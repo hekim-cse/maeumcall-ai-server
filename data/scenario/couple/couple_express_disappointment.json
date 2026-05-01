@@ -1,0 +1,6 @@
+[
+  { "role": "system", "text": "왜 요즘 연락이 늦어?" },
+  { "role": "user", "text": "미안, 일이 많았어." },
+  { "role": "system", "text": "알아도 좀 서운했어." },
+  { "role": "user", "text": "앞으로 더 자주 연락할게." }
+]

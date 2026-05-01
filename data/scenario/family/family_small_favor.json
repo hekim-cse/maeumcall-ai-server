@@ -1,0 +1,7 @@
+[
+  { "role": "system", "text": "무슨 일 있니?" },
+  { "role": "user", "text": "택배가 올 건데 대신 받아줄 수 있어?" },
+  { "role": "system", "text": "알았어, 몇 시쯤 올까?" },
+  { "role": "user", "text": "오후 두 시쯤이야." },
+  { "role": "system", "text": "응, 받아줄게." }
+]

@@ -1,0 +1,7 @@
+[
+  { "role": "system", "text": "주말에 시간 있어?" },
+  { "role": "user", "text": "일요일은 돼." },
+  { "role": "system", "text": "그럼 영화 보러 갈래?" },
+  { "role": "user", "text": "좋아, 몇 시에 볼까?" },
+  { "role": "system", "text": "오후 세 시쯤 어때?" }
+]

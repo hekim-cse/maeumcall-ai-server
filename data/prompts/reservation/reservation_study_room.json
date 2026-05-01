@@ -1,0 +1,7 @@
+[
+  { "role": "system", "text": "스터디룸입니다." },
+  { "role": "user", "text": "내일 두 시간 예약할 수 있을까요?" },
+  { "role": "system", "text": "몇 시부터 이용하시겠어요?" },
+  { "role": "user", "text": "오후 두 시부터요." },
+  { "role": "system", "text": "네, 예약 완료되었습니다." }
+]

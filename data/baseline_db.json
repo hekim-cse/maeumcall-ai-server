@@ -1,0 +1,32 @@
+{
+  "4490591711": {
+    "n": 3,
+    "pitchHz": 199.726333,
+    "pitchStdHz": 20.365897,
+    "pitch_m2": 829.5395226666677,
+    "jitterLocal": 0.023914,
+    "jitterStd": 0.003643,
+    "jitter_m2": 2.6548454000000006e-05,
+    "shimmerLocal": 0.108,
+    "shimmerStd": 0.015723,
+    "shimmer_m2": 0.0004944341464999998,
+    "pitchIqrHz": 0.0,
+    "samples": 3,
+    "ts": 1760298864
+  },
+  "4403075585": {
+    "n": 3,
+    "pitchHz": 204.039333,
+    "pitchStdHz": 9.556044,
+    "pitch_m2": 182.63597066666676,
+    "jitterLocal": 0.018824,
+    "jitterStd": 0.000479,
+    "jitter_m2": 4.5798466666666285e-07,
+    "shimmerLocal": 0.080713,
+    "shimmerStd": 0.005637,
+    "shimmer_m2": 6.356099466666665e-05,
+    "pitchIqrHz": 0.0,
+    "samples": 3,
+    "ts": 1760310208
+  }
+}

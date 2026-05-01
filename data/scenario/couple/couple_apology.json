@@ -1,0 +1,6 @@
+[
+  { "role": "system", "text": "어제 왜 화냈어?" },
+  { "role": "user", "text": "미안, 내가 예민했어." },
+  { "role": "system", "text": "괜찮아, 하지만 속상했어." },
+  { "role": "user", "text": "정말 미안해, 잘할게." }
+]

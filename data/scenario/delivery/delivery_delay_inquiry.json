@@ -1,0 +1,6 @@
+[
+  { "role": "system", "text": "안녕하세요, 배달 기사입니다." },
+  { "role": "user", "text": "혹시 언제쯤 도착하세요?" },
+  { "role": "system", "text": "20분 정도 걸릴 것 같습니다." },
+  { "role": "user", "text": "알겠습니다." }
+]

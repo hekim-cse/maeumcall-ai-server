@@ -1,0 +1,63 @@
+	1.	main.py가 .env 로드 → FastAPI 앱 생성 → 라우터 등록
+	2.	HTTP 요청
+	•	/chat → routes/chat_routes.py → services/chat_service.py
+        → llm/prompt_builder.py로 프롬프트 생성 → llm/client.py가 OpenAI 호출 → 후처리(llm/postprocessor.py)
+	•	/chat/suggest, /chat/improve → routes/suggest_routes.py → (LLM 단건 호출 / services/correction_service.py)
+	•	/voice/* → routes/voice_routes.py → Praat 분석(praat_voice_analysis) → 기준선 저장/계산(services/baseline_store.py) 
+        → 응답 페이로드 조립(services/analysis_service.py)
+	•	/analysis/* → routes/wordfreq_router.py 로 텍스트 토큰화/집계
+	3.	프롬프트/시나리오 로딩은 services/prompt_registry.py + services/prompt_loader.py 조합
+
+# ─────────────────────────────────────────
+# main.py 
+# ─────────────────────────────────────────
+
+	•	.env를 제일 먼저 로드(경로 자동 탐색) → FastAPI 앱 생성 → CORS 허용 → 라우터 등록 → 헬스체크/루트/레거시 엔드포인트.
+
+# ─────────────────────────────────────────
+# translate_server.py 
+# ─────────────────────────────────────────
+
+	•	독립 Flask 미니 서버(영→한 번역 테스트). POST /translate로 간단 번역.
+
+# ─────────────────────────────────────────
+# .env
+# ─────────────────────────────────────────
+
+	•	OPENAI_API_KEY, OPENAI_MODEL, PROMPT_CACHE 등 환경변수.
+
+# ─────────────────────────────────────────
+#	/data/
+# ─────────────────────────────────────────
+
+	•	prompts/ : 카테고리/시나리오 INI 모음.
+	•	baseline_db.json : 음성 기준선 저장 파일(자동 생성).
+
+
+API/엔드포인트 한눈에
+	•	GET  /health : FastAPI 헬스
+	•	POST /chat : 본 대화(상대역)
+	•	POST /chat/suggest / POST /suggest : 짧은 답변 3개
+	•	POST /chat/improve / POST /improve : 문장 정제
+	•	POST /voice/analyze : 음성 분석(+기준선 반영)
+	•	GET  /voice/baseline?user_id= : 기준선 조회
+	•	POST /voice/calibrate/finalize / /reset : 기준선 확정/초기화
+	•	GET  /voice/health : 보이스 라우트 헬스
+	•	POST /analysis/wordfreq : 단일 집계
+	•	POST /analysis/wordfreq/by-category : 카테고리별 집계
+
+환경변수(주요)
+	•	OPENAI_API_KEY : OpenAI 키
+	•	OPENAI_MODEL / OPENAI_MODEL_SUGGEST / OPENAI_MODEL_REWRITE : 모델 명
+	•	PROMPT_CACHE : 1(기본) 캐시 ON / 0 OFF
+
+프롬프트/시나리오가 로딩되는 법
+	1.	(category, title)로 정확 매핑 시도 → 없으면
+	2.	이모지/띄어쓰기 제거·소문자화로 별칭 매핑 → 없으면
+	3.	general/default.ini로 폴백
+	4.	항상 카테고리 폴더의 _default.ini와 병합(시나리오가 더 우선)
+
+
+음성 기준선 동작
+	•	Welford: 호출 때마다 즉시 평균/표준편차 누적 → 분석 응답에 z, deltaPct 포함
+	•	배치 확정: mode=calibrate로 샘플 모아두었다가 /voice/calibrate/finalize에서 평균값으로 덮어쓰기
