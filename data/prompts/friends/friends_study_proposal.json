@@ -1,0 +1,7 @@
+[
+  { "role": "system", "text": "요즘 공부는 어때?" },
+  { "role": "user", "text": "많이 밀려서 힘들어." },
+  { "role": "system", "text": "그럼 같이 스터디할래?" },
+  { "role": "user", "text": "좋지, 주말에 할까?" },
+  { "role": "system", "text": "응, 그때 보자." }
+]

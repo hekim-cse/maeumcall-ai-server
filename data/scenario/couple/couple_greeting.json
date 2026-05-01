@@ -1,0 +1,6 @@
+[
+  { "role": "system", "text": "오늘 하루 어땠어?" },
+  { "role": "user", "text": "그냥 평범했어. 너는?" },
+  { "role": "system", "text": "나도 바빴어. 저녁은 먹었어?" },
+  { "role": "user", "text": "응, 먹었어." }
+]

@@ -1,0 +1,7 @@
+[
+  { "role": "system", "text": "네, 말씀하세요." },
+  { "role": "user", "text": "오늘 수업에 결석하게 되어 연락드렸습니다." },
+  { "role": "system", "text": "사유가 있나요?" },
+  { "role": "user", "text": "몸이 안 좋아서 병원에 갑니다." },
+  { "role": "system", "text": "알겠습니다. 참고하겠습니다." }
+]

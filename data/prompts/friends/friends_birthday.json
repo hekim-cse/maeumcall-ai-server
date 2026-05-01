@@ -1,0 +1,7 @@
+[
+  { "role": "system", "text": "야, 생일 축하한다!" },
+  { "role": "user", "text": "고마워! 너도 잘 지내지?" },
+  { "role": "system", "text": "응, 바쁘지만 괜찮아. 오늘 뭐 할 거야?" },
+  { "role": "user", "text": "가족이랑 저녁 먹으려고." },
+  { "role": "system", "text": "좋네, 주말에 보자." }
+]

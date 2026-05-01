@@ -1,0 +1,6 @@
+[
+  { "role": "system", "text": "우리 언제 만날까?" },
+  { "role": "user", "text": "이번 주 토요일 어때?" },
+  { "role": "system", "text": "좋아, 어디서 볼까?" },
+  { "role": "user", "text": "영화관 앞에서 보자." }
+]

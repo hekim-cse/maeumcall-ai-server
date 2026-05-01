@@ -1,0 +1,6 @@
+[
+  { "role": "system", "text": "뭐해?" },
+  { "role": "user", "text": "그냥 누워 있었어." },
+  { "role": "system", "text": "나도 심심해서 전화했어." },
+  { "role": "user", "text": "잘 됐다. 얘기 좀 하자." }
+]

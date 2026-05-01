@@ -1,0 +1,7 @@
+[
+  { "role": "system", "text": "헤어샵입니다." },
+  { "role": "user", "text": "내일 오후에 커트 예약 가능할까요?" },
+  { "role": "system", "text": "네, 오후 세 시 가능합니다." },
+  { "role": "user", "text": "그때로 예약해주세요." },
+  { "role": "system", "text": "네, 예약해 두겠습니다." }
+]

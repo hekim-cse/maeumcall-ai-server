@@ -1,0 +1,7 @@
+[
+  { "role": "system", "text": "순천향병원입니다." },
+  { "role": "user", "text": "내일 오전에 내과 예약 가능할까요?" },
+  { "role": "system", "text": "네, 오전 10시에 가능합니다." },
+  { "role": "user", "text": "그 시간으로 예약해주세요." },
+  { "role": "system", "text": "네, 예약 완료되었습니다." }
+]
