@@ -4,3 +4,10 @@ __pycache__/
 *.pyc
 .DS_Store
 user_voice.wav
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+*.wav
