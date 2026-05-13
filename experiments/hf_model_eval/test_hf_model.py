@@ -2,7 +2,7 @@ import time
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-MODEL_NAME = "naver-hyperclovax/HyperCLOVAX-SEED-Text-Instruct-0.5B"
+MODEL_NAME = "naver-hyperclovax/HyperCLOVAX-SEED-Text-Instruct-1.5B"
 
 BENCHMARK_PROMPT = """
 너는 전화 공포증 완화를 위한 통화 시뮬레이션 상대이다.
