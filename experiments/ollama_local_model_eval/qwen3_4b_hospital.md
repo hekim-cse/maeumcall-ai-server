@@ -1,3 +1,4 @@
+git commit -m "문서: Ollama 모델 비교 결과 폴더명 정리"
 # Qwen3 4B - Hospital Reservation Test
 
 ## Model
