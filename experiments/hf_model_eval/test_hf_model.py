@@ -2,40 +2,38 @@ import time
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-# 3차 테스트 첫 번째 모델: EXAONE
-# 다음 모델 테스트 시 MODEL_NAME만 변경하면 된다.
-MODEL_NAME = "kakaocorp/kanana-1.5-2.1b-instruct-2505"
+# 4차 테스트 첫 번째 모델: Kanana
+# EXAONE 테스트 시 아래 MODEL_NAME만 변경하면 된다.
+MODEL_NAME = "LGAI-EXAONE/EXAONE-4.0-1.2B"
 
 BENCHMARK_PROMPT = """
-너는 병원 예약 전화 시뮬레이션 AI이다.
-
-역할:
-- ai_message는 병원 접수 직원이 사용자에게 말하는 문장이다.
-- recommended_replies는 사용자가 병원 접수 직원에게 답할 수 있는 환자 입장의 문장이다.
+너는 한국 병원 접수 직원 역할을 하는 통화 시뮬레이션 AI이다.
 
 상황:
-사용자가 말했다: "저기... 내일 오후에 진료 예약 가능할까요?"
+- 사용자는 병원에 전화해서 진료 예약을 연습하고 있다.
+- 사용자는 전화 상황에 익숙하지 않아 긴장할 수 있다.
+- 사용자가 말했다: "저기... 내일 오후에 진료 예약 가능할까요?"
 
-규칙:
-- 반드시 JSON 객체 하나만 출력한다.
-- markdown 코드블록을 쓰지 않는다.
+현재 대화 상태:
+- asking_department
+- 사용자는 날짜와 시간 정보를 일부 말했다.
+- 하지만 아직 진료과를 말하지 않았다.
+
+응답 목표:
+- 병원 접수 직원처럼 자연스럽고 공손하게 응답한다.
+- 병원 예약 가능 여부는 시스템에 조회된 정보가 없으므로 절대 가능하다고 말하지 않는다.
+- "가능합니다", "예약해드리겠습니다"라는 표현을 사용하지 않는다.
+- 대신 "확인해드리겠습니다", "예약 가능 시간을 확인해보겠습니다"처럼 말한다.
+- 다음에 필요한 정보인 진료과를 부드럽게 물어본다.
+- 사용자를 압박하지 않는다.
+
+출력 규칙:
+- JSON을 출력하지 않는다.
+- markdown 코드블록을 출력하지 않는다.
 - assistant, user 같은 역할 이름을 출력하지 않는다.
-- 설명 문장을 붙이지 않는다.
-- JSON 뒤에 추가 문장을 붙이지 않는다.
-- ai_message는 병원 접수 직원 말투로 1문장만 작성한다.
-- ai_message에서 예약 가능 여부를 확정하지 않는다.
-- ai_message는 다음에 필요한 정보를 부드럽게 물어본다.
-- recommended_replies는 사용자가 실제로 말할 수 있는 짧은 문장 3개로 작성한다.
-- recommended_replies는 병원 직원 말투로 작성하지 않는다.
-- should_end_call은 false로 작성한다.
-
-출력 형식:
-{
-  "ai_message": "문장",
-  "recommended_replies": ["문장1", "문장2", "문장3"],
-  "conversation_state": "asking_department",
-  "should_end_call": false
-}
+- 설명을 붙이지 않는다.
+- 병원 접수 직원의 응답 문장만 출력한다.
+- 반드시 한 문장만 출력한다.
 """
 
 
@@ -78,25 +76,25 @@ def main():
 
     start = time.perf_counter()
 
-    # 3차 Strict JSON Prompt 테스트 조건
-    # max_new_tokens=100: JSON 하나만 짧게 생성하도록 제한한다.
+    # 4차 ai_message 전용 테스트 조건
+    # max_new_tokens=60: 한 문장 응답만 생성하도록 제한한다.
     # do_sample=False: 모델별 비교 조건을 고정한다.
-    # repetition_penalty=1.15: 반복 출력을 줄인다.
+    # repetition_penalty=1.1: 반복 출력을 줄인다.
     with torch.no_grad():
         outputs = model.generate(
             **inputs,
-            max_new_tokens=100,
+            max_new_tokens=60,
             do_sample=False,
-            repetition_penalty=1.15,
+            repetition_penalty=1.1,
         )
 
     end = time.perf_counter()
 
     input_length = inputs["input_ids"].shape[-1]
     generated_tokens = outputs[0][input_length:]
-    decoded = tokenizer.decode(generated_tokens, skip_special_tokens=True)
+    decoded = tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
 
-    print("\n===== GENERATED OUTPUT ONLY =====")
+    print("\n===== AI MESSAGE ONLY =====")
     print(decoded)
 
     print("\n===== LATENCY =====")
