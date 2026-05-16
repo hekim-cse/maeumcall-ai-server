@@ -12,6 +12,11 @@ from services.closing import is_closing_utterance, closing_line
 from llm.prompt_builder import generate_prompts
 from services.etiquette import maybe_get_etiquette_tip
 
+from services.flow.hospital_reservation_response import (
+    is_hospital_reservation_request,
+    complete_hospital_reservation_with_graph,
+)
+
 router = APIRouter(prefix="/chat", tags=["chat"])
 OPENAI_TIMEOUT = int(os.getenv("OPENAI_TIMEOUT", "8"))
 
@@ -42,8 +47,13 @@ def _to_safe_turns(turns: Optional[List[Any]]) -> List[Dict[str, str]]:
     return safe
 
 @router.post("", response_model=ChatResponse)
+
 def chat(req: ChatRequest):
-    # 1) 종료 감지
+    # 1) 병원 예약 시나리오는 LangGraph가 종료까지 직접 관리한다.
+    if is_hospital_reservation_request(req):
+        return complete_hospital_reservation_with_graph(req)
+
+    # 2) 일반 시나리오 종료 감지
     if is_closing_utterance(getattr(req, "userMessage", "")):
         return ChatResponse(response=closing_line(req.category, req.userMessage))
 

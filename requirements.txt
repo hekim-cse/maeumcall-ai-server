@@ -1,6 +1,9 @@
 fastapi
-uvicorn
+uvicorn[standard]
 praatio
 python-multipart
 python-dotenv
 openai
+
+langgraph==0.6.11
+praat-parselmouth==0.4.7
