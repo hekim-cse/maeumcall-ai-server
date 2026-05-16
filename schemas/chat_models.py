@@ -1,6 +1,6 @@
 # schemas/chat_models.py
 from __future__ import annotations
-from typing import List, Optional, Literal, Dict
+from typing import List, Optional, Literal, Dict, Any
 from pydantic import BaseModel
 
 # 공통
@@ -9,16 +9,27 @@ Role = Literal["user", "assistant", "system", "ai"]  # ← 3번과 연결
 # === 대화 생성 ===
 class ChatRequest(BaseModel):
     category: str
-    nickname: Optional[str] = None    # ⬅️ 추가
+    nickname: Optional[str] = None
     title: str
     description: str
     userMessage: str
     turns: Optional[List[Dict[str, str]]] = None
     history: Optional[List[Dict[str, str]]] = None
 
+    # LangGraph 상태 기반 시나리오용
+    conversationState: Optional[str] = None
+    scenarioState: Optional[Dict[str, Any]] = None
+
+
 class ChatResponse(BaseModel):
     response: str
-    etiquetteTip: Optional[str] = None  # ✅ 추가
+    etiquetteTip: Optional[str] = None
+
+    # LangGraph 상태 기반 응답용
+    recommendedReplies: Optional[List[str]] = None
+    conversationState: Optional[str] = None
+    shouldEndCall: Optional[bool] = None
+    scenarioState: Optional[Dict[str, Any]] = None
 
 # === 짧은 제안(suggest) ===
 class SuggestRequest(BaseModel):
