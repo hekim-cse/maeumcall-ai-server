@@ -7,3 +7,4 @@ openai
 
 langgraph==0.6.11
 praat-parselmouth==0.4.7
+huggingface_hub==0.36.2
