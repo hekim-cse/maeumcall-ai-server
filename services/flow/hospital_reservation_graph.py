@@ -4,7 +4,7 @@ from typing import TypedDict, Optional, Dict, List
 
 from langgraph.graph import StateGraph, START, END
 
-from llm.client import complete_messages
+from llm.huggingface_provider import complete_hf_messages
 from services.flow.hospital_reservation_extractor import extract_hospital_reservation_info
 from services.flow.hospital_reservation_replies import get_recommended_replies
 
@@ -155,12 +155,26 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
 
 def clean_ai_message(text: str) -> str:
     text = (text or "").strip()
-    text = text.strip('"').strip("'").strip()
-    text = text.replace("```", "").strip()
 
+    # 코드블록 제거
+    text = text.replace("```json", "").replace("```", "").strip()
+
+    # assistant/user/system 라벨 제거
     for label in ["assistant", "user", "system"]:
         if text.lower().startswith(label):
             text = text[len(label):].strip(":： \n")
+
+    # 여러 줄이 나오면 첫 번째 유효 줄만 사용
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if lines:
+        text = lines[0]
+
+    # 앞뒤 따옴표 제거
+    text = text.strip().strip('"').strip("'").strip()
+
+    # 혹시 JSON 비슷하게 나오면 fallback으로 넘기기 위해 비움
+    if text.startswith("{") or text.startswith("["):
+        return ""
 
     return text
 
@@ -206,9 +220,13 @@ def generate_ai_message_node(state: HospitalReservationState) -> Dict:
 
     prompt = build_ai_message_prompt(state)
 
-    ai_message = complete_messages(
+    ai_message = complete_hf_messages(
         messages=[{"role": "user", "content": prompt}],
-        timeout_s=8,
+        max_new_tokens=80,
+        do_sample=True,
+        temperature=0.4,
+        top_p=0.9,
+        repetition_penalty=1.1,
     )
 
     ai_message = clean_ai_message(ai_message)
