@@ -165,17 +165,35 @@ def clean_ai_message(text: str) -> str:
     return text
 
 
-def fallback_ai_message(conversation_state: str) -> str:
+def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
+    """
+    LLM 호출이 실패하거나 빈 응답을 반환했을 때 사용하는 안전 응답이다.
+    상태별로 필요한 정보를 반영해서 고정 응답을 만든다.
+    """
+    state = state or {}
+
+    department = state.get("department") or "선택하신 진료과"
+    date = state.get("date") or "원하시는 날짜"
+    time = state.get("time") or "원하시는 시간대"
+
     if conversation_state == "asking_department":
         return "네, 확인해드리겠습니다. 원하시는 진료과를 알려주시면 예약 가능 시간을 확인해드리겠습니다."
+
     if conversation_state == "asking_date":
         return "네, 확인해드리겠습니다. 원하시는 예약 날짜를 말씀해주시겠어요?"
+
     if conversation_state == "asking_time":
         return "네, 확인해드리겠습니다. 원하시는 시간대를 말씀해주시겠어요?"
+
     if conversation_state == "confirming_info":
-        return "말씀해주신 내용으로 확인해드리겠습니다. 예약 정보를 다시 확인해드릴까요?"
+        return f"말씀해주신 내용으로 확인해드리겠습니다. {date} {time} {department} 진료 예약을 원하시는 것이 맞으실까요?"
+
     if conversation_state == "closing":
         return "네, 확인 감사합니다. 추가로 궁금하신 점이 없으시면 통화 마무리 도와드리겠습니다."
+
+    if conversation_state == "END":
+        return "네, 감사합니다. 좋은 하루 보내세요."
+
     return "네, 확인해드리겠습니다. 어떤 진료를 원하시는지 말씀해주시겠어요?"
 
 
@@ -196,7 +214,10 @@ def generate_ai_message_node(state: HospitalReservationState) -> Dict:
     ai_message = clean_ai_message(ai_message)
 
     if not ai_message:
-        ai_message = fallback_ai_message(state.get("conversation_state") or "asking_purpose")
+        ai_message = fallback_ai_message(
+            state.get("conversation_state") or "asking_purpose", 
+            state
+        )
 
     return {"ai_message": ai_message}
 
