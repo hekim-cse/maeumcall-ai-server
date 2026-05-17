@@ -28,6 +28,7 @@ def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
         "date": result.get("date"),
         "time": result.get("time"),
         "conversation_state": result.get("conversation_state"),
+        "last_ai_message": result.get("ai_message"),
     }
 
 
