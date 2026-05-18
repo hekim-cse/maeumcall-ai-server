@@ -35,6 +35,8 @@ def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
 def complete_hospital_reservation_with_graph(req: ChatRequest) -> ChatResponse:
     previous_state = getattr(req, "scenarioState", None) or {}
 
+    history = getattr(req, "history", None) or previous_state.get("history") or []
+
     initial_state = {
         **previous_state,
         "user_message": getattr(req, "userMessage", "") or "",
@@ -43,6 +45,7 @@ def complete_hospital_reservation_with_graph(req: ChatRequest) -> ChatResponse:
             or previous_state.get("conversation_state")
             or "greeting"
         ),
+        "history": history,
         "recommended_replies": [],
         "should_end_call": False,
     }

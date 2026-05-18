@@ -24,6 +24,8 @@ class HospitalReservationState(TypedDict, total=False):
     ai_message: Optional[str]
     last_ai_message: Optional[str]
 
+    history: List[Dict[str, str]]
+
     recommended_replies: List[str]
     should_end_call: bool
 
@@ -31,8 +33,8 @@ class HospitalReservationState(TypedDict, total=False):
 def choose_message(candidates: List[str], state: dict) -> str:
     """
     직전 ai_message와 같은 문장을 피해서 후보 중 하나를 선택한다.
-    Flutter가 scenarioState.last_ai_message를 다음 요청에 다시 보내주면
-    같은 상태에서 같은 응답이 반복되는 문제를 줄일 수 있다.
+    fallback은 최후 안전장치로만 사용하지만,
+    fallback이 사용될 경우에도 같은 문장이 반복되지 않도록 한다.
     """
     last_ai_message = state.get("last_ai_message")
 
@@ -48,6 +50,10 @@ def choose_message(candidates: List[str], state: dict) -> str:
 
 
 def extract_info_node(state: HospitalReservationState) -> Dict:
+    """
+    사용자 발화에서 병원 예약에 필요한 정보를 추출한다.
+    새로 추출되지 않은 정보는 기존 state 값을 유지한다.
+    """
     user_message = state.get("user_message", "") or ""
     extracted = extract_hospital_reservation_info(user_message)
 
@@ -57,10 +63,14 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
         "date": extracted.get("date") or state.get("date"),
         "time": extracted.get("time") or state.get("time"),
         "last_ai_message": state.get("last_ai_message"),
+        "history": state.get("history") or [],
     }
 
 
 def decide_next_state_node(state: HospitalReservationState) -> Dict:
+    """
+    현재까지 수집된 정보를 기준으로 다음 conversation_state를 결정한다.
+    """
     current_state = state.get("conversation_state") or "greeting"
     user_message = state.get("user_message", "") or ""
 
@@ -78,15 +88,27 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
             }
 
         if "진료과" in user_message or "과를" in user_message:
-            return {"conversation_state": "asking_department", "should_end_call": False}
+            return {
+                "conversation_state": "asking_department",
+                "should_end_call": False,
+            }
 
         if "날짜" in user_message or "요일" in user_message:
-            return {"conversation_state": "asking_date", "should_end_call": False}
+            return {
+                "conversation_state": "asking_date",
+                "should_end_call": False,
+            }
 
         if "시간" in user_message or "시" in user_message:
-            return {"conversation_state": "asking_time", "should_end_call": False}
+            return {
+                "conversation_state": "asking_time",
+                "should_end_call": False,
+            }
 
-        return {"conversation_state": "confirming_info", "should_end_call": False}
+        return {
+            "conversation_state": "confirming_info",
+            "should_end_call": False,
+        }
 
     intent = state.get("intent")
     department = state.get("department")
@@ -96,46 +118,128 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
     if current_state in ["greeting", "asking_purpose"]:
         if intent == "reservation":
             if not department:
-                return {"conversation_state": "asking_department", "should_end_call": False}
+                return {
+                    "conversation_state": "asking_department",
+                    "should_end_call": False,
+                }
             if not date:
-                return {"conversation_state": "asking_date", "should_end_call": False}
+                return {
+                    "conversation_state": "asking_date",
+                    "should_end_call": False,
+                }
             if not time:
-                return {"conversation_state": "asking_time", "should_end_call": False}
-            return {"conversation_state": "confirming_info", "should_end_call": False}
+                return {
+                    "conversation_state": "asking_time",
+                    "should_end_call": False,
+                }
+            return {
+                "conversation_state": "confirming_info",
+                "should_end_call": False,
+            }
 
-        return {"conversation_state": "asking_purpose", "should_end_call": False}
+        return {
+            "conversation_state": "asking_purpose",
+            "should_end_call": False,
+        }
 
     if current_state == "asking_department":
         if department:
             if not date:
-                return {"conversation_state": "asking_date", "should_end_call": False}
+                return {
+                    "conversation_state": "asking_date",
+                    "should_end_call": False,
+                }
             if not time:
-                return {"conversation_state": "asking_time", "should_end_call": False}
-            return {"conversation_state": "confirming_info", "should_end_call": False}
-        return {"conversation_state": "asking_department", "should_end_call": False}
+                return {
+                    "conversation_state": "asking_time",
+                    "should_end_call": False,
+                }
+            return {
+                "conversation_state": "confirming_info",
+                "should_end_call": False,
+            }
+
+        return {
+            "conversation_state": "asking_department",
+            "should_end_call": False,
+        }
 
     if current_state == "asking_date":
         if date:
             if not time:
-                return {"conversation_state": "asking_time", "should_end_call": False}
-            return {"conversation_state": "confirming_info", "should_end_call": False}
-        return {"conversation_state": "asking_date", "should_end_call": False}
+                return {
+                    "conversation_state": "asking_time",
+                    "should_end_call": False,
+                }
+            return {
+                "conversation_state": "confirming_info",
+                "should_end_call": False,
+            }
+
+        return {
+            "conversation_state": "asking_date",
+            "should_end_call": False,
+        }
 
     if current_state == "asking_time":
         if time:
-            return {"conversation_state": "confirming_info", "should_end_call": False}
-        return {"conversation_state": "asking_time", "should_end_call": False}
+            return {
+                "conversation_state": "confirming_info",
+                "should_end_call": False,
+            }
 
-    return {"conversation_state": current_state, "should_end_call": False}
+        return {
+            "conversation_state": "asking_time",
+            "should_end_call": False,
+        }
+
+    return {
+        "conversation_state": current_state,
+        "should_end_call": False,
+    }
+
+
+def format_history_for_prompt(history: List[Dict[str, str]], max_turns: int = 6) -> str:
+    """
+    최근 대화 기록을 LLM prompt에 넣기 좋은 문자열로 변환한다.
+    너무 긴 history는 최근 max_turns개만 사용한다.
+    """
+    if not history:
+        return "없음"
+
+    recent_history = history[-max_turns:]
+
+    lines = []
+    for item in recent_history:
+        role = item.get("role", "")
+        content = item.get("content", "")
+
+        if not content:
+            continue
+
+        if role == "user":
+            lines.append(f"사용자: {content}")
+        elif role in ["assistant", "ai"]:
+            lines.append(f"AI: {content}")
+
+    return "\n".join(lines) if lines else "없음"
 
 
 def build_ai_message_prompt(state: HospitalReservationState) -> str:
+    """
+    Kanana가 ai_message를 직접 생성하기 위한 기본 prompt를 만든다.
+    history와 last_ai_message를 함께 넣어서 같은 표현 반복을 줄인다.
+    """
     conversation_state = state.get("conversation_state") or "asking_purpose"
     user_message = state.get("user_message", "") or ""
 
     department = state.get("department") or "없음"
     date = state.get("date") or "없음"
     time = state.get("time") or "없음"
+
+    history = state.get("history") or []
+    history_text = format_history_for_prompt(history)
+    last_ai_message = state.get("last_ai_message") or "없음"
 
     if conversation_state == "asking_department":
         task = (
@@ -153,7 +257,12 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
             "시간대만 부드럽게 물어봐라."
         )
     elif conversation_state == "confirming_info":
-        task = f"{date} {time} {department} 진료 예약을 원하는지 확인해라."
+        task = (
+            f"{date} {time} {department} 진료 예약을 원하는지 확인하는 질문을 해라. "
+            "예약 가능 여부를 조회하거나 확정하지 말고, 사용자의 의사가 맞는지만 물어봐라. "
+            "반드시 아래 의미의 확인 질문만 작성해라: "
+            f"'{date} {time} {department} 진료 예약을 원하시는 것이 맞으실까요?'"
+        )
     elif conversation_state == "closing":
         task = "통화를 자연스럽게 마무리해라."
     else:
@@ -162,14 +271,21 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
     return f"""
 너는 한국 병원 접수 직원이다.
 
-현재 상태: {conversation_state}
+현재 상태:
+{conversation_state}
 
 확인된 정보:
 - 진료과: {department}
 - 날짜: {date}
 - 시간: {time}
 
-사용자 발화:
+최근 대화:
+{history_text}
+
+직전 AI 응답:
+{last_ai_message}
+
+현재 사용자 발화:
 {user_message}
 
 해야 할 일:
@@ -179,21 +295,104 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
 - 병원 접수 직원의 응답 한 문장만 출력한다.
 - JSON, markdown, 따옴표, assistant, user를 출력하지 않는다.
 - 이미 확인된 정보는 다시 묻지 않는다.
-- 현재 상태에서 부족한 정보 하나만 묻는다.
+- 예약 가능 여부를 확정하지 않는다.
+- 예약이 완료되었다고 말하지 않는다.
+- 예약이 확인되었다고 말하지 않는다.
+- "예약 가능합니다", "예약해드리겠습니다", "예약되었습니다"를 쓰지 않는다.
+- "확인되었습니다", "예약이 확인되었습니다", "예약이 완료되었습니다"를 쓰지 않는다.
+- "가능합니다", "가능하십니다", "예약 가능", "예약이 가능"을 절대 쓰지 않는다.
+- "가능하신지", "가능한지", "확인 후 안내" 같은 표현을 쓰지 않는다.
+- "추가로 필요한 사항", "변경이 있으신가요"를 쓰지 않는다.
+- "시간대가 있으신가요", "몇 시", "시간을 알려주세요"처럼 시간을 다시 묻지 않는다.
+- confirming_info 상태라면 반드시 예약 의사가 맞는지 확인하는 질문만 한다.
+- confirming_info 상태라면 반드시 "예약"이라는 단어를 포함한다.
+- confirming_info 상태라면 반드시 "맞으실까요?", "맞을까요?", "확인해도 될까요?" 중 하나로 끝낸다.
+""".strip()
+
+
+def build_retry_prompt(state: HospitalReservationState, rejected_message: str) -> str:
+    """
+    LLM 응답이 현재 상태에 맞지 않을 때,
+    fallback으로 바로 가지 않고 한 번 더 재생성을 요청하기 위한 prompt이다.
+    """
+    conversation_state = state.get("conversation_state") or "asking_purpose"
+
+    department = state.get("department") or "없음"
+    date = state.get("date") or "없음"
+    time = state.get("time") or "없음"
+
+    history = state.get("history") or []
+    history_text = format_history_for_prompt(history)
+    last_ai_message = state.get("last_ai_message") or "없음"
+    user_message = state.get("user_message", "") or ""
+
+    if conversation_state == "confirming_info":
+        task = (
+            f"이미 확인된 정보는 진료과={department}, 날짜={date}, 시간={time}이다. "
+            "새로운 정보를 묻지 말고, 이 예약 내용을 사용자가 원하는 것이 맞는지 확인하는 질문만 작성해라. "
+            "예약이 완료되었거나 확인되었다고 말하지 마라. "
+            "반드시 다음 형식과 같은 의미의 확인 질문 한 문장만 작성해라: "
+            f"{date} {time} {department} 진료 예약을 원하시는 것이 맞으실까요?" 
+        )
+    elif conversation_state == "asking_department":
+        task = "진료과만 물어봐라. 날짜, 시간, 연락처, 성함은 묻지 마라."
+    elif conversation_state == "asking_date":
+        task = "예약 날짜만 물어봐라. 진료과, 시간, 연락처, 성함은 묻지 마라."
+    elif conversation_state == "asking_time":
+        task = "예약 시간대만 물어봐라. 진료과, 날짜, 연락처, 성함은 묻지 마라."
+    elif conversation_state == "closing":
+        task = "통화를 마무리하는 문장만 작성해라."
+    else:
+        task = "현재 상태에 맞는 병원 접수 직원 응답을 한 문장으로 작성해라."
+
+    return f"""
+방금 생성한 응답은 현재 대화 상태에 맞지 않았다.
+
+부적절했던 응답:
+{rejected_message}
+
+현재 상태:
+{conversation_state}
+
+확인된 정보:
+- 진료과: {department}
+- 날짜: {date}
+- 시간: {time}
+
+최근 대화:
+{history_text}
+
+직전 AI 응답:
+{last_ai_message}
+
+현재 사용자 발화:
+{user_message}
+
+다시 작성해야 할 일:
+{task}
+
+규칙:
+- 병원 접수 직원의 응답 한 문장만 출력한다.
+- JSON, markdown, 따옴표, assistant, user를 출력하지 않는다.
+- 이미 확인된 정보는 다시 묻지 않는다.
 - 예약 가능 여부를 확정하지 않는다.
 - "예약 가능합니다", "예약해드리겠습니다", "예약되었습니다"를 쓰지 않는다.
-- "알려주시면 더 정확히 안내해드릴 수 있습니다" 같은 긴 안내문을 쓰지 않는다.
-- 질문은 짧게 끝낸다.
+- "가능합니다", "가능하십니다", "예약 가능", "예약이 가능"을 절대 쓰지 않는다.
+- "가능하신지", "가능한지", "확인 후 안내" 같은 표현을 쓰지 않는다.
+- "시간대가 있으신가요", "몇 시", "시간을 알려주세요"처럼 시간을 다시 묻지 않는다.
+- confirming_info 상태라면 반드시 사용자의 의사가 맞는지 확인하는 질문만 한다.
+- confirming_info 상태라면 반드시 "맞으실까요?", "맞을까요?", "확인해도 될까요?" 중 하나로 끝낸다.
 """.strip()
 
 
 def clean_ai_message(text: str) -> str:
+    """
+    LLM 출력에서 코드블록, JSON 조각, 라벨, 위험 표현을 제거하거나 실패 처리한다.
+    """
     text = (text or "").strip()
 
-    # 코드블록 제거
     text = text.replace("```json", "").replace("```", "").strip()
 
-    # JSON/응답 필드가 섞이면 실패 처리
     invalid_tokens = [
         "{",
         "}",
@@ -210,143 +409,229 @@ def clean_ai_message(text: str) -> str:
     if any(token in text for token in invalid_tokens):
         return ""
 
-    # assistant/user/system 라벨 제거
     for label in ["assistant", "user", "system"]:
         if text.lower().startswith(label):
             text = text[len(label):].strip(":： \n")
 
-    # 여러 줄이면 첫 번째 줄만 사용
     lines = [line.strip() for line in text.splitlines() if line.strip()]
     if lines:
         text = lines[0]
 
-    # 앞뒤 따옴표 제거
     text = text.strip().strip('"').strip("'").strip()
 
-    # 정말 위험한 표현만 금지한다.
-    # 너무 넓게 막으면 LLM 응답이 계속 fallback으로 떨어진다.
     banned_phrases = [
         "예약 가능합니다",
         "예약해드리겠습니다",
         "예약되었습니다",
         "예약 완료",
         "예약이 완료",
+        "예약이 가능",
+        "가능하십니다",
+        "가능하신지",
+        "가능한지",
+        "확인하기 위해",
+        "확인 후",
+        "확인되었습니다",
+        "예약이 확인되었습니다",
+        "예약이 완료되었습니다",    
+        "바로 안내해드리겠습니다",
+        "정상적으로 잡혀",
+        "추가로 필요한 사항",
+        "변경이 있으신가요",
     ]
 
     if any(phrase in text for phrase in banned_phrases):
         return ""
 
-    # 너무 짧거나 깨진 문장 방지
     if len(text) < 8:
         return ""
 
     return text
 
 
-def refine_ai_message_by_state(text: str, state: dict) -> str:
+def validate_ai_message_by_state(text: str, state: dict) -> bool:
     """
-    LLM이 생성한 문장을 상태별 목표에 맞게 보정한다.
-    같은 상태에서 같은 문장이 반복되는 것을 줄이기 위해
-    상태별 자연스러운 후보 문장 중 하나를 선택할 수 있다.
+    LLM이 생성한 문장이 현재 conversation_state에 맞는지 검증한다.
+    True면 LLM 문장을 그대로 사용하고,
+    False면 retry 또는 fallback을 사용한다.
     """
     text = (text or "").strip()
 
+    if not text:
+        return False
+
     conversation_state = state.get("conversation_state") or "asking_purpose"
-    department = state.get("department")
-    date = state.get("date")
-    time = state.get("time")
+
+    banned_phrases = [
+        "예약 가능합니다",
+        "예약해드리겠습니다",
+        "예약되었습니다",
+        "예약 완료",
+        "예약이 완료",
+        "예약이 가능",
+        "가능하십니다",
+        "가능하신지",
+        "가능한지",
+        "확인하기 위해",
+        "확인 후",
+        "확인되었습니다",
+        "예약이 확인되었습니다",
+        "예약이 완료되었습니다",    
+        "바로 안내해드리겠습니다",
+        "정상적으로 잡혀",
+        "추가로 필요한 사항",
+        "변경이 있으신가요",
+    ]
+
+    if any(phrase in text for phrase in banned_phrases):
+        return False
 
     if conversation_state == "asking_department":
-        repeated_patterns = [
-            "원하시는 진료과가 있으신가요?",
-            "원하시는 진료과를 말씀해주시겠어요?",
-            "어떤 진료과로 예약을 원하시나요?",
-        ]
+        has_department_question = any(keyword in text for keyword in [
+            "진료과",
+            "과를",
+            "어느 과",
+            "무슨 과",
+            "진료받으실 과",
+        ])
 
-        too_verbose_patterns = [
-            "알려주시면",
-            "안내해드릴 수 있습니다",
-            "더 정확히",
+        asks_wrong_info = any(keyword in text for keyword in [
+            "날짜",
+            "요일",
+            "시간대",
+            "몇 시",
+            "연락처",
+            "성함",
+        ])
+
+        too_verbose = any(phrase in text for phrase in [
+            "알려주시면 더 정확하게",
+            "알려주시면 더 정확히",
             "도와드릴 수 있습니다",
-            "어떤 진료과로 예약을 원하시는지",
-        ]
+            "안내해드릴 수 있습니다",
+        ])
 
-        should_replace = (
-            text in repeated_patterns
-            or any(pattern in text for pattern in too_verbose_patterns)
-            or len(text) > 70
-        )
+        too_long = len(text) > 70
 
-        if should_replace:
-            if date and time:
-                candidates = [
-                    f"네, {date} {time} 진료 예약을 원하시는군요. 원하시는 진료과를 말씀해주시겠어요?",
-                    f"네, {date} {time} 예약 문의로 확인했습니다. 진료받으실 과를 알려주시겠어요?",
-                    f"네, 확인해드리겠습니다. {date} {time}에 진료받으실 과를 말씀해주시겠어요?",
-                    f"네, {date} {time} 진료 예약 확인을 위해 원하시는 진료과를 알려주시겠어요?",
-                    f"네, {date} {time} 방문을 원하시는군요. 어느 진료과로 예약을 원하시나요?",
-                ]
-                return choose_message(candidates, state)
-
-            candidates = [
-                "네, 확인해드리겠습니다. 원하시는 진료과를 말씀해주시겠어요?",
-                "네, 진료 예약을 원하시는군요. 진료받으실 과를 알려주시겠어요?",
-                "네, 확인 도와드리겠습니다. 원하시는 진료과가 있으실까요?",
-            ]
-            return choose_message(candidates, state)
+        return (
+            has_department_question
+            and not asks_wrong_info
+            and not too_verbose
+            and not too_long
+        )   
 
     if conversation_state == "asking_date":
-        if len(text) > 70 or "시간" in text:
-            if department:
-                candidates = [
-                    f"네, {department} 진료 예약을 원하시는군요. 원하시는 날짜를 말씀해주시겠어요?",
-                    f"네, {department} 진료로 확인했습니다. 방문을 원하시는 날짜가 있으실까요?",
-                    f"네, 확인해드리겠습니다. {department} 진료 예약 날짜를 말씀해주시겠어요?",
-                ]
-                return choose_message(candidates, state)
+        has_date_question = any(keyword in text for keyword in [
+            "날짜",
+            "언제",
+            "요일",
+            "방문",
+        ])
 
-            candidates = [
-                "네, 확인해드리겠습니다. 원하시는 예약 날짜를 말씀해주시겠어요?",
-                "네, 진료 예약을 위해 방문을 원하시는 날짜를 알려주시겠어요?",
-            ]
-            return choose_message(candidates, state)
+        asks_wrong_info = any(keyword in text for keyword in [
+            "진료과",
+            "어느 과",
+            "시간대",
+            "몇 시",
+            "연락처",
+            "성함",
+        ])
+
+        return has_date_question and not asks_wrong_info
 
     if conversation_state == "asking_time":
-        if len(text) > 70 or "진료과" in text or "날짜" in text:
-            if date:
-                candidates = [
-                    f"네, {date} 예약으로 확인했습니다. 원하시는 시간대를 말씀해주시겠어요?",
-                    f"네, {date}에 진료를 원하시는군요. 편하신 시간대가 있으실까요?",
-                    f"네, 확인해드리겠습니다. {date} 중 원하시는 시간대를 알려주시겠어요?",
-                ]
-                return choose_message(candidates, state)
+        has_time_question = any(keyword in text for keyword in [
+            "시간",
+            "시간대",
+            "몇 시",
+            "오전",
+            "오후",
+        ])
 
-            candidates = [
-                "네, 확인해드리겠습니다. 원하시는 시간대를 말씀해주시겠어요?",
-                "네, 예약을 위해 희망하시는 시간대를 알려주시겠어요?",
-                "네, 편하신 시간대가 있으실까요?",
-            ]
-            return choose_message(candidates, state)
+        asks_wrong_info = any(keyword in text for keyword in [
+            "진료과",
+            "어느 과",
+            "날짜",
+            "요일",
+            "연락처",
+            "성함",
+        ])
+
+        return has_time_question and not asks_wrong_info
 
     if conversation_state == "confirming_info":
-        safe_department = department or "선택하신 진료과"
-        safe_date = date or "원하시는 날짜"
-        safe_time = time or "원하시는 시간대"
+        department = state.get("department")
+        date = state.get("date")
+        time = state.get("time")
 
-        candidates = [
-            f"말씀해주신 내용으로 확인해드리겠습니다. {safe_date} {safe_time} {safe_department} 진료 예약을 원하시는 것이 맞으실까요?",
-            f"확인하겠습니다. {safe_date} {safe_time} {safe_department} 진료 예약으로 진행을 원하시는 것이 맞으실까요?",
-            f"{safe_date} {safe_time} {safe_department} 진료 예약을 원하시는 내용으로 확인하면 될까요?",
-        ]
-        return choose_message(candidates, state)
+        has_confirm_question = any(keyword in text for keyword in [
+            "맞으실까요",
+            "맞을까요",
+            "맞습니까",
+            "맞으신가요",
+            "확인하면 될까요",
+            "확인해도 될까요",
+            "확인해드려도 될까요",
+        ])
 
-    return text
+        asks_new_info = any(keyword in text for keyword in [
+            "알려주시겠어요",
+            "말씀해주시겠어요",
+            "있으실까요",
+            "있으신가요",
+            "정해져 있으신가요",
+            "몇 시",
+            "어느 과",
+            "날짜",
+            "시간대",
+            "성함",
+            "연락처",
+        ])
+
+        has_saved_info = True
+
+        if department and department not in text:
+            has_saved_info = False
+
+        if date and date not in text:
+            has_saved_info = False
+
+        if time and time not in text:
+            has_saved_info = False
+
+        # confirming_info 상태에서는 "예약"이라는 단어가 포함되어야
+        # 단순 진료 확인이 아니라 예약 정보 확인 문장으로 판단한다.
+        has_reservation_word = "예약" in text
+
+        return (
+            has_confirm_question
+            and has_saved_info
+            and has_reservation_word
+            and not asks_new_info
+        )
+
+    if conversation_state == "closing":
+        return any(keyword in text for keyword in [
+            "궁금하신 점",
+            "문의",
+            "마무리",
+            "감사",
+            "좋은 하루",
+        ])
+
+    if conversation_state == "END":
+        return any(keyword in text for keyword in [
+            "감사합니다",
+            "좋은 하루",
+            "편안한 하루",
+        ])
+
+    return True
 
 
 def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
     """
-    LLM 호출이 실패하거나 금지 표현이 포함된 응답을 반환했을 때 사용하는 안전 응답이다.
-    같은 상태에서도 너무 반복적으로 느껴지지 않도록 여러 후보 중 하나를 선택한다.
+    LLM 1차 생성과 retry가 모두 실패했을 때 사용하는 최후 안전 응답이다.
     """
     state = state or {}
 
@@ -399,7 +684,7 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
         candidates = [
             f"말씀해주신 내용으로 확인해드리겠습니다. {date} {time} {department} 진료 예약을 원하시는 것이 맞으실까요?",
             f"확인하겠습니다. {date} {time} {department} 진료 예약을 원하시는 내용이 맞으실까요?",
-            f"{date} {time} {department} 진료 예약으로 확인하면 될까요?",
+            f"{date} {time} {department} 진료 예약을 원하시는 것으로 확인해도 될까요?",
         ]
         return choose_message(candidates, state)
 
@@ -428,10 +713,19 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
 
 
 def generate_ai_message_node(state: HospitalReservationState) -> Dict:
+    """
+    ai_message 생성 노드이다.
+
+    우선순위:
+    1. LLM 1차 응답
+    2. LLM retry 응답
+    3. fallback 응답
+    """
     if state.get("conversation_state") == "END":
         ai_message = fallback_ai_message("END", state)
         return {
             "ai_message": ai_message,
+            "last_ai_message": ai_message,
             "should_end_call": True,
         }
 
@@ -450,26 +744,58 @@ def generate_ai_message_node(state: HospitalReservationState) -> Dict:
 
     ai_message = clean_ai_message(raw_ai_message)
 
+    if ai_message and validate_ai_message_by_state(ai_message, state):
+        print(f"[AI message source] hf: {ai_message}")
+        return {
+            "ai_message": ai_message,
+            "last_ai_message": ai_message,
+        }
+
     if ai_message:
-        refined_message = refine_ai_message_by_state(ai_message, state)
+        print(f"[AI message rejected] {ai_message}")
+    else:
+        print("[AI message rejected] empty or invalid output")
 
-        if refined_message != ai_message:
-            print(f"[AI message source] hf/refined: {ai_message} -> {refined_message}")
-        else:
-            print(f"[AI message source] hf: {ai_message}")
+    retry_prompt = build_retry_prompt(
+        state=state,
+        rejected_message=ai_message or raw_ai_message or "",
+    )
 
-        ai_message = refined_message
+    retry_raw_ai_message = complete_hf_messages(
+        messages=[{"role": "user", "content": retry_prompt}],
+        max_new_tokens=40,
+        do_sample=False,
+        # temperature=0.25,
+        # top_p=0.8,
+        repetition_penalty=1.08,
+    )
 
-    if not ai_message:
-        ai_message = fallback_ai_message(
-            state.get("conversation_state") or "asking_purpose",
-            state,
-        )
-        print(f"[AI message source] fallback: {ai_message}")
+    print(f"[HF retry raw ai_message] {retry_raw_ai_message}")
+
+    retry_ai_message = clean_ai_message(retry_raw_ai_message)
+
+    if retry_ai_message and validate_ai_message_by_state(retry_ai_message, state):
+        print(f"[AI message source] hf/retry: {retry_ai_message}")
+        return {
+            "ai_message": retry_ai_message,
+            "last_ai_message": retry_ai_message,
+        }
+
+    if retry_ai_message:
+        print(f"[AI retry rejected] {retry_ai_message}")
+    else:
+        print("[AI retry rejected] empty or invalid output")
+
+    fallback_message = fallback_ai_message(
+        state.get("conversation_state") or "asking_purpose",
+        state,
+    )
+
+    print(f"[AI message source] fallback: {fallback_message}")
 
     return {
-        "ai_message": ai_message,
-        "last_ai_message": ai_message,
+        "ai_message": fallback_message,
+        "last_ai_message": fallback_message,
     }
 
 
