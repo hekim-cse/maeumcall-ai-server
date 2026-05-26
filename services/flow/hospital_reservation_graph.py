@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-import random
-from typing import TypedDict, Optional, Dict, List
+from typing import TypedDict, Optional, Dict, List, Any
 
 from langgraph.graph import StateGraph, START, END
 
 from llm.huggingface_provider import complete_hf_messages
 from services.flow.hospital_reservation_extractor import extract_hospital_reservation_info
 from services.flow.hospital_reservation_replies import get_recommended_replies
+from services.flow.hospital_reservation_availability import resolve_hospital_availability
 
 
 class HospitalReservationState(TypedDict, total=False):
@@ -21,6 +21,14 @@ class HospitalReservationState(TypedDict, total=False):
     user_name: Optional[str]
     phone_number: Optional[str]
 
+    availability_status: Optional[str]
+    availability_reason: Optional[str]
+    available_time: Optional[str]
+    alternative_times: List[str]
+    availability_message_hint: Optional[str]
+    reservation_confirmed: Optional[bool]
+    simulation_result: Optional[Dict[str, Any]]
+
     ai_message: Optional[str]
     last_ai_message: Optional[str]
 
@@ -32,21 +40,16 @@ class HospitalReservationState(TypedDict, total=False):
 
 def choose_message(candidates: List[str], state: dict) -> str:
     """
-    직전 ai_message와 같은 문장을 피해서 후보 중 하나를 선택한다.
-    fallback은 최후 안전장치로만 사용하지만,
-    fallback이 사용될 경우에도 같은 문장이 반복되지 않도록 한다.
+    fallback 후보 중 직전 ai_message와 다른 첫 번째 문장을 선택한다.
+    random을 사용하지 않아 테스트 재현성을 유지한다.
     """
     last_ai_message = state.get("last_ai_message")
 
-    filtered = [
-        message for message in candidates
-        if message != last_ai_message
-    ]
+    for message in candidates:
+        if message != last_ai_message:
+            return message
 
-    if not filtered:
-        filtered = candidates
-
-    return random.choice(filtered)
+    return candidates[0] if candidates else ""
 
 
 def extract_info_node(state: HospitalReservationState) -> Dict:
@@ -63,8 +66,16 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
         "date": extracted.get("date") or state.get("date"),
         "time": extracted.get("time") or state.get("time"),
         "last_ai_message": state.get("last_ai_message"),
+
         "history": state.get("history") or [],
-    }
+        "availability_status": state.get("availability_status"),
+        "availability_reason": state.get("availability_reason"),
+        "available_time": state.get("available_time"),
+        "alternative_times": state.get("alternative_times") or [],
+        "availability_message_hint": state.get("availability_message_hint"),
+        "reservation_confirmed": state.get("reservation_confirmed"),
+        "simulation_result": state.get("simulation_result"),
+}
 
 
 def decide_next_state_node(state: HospitalReservationState) -> Dict:
@@ -83,7 +94,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
     if current_state == "confirming_info":
         if any(word in user_message for word in ["네", "맞아요", "맞습니다", "확인", "좋아요"]):
             return {
-                "conversation_state": "closing",
+                "conversation_state": "checking_availability",
                 "should_end_call": False,
             }
 
@@ -192,11 +203,63 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
             "conversation_state": "asking_time",
             "should_end_call": False,
         }
+    
+    if current_state == "checking_availability":
+        return {
+            "conversation_state": "reservation_lookup",
+            "should_end_call": False,
+        }
+
+    if current_state == "reservation_available":
+        if any(word in user_message for word in ["네", "좋아요", "진행", "예약", "맞습니다", "그걸로"]):
+            return {
+                "conversation_state": "reservation_confirmed",
+                "reservation_confirmed": True,
+                "should_end_call": False,
+            }
+
+        if any(word in user_message for word in ["아니요", "다른", "변경", "시간"]):
+            return {
+                "conversation_state": "suggest_alternative",
+                "should_end_call": False,
+            }
+
+        return {
+            "conversation_state": "reservation_available",
+            "should_end_call": False,
+        }
+
+    if current_state == "reservation_unavailable":
+        return {
+            "conversation_state": "suggest_alternative",
+            "should_end_call": False,
+        }
+
+    if current_state == "suggest_alternative":
+        if any(word in user_message for word in ["네", "좋아요", "그걸로", "가능", "예약"]):
+            return {
+                "conversation_state": "reservation_confirmed",
+                "reservation_confirmed": True,
+                "should_end_call": False,
+            }
+
+        return {
+            "conversation_state": "suggest_alternative",
+            "should_end_call": False,
+        }
+
+    if current_state == "reservation_confirmed":
+        return {
+            "conversation_state": "closing",
+            "should_end_call": False,
+        }
 
     return {
         "conversation_state": current_state,
         "should_end_call": False,
     }
+
+
 
 
 def format_history_for_prompt(history: List[Dict[str, str]], max_turns: int = 6) -> str:
@@ -223,6 +286,71 @@ def format_history_for_prompt(history: List[Dict[str, str]], max_turns: int = 6)
             lines.append(f"AI: {content}")
 
     return "\n".join(lines) if lines else "없음"
+
+
+def build_state_rules(conversation_state: str) -> str:
+    common_rules = """
+- 병원 접수 직원의 응답 한 문장만 출력한다.
+- JSON, markdown, 따옴표, assistant, user를 출력하지 않는다.
+- 이미 확인된 정보는 다시 묻지 않는다.
+- 질문은 짧게 끝낸다.
+""".strip()
+
+    if conversation_state == "confirming_info":
+        return common_rules + "\n" + """
+- 예약 가능 여부를 확정하지 않는다.
+- 예약이 완료되었다고 말하지 않는다.
+- 예약이 확인되었다고 말하지 않는다.
+- "예약 가능합니다", "예약해드리겠습니다", "예약되었습니다"를 쓰지 않는다.
+- 반드시 예약 의사가 맞는지 확인하는 질문만 한다.
+- 반드시 "예약"이라는 단어를 포함한다.
+- 반드시 "맞으실까요?", "맞을까요?", "확인해도 될까요?" 중 하나로 끝낸다.
+""".strip()
+
+    if conversation_state == "checking_availability":
+        return common_rules + "\n" + """
+- 예약 가능/불가능 결과를 아직 말하지 않는다.
+- "확인해보겠습니다", "잠시만 기다려주세요"처럼 확인 중임을 안내한다.
+""".strip()
+
+    if conversation_state == "reservation_available":
+        return common_rules + "\n" + """
+- 서버 시뮬레이션 결과에 나온 가능 시간만 안내한다.
+- 예약 가능 표현을 사용할 수 있다.
+- 이 시간으로 진행할지 물어본다.
+- 없는 시간이나 다른 결과를 지어내지 않는다.
+""".strip()
+
+    if conversation_state == "reservation_unavailable":
+        return common_rules + "\n" + """
+- 요청한 시간대 예약이 어렵다고 안내한다.
+- 서버 시뮬레이션 결과에 나온 대안 시간만 제시한다.
+- 없는 대안 시간을 지어내지 않는다.
+""".strip()
+
+    if conversation_state == "suggest_alternative":
+        return common_rules + "\n" + """
+- 서버 시뮬레이션 결과에 있는 대안 시간만 제시한다.
+- 사용자가 선택할 수 있게 묻는다.
+""".strip()
+
+    if conversation_state == "reservation_confirmed":
+        return common_rules + "\n" + """
+- 예약 완료 표현을 사용할 수 있다.
+- 서버 상태에 있는 날짜, 시간, 진료과만 사용한다.
+- 짧게 마무리한다.
+- 같은 의미를 반복하지 않는다.
+- "예약되었습니다"와 "예약이 완료되었습니다"를 한 문장 안에서 동시에 쓰지 않는다.
+""".strip()
+
+    if conversation_state == "closing":
+        return common_rules + "\n" + """
+- 예약 내용을 다시 길게 반복하지 않는다.
+- 추가 문의가 없으면 통화를 마무리하겠다고 짧게 안내한다.
+- "정상적으로 접수되었습니다"처럼 예약 완료 내용을 다시 확정하지 않는다.
+""".strip()
+
+    return common_rules
 
 
 def build_ai_message_prompt(state: HospitalReservationState) -> str:
@@ -265,8 +393,47 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
         )
     elif conversation_state == "closing":
         task = "통화를 자연스럽게 마무리해라."
+    elif conversation_state == "checking_availability":
+        task = (
+            "사용자가 예약 정보가 맞다고 확인했다. "
+            "예약 가능 여부를 확인해보겠다고 말하고 잠시 기다려달라고 안내해라. "
+            "예약 가능/불가능 결과를 아직 말하지 마라."
+        )
+    elif conversation_state == "reservation_available":
+        available_time = state.get("available_time") or time
+        availability_message_hint = state.get("availability_message_hint") or ""
+        task = (
+            f"서버 시뮬레이션 결과는 다음과 같다: {availability_message_hint} "
+            f"{date} {available_time} {department} 진료 예약이 가능하다고 안내하고, "
+            "이 시간으로 진행할지 물어봐라."
+        )
+    elif conversation_state == "reservation_unavailable":
+        alternatives = state.get("alternative_times") or []
+        alternatives_text = ", ".join(alternatives) if alternatives else "다른 시간대"
+        availability_message_hint = state.get("availability_message_hint") or ""
+        task = (
+            f"서버 시뮬레이션 결과는 다음과 같다: {availability_message_hint} "
+            f"요청한 예약은 어렵다고 안내하고, 대안 시간 {alternatives_text} 중 괜찮은 시간이 있는지 물어봐라."
+        )
+    elif conversation_state == "suggest_alternative":
+        alternatives = state.get("alternative_times") or []
+        alternatives_text = ", ".join(alternatives) if alternatives else "다른 시간대"
+        task = (
+            f"대안 시간은 {alternatives_text}이다. "
+            "사용자에게 가능한 대안 시간 중 선택할 수 있도록 부드럽게 안내해라."
+        )
+    elif conversation_state == "reservation_confirmed":
+        available_time = state.get("available_time") or time
+        task = (
+            f"{date} {available_time} {department} 진료 예약이 완료되었다고 한 문장으로 안내해라. "
+            "같은 의미를 반복하지 말고, '예약되었습니다'와 '예약이 완료되었습니다'를 동시에 쓰지 마라. "
+            "예시: 네, 내일 오후 3시 내과 진료 예약이 완료되었습니다."
+        )
     else:
-        task = "사용자의 전화 목적을 부드럽게 확인해라."
+
+        task = "현재 상태에 맞는 병원 접수 직원 응답을 한 문장으로 작성해라."
+
+    state_rules = build_state_rules(conversation_state)
 
     return f"""
 너는 한국 병원 접수 직원이다.
@@ -292,22 +459,9 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
 {task}
 
 규칙:
-- 병원 접수 직원의 응답 한 문장만 출력한다.
-- JSON, markdown, 따옴표, assistant, user를 출력하지 않는다.
-- 이미 확인된 정보는 다시 묻지 않는다.
-- 예약 가능 여부를 확정하지 않는다.
-- 예약이 완료되었다고 말하지 않는다.
-- 예약이 확인되었다고 말하지 않는다.
-- "예약 가능합니다", "예약해드리겠습니다", "예약되었습니다"를 쓰지 않는다.
-- "확인되었습니다", "예약이 확인되었습니다", "예약이 완료되었습니다"를 쓰지 않는다.
-- "가능합니다", "가능하십니다", "예약 가능", "예약이 가능"을 절대 쓰지 않는다.
-- "가능하신지", "가능한지", "확인 후 안내" 같은 표현을 쓰지 않는다.
-- "추가로 필요한 사항", "변경이 있으신가요"를 쓰지 않는다.
-- "시간대가 있으신가요", "몇 시", "시간을 알려주세요"처럼 시간을 다시 묻지 않는다.
-- confirming_info 상태라면 반드시 예약 의사가 맞는지 확인하는 질문만 한다.
-- confirming_info 상태라면 반드시 "예약"이라는 단어를 포함한다.
-- confirming_info 상태라면 반드시 "맞으실까요?", "맞을까요?", "확인해도 될까요?" 중 하나로 끝낸다.
+{state_rules}
 """.strip()
+
 
 
 def build_retry_prompt(state: HospitalReservationState, rejected_message: str) -> str:
@@ -344,7 +498,8 @@ def build_retry_prompt(state: HospitalReservationState, rejected_message: str) -
         task = "통화를 마무리하는 문장만 작성해라."
     else:
         task = "현재 상태에 맞는 병원 접수 직원 응답을 한 문장으로 작성해라."
-
+    state_rules = build_state_rules(conversation_state)
+    
     return f"""
 방금 생성한 응답은 현재 대화 상태에 맞지 않았다.
 
@@ -372,16 +527,7 @@ def build_retry_prompt(state: HospitalReservationState, rejected_message: str) -
 {task}
 
 규칙:
-- 병원 접수 직원의 응답 한 문장만 출력한다.
-- JSON, markdown, 따옴표, assistant, user를 출력하지 않는다.
-- 이미 확인된 정보는 다시 묻지 않는다.
-- 예약 가능 여부를 확정하지 않는다.
-- "예약 가능합니다", "예약해드리겠습니다", "예약되었습니다"를 쓰지 않는다.
-- "가능합니다", "가능하십니다", "예약 가능", "예약이 가능"을 절대 쓰지 않는다.
-- "가능하신지", "가능한지", "확인 후 안내" 같은 표현을 쓰지 않는다.
-- "시간대가 있으신가요", "몇 시", "시간을 알려주세요"처럼 시간을 다시 묻지 않는다.
-- confirming_info 상태라면 반드시 사용자의 의사가 맞는지 확인하는 질문만 한다.
-- confirming_info 상태라면 반드시 "맞으실까요?", "맞을까요?", "확인해도 될까요?" 중 하나로 끝낸다.
+{state_rules}
 """.strip()
 
 
@@ -420,24 +566,8 @@ def clean_ai_message(text: str) -> str:
     text = text.strip().strip('"').strip("'").strip()
 
     banned_phrases = [
-        "예약 가능합니다",
-        "예약해드리겠습니다",
-        "예약되었습니다",
-        "예약 완료",
-        "예약이 완료",
-        "예약이 가능",
-        "가능하십니다",
-        "가능하신지",
-        "가능한지",
-        "확인하기 위해",
-        "확인 후",
-        "확인되었습니다",
-        "예약이 확인되었습니다",
-        "예약이 완료되었습니다",    
         "바로 안내해드리겠습니다",
         "정상적으로 잡혀",
-        "추가로 필요한 사항",
-        "변경이 있으신가요",
     ]
 
     if any(phrase in text for phrase in banned_phrases):
@@ -462,28 +592,12 @@ def validate_ai_message_by_state(text: str, state: dict) -> bool:
 
     conversation_state = state.get("conversation_state") or "asking_purpose"
 
-    banned_phrases = [
-        "예약 가능합니다",
-        "예약해드리겠습니다",
-        "예약되었습니다",
-        "예약 완료",
-        "예약이 완료",
-        "예약이 가능",
-        "가능하십니다",
-        "가능하신지",
-        "가능한지",
-        "확인하기 위해",
-        "확인 후",
-        "확인되었습니다",
-        "예약이 확인되었습니다",
-        "예약이 완료되었습니다",    
+    global_banned_phrases = [
         "바로 안내해드리겠습니다",
         "정상적으로 잡혀",
-        "추가로 필요한 사항",
-        "변경이 있으신가요",
     ]
 
-    if any(phrase in text for phrase in banned_phrases):
+    if any(phrase in text for phrase in global_banned_phrases):
         return False
 
     if conversation_state == "asking_department":
@@ -601,6 +715,21 @@ def validate_ai_message_by_state(text: str, state: dict) -> bool:
 
         # confirming_info 상태에서는 "예약"이라는 단어가 포함되어야
         # 단순 진료 확인이 아니라 예약 정보 확인 문장으로 판단한다.
+        invalid_confirming_phrases = [
+            "예약 가능합니다",
+            "예약이 가능합니다",
+            "예약해드리겠습니다",
+            "예약되었습니다",
+            "예약 완료",
+            "예약이 완료",
+            "예약이 확인",
+            "가능합니다",
+            "가능하십니다",
+        ]
+
+        if any(phrase in text for phrase in invalid_confirming_phrases):
+            return False
+
         has_reservation_word = "예약" in text
 
         return (
@@ -609,15 +738,110 @@ def validate_ai_message_by_state(text: str, state: dict) -> bool:
             and has_reservation_word
             and not asks_new_info
         )
+        
+    if conversation_state == "checking_availability":
+        has_checking_expression = any(keyword in text for keyword in [
+            "확인해보겠습니다",
+            "확인하겠습니다",
+            "잠시만",
+            "기다려",
+        ])
+
+        says_result_too_early = any(keyword in text for keyword in [
+            "예약 가능합니다",
+            "예약이 어렵습니다",
+            "예약이 완료되었습니다",
+            "예약되었습니다",
+        ])
+
+        return has_checking_expression and not says_result_too_early
+    
+    if conversation_state == "reservation_available":
+        has_available_expression = any(keyword in text for keyword in [
+            "예약이 가능합니다",
+            "예약 가능합니다",
+            "가능합니다",
+        ])
+
+        asks_confirmation = any(keyword in text for keyword in [
+            "진행",
+            "괜찮으실까요",
+            "도와드릴까요",
+            "예약할까요",
+            "해드릴까요",
+            "이 시간으로",  
+            "원하실까요",
+        ])
+
+        return has_available_expression and asks_confirmation
+    
+    if conversation_state == "reservation_unavailable":
+        has_unavailable_expression = any(keyword in text for keyword in [
+            "예약이 어렵",
+            "예약이 모두 차",
+            "예약은 모두 차",
+            "예약은 어렵",
+            "어렵습니다",
+            "불가능",
+        ])
+
+        has_alternative_expression = any(keyword in text for keyword in [
+            "대신",
+            "다른 시간",
+            "가능한 시간",
+            "괜찮으실까요",
+            "시간대",
+        ])
+
+        return has_unavailable_expression and has_alternative_expression
+    
+    if conversation_state == "suggest_alternative":
+        alternative_times = state.get("alternative_times") or []
+
+        mentions_alternative_time = any(
+            alt_time in text for alt_time in alternative_times
+        )
+
+        has_choice_expression = any(keyword in text for keyword in [
+            "선택",
+            "말씀",
+            "알려",
+            "괜찮",
+            "원하시는 시간",
+            "가능한 시간",
+            "시간",
+        ])
+
+        return mentions_alternative_time and has_choice_expression
+    
+    if conversation_state == "reservation_confirmed":
+        has_confirmed_expression = any(keyword in text for keyword in [
+            "예약이 완료",
+            "예약되었습니다",
+            "예약 완료",
+            "완료되었습니다",
+            "예약으로 완료",
+        ])
+
+        return has_confirmed_expression
 
     if conversation_state == "closing":
-        return any(keyword in text for keyword in [
+        has_closing_expression = any(keyword in text for keyword in [
             "궁금하신 점",
             "문의",
             "마무리",
             "감사",
             "좋은 하루",
         ])
+        
+        too_verbose_or_reconfirm = any(keyword in text for keyword in [
+            "정상적으로 접수",
+            "예약이 완료",
+            "예약되었습니다",
+            "도움이 필요하시면 언제든",
+        ])
+
+        return has_closing_expression and not too_verbose_or_reconfirm
 
     if conversation_state == "END":
         return any(keyword in text for keyword in [
@@ -687,6 +911,48 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
             f"{date} {time} {department} 진료 예약을 원하시는 것으로 확인해도 될까요?",
         ]
         return choose_message(candidates, state)
+    
+    if conversation_state == "checking_availability":
+        candidates = [
+            "네, 확인해보겠습니다. 잠시만 기다려주시겠어요?",
+            "네, 예약 가능 여부를 확인해보겠습니다. 잠시만 기다려주세요.",
+        ]
+        return choose_message(candidates, state)
+
+    if conversation_state == "reservation_available":
+        available_time = state.get("available_time") or time
+        candidates = [
+            f"확인 결과, {date} {available_time}에 {department} 진료 예약이 가능합니다. 이 시간으로 진행해드릴까요?",
+            f"{date} {available_time} {department} 진료 예약이 가능합니다. 이 시간으로 예약을 진행할까요?",
+        ]
+        return choose_message(candidates, state)
+
+    if conversation_state == "reservation_unavailable":
+        alternatives = state.get("alternative_times") or ["다른 시간대"]
+        alternatives_text = " 또는 ".join(alternatives)
+        candidates = [
+            f"확인 결과, {date} {time}에는 예약이 어렵습니다. 대신 {alternatives_text} 시간대는 가능한데 괜찮으실까요?",
+            f"요청하신 시간대는 예약이 어렵습니다. 대신 {alternatives_text} 중 가능한 시간이 있으실까요?",
+        ]
+        return choose_message(candidates, state)
+
+    if conversation_state == "suggest_alternative":
+        alternatives = state.get("alternative_times") or ["다른 시간대"]
+        alternatives_text = " 또는 ".join(alternatives)
+        candidates = [
+            f"그럼 {alternatives_text} 중에서 괜찮으신 시간을 선택해주시겠어요?",
+            f"가능한 대안 시간은 {alternatives_text}입니다. 어떤 시간이 괜찮으실까요?",
+        ]
+        return choose_message(candidates, state)
+
+    if conversation_state == "reservation_confirmed":
+        available_time = state.get("available_time") or time
+        candidates = [
+            f"네, {date} {available_time} {department} 진료 예약이 완료되었습니다.",
+            f"{date} {available_time} {department} 진료 예약으로 완료되었습니다.",
+        ]
+        return choose_message(candidates, state)
+    
 
     if conversation_state == "closing":
         candidates = [
@@ -806,17 +1072,57 @@ def attach_recommended_replies_node(state: HospitalReservationState) -> Dict:
     return {"recommended_replies": replies}
 
 
+def check_availability_node(state: HospitalReservationState) -> Dict:
+    """
+    checking_availability 상태에서 예약 가능 여부를 결정한다.
+    실제 API가 아니라 시뮬레이션 엔진 결과를 사용한다.
+    """
+    result = resolve_hospital_availability(state)
+
+    next_state = (
+        "reservation_available"
+        if result.get("availability_status") == "available"
+        else "reservation_unavailable"
+    )
+
+    return {
+        **result,
+        "conversation_state": next_state,
+        "should_end_call": False,
+    }
+
+def route_after_decide(state: HospitalReservationState) -> str:
+    conversation_state = state.get("conversation_state")
+
+    if conversation_state == "reservation_lookup":
+        return "check_availability"
+
+    return "generate_ai_message"
+
+
 def build_hospital_reservation_graph():
     builder = StateGraph(HospitalReservationState)
 
     builder.add_node("extract_info", extract_info_node)
     builder.add_node("decide_next_state", decide_next_state_node)
+    builder.add_node("check_availability", check_availability_node)
     builder.add_node("generate_ai_message", generate_ai_message_node)
     builder.add_node("attach_recommended_replies", attach_recommended_replies_node)
 
     builder.add_edge(START, "extract_info")
     builder.add_edge("extract_info", "decide_next_state")
-    builder.add_edge("decide_next_state", "generate_ai_message")
+
+    builder.add_conditional_edges(
+        "decide_next_state",
+        route_after_decide,
+        {
+            "check_availability": "check_availability",
+            "generate_ai_message": "generate_ai_message",
+        },
+    )
+
+
+    builder.add_edge("check_availability", "generate_ai_message")
     builder.add_edge("generate_ai_message", "attach_recommended_replies")
     builder.add_edge("attach_recommended_replies", END)
 

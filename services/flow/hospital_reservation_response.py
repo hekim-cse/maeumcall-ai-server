@@ -29,6 +29,14 @@ def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
         "time": result.get("time"),
         "conversation_state": result.get("conversation_state"),
         "last_ai_message": result.get("ai_message"),
+
+        "availability_status": result.get("availability_status"),
+        "availability_reason": result.get("availability_reason"),
+        "available_time": result.get("available_time"),
+        "alternative_times": result.get("alternative_times") or [],
+        "availability_message_hint": result.get("availability_message_hint"),
+        "reservation_confirmed": result.get("reservation_confirmed"),
+        "simulation_result": result.get("simulation_result"),
     }
 
 
