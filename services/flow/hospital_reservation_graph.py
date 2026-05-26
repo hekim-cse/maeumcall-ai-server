@@ -1168,3 +1168,5 @@ def build_hospital_reservation_graph():
     builder.add_edge("attach_recommended_replies", END)
 
     return builder.compile()
+
+hospital_reservation_graph = build_hospital_reservation_graph()
