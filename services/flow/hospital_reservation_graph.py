@@ -8,6 +8,7 @@ from llm.huggingface_provider import complete_hf_messages
 from services.flow.hospital_reservation_extractor import extract_hospital_reservation_info
 from services.flow.hospital_reservation_replies import get_recommended_replies
 from services.flow.hospital_reservation_availability import resolve_hospital_availability
+from services.flow.hospital_reservation_action_parser import parse_hospital_reservation_action
 
 
 class HospitalReservationState(TypedDict, total=False):
@@ -20,6 +21,9 @@ class HospitalReservationState(TypedDict, total=False):
     time: Optional[str]
     user_name: Optional[str]
     phone_number: Optional[str]
+    
+    user_action: Optional[str]
+    selected_time: Optional[str]
 
     availability_status: Optional[str]
     availability_reason: Optional[str]
@@ -66,6 +70,9 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
         "date": extracted.get("date") or state.get("date"),
         "time": extracted.get("time") or state.get("time"),
         "last_ai_message": state.get("last_ai_message"),
+        
+        "user_action": state.get("user_action"),
+        "selected_time": state.get("selected_time"),
 
         "history": state.get("history") or [],
         "availability_status": state.get("availability_status"),
@@ -76,6 +83,18 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
         "reservation_confirmed": state.get("reservation_confirmed"),
         "simulation_result": state.get("simulation_result"),
 }
+    
+def parse_user_action_node(state: HospitalReservationState) -> Dict:
+    """
+    사용자 발화를 user_action으로 변환한다.
+    decide_next_state_node는 user_message가 아니라 user_action을 기준으로 상태를 전이한다.
+    """
+    parsed_action = parse_hospital_reservation_action(state)
+
+    return {
+        "user_action": parsed_action.get("user_action") or "unknown",
+        "selected_time": parsed_action.get("selected_time") or state.get("selected_time"),
+    }
 
 
 def decide_next_state_node(state: HospitalReservationState) -> Dict:
@@ -83,7 +102,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
     현재까지 수집된 정보를 기준으로 다음 conversation_state를 결정한다.
     """
     current_state = state.get("conversation_state") or "greeting"
-    user_message = state.get("user_message", "") or ""
+    user_action = state.get("user_action") or "unknown"
 
     if current_state == "closing":
         return {
@@ -92,25 +111,25 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         }
 
     if current_state == "confirming_info":
-        if any(word in user_message for word in ["네", "맞아요", "맞습니다", "확인", "좋아요"]):
-            return {
-                "conversation_state": "checking_availability",
-                "should_end_call": False,
-            }
+        if user_action == "confirm_reservation_info":
+                return {
+                    "conversation_state": "checking_availability",
+                    "should_end_call": False,
+                }
 
-        if "진료과" in user_message or "과를" in user_message:
+        if user_action == "change_department":
             return {
                 "conversation_state": "asking_department",
                 "should_end_call": False,
             }
 
-        if "날짜" in user_message or "요일" in user_message:
+        if user_action == "change_date":
             return {
                 "conversation_state": "asking_date",
                 "should_end_call": False,
             }
 
-        if "시간" in user_message or "시" in user_message:
+        if user_action == "change_time":
             return {
                 "conversation_state": "asking_time",
                 "should_end_call": False,
@@ -211,14 +230,15 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         }
 
     if current_state == "reservation_available":
-        if any(word in user_message for word in ["네", "좋아요", "진행", "예약", "맞습니다", "그걸로"]):
+        if user_action == "confirm_available_time":
             return {
                 "conversation_state": "reservation_confirmed",
                 "reservation_confirmed": True,
+                "selected_time": state.get("available_time") or state.get("selected_time"),
                 "should_end_call": False,
             }
 
-        if any(word in user_message for word in ["아니요", "다른", "변경", "시간"]):
+        if user_action == "ask_other_time":
             return {
                 "conversation_state": "suggest_alternative",
                 "should_end_call": False,
@@ -230,16 +250,36 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         }
 
     if current_state == "reservation_unavailable":
+        if user_action in ["ask_other_time", "select_alternative_time"]:
+            return {
+                "conversation_state": "suggest_alternative",
+                "selected_time": state.get("selected_time"),
+                "should_end_call": False,
+            }
+
         return {
-            "conversation_state": "suggest_alternative",
+            "conversation_state": "reservation_unavailable",
             "should_end_call": False,
         }
 
     if current_state == "suggest_alternative":
-        if any(word in user_message for word in ["네", "좋아요", "그걸로", "가능", "예약"]):
+        if user_action == "select_alternative_time":
             return {
                 "conversation_state": "reservation_confirmed",
                 "reservation_confirmed": True,
+                "selected_time": state.get("selected_time"),
+                "should_end_call": False,
+            }
+
+        if user_action == "change_date":
+            return {
+                "conversation_state": "asking_date",
+                "should_end_call": False,
+            }
+
+        if user_action == "ask_other_time":
+            return {
+                "conversation_state": "suggest_alternative",
                 "should_end_call": False,
             }
 
@@ -400,11 +440,11 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
             "예약 가능/불가능 결과를 아직 말하지 마라."
         )
     elif conversation_state == "reservation_available":
-        available_time = state.get("available_time") or time
+        final_time = state.get("selected_time") or state.get("available_time") or time
         availability_message_hint = state.get("availability_message_hint") or ""
         task = (
             f"서버 시뮬레이션 결과는 다음과 같다: {availability_message_hint} "
-            f"{date} {available_time} {department} 진료 예약이 가능하다고 안내하고, "
+            f"{date} {final_time} {department} 진료 예약이 가능하다고 안내하고, "
             "이 시간으로 진행할지 물어봐라."
         )
     elif conversation_state == "reservation_unavailable":
@@ -423,11 +463,11 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
             "사용자에게 가능한 대안 시간 중 선택할 수 있도록 부드럽게 안내해라."
         )
     elif conversation_state == "reservation_confirmed":
-        available_time = state.get("available_time") or time
+        final_time = state.get("selected_time") or state.get("available_time") or time
         task = (
-            f"{date} {available_time} {department} 진료 예약이 완료되었다고 한 문장으로 안내해라. "
+            f"{date} {final_time} {department} 진료 예약이 완료되었다고 한 문장으로 안내해라. "
             "같은 의미를 반복하지 말고, '예약되었습니다'와 '예약이 완료되었습니다'를 동시에 쓰지 마라. "
-            "예시: 네, 내일 오후 3시 내과 진료 예약이 완료되었습니다."
+            f"예시: 네, {date} {final_time} {department} 진료 예약이 완료되었습니다."
         )
     else:
 
@@ -920,10 +960,10 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
         return choose_message(candidates, state)
 
     if conversation_state == "reservation_available":
-        available_time = state.get("available_time") or time
+        final_time = state.get("selected_time") or state.get("available_time") or time
         candidates = [
-            f"확인 결과, {date} {available_time}에 {department} 진료 예약이 가능합니다. 이 시간으로 진행해드릴까요?",
-            f"{date} {available_time} {department} 진료 예약이 가능합니다. 이 시간으로 예약을 진행할까요?",
+            f"확인 결과, {date} {final_time}에 {department} 진료 예약이 가능합니다. 이 시간으로 진행해드릴까요?",
+            f"{date} {final_time} {department} 진료 예약이 가능합니다. 이 시간으로 예약을 진행할까요?",
         ]
         return choose_message(candidates, state)
 
@@ -946,10 +986,10 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
         return choose_message(candidates, state)
 
     if conversation_state == "reservation_confirmed":
-        available_time = state.get("available_time") or time
+        final_time = state.get("selected_time") or state.get("available_time") or time
         candidates = [
-            f"네, {date} {available_time} {department} 진료 예약이 완료되었습니다.",
-            f"{date} {available_time} {department} 진료 예약으로 완료되었습니다.",
+            f"네, {date} {final_time} {department} 진료 예약이 완료되었습니다.",
+            f"{date} {final_time} {department} 진료 예약으로 완료되었습니다.",
         ]
         return choose_message(candidates, state)
     
@@ -1104,13 +1144,15 @@ def build_hospital_reservation_graph():
     builder = StateGraph(HospitalReservationState)
 
     builder.add_node("extract_info", extract_info_node)
+    builder.add_node("parse_user_action", parse_user_action_node)
     builder.add_node("decide_next_state", decide_next_state_node)
     builder.add_node("check_availability", check_availability_node)
     builder.add_node("generate_ai_message", generate_ai_message_node)
     builder.add_node("attach_recommended_replies", attach_recommended_replies_node)
 
     builder.add_edge(START, "extract_info")
-    builder.add_edge("extract_info", "decide_next_state")
+    builder.add_edge("extract_info", "parse_user_action")
+    builder.add_edge("parse_user_action", "decide_next_state")
 
     builder.add_conditional_edges(
         "decide_next_state",
@@ -1121,12 +1163,8 @@ def build_hospital_reservation_graph():
         },
     )
 
-
     builder.add_edge("check_availability", "generate_ai_message")
     builder.add_edge("generate_ai_message", "attach_recommended_replies")
     builder.add_edge("attach_recommended_replies", END)
 
     return builder.compile()
-
-
-hospital_reservation_graph = build_hospital_reservation_graph()
