@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
+from services.flow.reservation_time_utils import select_time_from_options
+
 
 def parse_hospital_reservation_action(state: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -137,11 +139,16 @@ def _extract_selected_time(
     user_message: str,
     alternative_times: list[str],
 ) -> Optional[str]:
-    for alternative_time in alternative_times:
-        if alternative_time and alternative_time in user_message:
-            return alternative_time
+    # 1. 서버가 제시한 대안 시간 목록에서 먼저 선택 시간을 찾는다.
+    selected_from_options = select_time_from_options(
+        user_message=user_message,
+        time_options=alternative_times,
+    )
 
-    # alternative_times에 없어도 사용자가 직접 시간대를 말하는 경우를 대비한다.
+    if selected_from_options:
+        return selected_from_options
+
+    # 2. 대안 목록에 없어도 사용자가 직접 시간대를 말하는 경우를 대비한다.
     if "오전" in user_message:
         return _extract_time_phrase(user_message, "오전")
 
