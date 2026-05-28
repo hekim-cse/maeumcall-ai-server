@@ -77,12 +77,23 @@ def _parse_reservation_available_action(user_message: str) -> str:
     예약 가능한 시간이 안내된 상태에서 사용자의 행동을 판단한다.
 
     주의:
-    - "네, 그 시간으로 예약하고 싶습니다."에는 '시간'이라는 단어가 들어가지만,
-      의미는 다른 시간 문의가 아니라 현재 제안된 시간 확정이다.
-    - 따라서 확정 표현을 먼저 판단하고, 그 다음 변경/다른 시간 요청을 판단한다.
+    - "네, 그 시간으로 예약하고 싶습니다."는 현재 제안된 시간 확정이다.
+    - "그 시간 말고 다른 시간으로요."는 '그 시간'이 포함되어도 변경 요청이다.
+    - 따라서 명시적인 거절/변경 표현을 먼저 판단한 뒤, 확정 표현을 판단한다.
     """
 
-    # 먼저 "제안된 시간으로 예약 진행" 의도를 판단한다.
+    # 먼저 "다른 시간 확인/변경" 의도를 판단한다.
+    if _contains_any(user_message, [
+        "아니요",
+        "다른 시간",
+        "다른 시간도",
+        "변경",
+        "다시",
+        "말고",
+    ]):
+        return "ask_other_time"
+
+    # 그 다음 "제안된 시간으로 예약 진행" 의도를 판단한다.
     if _contains_any(user_message, [
         "그 시간으로",
         "그걸로",
@@ -97,17 +108,6 @@ def _parse_reservation_available_action(user_message: str) -> str:
         "해주세요",
     ]):
         return "confirm_available_time"
-
-    # 그 다음에 "다른 시간 확인/변경" 의도를 판단한다.
-    if _contains_any(user_message, [
-        "아니요",
-        "다른 시간",
-        "다른 시간도",
-        "변경",
-        "다시",
-        "말고",
-    ]):
-        return "ask_other_time"
 
     return "unknown"
 
