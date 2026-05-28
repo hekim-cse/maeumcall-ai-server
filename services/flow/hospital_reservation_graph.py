@@ -263,6 +263,12 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         }
 
     if current_state == "reservation_unavailable":
+        if user_action == "change_date":
+            return {
+                "conversation_state": "asking_date",
+                "should_end_call": False,
+            }
+
         if user_action == "select_alternative_time":
             selected_time = state.get("selected_time")
             alternative_times = state.get("alternative_times") or []
