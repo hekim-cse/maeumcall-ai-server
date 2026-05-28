@@ -273,3 +273,13 @@ def test_suggest_alternative_change_date_day_after_tomorrow_action():
     )
 
     assert result["user_action"] == "change_date"
+
+
+def test_reservation_unavailable_change_date_action():
+    result = _parse(
+        user_message="다른 날짜로 확인해주세요.",
+        conversation_state="reservation_unavailable",
+    )
+
+    assert result["user_action"] == "change_date"
+    assert result["selected_time"] is None

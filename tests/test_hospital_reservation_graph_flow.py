@@ -358,9 +358,8 @@ def test_reservation_unavailable_change_date_flow(monkeypatch):
         monkeypatch,
     )
 
-    # 현재 reservation_unavailable 상태에서는 날짜 변경을 직접 처리하지 않고,
-    # 우선 suggest_alternative로 이동한다.
-    assert state["conversation_state"] == "suggest_alternative"
+    assert state["conversation_state"] == "asking_date"
+    assert state["user_action"] == "change_date"
     assert state["reservation_confirmed"] is None
 
 

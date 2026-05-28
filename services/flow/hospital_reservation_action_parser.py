@@ -195,6 +195,20 @@ def parse_reservation_available_action(user_message: str) -> str:
 
 
 def parse_reservation_unavailable_action(user_message: str) -> str:
+    """
+    예약 불가 상태에서 사용자 행동을 판단한다.
+
+    예:
+    - "다른 날짜로 확인해주세요." → change_date
+    - "다른 시간도 가능할까요?" → ask_other_time
+
+    날짜 변경 표현은 "다른"이라는 단어를 포함할 수 있으므로,
+    다른 시간 요청보다 먼저 검사한다.
+    """
+
+    if contains_any(user_message, CHANGE_DATE_KEYWORDS):
+        return "change_date"
+
     if contains_any(user_message, UNAVAILABLE_ASK_OTHER_TIME_KEYWORDS):
         return "ask_other_time"
 
