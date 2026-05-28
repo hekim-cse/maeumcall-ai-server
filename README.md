@@ -49,15 +49,9 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 현재는 병원 예약 시나리오를 중심으로 구현되어 있으며, 다음 흐름을 처리합니다.
 
-| 처리 단계 | 설명 |
-|---|---|
-| 🗣 사용자 발화 분석 | 사용자의 말을 서버에서 분석 |
-| 🧾 예약 정보 추출 | 진료과, 날짜, 시간 추출 |
-| 🔁 상태 전이 | 현재 상태와 사용자 행동을 기준으로 다음 상태 결정 |
-| ⏰ 예약 가능 여부 판단 | 예약 가능/불가 및 대안 시간 처리 |
-| 🧠 AI 응답 생성 | Kanana 1.5 기반 응답 생성 |
-| 💬 추천 답변 생성 | 사용자가 누를 수 있는 추천 답변 제공 |
-| 📞 통화 종료 판단 | shouldEndCall 값으로 종료 여부 반환 |
+<p align="left">
+  <img src="docs/assets/service_flow.png" width="50%" alt="Service Flow" />
+</p>
 
 ---
 
@@ -123,16 +117,9 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 5. API 흐름
 
-| 단계 | 처리 주체 | 설명 |
-|---|---|---|
-| 1 | 📱 Flutter App | 사용자 발화 입력 |
-| 2 | 📱 Flutter App → 🔌 FastAPI | /chat 요청 전송 |
-| 3 | 🔌 FastAPI | 요청 데이터 검증 |
-| 4 | 🔁 LangGraph | 정보 추출, action parser, 상태 전이 수행 |
-| 5 | 🧠 Kanana 1.5 | 현재 상태에 맞는 AI 응답 후보 생성 |
-| 6 | 🛡 Validator | 응답 검증, retry, fallback 처리 |
-| 7 | 🔌 FastAPI → 📱 Flutter App | 응답 문장과 갱신된 상태 반환 |
-| 8 | 📱 Flutter App | AI 응답과 추천 답변 표시 |
+<p align="left">
+  <img src="docs/assets/api_flow.png" width="55%" alt="API Flow" />
+</p>
 
 ---
 
