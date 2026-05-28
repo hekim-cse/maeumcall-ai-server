@@ -49,7 +49,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 현재는 병원 예약 시나리오를 중심으로 구현되어 있으며, 다음 흐름을 처리합니다.
 
-<p align="left">
+<p align="center">
   <img src="docs/assets/service_flow.png" width="75%" alt="Service Flow" />
 </p>
 
@@ -117,8 +117,8 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 5. API 흐름
 
-<p align="left">
-  <img src="docs/assets/api_flow.png" width="75%" alt="API Flow" />
+<p align="center">
+  <img src="docs/assets/api_flow.png" width="82%" alt="API Flow" />
 </p>
 
 ---
