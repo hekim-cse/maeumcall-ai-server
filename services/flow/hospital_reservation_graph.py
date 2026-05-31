@@ -163,6 +163,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         if user_action == "change_date":
             return {
                 "conversation_state": "asking_date",
+                "time": None,
                 "should_end_call": False,
                 **clear_reservation_lookup_fields(),
             }
@@ -291,6 +292,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         if user_action == "change_date":
             return {
                 "conversation_state": "asking_date",
+                "time": None,
                 "should_end_call": False,
                 **clear_reservation_lookup_fields(),
             }
@@ -346,6 +348,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         if user_action == "change_date":
             return {
                 "conversation_state": "asking_date",
+                "time": None,
                 "should_end_call": False,
                 **clear_reservation_lookup_fields(),
             }

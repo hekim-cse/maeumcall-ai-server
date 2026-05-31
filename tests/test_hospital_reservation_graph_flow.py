@@ -278,7 +278,7 @@ def test_confirming_info_change_date_flow(monkeypatch):
     assert state["conversation_state"] == "asking_date"
     assert state["user_action"] == "change_date"
     assert state["department"] == "내과"
-    assert state["time"] == "오후"
+    assert state.get("time") is None
 
 
 def test_confirming_info_change_department_flow(monkeypatch):
@@ -464,4 +464,83 @@ def test_reservation_unavailable_change_date_clears_lookup_fields(monkeypatch):
     assert result.get("selected_time") is None
     assert result.get("reservation_confirmed") is None
     assert result.get("simulation_result") is None
+    assert result.get("should_end_call") is False
+
+
+def test_reservation_unavailable_change_date_clears_time_too(monkeypatch):
+    """
+    reservation_unavailable 상태에서 다른 날짜를 요청하면
+    이전 시간 조건도 초기화해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    monkeypatch.setattr(
+        graph_module,
+        "complete_hf_messages",
+        lambda *args, **kwargs: "원하시는 예약 날짜를 말씀해주시겠어요?",
+    )
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "다른 날짜로 확인해주세요.",
+            "conversation_state": "reservation_unavailable",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "available_time": None,
+            "alternative_times": ["오후 4시", "오후 5시"],
+            "availability_message_hint": "내일 오후에는 예약이 모두 차 있습니다.",
+            "selected_time": "오후 4시",
+            "reservation_confirmed": True,
+            "simulation_result": {
+                "availability_status": "unavailable",
+                "availability_reason": "requested_time_full",
+                "available_time": None,
+                "alternative_times": ["오후 4시", "오후 5시"],
+            },
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "asking_date"
+    assert result.get("time") is None
+    assert result.get("availability_status") is None
+    assert result.get("alternative_times") == []
+    assert result.get("selected_time") is None
+    assert result.get("reservation_confirmed") is None
+
+
+def test_asking_date_after_change_date_moves_to_asking_time(monkeypatch):
+    """
+    날짜 변경 이후 새 날짜를 입력하면
+    time이 초기화된 상태이므로 asking_time으로 이동해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    monkeypatch.setattr(
+        graph_module,
+        "complete_hf_messages",
+        lambda *args, **kwargs: "네, 모레 예약으로 확인했습니다. 원하시는 시간대를 말씀해주시겠어요?",
+    )
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "모레로 확인해주세요.",
+            "conversation_state": "asking_date",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": None,
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "asking_time"
+    assert result.get("date") == "모레"
+    assert result.get("time") is None
     assert result.get("should_end_call") is False
