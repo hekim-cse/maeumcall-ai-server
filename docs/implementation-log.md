@@ -477,3 +477,46 @@ confirming_info 상태에서 LLM 호출 없이 template 응답을 사용하도�
 - graph flow 통합 테스트: 31 passed
 - 전체 병원 예약 테스트: 59 passed
 - /chat API curl 테스트에서 confirming_info template-first 로그 확인
+
+
+---
+
+## 설계 정리 - LLM 사용 범위와 Template 응답 범위 분리
+
+병원 예약 시뮬레이션에서 LLM과 template/rule의 역할을 분리하는 정책을 정리하였다.
+
+핵심 내용:
+
+- 정형 예약 절차는 template-first 응답으로 처리
+- 진료과/날짜/시간 질문은 LLM 호출 없이 template 응답 사용
+- 예약 정보 확인, 예약 가능 안내, 예약 완료 안내도 서버 상태값 기반 응답으로 처리
+- LLM은 모호한 발화, 감정 발화, 예외 상황 대응에 집중
+- 현재 MVP에서는 성함/연락처 수집을 제외
+- TTS를 고려하여 정형 응답은 짧고 명확하게 유지
+
+현재 template-first 대상:
+
+- asking_department
+- asking_date
+- asking_time
+- confirming_info
+- checking_availability
+- reservation_available
+- reservation_confirmed
+- closing
+- END
+
+LLM 사용 후보:
+
+- reservation_unavailable
+- suggest_alternative
+- unknown 발화
+- 감정 표현 또는 머뭇거림이 포함된 발화
+- 대안 시간 선택/거절/재요청처럼 해석이 필요한 발화
+
+기대 효과:
+
+- LLM hallucination 위험 감소
+- 예약 절차의 상태값 일관성 강화
+- TTS 친화적인 응답 구조 확보
+- 전화 공포 완화 앱의 자연스러운 예외 대응 여지 유지
