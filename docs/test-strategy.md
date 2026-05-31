@@ -233,3 +233,21 @@ template-first 대상 상태는 fallback 응답을 단순 재사용하지 않고
 - 각 template 응답이 서버 상태값 또는 상태 목적에 맞는 문장을 반환하는지 확인
 
 이 테스트는 template-first 응답 생성 로직이 LLM 실패 대응 fallback과 구조적으로 분리되어 동작하는지 확인하기 위한 것이다.
+
+
+---
+
+## 시간 질문 상태 Template-first 테스트
+
+asking_time 상태는 시간을 묻는 정형 질문으로 충분하므로 LLM 호출 없이 template 응답을 사용한다.
+
+검증 대상:
+
+- asking_time 상태에서 LLM을 호출하지 않는지 확인
+- 시간 또는 시간대 질문 표현이 포함되는지 확인
+- 연락처를 묻지 않는지 확인
+- 성함을 묻지 않는지 확인
+- should_end_call이 False로 유지되는지 확인
+- build_template_ai_message()가 asking_time 상태에서 시간 질문을 생성하는지 확인
+
+이 테스트는 시간 질문 상태에서 LLM이 연락처, 성함 등 불필요한 정보를 함께 묻는 문제를 방지하기 위한 것이다.
