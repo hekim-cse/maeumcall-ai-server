@@ -407,3 +407,38 @@ asking_department 상태에서 LLM 호출 없이 template 응답을 사용하도
 - action parser 단위 테스트: 28 passed
 - graph flow 통합 테스트: 28 passed
 - 전체 병원 예약 테스트: 56 passed
+
+
+---
+
+## 수정 - 예약 확인 추천 답변 MVP 범위 정리
+
+confirming_info 상태의 추천 답변에서 현재 MVP 범위를 벗어나는 성함/연락처 관련 문구를 제거하였다.
+
+핵심 내용:
+
+- hospital_reservation_replies.py의 confirming_info 추천 답변 수정
+- “연락처를 다시 말씀드릴게요.” 문구 제거
+- 날짜/시간/진료과 변경 중심의 추천 답변으로 정리
+- confirming_info 추천 답변에 성함/연락처가 포함되지 않는지 테스트 추가
+- 실제 /chat API curl 테스트로 recommendedReplies 응답 확인
+
+수정 후 confirming_info 추천 답변:
+
+- 네, 맞습니다.
+- 시간을 다시 확인하고 싶습니다.
+- 날짜를 다시 확인하고 싶습니다.
+
+기대 효과:
+
+- 현재 MVP 범위와 추천 답변 일치
+- 프론트 추천 버튼에서 개인정보 수집 흐름으로 잘못 이어지는 문제 방지
+- TTS 및 버튼 UI 흐름 안정화
+- 추후 성함/연락처 수집 확장 시 별도 상태로 분리하기 쉬운 구조 유지
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 29 passed
+- 전체 병원 예약 테스트: 57 passed
+- /chat API curl 테스트에서 recommendedReplies 내 연락처 문구 제거 확인
