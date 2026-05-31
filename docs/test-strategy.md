@@ -61,7 +61,7 @@
 
 현재 테스트 결과:
 
-- 21 passed
+- 22 passed
 
 ---
 
@@ -87,7 +87,7 @@ action parser와 graph flow 테스트를 함께 실행한다.
 
 현재 결과:
 
-- 49 passed
+- 50 passed
 
 ---
 
@@ -215,3 +215,21 @@ template-first 응답 생성과 LLM 실패 fallback 응답 생성을 역할상 �
 - 예약 가능 표현이 정상 포함되는지 확인
 
 이 테스트는 template-first 응답이 단순 fallback 실패 처리와 구분되어, 서버 상태값 기반 정형 응답으로 동작하는지 확인하기 위한 것이다.
+
+
+---
+
+## Template 상태별 응답 로직 테스트
+
+template-first 대상 상태는 fallback 응답을 단순 재사용하지 않고 build_template_ai_message() 내부에서 상태별 template 응답을 직접 생성한다.
+
+검증 대상:
+
+- checking_availability template 응답 생성
+- reservation_available template 응답 생성
+- reservation_confirmed template 응답 생성
+- closing template 응답 생성
+- END template 응답 생성
+- 각 template 응답이 서버 상태값 또는 상태 목적에 맞는 문장을 반환하는지 확인
+
+이 테스트는 template-first 응답 생성 로직이 LLM 실패 대응 fallback과 구조적으로 분리되어 동작하는지 확인하기 위한 것이다.

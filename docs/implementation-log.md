@@ -313,3 +313,38 @@ template-first 상태에서 사용하는 응답 생성 로직을 build_template_
 - action parser 단위 테스트: 28 passed
 - graph flow 통합 테스트: 21 passed
 - 전체 병원 예약 테스트: 49 passed
+
+
+---
+
+## 리팩토링 - Template-first 상태별 응답 로직 구현
+
+build_template_ai_message() 내부에 template-first 대상 상태별 응답 생성 로직을 직접 구현하였다.
+
+핵심 내용:
+
+- checking_availability template 응답 구현
+- reservation_available template 응답 구현
+- reservation_confirmed template 응답 구현
+- closing template 응답 구현
+- END template 응답 구현
+- fallback_ai_message()는 LLM 실패 또는 검증 실패 시 최후 안전 응답 역할로 유지
+- template-first 대상 상태별 응답 생성 테스트 추가
+
+구조 변경:
+
+- template-first 응답: build_template_ai_message()
+- LLM 실패 응답: fallback_ai_message()
+
+기대 효과:
+
+- template 응답과 fallback 응답의 실질적 역할 분리
+- 정형 상태 응답의 안정성 향상
+- 서버 상태값 기반 응답 생성 강화
+- 향후 template 응답 전용 개선 작업 용이
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 22 passed
+- 전체 병원 예약 테스트: 50 passed
