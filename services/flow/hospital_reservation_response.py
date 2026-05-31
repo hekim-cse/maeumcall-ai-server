@@ -9,16 +9,21 @@ from services.flow.hospital_reservation_graph import hospital_reservation_graph
 
 
 def is_hospital_reservation_request(req: ChatRequest) -> bool:
+    """
+    병원 예약 LangGraph 라우팅 여부를 판단한다.
+
+    휴리스틱 키워드 매칭을 사용하지 않고,
+    category/title의 명시적인 시나리오 매핑만 사용한다.
+
+    이유:
+    - "예약"이라는 단어만으로 병원 예약 graph에 보내면
+      식당 예약, 스터디룸 예약, 미용실 예약도 병원 graph로 잘못 들어갈 수 있다.
+    - LangGraph case는 시나리오 단위로 명확하게 분리되어야 한다.
+    """
     category = (getattr(req, "category", "") or "").strip()
     title = (getattr(req, "title", "") or "").strip()
-    description = (getattr(req, "description", "") or "").strip()
 
-    if category != "예약":
-        return False
-
-    target_text = f"{title} {description}"
-
-    return any(word in target_text for word in ["병원", "진료", "내과", "예약"])
+    return category == "예약" and title == "병원 예약"
 
 
 def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
