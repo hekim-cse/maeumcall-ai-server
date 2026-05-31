@@ -893,6 +893,7 @@ def should_use_template_first(conversation_state: str) -> bool:
     Kanana 호출보다 fallback/template 응답을 우선 사용하는 것이 안정적이다.
     """
     return conversation_state in {
+        "asking_date",
         "checking_availability",
         "reservation_available",
         "reservation_confirmed",
