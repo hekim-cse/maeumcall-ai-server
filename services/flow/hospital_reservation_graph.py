@@ -838,6 +838,7 @@ def should_use_template_first(conversation_state: str) -> bool:
     """
     return conversation_state in {
         "checking_availability",
+        "reservation_confirmed",
         "closing",
         "END",
     }
