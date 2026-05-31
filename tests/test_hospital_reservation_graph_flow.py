@@ -870,3 +870,56 @@ def test_template_message_builder_handles_all_template_states():
         base_state,
     )
     assert "감사" in end_message or "좋은 하루" in end_message
+
+
+def test_asking_date_uses_template_first_without_llm(monkeypatch):
+    """
+    asking_date 상태는 날짜를 묻는 정형 질문으로 충분하므로
+    LLM을 호출하지 않고 template 응답을 사용해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    def fail_if_llm_called(*args, **kwargs):
+        raise AssertionError("asking_date 상태에서는 LLM을 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(graph_module, "complete_hf_messages", fail_if_llm_called)
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "내과 진료를 예약하고 싶습니다.",
+            "conversation_state": "asking_department",
+            "intent": "reservation",
+            "department": "내과",
+            "date": None,
+            "time": None,
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "asking_date"
+    assert result["department"] == "내과"
+    assert "날짜" in result["ai_message"] or "언제" in result["ai_message"] or "방문" in result["ai_message"]
+    assert "시간" not in result["ai_message"]
+    assert "연락처" not in result["ai_message"]
+    assert result["should_end_call"] is False
+
+
+def test_template_message_builder_handles_asking_date():
+    """
+    template 응답 생성 함수는 asking_date 상태에서 날짜 질문만 생성해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    message = graph_module.build_template_ai_message(
+        "asking_date",
+        {
+            "department": "내과",
+            "date": None,
+            "time": None,
+        },
+    )
+
+    assert "날짜" in message or "언제" in message or "방문" in message
+    assert "시간" not in message
+    assert "연락처" not in message
