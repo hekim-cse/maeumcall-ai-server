@@ -251,3 +251,22 @@ asking_time 상태는 시간을 묻는 정형 질문으로 충분하므로 LLM �
 - build_template_ai_message()가 asking_time 상태에서 시간 질문을 생성하는지 확인
 
 이 테스트는 시간 질문 상태에서 LLM이 연락처, 성함 등 불필요한 정보를 함께 묻는 문제를 방지하기 위한 것이다.
+
+
+---
+
+## 진료과 질문 상태 Template-first 테스트
+
+asking_department 상태는 진료과를 묻는 정형 질문으로 충분하므로 LLM 호출 없이 template 응답을 사용한다.
+
+검증 대상:
+
+- asking_department 상태에서 LLM을 호출하지 않는지 확인
+- 진료과 질문 표현이 포함되는지 확인
+- 연락처를 묻지 않는지 확인
+- 성함을 묻지 않는지 확인
+- should_end_call이 False로 유지되는지 확인
+- 사용자가 이미 날짜와 시간을 말한 경우 해당 정보를 반영한 진료과 질문을 생성하는지 확인
+- build_template_ai_message()가 asking_department 상태에서 진료과 질문을 생성하는지 확인
+
+이 테스트는 진료과 질문 상태에서 LLM이 연락처, 성함 등 MVP 범위를 벗어난 정보를 함께 묻는 문제를 방지하기 위한 것이다.
