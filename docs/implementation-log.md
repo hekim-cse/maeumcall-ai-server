@@ -166,3 +166,25 @@ action parser 구조를 정리하고 graph flow 통합 테스트를 추가하였
 - action parser 단위 테스트: 28 passed
 - graph flow 통합 테스트: 11 passed
 - 전체 병원 예약 테스트: 39 passed
+
+
+---
+
+## 정책 개선 - 날짜 변경 시 시간 조건 초기화
+
+날짜 변경 흐름에서 기존 시간 조건이 새 날짜에 그대로 남지 않도록 time 초기화 처리를 추가하였다.
+
+핵심 내용:
+
+- change_date 전이 시 기존 time 값 초기화
+- confirming_info → change_date → asking_date 흐름에서 time 초기화
+- reservation_unavailable → change_date → asking_date 흐름에서 time 초기화
+- suggest_alternative → change_date → asking_date 흐름에서 time 초기화
+- 날짜 변경 후 새 날짜 입력 시 asking_time으로 이동하는 테스트 추가
+- 날짜 변경이 아닌 흐름에서는 기존 time 값을 유지하도록 테스트 기대값 정리
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 13 passed
+- 전체 병원 예약 테스트: 41 passed
