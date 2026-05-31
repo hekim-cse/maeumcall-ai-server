@@ -218,3 +218,34 @@ action parser 구조를 정리하고 graph flow 통합 테스트를 추가하였
 - action parser 단위 테스트: 28 passed
 - graph flow 통합 테스트: 16 passed
 - 전체 병원 예약 테스트: 44 passed
+
+
+---
+
+## 리팩토링 - 예약 완료 상태 응답 생성 안정화
+
+reservation_confirmed 상태에서 LLM 호출 없이 template/fallback 응답을 사용하도록 개선하였다.
+
+핵심 내용:
+
+- should_use_template_first() 대상에 reservation_confirmed 추가
+- 예약 완료 상태에서 complete_hf_messages 미호출 처리
+- 예약 완료 문장을 fallback_ai_message 기반으로 생성
+- selected_time이 있는 경우 selected_time을 우선 사용
+- available_time이 있는 경우 available_time 기반 예약 완료 문장 생성
+- 예약 완료 상태 LLM 미호출 테스트 추가
+- selected_time 우선 사용 테스트 추가
+
+기대 효과:
+
+- 예약 완료 문장의 안정성 향상
+- 잘못된 시간 hallucination 방지
+- 예약 완료 표현 중복 생성 방지
+- 불필요한 Kanana 호출 감소
+- Flutter 통화 시뮬레이션 응답 속도 개선
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 18 passed
+- 전체 병원 예약 테스트: 46 passed

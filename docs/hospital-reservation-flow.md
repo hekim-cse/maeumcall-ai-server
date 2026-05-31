@@ -231,3 +231,41 @@ graph의 역할은 다음과 같다.
 - 빈 응답 또는 부적절한 LLM 응답 가능성을 줄인다.
 - retry/fallback 발생 빈도를 줄인다.
 - 실제 Flutter 통화 UX에서 응답 속도를 개선한다.
+
+
+---
+
+## 예약 완료 상태 Template-first 응답 정책
+
+reservation_confirmed 상태는 LLM 호출 없이 template/fallback 응답을 우선 사용한다.
+
+예약 완료 상태의 응답은 다음과 같이 서버 상태값을 기반으로 생성한다.
+
+- date
+- department
+- selected_time
+- available_time
+- time
+
+시간 값은 selected_time을 우선 사용한다.
+
+우선순위:
+
+- selected_time
+- available_time
+- time
+
+예시:
+
+- selected_time: 오후 4시
+- department: 내과
+- date: 내일
+- 응답: 네, 내일 오후 4시 내과 진료 예약이 완료되었습니다.
+
+이 정책을 적용한 이유는 다음과 같다.
+
+- 예약 완료 문장은 정형 문장으로 충분하다.
+- LLM이 잘못된 시간을 생성하는 위험을 줄인다.
+- LLM이 예약 완료 표현을 중복 생성하는 위험을 줄인다.
+- selected_time 우선 사용 정책을 안정적으로 보장한다.
+- 예약 완료 상태의 응답 속도와 안정성을 높인다.

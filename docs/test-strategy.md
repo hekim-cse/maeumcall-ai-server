@@ -61,7 +61,7 @@
 
 현재 테스트 결과:
 
-- 16 passed
+- 18 passed
 
 ---
 
@@ -87,7 +87,7 @@ action parser와 graph flow 테스트를 함께 실행한다.
 
 현재 결과:
 
-- 44 passed
+- 46 passed
 
 ---
 
@@ -164,3 +164,20 @@ action parser와 graph flow 테스트를 함께 실행한다.
 - END 상태에서 should_end_call이 True로 반환되는지 확인
 
 이 테스트는 정형 응답으로 충분한 상태에서 불필요한 LLM 호출을 줄이고, 응답 속도와 안정성을 높이기 위한 것이다.
+
+
+---
+
+## 예약 완료 상태 Template-first 테스트
+
+reservation_confirmed 상태는 예약 완료 안내 문장으로 충분하므로 LLM 호출 없이 template/fallback 응답을 사용한다.
+
+검증 대상:
+
+- reservation_confirmed 상태에서 LLM을 호출하지 않는지 확인
+- 예약 완료 상태에서 fallback 기반 응답이 정상 반환되는지 확인
+- selected_time이 존재하면 selected_time을 우선 사용하는지 확인
+- available_time이 존재하면 available_time 기반으로 예약 완료 문장이 생성되는지 확인
+- 예약 완료 응답에 진료과와 예약 시간이 포함되는지 확인
+
+이 테스트는 예약 완료 상태에서 LLM이 잘못된 시간이나 중복된 예약 완료 표현을 생성하는 문제를 방지하기 위한 것이다.
