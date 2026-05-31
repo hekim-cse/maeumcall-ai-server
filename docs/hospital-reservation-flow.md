@@ -307,3 +307,32 @@ reservation_available 상태는 LLM 호출 없이 template/fallback 응답을 �
 - 서버의 예약 가능 여부 시뮬레이션 결과를 그대로 반영한다.
 - available_time 기반 안내를 안정적으로 보장한다.
 - template-first 응답을 사용하더라도 recommended_replies는 기존처럼 유지한다.
+
+
+---
+
+## Template 응답 생성과 Fallback 응답 생성 역할 분리
+
+정형 상태에서 의도적으로 사용하는 template 응답과, LLM 실패 시 사용하는 fallback 응답의 역할을 분리하였다.
+
+기존 구조:
+
+- template-first 상태도 fallback_ai_message() 사용
+- LLM 응답 실패 시에도 fallback_ai_message() 사용
+
+개선 구조:
+
+- template-first 상태: build_template_ai_message() 사용
+- LLM 실패 또는 검증 실패: fallback_ai_message() 사용
+
+각 함수의 역할은 다음과 같다.
+
+- build_template_ai_message(): 서버 상태값을 기반으로 정형 상태 응답을 생성한다.
+- fallback_ai_message(): LLM 응답이 비어 있거나 검증에 실패했을 때 최후 안전 응답을 생성한다.
+
+이 구조를 적용한 이유는 다음과 같다.
+
+- template-first 응답과 fallback 응답의 의미를 명확히 구분한다.
+- 코드 가독성을 높인다.
+- 로그에서 응답 출처를 더 명확하게 해석할 수 있다.
+- 이후 template 응답만 별도 고도화하기 쉬운 구조를 만든다.
