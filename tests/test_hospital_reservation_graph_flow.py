@@ -977,3 +977,54 @@ def test_template_message_builder_handles_asking_time():
     assert "시간" in message or "시간대" in message
     assert "연락처" not in message
     assert "성함" not in message
+
+
+def test_asking_department_uses_template_first_without_llm(monkeypatch):
+    """
+    asking_department 상태는 진료과를 묻는 정형 질문으로 충분하므로
+    LLM을 호출하지 않고 template 응답을 사용해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    def fail_if_llm_called(*args, **kwargs):
+        raise AssertionError("asking_department 상태에서는 LLM을 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(graph_module, "complete_hf_messages", fail_if_llm_called)
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "저기... 내일 오후에 진료 예약 가능할까요?",
+            "conversation_state": "greeting",
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "asking_department"
+    assert result["intent"] == "reservation"
+    assert result["date"] == "내일"
+    assert result["time"] == "오후"
+    assert "진료과" in result["ai_message"] or "과를" in result["ai_message"] or "진료받으실 과" in result["ai_message"]
+    assert "연락처" not in result["ai_message"]
+    assert "성함" not in result["ai_message"]
+    assert result["should_end_call"] is False
+
+
+def test_template_message_builder_handles_asking_department():
+    """
+    template 응답 생성 함수는 asking_department 상태에서 진료과 질문만 생성해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    message = graph_module.build_template_ai_message(
+        "asking_department",
+        {
+            "date": "내일",
+            "time": "오후",
+            "department": None,
+        },
+    )
+
+    assert "진료과" in message or "과를" in message or "진료받으실 과" in message
+    assert "연락처" not in message
+    assert "성함" not in message

@@ -729,6 +729,22 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
         ]
         return choose_message(candidates, state)
 
+    if conversation_state == "asking_department":
+        if date != "원하시는 날짜" and time != "원하시는 시간대":
+            candidates = [
+                f"네, {date} {time} 진료 예약을 원하시는군요. 원하시는 진료과를 말씀해주시겠어요?",
+                f"네, {date} {time} 예약 문의로 확인했습니다. 진료받으실 과를 알려주시겠어요?",
+                f"네, 확인해드리겠습니다. {date} {time}에 진료받으실 과를 말씀해주시겠어요?",
+            ]
+            return choose_message(candidates, state)
+
+        candidates = [
+            "네, 확인해드리겠습니다. 원하시는 진료과를 말씀해주시겠어요?",
+            "네, 진료 예약을 원하시는군요. 진료받으실 과를 알려주시겠어요?",
+            "네, 확인 도와드리겠습니다. 원하시는 진료과가 있으실까요?",
+        ]
+        return choose_message(candidates, state)
+
     if conversation_state == "asking_date":
         candidates = [
             "네, 확인해드리겠습니다. 원하시는 예약 날짜를 말씀해주시겠어요?",
@@ -909,6 +925,7 @@ def should_use_template_first(conversation_state: str) -> bool:
     Kanana 호출보다 fallback/template 응답을 우선 사용하는 것이 안정적이다.
     """
     return conversation_state in {
+        "asking_department",
         "asking_date",
         "asking_time",
         "checking_availability",
