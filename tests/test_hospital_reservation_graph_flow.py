@@ -639,3 +639,81 @@ def test_end_uses_template_first_without_llm(monkeypatch):
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
     assert "감사" in result["ai_message"] or "좋은 하루" in result["ai_message"]
+
+
+def test_reservation_confirmed_uses_template_first_without_llm(monkeypatch):
+    """
+    reservation_confirmed 상태는 예약 완료 정형 문장으로 충분하므로
+    LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    def fail_if_llm_called(*args, **kwargs):
+        raise AssertionError("reservation_confirmed 상태에서는 LLM을 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(graph_module, "complete_hf_messages", fail_if_llm_called)
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "오후 4시로 하겠습니다.",
+            "conversation_state": "suggest_alternative",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "available_time": None,
+            "alternative_times": ["오후 4시", "오후 5시"],
+            "availability_message_hint": "내일 오후에는 예약이 모두 차 있습니다. 대신 오후 4시 또는 오후 5시 시간대는 가능합니다.",
+            "selected_time": None,
+            "reservation_confirmed": None,
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "reservation_confirmed"
+    assert result["reservation_confirmed"] is True
+    assert result["selected_time"] == "오후 4시"
+    assert "예약" in result["ai_message"]
+    assert "완료" in result["ai_message"] or "예약되었습니다" in result["ai_message"]
+
+
+def test_reservation_confirmed_template_uses_selected_time_first(monkeypatch):
+    """
+    reservation_confirmed template 응답은 selected_time을 우선 사용해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    def fail_if_llm_called(*args, **kwargs):
+        raise AssertionError("reservation_confirmed 상태에서는 LLM을 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(graph_module, "complete_hf_messages", fail_if_llm_called)
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "네, 그 시간으로 예약하고 싶습니다.",
+            "conversation_state": "reservation_available",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "availability_status": "available",
+            "availability_reason": None,
+            "available_time": "오후 3시",
+            "alternative_times": [],
+            "availability_message_hint": "내일 오후 3시에 내과 진료 예약이 가능합니다.",
+            "selected_time": None,
+            "reservation_confirmed": None,
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "reservation_confirmed"
+    assert result["reservation_confirmed"] is True
+    assert result["selected_time"] == "오후 3시"
+    assert "오후 3시" in result["ai_message"]
+    assert "내과" in result["ai_message"]
+    assert "예약" in result["ai_message"]
