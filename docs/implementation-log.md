@@ -188,3 +188,33 @@ action parser 구조를 정리하고 graph flow 통합 테스트를 추가하였
 - action parser 단위 테스트: 28 passed
 - graph flow 통합 테스트: 13 passed
 - 전체 병원 예약 테스트: 41 passed
+
+
+---
+
+## 리팩토링 - 정형 상태 응답 생성 안정화
+
+정형 문장으로 충분한 상태에서는 LLM 호출 없이 template/fallback 응답을 우선 사용하도록 개선하였다.
+
+핵심 내용:
+
+- should_use_template_first() 추가
+- checking_availability 상태에서 template-first 응답 사용
+- closing 상태에서 template-first 응답 사용
+- END 상태에서 template-first 응답 사용
+- 정형 상태에서 complete_hf_messages가 호출되지 않는지 테스트 추가
+- END 상태에서는 should_end_call을 True로 반환하도록 유지
+
+기대 효과:
+
+- 응답 속도 개선
+- 불필요한 Kanana 호출 감소
+- 빈 응답 및 부적절한 응답 가능성 감소
+- retry/fallback 빈도 감소
+- Flutter 실시간 통화 UX 안정성 개선
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 16 passed
+- 전체 병원 예약 테스트: 44 passed
