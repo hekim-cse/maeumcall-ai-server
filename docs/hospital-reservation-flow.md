@@ -146,3 +146,30 @@ graph의 역할은 다음과 같다.
 - 대안 시간 검증
 - 예약 확정 여부 결정
 - 통화 종료 여부 결정
+
+
+---
+
+## 날짜 변경 시 예약 조회 결과 초기화
+
+예약 불가 상태에서 사용자가 다른 날짜를 요청하면 기존 예약 조회 결과를 초기화한다.
+
+예시 흐름:
+
+- 현재 상태: reservation_unavailable
+- 기존 대안 시간: 오후 4시, 오후 5시
+- 사용자 입력: 다른 날짜로 확인해주세요.
+- 다음 상태: asking_date
+
+이때 다음 값은 초기화된다.
+
+- availability_status
+- availability_reason
+- available_time
+- alternative_times
+- availability_message_hint
+- selected_time
+- reservation_confirmed
+- simulation_result
+
+이 정책은 이전 날짜의 예약 불가 결과가 새 날짜 예약 흐름에 남는 문제를 방지하기 위한 것이다.
