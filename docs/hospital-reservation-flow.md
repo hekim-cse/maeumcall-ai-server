@@ -205,3 +205,29 @@ graph의 역할은 다음과 같다.
 - 초기 예약 발화에서 시간 정보가 추출된 경우
 - 잘못된 대안 시간을 선택한 경우
 - 진료과만 변경한 경우
+
+
+---
+
+## 정형 상태 Template-first 응답 정책
+
+일부 상태는 LLM이 문장을 새로 생성하지 않아도 정형 응답으로 충분하다.
+
+현재 template-first 대상 상태는 다음과 같다.
+
+- checking_availability
+- closing
+- END
+
+각 상태의 역할은 다음과 같다.
+
+- checking_availability: 예약 가능 여부를 확인 중임을 안내한다.
+- closing: 추가 문의가 없으면 통화를 마무리하겠다고 안내한다.
+- END: 최종 종료 문장을 반환하고 should_end_call을 True로 설정한다.
+
+이 정책을 적용한 이유는 다음과 같다.
+
+- 정형 문장 상태에서 불필요한 LLM 호출을 줄인다.
+- 빈 응답 또는 부적절한 LLM 응답 가능성을 줄인다.
+- retry/fallback 발생 빈도를 줄인다.
+- 실제 Flutter 통화 UX에서 응답 속도를 개선한다.
