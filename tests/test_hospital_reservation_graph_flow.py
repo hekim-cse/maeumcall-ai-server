@@ -1028,3 +1028,42 @@ def test_template_message_builder_handles_asking_department():
     assert "진료과" in message or "과를" in message or "진료받으실 과" in message
     assert "연락처" not in message
     assert "성함" not in message
+
+
+def test_confirming_info_recommended_replies_do_not_include_name_or_phone(monkeypatch):
+    """
+    현재 MVP에서는 성함/연락처를 수집하지 않으므로
+    confirming_info 추천 답변에 성함/연락처 관련 문구가 포함되면 안 된다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    monkeypatch.setattr(
+        graph_module,
+        "complete_hf_messages",
+        lambda *args, **kwargs: "내일 오후 3시 내과 진료 예약을 원하시는 것이 맞으실까요?",
+    )
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "오후 3시로 하고 싶습니다.",
+            "conversation_state": "asking_time",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": None,
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "confirming_info"
+
+    recommended_replies = result.get("recommended_replies") or []
+    joined_replies = " ".join(recommended_replies)
+
+    assert recommended_replies
+    assert "연락처" not in joined_replies
+    assert "성함" not in joined_replies
+    assert "네, 맞습니다." in recommended_replies
+    assert any("시간" in reply for reply in recommended_replies)
+    assert any("날짜" in reply or "진료과" in reply for reply in recommended_replies)
