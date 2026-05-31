@@ -14,7 +14,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
 <img src="https://img.shields.io/badge/LangGraph-143D60?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Kanana_1.5-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"/>
-<img src="https://img.shields.io/badge/Pytest-46_passed-FF9149?style=for-the-badge&logo=pytest&logoColor=white"/>
+<img src="https://img.shields.io/badge/Pytest-48_passed-FF9149?style=for-the-badge&logo=pytest&logoColor=white"/>
 
 <br/>
 <br/>
@@ -194,8 +194,8 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 테스트 구분 | 파일 | 결과 |
 |---|---|---|
 | 🧩 Action Parser Unit Test | tests/test_hospital_reservation_action_parser.py | ✅ 28 passed |
-| 🔁 Graph Flow Integration Test | tests/test_hospital_reservation_graph_flow.py | ✅ 18 passed |
-| ✅ Total | 병원 예약 서버 테스트 | ✅ 46 passed |
+| 🔁 Graph Flow Integration Test | tests/test_hospital_reservation_graph_flow.py | ✅ 20 passed |
+| ✅ Total | 병원 예약 서버 테스트 | ✅ 48 passed |
 
 테스트 실행:
 
@@ -265,6 +265,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 - ⏰ 날짜 변경 시 기존 시간 조건 초기화 처리
 - ⚡ 정형 상태에서 template-first 응답 생성 처리
 - ✅ 예약 완료 상태에서 selected_time 기반 template 응답 처리
+- 🕒 예약 가능 상태에서 available_time 기반 template 응답 처리
 
 ---
 

@@ -269,3 +269,41 @@ reservation_confirmed 상태는 LLM 호출 없이 template/fallback 응답을 �
 - LLM이 예약 완료 표현을 중복 생성하는 위험을 줄인다.
 - selected_time 우선 사용 정책을 안정적으로 보장한다.
 - 예약 완료 상태의 응답 속도와 안정성을 높인다.
+
+
+---
+
+## 예약 가능 상태 Template-first 응답 정책
+
+reservation_available 상태는 LLM 호출 없이 template/fallback 응답을 우선 사용한다.
+
+예약 가능 상태의 응답은 다음과 같이 서버 상태값을 기반으로 생성한다.
+
+- date
+- department
+- available_time
+- selected_time
+- time
+
+시간 값은 예약 가능 여부 조회 결과에서 반환된 available_time을 우선 사용한다.
+
+우선순위:
+
+- selected_time
+- available_time
+- time
+
+예시:
+
+- available_time: 오후 3시
+- department: 내과
+- date: 내일
+- 응답: 확인 결과, 내일 오후 3시에 내과 진료 예약이 가능합니다. 이 시간으로 진행해드릴까요?
+
+이 정책을 적용한 이유는 다음과 같다.
+
+- 예약 가능 안내 문장은 정형 문장으로 충분하다.
+- LLM이 없는 시간을 생성하는 위험을 줄인다.
+- 서버의 예약 가능 여부 시뮬레이션 결과를 그대로 반영한다.
+- available_time 기반 안내를 안정적으로 보장한다.
+- template-first 응답을 사용하더라도 recommended_replies는 기존처럼 유지한다.
