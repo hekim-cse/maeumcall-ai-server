@@ -1004,7 +1004,7 @@ def test_asking_department_uses_template_first_without_llm(monkeypatch):
     assert result["intent"] == "reservation"
     assert result["date"] == "내일"
     assert result["time"] == "오후"
-    assert "진료과" in result["ai_message"] or "과를" in result["ai_message"] or "진료받으실 과" in result["ai_message"]
+    assert "진료과" in result["ai_message"] or "과를" in result["ai_message"] or "진료받으실 과" in result["ai_message"] or "어느 과" in result["ai_message"] or "과 진료" in result["ai_message"]
     assert "연락처" not in result["ai_message"]
     assert "성함" not in result["ai_message"]
     assert result["should_end_call"] is False
@@ -1025,7 +1025,7 @@ def test_template_message_builder_handles_asking_department():
         },
     )
 
-    assert "진료과" in message or "과를" in message or "진료받으실 과" in message
+    assert "진료과" in message or "과를" in message or "진료받으실 과" in message or "어느 과" in message or "과 진료" in message
     assert "연락처" not in message
     assert "성함" not in message
 
@@ -1101,7 +1101,7 @@ def test_confirming_info_uses_template_first_without_llm(monkeypatch):
     assert "내일" in result["ai_message"]
     assert "오후 3시" in result["ai_message"]
     assert "내과" in result["ai_message"]
-    assert "맞으실까요" in result["ai_message"] or "확인" in result["ai_message"]
+    assert "맞으실까요" in result["ai_message"] or "확인" in result["ai_message"] or "맞으세요" in result["ai_message"] or "될까요" in result["ai_message"]
     assert result["should_end_call"] is False
 
 
@@ -1125,8 +1125,8 @@ def test_template_message_builder_handles_confirming_info():
     assert "내일" in message
     assert "오후 3시" in message
     assert "내과" in message
-    assert "예약" in message
-    assert "맞으실까요" in message or "확인" in message
+    assert "예약" in message or "진료" in message
+    assert "맞으실까요" in message or "확인" in message or "맞으세요" in message or "될까요" in message
 
 
 def test_template_message_builder_handles_reservation_unavailable_with_alternatives():
