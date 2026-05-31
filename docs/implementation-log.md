@@ -377,3 +377,33 @@ asking_time 상태에서 LLM 호출 없이 template 응답을 사용하도록 �
 - action parser 단위 테스트: 28 passed
 - graph flow 통합 테스트: 26 passed
 - 전체 병원 예약 테스트: 54 passed
+
+
+---
+
+## 리팩토링 - 진료과 질문 상태 응답 생성 안정화
+
+asking_department 상태에서 LLM 호출 없이 template 응답을 사용하도록 개선하였다.
+
+핵심 내용:
+
+- should_use_template_first() 대상에 asking_department 추가
+- build_template_ai_message()에 asking_department 전용 응답 추가
+- 진료과 질문은 LLM 호출 없이 template 응답으로 생성
+- 연락처/성함을 함께 묻지 않도록 테스트 추가
+- asking_department 상태에서 complete_hf_messages가 호출되지 않는지 테스트 추가
+- 날짜와 시간이 이미 존재하는 경우 이를 반영한 진료과 질문 생성
+
+기대 효과:
+
+- 진료과 질문 응답의 안정성 향상
+- 불필요한 LLM 호출 감소
+- TTS 친화적인 짧은 응답 유지
+- 진료과 질문 상태에서 과도한 정보 요청 방지
+- 진료과/날짜/시간 질문 구간의 template-first 정리 완료
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 28 passed
+- 전체 병원 예약 테스트: 56 passed
