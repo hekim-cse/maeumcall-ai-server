@@ -818,3 +818,55 @@ def test_template_message_builder_uses_server_state_values():
     assert "내과" in message
     assert "예약" in message
     assert "가능" in message
+
+
+def test_template_message_builder_handles_all_template_states():
+    """
+    template 응답 생성 함수는 template-first 대상 상태를 직접 처리해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    base_state = {
+        "department": "내과",
+        "date": "내일",
+        "time": "오후",
+        "available_time": "오후 3시",
+        "selected_time": "오후 3시",
+    }
+
+    checking_message = graph_module.build_template_ai_message(
+        "checking_availability",
+        base_state,
+    )
+    assert "확인" in checking_message
+    assert "기다" in checking_message or "잠시" in checking_message
+
+    available_message = graph_module.build_template_ai_message(
+        "reservation_available",
+        base_state,
+    )
+    assert "내일" in available_message
+    assert "오후 3시" in available_message
+    assert "내과" in available_message
+    assert "가능" in available_message
+
+    confirmed_message = graph_module.build_template_ai_message(
+        "reservation_confirmed",
+        base_state,
+    )
+    assert "내일" in confirmed_message
+    assert "오후 3시" in confirmed_message
+    assert "내과" in confirmed_message
+    assert "예약" in confirmed_message
+
+    closing_message = graph_module.build_template_ai_message(
+        "closing",
+        base_state,
+    )
+    assert "마무리" in closing_message or "문의" in closing_message
+
+    end_message = graph_module.build_template_ai_message(
+        "END",
+        base_state,
+    )
+    assert "감사" in end_message or "좋은 하루" in end_message
