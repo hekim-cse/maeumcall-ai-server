@@ -442,3 +442,38 @@ confirming_info 상태의 추천 답변에서 현재 MVP 범위를 벗어나는 
 - graph flow 통합 테스트: 29 passed
 - 전체 병원 예약 테스트: 57 passed
 - /chat API curl 테스트에서 recommendedReplies 내 연락처 문구 제거 확인
+
+
+---
+
+## 리팩토링 - 예약 정보 확인 상태 응답 생성 안정화
+
+confirming_info 상태에서 LLM 호출 없이 template 응답을 사용하도록 개선하였다.
+
+핵심 내용:
+
+- should_use_template_first() 대상에 confirming_info 추가
+- build_template_ai_message()에 confirming_info 전용 응답 추가
+- 예약 정보 확인 문장을 date, time, department 기반으로 생성
+- selected_time 또는 available_time이 있는 경우 해당 값을 우선 사용
+- confirming_info 상태에서 complete_hf_messages가 호출되지 않는지 테스트 추가
+- 실제 /chat API curl 테스트에서 template-first 로그 확인
+
+수정 후 로그 예시:
+
+- [AI message source] template-first: 내일 오후 3시 내과 진료 예약을 원하시는 것이 맞으실까요?
+
+기대 효과:
+
+- 예약 정보 확인 문장의 안정성 향상
+- 잘못된 시간 hallucination 방지
+- 불필요한 Kanana 호출 감소
+- TTS 친화적인 짧은 응답 유지
+- 진료과/날짜/시간 수집부터 예약 확인까지 정형 응답 안정화
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 31 passed
+- 전체 병원 예약 테스트: 59 passed
+- /chat API curl 테스트에서 confirming_info template-first 로그 확인
