@@ -61,7 +61,7 @@
 
 현재 테스트 결과:
 
-- 10 passed
+- 11 passed
 
 ---
 
@@ -87,7 +87,7 @@ action parser와 graph flow 테스트를 함께 실행한다.
 
 현재 결과:
 
-- 38 passed
+- 39 passed
 
 ---
 
@@ -101,3 +101,25 @@ action parser와 graph flow 테스트를 함께 실행한다.
 현재 경고는 기능 실패와 관련 없는 환경 및 라이브러리 경고이다.
 
 테스트 실패 여부는 passed / failed 결과를 기준으로 판단한다.
+
+
+---
+
+## 날짜 변경 초기화 테스트
+
+예약 불가 상태에서 사용자가 다른 날짜를 요청하면 기존 예약 조회 결과가 새 날짜 흐름에 남지 않아야 한다.
+
+검증 대상:
+
+- reservation_unavailable 상태에서 change_date 감지
+- asking_date 상태로 전이
+- availability_status 초기화
+- availability_reason 초기화
+- available_time 초기화
+- alternative_times 빈 배열 처리
+- availability_message_hint 초기화
+- selected_time 초기화
+- reservation_confirmed 초기화
+- simulation_result 초기화
+
+이 테스트는 이전 날짜의 예약 불가 결과가 새 날짜 예약 흐름에 섞이는 문제를 방지하기 위한 것이다.

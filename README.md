@@ -14,7 +14,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
 <img src="https://img.shields.io/badge/LangGraph-143D60?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Kanana_1.5-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"/>
-<img src="https://img.shields.io/badge/Pytest-38_passed-FF9149?style=for-the-badge&logo=pytest&logoColor=white"/>
+<img src="https://img.shields.io/badge/Pytest-39_passed-FF9149?style=for-the-badge&logo=pytest&logoColor=white"/>
 
 <br/>
 <br/>
@@ -194,8 +194,8 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 테스트 구분 | 파일 | 결과 |
 |---|---|---|
 | 🧩 Action Parser Unit Test | tests/test_hospital_reservation_action_parser.py | ✅ 28 passed |
-| 🔁 Graph Flow Integration Test | tests/test_hospital_reservation_graph_flow.py | ✅ 10 passed |
-| ✅ Total | 병원 예약 서버 테스트 | ✅ 38 passed |
+| 🔁 Graph Flow Integration Test | tests/test_hospital_reservation_graph_flow.py | ✅ 11 passed |
+| ✅ Total | 병원 예약 서버 테스트 | ✅ 39 passed |
 
 테스트 실행:
 

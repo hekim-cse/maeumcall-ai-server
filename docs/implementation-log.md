@@ -145,3 +145,24 @@ action parser 구조를 정리하고 graph flow 통합 테스트를 추가하였
 - 날짜 변경 후 예약 가능 여부 재조회 흐름 검증
 - Flutter 연동용 /chat API 저장 규칙 정리
 - Flutter에서 conversationState, scenarioState, history 저장 구조 구현
+
+
+---
+
+## 정책 개선 - 날짜 변경 시 예약 조회 상태 초기화
+
+예약 불가 상태에서 사용자가 다른 날짜를 요청하는 경우, 이전 예약 조회 결과가 새 날짜 흐름에 남지 않도록 초기화 처리를 추가하였다.
+
+핵심 내용:
+
+- clear_reservation_lookup_fields() 추가
+- change_date 전이 시 예약 조회 관련 상태 초기화
+- reservation_unavailable → asking_date 전이 시 이전 대안 시간 제거
+- selected_time, reservation_confirmed, simulation_result 초기화
+- 날짜 변경 초기화 graph flow 테스트 추가
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 11 passed
+- 전체 병원 예약 테스트: 39 passed
