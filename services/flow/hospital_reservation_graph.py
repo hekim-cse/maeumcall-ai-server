@@ -715,41 +715,41 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
     if conversation_state == "asking_department":
         if date != "원하시는 날짜" and time != "원하시는 시간대":
             candidates = [
-                f"{date} {time} 예약 문의 맞으시죠? 어느 과 진료 원하세요?",
-                f"{date} {time}로 보고 있습니다. 진료과는 어디로 도와드릴까요?",
-                f"{date} {time}에 진료받으실 과가 어디세요?",
-                f"{date} {time} 예약으로 확인할게요. 어느 과 진료 원하세요?",
+                f"{date} {time} 예약이시죠? 어느 과로 진료 보실까요?",
+                f"{date} {time}로 확인했습니다. 어느 과로 진료 보실까요?",
+                f"{date} {time}에 어느 과로 진료 보실까요?",
+                f"{date} {time} 예약으로 확인할게요. 어느 과로 진료 보실까요?",
             ]
             return choose_message(candidates, state)
 
         candidates = [
-            "예약 도와드릴게요. 어느 과 진료 원하세요?",
-            "진료받으실 과가 어디세요?",
-            "어느 진료과로 예약 도와드릴까요?",
+            "예약 도와드릴게요. 어느 과로 진료 보실까요?",
+            "어느 과로 진료 보실까요?",
+            "어느 과로 예약 도와드릴까요?",
         ]
         return choose_message(candidates, state)
 
     if conversation_state == "asking_department":
         if date != "원하시는 날짜" and time != "원하시는 시간대":
             candidates = [
-                f"{date} {time} 예약 문의 맞으시죠? 어느 과 진료 원하세요?",
-                f"{date} {time}로 보고 있습니다. 진료과는 어디로 도와드릴까요?",
-                f"{date} {time}에 진료받으실 과가 어디세요?",
+                f"{date} {time} 예약이시죠? 어느 과로 진료 보실까요?",
+                f"{date} {time}로 확인했습니다. 어느 과로 진료 보실까요?",
+                f"{date} {time}에 어느 과로 진료 보실까요?",
             ]
             return choose_message(candidates, state)
 
         candidates = [
-            "예약 도와드릴게요. 어느 과 진료 원하세요?",
-            "진료받으실 과가 어디세요?",
-            "어느 진료과로 예약 도와드릴까요?",
+            "예약 도와드릴게요. 어느 과로 진료 보실까요?",
+            "어느 과로 진료 보실까요?",
+            "어느 과로 예약 도와드릴까요?",
         ]
         return choose_message(candidates, state)
 
     if conversation_state == "asking_date":
         candidates = [
-            "예약 날짜는 언제로 도와드릴까요?",
-            f"{department} 진료 예약이시죠. 날짜는 언제로 도와드릴까요?",
-            "방문하실 날짜가 언제세요?",
+            "예약 날짜는 언제가 괜찮으세요?",
+            f"{department} 진료 예약이시죠. 날짜는 언제가 괜찮으세요?",
+            "방문 날짜는 언제가 괜찮으세요?",
         ]
         return choose_message(candidates, state)
 
@@ -763,7 +763,7 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
             return choose_message(candidates, state)
 
         candidates = [
-            "시간은 몇 시쯤 원하세요?",
+            "시간은 몇 시쯤 괜찮으세요?",
             "네, 예약을 위해 희망하시는 시간대를 알려주시겠어요?",
             "네, 편하신 시간대가 있으실까요?",
         ]
@@ -779,18 +779,18 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
     
     if conversation_state == "asking_time":
         candidates = [
-            "시간은 몇 시쯤 원하세요?",
-            f"{date} 예약으로 확인했습니다. 시간은 몇 시쯤 원하세요?",
-            f"{date} 방문 예정이시죠. 원하시는 시간대가 있으세요?",
+            "시간은 몇 시쯤 괜찮으세요?",
+            f"{date} 예약으로 확인했습니다. 시간은 몇 시쯤 괜찮으세요?",
+            f"{date} 방문 예정이시죠. 편하신 시간대가 있으세요?",
         ]
         return choose_message(candidates, state)
 
     if conversation_state == "confirming_info":
         final_time = resolve_final_reservation_time(state) or time
         candidates = [
-            f"{date} {final_time} {department} 진료 맞으세요?",
-            f"{date} {final_time}, {department}로 예약 도와드리면 될까요?",
-            f"{date} {final_time} {department} 진료로 확인했습니다. 맞으세요?",
+            f"{date} {final_time} {department} 진료 맞으실까요?",
+            f"{date} {final_time}, {department}로 예약 도와드릴까요?",
+            f"{date} {final_time} {department} 진료로 확인했습니다. 맞으실까요?",
         ]
         return choose_message(candidates, state)
 
@@ -804,7 +804,7 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
     if conversation_state == "reservation_available":
         final_time = resolve_final_reservation_time(state) or time
         candidates = [
-            f"{date} {final_time} {department} 예약 가능합니다. 이 시간으로 도와드릴까요?",
+            f"{date} {final_time} {department} 예약 가능합니다. 이 시간 괜찮으세요?",
             f"확인해보니 {date} {final_time} 가능합니다. 이 시간 괜찮으세요?",
         ]
         return choose_message(candidates, state)
@@ -830,7 +830,7 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
     if conversation_state == "reservation_confirmed":
         final_time = resolve_final_reservation_time(state) or time
         candidates = [
-            f"예약 완료됐습니다. {date} {final_time} {department}로 방문해주시면 됩니다.",
+            f"예약 완료됐습니다. {date} {final_time}에 {department}로 방문해주시면 됩니다.",
             f"{date} {final_time} {department} 진료로 예약 완료됐습니다.",
         ]
         return choose_message(candidates, state)
@@ -879,18 +879,18 @@ def build_template_ai_message(conversation_state: str, state: dict = None) -> st
 
     if conversation_state == "asking_time":
         candidates = [
-            "시간은 몇 시쯤 원하세요?",
-            f"{date} 예약으로 확인했습니다. 시간은 몇 시쯤 원하세요?",
-            f"{date} 방문 예정이시죠. 원하시는 시간대가 있으세요?",
+            "시간은 몇 시쯤 괜찮으세요?",
+            f"{date} 예약으로 확인했습니다. 시간은 몇 시쯤 괜찮으세요?",
+            f"{date} 방문 예정이시죠. 편하신 시간대가 있으세요?",
         ]
         return choose_message(candidates, state)
 
     if conversation_state == "confirming_info":
         final_time = resolve_final_reservation_time(state) or time
         candidates = [
-            f"{date} {final_time} {department} 진료 맞으세요?",
-            f"{date} {final_time}, {department}로 예약 도와드리면 될까요?",
-            f"{date} {final_time} {department} 진료로 확인했습니다. 맞으세요?",
+            f"{date} {final_time} {department} 진료 맞으실까요?",
+            f"{date} {final_time}, {department}로 예약 도와드릴까요?",
+            f"{date} {final_time} {department} 진료로 확인했습니다. 맞으실까요?",
         ]
         return choose_message(candidates, state)
 
@@ -904,7 +904,7 @@ def build_template_ai_message(conversation_state: str, state: dict = None) -> st
     if conversation_state == "reservation_available":
         final_time = resolve_final_reservation_time(state) or time
         candidates = [
-            f"{date} {final_time} {department} 예약 가능합니다. 이 시간으로 도와드릴까요?",
+            f"{date} {final_time} {department} 예약 가능합니다. 이 시간 괜찮으세요?",
             f"확인해보니 {date} {final_time} 가능합니다. 이 시간 괜찮으세요?",
         ]
         return choose_message(candidates, state)
@@ -912,7 +912,7 @@ def build_template_ai_message(conversation_state: str, state: dict = None) -> st
     if conversation_state == "reservation_confirmed":
         final_time = resolve_final_reservation_time(state) or time
         candidates = [
-            f"예약 완료됐습니다. {date} {final_time} {department}로 방문해주시면 됩니다.",
+            f"예약 완료됐습니다. {date} {final_time}에 {department}로 방문해주시면 됩니다.",
             f"{date} {final_time} {department} 진료로 예약 완료됐습니다.",
         ]
         return choose_message(candidates, state)
