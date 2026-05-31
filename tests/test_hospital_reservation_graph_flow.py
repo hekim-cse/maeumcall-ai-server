@@ -1127,3 +1127,59 @@ def test_template_message_builder_handles_confirming_info():
     assert "내과" in message
     assert "예약" in message
     assert "맞으실까요" in message or "확인" in message
+
+
+def test_template_message_builder_handles_reservation_unavailable_with_alternatives():
+    """
+    reservation_unavailable template 응답은 대안 시간이 있으면
+    alternative_times 기반 안내 문장을 생성해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    message = graph_module.build_template_ai_message(
+        "reservation_unavailable",
+        {
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "alternative_times": ["오후 4시", "오후 5시"],
+            "availability_message_hint": None,
+        },
+    )
+
+    assert "내일" in message
+    assert "오후" in message
+    assert "예약" in message
+    assert "어렵" in message or "차" in message
+    assert "오후 4시" in message
+    assert "오후 5시" in message
+    assert "가능" in message
+
+
+def test_template_message_builder_handles_reservation_unavailable_without_alternatives():
+    """
+    reservation_unavailable template 응답은 대안 시간이 없으면
+    다른 날짜나 시간을 요청하는 안내 문장을 생성해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    message = graph_module.build_template_ai_message(
+        "reservation_unavailable",
+        {
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "availability_status": "unavailable",
+            "availability_reason": "no_available_slot",
+            "alternative_times": [],
+            "availability_message_hint": None,
+        },
+    )
+
+    assert "내일" in message
+    assert "오후" in message
+    assert "예약" in message
+    assert "어렵" in message or "차" in message
+    assert "다른 날짜" in message or "다른 시간" in message
