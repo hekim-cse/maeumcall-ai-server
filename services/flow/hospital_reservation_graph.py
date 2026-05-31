@@ -785,6 +785,15 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
         ]
         return choose_message(candidates, state)
 
+    if conversation_state == "confirming_info":
+        final_time = resolve_final_reservation_time(state) or time
+        candidates = [
+            f"{date} {final_time} {department} 진료 예약을 원하시는 것이 맞으실까요?",
+            f"확인하겠습니다. {date} {final_time} {department} 진료 예약이 맞으실까요?",
+            f"{date} {final_time}에 {department} 진료 예약으로 확인하면 될까요?",
+        ]
+        return choose_message(candidates, state)
+
     if conversation_state == "checking_availability":
         candidates = [
             "네, 확인해보겠습니다. 잠시만 기다려주시겠어요?",
@@ -876,6 +885,15 @@ def build_template_ai_message(conversation_state: str, state: dict = None) -> st
         ]
         return choose_message(candidates, state)
 
+    if conversation_state == "confirming_info":
+        final_time = resolve_final_reservation_time(state) or time
+        candidates = [
+            f"{date} {final_time} {department} 진료 예약을 원하시는 것이 맞으실까요?",
+            f"확인하겠습니다. {date} {final_time} {department} 진료 예약이 맞으실까요?",
+            f"{date} {final_time}에 {department} 진료 예약으로 확인하면 될까요?",
+        ]
+        return choose_message(candidates, state)
+
     if conversation_state == "checking_availability":
         candidates = [
             "네, 확인해보겠습니다. 잠시만 기다려주시겠어요?",
@@ -928,6 +946,7 @@ def should_use_template_first(conversation_state: str) -> bool:
         "asking_department",
         "asking_date",
         "asking_time",
+        "confirming_info",
         "checking_availability",
         "reservation_available",
         "reservation_confirmed",
