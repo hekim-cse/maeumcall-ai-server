@@ -62,6 +62,30 @@ def choose_message(candidates: List[str], state: dict) -> str:
     return candidates[0] if candidates else ""
 
 
+
+def clear_reservation_lookup_fields() -> Dict[str, Any]:
+    """
+    날짜/시간/진료과 변경처럼 예약 조건이 바뀌는 경우,
+    이전 예약 가능 여부 조회 결과를 초기화한다.
+
+    예:
+    - 이전 상태: reservation_unavailable
+    - 이전 대안 시간: 오후 4시, 오후 5시
+    - 사용자: 다른 날짜로 확인해주세요.
+
+    이때 이전 날짜의 조회 결과가 새 날짜 흐름에 남지 않도록 비운다.
+    """
+    return {
+        "availability_status": None,
+        "availability_reason": None,
+        "available_time": None,
+        "alternative_times": [],
+        "availability_message_hint": None,
+        "reservation_confirmed": None,
+        "selected_time": None,
+        "simulation_result": None,
+    }
+
 def extract_info_node(state: HospitalReservationState) -> Dict:
     """
     사용자 발화에서 병원 예약에 필요한 정보를 추출한다.
@@ -140,6 +164,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
             return {
                 "conversation_state": "asking_date",
                 "should_end_call": False,
+                **clear_reservation_lookup_fields(),
             }
 
         if user_action == "change_time":
@@ -267,6 +292,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
             return {
                 "conversation_state": "asking_date",
                 "should_end_call": False,
+                **clear_reservation_lookup_fields(),
             }
 
         if user_action == "select_alternative_time":
@@ -321,6 +347,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
             return {
                 "conversation_state": "asking_date",
                 "should_end_call": False,
+                **clear_reservation_lookup_fields(),
             }
 
         if user_action == "ask_other_time":
