@@ -1067,3 +1067,63 @@ def test_confirming_info_recommended_replies_do_not_include_name_or_phone(monkey
     assert "네, 맞습니다." in recommended_replies
     assert any("시간" in reply for reply in recommended_replies)
     assert any("날짜" in reply or "진료과" in reply for reply in recommended_replies)
+
+
+def test_confirming_info_uses_template_first_without_llm(monkeypatch):
+    """
+    confirming_info 상태는 예약 정보 확인 정형 문장으로 충분하므로
+    LLM을 호출하지 않고 template 응답을 사용해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    def fail_if_llm_called(*args, **kwargs):
+        raise AssertionError("confirming_info 상태에서는 LLM을 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(graph_module, "complete_hf_messages", fail_if_llm_called)
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "오후 3시로 하고 싶습니다.",
+            "conversation_state": "asking_time",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": None,
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "confirming_info"
+    assert result["department"] == "내과"
+    assert result["date"] == "내일"
+    assert result["time"] == "오후 3시"
+    assert "내일" in result["ai_message"]
+    assert "오후 3시" in result["ai_message"]
+    assert "내과" in result["ai_message"]
+    assert "맞으실까요" in result["ai_message"] or "확인" in result["ai_message"]
+    assert result["should_end_call"] is False
+
+
+def test_template_message_builder_handles_confirming_info():
+    """
+    template 응답 생성 함수는 confirming_info 상태에서
+    서버 상태값 기반 예약 확인 문장을 생성해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    message = graph_module.build_template_ai_message(
+        "confirming_info",
+        {
+            "department": "내과",
+            "date": "내일",
+            "time": "오후 3시",
+            "selected_time": "오후 3시",
+        },
+    )
+
+    assert "내일" in message
+    assert "오후 3시" in message
+    assert "내과" in message
+    assert "예약" in message
+    assert "맞으실까요" in message or "확인" in message
