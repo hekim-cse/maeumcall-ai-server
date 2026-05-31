@@ -414,3 +414,54 @@ def test_suggest_alternative_unknown_keeps_state(monkeypatch):
     assert state["conversation_state"] == "suggest_alternative"
     assert state["user_action"] == "unknown"
     assert state["reservation_confirmed"] is None
+
+
+def test_reservation_unavailable_change_date_clears_lookup_fields(monkeypatch):
+    """
+    reservation_unavailable 상태에서 사용자가 다른 날짜를 요청하면
+    asking_date로 전이하면서 이전 예약 조회 결과를 초기화해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    monkeypatch.setattr(
+        graph_module,
+        "complete_hf_messages",
+        lambda *args, **kwargs: "원하시는 예약 날짜를 말씀해주시겠어요?",
+    )
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "다른 날짜로 확인해주세요.",
+            "conversation_state": "reservation_unavailable",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "available_time": None,
+            "alternative_times": ["오후 4시", "오후 5시"],
+            "availability_message_hint": "내일 오후에는 예약이 모두 차 있습니다. 대신 오후 4시 또는 오후 5시 시간대는 가능합니다.",
+            "selected_time": "오후 4시",
+            "reservation_confirmed": True,
+            "simulation_result": {
+                "availability_status": "unavailable",
+                "availability_reason": "requested_time_full",
+                "available_time": None,
+                "alternative_times": ["오후 4시", "오후 5시"],
+            },
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "asking_date"
+    assert result.get("availability_status") is None
+    assert result.get("availability_reason") is None
+    assert result.get("available_time") is None
+    assert result.get("alternative_times") == []
+    assert result.get("availability_message_hint") is None
+    assert result.get("selected_time") is None
+    assert result.get("reservation_confirmed") is None
+    assert result.get("simulation_result") is None
+    assert result.get("should_end_call") is False
