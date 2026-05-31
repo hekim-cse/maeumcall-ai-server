@@ -761,6 +761,14 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
         ]
         return choose_message(candidates, state)
     
+    if conversation_state == "asking_time":
+        candidates = [
+            "네, 확인해드리겠습니다. 원하시는 시간대를 말씀해주시겠어요?",
+            f"네, {date} 예약으로 확인했습니다. 편하신 시간대가 있으실까요?",
+            f"네, {date}에 진료를 원하시는군요. 원하시는 시간을 알려주시겠어요?",
+        ]
+        return choose_message(candidates, state)
+
     if conversation_state == "checking_availability":
         candidates = [
             "네, 확인해보겠습니다. 잠시만 기다려주시겠어요?",
@@ -844,6 +852,14 @@ def build_template_ai_message(conversation_state: str, state: dict = None) -> st
     date = state.get("date") or "원하시는 날짜"
     time = state.get("time") or "원하시는 시간대"
 
+    if conversation_state == "asking_time":
+        candidates = [
+            "네, 확인해드리겠습니다. 원하시는 시간대를 말씀해주시겠어요?",
+            f"네, {date} 예약으로 확인했습니다. 편하신 시간대가 있으실까요?",
+            f"네, {date}에 진료를 원하시는군요. 원하시는 시간을 알려주시겠어요?",
+        ]
+        return choose_message(candidates, state)
+
     if conversation_state == "checking_availability":
         candidates = [
             "네, 확인해보겠습니다. 잠시만 기다려주시겠어요?",
@@ -894,6 +910,7 @@ def should_use_template_first(conversation_state: str) -> bool:
     """
     return conversation_state in {
         "asking_date",
+        "asking_time",
         "checking_availability",
         "reservation_available",
         "reservation_confirmed",
