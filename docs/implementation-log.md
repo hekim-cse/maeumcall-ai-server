@@ -280,3 +280,36 @@ reservation_available 상태에서 LLM 호출 없이 template/fallback 응답을
 - action parser 단위 테스트: 28 passed
 - graph flow 통합 테스트: 20 passed
 - 전체 병원 예약 테스트: 48 passed
+
+
+---
+
+## 리팩토링 - Template 응답 생성 함수 분리
+
+template-first 상태에서 사용하는 응답 생성 로직을 build_template_ai_message() 함수로 분리하였다.
+
+핵심 내용:
+
+- build_template_ai_message() 추가
+- template-first 분기에서 fallback_ai_message() 직접 호출 제거
+- template-first 분기에서 build_template_ai_message() 호출
+- LLM 실패 fallback은 기존 fallback_ai_message() 유지
+- template 응답이 서버 상태값을 사용하는지 테스트 추가
+
+구조 변경:
+
+- 정형 상태 응답: build_template_ai_message()
+- LLM 실패 응답: fallback_ai_message()
+
+기대 효과:
+
+- template-first 응답과 fallback 응답의 역할 구분
+- 코드 의미 명확화
+- 향후 template 응답 전용 로직 확장 용이
+- 예약 가능/예약 완료 같은 정형 응답의 안정적 관리
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 21 passed
+- 전체 병원 예약 테스트: 49 passed

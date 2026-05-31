@@ -61,7 +61,7 @@
 
 현재 테스트 결과:
 
-- 20 passed
+- 21 passed
 
 ---
 
@@ -87,7 +87,7 @@ action parser와 graph flow 테스트를 함께 실행한다.
 
 현재 결과:
 
-- 48 passed
+- 49 passed
 
 ---
 
@@ -198,3 +198,20 @@ reservation_available 상태는 예약 가능 안내 문장으로 충분하므�
 - template-first 응답을 사용하더라도 recommended_replies가 유지되는지 확인
 
 이 테스트는 예약 가능 상태에서 LLM이 없는 시간을 생성하거나 예약 가능 시간을 잘못 안내하는 문제를 방지하기 위한 것이다.
+
+
+---
+
+## Template 응답 생성 함수 분리 테스트
+
+template-first 응답 생성과 LLM 실패 fallback 응답 생성을 역할상 분리하였다.
+
+검증 대상:
+
+- build_template_ai_message() 함수가 서버 상태값을 기반으로 응답을 생성하는지 확인
+- reservation_available 상태에서 date 값이 응답에 포함되는지 확인
+- available_time 값이 응답에 포함되는지 확인
+- department 값이 응답에 포함되는지 확인
+- 예약 가능 표현이 정상 포함되는지 확인
+
+이 테스트는 template-first 응답이 단순 fallback 실패 처리와 구분되어, 서버 상태값 기반 정형 응답으로 동작하는지 확인하기 위한 것이다.
