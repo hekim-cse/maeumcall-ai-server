@@ -827,22 +827,45 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
     return choose_message(candidates, state)
 
 
+
+
+def should_use_template_first(conversation_state: str) -> bool:
+    """
+    LLM 호출 없이 정형 응답으로 충분한 상태인지 판단한다.
+
+    이 상태들은 응답 문장이 거의 고정되어 있어
+    Kanana 호출보다 fallback/template 응답을 우선 사용하는 것이 안정적이다.
+    """
+    return conversation_state in {
+        "checking_availability",
+        "closing",
+        "END",
+    }
+
 def generate_ai_message_node(state: HospitalReservationState) -> Dict:
     """
     ai_message 생성 노드이다.
 
     우선순위:
-    1. LLM 1차 응답
-    2. LLM retry 응답
-    3. fallback 응답
+    1. 정형 응답으로 충분한 상태는 template/fallback 우선 사용
+    2. 그 외 상태는 LLM 1차 응답
+    3. LLM retry 응답
+    4. fallback 응답
     """
-    if state.get("conversation_state") == "END":
-        ai_message = fallback_ai_message("END", state)
-        return {
+    conversation_state = state.get("conversation_state") or "asking_purpose"
+
+    if should_use_template_first(conversation_state):
+        ai_message = fallback_ai_message(conversation_state, state)
+        result = {
             "ai_message": ai_message,
             "last_ai_message": ai_message,
-            "should_end_call": True,
         }
+
+        if conversation_state == "END":
+            result["should_end_call"] = True
+
+        print(f"[AI message source] template-first: {ai_message}")
+        return result
 
     prompt = build_ai_message_prompt(state)
 

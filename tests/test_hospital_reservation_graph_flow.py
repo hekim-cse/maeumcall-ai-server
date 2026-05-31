@@ -544,3 +544,98 @@ def test_asking_date_after_change_date_moves_to_asking_time(monkeypatch):
     assert result.get("date") == "모레"
     assert result.get("time") is None
     assert result.get("should_end_call") is False
+
+
+def test_checking_availability_uses_template_first_without_llm(monkeypatch):
+    """
+    checking_availability 상태는 정형 안내 문장으로 충분하므로
+    LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    def fail_if_llm_called(*args, **kwargs):
+        raise AssertionError("checking_availability 상태에서는 LLM을 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(graph_module, "complete_hf_messages", fail_if_llm_called)
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "네, 맞습니다.",
+            "conversation_state": "confirming_info",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "user_action": "confirm_reservation_info",
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "checking_availability"
+    assert "확인" in result["ai_message"]
+    assert result["should_end_call"] is False
+
+
+def test_closing_uses_template_first_without_llm(monkeypatch):
+    """
+    closing 상태는 통화 마무리 정형 문장으로 충분하므로
+    LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    def fail_if_llm_called(*args, **kwargs):
+        raise AssertionError("closing 상태에서는 LLM을 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(graph_module, "complete_hf_messages", fail_if_llm_called)
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "네, 감사합니다.",
+            "conversation_state": "reservation_confirmed",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "selected_time": "오후 3시",
+            "reservation_confirmed": True,
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "closing"
+    assert "마무리" in result["ai_message"] or "문의" in result["ai_message"]
+    assert result["should_end_call"] is False
+
+
+def test_end_uses_template_first_without_llm(monkeypatch):
+    """
+    END 상태는 최종 종료 문장으로 충분하므로
+    LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    def fail_if_llm_called(*args, **kwargs):
+        raise AssertionError("END 상태에서는 LLM을 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(graph_module, "complete_hf_messages", fail_if_llm_called)
+
+    result = graph_module.hospital_reservation_graph.invoke(
+        {
+            "user_message": "네, 감사합니다.",
+            "conversation_state": "closing",
+            "intent": "reservation",
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "selected_time": "오후 3시",
+            "reservation_confirmed": True,
+            "history": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "END"
+    assert result["should_end_call"] is True
+    assert "감사" in result["ai_message"] or "좋은 하루" in result["ai_message"]
