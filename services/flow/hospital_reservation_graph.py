@@ -829,6 +829,18 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
 
 
 
+
+
+def build_template_ai_message(conversation_state: str, state: dict = None) -> str:
+    """
+    정형 상태에서 의도적으로 사용하는 template 응답을 생성한다.
+
+    fallback_ai_message와 같은 문장 후보를 사용하지만,
+    의미상 LLM 실패에 대한 fallback이 아니라
+    서버 상태값 기반 template 응답이라는 점을 분리한다.
+    """
+    return fallback_ai_message(conversation_state, state)
+
 def should_use_template_first(conversation_state: str) -> bool:
     """
     LLM 호출 없이 정형 응답으로 충분한 상태인지 판단한다.
@@ -857,7 +869,7 @@ def generate_ai_message_node(state: HospitalReservationState) -> Dict:
     conversation_state = state.get("conversation_state") or "asking_purpose"
 
     if should_use_template_first(conversation_state):
-        ai_message = fallback_ai_message(conversation_state, state)
+        ai_message = build_template_ai_message(conversation_state, state)
         result = {
             "ai_message": ai_message,
             "last_ai_message": ai_message,

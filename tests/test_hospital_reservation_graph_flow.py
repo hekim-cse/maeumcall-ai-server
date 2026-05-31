@@ -795,3 +795,26 @@ def test_reservation_available_template_keeps_recommended_replies(monkeypatch):
     assert "피부과" in result["ai_message"]
     assert result.get("recommended_replies")
     assert "네, 그 시간으로 예약하고 싶습니다." in result["recommended_replies"]
+
+
+def test_template_message_builder_uses_server_state_values():
+    """
+    template 응답 생성 함수는 서버 상태값을 기반으로 정형 응답을 만들어야 한다.
+    """
+    from services.flow import hospital_reservation_graph as graph_module
+
+    message = graph_module.build_template_ai_message(
+        "reservation_available",
+        {
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "available_time": "오후 3시",
+        },
+    )
+
+    assert "내일" in message
+    assert "오후 3시" in message
+    assert "내과" in message
+    assert "예약" in message
+    assert "가능" in message
