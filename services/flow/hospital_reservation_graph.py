@@ -835,10 +835,54 @@ def build_template_ai_message(conversation_state: str, state: dict = None) -> st
     """
     정형 상태에서 의도적으로 사용하는 template 응답을 생성한다.
 
-    fallback_ai_message와 같은 문장 후보를 사용하지만,
-    의미상 LLM 실패에 대한 fallback이 아니라
-    서버 상태값 기반 template 응답이라는 점을 분리한다.
+    이 함수는 LLM 실패 대응용 fallback이 아니라,
+    서버 상태값을 기반으로 정해진 상태 응답을 안정적으로 생성하기 위한 함수이다.
     """
+    state = state or {}
+
+    department = state.get("department") or "선택하신 진료과"
+    date = state.get("date") or "원하시는 날짜"
+    time = state.get("time") or "원하시는 시간대"
+
+    if conversation_state == "checking_availability":
+        candidates = [
+            "네, 확인해보겠습니다. 잠시만 기다려주시겠어요?",
+            "네, 예약 가능 여부를 확인해보겠습니다. 잠시만 기다려주세요.",
+        ]
+        return choose_message(candidates, state)
+
+    if conversation_state == "reservation_available":
+        final_time = resolve_final_reservation_time(state) or time
+        candidates = [
+            f"확인 결과, {date} {final_time}에 {department} 진료 예약이 가능합니다. 이 시간으로 진행해드릴까요?",
+            f"{date} {final_time} {department} 진료 예약이 가능합니다. 이 시간으로 예약을 진행할까요?",
+        ]
+        return choose_message(candidates, state)
+
+    if conversation_state == "reservation_confirmed":
+        final_time = resolve_final_reservation_time(state) or time
+        candidates = [
+            f"네, {date} {final_time} {department} 진료 예약이 완료되었습니다.",
+            f"{date} {final_time} {department} 진료 예약으로 완료되었습니다.",
+        ]
+        return choose_message(candidates, state)
+
+    if conversation_state == "closing":
+        candidates = [
+            "네, 확인 감사합니다. 추가로 궁금하신 점이 없으시면 통화 마무리 도와드리겠습니다.",
+            "네, 알겠습니다. 더 문의하실 내용이 없으시면 통화 마무리하겠습니다.",
+            "네, 확인했습니다. 다른 문의가 없으시면 통화 마무리 도와드리겠습니다.",
+        ]
+        return choose_message(candidates, state)
+
+    if conversation_state == "END":
+        candidates = [
+            "네, 감사합니다. 좋은 하루 보내세요.",
+            "네, 감사합니다. 편안한 하루 보내세요.",
+            "네, 문의해주셔서 감사합니다. 좋은 하루 되세요.",
+        ]
+        return choose_message(candidates, state)
+
     return fallback_ai_message(conversation_state, state)
 
 def should_use_template_first(conversation_state: str) -> bool:
