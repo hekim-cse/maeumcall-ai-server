@@ -336,3 +336,33 @@ reservation_available 상태는 LLM 호출 없이 template/fallback 응답을 �
 - 코드 가독성을 높인다.
 - 로그에서 응답 출처를 더 명확하게 해석할 수 있다.
 - 이후 template 응답만 별도 고도화하기 쉬운 구조를 만든다.
+
+
+---
+
+## Template-first 상태별 응답 생성 구조
+
+template-first 대상 상태는 build_template_ai_message()에서 상태별 template 응답을 직접 생성한다.
+
+현재 template-first 대상 상태는 다음과 같다.
+
+- checking_availability
+- reservation_available
+- reservation_confirmed
+- closing
+- END
+
+각 상태의 응답 생성 기준은 다음과 같다.
+
+- checking_availability: 예약 가능 여부 확인 중임을 안내한다.
+- reservation_available: available_time 기반 예약 가능 안내를 생성한다.
+- reservation_confirmed: selected_time 또는 available_time 기반 예약 완료 안내를 생성한다.
+- closing: 추가 문의가 없으면 통화를 마무리하겠다고 안내한다.
+- END: 최종 종료 문장을 반환한다.
+
+이 구조를 적용한 이유는 다음과 같다.
+
+- template-first 응답을 LLM 실패 fallback과 분리한다.
+- 정형 상태 응답을 서버 상태값 기반으로 안정적으로 생성한다.
+- 예약 시간 hallucination 가능성을 줄인다.
+- 상태별 응답 문장을 이후 독립적으로 개선할 수 있게 한다.
