@@ -249,3 +249,34 @@ reservation_confirmed 상태에서 LLM 호출 없이 template/fallback 응답을
 - action parser 단위 테스트: 28 passed
 - graph flow 통합 테스트: 18 passed
 - 전체 병원 예약 테스트: 46 passed
+
+
+---
+
+## 리팩토링 - 예약 가능 상태 응답 생성 안정화
+
+reservation_available 상태에서 LLM 호출 없이 template/fallback 응답을 사용하도록 개선하였다.
+
+핵심 내용:
+
+- should_use_template_first() 대상에 reservation_available 추가
+- 예약 가능 상태에서 complete_hf_messages 미호출 처리
+- 예약 가능 안내 문장을 fallback_ai_message 기반으로 생성
+- available_time 기반 예약 가능 안내 문장 생성
+- reservation_available 상태에서도 recommended_replies 유지
+- 예약 가능 상태 LLM 미호출 테스트 추가
+- 예약 가능 상태 추천 답변 유지 테스트 추가
+
+기대 효과:
+
+- 예약 가능 안내 문장의 안정성 향상
+- 없는 시간 hallucination 방지
+- 불필요한 Kanana 호출 감소
+- 예약 가능 여부 조회 결과의 일관된 반영
+- Flutter 통화 시뮬레이션 응답 속도 개선
+
+검증 결과:
+
+- action parser 단위 테스트: 28 passed
+- graph flow 통합 테스트: 20 passed
+- 전체 병원 예약 테스트: 48 passed
