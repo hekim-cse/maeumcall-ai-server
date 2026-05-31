@@ -61,7 +61,7 @@
 
 현재 테스트 결과:
 
-- 11 passed
+- 13 passed
 
 ---
 
@@ -87,7 +87,7 @@ action parser와 graph flow 테스트를 함께 실행한다.
 
 현재 결과:
 
-- 39 passed
+- 41 passed
 
 ---
 
@@ -123,3 +123,21 @@ action parser와 graph flow 테스트를 함께 실행한다.
 - simulation_result 초기화
 
 이 테스트는 이전 날짜의 예약 불가 결과가 새 날짜 예약 흐름에 섞이는 문제를 방지하기 위한 것이다.
+
+
+---
+
+## 날짜 변경 시 시간 조건 초기화 테스트
+
+날짜 변경 흐름에서는 기존 시간 조건이 새 날짜에 그대로 적용되지 않아야 한다.
+
+검증 대상:
+
+- confirming_info 상태에서 change_date 감지
+- reservation_unavailable 상태에서 change_date 감지
+- asking_date 상태로 전이
+- 기존 time 값 초기화
+- 새 날짜 입력 후 asking_time 상태로 전이
+- 날짜 변경이 아닌 흐름에서는 기존 time 값 유지
+
+이 테스트는 날짜가 바뀌었는데 이전 시간 조건이 그대로 남아 잘못된 예약 확인으로 이어지는 문제를 방지하기 위한 것이다.
