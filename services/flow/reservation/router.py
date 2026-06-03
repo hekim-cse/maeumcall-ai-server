@@ -7,6 +7,10 @@ from services.flow.reservation.hospital.response import (
     is_hospital_reservation_request,
     complete_hospital_reservation_with_graph,
 )
+from services.flow.reservation.restaurant.response import (
+    is_restaurant_reservation_request,
+    complete_restaurant_reservation_with_graph,
+)
 
 
 def complete_reservation_graph_if_supported(req: ChatRequest) -> Optional[ChatResponse]:
@@ -15,9 +19,9 @@ def complete_reservation_graph_if_supported(req: ChatRequest) -> Optional[ChatRe
 
     현재 지원하는 graph:
     - 예약 / 병원 예약
+    - 예약 / 식당 예약
 
     아직 지원하지 않는 예약 시나리오:
-    - 예약 / 식당 예약
     - 예약 / 스터디룸 예약
     - 예약 / 미용실 예약
 
@@ -25,5 +29,8 @@ def complete_reservation_graph_if_supported(req: ChatRequest) -> Optional[ChatRe
     """
     if is_hospital_reservation_request(req):
         return complete_hospital_reservation_with_graph(req)
+
+    if is_restaurant_reservation_request(req):
+        return complete_restaurant_reservation_with_graph(req)
 
     return None

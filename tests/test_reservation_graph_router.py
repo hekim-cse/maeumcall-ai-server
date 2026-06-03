@@ -27,15 +27,18 @@ def test_reservation_graph_router_handles_hospital_reservation():
     assert result.scenarioState is not None
 
 
-def test_reservation_graph_router_ignores_restaurant_reservation():
+def test_reservation_graph_router_handles_restaurant_reservation():
     """
-    예약 / 식당 예약은 아직 graph가 없으므로 기존 LLM/fallback 흐름으로 넘겨야 한다.
+    예약 / 식당 예약은 식당 예약 LangGraph로 처리되어야 한다.
     """
     req = make_request("식당 예약")
 
     result = complete_reservation_graph_if_supported(req)
 
-    assert result is None
+    assert result is not None
+    assert result.conversationState == "asking_date"
+    assert result.shouldEndCall is False
+    assert "예약" in result.response
 
 
 def test_reservation_graph_router_ignores_study_room_reservation():
@@ -58,3 +61,5 @@ def test_reservation_graph_router_ignores_hair_salon_reservation():
     result = complete_reservation_graph_if_supported(req)
 
     assert result is None
+
+
