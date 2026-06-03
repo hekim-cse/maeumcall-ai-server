@@ -21,6 +21,23 @@ def choose_message(candidates: List[str], state: dict) -> str:
     return candidates[0] if candidates else ""
 
 
+
+
+def is_first_response(state: dict) -> bool:
+    history = state.get("history") or []
+    last_ai_message = state.get("last_ai_message")
+
+    return not history and not last_ai_message
+
+
+def with_service_greeting(message: str, state: dict) -> str:
+    if not is_first_response(state):
+        return message
+
+    service_name = state.get("service_name") or "마음병원"
+    return f"네, {service_name}입니다. {message}"
+
+
 def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
     """
     LLM 1차 생성과 retry가 모두 실패했을 때 사용하는 최후 안전 응답이다.
@@ -46,7 +63,8 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
             "어느 과로 진료 보실까요?",
             "어느 과로 예약 도와드릴까요?",
         ]
-        return choose_message(candidates, state)
+        message = choose_message(candidates, state)
+        return with_service_greeting(message, state)
 
     if conversation_state == "asking_department":
         if date != "원하시는 날짜" and time != "원하시는 시간대":
@@ -62,7 +80,8 @@ def fallback_ai_message(conversation_state: str, state: dict = None) -> str:
             "어느 과로 진료 보실까요?",
             "어느 과로 예약 도와드릴까요?",
         ]
-        return choose_message(candidates, state)
+        message = choose_message(candidates, state)
+        return with_service_greeting(message, state)
 
     if conversation_state == "asking_date":
         candidates = [
