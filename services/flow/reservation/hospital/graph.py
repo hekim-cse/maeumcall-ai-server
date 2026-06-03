@@ -20,7 +20,7 @@ from services.flow.reservation.hospital.nodes import (
     parse_user_action_node,
 )
 
-from llm.huggingface_provider import complete_hf_messages
+from services.flow.reservation.hospital.llm_client import complete_hospital_ai_message
 from services.flow.reservation.hospital.validator import validate_hospital_reservation_message
 from services.flow.reservation.common.time_utils import (
     resolve_final_reservation_time,
@@ -381,7 +381,7 @@ def generate_ai_message_node(state: HospitalReservationState) -> Dict:
 
     prompt = build_ai_message_prompt(state)
 
-    raw_ai_message = complete_hf_messages(
+    raw_ai_message = complete_hospital_ai_message(
         messages=[{"role": "user", "content": prompt}],
         max_new_tokens=45,
         do_sample=True,
@@ -411,7 +411,7 @@ def generate_ai_message_node(state: HospitalReservationState) -> Dict:
         rejected_message=ai_message or raw_ai_message or "",
     )
 
-    retry_raw_ai_message = complete_hf_messages(
+    retry_raw_ai_message = complete_hospital_ai_message(
         messages=[{"role": "user", "content": retry_prompt}],
         max_new_tokens=40,
         do_sample=False,
