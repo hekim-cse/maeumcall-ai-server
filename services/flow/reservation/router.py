@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 from schemas.chat_models import ChatRequest, ChatResponse
-from services.flow.hospital_reservation_response import (
+from services.flow.reservation.hospital.response import (
     is_hospital_reservation_request,
     complete_hospital_reservation_with_graph,
 )

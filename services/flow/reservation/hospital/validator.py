@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, Any
 
-from services.flow.reservation_time_utils import is_time_in_options
+from services.flow.reservation.common.time_utils import is_time_in_options
 
 
 def validate_hospital_reservation_message(text: str, state: Dict[str, Any]) -> bool:

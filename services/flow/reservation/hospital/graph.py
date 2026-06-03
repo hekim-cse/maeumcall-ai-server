@@ -5,12 +5,12 @@ from typing import TypedDict, Optional, Dict, List, Any
 from langgraph.graph import StateGraph, START, END
 
 from llm.huggingface_provider import complete_hf_messages
-from services.flow.hospital_reservation_extractor import extract_hospital_reservation_info
-from services.flow.hospital_reservation_replies import get_recommended_replies
-from services.flow.hospital_reservation_availability import resolve_hospital_availability
-from services.flow.hospital_reservation_action_parser import parse_hospital_reservation_action
-from services.flow.hospital_reservation_validator import validate_hospital_reservation_message
-from services.flow.reservation_time_utils import (
+from services.flow.reservation.hospital.extractor import extract_hospital_reservation_info
+from services.flow.reservation.hospital.replies import get_recommended_replies
+from services.flow.reservation.hospital.availability import resolve_hospital_availability
+from services.flow.reservation.hospital.action_parser import parse_hospital_reservation_action
+from services.flow.reservation.hospital.validator import validate_hospital_reservation_message
+from services.flow.reservation.common.time_utils import (
     resolve_final_reservation_time,
     format_time_options,
     is_time_in_options,
