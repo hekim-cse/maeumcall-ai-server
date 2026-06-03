@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import TypedDict, Optional, Dict, List, Any
+from typing import Dict, List, Any
 
 from langgraph.graph import StateGraph, START, END
+from services.flow.reservation.hospital.state import HospitalReservationState
 
 from llm.huggingface_provider import complete_hf_messages
 from services.flow.reservation.hospital.extractor import extract_hospital_reservation_info
@@ -16,36 +17,6 @@ from services.flow.reservation.common.time_utils import (
     is_time_in_options,
 )
 
-
-class HospitalReservationState(TypedDict, total=False):
-    user_message: str
-    conversation_state: str
-
-    intent: Optional[str]
-    department: Optional[str]
-    date: Optional[str]
-    time: Optional[str]
-    user_name: Optional[str]
-    phone_number: Optional[str]
-    
-    user_action: Optional[str]
-    selected_time: Optional[str]
-
-    availability_status: Optional[str]
-    availability_reason: Optional[str]
-    available_time: Optional[str]
-    alternative_times: List[str]
-    availability_message_hint: Optional[str]
-    reservation_confirmed: Optional[bool]
-    simulation_result: Optional[Dict[str, Any]]
-
-    ai_message: Optional[str]
-    last_ai_message: Optional[str]
-
-    history: List[Dict[str, str]]
-
-    recommended_replies: List[str]
-    should_end_call: bool
 
 
 def choose_message(candidates: List[str], state: dict) -> str:
