@@ -1,9 +1,10 @@
 from services.flow.reservation.hospital import graph as graph_module
+from services.flow.reservation.hospital import generation as generation_module
 
 
 def _invoke(state: dict, monkeypatch):
     monkeypatch.setattr(
-        graph_module,
+        generation_module,
         "complete_hospital_ai_message",
         lambda *args, **kwargs: "",
     )
@@ -424,7 +425,7 @@ def test_reservation_unavailable_change_date_clears_lookup_fields(monkeypatch):
     from services.flow.reservation.hospital import graph as graph_module
 
     monkeypatch.setattr(
-        graph_module,
+        generation_module,
         "complete_hospital_ai_message",
         lambda *args, **kwargs: "원하시는 예약 날짜를 말씀해주시겠어요?",
     )
@@ -475,7 +476,7 @@ def test_reservation_unavailable_change_date_clears_time_too(monkeypatch):
     from services.flow.reservation.hospital import graph as graph_module
 
     monkeypatch.setattr(
-        graph_module,
+        generation_module,
         "complete_hospital_ai_message",
         lambda *args, **kwargs: "원하시는 예약 날짜를 말씀해주시겠어요?",
     )
@@ -522,7 +523,7 @@ def test_asking_date_after_change_date_moves_to_asking_time(monkeypatch):
     from services.flow.reservation.hospital import graph as graph_module
 
     monkeypatch.setattr(
-        graph_module,
+        generation_module,
         "complete_hospital_ai_message",
         lambda *args, **kwargs: "네, 모레 예약으로 확인했습니다. 원하시는 시간대를 말씀해주시겠어요?",
     )
@@ -556,7 +557,7 @@ def test_checking_availability_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("checking_availability 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -587,7 +588,7 @@ def test_closing_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("closing 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -619,7 +620,7 @@ def test_end_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("END 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -651,7 +652,7 @@ def test_reservation_confirmed_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("reservation_confirmed 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -689,7 +690,7 @@ def test_reservation_confirmed_template_uses_selected_time_first(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("reservation_confirmed 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -729,7 +730,7 @@ def test_reservation_available_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("reservation_available 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -769,7 +770,7 @@ def test_reservation_available_template_keeps_recommended_replies(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("reservation_available 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -882,7 +883,7 @@ def test_asking_date_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("asking_date 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -935,7 +936,7 @@ def test_asking_time_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("asking_time 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -989,7 +990,7 @@ def test_asking_department_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("asking_department 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -1038,7 +1039,7 @@ def test_confirming_info_recommended_replies_do_not_include_name_or_phone(monkey
     from services.flow.reservation.hospital import graph as graph_module
 
     monkeypatch.setattr(
-        graph_module,
+        generation_module,
         "complete_hospital_ai_message",
         lambda *args, **kwargs: "내일 오후 3시 내과 진료 예약을 원하시는 것이 맞으실까요?",
     )
@@ -1079,7 +1080,7 @@ def test_confirming_info_uses_template_first_without_llm(monkeypatch):
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("confirming_info 상태에서는 LLM을 호출하면 안 됩니다.")
 
-    monkeypatch.setattr(graph_module, "complete_hospital_ai_message", fail_if_llm_called)
+    monkeypatch.setattr(generation_module, "complete_hospital_ai_message", fail_if_llm_called)
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
