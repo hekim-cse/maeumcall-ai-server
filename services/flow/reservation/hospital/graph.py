@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Any
+from typing import Dict, List
 
 from langgraph.graph import StateGraph, START, END
 from services.flow.reservation.hospital.state import HospitalReservationState
@@ -9,7 +9,6 @@ from services.flow.reservation.hospital.templates import (
     fallback_ai_message,
 )
 from services.flow.reservation.hospital.policy import (
-    clear_reservation_lookup_fields,
     route_after_decide,
     should_use_template_first,
 )
@@ -22,28 +21,14 @@ from services.flow.reservation.hospital.nodes import (
 )
 
 from llm.huggingface_provider import complete_hf_messages
-from services.flow.reservation.hospital.extractor import extract_hospital_reservation_info
-from services.flow.reservation.hospital.replies import get_recommended_replies
-from services.flow.reservation.hospital.availability import resolve_hospital_availability
-from services.flow.reservation.hospital.action_parser import parse_hospital_reservation_action
 from services.flow.reservation.hospital.validator import validate_hospital_reservation_message
 from services.flow.reservation.common.time_utils import (
     resolve_final_reservation_time,
     format_time_options,
-    is_time_in_options,
 )
 
 
-
-
-
-
-
     
-
-
-
-
 
 
 def format_history_for_prompt(history: List[Dict[str, str]], max_turns: int = 6) -> str:
@@ -248,7 +233,6 @@ def build_ai_message_prompt(state: HospitalReservationState) -> str:
 """.strip()
 
 
-
 def build_retry_prompt(state: HospitalReservationState, rejected_message: str) -> str:
     """
     LLM 응답이 현재 상태에 맞지 않을 때,
@@ -370,14 +354,6 @@ def clean_ai_message(text: str) -> str:
     return text
 
 
-
-
-
-
-
-
-
-
 def generate_ai_message_node(state: HospitalReservationState) -> Dict:
     """
     ai_message 생성 노드이다.
@@ -471,11 +447,6 @@ def generate_ai_message_node(state: HospitalReservationState) -> Dict:
         "ai_message": fallback_message,
         "last_ai_message": fallback_message,
     }
-
-
-
-
-
 
 
 def build_hospital_reservation_graph():
