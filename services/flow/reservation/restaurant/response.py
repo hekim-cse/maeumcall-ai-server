@@ -22,6 +22,7 @@ def is_restaurant_reservation_request(req: ChatRequest) -> bool:
 def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "intent": result.get("intent"),
+        "service_name": result.get("service_name"),
         "date": result.get("date"),
         "time": result.get("time"),
         "party_size": result.get("party_size"),
@@ -50,6 +51,7 @@ def complete_restaurant_reservation_with_graph(req: ChatRequest) -> ChatResponse
     initial_state = {
         **previous_state,
         "user_message": getattr(req, "userMessage", "") or "",
+        "service_name": previous_state.get("service_name") or "마음식당",
         "conversation_state": (
             getattr(req, "conversationState", None)
             or previous_state.get("conversation_state")

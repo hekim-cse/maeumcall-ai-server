@@ -6,6 +6,7 @@ from typing import TypedDict, Optional, Dict, List, Any
 class HospitalReservationState(TypedDict, total=False):
     user_message: str
     conversation_state: str
+    service_name: Optional[str]
 
     intent: Optional[str]
     department: Optional[str]

@@ -12,10 +12,13 @@ def restaurant_greeting_node(state: RestaurantReservationState) -> Dict:
     식당 예약 LangGraph 최소 진입 확인용 노드이다.
     이후 식당 예약 상태 흐름을 구현하면서 세부 노드로 분리할 예정이다.
     """
+    service_name = state.get("service_name") or "마음식당"
+
     return {
         "intent": "reservation",
+        "service_name": service_name,
         "conversation_state": "asking_date",
-        "ai_message": "네, 식당 예약 도와드리겠습니다. 예약 날짜는 언제가 괜찮으세요?",
+        "ai_message": f"네, {service_name}입니다. 예약 도와드리겠습니다. 예약 날짜는 언제가 괜찮으세요?",
         "recommended_replies": [
             "오늘 저녁으로 예약하고 싶습니다.",
             "내일 저녁으로 예약하고 싶습니다.",
