@@ -36,7 +36,7 @@ def test_reservation_graph_router_handles_restaurant_reservation():
     result = complete_reservation_graph_if_supported(req)
 
     assert result is not None
-    assert result.conversationState == "asking_date"
+    assert result.conversationState == "collecting_reservation_info"
     assert result.shouldEndCall is False
     assert "예약" in result.response
 

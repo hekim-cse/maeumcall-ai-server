@@ -4,6 +4,7 @@ from typing import Dict, Any
 
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.reservation.restaurant.graph import restaurant_reservation_graph
+from services.flow.reservation.restaurant.policy import compact_restaurant_state
 
 
 def is_restaurant_reservation_request(req: ChatRequest) -> bool:
@@ -18,29 +19,6 @@ def is_restaurant_reservation_request(req: ChatRequest) -> bool:
 
     return category == "예약" and title == "식당 예약"
 
-
-def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
-    return {
-        "intent": result.get("intent"),
-        "service_name": result.get("service_name"),
-        "date": result.get("date"),
-        "time": result.get("time"),
-        "party_size": result.get("party_size"),
-        "user_name": result.get("user_name"),
-        "conversation_state": result.get("conversation_state"),
-        "last_ai_message": result.get("ai_message"),
-
-        "user_action": result.get("user_action"),
-        "selected_time": result.get("selected_time"),
-
-        "availability_status": result.get("availability_status"),
-        "availability_reason": result.get("availability_reason"),
-        "available_time": result.get("available_time"),
-        "alternative_times": result.get("alternative_times") or [],
-        "availability_message_hint": result.get("availability_message_hint"),
-        "reservation_confirmed": result.get("reservation_confirmed"),
-        "simulation_result": result.get("simulation_result"),
-    }
 
 
 def complete_restaurant_reservation_with_graph(req: ChatRequest) -> ChatResponse:
@@ -75,5 +53,5 @@ def complete_restaurant_reservation_with_graph(req: ChatRequest) -> ChatResponse
         recommendedReplies=recommended_replies,
         conversationState=conversation_state,
         shouldEndCall=should_end_call,
-        scenarioState=_compact_scenario_state(result),
+        scenarioState=compact_restaurant_state(result),
     )
