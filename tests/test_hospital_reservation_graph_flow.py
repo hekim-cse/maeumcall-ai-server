@@ -1,4 +1,4 @@
-from services.flow import hospital_reservation_graph as graph_module
+from services.flow.reservation.hospital import graph as graph_module
 
 
 def _invoke(state: dict, monkeypatch):
@@ -421,7 +421,7 @@ def test_reservation_unavailable_change_date_clears_lookup_fields(monkeypatch):
     reservation_unavailable 상태에서 사용자가 다른 날짜를 요청하면
     asking_date로 전이하면서 이전 예약 조회 결과를 초기화해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     monkeypatch.setattr(
         graph_module,
@@ -472,7 +472,7 @@ def test_reservation_unavailable_change_date_clears_time_too(monkeypatch):
     reservation_unavailable 상태에서 다른 날짜를 요청하면
     이전 시간 조건도 초기화해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     monkeypatch.setattr(
         graph_module,
@@ -519,7 +519,7 @@ def test_asking_date_after_change_date_moves_to_asking_time(monkeypatch):
     날짜 변경 이후 새 날짜를 입력하면
     time이 초기화된 상태이므로 asking_time으로 이동해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     monkeypatch.setattr(
         graph_module,
@@ -551,7 +551,7 @@ def test_checking_availability_uses_template_first_without_llm(monkeypatch):
     checking_availability 상태는 정형 안내 문장으로 충분하므로
     LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("checking_availability 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -582,7 +582,7 @@ def test_closing_uses_template_first_without_llm(monkeypatch):
     closing 상태는 통화 마무리 정형 문장으로 충분하므로
     LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("closing 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -614,7 +614,7 @@ def test_end_uses_template_first_without_llm(monkeypatch):
     END 상태는 최종 종료 문장으로 충분하므로
     LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("END 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -646,7 +646,7 @@ def test_reservation_confirmed_uses_template_first_without_llm(monkeypatch):
     reservation_confirmed 상태는 예약 완료 정형 문장으로 충분하므로
     LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("reservation_confirmed 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -684,7 +684,7 @@ def test_reservation_confirmed_template_uses_selected_time_first(monkeypatch):
     """
     reservation_confirmed template 응답은 selected_time을 우선 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("reservation_confirmed 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -724,7 +724,7 @@ def test_reservation_available_uses_template_first_without_llm(monkeypatch):
     reservation_available 상태는 예약 가능 안내 정형 문장으로 충분하므로
     LLM을 호출하지 않고 template/fallback 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("reservation_available 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -764,7 +764,7 @@ def test_reservation_available_template_keeps_recommended_replies(monkeypatch):
     reservation_available 상태에서 template-first 응답을 사용하더라도
     recommended_replies는 기존처럼 유지되어야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("reservation_available 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -801,7 +801,7 @@ def test_template_message_builder_uses_server_state_values():
     """
     template 응답 생성 함수는 서버 상태값을 기반으로 정형 응답을 만들어야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     message = graph_module.build_template_ai_message(
         "reservation_available",
@@ -824,7 +824,7 @@ def test_template_message_builder_handles_all_template_states():
     """
     template 응답 생성 함수는 template-first 대상 상태를 직접 처리해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     base_state = {
         "department": "내과",
@@ -877,7 +877,7 @@ def test_asking_date_uses_template_first_without_llm(monkeypatch):
     asking_date 상태는 날짜를 묻는 정형 질문으로 충분하므로
     LLM을 호출하지 않고 template 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("asking_date 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -909,7 +909,7 @@ def test_template_message_builder_handles_asking_date():
     """
     template 응답 생성 함수는 asking_date 상태에서 날짜 질문만 생성해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     message = graph_module.build_template_ai_message(
         "asking_date",
@@ -930,7 +930,7 @@ def test_asking_time_uses_template_first_without_llm(monkeypatch):
     asking_time 상태는 시간을 묻는 정형 질문으로 충분하므로
     LLM을 호출하지 않고 template 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("asking_time 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -963,7 +963,7 @@ def test_template_message_builder_handles_asking_time():
     """
     template 응답 생성 함수는 asking_time 상태에서 시간 질문만 생성해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     message = graph_module.build_template_ai_message(
         "asking_time",
@@ -984,7 +984,7 @@ def test_asking_department_uses_template_first_without_llm(monkeypatch):
     asking_department 상태는 진료과를 묻는 정형 질문으로 충분하므로
     LLM을 호출하지 않고 template 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("asking_department 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -1014,7 +1014,7 @@ def test_template_message_builder_handles_asking_department():
     """
     template 응답 생성 함수는 asking_department 상태에서 진료과 질문만 생성해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     message = graph_module.build_template_ai_message(
         "asking_department",
@@ -1035,7 +1035,7 @@ def test_confirming_info_recommended_replies_do_not_include_name_or_phone(monkey
     현재 MVP에서는 성함/연락처를 수집하지 않으므로
     confirming_info 추천 답변에 성함/연락처 관련 문구가 포함되면 안 된다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     monkeypatch.setattr(
         graph_module,
@@ -1074,7 +1074,7 @@ def test_confirming_info_uses_template_first_without_llm(monkeypatch):
     confirming_info 상태는 예약 정보 확인 정형 문장으로 충분하므로
     LLM을 호출하지 않고 template 응답을 사용해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     def fail_if_llm_called(*args, **kwargs):
         raise AssertionError("confirming_info 상태에서는 LLM을 호출하면 안 됩니다.")
@@ -1110,7 +1110,7 @@ def test_template_message_builder_handles_confirming_info():
     template 응답 생성 함수는 confirming_info 상태에서
     서버 상태값 기반 예약 확인 문장을 생성해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     message = graph_module.build_template_ai_message(
         "confirming_info",
@@ -1134,7 +1134,7 @@ def test_template_message_builder_handles_reservation_unavailable_with_alternati
     reservation_unavailable template 응답은 대안 시간이 있으면
     alternative_times 기반 안내 문장을 생성해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     message = graph_module.build_template_ai_message(
         "reservation_unavailable",
@@ -1163,7 +1163,7 @@ def test_template_message_builder_handles_reservation_unavailable_without_altern
     reservation_unavailable template 응답은 대안 시간이 없으면
     다른 날짜나 시간을 요청하는 안내 문장을 생성해야 한다.
     """
-    from services.flow import hospital_reservation_graph as graph_module
+    from services.flow.reservation.hospital import graph as graph_module
 
     message = graph_module.build_template_ai_message(
         "reservation_unavailable",

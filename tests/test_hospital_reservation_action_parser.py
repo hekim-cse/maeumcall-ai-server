@@ -1,4 +1,4 @@
-from services.flow.hospital_reservation_action_parser import (
+from services.flow.reservation.hospital.action_parser import (
     parse_hospital_reservation_action,
 )
 

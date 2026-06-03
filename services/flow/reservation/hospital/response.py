@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Dict, Any
 
 from schemas.chat_models import ChatRequest, ChatResponse
-from services.flow.hospital_reservation_graph import hospital_reservation_graph
+from services.flow.reservation.hospital.graph import hospital_reservation_graph
 
 
 def is_hospital_reservation_request(req: ChatRequest) -> bool:

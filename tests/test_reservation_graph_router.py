@@ -1,5 +1,5 @@
 from schemas.chat_models import ChatRequest
-from services.flow.reservation_graph_router import complete_reservation_graph_if_supported
+from services.flow.reservation.router import complete_reservation_graph_if_supported
 
 
 def make_request(title: str) -> ChatRequest:

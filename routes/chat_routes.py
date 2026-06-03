@@ -12,7 +12,7 @@ from services.closing import is_closing_utterance, closing_line
 from llm.prompt_builder import generate_prompts
 from services.etiquette import maybe_get_etiquette_tip
 
-from services.flow.reservation_graph_router import complete_reservation_graph_if_supported
+from services.flow.reservation.router import complete_reservation_graph_if_supported
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 OPENAI_TIMEOUT = int(os.getenv("OPENAI_TIMEOUT", "8"))

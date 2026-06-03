@@ -1,5 +1,5 @@
 from schemas.chat_models import ChatRequest
-from services.flow.hospital_reservation_response import is_hospital_reservation_request
+from services.flow.reservation.hospital.response import is_hospital_reservation_request
 
 
 def make_request(title: str) -> ChatRequest:
