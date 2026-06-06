@@ -56,6 +56,7 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
         user_message,
     )
     user_action = action_result.get("user_action")
+    selected_time = action_result.get("selected_time")
 
     # 1) 예약 정보 확인 상태에서 사용자가 맞다고 한 경우
     if current_state == "confirming_info":
@@ -147,8 +148,28 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
             "conversation_state": "reservation_available",
         }
 
-    # 3) 예약 불가 안내 후 사용자가 다른 날짜/시간을 요청한 경우
+    # 3) 예약 불가 안내 후 사용자가 대안 시간/다른 날짜/다른 시간을 요청한 경우
     if current_state == "reservation_unavailable":
+        if user_action == "select_alternative_time":
+            alternatives = state.get("alternative_times") or []
+
+            if selected_time in alternatives:
+                return {
+                    "user_action": user_action,
+                    "selected_time": selected_time,
+                    "available_time": selected_time,
+                    "availability_status": "available",
+                    "availability_reason": None,
+                    "availability_message_hint": f"{state.get('date')} {selected_time}에 {state.get('party_size')} 예약이 가능합니다.",
+                    "conversation_state": "reservation_available",
+                }
+
+            return {
+                "user_action": "ask_other_time",
+                "reservation_confirmed": False,
+                "conversation_state": "reservation_unavailable",
+            }
+
         if user_action == "change_date":
             return {
                 "user_action": user_action,
@@ -239,7 +260,6 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
         "missing_fields": [],
         "conversation_state": "confirming_info",
     }
-
 
 
 def generate_restaurant_response_node(state: RestaurantReservationState) -> Dict:
@@ -344,23 +364,6 @@ def _build_asking_user_name_message(state: RestaurantReservationState) -> str:
     party_size = state.get("party_size") or "인원"
 
     return f"{date} {time}에 {party_size} 예약으로 확인했습니다. 예약자 성함은 어떻게 남겨드릴까요?"
-
-
-def check_restaurant_availability_node(state: RestaurantReservationState) -> Dict:
-    """
-    식당 예약 가능 여부를 확인한다.
-    """
-    result = resolve_restaurant_availability(state)
-
-    return {
-        "availability_status": result.get("availability_status"),
-        "availability_reason": result.get("availability_reason"),
-        "available_time": result.get("available_time"),
-        "alternative_times": result.get("alternative_times") or [],
-        "availability_message_hint": result.get("availability_message_hint"),
-        "reservation_confirmed": result.get("reservation_confirmed"),
-        "simulation_result": result.get("simulation_result"),
-    }
 
 
 def check_restaurant_availability_node(state: RestaurantReservationState) -> Dict:

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from typing import Dict, Optional
 
 
@@ -97,6 +99,14 @@ def _parse_reservation_available_action(text: str) -> Dict[str, Optional[str]]:
 
 
 def _parse_reservation_unavailable_action(text: str) -> Dict[str, Optional[str]]:
+    selected_time = _extract_selected_time(text)
+
+    if selected_time:
+        return {
+            "user_action": "select_alternative_time",
+            "selected_time": selected_time,
+        }
+
     if _contains_any(text, ["다른 시간", "다른 시간대", "가능한 시간", "가장 빠른"]):
         return {"user_action": "ask_other_time"}
 
@@ -121,6 +131,30 @@ def _parse_closing_action(text: str) -> Dict[str, Optional[str]]:
         return {"user_action": "end_call"}
 
     return {"user_action": "unknown"}
+
+
+
+def _extract_selected_time(text: str) -> Optional[str]:
+    """
+    예약 불가 상태에서 사용자가 제안된 대안 시간을 고르는지 확인한다.
+
+    예:
+    - 저녁 8시로 할게요.
+    - 6시로 예약해주세요.
+    - 오후 8시 괜찮습니다.
+    """
+    match = re.search(r"(오전|오후|저녁|밤|낮)?\s*(\d{1,2})\s*시", text)
+
+    if not match:
+        return None
+
+    period = match.group(1)
+    hour = match.group(2)
+
+    if period:
+        return f"{period} {hour}시"
+
+    return f"{hour}시"
 
 
 def _is_positive(text: str) -> bool:

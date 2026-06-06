@@ -87,3 +87,55 @@ def test_restaurant_reservation_available_confirm_completes_reservation():
     assert result["conversation_state"] == "reservation_confirmed"
     assert result["reservation_confirmed"] is True
     assert "예약 완료" in result["ai_message"]
+
+
+def test_restaurant_reservation_unavailable_selects_alternative_time():
+    result = restaurant_reservation_graph.invoke(
+        {
+            "user_message": "저녁 8시로 할게요.",
+            "conversation_state": "reservation_unavailable",
+            "service_name": "마음식당",
+            "date": "오늘",
+            "time": "저녁 7시",
+            "party_size": "2명",
+            "user_name": "김개굴",
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "available_time": None,
+            "alternative_times": ["저녁 6시", "저녁 8시"],
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "reservation_available"
+    assert result["selected_time"] == "저녁 8시"
+    assert result["available_time"] == "저녁 8시"
+    assert result["availability_status"] == "available"
+    assert "가능" in result["ai_message"]
+
+
+def test_restaurant_reservation_unavailable_rejects_out_of_option_time():
+    result = restaurant_reservation_graph.invoke(
+        {
+            "user_message": "저녁 9시로 할게요.",
+            "conversation_state": "reservation_unavailable",
+            "service_name": "마음식당",
+            "date": "오늘",
+            "time": "저녁 7시",
+            "party_size": "2명",
+            "user_name": "김개굴",
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "available_time": None,
+            "alternative_times": ["저녁 6시", "저녁 8시"],
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "reservation_unavailable"
+    assert result.get("selected_time") is None
+    assert result["reservation_confirmed"] is not True
