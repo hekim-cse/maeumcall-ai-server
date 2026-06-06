@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Dict
 
 from services.flow.reservation.restaurant.state import RestaurantReservationState
+from services.flow.reservation.restaurant.action_parser import parse_restaurant_reservation_action
 from services.flow.reservation.restaurant.extractor import extract_restaurant_reservation_info
 from services.flow.reservation.restaurant.policy import (
     decide_restaurant_next_state,
@@ -39,13 +40,206 @@ def extract_restaurant_info_node(state: RestaurantReservationState) -> Dict:
 
 def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
     """
-    현재까지 모인 정보를 보고 다음 상태를 결정한다.
+    식당 예약 상태를 결정한다.
+
+    중요:
+    - 이미 confirming_info, reservation_available 같은 진행 상태에 들어온 경우에는
+      사용자의 확인/변경 의도를 먼저 처리한다.
+    - 그 다음에 부족한 예약 정보를 판단한다.
+    - 정보가 모두 모이면 confirming_info로 이동한다.
     """
-    next_state = decide_restaurant_next_state(state)
+    user_message = state.get("user_message", "") or ""
+    current_state = state.get("conversation_state") or "greeting"
+
+    action_result = parse_restaurant_reservation_action(
+        current_state,
+        user_message,
+    )
+    user_action = action_result.get("user_action")
+
+    # 1) 예약 정보 확인 상태에서 사용자가 맞다고 한 경우
+    if current_state == "confirming_info":
+        if user_action == "confirm":
+            return {
+                "user_action": user_action,
+                "conversation_state": "checking_availability",
+            }
+
+        if user_action == "change_date":
+            return {
+                "user_action": user_action,
+                "date": None,
+                "availability_status": None,
+                "availability_reason": None,
+                "available_time": None,
+                "alternative_times": [],
+                "availability_message_hint": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
+        if user_action == "change_time":
+            return {
+                "user_action": user_action,
+                "time": None,
+                "availability_status": None,
+                "availability_reason": None,
+                "available_time": None,
+                "alternative_times": [],
+                "availability_message_hint": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
+        if user_action == "change_party_size":
+            return {
+                "user_action": user_action,
+                "party_size": None,
+                "availability_status": None,
+                "availability_reason": None,
+                "available_time": None,
+                "alternative_times": [],
+                "availability_message_hint": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
+        if user_action == "change_user_name":
+            return {
+                "user_action": user_action,
+                "user_name": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
+        return {
+            "user_action": user_action,
+            "conversation_state": "confirming_info",
+        }
+
+    # 2) 예약 가능 안내 후 사용자가 확정한 경우
+    if current_state == "reservation_available":
+        if user_action == "confirm_reservation":
+            final_time = state.get("available_time") or state.get("selected_time") or state.get("time")
+
+            return {
+                "user_action": user_action,
+                "selected_time": final_time,
+                "reservation_confirmed": True,
+                "conversation_state": "reservation_confirmed",
+            }
+
+        if user_action == "ask_other_time":
+            return {
+                "user_action": user_action,
+                "time": None,
+                "availability_status": None,
+                "availability_reason": None,
+                "available_time": None,
+                "alternative_times": [],
+                "availability_message_hint": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
+        return {
+            "user_action": user_action,
+            "conversation_state": "reservation_available",
+        }
+
+    # 3) 예약 불가 안내 후 사용자가 다른 날짜/시간을 요청한 경우
+    if current_state == "reservation_unavailable":
+        if user_action == "change_date":
+            return {
+                "user_action": user_action,
+                "date": None,
+                "time": None,
+                "availability_status": None,
+                "availability_reason": None,
+                "available_time": None,
+                "alternative_times": [],
+                "availability_message_hint": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
+        if user_action == "ask_other_time":
+            return {
+                "user_action": user_action,
+                "time": None,
+                "availability_status": None,
+                "availability_reason": None,
+                "available_time": None,
+                "alternative_times": [],
+                "availability_message_hint": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
+        return {
+            "user_action": user_action,
+            "conversation_state": "reservation_unavailable",
+        }
+
+    # 4) 예약 완료 후 마무리
+    if current_state == "reservation_confirmed":
+        if user_action == "go_closing":
+            return {
+                "user_action": user_action,
+                "conversation_state": "closing",
+            }
+
+        return {
+            "user_action": user_action,
+            "conversation_state": "reservation_confirmed",
+        }
+
+    if current_state == "closing":
+        if user_action == "end_call":
+            return {
+                "user_action": user_action,
+                "conversation_state": "END",
+                "should_end_call": True,
+            }
+
+        return {
+            "user_action": user_action,
+            "conversation_state": "closing",
+        }
+
+    # 5) 일반 정보 수집 흐름
+    date = state.get("date")
+    time = state.get("time")
+    party_size = state.get("party_size")
+    user_name = state.get("user_name")
+
+    missing_fields = []
+
+    if not date:
+        missing_fields.append("date")
+
+    if not time:
+        missing_fields.append("time")
+
+    if not party_size:
+        missing_fields.append("party_size")
+
+    if not user_name:
+        missing_fields.append("user_name")
+
+    if missing_fields:
+        return {
+            "user_action": user_action,
+            "missing_fields": missing_fields,
+            "conversation_state": "collecting_reservation_info",
+        }
 
     return {
-        "conversation_state": next_state,
+        "user_action": user_action,
+        "missing_fields": [],
+        "conversation_state": "confirming_info",
     }
+
 
 
 def generate_restaurant_response_node(state: RestaurantReservationState) -> Dict:
@@ -166,4 +360,29 @@ def check_restaurant_availability_node(state: RestaurantReservationState) -> Dic
         "availability_message_hint": result.get("availability_message_hint"),
         "reservation_confirmed": result.get("reservation_confirmed"),
         "simulation_result": result.get("simulation_result"),
+    }
+
+
+def check_restaurant_availability_node(state: RestaurantReservationState) -> Dict:
+    """
+    식당 예약 가능 여부를 확인하는 노드이다.
+
+    실제 예약 시스템 연동 전까지는 resolve_restaurant_availability의
+    규칙 기반 시뮬레이션 결과를 사용한다.
+    """
+    result = resolve_restaurant_availability(state)
+
+    availability_status = result.get("availability_status")
+
+    if availability_status == "available":
+        next_state = "reservation_available"
+    elif availability_status == "unavailable":
+        next_state = "reservation_unavailable"
+    else:
+        next_state = "reservation_unavailable"
+
+    return {
+        **result,
+        "conversation_state": next_state,
+        "simulation_result": result,
     }

@@ -12,9 +12,9 @@ from services.flow.reservation.restaurant.nodes import (
 )
 
 
-def route_after_decide(state: RestaurantReservationState) -> str:
+def route_after_restaurant_decide(state: RestaurantReservationState) -> str:
     """
-    상태 결정 이후 예약 가능 여부 조회가 필요한지 판단한다.
+    decide_state 이후 다음 노드를 결정한다.
     """
     conversation_state = state.get("conversation_state")
 
@@ -38,7 +38,7 @@ def build_restaurant_reservation_graph():
 
     builder.add_conditional_edges(
         "decide_state",
-        route_after_decide,
+        route_after_restaurant_decide,
         {
             "check_availability": "check_availability",
             "generate_response": "generate_response",
