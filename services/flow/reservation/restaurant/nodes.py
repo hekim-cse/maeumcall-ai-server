@@ -12,6 +12,7 @@ from services.flow.reservation.restaurant.policy import (
 from services.flow.reservation.restaurant.replies import get_restaurant_recommended_replies
 from services.flow.reservation.restaurant.templates import build_restaurant_template_message
 from services.flow.reservation.restaurant.availability import resolve_restaurant_availability
+from services.flow.reservation.restaurant.generation import generate_restaurant_ai_message
 
 
 def extract_restaurant_info_node(state: RestaurantReservationState) -> Dict:
@@ -264,24 +265,12 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
 
 def generate_restaurant_response_node(state: RestaurantReservationState) -> Dict:
     """
-    식당 예약 응답을 생성한다.
+    식당 예약 응답 생성 노드이다.
 
-    콜 포비아 사용자를 고려해서 부족한 정보를 하나씩 딱딱하게 묻기보다,
-    부족한 정보를 자연스럽게 묶어서 요청한다.
+    실제 응답 문장은 generation.py에서 LLM 우선으로 생성하고,
+    검증 실패 시 template fallback을 사용한다.
     """
-    conversation_state = state.get("conversation_state") or "collecting_reservation_info"
-
-    if conversation_state == "collecting_reservation_info":
-        ai_message = _build_collecting_info_message(state)
-    elif conversation_state == "asking_user_name":
-        ai_message = _build_asking_user_name_message(state)
-    else:
-        ai_message = build_restaurant_template_message(conversation_state, state)
-
-    return {
-        "ai_message": ai_message,
-        "last_ai_message": ai_message,
-    }
+    return generate_restaurant_ai_message(state)
 
 
 def attach_restaurant_recommended_replies_node(state: RestaurantReservationState) -> Dict:
