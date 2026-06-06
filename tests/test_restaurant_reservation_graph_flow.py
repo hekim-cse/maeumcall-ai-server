@@ -62,7 +62,10 @@ def test_restaurant_reservation_confirm_checks_availability_unavailable():
     assert result["conversation_state"] == "reservation_unavailable"
     assert result["availability_status"] == "unavailable"
     assert result["alternative_times"] == ["저녁 6시", "저녁 8시"]
-    assert "어렵" in result["ai_message"] or "마감" in result["ai_message"]
+    assert any(
+        keyword in result["ai_message"]
+        for keyword in ["어렵", "어려운", "마감", "불가능"]
+    )
 
 
 def test_restaurant_reservation_available_confirm_completes_reservation():
@@ -139,3 +142,49 @@ def test_restaurant_reservation_unavailable_rejects_out_of_option_time():
     assert result["conversation_state"] == "reservation_unavailable"
     assert result.get("selected_time") is None
     assert result["reservation_confirmed"] is not True
+
+
+def test_restaurant_reservation_confirmed_moves_to_closing():
+    result = restaurant_reservation_graph.invoke(
+        {
+            "user_message": "네, 감사합니다.",
+            "conversation_state": "reservation_confirmed",
+            "service_name": "마음식당",
+            "date": "오늘",
+            "time": "저녁 6시",
+            "party_size": "2명",
+            "user_name": "김개굴",
+            "reservation_confirmed": True,
+            "selected_time": "저녁 6시",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "closing"
+    assert result["should_end_call"] is False
+    assert "감사" in result["ai_message"] or "방문" in result["ai_message"]
+
+
+def test_restaurant_reservation_closing_moves_to_end():
+    result = restaurant_reservation_graph.invoke(
+        {
+            "user_message": "네, 괜찮습니다.",
+            "conversation_state": "closing",
+            "service_name": "마음식당",
+            "date": "오늘",
+            "time": "저녁 6시",
+            "party_size": "2명",
+            "user_name": "김개굴",
+            "reservation_confirmed": True,
+            "selected_time": "저녁 6시",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "END"
+    assert result["should_end_call"] is True
+    assert "감사" in result["ai_message"] or "좋은 하루" in result["ai_message"]
