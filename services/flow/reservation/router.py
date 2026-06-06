@@ -11,6 +11,10 @@ from services.flow.reservation.restaurant.response import (
     is_restaurant_reservation_request,
     complete_restaurant_reservation_with_graph,
 )
+from services.flow.reservation.study_room.response import (
+    is_study_room_reservation_request,
+    complete_study_room_reservation_with_graph,
+)
 
 
 def complete_reservation_graph_if_supported(req: ChatRequest) -> Optional[ChatResponse]:
@@ -20,9 +24,9 @@ def complete_reservation_graph_if_supported(req: ChatRequest) -> Optional[ChatRe
     현재 지원하는 graph:
     - 예약 / 병원 예약
     - 예약 / 식당 예약
+    - 예약 / 스터디룸 예약
 
     아직 지원하지 않는 예약 시나리오:
-    - 예약 / 스터디룸 예약
     - 예약 / 미용실 예약
 
     지원하지 않는 시나리오는 None을 반환하여 기존 LLM/fallback 흐름으로 넘긴다.
@@ -32,5 +36,8 @@ def complete_reservation_graph_if_supported(req: ChatRequest) -> Optional[ChatRe
 
     if is_restaurant_reservation_request(req):
         return complete_restaurant_reservation_with_graph(req)
+
+    if is_study_room_reservation_request(req):
+        return complete_study_room_reservation_with_graph(req)
 
     return None
