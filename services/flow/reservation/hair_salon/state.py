@@ -12,6 +12,7 @@ class HairSalonReservationState(TypedDict, total=False):
     date: Optional[str]
     time: Optional[str]
     service_type: Optional[str]
+    designer: Optional[str]
     user_name: Optional[str]
 
     user_action: Optional[str]
