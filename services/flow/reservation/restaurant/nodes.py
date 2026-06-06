@@ -10,6 +10,7 @@ from services.flow.reservation.restaurant.policy import (
 )
 from services.flow.reservation.restaurant.replies import get_restaurant_recommended_replies
 from services.flow.reservation.restaurant.templates import build_restaurant_template_message
+from services.flow.reservation.restaurant.availability import resolve_restaurant_availability
 
 
 def extract_restaurant_info_node(state: RestaurantReservationState) -> Dict:
@@ -149,3 +150,20 @@ def _build_asking_user_name_message(state: RestaurantReservationState) -> str:
     party_size = state.get("party_size") or "인원"
 
     return f"{date} {time}에 {party_size} 예약으로 확인했습니다. 예약자 성함은 어떻게 남겨드릴까요?"
+
+
+def check_restaurant_availability_node(state: RestaurantReservationState) -> Dict:
+    """
+    식당 예약 가능 여부를 확인한다.
+    """
+    result = resolve_restaurant_availability(state)
+
+    return {
+        "availability_status": result.get("availability_status"),
+        "availability_reason": result.get("availability_reason"),
+        "available_time": result.get("available_time"),
+        "alternative_times": result.get("alternative_times") or [],
+        "availability_message_hint": result.get("availability_message_hint"),
+        "reservation_confirmed": result.get("reservation_confirmed"),
+        "simulation_result": result.get("simulation_result"),
+    }

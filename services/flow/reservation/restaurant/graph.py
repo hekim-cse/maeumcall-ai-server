@@ -5,10 +5,23 @@ from langgraph.graph import StateGraph, START, END
 from services.flow.reservation.restaurant.state import RestaurantReservationState
 from services.flow.reservation.restaurant.nodes import (
     attach_restaurant_recommended_replies_node,
+    check_restaurant_availability_node,
     decide_restaurant_state_node,
     extract_restaurant_info_node,
     generate_restaurant_response_node,
 )
+
+
+def route_after_decide(state: RestaurantReservationState) -> str:
+    """
+    상태 결정 이후 예약 가능 여부 조회가 필요한지 판단한다.
+    """
+    conversation_state = state.get("conversation_state")
+
+    if conversation_state == "checking_availability":
+        return "check_availability"
+
+    return "generate_response"
 
 
 def build_restaurant_reservation_graph():
@@ -16,12 +29,23 @@ def build_restaurant_reservation_graph():
 
     builder.add_node("extract_info", extract_restaurant_info_node)
     builder.add_node("decide_state", decide_restaurant_state_node)
+    builder.add_node("check_availability", check_restaurant_availability_node)
     builder.add_node("generate_response", generate_restaurant_response_node)
     builder.add_node("attach_replies", attach_restaurant_recommended_replies_node)
 
     builder.add_edge(START, "extract_info")
     builder.add_edge("extract_info", "decide_state")
-    builder.add_edge("decide_state", "generate_response")
+
+    builder.add_conditional_edges(
+        "decide_state",
+        route_after_decide,
+        {
+            "check_availability": "check_availability",
+            "generate_response": "generate_response",
+        },
+    )
+
+    builder.add_edge("check_availability", "generate_response")
     builder.add_edge("generate_response", "attach_replies")
     builder.add_edge("attach_replies", END)
 
