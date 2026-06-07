@@ -16,6 +16,7 @@ class StudyRoomReservationState(TypedDict, total=False):
     user_name: Optional[str]
 
     user_action: Optional[str]
+    missing_fields: List[str]
     selected_time: Optional[str]
 
     availability_status: Optional[str]
