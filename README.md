@@ -83,15 +83,35 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 3. 기술 스택
 
-| 영역 | 기술 |
+아래 이미지는 마음콜 AI Server 구현에 사용한 주요 기술 구성을 정리한 것입니다.
+
+<p align="center">
+  <img src="docs/assets/tech_stack.png" width="82%" alt="Tech Stack" />
+</p>
+
+### 기술 선택 이유
+
+| 기술 | 선택 이유 |
 |---|---|
-| 🖥 Server Framework | FastAPI |
-| 🐍 Language | Python 3.9+ |
-| 🔁 State Flow | LangGraph |
-| 🧠 LLM | Kanana 1.5 Hugging Face |
-| 🧪 Test | Pytest |
-| 📱 Client | Flutter |
-| 📦 Response Format | JSON |
+| FastAPI | 비동기 API 서버 구현이 간단하고, `/chat` API처럼 요청/응답 구조가 명확한 서버를 빠르게 구성할 수 있기 때문에 사용했습니다. |
+| Python 3.9+ | LLM 연동, 데이터 처리, 테스트 자동화에 필요한 라이브러리 생태계가 풍부해 AI 서버 구현에 적합하다고 판단했습니다. |
+| LangGraph | 단순 프롬프트 호출이 아니라, 예약 시나리오처럼 상태 전이가 필요한 대화 흐름을 명확하게 관리하기 위해 사용했습니다. |
+| Kanana 1.5 Hugging Face | 한국어 통화 상황에 맞는 자연스러운 응답 생성을 위해 사용했으며, Hugging Face 기반으로 모델 호출 구조를 분리하기 쉽다고 판단했습니다. |
+| Pytest | action parser, extractor, graph flow, routing 등 서버 내부 로직을 기능 단위로 검증하기 위해 사용했습니다. |
+| Flutter | 실제 앱 클라이언트와 연동되는 구조를 고려해, 서버 응답이 모바일 화면에서 바로 사용될 수 있도록 설계했습니다. |
+| JSON | Flutter와 FastAPI 간 데이터 교환 형식으로 사용하며, AI 응답뿐 아니라 상태값과 추천 답변을 함께 전달하기에 적합하다고 판단했습니다. |
+
+<table>
+  <tr>
+    <td>
+      <strong>🧭 기술 선택 방향</strong><br/>
+      마음콜 AI Server의 기술 선택 핵심은 단순히 LLM 응답을 생성하는 것이 아니라,
+      사용자의 발화에 따라 <strong>상태를 전이</strong>하고,
+      현재 상황에 맞는 응답인지 <strong>검증</strong>한 뒤,
+      안정적인 통화 연습 흐름을 이어갈 수 있도록 만드는 데 있습니다.
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -372,10 +392,18 @@ http://127.0.0.1:8000/docs
     <td>
       <strong>✅ 구현 성과</strong><br/>
       마음콜 AI Server는 단순 LLM 응답 서버가 아니라,
-      사용자의 발화를 기반으로 현재 상태를 판단하고 시나리오 흐름을 이어가는
-      <strong>상태 기반 통화 시뮬레이션 서버</strong>로 확장되고 있습니다.
-      현재는 예약 카테고리를 기준으로 LangGraph, validator, fallback 구조를 검증했으며,
-      이후 다른 전화 상황에도 동일한 구조를 확장할 수 있도록 문서와 폴더 구조를 분리했습니다.
+      사용자의 발화를 분석하고 현재 대화 상태를 갱신하며,
+      검증된 AI 응답과 추천 답변을 함께 반환하는
+      <strong>상태 기반 통화 시뮬레이션 서버</strong>로 구현했습니다.
+      <br/><br/>
+      현재는 예약 카테고리를 기준으로
+      <strong>LangGraph 상태 전이</strong>,
+      <strong>validator 응답 검증</strong>,
+      <strong>template fallback</strong>,
+      <strong>추천 답변 생성</strong>,
+      <strong>API 응답 구조</strong>를 검증했습니다.
+      또한 예약 관련 테스트 <strong>165개를 통과</strong>하여,
+      이후 다른 전화 상황으로 확장 가능한 서버 구조를 마련했습니다.
     </td>
   </tr>
 </table>
