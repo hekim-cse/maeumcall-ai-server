@@ -76,7 +76,7 @@
 예약 시나리오는 사용자의 발화를 입력받은 뒤, 필요한 정보를 추출하고, 현재 상태를 판단한 다음, LLM 응답과 추천 답변을 생성해 반환한다.
 
 <p align="center">
-  <img src="../../../../../../docs/assets/conversation_pipeline.png" width="92%" alt="Reservation LangGraph Conversation Pipeline" />
+  <img src="../../../docs/assets/conversation_pipeline.png" width="92%" alt="Reservation LangGraph Conversation Pipeline" />
 </p>
 
 <table>
