@@ -97,39 +97,65 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 4. 서버 구조
 
-서버는 Flutter 앱의 사용자 발화를 받아 현재 시나리오 흐름을 처리하고, 갱신된 상태와 AI 응답을 JSON으로 반환합니다.
+마음콜 AI Server는 사용자 발화를 입력받아 시나리오별 처리 흐름으로 분기하고, 현재 상태에 맞는 AI 응답을 생성하는 구조입니다.
+
+이 섹션에서는 실제 요청 처리 순서보다, 서버 내부의 주요 구성 요소와 역할을 중심으로 설명합니다.
 
 | 영역 | 역할 |
 |---|---|
 | 📱 Flutter App | 사용자 발화 입력, AI 응답과 추천 답변 표시 |
-| 🔌 FastAPI `/chat` | 요청 수신 및 응답 반환 |
+| 🔌 FastAPI `/chat` | 클라이언트 요청 수신 및 응답 반환 |
 | 🚦 Scenario Router | category/title 기준으로 시나리오 처리 흐름 분기 |
-| 🔁 LangGraph Flow | 시나리오별 상태 전이 관리 |
+| 🔁 LangGraph Flow | 시나리오별 conversationState 관리 |
 | 🧾 Extractor | 사용자 발화에서 필요한 정보 추출 |
 | 🗣 Action Parser | 사용자 발화를 user_action으로 분류 |
-| 🧠 AI Message Generator | LLM 기반 응답 생성 |
-| 🛡 Validator / Fallback | 응답 검증 및 안전 응답 보정 |
+| 🧠 AI Message Generator | 현재 상태 기반 LLM 응답 생성 |
+| 🛡 Validator / Fallback | 상태에 맞지 않는 응답 검증 및 안전 응답 보정 |
 | 💬 Recommended Replies | 현재 상태에 맞는 추천 답변 생성 |
 
-전체 처리 흐름은 다음과 같습니다.
-
-1. Flutter 앱이 사용자 발화를 `/chat` API로 전송
-2. FastAPI가 요청 데이터를 시나리오 라우터로 전달
-3. LangGraph 지원 시나리오는 전용 graph로 분기
-4. extractor가 필요한 정보를 추출
-5. action_parser가 사용자 행동을 분류
-6. nodes가 다음 conversationState를 결정
-7. LLM이 현재 상태에 맞는 응답 후보를 생성
-8. validator가 응답을 검증하고 실패 시 template fallback 사용
-9. 서버가 response, conversationState, scenarioState, recommendedReplies, shouldEndCall 반환
+<table>
+  <tr>
+    <td>
+      <strong>💡 구조 핵심</strong><br/>
+      서버는 <strong>요청 수신</strong>, <strong>시나리오 분기</strong>, <strong>상태 처리</strong>, 
+      <strong>LLM 응답 생성</strong>, <strong>응답 검증</strong> 계층으로 나뉩니다.
+      메인 서버는 공통 API 흐름을 담당하고, 세부 상태 전이는 각 시나리오별 LangGraph에서 관리합니다.
+    </td>
+  </tr>
+</table>
 
 ---
 
 ## 5. API 흐름
 
+`/chat` API는 사용자 발화와 현재 시나리오 상태를 입력받고, 다음 AI 응답과 갱신된 상태를 반환합니다.
+
+아래 이미지는 클라이언트 요청부터 서버 내부 처리, 최종 응답 반환까지의 전체 흐름을 나타냅니다.
+
 <p align="center">
   <img src="docs/assets/api_flow.png" width="82%" alt="API Flow" />
 </p>
+
+### 흐름에서 중요한 점
+
+| 항목 | 설명 |
+|---|---|
+| 요청 기준 | Flutter는 `category`, `title`, `userMessage`, `conversationState`, `scenarioState`를 서버로 전달 |
+| 분기 기준 | 서버는 `category/title`을 기준으로 LangGraph 적용 시나리오와 일반 LLM 흐름을 구분 |
+| 상태 유지 | 서버는 다음 대화를 이어가기 위해 `conversationState`와 `scenarioState`를 함께 반환 |
+| 추천 답변 | 현재 상태에서 사용자가 말하기 쉬운 문장을 `recommendedReplies`로 제공 |
+| 종료 제어 | 통화가 끝나는 흐름에서는 `shouldEndCall` 값으로 프론트의 종료 처리를 제어 |
+
+<table>
+  <tr>
+    <td>
+      <strong>📌 API 흐름 핵심</strong><br/>
+      `/chat` API는 단순히 응답 문장만 반환하지 않습니다.
+      다음 발화에서 이어서 사용할 <strong>상태값</strong>과 <strong>추천 답변</strong>까지 함께 반환하여,
+      사용자가 하나의 전화 상황을 자연스럽게 이어갈 수 있도록 합니다.
+    </td>
+  </tr>
+</table>
 
 ---
 
