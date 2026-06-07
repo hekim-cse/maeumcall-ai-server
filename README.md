@@ -284,27 +284,40 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 10. 실행 방법
 
-1. 가상환경 활성화
+### 10-1. 가상환경 활성화
 
-    source .venv/bin/activate
+```bash
+source .venv/bin/activate
+```
 
-2. 의존성 설치
+### 10-2. 의존성 설치
 
-    python -m pip install -r requirements.txt
+```bash
+python -m pip install -r requirements.txt
+```
 
-3. 서버 실행
+### 10-3. 서버 실행
 
-    python -m uvicorn main:app --reload
+```bash
+python -m uvicorn main:app --reload
+```
+
+### 10-4. 접속 주소
 
 기본 실행 주소:
 
-    http://127.0.0.1:8000
+```text
+http://127.0.0.1:8000
+```
 
 API 문서:
 
-    http://127.0.0.1:8000/docs
+```text
+http://127.0.0.1:8000/docs
+```
 
 ---
+
 
 ## 11. 문서
 
