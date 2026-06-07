@@ -5,7 +5,7 @@
 ### FastAPI 기반 LLM 통화 시뮬레이션 서버
 
 통화가 어려운 사용자가 실제 전화 상황을 연습할 수 있도록  
-사용자 발화를 분석하고, 시나리오 상태를 전이하며,  
+사용자 발화를 분석하고, 시나리오 상태를 관리하며,  
 AI 응답과 추천 답변을 생성하는 서버입니다.
 
 <br/>
@@ -14,7 +14,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
 <img src="https://img.shields.io/badge/LangGraph-143D60?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Kanana_1.5-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"/>
-<img src="https://img.shields.io/badge/Pytest-50_passed-FF9149?style=for-the-badge&logo=pytest&logoColor=white"/>
+<img src="https://img.shields.io/badge/Pytest-165_passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white"/>
 
 <br/>
 <br/>
@@ -31,13 +31,12 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 4. [서버 구조](#4-서버-구조)
 5. [API 흐름](#5-api-흐름)
 6. [Main API](#6-main-api)
-7. [병원 예약 시나리오](#7-병원-예약-시나리오)
-8. [테스트 현황](#8-테스트-현황)
+7. [LangGraph 적용 구조](#7-langgraph-적용-구조)
+8. [테스트 및 검증](#8-테스트-및-검증)
 9. [프로젝트 구조](#9-프로젝트-구조)
 10. [실행 방법](#10-실행-방법)
 11. [문서](#11-문서)
-12. [현재 개발 상태](#12-현재-개발-상태)
-13. [프론트엔드 연동 계획](#13-프론트엔드-연동-계획)
+12. [구현 결과 요약](#12-구현-결과-요약)
 
 ---
 
@@ -47,11 +46,22 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 사용자가 통화 상황에서 말한 내용을 서버로 전달하면, 서버는 현재 시나리오 상태를 판단하고 다음 AI 응답을 생성합니다.
 
-현재는 병원 예약 시나리오를 중심으로 구현되어 있으며, 다음 흐름을 처리합니다.
+단순히 LLM에게 답변 생성을 맡기는 구조가 아니라, 시나리오별로 필요한 정보를 추출하고 상태를 전이하며, 응답 검증과 fallback 처리를 통해 안정적인 통화 연습 흐름을 제공합니다.
 
 <p align="center">
   <img src="docs/assets/service_flow.png" width="75%" alt="Service Flow" />
 </p>
+
+<table>
+  <tr>
+    <td>
+      <strong>🎯 핵심 목표</strong><br/>
+      마음콜 AI Server는 사용자가 실제 전화 상황을 단계적으로 연습할 수 있도록
+      <strong>사용자 발화 분석 → 상태 판단 → LLM 응답 생성 → 추천 답변 제공</strong>까지 이어지는
+      대화형 통화 시뮬레이션 서버를 목표로 합니다.
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -59,16 +69,15 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 | 기능 | 설명 |
 |---|---|
-| 🧠 AI 응답 생성 | Kanana 1.5 Hugging Face 모델을 이용해 현재 대화 상태에 맞는 응답 생성 |
-| 🔁 LangGraph 상태 전이 | 병원 예약 시나리오의 대화 흐름을 상태 기반으로 관리 |
-| 🗣 Action Parser | 사용자 발화를 user_action으로 변환 |
-| 🧾 Info Extractor | 진료과, 날짜, 시간 등 예약에 필요한 정보 추출 |
-| ⏰ Availability Simulator | 예약 가능 여부와 대안 시간 시뮬레이션 |
-| 🛡 Validator | 상태에 맞지 않는 LLM 응답 검증 |
-| 🔄 Retry / Fallback | 응답 실패 시 재생성 또는 안전 응답으로 보정 |
-| 💬 Recommended Replies | 현재 상태에 맞는 추천 답변 생성 |
-| 📞 Call Ending Control | shouldEndCall 값으로 통화 종료 흐름 제어 |
-| 🧪 Test Automation | action parser 단위 테스트와 graph flow 통합 테스트 구성 |
+| 🧠 AI 응답 생성 | Kanana 1.5 Hugging Face 모델을 이용해 현재 대화 맥락에 맞는 응답 생성 |
+| 🔁 LangGraph 상태 전이 | 시나리오별 대화 흐름을 상태 기반으로 관리 |
+| 🧾 정보 추출 | 사용자 발화에서 시나리오 진행에 필요한 정보 추출 |
+| 🗣 사용자 행동 분류 | 사용자 발화를 confirm, change_time, ask_other_time 등 user_action으로 변환 |
+| 🛡 응답 검증 | 현재 상태와 맞지 않는 LLM 응답 차단 |
+| 🧱 Fallback 처리 | 검증 실패 시 안전한 template 응답 사용 |
+| 💬 추천 답변 생성 | 현재 상태에 맞는 recommendedReplies 반환 |
+| 📦 상태 유지 | scenarioState로 다음 요청에 필요한 상태 저장 |
+| 📞 통화 종료 제어 | shouldEndCall 값으로 종료 흐름 관리 |
 
 ---
 
@@ -77,7 +86,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 영역 | 기술 |
 |---|---|
 | 🖥 Server Framework | FastAPI |
-| 🐍 Language | Python |
+| 🐍 Language | Python 3.9+ |
 | 🔁 State Flow | LangGraph |
 | 🧠 LLM | Kanana 1.5 Hugging Face |
 | 🧪 Test | Pytest |
@@ -88,30 +97,31 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 4. 서버 구조
 
-서버는 Flutter 앱의 사용자 발화를 받아 병원 예약 시나리오 흐름을 처리하고, 갱신된 상태와 AI 응답을 JSON으로 반환합니다.
+서버는 Flutter 앱의 사용자 발화를 받아 현재 시나리오 흐름을 처리하고, 갱신된 상태와 AI 응답을 JSON으로 반환합니다.
 
 | 영역 | 역할 |
 |---|---|
 | 📱 Flutter App | 사용자 발화 입력, AI 응답과 추천 답변 표시 |
-| 🔌 FastAPI /chat | 요청 수신, 응답 반환 |
-| 🔁 LangGraph Flow | 병원 예약 상태 전이 전체 관리 |
-| 🧾 Info Extractor | 사용자 발화에서 진료과, 날짜, 시간 추출 |
+| 🔌 FastAPI `/chat` | 요청 수신 및 응답 반환 |
+| 🚦 Scenario Router | category/title 기준으로 시나리오 처리 흐름 분기 |
+| 🔁 LangGraph Flow | 시나리오별 상태 전이 관리 |
+| 🧾 Extractor | 사용자 발화에서 필요한 정보 추출 |
 | 🗣 Action Parser | 사용자 발화를 user_action으로 분류 |
-| 🚦 State Transition | 현재 상태와 user_action 기준으로 다음 상태 결정 |
-| ⏰ Availability Simulator | 예약 가능 여부와 대안 시간 처리 |
-| 🧠 AI Message Generator | Kanana 1.5 기반 응답 생성 |
-| 🛡 Validator / Fallback | 응답 검증, retry, fallback 처리 |
+| 🧠 AI Message Generator | LLM 기반 응답 생성 |
+| 🛡 Validator / Fallback | 응답 검증 및 안전 응답 보정 |
 | 💬 Recommended Replies | 현재 상태에 맞는 추천 답변 생성 |
 
 전체 처리 흐름은 다음과 같습니다.
 
-1. Flutter 앱이 사용자 발화를 /chat API로 전송
-2. FastAPI가 요청 데이터를 LangGraph로 전달
-3. LangGraph가 정보 추출, user_action 분류, 상태 전이 수행
-4. 예약 가능 여부와 대안 시간 계산
-5. Kanana 1.5가 현재 상태에 맞는 AI 응답 후보 생성
-6. Validator가 응답을 검증하고 실패 시 retry/fallback 처리
-7. 서버가 response, conversationState, scenarioState, recommendedReplies, shouldEndCall 반환
+1. Flutter 앱이 사용자 발화를 `/chat` API로 전송
+2. FastAPI가 요청 데이터를 시나리오 라우터로 전달
+3. LangGraph 지원 시나리오는 전용 graph로 분기
+4. extractor가 필요한 정보를 추출
+5. action_parser가 사용자 행동을 분류
+6. nodes가 다음 conversationState를 결정
+7. LLM이 현재 상태에 맞는 응답 후보를 생성
+8. validator가 응답을 검증하고 실패 시 template fallback 사용
+9. 서버가 response, conversationState, scenarioState, recommendedReplies, shouldEndCall 반환
 
 ---
 
@@ -125,7 +135,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 6. Main API
 
-### POST /chat
+### POST `/chat`
 
 사용자 발화와 현재 시나리오 상태를 서버로 보내면, 서버는 다음 AI 응답과 갱신된 상태를 반환합니다.
 
@@ -133,9 +143,9 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
     {
       "category": "예약",
-      "title": "병원 예약",
-      "description": "병원 진료 예약 전화 상황",
-      "userMessage": "내일 오후에 내과 진료 예약 가능할까요?",
+      "title": "식당 예약",
+      "description": "식당 예약 전화 상황",
+      "userMessage": "오늘 저녁 7시에 두 명 예약할 수 있나요?",
       "conversationState": "greeting",
       "scenarioState": {},
       "history": []
@@ -144,21 +154,22 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 응답 예시:
 
     {
-      "response": "원하시는 진료과를 알려주시면 내일 오후의 예약 가능 여부를 확인해드리겠습니다.",
+      "response": "오늘 저녁 7시 두 분 예약으로 확인했습니다. 예약자 성함은 어떻게 남겨드릴까요?",
       "etiquetteTip": null,
       "recommendedReplies": [
-        "내과 진료를 예약하고 싶습니다.",
-        "피부과 진료를 예약하고 싶습니다.",
-        "어느 과로 가야 할지 상담받고 싶습니다."
+        "김개굴 이름으로 예약해주세요.",
+        "예약자는 김개굴입니다.",
+        "다른 시간도 가능할까요?"
       ],
-      "conversationState": "asking_department",
+      "conversationState": "collecting_reservation_info",
       "shouldEndCall": false,
       "scenarioState": {
         "intent": "reservation",
-        "department": null,
-        "date": "내일",
-        "time": "오후",
-        "conversation_state": "asking_department"
+        "date": "오늘",
+        "time": "저녁 7시",
+        "party_size": "2명",
+        "user_name": null,
+        "conversation_state": "collecting_reservation_info"
       }
     }
 
@@ -166,58 +177,108 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ---
 
-## 7. 병원 예약 시나리오
+## 7. LangGraph 적용 구조
 
-병원 예약 시나리오는 사용자의 발화에서 예약 정보를 수집하고, 예약 가능 여부를 확인한 뒤 예약 확정 또는 대안 시간 제안으로 이어지는 구조입니다.
+마음콜 AI Server는 모든 시나리오를 단일 프롬프트로 처리하지 않고, 상태 전이가 필요한 시나리오부터 LangGraph 기반 구조로 확장합니다.
 
-| 상태 | 역할 |
-|---|---|
-| 👋 greeting | 대화 시작 |
-| 🏥 asking_department | 진료과 확인 |
-| 📅 asking_date | 예약 날짜 확인 |
-| ⏰ asking_time | 예약 시간 확인 |
-| ✅ confirming_info | 예약 정보 확인 |
-| 🔍 checking_availability | 예약 가능 여부 조회 |
-| 🟢 reservation_available | 예약 가능 안내 |
-| 🔴 reservation_unavailable | 예약 불가 안내 |
-| 🔁 suggest_alternative | 대안 시간 제안 |
-| 🎉 reservation_confirmed | 예약 확정 |
-| 📞 closing | 통화 마무리 |
-| 🏁 END | 통화 종료 |
+메인 README에서는 전체 적용 현황만 간단히 정리하고, 각 카테고리별 상세 설계는 별도 README에서 관리합니다.
 
-상세한 상태 전이 흐름은 [hospital-reservation-flow.md](docs/hospital-reservation-flow.md)를 참고합니다.
+| 카테고리 | LangGraph 적용 상태 | 상세 문서 |
+|---|---|---|
+| 📞 예약 | ✅ 적용 | [Reservation README](services/flow/reservation/README.md) |
+| 🎓 교수님 | 예정 | 준비 중 |
+| 🏢 회사 | 예정 | 준비 중 |
+| 👪 가족 | 예정 | 준비 중 |
+| 🧑‍🤝‍🧑 친구 | 예정 | 준비 중 |
+| 💑 연인 | 예정 | 준비 중 |
+| 🎧 고객센터 | 예정 | 준비 중 |
+| 🛵 배달 | 예정 | 준비 중 |
+| 🏛 시청 | 예정 | 준비 중 |
+
+<table>
+  <tr>
+    <td>
+      <strong>💡 문서화 원칙</strong><br/>
+      메인 README는 프로젝트 전체 구조와 적용 현황만 요약합니다.
+      시나리오별 상태 설계, 노드 구성, 테스트 결과, 트러블슈팅은
+      각 카테고리 README에서 관리합니다.
+    </td>
+  </tr>
+</table>
 
 ---
 
-## 8. 테스트 현황
+## 8. 테스트 및 검증
 
-| 테스트 구분 | 파일 | 결과 |
-|---|---|---|
-| 🧩 Action Parser Unit Test | tests/test_hospital_reservation_action_parser.py | ✅ 28 passed |
-| 🔁 Graph Flow Integration Test | tests/test_hospital_reservation_graph_flow.py | ✅ 22 passed |
-| ✅ Total | 병원 예약 서버 테스트 | ✅ 50 passed |
+현재는 예약 카테고리 LangGraph를 중심으로 단위 테스트와 통합 테스트를 구성했습니다.
 
-테스트 실행:
+| 테스트 구분 | 검증 내용 |
+|---|---|
+| 🧩 Action Parser Test | 사용자 발화를 user_action으로 올바르게 분류하는지 검증 |
+| 🧾 Extractor Test | 시나리오 진행에 필요한 정보 추출 검증 |
+| 🔁 Graph Flow Test | 상태 전이, 확정/종료 흐름 검증 |
+| 🚦 Routing Test | category/title 기준으로 올바른 graph에 연결되는지 검증 |
+| 🛡 Response Validation | 현재 상태와 맞지 않는 LLM 응답을 fallback으로 보정하는지 검증 |
 
-    python -m pytest tests/test_hospital_reservation_action_parser.py tests/test_hospital_reservation_graph_flow.py -v
+| 구분 | 결과 |
+|---|---|
+| 예약 관련 테스트 | ✅ 165 passed |
+| 실패 테스트 | 없음 |
+| 경고 | LangGraph serializer 관련 warning 1건 |
+
+테스트 실행 예시:
+
+    python -m pytest \
+      tests/test_hair_salon_reservation_action_parser.py \
+      tests/test_hair_salon_reservation_extractor.py \
+      tests/test_hair_salon_reservation_graph_flow.py \
+      tests/test_hair_salon_reservation_graph_routing.py \
+      tests/test_study_room_reservation_action_parser.py \
+      tests/test_study_room_reservation_extractor.py \
+      tests/test_study_room_reservation_graph_flow.py \
+      tests/test_study_room_reservation_graph_routing.py \
+      tests/test_restaurant_reservation_action_parser.py \
+      tests/test_restaurant_reservation_extractor.py \
+      tests/test_restaurant_reservation_graph_flow.py \
+      tests/test_restaurant_reservation_graph_routing.py \
+      tests/test_reservation_graph_router.py \
+      tests/test_hospital_reservation_action_parser.py \
+      tests/test_hospital_reservation_graph_flow.py \
+      -v
 
 ---
 
 ## 9. 프로젝트 구조
 
     maeum-call-ai-server/
+    ├── data/
+    │   ├── prompts/
+    │   └── scenario/
     ├── docs/
-    │   ├── api-contract.md
-    │   ├── hospital-reservation-flow.md
-    │   ├── test-strategy.md
-    │   └── implementation-log.md
+    │   └── assets/
     ├── llm/
     ├── routes/
+    ├── schemas/
     ├── services/
     │   └── flow/
+    │       ├── reservation/
+    │       └── ...
     ├── tests/
     ├── main.py
     └── README.md
+
+### 주요 디렉터리
+
+| 경로 | 설명 |
+|---|---|
+| `routes/` | FastAPI 라우터 및 `/chat` 엔드포인트 |
+| `schemas/` | 요청/응답 데이터 모델 |
+| `services/chat_service.py` | 기본 LLM 응답 생성 흐름 |
+| `services/flow/` | 시나리오별 LangGraph 구현 영역 |
+| `llm/` | LLM provider, prompt builder, postprocessor |
+| `data/scenario/` | 시나리오 샘플 데이터 |
+| `data/prompts/` | 시나리오별 프롬프트 데이터 |
+| `tests/` | 단위 테스트 및 통합 테스트 |
 
 ---
 
@@ -227,7 +288,11 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
     source .venv/bin/activate
 
-2. 서버 실행
+2. 의존성 설치
+
+    python -m pip install -r requirements.txt
+
+3. 서버 실행
 
     python -m uvicorn main:app --reload
 
@@ -235,53 +300,46 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
     http://127.0.0.1:8000
 
+API 문서:
+
+    http://127.0.0.1:8000/docs
+
 ---
 
 ## 11. 문서
 
 | 문서 | 설명 |
 |---|---|
-| 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 /chat API 계약 |
-| 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 구조, 시나리오별 구현 요약, 테스트 결과 |
+| 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 `/chat` API 요청/응답 계약 |
+| 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 통합 설계 및 구현 요약 |
 
 ---
 
+## 12. 구현 결과 요약
 
+| 구분 | 결과 |
+|---|---|
+| 서버 구조 | FastAPI 기반 `/chat` API 구성 |
+| LLM 연동 | Kanana 1.5 Hugging Face 기반 응답 생성 |
+| 상태 관리 | LangGraph 기반 conversationState 관리 구조 도입 |
+| 적용 시나리오 | 예약 카테고리 우선 적용 |
+| 응답 안정성 | validator와 template fallback으로 상태 의미 보정 |
+| 추천 답변 | 현재 상태에 맞는 recommendedReplies 생성 |
+| 클라이언트 상태 유지 | scenarioState로 다음 요청에 필요한 상태 반환 |
+| 테스트 검증 | 예약 관련 테스트 165개 통과 |
 
-## 12. 현재 개발 상태
-
-현재 서버는 병원 예약 시나리오를 중심으로 다음 기능까지 구현되어 있습니다.
-
-- 🔁 LangGraph 기반 병원 예약 상태 흐름
-- 🧠 Kanana 1.5 Hugging Face 모델 기반 응답 생성
-- 🧾 history 기반 LLM 응답 검증 및 retry/fallback 처리
-- ⏰ 예약 가능 여부 시뮬레이션
-- 🗣 user_action 기반 상태 전이
-- 🛡 상태별 응답 validator 분리
-- 🔁 대안 시간 검증 로직 분리
-- 🧪 action parser 단위 테스트
-- 🧪 graph flow 통합 테스트
-- 📅 예약 불가 상태에서 다른 날짜 요청 시 asking_date 전이 처리
-- ⏰ 날짜 변경 시 기존 시간 조건 초기화 처리
-- ⚡ 정형 상태에서 template-first 응답 생성 처리
-- ✅ 예약 완료 상태에서 selected_time 기반 template 응답 처리
-- 🕒 예약 가능 상태에서 available_time 기반 template 응답 처리
-- 🧩 template 응답 생성 함수와 fallback 응답 생성 함수 역할 분리
-- 🧱 template-first 대상 상태별 전용 응답 로직 구현
-
----
-
-## 13. 프론트엔드 연동 계획
-
-Flutter 앱에서는 /chat 응답의 다음 값을 저장하고 다음 요청에 다시 전달해야 합니다.
-
-- conversationState
-- scenarioState
-- history
-- recommendedReplies
-- shouldEndCall
-
-Flutter 연동은 서버의 병원 예약 시나리오 안정화 이후 진행합니다.
+<table>
+  <tr>
+    <td>
+      <strong>✅ 구현 성과</strong><br/>
+      마음콜 AI Server는 단순 LLM 응답 서버가 아니라,
+      사용자의 발화를 기반으로 현재 상태를 판단하고 시나리오 흐름을 이어가는
+      <strong>상태 기반 통화 시뮬레이션 서버</strong>로 확장되고 있습니다.
+      현재는 예약 카테고리를 기준으로 LangGraph, validator, fallback 구조를 검증했으며,
+      이후 다른 전화 상황에도 동일한 구조를 확장할 수 있도록 문서와 폴더 구조를 분리했습니다.
+    </td>
+  </tr>
+</table>
 
 ---
 
