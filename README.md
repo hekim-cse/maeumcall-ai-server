@@ -241,8 +241,8 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 | 문서 | 설명 |
 |---|---|
-| 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 `/chat` API 요청/응답 계약 |
-| 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 통합 설계, 시나리오별 구현 요약, 테스트 결과 |
+| 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 /chat API 계약 |
+| 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 구조, 시나리오별 구현 요약, 테스트 결과 |
 
 ---
 
