@@ -241,12 +241,12 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 | 문서 | 설명 |
 |---|---|
-| 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 /chat API 계약 |
-  | 🏥 [hospital-reservation-flow.md](docs/hospital-reservation-flow.md) | 병원 예약 LangGraph 상태 흐름 |
-  | 🧪 [test-strategy.md](docs/test-strategy.md) | 단위 테스트 및 통합 테스트 전략 |
-  | 📝 [implementation-log.md](docs/implementation-log.md) | 구현 차수별 요약 기록 |
+| 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 `/chat` API 요청/응답 계약 |
+| 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 통합 설계, 시나리오별 구현 요약, 테스트 결과 |
 
 ---
+
+
 
 ## 12. 현재 개발 상태
 
