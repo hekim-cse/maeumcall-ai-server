@@ -15,6 +15,7 @@ class ProfessorAppointmentState(TypedDict, total=False):
     user_name: Optional[str]
 
     user_action: Optional[str]
+    missing_fields: List[str]
 
     ai_message: Optional[str]
     last_ai_message: Optional[str]
