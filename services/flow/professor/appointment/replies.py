@@ -21,6 +21,12 @@ def get_professor_appointment_recommended_replies(conversation_state: str) -> Li
             "면담 목적을 다시 말씀드리겠습니다.",
         ]
 
+    if conversation_state == "appointment_confirmed":
+        return [
+            "네, 감사합니다.",
+            "확인했습니다.",
+        ]
+
     if conversation_state == "closing":
         return [
             "네, 감사합니다.",

@@ -36,8 +36,14 @@ def build_professor_appointment_template_message(
     if conversation_state == "confirming_info":
         return _build_confirming_message(state)
 
+    if conversation_state == "appointment_confirmed":
+        return (
+            f"알겠습니다. {user_name} 학생의 {purpose} 관련 면담 요청은 "
+            f"{date} {time}로 확인해두겠습니다."
+        )
+
     if conversation_state == "closing":
-        return "네, 확인했습니다. 해당 일정으로 참고하겠습니다."
+        return "네, 확인했습니다. 추가로 필요한 사항이 있으면 다시 말씀해주시기 바랍니다."
 
     if conversation_state == "END":
         return "네, 알겠습니다."
