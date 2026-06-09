@@ -25,8 +25,14 @@ def is_valid_professor_appointment_response(
     if conversation_state == "confirming_info":
         return any(keyword in text for keyword in ["확인", "맞", "희망", "면담"])
 
+    if conversation_state == "appointment_confirmed":
+        return any(
+            keyword in text
+            for keyword in ["알겠습니다", "확인", "참고", "면담", "일정"]
+        )
+
     if conversation_state == "closing":
-        return any(keyword in text for keyword in ["확인", "알겠습니다", "참고"])
+        return any(keyword in text for keyword in ["확인", "알겠습니다", "말씀"])
 
     if conversation_state == "END":
         return any(keyword in text for keyword in ["알겠습니다", "확인"])
@@ -45,6 +51,7 @@ def _has_too_casual_tone(text: str) -> bool:
         "좋아",
         "말해줘",
         "괜찮아",
+        "그때 보자",
     ]
 
     return any(word in text for word in casual_words)
