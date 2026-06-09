@@ -35,7 +35,7 @@ def complete_professor_appointment_with_graph(req: ChatRequest) -> ChatResponse:
 
     result = professor_appointment_graph.invoke(initial_state)
 
-    ai_message = result.get("ai_message") or "네, 면담 예약 관련해서 말씀해주세요."
+    ai_message = result.get("ai_message") or "네, 면담 예약 관련해서 말씀해주시겠습니까?"
     conversation_state = result.get("conversation_state") or "collecting_appointment_info"
     recommended_replies = result.get("recommended_replies") or []
     should_end_call = bool(result.get("should_end_call", False))
