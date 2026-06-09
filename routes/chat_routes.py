@@ -13,6 +13,7 @@ from llm.prompt_builder import generate_prompts
 from services.etiquette import maybe_get_etiquette_tip
 
 from services.flow.reservation.router import complete_reservation_graph_if_supported
+from services.flow.professor.router import complete_professor_graph_if_supported
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 OPENAI_TIMEOUT = int(os.getenv("OPENAI_TIMEOUT", "8"))
@@ -50,6 +51,10 @@ def chat(req: ChatRequest):
     reservation_graph_response = complete_reservation_graph_if_supported(req)
     if reservation_graph_response is not None:
         return reservation_graph_response
+
+    professor_graph_response = complete_professor_graph_if_supported(req)
+    if professor_graph_response is not None:
+        return professor_graph_response
 
     # 2) 일반 시나리오 종료 감지
     if is_closing_utterance(getattr(req, "userMessage", "")):
