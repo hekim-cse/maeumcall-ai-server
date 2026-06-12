@@ -18,6 +18,7 @@ def get_professor_assignment_recommended_replies(conversation_state: str) -> Lis
         return [
             "네, 알겠습니다.",
             "추가로 하나 더 여쭤봐도 될까요?",
+            "감사합니다.",
         ]
 
     if conversation_state == "closing":

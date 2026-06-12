@@ -29,7 +29,7 @@ def is_valid_professor_assignment_response(
         )
 
     if conversation_state == "closing":
-        return any(keyword in text for keyword in ["확인", "알겠습니다", "궁금"])
+        return any(keyword in text for keyword in ["확인", "알겠습니다", "궁금", "말씀"])
 
     if conversation_state == "END":
         return any(keyword in text for keyword in ["알겠습니다", "확인"])
@@ -49,6 +49,7 @@ def _has_too_casual_tone(text: str) -> bool:
         "말해줘",
         "괜찮아",
         "그때 보자",
+        "알아서 해",
     ]
 
     return any(word in text for word in casual_words)
