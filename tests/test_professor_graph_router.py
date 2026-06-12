@@ -33,16 +33,19 @@ def test_professor_graph_router_handles_assignment_inquiry():
     assert "과제" in result.response or "궁금" in result.response
 
 
-def test_professor_graph_router_ignores_absence_notice():
+def test_professor_graph_router_handles_absence_notice():
     req = make_request("결석 사유 전달", user_message="오늘 수업에 결석하게 되어 연락드렸습니다.")
 
     result = complete_professor_graph_if_supported(req)
 
-    assert result is None
+    assert result is not None
+    assert result.conversationState == "collecting_absence_info"
+    assert result.shouldEndCall is False
+    assert "결석" in result.response or "사유" in result.response
 
 
 def test_professor_graph_router_ignores_non_professor_category():
-    req = make_request("과제 문의", category="예약", user_message="과제 문의드립니다.")
+    req = make_request("결석 사유 전달", category="회사", user_message="오늘 결석 사유를 전달드립니다.")
 
     result = complete_professor_graph_if_supported(req)
 
