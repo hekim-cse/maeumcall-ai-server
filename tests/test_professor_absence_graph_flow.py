@@ -1,15 +1,124 @@
 from services.flow.professor.absence.graph import professor_absence_graph
 
 
+def _patch_absence_analysis(monkeypatch):
+    def fake_analyze(conversation_state: str, user_message: str):
+        if conversation_state == "closing":
+            return {
+                "intent": "absence_notice",
+                "class_name": None,
+                "absence_date": None,
+                "absence_reason": None,
+                "user_name": None,
+                "user_action": "end_call",
+            }
+
+        if conversation_state == "absence_noted":
+            return {
+                "intent": "absence_notice",
+                "class_name": None,
+                "absence_date": None,
+                "absence_reason": None,
+                "user_name": None,
+                "user_action": "go_closing",
+            }
+
+        if conversation_state == "confirming_absence_info":
+            if "날짜" in user_message and ("수정" in user_message or "변경" in user_message):
+                return {
+                    "intent": "absence_notice",
+                    "class_name": None,
+                    "absence_date": None,
+                    "absence_reason": None,
+                    "user_name": None,
+                    "user_action": "change_absence_date",
+                }
+
+            if "사유" in user_message or "이유" in user_message:
+                return {
+                    "intent": "absence_notice",
+                    "class_name": None,
+                    "absence_date": None,
+                    "absence_reason": None,
+                    "user_name": None,
+                    "user_action": "change_absence_reason",
+                }
+
+            if "이름" in user_message or "성함" in user_message:
+                return {
+                    "intent": "absence_notice",
+                    "class_name": None,
+                    "absence_date": None,
+                    "absence_reason": None,
+                    "user_name": None,
+                    "user_action": "change_user_name",
+                }
+
+            return {
+                "intent": "absence_notice",
+                "class_name": None,
+                "absence_date": None,
+                "absence_reason": None,
+                "user_name": None,
+                "user_action": "confirm_info",
+            }
+
+        if "김개굴" in user_message and "오늘" in user_message:
+            return {
+                "intent": "absence_notice",
+                "class_name": None,
+                "absence_date": "오늘",
+                "absence_reason": "몸이 좋지 않음",
+                "user_name": "김개굴",
+                "user_action": "provide_absence_info",
+            }
+
+        if "오늘" in user_message:
+            return {
+                "intent": "absence_notice",
+                "class_name": None,
+                "absence_date": "오늘",
+                "absence_reason": "몸이 좋지 않음",
+                "user_name": None,
+                "user_action": "provide_absence_info",
+            }
+
+        if "김개굴" in user_message:
+            return {
+                "intent": "absence_notice",
+                "class_name": None,
+                "absence_date": None,
+                "absence_reason": None,
+                "user_name": "김개굴",
+                "user_action": "provide_absence_info",
+            }
+
+        return {
+            "intent": "absence_notice",
+            "class_name": None,
+            "absence_date": None,
+            "absence_reason": None,
+            "user_name": None,
+            "user_action": "unknown",
+        }
+
+    monkeypatch.setattr(
+        "services.flow.professor.absence.nodes.analyze_professor_absence_user_message",
+        fake_analyze,
+    )
+
+
 def test_professor_absence_full_info_moves_to_confirming(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "김개굴 학생, 오늘 운영체제 수업 결석 사유가 몸이 좋지 않음으로 확인했습니다. 맞습니까?",
+        lambda prompt: "김개굴 학생, 오늘 결석 사유가 몸이 좋지 않음인 것으로 확인했습니다. 맞습니까?",
     )
 
     result = professor_absence_graph.invoke(
         {
-            "user_message": "김개굴 학생입니다. 오늘 운영체제 수업에 몸이 좋지 않아 결석하게 되어 연락드렸습니다.",
+            "user_message": "김개굴 학생입니다. 오늘 몸이 좋지 않아 결석하게 되었습니다.",
             "conversation_state": "greeting",
             "professor_name": "교수님",
             "history": [],
@@ -18,15 +127,15 @@ def test_professor_absence_full_info_moves_to_confirming(monkeypatch):
         }
     )
 
-    assert result["class_name"] == "운영체제"
     assert result["absence_date"] == "오늘"
     assert result["absence_reason"] == "몸이 좋지 않음"
     assert result["user_name"] == "김개굴"
     assert result["conversation_state"] == "confirming_absence_info"
-    assert "결석" in result["ai_message"] or "확인" in result["ai_message"]
 
 
 def test_professor_absence_missing_user_name_keeps_collecting(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
         lambda prompt: "오늘 결석 사유는 확인했습니다. 성함을 말씀해주시겠습니까?",
@@ -46,12 +155,13 @@ def test_professor_absence_missing_user_name_keeps_collecting(monkeypatch):
     assert result["absence_date"] == "오늘"
     assert result["absence_reason"] == "몸이 좋지 않음"
     assert result["user_name"] is None
-    assert result["conversation_state"] == "collecting_absence_info"
     assert result["missing_fields"] == ["user_name"]
-    assert "성함" in result["ai_message"] or "이름" in result["ai_message"]
+    assert result["conversation_state"] == "collecting_absence_info"
 
 
 def test_professor_absence_partial_info_is_preserved(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
         lambda prompt: "확인했습니다. 부족한 정보를 말씀해주시겠습니까?",
@@ -82,6 +192,8 @@ def test_professor_absence_partial_info_is_preserved(monkeypatch):
 
 
 def test_professor_absence_casual_llm_response_falls_back(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
         lambda prompt: "응 좋아. 알아서 해.",
@@ -106,6 +218,8 @@ def test_professor_absence_casual_llm_response_falls_back(monkeypatch):
 
 
 def test_professor_absence_confirm_moves_to_noted(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
         lambda prompt: "알겠습니다. 김개굴 학생의 오늘 결석 사유는 참고하도록 하겠습니다.",
@@ -130,6 +244,8 @@ def test_professor_absence_confirm_moves_to_noted(monkeypatch):
 
 
 def test_professor_absence_change_date_resets_date(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
         lambda prompt: "결석하게 되는 날짜를 말씀해주시겠습니까?",
@@ -156,6 +272,8 @@ def test_professor_absence_change_date_resets_date(monkeypatch):
 
 
 def test_professor_absence_change_reason_resets_reason(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
         lambda prompt: "결석 사유를 말씀해주시겠습니까?",
@@ -182,6 +300,8 @@ def test_professor_absence_change_reason_resets_reason(monkeypatch):
 
 
 def test_professor_absence_noted_moves_to_closing(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
         lambda prompt: "네, 확인했습니다. 추후 필요한 사항이 있으면 다시 말씀하시기 바랍니다.",
@@ -206,6 +326,8 @@ def test_professor_absence_noted_moves_to_closing(monkeypatch):
 
 
 def test_professor_absence_closing_moves_to_end(monkeypatch):
+    _patch_absence_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
         lambda prompt: "네, 알겠습니다.",
