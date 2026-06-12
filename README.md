@@ -14,7 +14,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
 <img src="https://img.shields.io/badge/LangGraph-143D60?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Kanana_1.5-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"/>
-<img src="https://img.shields.io/badge/Pytest-200_passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white"/>
+<img src="https://img.shields.io/badge/Pytest-259_passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white"/>
 
 <br/>
 <br/>
@@ -232,7 +232,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 카테고리 | LangGraph 적용 상태 | 상세 문서 |
 |---|---|---|
 | 📞 예약 | ✅ 적용 | [Reservation README](services/flow/reservation/README.md) |
-| 🎓 교수님 | 🟡 일부 적용 | [Professor README](services/flow/professor/README.md) |
+| 🎓 교수님 | ✅ 적용 | [Professor README](services/flow/professor/README.md) |
 | 🏢 회사 | 예정 | 준비 중 |
 | 👪 가족 | 예정 | 준비 중 |
 | 🧑‍🤝‍🧑 친구 | 예정 | 준비 중 |
@@ -240,9 +240,6 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 🎧 고객센터 | 예정 | 준비 중 |
 | 🛵 배달 | 예정 | 준비 중 |
 | 🏛 시청 | 예정 | 준비 중 |
-
-> 🎓 교수님 카테고리는 현재 **면담 예약 시나리오만 LangGraph로 구현**되어 있습니다.  
-> 과제 문의와 결석 사유 전달은 아직 일반 LLM 흐름을 사용하며, 이후 별도 LangGraph로 확장할 예정입니다.
 
 <table>
   <tr>
@@ -259,41 +256,24 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 8. 테스트 및 검증
 
-현재는 예약 카테고리와 교수님 면담 예약 LangGraph를 중심으로 단위 테스트와 통합 테스트를 구성했습니다.
+현재는 예약 카테고리와 교수님 카테고리 LangGraph를 중심으로 단위 테스트와 통합 테스트를 구성했습니다.
 
 | 테스트 구분 | 검증 내용 |
 |---|---|
 | 🧩 Action Parser Test | 사용자 발화를 user_action으로 올바르게 분류하는지 검증 |
 | 🧾 Extractor Test | 시나리오 진행에 필요한 정보 추출 검증 |
-| 🔁 Graph Flow Test | 상태 전이, 확정/종료 흐름 검증 |
+| 🔁 Graph Flow Test | 상태 전이, 재수집, 확정/마무리/종료 흐름 검증 |
 | 🚦 Routing Test | category/title 기준으로 올바른 graph에 연결되는지 검증 |
 | 🛡 Response Validation | 현재 상태와 맞지 않는 LLM 응답을 fallback으로 보정하는지 검증 |
+| 🔌 Chat Route Test | 실제 `/chat` 함수 기준 LangGraph 연결 검증 |
 
 | 구분 | 결과 |
 |---|---|
-| 예약 + 교수님 LangGraph 테스트 | ✅ 200 passed |
+| 예약 + 교수님 LangGraph 테스트 | ✅ 259 passed |
 | 실패 테스트 | 없음 |
 | 경고 | LangGraph serializer 관련 warning 1건 |
 
-테스트 실행 예시:
-
-    python -m pytest \
-      tests/test_hair_salon_reservation_action_parser.py \
-      tests/test_hair_salon_reservation_extractor.py \
-      tests/test_hair_salon_reservation_graph_flow.py \
-      tests/test_hair_salon_reservation_graph_routing.py \
-      tests/test_study_room_reservation_action_parser.py \
-      tests/test_study_room_reservation_extractor.py \
-      tests/test_study_room_reservation_graph_flow.py \
-      tests/test_study_room_reservation_graph_routing.py \
-      tests/test_restaurant_reservation_action_parser.py \
-      tests/test_restaurant_reservation_extractor.py \
-      tests/test_restaurant_reservation_graph_flow.py \
-      tests/test_restaurant_reservation_graph_routing.py \
-      tests/test_reservation_graph_router.py \
-      tests/test_hospital_reservation_action_parser.py \
-      tests/test_hospital_reservation_graph_flow.py \
-      -v
+> 테스트 수는 예약 카테고리와 교수님 카테고리의 action parser, extractor, graph flow, routing, chat route 테스트를 포함합니다.
 
 ---
 
@@ -374,7 +354,7 @@ http://127.0.0.1:8000/docs
 |---|---|
 | 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 `/chat` API 요청/응답 계약 |
 | 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 통합 설계, 시나리오별 구현 요약, 테스트 결과 |
-| 🎓 [Professor LangGraph README](services/flow/professor/README.md) | 교수님 카테고리 중 면담 예약 LangGraph 설계, 구현 요약, 테스트 결과 |
+| 🎓 [Professor LangGraph README](services/flow/professor/README.md) | 교수님 카테고리 LangGraph 통합 설계, 면담 예약/과제 문의/결석 사유 전달 구현 요약, 테스트 결과 |
 
 ---
 
@@ -385,11 +365,12 @@ http://127.0.0.1:8000/docs
 | 서버 구조 | FastAPI 기반 `/chat` API 구성 |
 | LLM 연동 | Kanana 1.5 Hugging Face 기반 응답 생성 |
 | 상태 관리 | LangGraph 기반 conversationState 관리 구조 도입 |
-| 적용 시나리오 | 예약 카테고리, 교수님 면담 예약 적용 |
+| 적용 시나리오 | 예약 카테고리, 교수님 카테고리 적용 |
+| 교수님 적용 범위 | 면담 예약, 과제 문의, 결석 사유 전달 |
 | 응답 안정성 | validator와 template fallback으로 상태 의미 보정 |
 | 추천 답변 | 현재 상태에 맞는 recommendedReplies 생성 |
 | 클라이언트 상태 유지 | scenarioState로 다음 요청에 필요한 상태 반환 |
-| 테스트 검증 | 예약 + 교수님 LangGraph 테스트 200개 통과 |
+| 테스트 검증 | 예약 + 교수님 LangGraph 테스트 259개 통과 |
 
 <table>
   <tr>
@@ -400,13 +381,13 @@ http://127.0.0.1:8000/docs
       검증된 AI 응답과 추천 답변을 함께 반환하는
       <strong>상태 기반 통화 시뮬레이션 서버</strong>로 구현했습니다.
       <br/><br/>
-      현재는 예약 카테고리와 교수님 면담 예약을 기준으로
+      현재는 예약 카테고리와 교수님 카테고리를 기준으로
       <strong>LangGraph 상태 전이</strong>,
       <strong>validator 응답 검증</strong>,
       <strong>template fallback</strong>,
       <strong>추천 답변 생성</strong>,
       <strong>API 응답 구조</strong>를 검증했습니다.
-      또한 예약 + 교수님 LangGraph 관련 테스트 <strong>200개를 통과</strong>하여,
+      또한 예약 + 교수님 LangGraph 관련 테스트 <strong>259개를 통과</strong>하여,
       이후 다른 전화 상황으로 확장 가능한 서버 구조를 마련했습니다.
     </td>
   </tr>
