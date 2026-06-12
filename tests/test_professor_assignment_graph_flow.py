@@ -101,3 +101,75 @@ def test_professor_assignment_casual_llm_response_falls_back(monkeypatch):
     assert "응" not in result["ai_message"]
     assert "좋아" not in result["ai_message"]
     assert "확인" in result["ai_message"] or "과제" in result["ai_message"]
+
+
+def test_professor_assignment_answering_moves_to_closing(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
+        lambda prompt: "네, 확인했습니다. 추가로 궁금한 점이 있으면 다시 말씀하시기 바랍니다.",
+    )
+
+    result = professor_assignment_graph.invoke(
+        {
+            "user_message": "네, 알겠습니다.",
+            "conversation_state": "answering_assignment_question",
+            "professor_name": "교수님",
+            "assignment_topic": "제출 형식",
+            "question": "과제 제출 형식을 여쭤보고 싶습니다.",
+            "user_name": "김개굴",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "closing"
+    assert result["should_end_call"] is False
+
+
+def test_professor_assignment_answering_follow_up_resets_question(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
+        lambda prompt: "어떤 과제와 관련된 문의인지 말씀해주시겠습니까?",
+    )
+
+    result = professor_assignment_graph.invoke(
+        {
+            "user_message": "추가로 하나 더 여쭤봐도 될까요?",
+            "conversation_state": "answering_assignment_question",
+            "professor_name": "교수님",
+            "assignment_topic": "제출 형식",
+            "question": "과제 제출 형식을 여쭤보고 싶습니다.",
+            "user_name": "김개굴",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_assignment_info"
+    assert result["assignment_topic"] is None
+    assert result["question"] is None
+    assert result["user_name"] == "김개굴"
+    assert result["should_end_call"] is False
+
+
+def test_professor_assignment_closing_moves_to_end(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
+        lambda prompt: "네, 알겠습니다.",
+    )
+
+    result = professor_assignment_graph.invoke(
+        {
+            "user_message": "네, 감사합니다.",
+            "conversation_state": "closing",
+            "professor_name": "교수님",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "END"
+    assert result["should_end_call"] is True
