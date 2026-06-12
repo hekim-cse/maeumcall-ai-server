@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from services.flow.common.tone_validator import has_too_casual_tone
+
 
 def is_valid_professor_appointment_response(
     conversation_state: str,
@@ -13,7 +15,7 @@ def is_valid_professor_appointment_response(
     if not text:
         return False
 
-    if _has_too_casual_tone(text):
+    if has_too_casual_tone(text):
         return False
 
     if conversation_state == "collecting_appointment_info":
@@ -39,19 +41,3 @@ def is_valid_professor_appointment_response(
 
     return True
 
-
-def _has_too_casual_tone(text: str) -> bool:
-    casual_words = [
-        "ㅋㅋ",
-        "ㅎㅎ",
-        "응",
-        "그래",
-        "오케이",
-        "넵",
-        "좋아",
-        "말해줘",
-        "괜찮아",
-        "그때 보자",
-    ]
-
-    return any(word in text for word in casual_words)
