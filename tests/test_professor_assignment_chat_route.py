@@ -2,7 +2,61 @@ from routes.chat_routes import chat
 from schemas.chat_models import ChatRequest
 
 
+def _patch_assignment_analysis(monkeypatch):
+    def fake_analyze(conversation_state: str, user_message: str):
+        if conversation_state == "closing":
+            return {
+                "intent": "assignment_inquiry",
+                "assignment_topic": None,
+                "question": None,
+                "user_name": None,
+                "user_action": "end_call",
+            }
+
+        if conversation_state == "answering_assignment_question":
+            return {
+                "intent": "assignment_inquiry",
+                "assignment_topic": None,
+                "question": None,
+                "user_name": None,
+                "user_action": "go_closing",
+            }
+
+        if "김개굴" in user_message and "제출 형식" in user_message:
+            return {
+                "intent": "assignment_inquiry",
+                "assignment_topic": "제출 형식",
+                "question": "과제 제출 형식을 여쭤보고 싶습니다.",
+                "user_name": "김개굴",
+                "user_action": "provide_assignment_info",
+            }
+
+        if "제출 형식" in user_message:
+            return {
+                "intent": "assignment_inquiry",
+                "assignment_topic": "제출 형식",
+                "question": "과제 제출 형식을 여쭤보고 싶습니다.",
+                "user_name": None,
+                "user_action": "provide_assignment_info",
+            }
+
+        return {
+            "intent": "assignment_inquiry",
+            "assignment_topic": None,
+            "question": None,
+            "user_name": None,
+            "user_action": "unknown",
+        }
+
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.nodes.analyze_professor_assignment_user_message",
+        fake_analyze,
+    )
+
+
 def test_chat_route_handles_professor_assignment_with_graph(monkeypatch):
+    _patch_assignment_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
         lambda prompt: "과제와 관련해 어떤 부분이 궁금한지 말씀해주시겠습니까?",
@@ -29,6 +83,8 @@ def test_chat_route_handles_professor_assignment_with_graph(monkeypatch):
 
 
 def test_chat_route_professor_assignment_full_info_moves_to_answering(monkeypatch):
+    _patch_assignment_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
         lambda prompt: "김개굴 학생, 과제 제출 형식 관련 문의로 확인했습니다. 제출 형식은 공지된 기준을 확인하시기 바랍니다.",
@@ -48,12 +104,14 @@ def test_chat_route_professor_assignment_full_info_moves_to_answering(monkeypatc
 
     assert result.conversationState == "answering_assignment_question"
     assert result.scenarioState["assignment_topic"] == "제출 형식"
-    assert result.scenarioState["question"] is not None
+    assert result.scenarioState["question"] == "과제 제출 형식을 여쭤보고 싶습니다."
     assert result.scenarioState["user_name"] == "김개굴"
     assert "과제" in result.response or "제출" in result.response
 
 
 def test_chat_route_professor_assignment_missing_user_name_keeps_collecting(monkeypatch):
+    _patch_assignment_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
         lambda prompt: "과제 제출 형식 관련 문의 내용은 확인했습니다. 성함을 말씀해주시겠습니까?",
@@ -73,12 +131,14 @@ def test_chat_route_professor_assignment_missing_user_name_keeps_collecting(monk
 
     assert result.conversationState == "collecting_assignment_info"
     assert result.scenarioState["assignment_topic"] == "제출 형식"
-    assert result.scenarioState["question"] is not None
+    assert result.scenarioState["question"] == "과제 제출 형식을 여쭤보고 싶습니다."
     assert result.scenarioState["user_name"] is None
     assert result.scenarioState["missing_fields"] == ["user_name"]
 
 
 def test_chat_route_professor_assignment_casual_llm_response_falls_back(monkeypatch):
+    _patch_assignment_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
         lambda prompt: "응 좋아. 과제는 알아서 해.",
@@ -104,6 +164,8 @@ def test_chat_route_professor_assignment_casual_llm_response_falls_back(monkeypa
 
 
 def test_chat_route_professor_assignment_answering_moves_to_closing(monkeypatch):
+    _patch_assignment_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
         lambda prompt: "네, 확인했습니다. 추가로 궁금한 점이 있으면 다시 말씀하시기 바랍니다.",
@@ -133,6 +195,8 @@ def test_chat_route_professor_assignment_answering_moves_to_closing(monkeypatch)
 
 
 def test_chat_route_professor_assignment_closing_moves_to_end(monkeypatch):
+    _patch_assignment_analysis(monkeypatch)
+
     monkeypatch.setattr(
         "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
         lambda prompt: "네, 알겠습니다.",
