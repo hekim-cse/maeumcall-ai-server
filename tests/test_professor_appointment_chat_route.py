@@ -104,17 +104,17 @@ def test_chat_route_professor_appointment_casual_llm_response_falls_back(monkeyp
     assert "확인" in result.response or "맞습니까" in result.response
 
 
-def test_chat_route_professor_assignment_still_uses_general_flow(monkeypatch):
+def test_chat_route_professor_absence_still_uses_general_flow(monkeypatch):
     monkeypatch.setattr(
         "routes.chat_routes.complete",
-        lambda req, timeout_s: "과제 제출 형식은 PDF로 제출하면 됩니다.",
+        lambda req, timeout_s: "알겠습니다. 결석 사유는 참고하겠습니다.",
     )
 
     req = ChatRequest(
         category="교수님",
-        title="과제 문의",
-        description="교수님께 과제 제출 형식을 문의하는 상황",
-        userMessage="과제 제출 형식을 여쭤보려고 합니다.",
+        title="결석 사유 전달",
+        description="교수님께 결석 사유를 전달하는 상황",
+        userMessage="오늘 수업에 결석하게 되어 연락드렸습니다.",
         conversationState="greeting",
         scenarioState={},
         history=[],
