@@ -346,3 +346,74 @@ def test_professor_absence_closing_moves_to_end(monkeypatch):
 
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
+
+def test_professor_absence_change_user_name_resets_user_name_only(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.absence.nodes.analyze_professor_absence_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "class_name": None,
+            "absence_date": None,
+            "absence_reason": None,
+            "user_name": None,
+            "user_action": "change_user_name",
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.professor.absence.nodes.generate_professor_absence_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = professor_absence_graph.invoke(
+        {
+            "user_message": "이름을 다시 말씀드릴게요.",
+            "conversation_state": "confirming_absence_info",
+            "professor_name": "교수님",
+            "class_name": "자료구조",
+            "absence_date": "오늘",
+            "absence_reason": "몸이 좋지 않음",
+            "user_name": "김개굴",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_absence_info"
+    assert result["user_name"] is None
+    assert result["class_name"] == "자료구조"
+    assert result["absence_date"] == "오늘"
+    assert result["absence_reason"] == "몸이 좋지 않음"
+
+
+def test_professor_absence_closing_unknown_keeps_state(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.absence.nodes.analyze_professor_absence_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "class_name": None,
+            "absence_date": None,
+            "absence_reason": None,
+            "user_name": None,
+            "user_action": "unknown",
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.professor.absence.nodes.generate_professor_absence_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = professor_absence_graph.invoke(
+        {
+            "user_message": "음...",
+            "conversation_state": "closing",
+            "professor_name": "교수님",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "closing"
+    assert result["should_end_call"] is False
+

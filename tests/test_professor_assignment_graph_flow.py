@@ -255,3 +255,70 @@ def test_professor_assignment_closing_moves_to_end(monkeypatch):
 
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
+
+def test_professor_assignment_answering_unknown_keeps_state(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.nodes.analyze_professor_assignment_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "course_name": None,
+            "assignment_topic": None,
+            "user_name": None,
+            "user_action": "unknown",
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.nodes.generate_professor_assignment_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = professor_assignment_graph.invoke(
+        {
+            "user_message": "음...",
+            "conversation_state": "answering_assignment",
+            "professor_name": "교수님",
+            "course_name": "자료구조",
+            "assignment_topic": "제출 기한",
+            "user_name": "김개굴",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_assignment_info"
+    assert result["course_name"] == "자료구조"
+    assert result["assignment_topic"] == "제출 기한"
+    assert result["user_name"] == "김개굴"
+
+
+def test_professor_assignment_closing_unknown_keeps_state(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.nodes.analyze_professor_assignment_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "course_name": None,
+            "assignment_topic": None,
+            "user_name": None,
+            "user_action": "unknown",
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.nodes.generate_professor_assignment_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = professor_assignment_graph.invoke(
+        {
+            "user_message": "음...",
+            "conversation_state": "closing",
+            "professor_name": "교수님",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "closing"
+    assert result["should_end_call"] is False
+

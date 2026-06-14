@@ -405,3 +405,146 @@ def test_study_room_reservation_closing_moves_to_end(monkeypatch):
 
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
+
+def test_study_room_reservation_change_party_size_clears_lookup_fields(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.study_room.nodes.analyze_study_room_reservation_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "date": None,
+            "start_time": None,
+            "duration": None,
+            "party_size": None,
+            "user_name": None,
+            "user_action": "change_party_size",
+            "selected_time": None,
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.study_room.nodes.generate_study_room_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = study_room_reservation_graph.invoke(
+        {
+            "user_message": "인원을 바꾸고 싶습니다.",
+            "conversation_state": "confirming_info",
+            "service_name": "마음스터디룸",
+            "date": "내일",
+            "start_time": "오후 2시",
+            "duration": "2시간",
+            "party_size": "4명",
+            "user_name": "김개굴",
+            "availability_status": "available",
+            "availability_reason": None,
+            "available_time": "오후 2시",
+            "alternative_times": ["오후 1시", "오후 3시"],
+            "availability_message_hint": "내일 오후 2시부터 2시간 예약이 가능합니다.",
+            "selected_time": "오후 2시",
+            "reservation_confirmed": True,
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_reservation_info"
+    assert result["party_size"] is None
+    assert result["date"] == "내일"
+    assert result["start_time"] == "오후 2시"
+    assert result["duration"] == "2시간"
+    assert result["user_name"] == "김개굴"
+    assert result["selected_time"] is None
+    assert result["availability_status"] is None
+    assert result["alternative_times"] == []
+    assert result["reservation_confirmed"] is False
+
+
+def test_study_room_reservation_change_user_name_resets_user_name_only(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.study_room.nodes.analyze_study_room_reservation_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "date": None,
+            "start_time": None,
+            "duration": None,
+            "party_size": None,
+            "user_name": None,
+            "user_action": "change_user_name",
+            "selected_time": None,
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.study_room.nodes.generate_study_room_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = study_room_reservation_graph.invoke(
+        {
+            "user_message": "예약자 이름을 바꿀게요.",
+            "conversation_state": "confirming_info",
+            "service_name": "마음스터디룸",
+            "date": "내일",
+            "start_time": "오후 2시",
+            "duration": "2시간",
+            "party_size": "4명",
+            "user_name": "김개굴",
+            "availability_status": "available",
+            "available_time": "오후 2시",
+            "alternative_times": [],
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_reservation_info"
+    assert result["user_name"] is None
+    assert result["date"] == "내일"
+    assert result["start_time"] == "오후 2시"
+    assert result["duration"] == "2시간"
+    assert result["party_size"] == "4명"
+
+
+def test_study_room_reservation_unavailable_unknown_keeps_state(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.study_room.nodes.analyze_study_room_reservation_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "date": None,
+            "start_time": None,
+            "duration": None,
+            "party_size": None,
+            "user_name": None,
+            "user_action": "unknown",
+            "selected_time": None,
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.study_room.nodes.generate_study_room_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = study_room_reservation_graph.invoke(
+        {
+            "user_message": "음...",
+            "conversation_state": "reservation_unavailable",
+            "service_name": "마음스터디룸",
+            "date": "내일",
+            "start_time": "오후 2시",
+            "duration": "2시간",
+            "party_size": "4명",
+            "user_name": "김개굴",
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "available_time": None,
+            "alternative_times": ["오후 1시", "오후 3시"],
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "reservation_unavailable"
+    assert result["selected_time"] is None
+
