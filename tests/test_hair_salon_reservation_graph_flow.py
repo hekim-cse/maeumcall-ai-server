@@ -1,7 +1,107 @@
+def _patch_hair_salon_analysis(monkeypatch):
+    def fake_analyze(conversation_state, user_message):
+        base = {
+            "intent": "reservation",
+            "date": None,
+            "time": None,
+            "service_type": None,
+            "designer": None,
+            "user_name": None,
+            "user_action": "unknown",
+            "selected_time": None,
+        }
+
+        if conversation_state == "greeting":
+            if "수진 디자이너" in user_message:
+                return {
+                    **base,
+                    "date": "내일",
+                    "time": "오후 3시",
+                    "service_type": "커트",
+                    "designer": "수진",
+                    "user_name": "김개굴",
+                    "user_action": "continue_collecting",
+                }
+
+            if "아무 선생님" in user_message:
+                return {
+                    **base,
+                    "date": "내일",
+                    "time": "오후 4시",
+                    "service_type": "커트",
+                    "designer": "가능한 디자이너",
+                    "user_name": "김개굴",
+                    "user_action": "continue_collecting",
+                }
+
+            if "김개굴 이름" in user_message:
+                return {
+                    **base,
+                    "date": "내일",
+                    "time": "오후 3시",
+                    "service_type": "커트",
+                    "user_name": "김개굴",
+                    "user_action": "continue_collecting",
+                }
+
+        if conversation_state == "confirming_info":
+            return {
+                **base,
+                "user_action": "confirm",
+            }
+
+        if conversation_state == "reservation_available":
+            return {
+                **base,
+                "user_action": "confirm_reservation",
+            }
+
+        if conversation_state == "reservation_unavailable":
+            if "오후 4시" in user_message:
+                return {
+                    **base,
+                    "user_action": "select_alternative_time",
+                    "selected_time": "오후 4시",
+                }
+
+            if "오후 6시" in user_message:
+                return {
+                    **base,
+                    "user_action": "select_alternative_time",
+                    "selected_time": "오후 6시",
+                }
+
+            return {
+                **base,
+                "user_action": "ask_other_time",
+            }
+
+        if conversation_state == "reservation_confirmed":
+            return {
+                **base,
+                "user_action": "go_closing",
+            }
+
+        if conversation_state == "closing":
+            return {
+                **base,
+                "user_action": "end_call",
+            }
+
+        return base
+
+    monkeypatch.setattr(
+        "services.flow.reservation.hair_salon.nodes.analyze_hair_salon_reservation_user_message",
+        fake_analyze,
+    )
+
+
 from services.flow.reservation.hair_salon.graph import hair_salon_reservation_graph
 
 
-def test_hair_salon_reservation_full_info_moves_to_confirming_info():
+def test_hair_salon_reservation_full_info_moves_to_confirming_info(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "내일 오후 3시에 수진 디자이너님으로 커트 김개굴 이름으로 예약하고 싶어요.",
@@ -22,7 +122,9 @@ def test_hair_salon_reservation_full_info_moves_to_confirming_info():
     assert "예약" in result["ai_message"]
 
 
-def test_hair_salon_reservation_missing_designer_keeps_collecting_info():
+def test_hair_salon_reservation_missing_designer_keeps_collecting_info(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "내일 오후 3시에 커트 김개굴 이름으로 예약하고 싶어요.",
@@ -43,7 +145,9 @@ def test_hair_salon_reservation_missing_designer_keeps_collecting_info():
     assert "디자이너" in result["ai_message"] or "선생님" in result["ai_message"]
 
 
-def test_hair_salon_reservation_any_designer_moves_to_confirming_info():
+def test_hair_salon_reservation_any_designer_moves_to_confirming_info(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "내일 오후 4시에 아무 선생님이나 커트 김개굴 이름으로 예약하고 싶어요.",
@@ -63,7 +167,9 @@ def test_hair_salon_reservation_any_designer_moves_to_confirming_info():
     assert result["conversation_state"] == "confirming_info"
 
 
-def test_hair_salon_reservation_confirm_checks_availability_available():
+def test_hair_salon_reservation_confirm_checks_availability_available(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "네, 맞습니다.",
@@ -86,7 +192,9 @@ def test_hair_salon_reservation_confirm_checks_availability_available():
     assert "가능" in result["ai_message"]
 
 
-def test_hair_salon_reservation_confirm_checks_availability_unavailable():
+def test_hair_salon_reservation_confirm_checks_availability_unavailable(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "네, 맞습니다.",
@@ -112,7 +220,9 @@ def test_hair_salon_reservation_confirm_checks_availability_unavailable():
     )
 
 
-def test_hair_salon_reservation_available_confirm_completes_reservation():
+def test_hair_salon_reservation_available_confirm_completes_reservation(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "네, 예약해주세요.",
@@ -137,7 +247,9 @@ def test_hair_salon_reservation_available_confirm_completes_reservation():
     assert "예약" in result["ai_message"]
 
 
-def test_hair_salon_reservation_unavailable_selects_alternative_time():
+def test_hair_salon_reservation_unavailable_selects_alternative_time(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "오후 4시로 할게요.",
@@ -165,7 +277,9 @@ def test_hair_salon_reservation_unavailable_selects_alternative_time():
     assert "가능" in result["ai_message"]
 
 
-def test_hair_salon_reservation_unavailable_rejects_out_of_option_time():
+def test_hair_salon_reservation_unavailable_rejects_out_of_option_time(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "오후 6시로 할게요.",
@@ -191,7 +305,9 @@ def test_hair_salon_reservation_unavailable_rejects_out_of_option_time():
     assert result["reservation_confirmed"] is not True
 
 
-def test_hair_salon_reservation_confirmed_moves_to_closing():
+def test_hair_salon_reservation_confirmed_moves_to_closing(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "네, 감사합니다.",
@@ -214,7 +330,9 @@ def test_hair_salon_reservation_confirmed_moves_to_closing():
     assert result["should_end_call"] is False
 
 
-def test_hair_salon_reservation_closing_moves_to_end():
+def test_hair_salon_reservation_closing_moves_to_end(monkeypatch):
+    _patch_hair_salon_analysis(monkeypatch)
+
     result = hair_salon_reservation_graph.invoke(
         {
             "user_message": "네, 감사합니다.",

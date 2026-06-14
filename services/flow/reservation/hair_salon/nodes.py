@@ -3,32 +3,38 @@ from __future__ import annotations
 from typing import Dict
 
 from services.flow.reservation.hair_salon.state import HairSalonReservationState
-from services.flow.reservation.hair_salon.extractor import extract_hair_salon_reservation_info
+from services.flow.reservation.hair_salon.llm_structured import analyze_hair_salon_reservation_user_message
 from services.flow.reservation.hair_salon.generation import generate_hair_salon_ai_message
 from services.flow.reservation.hair_salon.policy import get_missing_hair_salon_fields
 from services.flow.reservation.hair_salon.replies import get_hair_salon_recommended_replies
-from services.flow.reservation.hair_salon.action_parser import parse_hair_salon_reservation_action
 from services.flow.reservation.hair_salon.availability import resolve_hair_salon_availability
 
 
 def extract_hair_salon_info_node(state: HairSalonReservationState) -> Dict:
     """
-    사용자 발화에서 미용실 예약에 필요한 정보를 추출한다.
+    사용자 발화를 LLM structured output으로 분석한다.
 
     한 번에 모든 정보를 말하지 않는 사용자를 고려해서,
-    새로 추출된 값만 갱신하고 기존 값은 유지한다.
+    새로 분석된 값만 갱신하고 기존 값은 유지한다.
     """
     user_message = state.get("user_message", "") or ""
-    extracted = extract_hair_salon_reservation_info(user_message)
+    conversation_state = state.get("conversation_state") or "greeting"
+
+    analyzed = analyze_hair_salon_reservation_user_message(
+        conversation_state,
+        user_message,
+    )
 
     return {
-        "intent": extracted.get("intent") or state.get("intent") or "reservation",
+        "intent": analyzed.get("intent") or state.get("intent") or "reservation",
         "service_name": state.get("service_name") or "마음헤어",
-        "date": extracted.get("date") or state.get("date"),
-        "time": extracted.get("time") or state.get("time"),
-        "service_type": extracted.get("service_type") or state.get("service_type"),
-        "designer": extracted.get("designer") or state.get("designer"),
-        "user_name": extracted.get("user_name") or state.get("user_name"),
+        "date": analyzed.get("date") or state.get("date"),
+        "time": analyzed.get("time") or state.get("time"),
+        "service_type": analyzed.get("service_type") or state.get("service_type"),
+        "designer": analyzed.get("designer") or state.get("designer"),
+        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        "user_action": analyzed.get("user_action") or "unknown",
+        "selected_time": analyzed.get("selected_time") or state.get("selected_time"),
         "last_ai_message": state.get("last_ai_message"),
         "history": state.get("history") or [],
         "recommended_replies": state.get("recommended_replies") or [],
@@ -45,14 +51,9 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> Dict:
     - 예약 정보 확인 후 가능 여부를 조회한다
     - 가능/불가 안내 후 사용자 응답에 따라 확정 또는 재수집으로 이동한다
     """
-    user_message = state.get("user_message", "") or ""
     current_state = state.get("conversation_state") or "greeting"
 
-    action_result = parse_hair_salon_reservation_action(
-        current_state,
-        user_message,
-    )
-    user_action = action_result.get("user_action")
+    user_action = state.get("user_action") or "unknown"
 
     if current_state == "confirming_info":
         if user_action == "confirm":
@@ -170,7 +171,7 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> Dict:
         }
 
     if current_state == "reservation_unavailable":
-        selected_time = action_result.get("selected_time")
+        selected_time = state.get("selected_time")
         alternative_times = state.get("alternative_times") or []
 
         if selected_time and selected_time in alternative_times:
@@ -189,6 +190,7 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> Dict:
         if selected_time and selected_time not in alternative_times:
             return {
                 "user_action": "invalid_alternative_time",
+                "selected_time": None,
                 "reservation_confirmed": False,
                 "conversation_state": "reservation_unavailable",
             }
