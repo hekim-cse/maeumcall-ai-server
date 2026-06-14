@@ -3,8 +3,7 @@ from __future__ import annotations
 from typing import Dict, Any
 
 from services.flow.reservation.hospital.state import HospitalReservationState
-from services.flow.reservation.hospital.extractor import extract_hospital_reservation_info
-from services.flow.reservation.hospital.action_parser import parse_hospital_reservation_action
+from services.flow.reservation.hospital.llm_structured import analyze_hospital_reservation_user_message
 from services.flow.reservation.hospital.availability import resolve_hospital_availability
 from services.flow.reservation.hospital.replies import get_recommended_replies
 from services.flow.reservation.hospital.policy import clear_reservation_lookup_fields
@@ -16,28 +15,32 @@ from services.flow.reservation.common.time_utils import (
 
 def extract_info_node(state: HospitalReservationState) -> Dict:
     """
-    사용자 발화에서 병원 예약에 필요한 정보를 추출한다.
-    새로 추출되지 않은 정보는 기존 state 값을 유지한다.
+    사용자 발화를 structured output으로 분석해 병원 예약 정보를 추출한다.
+
+    새로 분석된 값만 갱신하고, 비어 있는 값은 기존 state 값을 유지한다.
     """
     user_message = state.get("user_message", "") or ""
-    extracted = extract_hospital_reservation_info(user_message)
-
     current_state = state.get("conversation_state") or "greeting"
 
-    next_time = extracted.get("time") or state.get("time")
+    analysis = analyze_hospital_reservation_user_message(
+        current_state,
+        user_message,
+    )
+
+    next_time = analysis.get("time") or state.get("time")
 
     if current_state == "suggest_alternative":
         next_time = state.get("time")
-    
+
     return {
-        "intent": extracted.get("intent") or state.get("intent"),
-        "department": extracted.get("department") or state.get("department"),
-        "date": extracted.get("date") or state.get("date"),
+        "intent": analysis.get("intent") or state.get("intent"),
+        "department": analysis.get("department") or state.get("department"),
+        "date": analysis.get("date") or state.get("date"),
         "time": next_time,
         "last_ai_message": state.get("last_ai_message"),
-        
-        "user_action": state.get("user_action"),
-        "selected_time": state.get("selected_time"),
+
+        "user_action": analysis.get("user_action") or "unknown",
+        "selected_time": analysis.get("selected_time") or state.get("selected_time"),
 
         "history": state.get("history") or [],
         "availability_status": state.get("availability_status"),
@@ -52,14 +55,23 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
 
 def parse_user_action_node(state: HospitalReservationState) -> Dict:
     """
-    사용자 발화를 user_action으로 변환한다.
-    decide_next_state_node는 user_message가 아니라 user_action을 기준으로 상태를 전이한다.
+    structured 분석 단계에서 이미 user_action을 만들었으므로
+    이 노드는 상태 전이에 필요한 값을 그대로 전달한다.
+
+    다만 대안 시간 선택 상태에서는 selected_time이 있으면
+    상태 전이를 위해 select_alternative_time으로 보정한다.
     """
-    parsed_action = parse_hospital_reservation_action(state)
+    current_state = state.get("conversation_state") or "greeting"
+    user_action = state.get("user_action") or "unknown"
+    selected_time = state.get("selected_time")
+
+    if current_state in ["reservation_unavailable", "suggest_alternative"]:
+        if selected_time and user_action in ["unknown", "continue_collecting"]:
+            user_action = "select_alternative_time"
 
     return {
-        "user_action": parsed_action.get("user_action") or "unknown",
-        "selected_time": parsed_action.get("selected_time") or state.get("selected_time"),
+        "user_action": user_action,
+        "selected_time": selected_time,
     }
 
 

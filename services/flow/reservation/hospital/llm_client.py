@@ -10,6 +10,7 @@ def complete_hospital_ai_message(
     *,
     temperature: float = 0.2,
     max_new_tokens: int = 120,
+    **kwargs,
 ) -> str:
     """
     병원 예약 LangGraph에서 ai_message 생성을 위해 사용하는 LLM 호출 래퍼이다.
@@ -21,4 +22,5 @@ def complete_hospital_ai_message(
         messages,
         temperature=temperature,
         max_new_tokens=max_new_tokens,
+        **kwargs,
     )
