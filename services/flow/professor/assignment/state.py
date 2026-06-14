@@ -9,6 +9,7 @@ class ProfessorAssignmentState(TypedDict, total=False):
 
     professor_name: Optional[str]
     intent: Optional[str]
+    course_name: Optional[str]
     assignment_topic: Optional[str]
     question: Optional[str]
     user_name: Optional[str]
