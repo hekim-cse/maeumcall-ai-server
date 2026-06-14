@@ -29,13 +29,26 @@ def extract_professor_appointment_info_node(state: ProfessorAppointmentState) ->
         user_message=user_message,
     )
 
+    normalized_date = (
+        analyzed.get("appointment_date")
+        or analyzed.get("date")
+        or state.get("appointment_date")
+        or state.get("date")
+    )
+    normalized_time = (
+        analyzed.get("appointment_time")
+        or analyzed.get("time")
+        or state.get("appointment_time")
+        or state.get("time")
+    )
+
     return {
         "intent": analyzed.get("intent") or state.get("intent") or "appointment_booking",
         "professor_name": state.get("professor_name") or "교수님",
         "appointment_purpose": analyzed.get("appointment_purpose")
         or state.get("appointment_purpose"),
-        "date": analyzed.get("date") or state.get("date"),
-        "time": analyzed.get("time") or state.get("time"),
+        "date": normalized_date,
+        "time": normalized_time,
         "user_name": analyzed.get("user_name") or state.get("user_name"),
         "user_action": analyzed.get("user_action") or "unknown",
         "last_ai_message": state.get("last_ai_message"),
@@ -94,6 +107,11 @@ def decide_professor_appointment_state_node(state: ProfessorAppointmentState) ->
             return _reset_fields(
                 {
                     "user_action": user_action,
+                    "appointment_purpose": state.get("appointment_purpose"),
+                    "date": state.get("date") or state.get("appointment_date"),
+                    "time": state.get("time") or state.get("appointment_time"),
+                    "appointment_date": state.get("appointment_date") or state.get("date"),
+                    "appointment_time": state.get("appointment_time") or state.get("time"),
                     "user_name": None,
                     "conversation_state": "collecting_appointment_info",
                     "should_end_call": False,

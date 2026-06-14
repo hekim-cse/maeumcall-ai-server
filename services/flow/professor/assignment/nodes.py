@@ -32,6 +32,8 @@ def extract_professor_assignment_info_node(state: ProfessorAssignmentState) -> D
     return {
         "intent": analyzed.get("intent") or state.get("intent") or "assignment_inquiry",
         "professor_name": state.get("professor_name") or "교수님",
+        "course_name": analyzed.get("course_name") or state.get("course_name"),
+        "course_name": analyzed.get("course_name") or state.get("course_name"),
         "assignment_topic": analyzed.get("assignment_topic")
         or state.get("assignment_topic"),
         "question": analyzed.get("question") or state.get("question"),
@@ -92,6 +94,10 @@ def decide_professor_assignment_state_node(state: ProfessorAssignmentState) -> D
     if missing_fields:
         return {
             "user_action": user_action,
+            "course_name": state.get("course_name"),
+            "assignment_topic": state.get("assignment_topic"),
+            "question": state.get("question"),
+            "user_name": state.get("user_name"),
             "missing_fields": missing_fields,
             "conversation_state": "collecting_assignment_info",
         }

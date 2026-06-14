@@ -33,6 +33,7 @@ def compact_professor_assignment_state(result: Dict) -> Dict:
     return {
         "intent": result.get("intent"),
         "professor_name": result.get("professor_name"),
+        "course_name": result.get("course_name"),
         "assignment_topic": result.get("assignment_topic"),
         "question": result.get("question"),
         "user_name": result.get("user_name"),

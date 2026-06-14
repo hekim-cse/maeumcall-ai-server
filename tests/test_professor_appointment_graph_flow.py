@@ -364,3 +364,74 @@ def test_professor_appointment_closing_moves_to_end(monkeypatch):
 
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
+
+def test_professor_appointment_change_user_name_resets_user_name_only(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.appointment.nodes.analyze_professor_appointment_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "appointment_purpose": None,
+            "date": None,
+            "time": None,
+            "user_name": None,
+            "user_action": "change_user_name",
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.professor.appointment.nodes.generate_professor_appointment_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = professor_appointment_graph.invoke(
+        {
+            "user_message": "이름을 수정할게요.",
+            "conversation_state": "confirming_info",
+            "professor_name": "교수님",
+            "appointment_purpose": "진로 상담",
+            "date": "내일",
+            "time": "오후 3시",
+            "user_name": "김개굴",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_appointment_info"
+    assert result["user_name"] is None
+    assert result["appointment_purpose"] == "진로 상담"
+    assert result["date"] == "내일"
+    assert result["time"] == "오후 3시"
+
+
+def test_professor_appointment_closing_unknown_keeps_state(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.appointment.nodes.analyze_professor_appointment_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "appointment_purpose": None,
+            "date": None,
+            "time": None,
+            "user_name": None,
+            "user_action": "unknown",
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.professor.appointment.nodes.generate_professor_appointment_ai_message",
+        lambda state: "테스트 응답",
+    )
+
+    result = professor_appointment_graph.invoke(
+        {
+            "user_message": "음...",
+            "conversation_state": "closing",
+            "professor_name": "교수님",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "closing"
+    assert result["should_end_call"] is False
+
