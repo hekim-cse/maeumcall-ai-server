@@ -314,3 +314,119 @@ def test_restaurant_reservation_closing_moves_to_end(monkeypatch):
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
     assert "감사" in result["ai_message"] or "좋은 하루" in result["ai_message"]
+
+def test_restaurant_reservation_change_date_clears_lookup_fields(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.llm_structured.analyze_restaurant_reservation_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "date": None,
+            "time": None,
+            "party_size": None,
+            "user_name": None,
+            "user_action": "change_date",
+            "selected_time": None,
+        },
+    )
+
+    result = restaurant_reservation_graph.invoke(
+        {
+            "user_message": "날짜를 바꾸고 싶어요.",
+            "conversation_state": "confirming_info",
+            "service_name": "마음식당",
+            "date": "오늘",
+            "time": "저녁 6시",
+            "party_size": "2명",
+            "user_name": "김개굴",
+            "availability_status": "available",
+            "available_time": "저녁 6시",
+            "alternative_times": [],
+            "reservation_confirmed": False,
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_reservation_info"
+    assert result["date"] is None
+    assert result["availability_status"] is None
+    assert result["availability_reason"] is None
+    assert result["available_time"] is None
+    assert result["alternative_times"] == []
+    assert result["availability_message_hint"] is None
+    assert result["reservation_confirmed"] is False
+
+
+def test_restaurant_reservation_change_user_name_resets_user_name_only(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.llm_structured.analyze_restaurant_reservation_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "date": None,
+            "time": None,
+            "party_size": None,
+            "user_name": None,
+            "user_action": "change_user_name",
+            "selected_time": None,
+        },
+    )
+
+    result = restaurant_reservation_graph.invoke(
+        {
+            "user_message": "예약자 이름 바꿀게요.",
+            "conversation_state": "confirming_info",
+            "service_name": "마음식당",
+            "date": "오늘",
+            "time": "저녁 6시",
+            "party_size": "2명",
+            "user_name": "김개굴",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_reservation_info"
+    assert result["date"] == "오늘"
+    assert result["time"] == "저녁 6시"
+    assert result["party_size"] == "2명"
+    assert result["user_name"] is None
+
+
+def test_restaurant_reservation_unavailable_unknown_keeps_state(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.llm_structured.analyze_restaurant_reservation_user_message",
+        lambda conversation_state, user_message: {
+            "intent": None,
+            "date": None,
+            "time": None,
+            "party_size": None,
+            "user_name": None,
+            "user_action": "unknown",
+            "selected_time": None,
+        },
+    )
+
+    result = restaurant_reservation_graph.invoke(
+        {
+            "user_message": "음...",
+            "conversation_state": "reservation_unavailable",
+            "service_name": "마음식당",
+            "date": "오늘",
+            "time": "저녁 7시",
+            "party_size": "2명",
+            "user_name": "김개굴",
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "available_time": None,
+            "alternative_times": ["저녁 6시", "저녁 8시"],
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["conversation_state"] == "reservation_unavailable"
+    assert result["selected_time"] is None
+

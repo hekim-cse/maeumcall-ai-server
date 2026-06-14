@@ -105,6 +105,7 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> Dict:
             return {
                 "user_action": user_action,
                 "designer": None,
+                "selected_time": None,
                 "availability_status": None,
                 "availability_reason": None,
                 "available_time": None,
