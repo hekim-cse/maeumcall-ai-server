@@ -2,28 +2,46 @@ from __future__ import annotations
 
 from typing import Dict
 
+from services.flow.reservation.study_room.availability import (
+    resolve_study_room_availability,
+)
+from services.flow.reservation.study_room.generation import (
+    generate_study_room_ai_message,
+)
+from services.flow.reservation.study_room.llm_structured import (
+    analyze_study_room_reservation_user_message,
+)
+from services.flow.reservation.study_room.policy import (
+    get_missing_study_room_fields,
+)
 from services.flow.reservation.study_room.state import StudyRoomReservationState
-from services.flow.reservation.study_room.extractor import extract_study_room_reservation_info
-from services.flow.reservation.study_room.policy import get_missing_study_room_fields
-from services.flow.reservation.study_room.action_parser import parse_study_room_reservation_action
-from services.flow.reservation.study_room.availability import resolve_study_room_availability
-from services.flow.reservation.study_room.generation import generate_study_room_ai_message
-from services.flow.reservation.study_room.templates import build_study_room_template_message
+from services.flow.reservation.study_room.templates import (
+    build_study_room_template_message,
+)
 
 
 def extract_study_room_info_node(state: StudyRoomReservationState) -> Dict:
+    """
+    사용자 발화를 LLM structured output으로 분석하여 스터디룸 예약 정보를 추출한다.
+    """
     user_message = state.get("user_message", "") or ""
-    extracted = extract_study_room_reservation_info(user_message)
+    conversation_state = state.get("conversation_state") or "greeting"
+
+    analyzed = analyze_study_room_reservation_user_message(
+        conversation_state=conversation_state,
+        user_message=user_message,
+    )
 
     return {
-        "intent": extracted.get("intent") or state.get("intent") or "reservation",
+        "intent": analyzed.get("intent") or state.get("intent") or "reservation",
         "service_name": state.get("service_name") or "마음스터디룸",
-        "date": extracted.get("date") or state.get("date"),
-        "start_time": extracted.get("start_time") or state.get("start_time"),
-        "duration": extracted.get("duration") or state.get("duration"),
-        "party_size": extracted.get("party_size") or state.get("party_size"),
-        "user_name": extracted.get("user_name") or state.get("user_name"),
-        "selected_time": state.get("selected_time"),
+        "date": analyzed.get("date") or state.get("date"),
+        "start_time": analyzed.get("start_time") or state.get("start_time"),
+        "duration": analyzed.get("duration") or state.get("duration"),
+        "party_size": analyzed.get("party_size") or state.get("party_size"),
+        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        "user_action": analyzed.get("user_action") or "unknown",
+        "selected_time": analyzed.get("selected_time") or state.get("selected_time"),
         "availability_status": state.get("availability_status"),
         "availability_reason": state.get("availability_reason"),
         "available_time": state.get("available_time"),
@@ -41,14 +59,8 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> Dict:
     """
     스터디룸 예약 상태를 결정한다.
     """
-    user_message = state.get("user_message", "") or ""
     current_state = state.get("conversation_state") or "greeting"
-
-    action_result = parse_study_room_reservation_action(
-        current_state,
-        user_message,
-    )
-    user_action = action_result.get("user_action")
+    user_action = state.get("user_action") or "unknown"
 
     if current_state == "confirming_info":
         if user_action == "confirm":
@@ -108,7 +120,11 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> Dict:
 
     if current_state == "reservation_available":
         if user_action == "confirm_reservation":
-            final_time = state.get("available_time") or state.get("selected_time") or state.get("start_time")
+            final_time = (
+                state.get("available_time")
+                or state.get("selected_time")
+                or state.get("start_time")
+            )
 
             return {
                 "user_action": user_action,
@@ -133,7 +149,7 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> Dict:
 
     if current_state == "reservation_unavailable":
         if user_action == "select_alternative_time":
-            selected_time = action_result.get("selected_time")
+            selected_time = state.get("selected_time")
             alternative_times = state.get("alternative_times") or []
 
             if selected_time in alternative_times:
@@ -145,7 +161,8 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> Dict:
                     "availability_status": "available",
                     "availability_reason": None,
                     "availability_message_hint": (
-                        f"{state.get('date')} {selected_time}부터 {state.get('duration')} 예약이 가능합니다."
+                        f"{state.get('date')} {selected_time}부터 "
+                        f"{state.get('duration')} 예약이 가능합니다."
                     ),
                     "reservation_confirmed": False,
                     "conversation_state": "reservation_available",
@@ -256,34 +273,10 @@ def generate_study_room_response_node(state: StudyRoomReservationState) -> Dict:
     conversation_state = state.get("conversation_state") or "collecting_reservation_info"
     missing_fields = state.get("missing_fields") or get_missing_study_room_fields(state)
 
-    # 예약자 이름만 부족한 경우에는 이미 수집된 날짜/시간/인원을 다시 묻지 않는다.
     if conversation_state == "collecting_reservation_info" and missing_fields == ["user_name"]:
-        date = state.get("date") or "예약 날짜"
-        start_time = state.get("start_time") or "시작 시간"
-        duration = state.get("duration") or "이용 시간"
-        party_size = state.get("party_size") or "인원"
-
-        ai_message = (
-            f"{date} {start_time}부터 {duration}, {party_size} 이용 예약으로 확인했습니다. "
-            "예약자 성함은 어떻게 남겨드릴까요?"
-        )
+        ai_message = build_study_room_template_message(conversation_state, state)
     else:
         ai_message = generate_study_room_ai_message(state)
-
-    # 예약 불가 상태에서는 사용자에게 불가 의미가 명확히 전달되어야 한다.
-    if conversation_state == "reservation_unavailable":
-        unavailable_keywords = ["어렵", "어려운", "마감", "불가능"]
-        if not any(keyword in ai_message for keyword in unavailable_keywords):
-            alternatives = state.get("alternative_times") or []
-            alternatives_text = " 또는 ".join(alternatives)
-
-            if alternatives_text:
-                ai_message = (
-                    f"죄송하지만 요청하신 시간은 예약이 어렵습니다. "
-                    f"대신 {alternatives_text}부터는 가능합니다."
-                )
-            else:
-                ai_message = "죄송하지만 해당 시간은 예약이 어렵습니다. 다른 시간대로 확인해드릴까요?"
 
     return {
         "ai_message": ai_message,
@@ -297,39 +290,37 @@ def attach_study_room_recommended_replies_node(state: StudyRoomReservationState)
     """
     conversation_state = state.get("conversation_state") or "collecting_reservation_info"
 
-    if conversation_state == "confirming_info":
+    if conversation_state == "collecting_reservation_info":
+        replies = [
+            "내일 오후 2시부터 2시간, 4명 예약하고 싶습니다.",
+            "예약자는 김개굴입니다.",
+        ]
+    elif conversation_state == "confirming_info":
         replies = [
             "네, 맞습니다.",
-            "시간을 바꾸고 싶습니다.",
-            "인원을 변경하고 싶습니다.",
+            "시작 시간을 변경하고 싶습니다.",
+            "이용 인원을 수정하고 싶습니다.",
         ]
     elif conversation_state == "reservation_available":
         replies = [
-            "네, 예약해주세요.",
-            "다른 시간 가능할까요?",
-            "날짜를 바꾸고 싶습니다.",
+            "네, 그 시간으로 예약해주세요.",
+            "다른 시간도 가능할까요?",
         ]
     elif conversation_state == "reservation_unavailable":
         replies = [
-            "오후 1시로 할게요.",
-            "오후 3시로 할게요.",
-            "다른 날짜로 확인해주세요.",
+            "가능한 다른 시간 알려주세요.",
+            "다른 날짜로 예약할게요.",
         ]
     elif conversation_state == "reservation_confirmed":
         replies = [
             "네, 감사합니다.",
-            "확인했습니다.",
         ]
     elif conversation_state == "closing":
         replies = [
             "네, 감사합니다.",
         ]
     else:
-        replies = [
-            "내일 오후 두 시부터 두 시간 이용하고 싶습니다.",
-            "4명이고 김개굴 이름으로 예약해주세요.",
-            "오늘 오후 3시부터 2시간 가능할까요?",
-        ]
+        replies = []
 
     return {
         "recommended_replies": replies,
@@ -338,14 +329,16 @@ def attach_study_room_recommended_replies_node(state: StudyRoomReservationState)
 
 def _reset_lookup_state(extra: Dict) -> Dict:
     """
-    날짜/시간/이용 시간 등 예약 조건이 바뀌면 기존 예약 조회 결과를 초기화한다.
+    예약 조회와 확정에 관련된 값을 초기화한다.
     """
     return {
         **extra,
+        "selected_time": None,
         "availability_status": None,
         "availability_reason": None,
         "available_time": None,
         "alternative_times": [],
         "availability_message_hint": None,
         "reservation_confirmed": False,
+        "missing_fields": [],
     }
