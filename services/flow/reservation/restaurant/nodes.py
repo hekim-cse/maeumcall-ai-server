@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import Dict
 
 from services.flow.reservation.restaurant.state import RestaurantReservationState
-from services.flow.reservation.restaurant.action_parser import parse_restaurant_reservation_action
-from services.flow.reservation.restaurant.extractor import extract_restaurant_reservation_info
+from services.flow.reservation.restaurant.llm_structured import (
+    analyze_restaurant_reservation_user_message,
+)
 from services.flow.reservation.restaurant.policy import (
     decide_restaurant_next_state,
     get_missing_restaurant_fields,
@@ -17,21 +18,33 @@ from services.flow.reservation.restaurant.generation import generate_restaurant_
 
 def extract_restaurant_info_node(state: RestaurantReservationState) -> Dict:
     """
-    사용자 발화에서 식당 예약에 필요한 정보를 추출한다.
+    사용자 발화를 LLM structured output으로 분석한다.
 
-    한 번에 모든 정보를 말하지 않는 사용자를 고려해서,
-    새로 추출된 값만 갱신하고 기존 값은 유지한다.
+    새로 분석된 값만 갱신하고, 기존에 수집된 값은 유지한다.
     """
     user_message = state.get("user_message", "") or ""
-    extracted = extract_restaurant_reservation_info(user_message)
+    conversation_state = state.get("conversation_state") or "greeting"
+
+    analyzed = analyze_restaurant_reservation_user_message(
+        conversation_state,
+        user_message,
+    )
 
     return {
-        "intent": extracted.get("intent") or state.get("intent") or "reservation",
+        "intent": analyzed.get("intent") or state.get("intent") or "reservation",
         "service_name": state.get("service_name") or "마음식당",
-        "date": extracted.get("date") or state.get("date"),
-        "time": extracted.get("time") or state.get("time"),
-        "party_size": extracted.get("party_size") or state.get("party_size"),
-        "user_name": extracted.get("user_name") or state.get("user_name"),
+        "date": analyzed.get("date") or state.get("date"),
+        "time": analyzed.get("time") or state.get("time"),
+        "party_size": analyzed.get("party_size") or state.get("party_size"),
+        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        "user_action": analyzed.get("user_action") or "unknown",
+        "selected_time": analyzed.get("selected_time") or state.get("selected_time"),
+        "availability_status": state.get("availability_status"),
+        "availability_reason": state.get("availability_reason"),
+        "available_time": state.get("available_time"),
+        "alternative_times": state.get("alternative_times") or [],
+        "availability_message_hint": state.get("availability_message_hint"),
+        "reservation_confirmed": state.get("reservation_confirmed", False),
         "last_ai_message": state.get("last_ai_message"),
         "history": state.get("history") or [],
         "recommended_replies": state.get("recommended_replies") or [],
@@ -49,15 +62,10 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
     - 그 다음에 부족한 예약 정보를 판단한다.
     - 정보가 모두 모이면 confirming_info로 이동한다.
     """
-    user_message = state.get("user_message", "") or ""
     current_state = state.get("conversation_state") or "greeting"
 
-    action_result = parse_restaurant_reservation_action(
-        current_state,
-        user_message,
-    )
-    user_action = action_result.get("user_action")
-    selected_time = action_result.get("selected_time")
+    user_action = state.get("user_action") or "unknown"
+    selected_time = state.get("selected_time")
 
     # 1) 예약 정보 확인 상태에서 사용자가 맞다고 한 경우
     if current_state == "confirming_info":
@@ -167,6 +175,7 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
 
             return {
                 "user_action": "ask_other_time",
+                "selected_time": None,
                 "reservation_confirmed": False,
                 "conversation_state": "reservation_unavailable",
             }
