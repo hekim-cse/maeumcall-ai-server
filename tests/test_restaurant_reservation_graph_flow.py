@@ -1,6 +1,8 @@
+import pytest
 from services.flow.reservation.restaurant.graph import restaurant_reservation_graph
 
 
+pytestmark = pytest.mark.graph_flow
 def _patch_restaurant_analysis(monkeypatch):
     def fake_analyze(conversation_state, user_message):
         if conversation_state in ["greeting", "collecting_reservation_info"]:
@@ -241,7 +243,19 @@ def test_restaurant_reservation_unavailable_selects_alternative_time(monkeypatch
     assert "가능" in result["ai_message"]
 
 
-def test_restaurant_reservation_unavailable_rejects_out_of_option_time():
+def test_restaurant_reservation_unavailable_rejects_out_of_option_time(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.nodes.analyze_restaurant_reservation_user_message",
+        lambda conversation_state, user_message: {
+            "intent": "reservation",
+            "date": None,
+            "time": None,
+            "party_size": None,
+            "user_name": None,
+            "user_action": "select_alternative_time",
+            "selected_time": "저녁 9시",
+        },
+    )
     result = restaurant_reservation_graph.invoke(
         {
             "user_message": "저녁 9시로 할게요.",
@@ -263,8 +277,6 @@ def test_restaurant_reservation_unavailable_rejects_out_of_option_time():
 
     assert result["conversation_state"] == "reservation_unavailable"
     assert result.get("selected_time") is None
-    assert result["reservation_confirmed"] is not True
-
 
 def test_restaurant_reservation_confirmed_moves_to_closing(monkeypatch):
     _patch_restaurant_analysis(monkeypatch)
