@@ -16,10 +16,26 @@ def make_request(title: str) -> ChatRequest:
     )
 
 
-def test_reservation_graph_router_handles_hospital_reservation():
+def test_reservation_graph_router_handles_hospital_reservation(monkeypatch):
     """
     예약 / 병원 예약은 병원 예약 LangGraph가 처리해야 한다.
     """
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.nodes.analyze_hospital_reservation_user_message",
+        lambda conversation_state, user_message: {
+            "intent": "reservation",
+            "department": None,
+            "date": None,
+            "time": None,
+            "user_action": "continue_collecting",
+            "selected_time": None,
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.generation.complete_hospital_ai_message",
+        lambda *args, **kwargs: "",
+    )
+
     req = make_request("병원 예약")
 
     result = complete_reservation_graph_if_supported(req)
