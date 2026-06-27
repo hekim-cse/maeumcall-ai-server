@@ -4,8 +4,6 @@ from __future__ import annotations
 import time
 from typing import Dict, List, Optional
 
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 # 마음콜 1차 메인 후보
@@ -19,8 +17,10 @@ _loaded_model_name: Optional[str] = None
 def _get_device_dtype():
     """
     Mac M 계열에서는 MPS 사용 가능 여부를 확인한다.
-    단, device_map='auto'를 사용할 것이므로 dtype만 명확히 지정한다.
+    단, fast CI에서는 torch import 자체가 collection 단계에서 부담이 되므로
+    실제 필요한 시점에만 torch를 import한다.
     """
+    import torch
     return torch.float16
 
 
@@ -29,6 +29,8 @@ def load_hf_model(model_name: str = DEFAULT_HF_MODEL_NAME):
     Hugging Face 모델을 최초 1회만 로드한다.
     서버 요청마다 모델을 다시 로드하면 너무 느리므로 전역 캐시를 사용한다.
     """
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
     global _tokenizer, _model, _loaded_model_name
 
     if _tokenizer is not None and _model is not None and _loaded_model_name == model_name:
@@ -115,6 +117,8 @@ def complete_hf_messages(
         inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
         start = time.perf_counter()
+
+        import torch
 
         with torch.no_grad():
             generate_kwargs = {
