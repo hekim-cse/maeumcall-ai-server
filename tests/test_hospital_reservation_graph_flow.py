@@ -192,6 +192,12 @@ def _patch_hospital_analysis(monkeypatch):
     )
 
 
+
+@pytest.fixture(autouse=True)
+def _patch_hospital_analysis_for_all_tests(monkeypatch):
+    _patch_hospital_analysis(monkeypatch)
+
+
 def _invoke(state: dict, monkeypatch):
     _patch_hospital_analysis(monkeypatch)
     monkeypatch.setattr(
