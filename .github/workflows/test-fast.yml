@@ -26,4 +26,4 @@ jobs:
 
       - name: Run unit + graph_flow tests
         run: |
-          python -m pytest -m "unit or graph_flow" -v
+          python -m pytest tests -m "unit or graph_flow" -v
