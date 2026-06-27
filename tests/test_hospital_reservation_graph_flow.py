@@ -368,7 +368,7 @@ def test_reservation_unavailable_change_date_flow(monkeypatch):
 
 def test_confirming_info_unknown_keeps_state(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hospital.llm_structured.analyze_hospital_reservation_user_message",
+        "services.flow.reservation.hospital.nodes.analyze_hospital_reservation_user_message",
         lambda conversation_state, user_message: {
             "intent": None,
             "department": None,
