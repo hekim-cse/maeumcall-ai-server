@@ -1,8 +1,11 @@
+import pytest
 from services.flow.professor.assignment.llm_structured import (
     analyze_professor_assignment_user_message,
 )
 
 
+
+pytestmark = pytest.mark.unit
 def test_professor_assignment_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.professor.assignment.llm_structured.complete_hf_messages",

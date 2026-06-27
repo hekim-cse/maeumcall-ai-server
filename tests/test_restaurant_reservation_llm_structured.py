@@ -1,8 +1,11 @@
+import pytest
 from services.flow.reservation.restaurant.llm_structured import (
     analyze_restaurant_reservation_user_message,
 )
 
 
+
+pytestmark = pytest.mark.unit
 def test_restaurant_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.restaurant.llm_structured.complete_hf_messages",

@@ -1,3 +1,5 @@
+import pytest
+pytestmark = pytest.mark.graph_flow
 def _patch_hair_salon_analysis(monkeypatch):
     def fake_analyze(conversation_state, user_message):
         base = {

@@ -1,6 +1,8 @@
+import pytest
 from services.flow.professor.absence.graph import professor_absence_graph
 
 
+pytestmark = pytest.mark.graph_flow
 def _patch_absence_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":

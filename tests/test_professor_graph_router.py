@@ -1,7 +1,9 @@
+import pytest
 from schemas.chat_models import ChatRequest
 from services.flow.professor.router import complete_professor_graph_if_supported
 
 
+pytestmark = pytest.mark.unit
 def make_request(title: str, category: str = "교수님", user_message: str = "") -> ChatRequest:
     return ChatRequest(
         category=category,

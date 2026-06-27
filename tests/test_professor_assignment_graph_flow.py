@@ -1,6 +1,8 @@
+import pytest
 from services.flow.professor.assignment.graph import professor_assignment_graph
 
 
+pytestmark = pytest.mark.graph_flow
 def _patch_assignment_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":

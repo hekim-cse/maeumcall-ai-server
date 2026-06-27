@@ -1,8 +1,11 @@
+import pytest
 from services.flow.reservation.hospital.llm_structured import (
     analyze_hospital_reservation_user_message,
 )
 
 
+
+pytestmark = pytest.mark.unit
 def test_hospital_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hospital.llm_structured.complete_hf_messages",
