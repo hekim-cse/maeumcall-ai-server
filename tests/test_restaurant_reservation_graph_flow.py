@@ -131,7 +131,9 @@ def test_restaurant_reservation_full_info_moves_to_confirming_info(monkeypatch):
     assert "맞으실까요" in result["ai_message"] or "확인" in result["ai_message"]
 
 
-def test_restaurant_reservation_confirm_checks_availability_available():
+def test_restaurant_reservation_confirm_checks_availability_available(monkeypatch):
+    _patch_restaurant_analysis(monkeypatch)
+
     result = restaurant_reservation_graph.invoke(
         {
             "user_message": "네, 맞습니다.",
