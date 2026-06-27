@@ -1,7 +1,9 @@
+import pytest
 from services.flow.reservation.hospital import graph as graph_module
 from services.flow.reservation.hospital import generation as generation_module
 
 
+pytestmark = pytest.mark.graph_flow
 def _invoke(state: dict, monkeypatch):
     monkeypatch.setattr(
         generation_module,
