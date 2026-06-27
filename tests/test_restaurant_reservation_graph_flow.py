@@ -329,7 +329,7 @@ def test_restaurant_reservation_closing_moves_to_end(monkeypatch):
 
 def test_restaurant_reservation_change_date_clears_lookup_fields(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.restaurant.llm_structured.analyze_restaurant_reservation_user_message",
+        "services.flow.reservation.restaurant.nodes.analyze_restaurant_reservation_user_message",
         lambda conversation_state, user_message: {
             "intent": None,
             "date": None,
@@ -372,7 +372,7 @@ def test_restaurant_reservation_change_date_clears_lookup_fields(monkeypatch):
 
 def test_restaurant_reservation_change_user_name_resets_user_name_only(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.restaurant.llm_structured.analyze_restaurant_reservation_user_message",
+        "services.flow.reservation.restaurant.nodes.analyze_restaurant_reservation_user_message",
         lambda conversation_state, user_message: {
             "intent": None,
             "date": None,
@@ -408,7 +408,7 @@ def test_restaurant_reservation_change_user_name_resets_user_name_only(monkeypat
 
 def test_restaurant_reservation_unavailable_unknown_keeps_state(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.restaurant.llm_structured.analyze_restaurant_reservation_user_message",
+        "services.flow.reservation.restaurant.nodes.analyze_restaurant_reservation_user_message",
         lambda conversation_state, user_message: {
             "intent": None,
             "date": None,
