@@ -4,7 +4,196 @@ from services.flow.reservation.hospital import generation as generation_module
 
 
 pytestmark = pytest.mark.graph_flow
+
+def _patch_hospital_analysis(monkeypatch):
+    def fake_analyze(conversation_state, user_message):
+        if conversation_state in ["greeting", "collecting_reservation_info"]:
+            if "내일" in user_message and "오후" in user_message:
+                return {
+                    "intent": "reservation",
+                    "department": None,
+                    "date": "내일",
+                    "time": "오후",
+                    "user_action": "continue_collecting",
+                    "selected_time": None,
+                }
+
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": None,
+                "user_action": "continue_collecting",
+                "selected_time": None,
+            }
+
+        if conversation_state == "asking_department":
+            return {
+                "intent": "reservation",
+                "department": "내과" if "내과" in user_message else None,
+                "date": None,
+                "time": None,
+                "user_action": "continue_collecting",
+                "selected_time": None,
+            }
+
+        if conversation_state == "asking_date":
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": "모레" if "모레" in user_message else None,
+                "time": None,
+                "user_action": "continue_collecting",
+                "selected_time": None,
+            }
+
+        if conversation_state == "asking_time":
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": "오후 3시" if "오후 3시" in user_message else None,
+                "user_action": "continue_collecting",
+                "selected_time": None,
+            }
+
+        if conversation_state == "confirming_info":
+            if "시간" in user_message and ("바꾸" in user_message or "다시" in user_message):
+                user_action = "change_time"
+            elif "날짜" in user_message or "다른 날짜" in user_message:
+                user_action = "change_date"
+            elif "진료과" in user_message or "과를" in user_message:
+                user_action = "change_department"
+            elif "네" in user_message or "맞습니다" in user_message:
+                user_action = "confirm_reservation_info"
+            else:
+                user_action = "unknown"
+
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": None,
+                "user_action": user_action,
+                "selected_time": None,
+            }
+
+        if conversation_state == "checking_availability":
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": None,
+                "user_action": "lookup_availability",
+                "selected_time": None,
+            }
+
+        if conversation_state == "reservation_available":
+            if "다른 시간" in user_message or "그 시간 말고" in user_message:
+                user_action = "ask_other_time"
+            elif "예약" in user_message or "그 시간" in user_message or "네" in user_message:
+                user_action = "confirm_available_time"
+            else:
+                user_action = "unknown"
+
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": None,
+                "user_action": user_action,
+                "selected_time": None,
+            }
+
+        if conversation_state == "reservation_unavailable":
+            if "다른 날짜" in user_message or "날짜" in user_message:
+                user_action = "change_date"
+                selected_time = None
+            elif "다른 시간" in user_message or "가능할까요" in user_message:
+                user_action = "ask_other_time"
+                selected_time = None
+            elif "오후 4시" in user_message:
+                user_action = "select_alternative_time"
+                selected_time = "오후 4시"
+            elif "오후 5시" in user_message:
+                user_action = "select_alternative_time"
+                selected_time = "오후 5시"
+            else:
+                user_action = "unknown"
+                selected_time = None
+
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": None,
+                "user_action": user_action,
+                "selected_time": selected_time,
+            }
+
+        if conversation_state == "suggest_alternative":
+            if "오후 4시" in user_message:
+                user_action = "select_alternative_time"
+                selected_time = "오후 4시"
+            elif "오후 5시" in user_message:
+                user_action = "select_alternative_time"
+                selected_time = "오후 5시"
+            elif "다른 날짜" in user_message or "날짜" in user_message:
+                user_action = "change_date"
+                selected_time = None
+            elif "다른 시간" in user_message:
+                user_action = "ask_other_time"
+                selected_time = None
+            else:
+                user_action = "unknown"
+                selected_time = None
+
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": None,
+                "user_action": user_action,
+                "selected_time": selected_time,
+            }
+
+        if conversation_state == "reservation_confirmed":
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": None,
+                "user_action": "go_closing",
+                "selected_time": None,
+            }
+
+        if conversation_state == "closing":
+            return {
+                "intent": "reservation",
+                "department": None,
+                "date": None,
+                "time": None,
+                "user_action": "end_call",
+                "selected_time": None,
+            }
+
+        return {
+            "intent": "reservation",
+            "department": None,
+            "date": None,
+            "time": None,
+            "user_action": "unknown",
+            "selected_time": None,
+        }
+
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.nodes.analyze_hospital_reservation_user_message",
+        fake_analyze,
+    )
+
+
 def _invoke(state: dict, monkeypatch):
+    _patch_hospital_analysis(monkeypatch)
     monkeypatch.setattr(
         generation_module,
         "complete_hospital_ai_message",
