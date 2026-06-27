@@ -1,8 +1,11 @@
+import pytest
 from services.flow.reservation.study_room.llm_structured import (
     analyze_study_room_reservation_user_message,
 )
 
 
+
+pytestmark = pytest.mark.unit
 def test_study_room_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.study_room.llm_structured.complete_hf_messages",

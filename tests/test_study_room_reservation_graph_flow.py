@@ -1,6 +1,8 @@
+import pytest
 from services.flow.reservation.study_room.graph import study_room_reservation_graph
 
 
+pytestmark = pytest.mark.graph_flow
 def _patch_study_room_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":

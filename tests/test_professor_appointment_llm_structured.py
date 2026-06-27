@@ -1,8 +1,11 @@
+import pytest
 from services.flow.professor.appointment.llm_structured import (
     analyze_professor_appointment_user_message,
 )
 
 
+
+pytestmark = pytest.mark.unit
 def test_professor_appointment_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.professor.appointment.llm_structured.complete_hf_messages",

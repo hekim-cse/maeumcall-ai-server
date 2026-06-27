@@ -1,7 +1,9 @@
+import pytest
 from services.flow.reservation.restaurant.response import is_restaurant_reservation_request
 from schemas.chat_models import ChatRequest
 
 
+pytestmark = pytest.mark.unit
 def _req(category: str, title: str) -> ChatRequest:
     return ChatRequest(
         category=category,

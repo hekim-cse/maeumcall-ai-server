@@ -1,6 +1,8 @@
+import pytest
 from services.flow.professor.appointment.graph import professor_appointment_graph
 
 
+pytestmark = pytest.mark.graph_flow
 def _patch_appointment_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":

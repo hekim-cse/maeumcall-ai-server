@@ -1,8 +1,11 @@
+import pytest
 from services.flow.reservation.hair_salon.llm_structured import (
     analyze_hair_salon_reservation_user_message,
 )
 
 
+
+pytestmark = pytest.mark.unit
 def test_hair_salon_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hair_salon.llm_structured.complete_hf_messages",
