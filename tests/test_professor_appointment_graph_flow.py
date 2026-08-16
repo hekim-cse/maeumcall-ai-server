@@ -123,10 +123,6 @@ def _patch_appointment_analysis(monkeypatch):
 def test_professor_appointment_full_info_moves_to_confirming_info(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "김개굴 학생, 이번 주 수요일 오후 3시에 진로 상담 관련 면담을 희망하시는 것으로 확인했습니다. 맞습니까?",
-    )
 
     result = professor_appointment_graph.invoke(
         {
@@ -149,10 +145,6 @@ def test_professor_appointment_full_info_moves_to_confirming_info(monkeypatch):
 def test_professor_appointment_missing_user_name_keeps_collecting_info(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "이번 주 수요일 오후 3시, 진로 상담 관련 면담으로 확인했습니다. 성함을 말씀해주시겠습니까?",
-    )
 
     result = professor_appointment_graph.invoke(
         {
@@ -176,10 +168,6 @@ def test_professor_appointment_missing_user_name_keeps_collecting_info(monkeypat
 def test_professor_appointment_partial_info_is_preserved(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "확인했습니다. 부족한 정보를 말씀해주시겠습니까?",
-    )
 
     first = professor_appointment_graph.invoke(
         {
@@ -209,10 +197,6 @@ def test_professor_appointment_partial_info_is_preserved(monkeypatch):
 def test_professor_appointment_casual_llm_response_falls_back(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "응 좋아. 그때 보자.",
-    )
 
     result = professor_appointment_graph.invoke(
         {
@@ -234,10 +218,6 @@ def test_professor_appointment_casual_llm_response_falls_back(monkeypatch):
 def test_professor_appointment_confirm_moves_to_confirmed(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "알겠습니다. 김개굴 학생의 진로 상담 관련 면담 요청은 이번 주 수요일 오후 3시로 확인해두겠습니다.",
-    )
 
     result = professor_appointment_graph.invoke(
         {
@@ -261,10 +241,6 @@ def test_professor_appointment_confirm_moves_to_confirmed(monkeypatch):
 def test_professor_appointment_change_time_resets_time(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "희망하시는 시간을 말씀해주시겠습니까?",
-    )
 
     result = professor_appointment_graph.invoke(
         {
@@ -291,10 +267,6 @@ def test_professor_appointment_change_time_resets_time(monkeypatch):
 def test_professor_appointment_change_purpose_resets_purpose(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "면담을 희망하시는 구체적인 목적을 말씀해주시겠습니까?",
-    )
 
     result = professor_appointment_graph.invoke(
         {
@@ -321,10 +293,6 @@ def test_professor_appointment_change_purpose_resets_purpose(monkeypatch):
 def test_professor_appointment_confirmed_moves_to_closing(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "네, 확인했습니다. 추가로 필요한 사항이 있으면 다시 말씀해주시기 바랍니다.",
-    )
 
     result = professor_appointment_graph.invoke(
         {
@@ -348,10 +316,6 @@ def test_professor_appointment_confirmed_moves_to_closing(monkeypatch):
 def test_professor_appointment_closing_moves_to_end(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "네, 알겠습니다.",
-    )
 
     result = professor_appointment_graph.invoke(
         {

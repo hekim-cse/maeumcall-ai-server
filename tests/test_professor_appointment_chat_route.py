@@ -2,11 +2,34 @@ from routes.chat_routes import chat
 from schemas.chat_models import ChatRequest
 
 
-def test_chat_route_handles_professor_appointment_with_graph(monkeypatch):
+def _patch_appointment_analysis(monkeypatch):
+    def fake_analyze(conversation_state: str, user_message: str):
+        if "진로 상담" in user_message:
+            return {
+                "intent": "appointment_booking",
+                "appointment_purpose": "진로 상담",
+                "date": "이번 주 수요일",
+                "time": "오후 3시",
+                "user_name": "김개굴" if "김개굴" in user_message else None,
+                "user_action": "provide_appointment_info",
+            }
+        return {
+            "intent": "appointment_booking",
+            "appointment_purpose": None,
+            "date": None,
+            "time": None,
+            "user_name": None,
+            "user_action": "unknown",
+        }
+
     monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "면담을 희망하시는 구체적인 목적을 말씀해주시겠습니까?",
+        "services.flow.professor.appointment.nodes.analyze_professor_appointment_user_message",
+        fake_analyze,
     )
+
+
+def test_chat_route_handles_professor_appointment_with_graph(monkeypatch):
+    _patch_appointment_analysis(monkeypatch)
 
     req = ChatRequest(
         category="교수님",
@@ -29,10 +52,7 @@ def test_chat_route_handles_professor_appointment_with_graph(monkeypatch):
 
 
 def test_chat_route_professor_appointment_preserves_partial_state(monkeypatch):
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "이번 주 수요일 오후 3시 진로 상담 면담으로 확인했습니다. 성함을 말씀해주시겠습니까?",
-    )
+    _patch_appointment_analysis(monkeypatch)
 
     req = ChatRequest(
         category="교수님",
@@ -55,10 +75,7 @@ def test_chat_route_professor_appointment_preserves_partial_state(monkeypatch):
 
 
 def test_chat_route_professor_appointment_full_info_moves_to_confirming(monkeypatch):
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "김개굴 학생, 이번 주 수요일 오후 3시에 진로 상담 관련 면담을 희망하시는 것으로 확인했습니다. 맞습니까?",
-    )
+    _patch_appointment_analysis(monkeypatch)
 
     req = ChatRequest(
         category="교수님",
@@ -80,11 +97,8 @@ def test_chat_route_professor_appointment_full_info_moves_to_confirming(monkeypa
     assert "확인" in result.response or "맞" in result.response
 
 
-def test_chat_route_professor_appointment_casual_llm_response_falls_back(monkeypatch):
-    monkeypatch.setattr(
-        "services.flow.professor.appointment.generation.complete_professor_appointment_ai_message",
-        lambda prompt: "응 좋아. 그때 보자.",
-    )
+def test_chat_route_professor_appointment_uses_formal_response_policy(monkeypatch):
+    _patch_appointment_analysis(monkeypatch)
 
     req = ChatRequest(
         category="교수님",

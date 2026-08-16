@@ -92,10 +92,6 @@ def _patch_absence_analysis(monkeypatch):
 def test_chat_route_handles_professor_absence_with_graph(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "결석 사유 전달과 관련해서 어떤 사유인지 말씀해주시겠습니까?",
-    )
 
     req = ChatRequest(
         category="교수님",
@@ -120,10 +116,6 @@ def test_chat_route_handles_professor_absence_with_graph(monkeypatch):
 def test_chat_route_professor_absence_full_info_moves_to_confirming(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "김개굴 학생, 오늘 결석 사유가 몸이 좋지 않음인 것으로 확인했습니다. 맞습니까?",
-    )
 
     req = ChatRequest(
         category="교수님",
@@ -146,10 +138,6 @@ def test_chat_route_professor_absence_full_info_moves_to_confirming(monkeypatch)
 def test_chat_route_professor_absence_missing_user_name_keeps_collecting(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "오늘 결석 사유는 확인했습니다. 성함을 말씀해주시겠습니까?",
-    )
 
     req = ChatRequest(
         category="교수님",
@@ -173,10 +161,6 @@ def test_chat_route_professor_absence_missing_user_name_keeps_collecting(monkeyp
 def test_chat_route_professor_absence_casual_llm_response_falls_back(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "응 좋아. 알아서 해.",
-    )
 
     req = ChatRequest(
         category="교수님",
@@ -200,10 +184,6 @@ def test_chat_route_professor_absence_casual_llm_response_falls_back(monkeypatch
 def test_chat_route_professor_absence_confirm_moves_to_noted(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "알겠습니다. 김개굴 학생의 오늘 결석 사유는 참고하도록 하겠습니다.",
-    )
 
     req = ChatRequest(
         category="교수님",
@@ -231,10 +211,6 @@ def test_chat_route_professor_absence_confirm_moves_to_noted(monkeypatch):
 def test_chat_route_professor_absence_change_reason_resets_reason(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "결석 사유를 말씀해주시겠습니까?",
-    )
 
     req = ChatRequest(
         category="교수님",
@@ -264,10 +240,6 @@ def test_chat_route_professor_absence_change_reason_resets_reason(monkeypatch):
 def test_chat_route_professor_absence_noted_moves_to_closing(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "네, 확인했습니다. 추후 필요한 사항이 있으면 다시 말씀하시기 바랍니다.",
-    )
 
     req = ChatRequest(
         category="교수님",
@@ -295,10 +267,6 @@ def test_chat_route_professor_absence_noted_moves_to_closing(monkeypatch):
 def test_chat_route_professor_absence_closing_moves_to_end(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "네, 알겠습니다.",
-    )
 
     req = ChatRequest(
         category="교수님",

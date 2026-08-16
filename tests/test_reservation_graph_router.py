@@ -4,6 +4,46 @@ from services.flow.reservation.router import complete_reservation_graph_if_suppo
 
 
 pytestmark = pytest.mark.unit
+
+
+@pytest.fixture(autouse=True)
+def _mock_structured_analysis(monkeypatch):
+    reservation_result = {
+        "intent": "reservation",
+        "date": None,
+        "time": None,
+        "user_action": "continue_collecting",
+        "selected_time": None,
+    }
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.nodes.analyze_restaurant_reservation_user_message",
+        lambda conversation_state, user_message: {
+            **reservation_result,
+            "party_size": None,
+            "user_name": None,
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.study_room.nodes.analyze_study_room_reservation_user_message",
+        lambda conversation_state, user_message: {
+            **reservation_result,
+            "start_time": None,
+            "duration": None,
+            "party_size": None,
+            "user_name": None,
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.hair_salon.nodes.analyze_hair_salon_reservation_user_message",
+        lambda conversation_state, user_message: {
+            **reservation_result,
+            "service_type": None,
+            "designer": None,
+            "user_name": None,
+        },
+    )
+
+
 def make_request(title: str) -> ChatRequest:
     return ChatRequest(
         category="예약",
@@ -30,10 +70,6 @@ def test_reservation_graph_router_handles_hospital_reservation(monkeypatch):
             "user_action": "continue_collecting",
             "selected_time": None,
         },
-    )
-    monkeypatch.setattr(
-        "services.flow.reservation.hospital.generation.complete_hospital_ai_message",
-        lambda *args, **kwargs: "",
     )
 
     req = make_request("병원 예약")
@@ -85,5 +121,4 @@ def test_reservation_graph_router_handles_hair_salon_reservation():
     assert result.conversationState == "collecting_reservation_info"
     assert result.shouldEndCall is False
     assert "미용실" in result.response or "예약" in result.response
-
 

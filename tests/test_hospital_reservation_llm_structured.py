@@ -1,4 +1,5 @@
 import pytest
+from llm.errors import AIResponseValidationError
 from services.flow.reservation.hospital.llm_structured import (
     analyze_hospital_reservation_user_message,
 )
@@ -8,7 +9,7 @@ from services.flow.reservation.hospital.llm_structured import (
 pytestmark = pytest.mark.unit
 def test_hospital_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hospital.llm_structured.complete_hf_messages",
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": "reservation",
@@ -35,20 +36,15 @@ def test_hospital_structured_analysis_extracts_full_info(monkeypatch):
 
 
 def test_hospital_structured_analysis_handles_markdown_json(monkeypatch):
+    responses = iter([
+        """```json
+        {"intent":"reservation"}
+        ```""",
+        '{"intent":"reservation","department":"피부과","date":"모레","time":"오전 10시","user_action":"confirm_reservation_info","selected_time":null}',
+    ])
     monkeypatch.setattr(
-        "services.flow.reservation.hospital.llm_structured.complete_hf_messages",
-        lambda messages: """
-        ```json
-        {
-          "intent": "reservation",
-          "department": "피부과",
-          "date": "모레",
-          "time": "오전 10시",
-          "user_action": "confirm_reservation_info",
-          "selected_time": null
-        }
-        ```
-        """,
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
+        lambda messages: next(responses),
     )
 
     result = analyze_hospital_reservation_user_message(
@@ -65,7 +61,7 @@ def test_hospital_structured_analysis_handles_markdown_json(monkeypatch):
 
 def test_hospital_structured_analysis_extracts_selected_time(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hospital.llm_structured.complete_hf_messages",
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": null,
@@ -87,28 +83,19 @@ def test_hospital_structured_analysis_extracts_selected_time(monkeypatch):
     assert result["selected_time"] == "오후 4시"
 
 
-def test_hospital_structured_analysis_fallbacks_on_invalid_json(monkeypatch):
+def test_hospital_structured_analysis_rejects_invalid_json_after_retry(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hospital.llm_structured.complete_hf_messages",
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
         lambda messages: "예약 도와드리겠습니다.",
     )
 
-    result = analyze_hospital_reservation_user_message(
-        "greeting",
-        "예약하고 싶습니다.",
-    )
-
-    assert result["intent"] is None
-    assert result["department"] is None
-    assert result["date"] is None
-    assert result["time"] is None
-    assert result["user_action"] == "unknown"
-    assert result["selected_time"] is None
+    with pytest.raises(AIResponseValidationError):
+        analyze_hospital_reservation_user_message("greeting", "예약하고 싶습니다.")
 
 
-def test_hospital_structured_analysis_normalizes_invalid_action(monkeypatch):
+def test_hospital_structured_analysis_rejects_invalid_action(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hospital.llm_structured.complete_hf_messages",
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": "reservation",
@@ -121,13 +108,7 @@ def test_hospital_structured_analysis_normalizes_invalid_action(monkeypatch):
         """,
     )
 
-    result = analyze_hospital_reservation_user_message(
-        "greeting",
-        "내일 오후 3시에 내과 예약하고 싶습니다.",
-    )
-
-    assert result["intent"] == "reservation"
-    assert result["department"] == "내과"
-    assert result["date"] == "내일"
-    assert result["time"] == "오후 3시"
-    assert result["user_action"] == "unknown"
+    with pytest.raises(AIResponseValidationError):
+        analyze_hospital_reservation_user_message(
+            "greeting", "내일 오후 3시에 내과 예약하고 싶습니다."
+        )

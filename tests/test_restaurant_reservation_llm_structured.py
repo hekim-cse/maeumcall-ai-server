@@ -1,4 +1,5 @@
 import pytest
+from llm.errors import AIResponseValidationError
 from services.flow.reservation.restaurant.llm_structured import (
     analyze_restaurant_reservation_user_message,
 )
@@ -8,7 +9,7 @@ from services.flow.reservation.restaurant.llm_structured import (
 pytestmark = pytest.mark.unit
 def test_restaurant_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.restaurant.llm_structured.complete_hf_messages",
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": "reservation",
@@ -37,19 +38,15 @@ def test_restaurant_structured_analysis_extracts_full_info(monkeypatch):
 
 
 def test_restaurant_structured_analysis_handles_markdown_json(monkeypatch):
-    monkeypatch.setattr(
-        "services.flow.reservation.restaurant.llm_structured.complete_hf_messages",
-        lambda messages: """```json
-        {
-          "intent": "reservation",
-          "date": "이번 주말",
-          "time": "오후 6시",
-          "party_size": "2명",
-          "user_name": "김개굴",
-          "user_action": "continue_collecting",
-          "selected_time": null
-        }
+    responses = iter([
+        """```json
+        {"intent":"reservation"}
         ```""",
+        '{"intent":"reservation","date":"이번 주말","time":"오후 6시","party_size":"2명","user_name":"김개굴","user_action":"continue_collecting","selected_time":null}',
+    ])
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
+        lambda messages: next(responses),
     )
 
     result = analyze_restaurant_reservation_user_message(
@@ -65,7 +62,7 @@ def test_restaurant_structured_analysis_handles_markdown_json(monkeypatch):
 
 def test_restaurant_structured_analysis_extracts_selected_time(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.restaurant.llm_structured.complete_hf_messages",
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": "reservation",
@@ -88,29 +85,19 @@ def test_restaurant_structured_analysis_extracts_selected_time(monkeypatch):
     assert result["selected_time"] == "저녁 8시"
 
 
-def test_restaurant_structured_analysis_fallbacks_on_invalid_json(monkeypatch):
+def test_restaurant_structured_analysis_rejects_invalid_json_after_retry(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.restaurant.llm_structured.complete_hf_messages",
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
         lambda messages: "예약 가능합니다.",
     )
 
-    result = analyze_restaurant_reservation_user_message(
-        "greeting",
-        "식당 예약하고 싶습니다.",
-    )
-
-    assert result["intent"] == "reservation"
-    assert result["date"] is None
-    assert result["time"] is None
-    assert result["party_size"] is None
-    assert result["user_name"] is None
-    assert result["user_action"] == "unknown"
-    assert result["selected_time"] is None
+    with pytest.raises(AIResponseValidationError):
+        analyze_restaurant_reservation_user_message("greeting", "식당 예약하고 싶습니다.")
 
 
-def test_restaurant_structured_analysis_normalizes_invalid_action(monkeypatch):
+def test_restaurant_structured_analysis_rejects_invalid_action(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.restaurant.llm_structured.complete_hf_messages",
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": "reservation",
@@ -124,13 +111,7 @@ def test_restaurant_structured_analysis_normalizes_invalid_action(monkeypatch):
         """,
     )
 
-    result = analyze_restaurant_reservation_user_message(
-        "greeting",
-        "내일 저녁 7시에 4명 김개굴 이름으로 예약하고 싶습니다.",
-    )
-
-    assert result["date"] == "내일"
-    assert result["time"] == "저녁 7시"
-    assert result["party_size"] == "4명"
-    assert result["user_name"] == "김개굴"
-    assert result["user_action"] == "unknown"
+    with pytest.raises(AIResponseValidationError):
+        analyze_restaurant_reservation_user_message(
+            "greeting", "내일 저녁 7시에 4명 김개굴 이름으로 예약하고 싶습니다."
+        )

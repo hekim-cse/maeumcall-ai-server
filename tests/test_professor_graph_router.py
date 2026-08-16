@@ -4,6 +4,44 @@ from services.flow.professor.router import complete_professor_graph_if_supported
 
 
 pytestmark = pytest.mark.unit
+
+
+@pytest.fixture(autouse=True)
+def _mock_structured_analysis(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.appointment.nodes.analyze_professor_appointment_user_message",
+        lambda conversation_state, user_message: {
+            "intent": "appointment_booking",
+            "appointment_purpose": None,
+            "date": None,
+            "time": None,
+            "user_name": None,
+            "user_action": "provide_appointment_info",
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.nodes.analyze_professor_assignment_user_message",
+        lambda conversation_state, user_message: {
+            "intent": "assignment_inquiry",
+            "assignment_topic": None,
+            "question": None,
+            "user_name": None,
+            "user_action": "provide_assignment_info",
+        },
+    )
+    monkeypatch.setattr(
+        "services.flow.professor.absence.nodes.analyze_professor_absence_user_message",
+        lambda conversation_state, user_message: {
+            "intent": "absence_notice",
+            "class_name": None,
+            "absence_date": None,
+            "absence_reason": None,
+            "user_name": None,
+            "user_action": "provide_absence_info",
+        },
+    )
+
+
 def make_request(title: str, category: str = "교수님", user_message: str = "") -> ChatRequest:
     return ChatRequest(
         category=category,

@@ -76,10 +76,6 @@ def _patch_assignment_analysis(monkeypatch):
 def test_professor_assignment_full_info_moves_to_answering(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
-        lambda prompt: "김개굴 학생, 과제 제출 형식 관련 문의로 확인했습니다. 제출 형식은 공지된 기준을 확인하시기 바랍니다.",
-    )
 
     result = professor_assignment_graph.invoke(
         {
@@ -101,10 +97,6 @@ def test_professor_assignment_full_info_moves_to_answering(monkeypatch):
 def test_professor_assignment_missing_user_name_keeps_collecting(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
-        lambda prompt: "과제 제출 형식 관련 문의 내용은 확인했습니다. 성함을 말씀해주시겠습니까?",
-    )
 
     result = professor_assignment_graph.invoke(
         {
@@ -127,10 +119,6 @@ def test_professor_assignment_missing_user_name_keeps_collecting(monkeypatch):
 def test_professor_assignment_partial_info_is_preserved(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
-        lambda prompt: "확인했습니다. 부족한 정보를 말씀해주시겠습니까?",
-    )
 
     first = professor_assignment_graph.invoke(
         {
@@ -159,10 +147,6 @@ def test_professor_assignment_partial_info_is_preserved(monkeypatch):
 def test_professor_assignment_casual_llm_response_falls_back(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
-        lambda prompt: "응 좋아. 과제는 알아서 해.",
-    )
 
     result = professor_assignment_graph.invoke(
         {
@@ -185,10 +169,6 @@ def test_professor_assignment_casual_llm_response_falls_back(monkeypatch):
 def test_professor_assignment_answering_moves_to_closing(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
-        lambda prompt: "네, 확인했습니다. 추가로 궁금한 점이 있으면 다시 말씀하시기 바랍니다.",
-    )
 
     result = professor_assignment_graph.invoke(
         {
@@ -211,10 +191,6 @@ def test_professor_assignment_answering_moves_to_closing(monkeypatch):
 def test_professor_assignment_answering_follow_up_resets_question(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
-        lambda prompt: "과제와 관련해 어떤 부분이 추가로 궁금한지 말씀해주시겠습니까?",
-    )
 
     result = professor_assignment_graph.invoke(
         {
@@ -239,10 +215,6 @@ def test_professor_assignment_answering_follow_up_resets_question(monkeypatch):
 def test_professor_assignment_closing_moves_to_end(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.assignment.generation.complete_professor_assignment_ai_message",
-        lambda prompt: "네, 알겠습니다.",
-    )
 
     result = professor_assignment_graph.invoke(
         {

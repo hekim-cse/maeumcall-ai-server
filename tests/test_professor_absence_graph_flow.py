@@ -113,10 +113,6 @@ def _patch_absence_analysis(monkeypatch):
 def test_professor_absence_full_info_moves_to_confirming(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "김개굴 학생, 오늘 결석 사유가 몸이 좋지 않음인 것으로 확인했습니다. 맞습니까?",
-    )
 
     result = professor_absence_graph.invoke(
         {
@@ -138,10 +134,6 @@ def test_professor_absence_full_info_moves_to_confirming(monkeypatch):
 def test_professor_absence_missing_user_name_keeps_collecting(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "오늘 결석 사유는 확인했습니다. 성함을 말씀해주시겠습니까?",
-    )
 
     result = professor_absence_graph.invoke(
         {
@@ -164,10 +156,6 @@ def test_professor_absence_missing_user_name_keeps_collecting(monkeypatch):
 def test_professor_absence_partial_info_is_preserved(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "확인했습니다. 부족한 정보를 말씀해주시겠습니까?",
-    )
 
     first = professor_absence_graph.invoke(
         {
@@ -196,10 +184,6 @@ def test_professor_absence_partial_info_is_preserved(monkeypatch):
 def test_professor_absence_casual_llm_response_falls_back(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "응 좋아. 알아서 해.",
-    )
 
     result = professor_absence_graph.invoke(
         {
@@ -222,10 +206,6 @@ def test_professor_absence_casual_llm_response_falls_back(monkeypatch):
 def test_professor_absence_confirm_moves_to_noted(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "알겠습니다. 김개굴 학생의 오늘 결석 사유는 참고하도록 하겠습니다.",
-    )
 
     result = professor_absence_graph.invoke(
         {
@@ -248,10 +228,6 @@ def test_professor_absence_confirm_moves_to_noted(monkeypatch):
 def test_professor_absence_change_date_resets_date(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "결석하게 되는 날짜를 말씀해주시겠습니까?",
-    )
 
     result = professor_absence_graph.invoke(
         {
@@ -276,10 +252,6 @@ def test_professor_absence_change_date_resets_date(monkeypatch):
 def test_professor_absence_change_reason_resets_reason(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "결석 사유를 말씀해주시겠습니까?",
-    )
 
     result = professor_absence_graph.invoke(
         {
@@ -304,10 +276,6 @@ def test_professor_absence_change_reason_resets_reason(monkeypatch):
 def test_professor_absence_noted_moves_to_closing(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "네, 확인했습니다. 추후 필요한 사항이 있으면 다시 말씀하시기 바랍니다.",
-    )
 
     result = professor_absence_graph.invoke(
         {
@@ -330,10 +298,6 @@ def test_professor_absence_noted_moves_to_closing(monkeypatch):
 def test_professor_absence_closing_moves_to_end(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-    monkeypatch.setattr(
-        "services.flow.professor.absence.generation.complete_professor_absence_ai_message",
-        lambda prompt: "네, 알겠습니다.",
-    )
 
     result = professor_absence_graph.invoke(
         {

@@ -1,4 +1,5 @@
 import pytest
+from llm.errors import AIResponseValidationError
 from services.flow.reservation.hair_salon.llm_structured import (
     analyze_hair_salon_reservation_user_message,
 )
@@ -8,7 +9,7 @@ from services.flow.reservation.hair_salon.llm_structured import (
 pytestmark = pytest.mark.unit
 def test_hair_salon_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hair_salon.llm_structured.complete_hf_messages",
+        "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": "reservation",
@@ -39,22 +40,15 @@ def test_hair_salon_structured_analysis_extracts_full_info(monkeypatch):
 
 
 def test_hair_salon_structured_analysis_handles_markdown_json(monkeypatch):
+    responses = iter([
+        """```json
+        {"intent":"reservation"}
+        ```""",
+        '{"intent":"reservation","date":"모레","time":"저녁 6시","service_type":"펌","designer":"가능한 디자이너","user_name":"김개굴","user_action":"continue_collecting","selected_time":null}',
+    ])
     monkeypatch.setattr(
-        "services.flow.reservation.hair_salon.llm_structured.complete_hf_messages",
-        lambda messages: """
-        ```json
-        {
-          "intent": "reservation",
-          "date": "모레",
-          "time": "저녁 6시",
-          "service_type": "펌",
-          "designer": "가능한 디자이너",
-          "user_name": "김개굴",
-          "user_action": "continue_collecting",
-          "selected_time": null
-        }
-        ```
-        """,
+        "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
+        lambda messages: next(responses),
     )
 
     result = analyze_hair_salon_reservation_user_message(
@@ -71,7 +65,7 @@ def test_hair_salon_structured_analysis_handles_markdown_json(monkeypatch):
 
 def test_hair_salon_structured_analysis_extracts_selected_time(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hair_salon.llm_structured.complete_hf_messages",
+        "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": "reservation",
@@ -95,30 +89,19 @@ def test_hair_salon_structured_analysis_extracts_selected_time(monkeypatch):
     assert result["selected_time"] == "오후 3시"
 
 
-def test_hair_salon_structured_analysis_fallbacks_on_invalid_json(monkeypatch):
+def test_hair_salon_structured_analysis_rejects_invalid_json_after_retry(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hair_salon.llm_structured.complete_hf_messages",
+        "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
         lambda messages: "JSON이 아닙니다.",
     )
 
-    result = analyze_hair_salon_reservation_user_message(
-        "greeting",
-        "미용실 예약하고 싶습니다.",
-    )
-
-    assert result["intent"] == "reservation"
-    assert result["date"] is None
-    assert result["time"] is None
-    assert result["service_type"] is None
-    assert result["designer"] is None
-    assert result["user_name"] is None
-    assert result["user_action"] == "unknown"
-    assert result["selected_time"] is None
+    with pytest.raises(AIResponseValidationError):
+        analyze_hair_salon_reservation_user_message("greeting", "미용실 예약하고 싶습니다.")
 
 
-def test_hair_salon_structured_analysis_normalizes_invalid_action(monkeypatch):
+def test_hair_salon_structured_analysis_rejects_invalid_action(monkeypatch):
     monkeypatch.setattr(
-        "services.flow.reservation.hair_salon.llm_structured.complete_hf_messages",
+        "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
         lambda messages: """
         {
           "intent": "reservation",
@@ -133,14 +116,7 @@ def test_hair_salon_structured_analysis_normalizes_invalid_action(monkeypatch):
         """,
     )
 
-    result = analyze_hair_salon_reservation_user_message(
-        "greeting",
-        "내일 오후 2시에 수진 선생님 커트 예약하고 싶습니다.",
-    )
-
-    assert result["date"] == "내일"
-    assert result["time"] == "오후 2시"
-    assert result["service_type"] == "커트"
-    assert result["designer"] == "수진"
-    assert result["user_name"] == "김개굴"
-    assert result["user_action"] == "unknown"
+    with pytest.raises(AIResponseValidationError):
+        analyze_hair_salon_reservation_user_message(
+            "greeting", "내일 오후 2시에 수진 선생님 커트 예약하고 싶습니다."
+        )
