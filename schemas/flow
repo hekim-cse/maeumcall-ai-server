@@ -1,7 +1,0 @@
-# ─────────────────────────────────────────
-# chat_models.py
-# ────────────────────────────────────────
-
-	•	Pydantic 모델 정의.
-	•	ChatRequest/Response, SuggestRequest/Response, ImproveRequest/Response, ChatMessage 등.
-

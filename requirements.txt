@@ -1,10 +1,9 @@
-fastapi
-uvicorn[standard]
-praatio
-python-multipart
-python-dotenv
-openai
-
+fastapi==0.128.8
+uvicorn[standard]==0.39.0
+pydantic==2.13.4
+numpy==2.0.2
+python-multipart==0.0.20
+python-dotenv==1.2.1
+openai==2.44.0
 langgraph==0.6.11
 praat-parselmouth==0.4.7
-huggingface_hub==0.36.2

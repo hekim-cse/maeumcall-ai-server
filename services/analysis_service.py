@@ -4,9 +4,9 @@ from typing import Dict, Any, Optional
 
 from services.baseline_store import (
     normalize_user_id,
-    load_db, save_db,
-    update_baseline_welford,
-    append_calib_sample, clear_calib_cache,
+    load_db,
+    update_baseline_persisted,
+    append_calib_sample,
     finalize_calibration_simple,
     pct, z,
 )
@@ -60,17 +60,14 @@ def accumulate_baseline(user_id: str, analysis: dict, strategy: str = "welford")
     """
     캘리브레이션 누적:
     - 'welford'  : 증분평균/표준편차를 즉시 DB에 반영 (실시간 누적형)
-    - 그 외(예: 'median'/'simple'): 메모리 캐시(CALIB_CACHE)에만 누적 → finalize 시 DB에 반영
+    - 'simple': 메모리 캐시에 누적하고 finalize 시 산술 평균을 DB에 반영
     """
     uid = normalize_user_id(user_id)
 
     if strategy == "welford":
-        db = load_db()
-        new_b = update_baseline_welford(db, uid, analysis)
-        save_db(db)
-        return new_b
+        return update_baseline_persisted(uid, analysis)
 
-    # 기본(미디안/심플 등): 캐시에만 누적하여 샘플 수만 올려줌
-    # DB엔 finalize 시점에만 저장
-    preview = append_calib_sample(uid, analysis)  # {"samples": n, ...}
-    return preview
+    if strategy == "simple":
+        return append_calib_sample(uid, analysis)
+
+    raise ValueError(f"unsupported calibration strategy: {strategy}")

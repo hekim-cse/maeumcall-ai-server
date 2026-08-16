@@ -1,7 +1,7 @@
 # routes/wordfreq_router.py
 from __future__ import annotations
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Tuple, Dict, Optional, Literal, Any
 from collections import Counter
 import re, unicodedata
@@ -55,9 +55,9 @@ def _pick_user_messages(messages: Optional[List[str]], turns: Optional[List[Turn
 class WordFreqRequest(BaseModel):
     messages: Optional[List[str]] = None
     turns: Optional[List[Dict[str, Any]]] = None  # [{role, text}] 형식
-    scope: str = "user"                           # "user" | "assistant" | "all"
-    top_k: int = 5
-    min_count: int = 1
+    scope: Literal["user", "assistant", "all"] = "user"
+    top_k: int = Field(default=5, ge=1, le=100)
+    min_count: int = Field(default=1, ge=1)
 
 @router.post("/wordfreq")
 def wordfreq_single(req: WordFreqRequest):
@@ -105,10 +105,10 @@ class WordFreqByCategoryItem(BaseModel):
 
 class WordFreqByCategoryRequest(BaseModel):
     items: List[WordFreqByCategoryItem]
-    scope: str = "user"                # 전체 요청에 대한 공통 스코프
-    top_k: int = 5
-    min_count_words: int = 2
-    min_count_fillers: int = 2
+    scope: Literal["user", "assistant", "all"] = "user"
+    top_k: int = Field(default=5, ge=1, le=100)
+    min_count_words: int = Field(default=2, ge=1)
+    min_count_fillers: int = Field(default=2, ge=1)
 
 @router.post("/wordfreq/by-category")
 def wordfreq_by_category(req: WordFreqByCategoryRequest):
@@ -193,6 +193,6 @@ def _select_texts(payload: Dict[str, Any]) -> List[str]:
                 out.append(text)
         return out
 
-    # fallback: turns가 없을 때만 messages 사용
+    # 입력 우선순위: turns가 없을 때만 messages 사용
     msgs = payload.get("messages") or []
     return [str(x).strip() for x in msgs if str(x).strip()]

@@ -2,34 +2,27 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 import json, math, time, re, unicodedata, os
+import threading
 import numpy as np
 from urllib.parse import unquote
+
+
+class BaselineStoreError(RuntimeError):
+    """Raised when persisted voice baseline data cannot be read safely."""
 
 # 데이터 파일 경로
 DB_PATH = (Path(__file__).resolve().parents[1] / "data" / "baseline_db.json")
 CALIB_CACHE: Dict[str, List[Tuple[float, float, float]]] = {}
+_STORE_LOCK = threading.RLock()
 
 __all__ = (
-    "load_db", "save_db", "debug_db_info",
+    "load_db", "save_db",
     "update_baseline_welford",
+    "update_baseline_persisted",
     "append_calib_sample", "clear_calib_cache",
     "finalize_calibration_simple", "delete_baseline",
     "pct", "z", "normalize_user_id",
 )
-
-
-def debug_db_info() -> Dict[str, Any]:
-    """현재 서버 프로세스가 사용하는 DB 파일 절대경로/크기/키 목록 확인용"""
-    _ensure_parent()
-    path = str(DB_PATH.resolve())
-    exists = DB_PATH.exists()
-    size = DB_PATH.stat().st_size if exists else 0
-    try:
-        db = load_db()
-        keys = list(db.keys())
-    except Exception:
-        db, keys = {}, []
-    return {"path": path, "exists": exists, "size": size, "keys": keys}
 
 
 def normalize_user_id(user_id: str | None) -> str:
@@ -50,26 +43,34 @@ def _ensure_parent():
 
 
 def load_db() -> Dict[str, Any]:
-    _ensure_parent()
-    if not DB_PATH.exists():
-        return {}
-    try:
-        return json.loads(DB_PATH.read_text("utf-8"))
-    except Exception:
-        return {}
+    with _STORE_LOCK:
+        _ensure_parent()
+        if not DB_PATH.exists():
+            return {}
+        try:
+            data = json.loads(DB_PATH.read_text("utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise BaselineStoreError("Voice baseline store is unreadable") from exc
+        if not isinstance(data, dict):
+            raise BaselineStoreError("Voice baseline store must contain an object")
+        return data
 
 
 def save_db(db: Dict[str, Any]) -> None:
-    """원자적 저장(임시파일 → rename) + 로그"""
-    _ensure_parent()
-    tmp = DB_PATH.with_suffix(".json.tmp")
-    data = json.dumps(db, ensure_ascii=False, indent=2)
-    with open(tmp, "w", encoding="utf-8") as f:
-        f.write(data)
-        f.flush()
-        os.fsync(f.fileno())
-    os.replace(tmp, DB_PATH)
-    print(f"[srv] save_db -> {DB_PATH.resolve()} (keys={len(db)})")
+    """원자적 저장(staging file → rename) + 로그"""
+    with _STORE_LOCK:
+        _ensure_parent()
+        tmp = DB_PATH.with_name(f".{DB_PATH.name}.{os.getpid()}.{threading.get_ident()}.tmp")
+        data = json.dumps(db, ensure_ascii=False, indent=2)
+        try:
+            with open(tmp, "w", encoding="utf-8") as f:
+                f.write(data)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp, DB_PATH)
+        finally:
+            if tmp.exists():
+                tmp.unlink()
 
 
 def pct(cur: float, base: float) -> float:
@@ -127,66 +128,75 @@ def update_baseline_welford(db: Dict[str, Any], user_id: str, analysis: Dict[str
     return b
 
 
+def update_baseline_persisted(user_id: str, analysis: Dict[str, Any]) -> Dict[str, Any]:
+    """Atomically apply one Welford sample and persist it within this process."""
+    with _STORE_LOCK:
+        db = load_db()
+        baseline = update_baseline_welford(db, user_id, analysis)
+        save_db(db)
+        return baseline
+
+
 def append_calib_sample(user_id: str, analysis: Dict[str, Any]) -> Dict[str, Any]:
-    user_id = normalize_user_id(user_id)
-    p, j, s = _extract(analysis)
-    lst = CALIB_CACHE.setdefault(user_id, [])
-    lst.append((p, j, s))
+    with _STORE_LOCK:
+        user_id = normalize_user_id(user_id)
+        p, j, s = _extract(analysis)
+        lst = CALIB_CACHE.setdefault(user_id, [])
+        lst.append((p, j, s))
+        n = len(lst)
+        mean_p = sum(x[0] for x in lst) / n
+        mean_j = sum(x[1] for x in lst) / n
+        mean_s = sum(x[2] for x in lst) / n
 
-    n = len(lst)
-    mean_p = sum(x[0] for x in lst) / n
-    mean_j = sum(x[1] for x in lst) / n
-    mean_s = sum(x[2] for x in lst) / n
+        std = lambda arr, mean: math.sqrt(sum((v - mean) ** 2 for v in arr) / (n - 1)) if n > 1 else 0.0
+        std_p = std([x[0] for x in lst], mean_p)
+        std_j = std([x[1] for x in lst], mean_j)
+        std_s = std([x[2] for x in lst], mean_s)
 
-    std = lambda arr, m: math.sqrt(sum((v - m) ** 2 for v in arr) / (n - 1)) if n > 1 else 0.0
-    std_p = std([x[0] for x in lst], mean_p)
-    std_j = std([x[1] for x in lst], mean_j)
-    std_s = std([x[2] for x in lst], mean_s)
-
-    return {
-        "pitchHz": round(mean_p, 6), "pitchStdHz": round(std_p, 6),
-        "jitterLocal": round(mean_j, 6), "jitterStd": round(std_j, 6),
-        "shimmerLocal": round(mean_s, 6), "shimmerStd": round(std_s, 6),
-        "samples": n,
-        "ts": int(time.time()),
-    }
+        return {
+            "pitchHz": round(mean_p, 6), "pitchStdHz": round(std_p, 6),
+            "jitterLocal": round(mean_j, 6), "jitterStd": round(std_j, 6),
+            "shimmerLocal": round(mean_s, 6), "shimmerStd": round(std_s, 6),
+            "samples": n,
+            "ts": int(time.time()),
+        }
 
 
 def clear_calib_cache(user_id: str) -> None:
-    user_id = normalize_user_id(user_id)
-    CALIB_CACHE.pop(user_id, None)
+    with _STORE_LOCK:
+        user_id = normalize_user_id(user_id)
+        CALIB_CACHE.pop(user_id, None)
 
 
 def finalize_calibration_simple(user_id: str) -> Dict[str, Any]:
-    user_id = normalize_user_id(user_id)
-    samples = CALIB_CACHE.get(user_id, [])
-    if not samples:
-        return {"ok": False, "error": "no samples"}
-
-    arr = np.array(samples, dtype=float)
-    mean_p, mean_j, mean_s = arr.mean(axis=0)
-
-    baseline = {
-        "pitchHz":     float(mean_p),
-        "jitterLocal": float(mean_j),
-        "shimmerLocal":float(mean_s),
-        "samples":     len(samples),
-        "ts":          int(time.time()),
-    }
-
-    db = load_db()
-    db[user_id] = baseline
-    save_db(db)
-    CALIB_CACHE.pop(user_id, None)
-    return {"ok": True, "baseline": baseline}
+    with _STORE_LOCK:
+        user_id = normalize_user_id(user_id)
+        samples = list(CALIB_CACHE.get(user_id, []))
+        if not samples:
+            return {"ok": False, "error": "no samples"}
+        arr = np.array(samples, dtype=float)
+        mean_p, mean_j, mean_s = arr.mean(axis=0)
+        baseline = {
+            "pitchHz": float(mean_p),
+            "jitterLocal": float(mean_j),
+            "shimmerLocal": float(mean_s),
+            "samples": len(samples),
+            "ts": int(time.time()),
+        }
+        db = load_db()
+        db[user_id] = baseline
+        save_db(db)
+        CALIB_CACHE.pop(user_id, None)
+        return {"ok": True, "baseline": baseline}
 
 
 def delete_baseline(user_id: str) -> Dict[str, Any]:
-    user_id = normalize_user_id(user_id)
-    db = load_db()
-    existed = user_id in db
-    if existed:
-        db.pop(user_id, None)
-        save_db(db)
-    CALIB_CACHE.pop(user_id, None)
-    return {"ok": True, "deleted": existed}
+    with _STORE_LOCK:
+        user_id = normalize_user_id(user_id)
+        db = load_db()
+        existed = user_id in db
+        if existed:
+            db.pop(user_id, None)
+            save_db(db)
+        CALIB_CACHE.pop(user_id, None)
+        return {"ok": True, "deleted": existed}

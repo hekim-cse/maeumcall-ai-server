@@ -2,12 +2,16 @@ from __future__ import annotations
 
 from fastapi import APIRouter, UploadFile, File, Form, Query
 from fastapi.responses import JSONResponse
+from pathlib import Path
 from typing import Optional
 import os
 import mimetypes
 import subprocess
+import tempfile
 import uuid
+import logging
 
+from core.config import AUDIO_UPLOAD_MAX_BYTES
 from praat_voice_analysis import analyze_audio
 from services.analysis_service import (
     build_payload,
@@ -15,11 +19,12 @@ from services.analysis_service import (
     accumulate_baseline,
 )
 from services.baseline_store import (
-    normalize_user_id, load_db, save_db, clear_calib_cache,
-    finalize_calibration_simple, delete_baseline, debug_db_info
+    normalize_user_id,
+    finalize_calibration_simple, delete_baseline
 )
 
 router = APIRouter(prefix="/voice", tags=["voice"])
+logger = logging.getLogger(__name__)
 
 
 def _safe_unlink(path: Optional[str]) -> None:
@@ -27,8 +32,10 @@ def _safe_unlink(path: Optional[str]) -> None:
         return
     try:
         os.remove(path)
-    except Exception:
-        pass
+    except FileNotFoundError:
+        return
+    except OSError:
+        logger.warning("Failed to remove voice analysis file: %s", path, exc_info=True)
 
 
 @router.post("/analyze")
@@ -36,18 +43,30 @@ async def analyze_audio_endpoint(
     file: UploadFile = File(...),
     user_id: Optional[str] = Form(None),
     mode: str = Form("normal"),       # "normal" | "calibrate"
-    strategy: str = Form("welford"),  # "welford" | "median" | "simple"
+    strategy: str = Form("simple"),  # "simple" | "welford"
 ):
     """
     업로드된 오디오를 분석하여 통일된 JSON 포맷으로 반환합니다.
     - 성공: { ok: true, mode, data: {...} }
     - 실패: { ok: false, error, detail }
     """
-    print(f"[srv] /voice/analyze HIT user_id={user_id} mode={mode} mime={file.content_type}")
+    logger.debug("Voice analysis requested: mode=%s mime=%s", mode, file.content_type)
 
-    tmp_in = f"/tmp/{uuid.uuid4().hex}_{file.filename or 'audio'}"
+    if mode not in {"normal", "calibrate"}:
+        return JSONResponse(status_code=422, content={"ok": False, "error": "invalid_mode"})
+    if strategy not in {"welford", "simple"}:
+        return JSONResponse(status_code=422, content={"ok": False, "error": "invalid_strategy"})
+
+    content = await file.read(AUDIO_UPLOAD_MAX_BYTES + 1)
+    if len(content) > AUDIO_UPLOAD_MAX_BYTES:
+        return JSONResponse(status_code=413, content={"ok": False, "error": "file_too_large"})
+
+    suffix = Path(file.filename or "").suffix.lower()
+    if len(suffix) > 10 or not suffix.replace(".", "").isalnum():
+        suffix = ".bin"
+    tmp_in = os.path.join(tempfile.gettempdir(), f"maeumcall_{uuid.uuid4().hex}{suffix}")
     with open(tmp_in, "wb") as f:
-        f.write(await file.read())
+        f.write(content)
 
     mime = file.content_type or (mimetypes.guess_type(file.filename or "")[0] or "")
     tmp_for_praat = tmp_in
@@ -59,8 +78,8 @@ async def analyze_audio_endpoint(
         is_wav = mime.endswith("/wav") or (file.filename or "").lower().endswith(".wav")
         if not is_wav:
             try:
-                subprocess.run(["ffmpeg", "-version"], check=True, capture_output=True)
-            except (FileNotFoundError, subprocess.CalledProcessError):
+                subprocess.run(["ffmpeg", "-version"], check=True, capture_output=True, timeout=10)
+            except (FileNotFoundError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
                 return JSONResponse(
                     status_code=400,
                     content={"ok": False, "error": "convert_missing", "detail": "ffmpeg 미설치/실행 불가"},
@@ -71,6 +90,12 @@ async def analyze_audio_endpoint(
                     ["ffmpeg", "-y", "-i", tmp_in, "-ac", "1", "-ar", "16000", "-sample_fmt", "s16", converted_tmp],
                     check=True,
                     capture_output=True,
+                    timeout=60,
+                )
+            except subprocess.TimeoutExpired:
+                return JSONResponse(
+                    status_code=408,
+                    content={"ok": False, "error": "convert_timeout"},
                 )
             except subprocess.CalledProcessError as e:
                 return JSONResponse(
@@ -86,16 +111,10 @@ async def analyze_audio_endpoint(
 
         # 사용자 ID 정규화
         uid = normalize_user_id(user_id) if user_id else None
-        print(f"[srv] analyze: uid={uid} mode={mode} strategy={strategy}")
-
         baseline = None
         if uid:
             if mode == "calibrate":
                 baseline = accumulate_baseline(uid, cur, strategy=strategy)
-                # welford면 DB 즉시 반영됨 → 확인 로그
-                if strategy == "welford":
-                    snap = load_db().get(uid)
-                    print(f"[srv] welford saved -> key={uid}, exists={bool(snap)}, snap={snap}")
             else:
                 baseline = get_baseline(uid).get("baseline")
 
@@ -115,8 +134,12 @@ async def analyze_audio_endpoint(
 
         return JSONResponse(content={"ok": True, "mode": mode, "data": payload})
 
-    except Exception as e:
-        return JSONResponse(status_code=400, content={"ok": False, "error": "analyze_failed", "detail": str(e)})
+    except Exception:
+        logger.exception("Voice analysis failed")
+        return JSONResponse(
+            status_code=500,
+            content={"ok": False, "error": "analyze_failed"},
+        )
 
     finally:
         _safe_unlink(tmp_in)
@@ -153,14 +176,8 @@ def api_delete_baseline(user_id: str = Form(None), q_user_id: str = Query(None))
 def calibrate_reset(user_id: str = Form(...)):
     """메모리 캐시/DB 기준선 리셋"""
     uid = normalize_user_id(user_id)
-    clear_calib_cache(uid)
-
-    db = load_db()
-    if uid in db:
-        db.pop(uid, None)
-        save_db(db)
-
-    return JSONResponse(content={"ok": True})
+    result = delete_baseline(uid)
+    return JSONResponse(content={"ok": True, "deleted": result["deleted"]})
 
 
 @router.get("/health")
@@ -171,9 +188,3 @@ def voice_health():
 @router.post("/ping")
 async def voice_post_ping(user_id: Optional[str] = Form(None)):
     return JSONResponse(content={"ok": True, "user_id": user_id or None})
-
-
-@router.get("/db/debug")
-def db_debug():
-    """현재 서버가 사용하는 baseline_db.json의 경로/키 확인"""
-    return JSONResponse(content={"ok": True, **debug_db_info()})
