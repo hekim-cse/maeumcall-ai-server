@@ -106,9 +106,9 @@
 | 모델 | 응답 시간 | JSON 안정성 | 한국어 자연스러움 | 추천 답변 품질 | 판단 |
 |---|---:|---|---|---|---|
 | EXAONE-4.0-1.2B | 3.72초 | 낮음 | 낮음~보통 | 낮음 | 속도 baseline으로 유지 |
-| Kanana 1.5 2.1B Instruct | 예정 | 예정 | 예정 | 예정 | 예정 |
-| HyperCLOVA X SEED 1.5B | 예정 | 예정 | 예정 | 예정 | 예정 |
-| Gemma-ko-2B | 예정 | 예정 | 예정 | 예정 | 예정 |
+| Kanana 1.5 2.1B Instruct | 7.57초 | 낮음 | 높음 | 낮음 | 자연어 응답 후보, JSON 생성 제외 |
+| HyperCLOVA X SEED 1.5B | 5.29초 | 낮음 | 보통 | 낮음 | 반복 출력 문제로 보류 |
+| Gemma-ko-2B | 6.72초 | 매우 낮음 | 낮음 | 매우 낮음 | 제외 |
 
 ---
 
@@ -178,7 +178,7 @@ EXAONE-4.0-1.2B는 2차 Improved Prompt에서도 응답 속도는 매우 우수�
 
 ---
 
-## 7. 현재 결론
+## 7. EXAONE 중간 결론
 
 ```text
 EXAONE-4.0-1.2B는 2차 테스트에서도 3.72초로 가장 빠른 속도를 보였다.
@@ -409,3 +409,21 @@ Gemma-ko-2B는 1차 Baseline Prompt에서는 첫 번째 JSON 응답 품질이 �
 - JSON 구조 생성 실패
 - 반복 출력 문제 발생
 ```
+
+---
+
+## 8. 최종 결론과 아키텍처 반영
+
+네 모델 모두 완성 JSON 전체를 안정적으로 생성하지 못했다. 반면 Kanana는 JSON 형식과 무관한 한국어 응답 문장 자체의 자연스러움이 가장 우수했다.
+
+따라서 서비스 구조를 다음과 같이 분리했다.
+
+```text
+LangGraph / 서버 로직: conversation_state, should_end_call
+검증된 structured output: 필수 정보와 user_action 계약
+LLM: ai_message 자연어 생성
+domain response policy / registry: recommended_replies와 확정 상태 문장
+FastAPI: 응답 JSON 조립
+```
+
+이 실험 결과를 근거로 LLM에 상태 판단과 JSON 계약 전체를 맡기지 않고, 모델이 잘하는 자연어 생성과 서버가 보장해야 하는 제어 로직을 분리했다.

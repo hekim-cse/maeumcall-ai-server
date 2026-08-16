@@ -1,8 +1,8 @@
 # API Contract
 
-이 문서는 Flutter 앱과 maeum-call-ai-server 사이의 API 연동 규칙을 정리한다.
+이 문서는 Flutter 앱과 MaeumCall AI Server 사이의 API 연동 규칙을 정리한다.
 
-현재 핵심 API는 병원 예약 시나리오를 포함한 통화 시뮬레이션용 /chat API이다.
+핵심 API는 모바일에 등록된 32개 시나리오를 처리하는 통화 시뮬레이션용 `/chat` API이다.
 
 ---
 
@@ -21,8 +21,10 @@
 예시:
 
 - 예약
-- 문의
-- 상담
+- 교수님
+- 회사
+- 가족, 친구, 연인
+- 배달, 시청, 고객센터
 
 ### title
 
@@ -30,7 +32,10 @@
 
 예시:
 
-- 병원 예약
+- 🏥 병원 예약
+- 📞 과제 문의
+
+서버는 라우팅 전에 이모지와 연속 공백을 정규화하므로 모바일 표시 제목을 그대로 전송할 수 있다.
 
 ### description
 
@@ -54,7 +59,7 @@
 
 현재 대화 상태이다.
 
-초기 요청에서는 greeting을 사용한다.
+초기 요청에서는 `greeting`을 사용한다. 선언형 공통 그래프는 `opening → active → END` 상태를 사용하고, 예약·교수님 상세 그래프는 아래와 같은 도메인 상태를 사용한다.
 
 예시:
 
@@ -94,13 +99,15 @@ Flutter는 이 값을 그대로 저장했다가 다음 /chat 요청에 다시 �
 - role: user 또는 assistant
 - content: 발화 내용
 
+레거시 클라이언트의 `turns` 필드도 같은 형식으로 지원한다. 둘 다 전달되면 `history`를 우선한다.
+
 ---
 
 ## Request Example
 
     {
       "category": "예약",
-      "title": "병원 예약",
+      "title": "🏥 병원 예약",
       "description": "병원 진료 예약 전화 상황",
       "userMessage": "내일 오후에 내과 진료 예약 가능할까요?",
       "conversationState": "greeting",
@@ -231,3 +238,27 @@ Flutter 처리 예시:
 - 녹음 종료
 - 음성 분석 요청
 - 통화 결과 화면 이동
+
+---
+
+## 오류 응답 계약
+
+AI 처리 오류는 정상 응답 문장으로 바꾸지 않고 HTTP 상태와 오류 코드로 전달한다.
+
+    {
+      "error": {
+        "code": "AI_RESPONSE_VALIDATION_FAILED",
+        "message": "AI 응답을 검증하지 못했습니다. 요청을 다시 시도해 주세요."
+      }
+    }
+
+| HTTP 상태 | code | 의미 |
+|---|---|---|
+| 422 | `UNSUPPORTED_SCENARIO` | 등록되지 않은 category/title 조합 |
+| 422 | `INVALID_SCENARIO_STATE` | `scenarioState` 내부 상태 계약 위반 |
+| 500 | `PROMPT_CONFIGURATION_ERROR` | 프롬프트 레지스트리 또는 파일 구성 오류 |
+| 502 | `AI_PROVIDER_EXECUTION_FAILED` | 모델 호출 실행 실패 |
+| 502 | `AI_RESPONSE_VALIDATION_FAILED` | 재요청 후에도 구조화 출력 계약 위반 |
+| 503 | `AI_PROVIDER_UNAVAILABLE` | API 키, SDK 또는 로컬 모델을 사용할 수 없음 |
+
+클라이언트는 5xx 응답을 성공 대화로 저장하지 않으며, 같은 사용자 발화를 자동으로 반복 전송할 때는 중복 요청 정책을 별도로 적용해야 한다.

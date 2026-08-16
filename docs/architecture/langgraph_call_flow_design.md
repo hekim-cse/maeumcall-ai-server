@@ -1,5 +1,7 @@
 # LangGraph 기반 통화 흐름 상태 설계
 
+> 상태: 구현 전 의사결정 기록(ADR). 현재 구현은 이 설계를 바탕으로 예약·교수님 상세 그래프와 25개 선언형 공통 그래프로 확장되었다. 최신 구조는 [`services/flow/README.md`](../../services/flow/README.md)를 기준으로 한다.
+
 ## 1. 목적
 
 마음콜 통화 시뮬레이션에서는 사용자가 실제 전화 상황에 익숙해질 수 있도록, 병원 예약과 같은 시나리오를 단계적으로 연습할 수 있어야 한다.
@@ -529,7 +531,7 @@ def build_call_response(user_message: str, state: dict) -> dict:
 | 모델 | 역할 |
 |---|---|
 | Kanana 1.5 2.1B Instruct | 메인 ai_message 생성 후보 |
-| EXAONE-4.0-1.2B | 속도 baseline / fallback 후보 |
+| EXAONE-4.0-1.2B | 속도 비교 기준 모델 |
 | HyperCLOVA X SEED 1.5B | 한국어 자연스러움 참고 후보 |
 | Gemma-ko-2B | 제외 |
 

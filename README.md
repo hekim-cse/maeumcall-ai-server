@@ -1,8 +1,8 @@
 <div align="center">
 
-# 마음콜 AI Server
+# MaeumCall AI Server
 
-### FastAPI 기반 LLM 통화 시뮬레이션 서버
+### 마음콜 고도화 프로젝트 · LangGraph 기반 AI 통화 시뮬레이션 서버
 
 통화가 어려운 사용자가 실제 전화 상황을 연습할 수 있도록  
 사용자 발화를 분석하고, 시나리오 상태를 관리하며,  
@@ -10,11 +10,11 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 <br/>
 
-<img src="https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
+<img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
 <img src="https://img.shields.io/badge/LangGraph-143D60?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Kanana_1.5-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"/>
-<img src="https://img.shields.io/badge/Pytest-259_passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white"/>
+<img src="https://img.shields.io/badge/Pytest-offline_suite_passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white"/>
 
 <br/>
 <br/>
@@ -42,11 +42,11 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 1. 프로젝트 소개
 
-마음콜 AI Server는 통화 공포 완화 앱의 AI 서버입니다.
+MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스템으로 고도화한 통화 공포 완화 앱의 AI 서버입니다.
 
 사용자가 통화 상황에서 말한 내용을 서버로 전달하면, 서버는 현재 시나리오 상태를 판단하고 다음 AI 응답을 생성합니다.
 
-단순히 LLM에게 답변 생성을 맡기는 구조가 아니라, 시나리오별로 필요한 정보를 추출하고 상태를 전이하며, 응답 검증과 fallback 처리를 통해 안정적인 통화 연습 흐름을 제공합니다.
+단순히 LLM에게 답변 생성을 맡기는 구조가 아니라, 전용 흐름 7개와 등록형 시나리오 흐름 25개를 LangGraph로 오케스트레이션합니다. 상세 그래프는 검증된 구조화 출력만 상태 전이에 사용하고, 확정된 서버 상태는 도메인 응답 정책으로 표현합니다. 모델 계약 위반은 제한 재시도 후 명시적 API 오류로 처리합니다.
 
 <p align="center">
   <img src="docs/assets/service_flow.png" width="75%" alt="Service Flow" />
@@ -69,12 +69,12 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 | 기능 | 설명 |
 |---|---|
-| 🧠 AI 응답 생성 | Kanana 1.5 Hugging Face 모델을 이용해 현재 대화 맥락에 맞는 응답 생성 |
+| 🧠 AI 처리 | 로컬 Kanana 1.5로 상세 시나리오 발화를 구조화하고 OpenAI로 자유 대화 턴 생성 |
 | 🔁 LangGraph 상태 전이 | 시나리오별 대화 흐름을 상태 기반으로 관리 |
 | 🧾 정보 추출 | 사용자 발화에서 시나리오 진행에 필요한 정보 추출 |
 | 🗣 사용자 행동 분류 | 사용자 발화를 confirm, change_time, ask_other_time 등 user_action으로 변환 |
-| 🛡 응답 검증 | 현재 상태와 맞지 않는 LLM 응답 차단 |
-| 🧱 Fallback 처리 | 검증 실패 시 안전한 template 응답 사용 |
+| 🛡 계약 검증 | JSON 형식, 필드 타입, 허용 action을 검증하고 위반 시 제한 재시도 |
+| 🚨 명시적 장애 처리 | 모델 미설정·호출 실패·계약 위반을 타입이 있는 5xx 응답으로 전달 |
 | 💬 추천 답변 생성 | 현재 상태에 맞는 recommendedReplies 반환 |
 | 📦 상태 유지 | scenarioState로 다음 요청에 필요한 상태 저장 |
 | 📞 통화 종료 제어 | shouldEndCall 값으로 종료 흐름 관리 |
@@ -94,9 +94,9 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 기술 | 선택 이유 |
 |---|---|
 | FastAPI | 비동기 API 서버 구현이 간단하고, `/chat` API처럼 요청/응답 구조가 명확한 서버를 빠르게 구성할 수 있기 때문에 사용했습니다. |
-| Python 3.9+ | LLM 연동, 데이터 처리, 테스트 자동화에 필요한 라이브러리 생태계가 풍부해 AI 서버 구현에 적합하다고 판단했습니다. |
+| Python 3.11+ | 타입 표현력, 비동기 서버 성능, 최신 AI 라이브러리 호환성을 고려해 기준 런타임으로 사용했습니다. |
 | LangGraph | 단순 프롬프트 호출이 아니라, 예약 시나리오처럼 상태 전이가 필요한 대화 흐름을 명확하게 관리하기 위해 사용했습니다. |
-| Kanana 1.5 Hugging Face | 한국어 통화 상황에 맞는 자연스러운 응답 생성을 위해 사용했으며, Hugging Face 기반으로 모델 호출 구조를 분리하기 쉽다고 판단했습니다. |
+| Kanana 1.5 Hugging Face | 한국어 사용자 발화를 도메인 필드와 action으로 구조화하는 로컬 NLU 경계를 구성하기 위해 사용했습니다. |
 | Pytest | action parser, extractor, graph flow, routing 등 서버 내부 로직을 기능 단위로 검증하기 위해 사용했습니다. |
 | Flutter | 실제 앱 클라이언트와 연동되는 구조를 고려해, 서버 응답이 모바일 화면에서 바로 사용될 수 있도록 설계했습니다. |
 | JSON | Flutter와 FastAPI 간 데이터 교환 형식으로 사용하며, AI 응답뿐 아니라 상태값과 추천 답변을 함께 전달하기에 적합하다고 판단했습니다. |
@@ -106,7 +106,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
     <td>
       <strong>🧭 기술 선택 방향</strong><br/>
       마음콜 AI Server의 기술 선택 핵심은 단순히 LLM 응답을 생성하는 것이 아니라,
-      사용자의 발화에 따라 <strong>상태를 전이</strong>하고,
+사용자의 발화에 따라 <strong>상태를 전이</strong>하고,
       현재 상황에 맞는 응답인지 <strong>검증</strong>한 뒤,
       안정적인 통화 연습 흐름을 이어갈 수 있도록 만드는 데 있습니다.
     </td>
@@ -129,8 +129,8 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 🔁 LangGraph Flow | 시나리오별 conversationState 관리 |
 | 🧾 Extractor | 사용자 발화에서 필요한 정보 추출 |
 | 🗣 Action Parser | 사용자 발화를 user_action으로 분류 |
-| 🧠 AI Message Generator | 현재 상태 기반 LLM 응답 생성 |
-| 🛡 Validator / Fallback | 상태에 맞지 않는 응답 검증 및 안전 응답 보정 |
+| 🧠 Response Generation | 상세 그래프의 도메인 응답 정책과 등록형 그래프의 구조화된 LLM 턴 생성 |
+| 🛡 Contract Enforcement | 구조화 출력 검증, 제한 재시도, 명시적 오류 처리 |
 | 💬 Recommended Replies | 현재 상태에 맞는 추천 답변 생성 |
 
 <table>
@@ -161,7 +161,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 항목 | 설명 |
 |---|---|
 | 요청 기준 | Flutter는 `category`, `title`, `userMessage`, `conversationState`, `scenarioState`를 서버로 전달 |
-| 분기 기준 | 서버는 `category/title`을 기준으로 LangGraph 적용 시나리오와 일반 LLM 흐름을 구분 |
+| 분기 기준 | 서버는 `category/title`의 등록 키를 기준으로 상세 그래프 또는 등록형 공통 그래프를 선택 |
 | 상태 유지 | 서버는 다음 대화를 이어가기 위해 `conversationState`와 `scenarioState`를 함께 반환 |
 | 추천 답변 | 현재 상태에서 사용자가 말하기 쉬운 문장을 `recommendedReplies`로 제공 |
 | 종료 제어 | 통화가 끝나는 흐름에서는 `shouldEndCall` 값으로 프론트의 종료 처리를 제어 |
@@ -225,21 +225,21 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 7. LangGraph 적용 구조
 
-마음콜 AI Server는 모든 시나리오를 단일 프롬프트로 처리하지 않고, 상태 전이가 필요한 시나리오부터 LangGraph 기반 구조로 확장합니다.
+MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하지 않습니다. 예약·교수님 시나리오는 도메인별 상세 상태 그래프를 사용하고, 나머지 시나리오는 선언형 설정 기반 공통 그래프로 일관된 상태·종료·추천 답변을 관리합니다.
 
 메인 README에서는 전체 적용 현황만 간단히 정리하고, 각 카테고리별 상세 설계는 별도 README에서 관리합니다.
 
 | 카테고리 | LangGraph 적용 상태 | 상세 문서 |
 |---|---|---|
-| 📞 예약 | ✅ 적용 | [Reservation README](services/flow/reservation/README.md) |
-| 🎓 교수님 | ✅ 적용 | [Professor README](services/flow/professor/README.md) |
-| 🏢 회사 | 예정 | 준비 중 |
-| 👪 가족 | 예정 | 준비 중 |
-| 🧑‍🤝‍🧑 친구 | 예정 | 준비 중 |
-| 💑 연인 | 예정 | 준비 중 |
-| 🎧 고객센터 | 예정 | 준비 중 |
-| 🛵 배달 | 예정 | 준비 중 |
-| 🏛 시청 | 예정 | 준비 중 |
+| 📞 예약 | ✅ 도메인별 상세 그래프 4개 | [Reservation README](services/flow/reservation/README.md) |
+| 🎓 교수님 | ✅ 도메인별 상세 그래프 3개 | [Professor README](services/flow/professor/README.md) |
+| 🏢 회사 | ✅ 선언형 공통 그래프 4개 | [Flow README](services/flow/README.md) |
+| 👪 가족 | ✅ 선언형 공통 그래프 3개 | [Flow README](services/flow/README.md) |
+| 🧑‍🤝‍🧑 친구 | ✅ 선언형 공통 그래프 5개 | [Flow README](services/flow/README.md) |
+| 💑 연인 | ✅ 선언형 공통 그래프 4개 | [Flow README](services/flow/README.md) |
+| 🎧 고객센터 | ✅ 선언형 공통 그래프 3개 | [Flow README](services/flow/README.md) |
+| 🛵 배달 | ✅ 선언형 공통 그래프 3개 | [Flow README](services/flow/README.md) |
+| 🏛 시청 | ✅ 선언형 공통 그래프 3개 | [Flow README](services/flow/README.md) |
 
 <table>
   <tr>
@@ -256,7 +256,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 ## 8. 테스트 및 검증
 
-현재는 예약 카테고리와 교수님 카테고리 LangGraph를 중심으로 단위 테스트와 통합 테스트를 구성했습니다.
+32개 전체 모바일 시나리오의 라우팅, 상태 전이, 구조화 출력 계약, 재시도·오류 응답, API 계약을 검증합니다. 실모델 테스트는 기본 테스트와 분리해 수동 실행합니다.
 
 | 테스트 구분 | 검증 내용 |
 |---|---|
@@ -264,22 +264,23 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 | 🧾 Extractor Test | 시나리오 진행에 필요한 정보 추출 검증 |
 | 🔁 Graph Flow Test | 상태 전이, 재수집, 확정/마무리/종료 흐름 검증 |
 | 🚦 Routing Test | category/title 기준으로 올바른 graph에 연결되는지 검증 |
-| 🛡 Response Validation | 현재 상태와 맞지 않는 LLM 응답을 fallback으로 보정하는지 검증 |
+| 🛡 Contract Validation | 잘못된 JSON과 허용되지 않은 action이 재시도 후 명시적으로 실패하는지 검증 |
 | 🔌 Chat Route Test | 실제 `/chat` 함수 기준 LangGraph 연결 검증 |
 
 | 구분 | 결과 |
 |---|---|
-| 예약 + 교수님 LangGraph 테스트 | ✅ 259 passed |
+| 오프라인 단위·그래프·라우트 테스트 | ✅ 전체 통과 |
+| 실모델 통합 테스트 | 7개, 수동 실행으로 분리 |
 | 실패 테스트 | 없음 |
-| 경고 | LangGraph serializer 관련 warning 1건 |
+| 기본 실행 네트워크 의존성 | 없음 |
 
-> 테스트 수는 예약 카테고리와 교수님 카테고리의 action parser, extractor, graph flow, routing, chat route 테스트를 포함합니다.
+> 기본 테스트는 모델 경계를 고정 출력으로 대체하고, graph flow, chat route, 프롬프트 레지스트리, 음성 업로드 안전성을 재현 가능하게 검증합니다.
 
 ---
 
 ## 9. 프로젝트 구조
 
-    maeum-call-ai-server/
+    maeumcall-ai-server/
     ├── data/
     │   ├── prompts/
     │   └── scenario/
@@ -290,8 +291,10 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
     ├── schemas/
     ├── services/
     │   └── flow/
-    │       ├── reservation/
-    │       └── ...
+    │       ├── common/
+    │       ├── scenario/
+    │       ├── professor/
+    │       └── reservation/
     ├── tests/
     ├── main.py
     └── README.md
@@ -302,9 +305,10 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 |---|---|
 | `routes/` | FastAPI 라우터 및 `/chat` 엔드포인트 |
 | `schemas/` | 요청/응답 데이터 모델 |
-| `services/chat_service.py` | 기본 LLM 응답 생성 흐름 |
-| `services/flow/` | 시나리오별 LangGraph 구현 영역 |
-| `llm/` | LLM provider, prompt builder, postprocessor |
+| `services/flow/scenario/` | 25개 등록 시나리오의 구조화된 턴 생성 LangGraph |
+| `services/flow/professor/` | 교수님 시나리오 3개의 상세 LangGraph |
+| `services/flow/reservation/` | 예약 시나리오 4개의 상세 LangGraph |
+| `llm/` | LLM provider, prompt builder, 구조화 출력 계약과 오류 타입 |
 | `data/scenario/` | 시나리오 샘플 데이터 |
 | `data/prompts/` | 시나리오별 프롬프트 데이터 |
 | `tests/` | 단위 테스트 및 통합 테스트 |
@@ -325,13 +329,45 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
+개발·테스트 의존성:
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+
+로컬 Kanana 실행 의존성(선택):
+
+```bash
+python -m pip install -r requirements-ml.txt
+cp .env.example .env
+# .env에서 HF_LOCAL_MODEL_ENABLED=1 설정
+# 최초 다운로드 후 HF_LOCAL_FILES_ONLY=1로 전환 권장
+```
+
 ### 10-3. 서버 실행
 
 ```bash
 python -m uvicorn main:app --reload
 ```
 
-### 10-4. 접속 주소
+또는 이식 가능한 실행 스크립트를 사용할 수 있습니다.
+
+```bash
+./run_server.sh --reload
+```
+
+### 10-4. 테스트
+
+```bash
+# 네트워크 없이 재현 가능한 기본 검증
+python -m pytest -q
+
+# 로컬 모델을 포함한 수동 통합 검증
+HF_LOCAL_MODEL_ENABLED=1 HF_LOCAL_FILES_ONLY=0 \
+  python -m pytest -m integration tests/integration -v
+```
+
+### 10-5. 접속 주소
 
 기본 실행 주소:
 
@@ -352,9 +388,11 @@ http://127.0.0.1:8000/docs
 
 | 문서 | 설명 |
 |---|---|
+| 🧾 [CHANGELOG.md](CHANGELOG.md) | 버전별 주요 기능·수정·보안 변경 기록 |
 | 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 `/chat` API 요청/응답 계약 |
 | 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 통합 설계, 시나리오별 구현 요약, 테스트 결과 |
 | 🎓 [Professor LangGraph README](services/flow/professor/README.md) | 교수님 카테고리 LangGraph 통합 설계, 면담 예약/과제 문의/결석 사유 전달 구현 요약, 테스트 결과 |
+| 📚 [학습 가이드](docs/learning-guide.md) | 기술 선택과 구현 원칙을 질문·답 형식으로 설명 |
 
 ---
 
@@ -363,14 +401,14 @@ http://127.0.0.1:8000/docs
 | 구분 | 결과 |
 |---|---|
 | 서버 구조 | FastAPI 기반 `/chat` API 구성 |
-| LLM 연동 | Kanana 1.5 Hugging Face 기반 응답 생성 |
+| LLM 연동 | 로컬 Kanana 1.5 + OpenAI 선택형 응답 생성 |
 | 상태 관리 | LangGraph 기반 conversationState 관리 구조 도입 |
-| 적용 시나리오 | 예약 카테고리, 교수님 카테고리 적용 |
+| 적용 시나리오 | 모바일에 등록된 9개 카테고리·32개 시나리오 전체 적용 |
 | 교수님 적용 범위 | 면담 예약, 과제 문의, 결석 사유 전달 |
-| 응답 안정성 | validator와 template fallback으로 상태 의미 보정 |
+| 응답 안정성 | 검증된 상태만 도메인 응답 정책으로 표현하고 모델 오류는 명시적으로 전달 |
 | 추천 답변 | 현재 상태에 맞는 recommendedReplies 생성 |
 | 클라이언트 상태 유지 | scenarioState로 다음 요청에 필요한 상태 반환 |
-| 테스트 검증 | 예약 + 교수님 LangGraph 테스트 259개 통과 |
+| 테스트 검증 | 오프라인 회귀 테스트 전체 통과, 실모델 통합 테스트 7개 분리 |
 
 <table>
   <tr>
@@ -381,13 +419,12 @@ http://127.0.0.1:8000/docs
       검증된 AI 응답과 추천 답변을 함께 반환하는
       <strong>상태 기반 통화 시뮬레이션 서버</strong>로 구현했습니다.
       <br/><br/>
-      현재는 예약 카테고리와 교수님 카테고리를 기준으로
-      <strong>LangGraph 상태 전이</strong>,
-      <strong>validator 응답 검증</strong>,
-      <strong>template fallback</strong>,
+      전체 모바일 시나리오를 기준으로 <strong>LangGraph 상태 전이</strong>,
+      <strong>구조화 출력 계약 검증</strong>,
+      <strong>도메인 응답 정책</strong>,
       <strong>추천 답변 생성</strong>,
       <strong>API 응답 구조</strong>를 검증했습니다.
-      또한 예약 + 교수님 LangGraph 관련 테스트 <strong>259개를 통과</strong>하여,
+      또한 네트워크 없이 재현 가능한 회귀 테스트와 분리된 실모델 통합 테스트를 구성하여,
       이후 다른 전화 상황으로 확장 가능한 서버 구조를 마련했습니다.
     </td>
   </tr>
@@ -397,8 +434,8 @@ http://127.0.0.1:8000/docs
 
 <div align="center">
 
-### 마음콜 AI Server
+### MaeumCall AI Server
 
-실제 전화처럼 이어지는 통화 연습 환경을 만들기 위해 개발 중입니다.
+실제 전화처럼 이어지는 상태 기반 통화 연습 환경을 구현했습니다.
 
 </div>

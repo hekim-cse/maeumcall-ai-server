@@ -88,7 +88,7 @@ EXAONE-4.0-1.2B는 4차 테스트에서 가장 빠른 응답 속도를 보였다
 - 응답 속도는 현재까지 가장 우수하다.
 - `ai_message`만 생성하도록 하면 출력 안정성은 크게 개선된다.
 - 다만 한국어 병원 접수 말투는 Kanana보다 약하다.
-- 최종 후보보다는 속도 baseline 또는 fallback 후보로 유지한다.
+- 최종 생성 후보보다는 속도 비교 기준 모델로 기록한다.
 
 ---
 
@@ -147,7 +147,7 @@ EXAONE-4.0-1.2B는 4차 테스트에서 가장 빠른 응답 속도를 보였다
 
 재테스트 결과, EXAONE-4.0-1.2B는 개선된 프롬프트에서 예약 가능 여부를 확정하지 않고 진료과를 묻는 응답을 생성했다.
 
-응답 시간은 1.22초로 매우 빠르며, 속도 baseline 또는 fallback 후보로 가치가 높다.
+응답 시간은 1.22초로 매우 빠르며, 속도 비교 기준으로 가치가 높다.
 
 다만 출력에 따옴표가 포함되었기 때문에 실제 서비스 적용 시 간단한 후처리가 필요하다.
 
@@ -163,6 +163,6 @@ ai_message = ai_message.strip().strip('"')
 
 ```text
 - Keep as speed baseline
-- Good fallback candidate
+- Useful latency reference
 - Needs simple quote post-processing
 ```

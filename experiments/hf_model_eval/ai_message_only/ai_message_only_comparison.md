@@ -38,7 +38,7 @@ EXAONE:
 | 모델 | 재테스트 이유 |
 |---|---|
 | kakaocorp/kanana-1.5-2.1b-instruct-2505 | 메인 ai_message 생성 후보 |
-| LGAI-EXAONE/EXAONE-4.0-1.2B | 속도 baseline / fallback 후보 |
+| LGAI-EXAONE/EXAONE-4.0-1.2B | 속도 비교 기준 모델 |
 
 ---
 
@@ -137,7 +137,7 @@ ai_message = ai_message.strip().strip('"')
 
 ```text
 - Keep as speed baseline
-- Good fallback candidate
+- Useful latency reference
 - Needs simple post-processing for quotes
 ```
 
@@ -152,7 +152,7 @@ Kanana 1.5 2.1B Instruct는 병원 접수 직원 말투가 가장 자연스럽�
 
 EXAONE-4.0-1.2B는 응답 시간이 1.22초로 매우 빠르고 필요한 정보를 정확히 요청했지만, 출력에 따옴표가 포함되고 말투가 Kanana보다 조금 덜 부드러웠다.
 
-따라서 현재 구조에서는 Kanana 1.5를 메인 ai_message 생성 후보로 두고, EXAONE은 속도 baseline 또는 fallback 후보로 유지한다.
+따라서 이 실험에서는 Kanana 1.5를 생성 품질 후보로 평가하고, EXAONE은 속도 비교 기준으로 기록한다. 현재 운영 구조는 이 실험 이후 구조화 NLU와 도메인 응답 정책으로 변경되었다.
 ```
 
 ---
@@ -178,7 +178,7 @@ LLM은 ai_message만 생성하고 FastAPI 서버가 최종 JSON을 조립하는 
 | 모델 | 최종 역할 |
 |---|---|
 | Kanana 1.5 2.1B Instruct | 메인 ai_message 생성 후보 |
-| EXAONE-4.0-1.2B | 속도 baseline / fallback 후보 |
+| EXAONE-4.0-1.2B | 속도 비교 기준 모델 |
 | HyperCLOVA X SEED 1.5B | 한국어 자연스러움 참고 후보 |
 | Gemma-ko-2B | 제외 |
 
