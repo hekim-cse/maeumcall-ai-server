@@ -5,6 +5,18 @@ from pydantic import BaseModel
 
 # 공통
 Role = Literal["user", "assistant", "system", "ai"]  # ← 3번과 연결
+ImproveCategory = Literal[
+    "가족",
+    "친구",
+    "연인",
+    "회사",
+    "예약",
+    "교수님",
+    "고객센터",
+    "시청",
+    "배달",
+    "일반",
+]
 
 # === 대화 생성 ===
 class ChatRequest(BaseModel):
@@ -47,8 +59,7 @@ class ChatMessage(BaseModel):
 
 class ImproveRequest(BaseModel):
     messages: List[ChatMessage]
-    # 선택: 친구/가족/교수님/직장상사/상담원 등 카테고리
-    category: Optional[str] = None
+    category: Optional[ImproveCategory] = None
 
 class ImproveResponse(BaseModel):
     # user 메시지 위치에만 개선문이 있고 나머지는 None

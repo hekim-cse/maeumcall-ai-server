@@ -3,16 +3,19 @@ from __future__ import annotations
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.professor.appointment.graph import professor_appointment_graph
 from services.flow.professor.appointment.policy import compact_professor_appointment_state
+from services.flow.common.scenario_keys import scenario_matches
 
 
 def is_professor_appointment_request(req: ChatRequest) -> bool:
     """
     교수님 / 면담 예약 시나리오인지 확인한다.
     """
-    category = (getattr(req, "category", "") or "").strip()
-    title = (getattr(req, "title", "") or "").strip()
-
-    return category == "교수님" and "면담" in title and "예약" in title
+    return scenario_matches(
+        req.category,
+        req.title,
+        expected_category="교수님",
+        expected_title="면담 예약",
+    )
 
 
 def complete_professor_appointment_with_graph(req: ChatRequest) -> ChatResponse:
@@ -35,10 +38,10 @@ def complete_professor_appointment_with_graph(req: ChatRequest) -> ChatResponse:
 
     result = professor_appointment_graph.invoke(initial_state)
 
-    ai_message = result.get("ai_message") or "네, 면담 예약 관련해서 말씀해주시겠습니까?"
-    conversation_state = result.get("conversation_state") or "collecting_appointment_info"
-    recommended_replies = result.get("recommended_replies") or []
-    should_end_call = bool(result.get("should_end_call", False))
+    ai_message = result["ai_message"]
+    conversation_state = result["conversation_state"]
+    recommended_replies = result["recommended_replies"]
+    should_end_call = result["should_end_call"]
 
     return ChatResponse(
         response=ai_message,

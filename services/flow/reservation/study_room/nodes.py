@@ -15,9 +15,6 @@ from services.flow.reservation.study_room.policy import (
     get_missing_study_room_fields,
 )
 from services.flow.reservation.study_room.state import StudyRoomReservationState
-from services.flow.reservation.study_room.templates import (
-    build_study_room_template_message,
-)
 
 
 def extract_study_room_info_node(state: StudyRoomReservationState) -> Dict:
@@ -229,13 +226,11 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> Dict:
     if missing_fields:
         return {
             "user_action": user_action,
-            "missing_fields": missing_fields,
             "conversation_state": "collecting_reservation_info",
         }
 
     return {
         "user_action": user_action,
-        "missing_fields": [],
         "conversation_state": "confirming_info",
     }
 
@@ -245,19 +240,22 @@ def check_study_room_availability_node(state: StudyRoomReservationState) -> Dict
     스터디룸 예약 가능 여부를 확인한다.
     """
     result = resolve_study_room_availability(state)
-    next_state = (
-        "reservation_available"
-        if result.get("availability_status") == "available"
-        else "reservation_unavailable"
-    )
+    if result["availability_status"] == "available":
+        next_state = "reservation_available"
+    elif result["availability_status"] == "unavailable":
+        next_state = "reservation_unavailable"
+    else:
+        raise ValueError(
+            f"unsupported availability status: {result['availability_status']}"
+        )
 
     return {
-        "availability_status": result.get("availability_status"),
-        "availability_reason": result.get("availability_reason"),
-        "available_time": result.get("available_time"),
-        "alternative_times": result.get("alternative_times") or [],
-        "availability_message_hint": result.get("availability_message_hint"),
-        "reservation_confirmed": result.get("reservation_confirmed", False),
+        "availability_status": result["availability_status"],
+        "availability_reason": result["availability_reason"],
+        "available_time": result["available_time"],
+        "alternative_times": result["alternative_times"],
+        "availability_message_hint": result["availability_message_hint"],
+        "reservation_confirmed": result["reservation_confirmed"],
         "conversation_state": next_state,
     }
 
@@ -266,17 +264,9 @@ def generate_study_room_response_node(state: StudyRoomReservationState) -> Dict:
     """
     스터디룸 예약 응답 생성 노드이다.
 
-    기본은 LLM 응답을 우선 사용한다.
-    다만 테스트와 실제 통화 흐름에서 반드시 보장되어야 하는 핵심 표현은
-    마지막 단계에서 안전하게 보정한다.
+    검증된 상태를 스터디룸 예약 응답 정책으로 표현한다.
     """
-    conversation_state = state.get("conversation_state") or "collecting_reservation_info"
-    missing_fields = state.get("missing_fields") or get_missing_study_room_fields(state)
-
-    if conversation_state == "collecting_reservation_info" and missing_fields == ["user_name"]:
-        ai_message = build_study_room_template_message(conversation_state, state)
-    else:
-        ai_message = generate_study_room_ai_message(state)
+    ai_message = generate_study_room_ai_message(state)
 
     return {
         "ai_message": ai_message,
@@ -340,5 +330,4 @@ def _reset_lookup_state(extra: Dict) -> Dict:
         "alternative_times": [],
         "availability_message_hint": None,
         "reservation_confirmed": False,
-        "missing_fields": [],
     }

@@ -1,17 +1,9 @@
 from __future__ import annotations
 
-from typing import Dict
-
 from langgraph.graph import StateGraph, START, END
 from services.flow.reservation.hospital.state import HospitalReservationState
-from services.flow.reservation.hospital.templates import (
-    build_template_ai_message,
-    fallback_ai_message,
-)
-from services.flow.reservation.hospital.policy import (
-    route_after_decide,
-    should_use_template_first,
-)
+from services.flow.reservation.hospital.policy import route_after_decide
+from services.flow.reservation.hospital.response_policy import build_hospital_response
 from services.flow.reservation.hospital.nodes import (
     attach_recommended_replies_node,
     check_availability_node,
@@ -22,8 +14,11 @@ from services.flow.reservation.hospital.nodes import (
 
 from services.flow.reservation.hospital.generation import generate_ai_message_node
 
-
-    
+__all__ = [
+    "build_hospital_reservation_graph",
+    "build_hospital_response",
+    "hospital_reservation_graph",
+]
 
 
 def build_hospital_reservation_graph():

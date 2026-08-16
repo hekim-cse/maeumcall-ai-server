@@ -11,7 +11,7 @@ from services.flow.reservation.restaurant.policy import (
     get_missing_restaurant_fields,
 )
 from services.flow.reservation.restaurant.replies import get_restaurant_recommended_replies
-from services.flow.reservation.restaurant.templates import build_restaurant_template_message
+from services.flow.reservation.restaurant.response_policy import build_restaurant_response
 from services.flow.reservation.restaurant.availability import resolve_restaurant_availability
 from services.flow.reservation.restaurant.generation import generate_restaurant_ai_message
 
@@ -239,35 +239,16 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
         }
 
     # 5) 일반 정보 수집 흐름
-    date = state.get("date")
-    time = state.get("time")
-    party_size = state.get("party_size")
-    user_name = state.get("user_name")
-
-    missing_fields = []
-
-    if not date:
-        missing_fields.append("date")
-
-    if not time:
-        missing_fields.append("time")
-
-    if not party_size:
-        missing_fields.append("party_size")
-
-    if not user_name:
-        missing_fields.append("user_name")
+    missing_fields = get_missing_restaurant_fields(state)
 
     if missing_fields:
         return {
             "user_action": user_action,
-            "missing_fields": missing_fields,
             "conversation_state": "collecting_reservation_info",
         }
 
     return {
         "user_action": user_action,
-        "missing_fields": [],
         "conversation_state": "confirming_info",
     }
 
@@ -276,8 +257,7 @@ def generate_restaurant_response_node(state: RestaurantReservationState) -> Dict
     """
     식당 예약 응답 생성 노드이다.
 
-    실제 응답 문장은 generation.py에서 LLM 우선으로 생성하고,
-    검증 실패 시 template fallback을 사용한다.
+    검증된 상태를 식당 예약 응답 정책으로 표현한다.
     """
     return generate_restaurant_ai_message(state)
 
@@ -350,7 +330,7 @@ def _build_collecting_info_message(state: RestaurantReservationState) -> str:
     if "user_name" in missing_fields:
         return _build_asking_user_name_message(state)
 
-    return build_restaurant_template_message("confirming_info", state)
+    return build_restaurant_response("confirming_info", state)
 
 
 def _build_asking_user_name_message(state: RestaurantReservationState) -> str:
@@ -366,24 +346,20 @@ def _build_asking_user_name_message(state: RestaurantReservationState) -> str:
 
 def check_restaurant_availability_node(state: RestaurantReservationState) -> Dict:
     """
-    식당 예약 가능 여부를 확인하는 노드이다.
-
-    실제 예약 시스템 연동 전까지는 resolve_restaurant_availability의
-    규칙 기반 시뮬레이션 결과를 사용한다.
+    식당 통화 훈련 시나리오의 예약 가능 여부를 확인한다.
     """
     result = resolve_restaurant_availability(state)
 
-    availability_status = result.get("availability_status")
+    availability_status = result["availability_status"]
 
     if availability_status == "available":
         next_state = "reservation_available"
     elif availability_status == "unavailable":
         next_state = "reservation_unavailable"
     else:
-        next_state = "reservation_unavailable"
+        raise ValueError(f"unsupported availability status: {availability_status}")
 
     return {
         **result,
         "conversation_state": next_state,
-        "simulation_result": result,
     }

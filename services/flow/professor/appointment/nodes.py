@@ -169,7 +169,7 @@ def generate_professor_appointment_response_node(state: ProfessorAppointmentStat
     """
     교수님 면담 예약 응답 생성 노드이다.
 
-    LLM 응답을 우선 사용하고, 상태나 말투 기준에 맞지 않으면 fallback한다.
+    검증된 상태를 교수님 면담 응답 정책으로 표현한다.
     """
     ai_message = generate_professor_appointment_ai_message(state)
 

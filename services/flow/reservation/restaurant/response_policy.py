@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from typing import List
 
+from services.flow.reservation.restaurant.policy import (
+    get_missing_restaurant_fields,
+)
+
 
 def choose_message(candidates: List[str], state: dict) -> str:
     """
@@ -14,7 +18,9 @@ def choose_message(candidates: List[str], state: dict) -> str:
         if message != last_ai_message:
             return message
 
-    return candidates[0] if candidates else ""
+    if not candidates:
+        raise ValueError("restaurant response policy requires at least one candidate")
+    return candidates[0]
 
 
 def with_service_greeting(message: str, state: dict) -> str:
@@ -31,7 +37,7 @@ def with_service_greeting(message: str, state: dict) -> str:
     return message
 
 
-def build_restaurant_template_message(conversation_state: str, state: dict = None) -> str:
+def build_restaurant_response(conversation_state: str, state: dict = None) -> str:
     """
     식당 예약 상태에 맞는 정형 응답을 생성한다.
     """
@@ -40,6 +46,18 @@ def build_restaurant_template_message(conversation_state: str, state: dict = Non
     date = state.get("date") or "원하시는 날짜"
     time = state.get("time") or "원하시는 시간"
     party_size = state.get("party_size") or "인원"
+
+    if conversation_state == "collecting_reservation_info":
+        missing = get_missing_restaurant_fields(state)
+        if "date" in missing:
+            return with_service_greeting("예약 날짜는 언제가 괜찮으세요?", state)
+        if "time" in missing:
+            return f"{date} 예약으로 확인했습니다. 시간은 몇 시쯤 괜찮으세요?"
+        if "party_size" in missing:
+            return f"{date} {time} 예약으로 확인했습니다. 몇 분이서 오시나요?"
+        if "user_name" in missing:
+            return "예약자 성함을 말씀해주시겠어요?"
+        raise ValueError("collecting_reservation_info requires at least one missing field")
 
     if conversation_state == "asking_date":
         candidates = [
@@ -123,4 +141,4 @@ def build_restaurant_template_message(conversation_state: str, state: dict = Non
     if conversation_state == "END":
         return "감사합니다. 좋은 하루 보내세요."
 
-    return "예약 도와드리겠습니다. 원하시는 날짜와 시간을 말씀해주세요."
+    raise ValueError(f"unsupported restaurant conversation state: {conversation_state}")

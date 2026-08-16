@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.reservation.hair_salon.graph import hair_salon_reservation_graph
+from services.flow.common.scenario_keys import scenario_matches
 from services.flow.reservation.hair_salon.policy import compact_hair_salon_state
 
 
@@ -9,13 +10,15 @@ def is_hair_salon_reservation_request(req: ChatRequest) -> bool:
     """
     미용실 예약 LangGraph 라우팅 여부를 판단한다.
 
-    휴리스틱 키워드 매칭을 사용하지 않고,
+    등록된 category/title 키를 사용해
     category/title의 명시적인 시나리오 매핑만 사용한다.
     """
-    category = (getattr(req, "category", "") or "").strip()
-    title = (getattr(req, "title", "") or "").strip()
-
-    return category == "예약" and title == "미용실 예약"
+    return scenario_matches(
+        getattr(req, "category", ""),
+        getattr(req, "title", ""),
+        expected_category="예약",
+        expected_title="미용실 예약",
+    )
 
 
 def complete_hair_salon_reservation_with_graph(req: ChatRequest) -> ChatResponse:
@@ -39,10 +42,10 @@ def complete_hair_salon_reservation_with_graph(req: ChatRequest) -> ChatResponse
 
     result = hair_salon_reservation_graph.invoke(initial_state)
 
-    ai_message = result.get("ai_message") or "네, 미용실 예약 도와드리겠습니다."
-    conversation_state = result.get("conversation_state") or "collecting_reservation_info"
-    recommended_replies = result.get("recommended_replies") or []
-    should_end_call = bool(result.get("should_end_call", False))
+    ai_message = result["ai_message"]
+    conversation_state = result["conversation_state"]
+    recommended_replies = result["recommended_replies"]
+    should_end_call = result["should_end_call"]
 
     return ChatResponse(
         response=ai_message,

@@ -2,6 +2,19 @@ from __future__ import annotations
 
 from typing import List
 
+from services.flow.reservation.study_room.policy import (
+    get_missing_study_room_fields,
+)
+
+
+STUDY_ROOM_FIELD_LABELS = {
+    "date": "이용 날짜",
+    "start_time": "시작 시간",
+    "duration": "이용 시간",
+    "party_size": "인원",
+    "user_name": "예약자 성함",
+}
+
 
 def choose_message(candidates: List[str], state: dict) -> str:
     last_ai_message = state.get("last_ai_message")
@@ -10,12 +23,14 @@ def choose_message(candidates: List[str], state: dict) -> str:
         if message != last_ai_message:
             return message
 
-    return candidates[0] if candidates else ""
+    if not candidates:
+        raise ValueError("study room response policy requires at least one candidate")
+    return candidates[0]
 
 
-def build_study_room_template_message(conversation_state: str, state: dict = None) -> str:
+def build_study_room_response(conversation_state: str, state: dict = None) -> str:
     """
-    스터디룸 예약 상태에 맞는 fallback 응답을 생성한다.
+    검증된 스터디룸 예약 상태에 맞는 제품 응답을 생성한다.
     """
     state = state or {}
 
@@ -25,7 +40,15 @@ def build_study_room_template_message(conversation_state: str, state: dict = Non
     party_size = state.get("party_size") or "인원"
 
     if conversation_state == "collecting_reservation_info":
-        return "스터디룸 예약 도와드리겠습니다. 이용 날짜, 시작 시간, 이용 시간, 인원을 말씀해주세요."
+        missing = get_missing_study_room_fields(state)
+        if missing == ["user_name"]:
+            return "예약자 성함을 말씀해주시겠어요?"
+        if not missing:
+            raise ValueError(
+                "collecting_reservation_info requires at least one missing field"
+            )
+        fields = ", ".join(STUDY_ROOM_FIELD_LABELS[field] for field in missing)
+        return f"스터디룸 예약 도와드리겠습니다. 필요한 정보는 {fields}입니다."
 
     if conversation_state == "confirming_info":
         return f"{date} {start_time}부터 {duration}, {party_size} 예약으로 확인했습니다. 맞으실까요?"
@@ -55,4 +78,4 @@ def build_study_room_template_message(conversation_state: str, state: dict = Non
     if conversation_state == "END":
         return "감사합니다. 좋은 하루 보내세요."
 
-    return "스터디룸 예약 도와드리겠습니다."
+    raise ValueError(f"unsupported study room conversation state: {conversation_state}")

@@ -31,9 +31,7 @@ def complete_reservation_graph_if_supported(req: ChatRequest) -> Optional[ChatRe
     - 예약 / 스터디룸 예약
     - 예약 / 미용실 예약
 
-    아직 지원하지 않는 예약 시나리오:
-
-    지원하지 않는 시나리오는 None을 반환하여 기존 LLM/fallback 흐름으로 넘긴다.
+    예약 카테고리가 아니거나 등록되지 않은 예약 시나리오는 None을 반환한다.
     """
     if is_hospital_reservation_request(req):
         return complete_hospital_reservation_with_graph(req)

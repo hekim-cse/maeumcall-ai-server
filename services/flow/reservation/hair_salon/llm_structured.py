@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-import json
 from typing import Any, Dict
 
-from llm.huggingface_provider import complete_hf_messages
+from llm.huggingface_provider import complete_hf_json
+from llm.structured_output import (
+    allowed_string,
+    complete_validated_json,
+    optional_string,
+)
 
 
 DEFAULT_HAIR_SALON_STRUCTURED_RESULT: Dict[str, Any] = {
@@ -25,32 +29,24 @@ def analyze_hair_salon_reservation_user_message(
     """
     미용실 예약 사용자 발화를 structured output으로 분석한다.
 
-    기존 정규식/키워드 기반 extractor와 action parser를 대체한다.
+    검증된 JSON 계약만 상태 전이에 사용한다.
     """
     prompt = build_hair_salon_structured_prompt(conversation_state, user_message)
 
-    try:
-        raw = complete_hf_messages(
-            [
-                {
-                    "role": "system",
-                    "content": (
-                        "너는 미용실 예약 통화 시뮬레이션 서버의 정보 추출기이다. "
-                        "반드시 JSON 객체만 반환한다. 설명 문장, markdown, 코드블록은 출력하지 않는다."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                },
-            ]
-        )
-
-        parsed = _parse_json_object(raw)
-        return _normalize_hair_salon_analysis_result(parsed)
-
-    except Exception:
-        return DEFAULT_HAIR_SALON_STRUCTURED_RESULT.copy()
+    return complete_validated_json(
+        [
+            {
+                "role": "system",
+                "content": (
+                    "너는 미용실 예약 통화 시뮬레이션 서버의 정보 추출기이다. "
+                    "반드시 JSON 객체만 반환한다. 설명 문장, markdown, 코드블록은 출력하지 않는다."
+                ),
+            },
+            {"role": "user", "content": prompt},
+        ],
+        completion=complete_hf_json,
+        validator=_normalize_hair_salon_analysis_result,
+    )
 
 
 def build_hair_salon_structured_prompt(
@@ -118,28 +114,11 @@ user_action 허용값:
 """
 
 
-def _parse_json_object(raw: str) -> Dict[str, Any]:
-    text = (raw or "").strip()
-
-    if text.startswith("```"):
-        text = text.replace("```json", "").replace("```", "").strip()
-
-    start = text.find("{")
-    end = text.rfind("}")
-
-    if start == -1 or end == -1 or end < start:
-        raise ValueError("JSON object not found")
-
-    return json.loads(text[start : end + 1])
-
-
 def _normalize_hair_salon_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]:
     result = DEFAULT_HAIR_SALON_STRUCTURED_RESULT.copy()
 
-    if not isinstance(parsed, dict):
-        return result
-
-    result["intent"] = "reservation"
+    if parsed.get("intent") != "reservation":
+        raise ValueError("intent must be reservation")
 
     for key in [
         "date",
@@ -149,14 +128,8 @@ def _normalize_hair_salon_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
         "user_name",
         "selected_time",
     ]:
-        value = parsed.get(key)
-        if isinstance(value, str):
-            value = value.strip() or None
-        else:
-            value = None
-        result[key] = value
+        result[key] = optional_string(parsed, key)
 
-    user_action = parsed.get("user_action")
     allowed_actions = {
         "continue_collecting",
         "confirm",
@@ -174,9 +147,6 @@ def _normalize_hair_salon_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
         "unknown",
     }
 
-    if user_action in allowed_actions:
-        result["user_action"] = user_action
-    else:
-        result["user_action"] = "unknown"
+    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
 
     return result

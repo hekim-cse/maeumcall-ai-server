@@ -8,7 +8,6 @@ from services.flow.reservation.hospital.availability import resolve_hospital_ava
 from services.flow.reservation.hospital.replies import get_recommended_replies
 from services.flow.reservation.hospital.policy import clear_reservation_lookup_fields
 from services.flow.reservation.common.time_utils import (
-    resolve_final_reservation_time,
     is_time_in_options,
 )
 
@@ -326,16 +325,18 @@ def attach_recommended_replies_node(state: HospitalReservationState) -> Dict:
 
 def check_availability_node(state: HospitalReservationState) -> Dict:
     """
-    checking_availability 상태에서 예약 가능 여부를 결정한다.
-    실제 API가 아니라 시뮬레이션 엔진 결과를 사용한다.
+    checking_availability 상태에서 통화 훈련 시나리오 결과를 결정한다.
     """
     result = resolve_hospital_availability(state)
 
-    next_state = (
-        "reservation_available"
-        if result.get("availability_status") == "available"
-        else "reservation_unavailable"
-    )
+    if result["availability_status"] == "available":
+        next_state = "reservation_available"
+    elif result["availability_status"] == "unavailable":
+        next_state = "reservation_unavailable"
+    else:
+        raise ValueError(
+            f"unsupported availability status: {result['availability_status']}"
+        )
 
     return {
         **result,

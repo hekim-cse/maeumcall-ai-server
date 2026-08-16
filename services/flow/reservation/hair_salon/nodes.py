@@ -258,13 +258,11 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> Dict:
     if missing_fields:
         return {
             "user_action": user_action,
-            "missing_fields": missing_fields,
             "conversation_state": "collecting_reservation_info",
         }
 
     return {
         "user_action": user_action,
-        "missing_fields": [],
         "conversation_state": "confirming_info",
     }
 
@@ -273,7 +271,7 @@ def generate_hair_salon_response_node(state: HairSalonReservationState) -> Dict:
     """
     미용실 예약 응답 생성 노드이다.
 
-    LLM 응답을 우선 사용하고, validator를 통과하지 못하면 template fallback을 사용한다.
+    검증된 상태를 미용실 예약 응답 정책으로 표현한다.
     """
     ai_message = generate_hair_salon_ai_message(state)
 
@@ -299,18 +297,21 @@ def check_hair_salon_availability_node(state: HairSalonReservationState) -> Dict
     미용실 예약 가능 여부를 확인하는 노드이다.
     """
     result = resolve_hair_salon_availability(state)
-    next_state = (
-        "reservation_available"
-        if result.get("availability_status") == "available"
-        else "reservation_unavailable"
-    )
+    if result["availability_status"] == "available":
+        next_state = "reservation_available"
+    elif result["availability_status"] == "unavailable":
+        next_state = "reservation_unavailable"
+    else:
+        raise ValueError(
+            f"unsupported availability status: {result['availability_status']}"
+        )
 
     return {
-        "availability_status": result.get("availability_status"),
-        "availability_reason": result.get("availability_reason"),
-        "available_time": result.get("available_time"),
-        "alternative_times": result.get("alternative_times") or [],
-        "availability_message_hint": result.get("availability_message_hint"),
-        "reservation_confirmed": result.get("reservation_confirmed", False),
+        "availability_status": result["availability_status"],
+        "availability_reason": result["availability_reason"],
+        "available_time": result["available_time"],
+        "alternative_times": result["alternative_times"],
+        "availability_message_hint": result["availability_message_hint"],
+        "reservation_confirmed": result["reservation_confirmed"],
         "conversation_state": next_state,
     }

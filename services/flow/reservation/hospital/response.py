@@ -6,13 +6,14 @@ from typing import Dict, Any
 
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.reservation.hospital.graph import hospital_reservation_graph
+from services.flow.common.scenario_keys import scenario_matches
 
 
 def is_hospital_reservation_request(req: ChatRequest) -> bool:
     """
     병원 예약 LangGraph 라우팅 여부를 판단한다.
 
-    휴리스틱 키워드 매칭을 사용하지 않고,
+    등록된 category/title 키를 사용해
     category/title의 명시적인 시나리오 매핑만 사용한다.
 
     이유:
@@ -20,10 +21,12 @@ def is_hospital_reservation_request(req: ChatRequest) -> bool:
       식당 예약, 스터디룸 예약, 미용실 예약도 병원 graph로 잘못 들어갈 수 있다.
     - LangGraph case는 시나리오 단위로 명확하게 분리되어야 한다.
     """
-    category = (getattr(req, "category", "") or "").strip()
-    title = (getattr(req, "title", "") or "").strip()
-
-    return category == "예약" and title == "병원 예약"
+    return scenario_matches(
+        getattr(req, "category", ""),
+        getattr(req, "title", ""),
+        expected_category="예약",
+        expected_title="병원 예약",
+    )
 
 
 def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
@@ -70,10 +73,10 @@ def complete_hospital_reservation_with_graph(req: ChatRequest) -> ChatResponse:
 
     result = hospital_reservation_graph.invoke(initial_state)
 
-    ai_message = result.get("ai_message") or "네, 확인해드리겠습니다. 조금만 더 말씀해주시겠어요?"
-    conversation_state = result.get("conversation_state") or "asking_purpose"
-    recommended_replies = result.get("recommended_replies") or []
-    should_end_call = bool(result.get("should_end_call", False))
+    ai_message = result["ai_message"]
+    conversation_state = result["conversation_state"]
+    recommended_replies = result["recommended_replies"]
+    should_end_call = result["should_end_call"]
 
     return ChatResponse(
         response=ai_message,

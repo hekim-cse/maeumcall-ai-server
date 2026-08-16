@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-import json
 from typing import Any, Dict
 
-from llm.huggingface_provider import complete_hf_messages
+from llm.huggingface_provider import complete_hf_json
+from llm.structured_output import (
+    allowed_string,
+    complete_validated_json,
+    optional_string,
+)
 
 
 DEFAULT_RESTAURANT_STRUCTURED_RESULT = {
@@ -78,57 +82,31 @@ def analyze_restaurant_reservation_user_message(
 - closing: 더 할 말 없거나 감사 인사면 end_call
 """
 
-    try:
-        raw = complete_hf_messages(
-            [
-                {
-                    "role": "system",
-                    "content": "너는 사용자 발화를 JSON으로만 분석하는 분류기이다.",
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                },
-            ]
-        )
-        parsed = _parse_json_object(raw)
-        return _normalize_restaurant_analysis_result(parsed)
-    except Exception:
-        return DEFAULT_RESTAURANT_STRUCTURED_RESULT.copy()
-
-
-def _parse_json_object(text: str) -> Dict[str, Any]:
-    text = (text or "").strip()
-
-    if text.startswith("```"):
-        text = text.replace("```json", "").replace("```", "").strip()
-
-    start = text.find("{")
-    end = text.rfind("}")
-
-    if start == -1 or end == -1 or start >= end:
-        raise ValueError("JSON object not found")
-
-    return json.loads(text[start : end + 1])
+    return complete_validated_json(
+        [
+            {
+                "role": "system",
+                "content": "너는 사용자 발화를 JSON으로만 분석하는 분류기이다.",
+            },
+            {
+                "role": "user",
+                "content": prompt,
+            },
+        ],
+        completion=complete_hf_json,
+        validator=_normalize_restaurant_analysis_result,
+    )
 
 
 def _normalize_restaurant_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]:
     result = DEFAULT_RESTAURANT_STRUCTURED_RESULT.copy()
 
-    if not isinstance(parsed, dict):
-        return result
-
-    result["intent"] = "reservation"
+    if parsed.get("intent") != "reservation":
+        raise ValueError("intent must be reservation")
 
     for key in ["date", "time", "party_size", "user_name", "selected_time"]:
-        value = parsed.get(key)
-        if isinstance(value, str):
-            value = value.strip() or None
-        else:
-            value = None
-        result[key] = value
+        result[key] = optional_string(parsed, key)
 
-    user_action = parsed.get("user_action")
     allowed_actions = {
         "continue_collecting",
         "confirm",
@@ -145,9 +123,6 @@ def _normalize_restaurant_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
         "unknown",
     }
 
-    if user_action in allowed_actions:
-        result["user_action"] = user_action
-    else:
-        result["user_action"] = "unknown"
+    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
 
     return result

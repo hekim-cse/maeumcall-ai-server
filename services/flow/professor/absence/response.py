@@ -3,16 +3,19 @@ from __future__ import annotations
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.professor.absence.graph import professor_absence_graph
 from services.flow.professor.absence.policy import compact_professor_absence_state
+from services.flow.common.scenario_keys import scenario_matches
 
 
 def is_professor_absence_request(req: ChatRequest) -> bool:
     """
     교수님 / 결석 사유 전달 시나리오인지 판단한다.
     """
-    category = (getattr(req, "category", "") or "").strip()
-    title = (getattr(req, "title", "") or "").strip()
-
-    return category == "교수님" and "결석" in title and "사유" in title
+    return scenario_matches(
+        req.category,
+        req.title,
+        expected_category="교수님",
+        expected_title="결석 사유 전달",
+    )
 
 
 def complete_professor_absence_with_graph(req: ChatRequest) -> ChatResponse:
@@ -35,10 +38,10 @@ def complete_professor_absence_with_graph(req: ChatRequest) -> ChatResponse:
 
     result = professor_absence_graph.invoke(initial_state)
 
-    ai_message = result.get("ai_message") or "네, 결석 사유와 관련해서 말씀해주시겠습니까?"
-    conversation_state = result.get("conversation_state") or "collecting_absence_info"
-    recommended_replies = result.get("recommended_replies") or []
-    should_end_call = bool(result.get("should_end_call", False))
+    ai_message = result["ai_message"]
+    conversation_state = result["conversation_state"]
+    recommended_replies = result["recommended_replies"]
+    should_end_call = result["should_end_call"]
 
     return ChatResponse(
         response=ai_message,

@@ -2,16 +2,20 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
+from services.flow.reservation.common.availability_contract import (
+    validate_availability_result,
+)
+
+
+HOSPITAL_TRAINING_TIME_SLOTS = {
+    "오전": "오전 10시",
+    "오후": "오후 3시",
+}
+
 
 def resolve_hospital_availability(state: Dict[str, Any]) -> Dict[str, Any]:
     """
-    병원 예약 시뮬레이션 결과를 결정한다.
-
-    상업 서비스 기준:
-    - random 사용하지 않는다.
-    - LLM이 예약 가능/불가를 임의 생성하지 않는다.
-    - scenarioState.simulation_result가 있으면 그 값을 사용한다.
-    - 없으면 기본 시뮬레이션 결과를 사용한다.
+    검증된 외부 결과 또는 병원 통화 훈련 시나리오 정책으로 결과를 결정한다.
     """
 
     department = state.get("department") or "진료과"
@@ -20,11 +24,12 @@ def resolve_hospital_availability(state: Dict[str, Any]) -> Dict[str, Any]:
 
     simulation_result = state.get("simulation_result")
 
-    if isinstance(simulation_result, dict):
-        status = simulation_result.get("availability_status") or "available"
-        reason = simulation_result.get("availability_reason")
-        available_time = simulation_result.get("available_time")
-        alternative_times = simulation_result.get("alternative_times") or []
+    if simulation_result is not None:
+        decision = validate_availability_result(simulation_result)
+        status = decision["availability_status"]
+        reason = decision["availability_reason"]
+        available_time = decision["available_time"]
+        alternative_times = decision["alternative_times"]
 
         return {
             "availability_status": status,
@@ -42,9 +47,7 @@ def resolve_hospital_availability(state: Dict[str, Any]) -> Dict[str, Any]:
             ),
         }
 
-    # 기본 시뮬레이션 결과
-    # random 없이 항상 같은 결과를 반환한다.
-    available_time = "오후 3시" if time == "오후" else time
+    available_time = HOSPITAL_TRAINING_TIME_SLOTS.get(time, time)
 
     return {
         "availability_status": "available",

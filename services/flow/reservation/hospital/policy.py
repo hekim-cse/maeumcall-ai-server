@@ -29,26 +29,6 @@ def clear_reservation_lookup_fields() -> Dict[str, Any]:
     }
 
 
-def should_use_template_first(conversation_state: str) -> bool:
-    """
-    LLM 호출 없이 정형 응답으로 충분한 상태인지 판단한다.
-
-    이 상태들은 응답 문장이 거의 고정되어 있어
-    Kanana 호출보다 fallback/template 응답을 우선 사용하는 것이 안정적이다.
-    """
-    return conversation_state in {
-        "asking_department",
-        "asking_date",
-        "asking_time",
-        "confirming_info",
-        "checking_availability",
-        "reservation_available",
-        "reservation_confirmed",
-        "closing",
-        "END",
-    }
-
-
 def route_after_decide(state: HospitalReservationState) -> str:
     conversation_state = state.get("conversation_state")
 

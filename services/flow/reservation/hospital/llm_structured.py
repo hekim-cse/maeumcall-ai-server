@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-import json
 from typing import Any, Dict
 
-from services.flow.reservation.hospital.llm_client import complete_hf_messages
+from llm.huggingface_provider import complete_hf_json
+from llm.structured_output import (
+    allowed_string,
+    complete_validated_json,
+    optional_string,
+)
 
 
 DEFAULT_HOSPITAL_STRUCTURED_RESULT: Dict[str, Any] = {
@@ -42,12 +46,11 @@ def analyze_hospital_reservation_user_message(
         },
     ]
 
-    try:
-        raw = complete_hf_messages(messages)
-        parsed = _parse_json_object(raw)
-        return _normalize_hospital_analysis_result(parsed)
-    except Exception:
-        return DEFAULT_HOSPITAL_STRUCTURED_RESULT.copy()
+    return complete_validated_json(
+        messages,
+        completion=complete_hf_json,
+        validator=_normalize_hospital_analysis_result,
+    )
 
 
 def _build_system_prompt() -> str:
@@ -124,37 +127,19 @@ user_message: {user_message}
 """.strip()
 
 
-def _parse_json_object(text: str) -> Dict[str, Any]:
-    text = (text or "").strip()
-    text = text.replace("```json", "").replace("```", "").strip()
-
-    start = text.find("{")
-    end = text.rfind("}")
-
-    if start == -1 or end == -1 or end < start:
-        raise ValueError("JSON object not found")
-
-    return json.loads(text[start : end + 1])
-
-
 def _normalize_hospital_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]:
-    result = DEFAULT_HOSPITAL_STRUCTURED_RESULT.copy()
-
-    if not isinstance(parsed, dict):
-        return result
-
+    if "intent" not in parsed:
+        raise ValueError("intent is required")
     intent = parsed.get("intent")
-    result["intent"] = "reservation" if intent == "reservation" else None
+    if intent not in {"reservation", None}:
+        raise ValueError("intent must be reservation or null")
+
+    result = DEFAULT_HOSPITAL_STRUCTURED_RESULT.copy()
+    result["intent"] = intent
 
     for key in ["department", "date", "time", "selected_time"]:
-        value = parsed.get(key)
-        if isinstance(value, str):
-            value = value.strip() or None
-        else:
-            value = None
-        result[key] = value
+        result[key] = optional_string(parsed, key)
 
-    user_action = parsed.get("user_action")
     allowed_actions = {
         "continue_collecting",
         "confirm_reservation_info",
@@ -170,9 +155,6 @@ def _normalize_hospital_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any
         "unknown",
     }
 
-    if user_action in allowed_actions:
-        result["user_action"] = user_action
-    else:
-        result["user_action"] = "unknown"
+    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
 
     return result
