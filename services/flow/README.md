@@ -48,7 +48,8 @@ POST /chat
 ```text
 services/flow/
 ├── common/
-│   └── scenario_keys.py
+│   ├── scenario_keys.py
+│   └── state_contract.py
 ├── scenario/
 │   ├── registry.py
 │   ├── state.py
@@ -79,6 +80,7 @@ services/flow/
 | `response_policy.py` | 검증된 서버 상태를 제품 문장으로 표현 |
 | `replies.py` | 상태별 승인된 사용자 답변 후보 |
 | `response.py` | `ChatRequest`와 `ChatResponse` 경계 변환 |
+| `common/state_contract.py` | 시나리오 키·상태 버전·허용 필드 검증과 공통 응답 조립 |
 
 ## 오류 정책
 
@@ -102,4 +104,4 @@ services/flow/
 - 모바일 이모지 제목의 등록 키 정규화
 - 모델 장애의 API 오류 계약
 
-다음 운영 단계는 LangGraph checkpointer를 이용한 세션 영속화와 노드별 latency/error 지표 추가입니다.
+현재 상태 원본은 모바일이 보관하는 버전 지정 `scenarioState` 하나로 유지합니다. 서버 checkpointer를 동시에 두지 않는 근거와 서버 소유 영속 상태로 전환할 조건은 [상태 책임 ADR](../../docs/architecture/langgraph_call_flow_design.md)에 기록합니다. 다음 운영 단계는 노드별 latency/error 지표와 시나리오별 평가 데이터셋 구축입니다.

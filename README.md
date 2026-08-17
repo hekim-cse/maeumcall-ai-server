@@ -12,7 +12,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
-<img src="https://img.shields.io/badge/LangGraph-143D60?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/LangGraph-1.2.11-143D60?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Kanana_1.5-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"/>
 <img src="https://img.shields.io/badge/Pytest-offline_suite_passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white"/>
 
@@ -76,8 +76,9 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | 🛡 계약 검증 | JSON 형식, 필드 타입, 허용 action을 검증하고 위반 시 제한 재시도 |
 | 🚨 명시적 장애 처리 | 모델 미설정·호출 실패·계약 위반을 타입이 있는 5xx 응답으로 전달 |
 | 💬 추천 답변 생성 | 현재 상태에 맞는 recommendedReplies 반환 |
-| 📦 상태 유지 | scenarioState로 다음 요청에 필요한 상태 저장 |
+| 📦 상태 유지 | 시나리오 키와 스키마 버전이 포함된 scenarioState를 모바일이 보관하고 서버가 매 턴 검증 |
 | 📞 통화 종료 제어 | shouldEndCall 값으로 종료 흐름 관리 |
+| 🔐 기준선 식별자 보호 | 실제 사용자 ID 대신 비밀키 기반 HMAC 식별자로 음성 기준선 저장 |
 
 ---
 
@@ -160,7 +161,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 
 | 항목 | 설명 |
 |---|---|
-| 요청 기준 | Flutter는 `category`, `title`, `userMessage`, `conversationState`, `scenarioState`를 서버로 전달 |
+| 요청 기준 | Flutter는 완료된 `turns`와 직전 서버 응답의 `conversationState`, `scenarioState`를 전달 |
 | 분기 기준 | 서버는 `category/title`의 등록 키를 기준으로 상세 그래프 또는 등록형 공통 그래프를 선택 |
 | 상태 유지 | 서버는 다음 대화를 이어가기 위해 `conversationState`와 `scenarioState`를 함께 반환 |
 | 추천 답변 | 현재 상태에서 사용자가 말하기 쉬운 문장을 `recommendedReplies`로 제공 |
@@ -210,6 +211,8 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
       "conversationState": "collecting_reservation_info",
       "shouldEndCall": false,
       "scenarioState": {
+        "scenario_key": "예약:식당 예약",
+        "state_version": 1,
         "intent": "reservation",
         "date": "오늘",
         "time": "저녁 7시",
@@ -269,7 +272,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 
 | 구분 | 결과 |
 |---|---|
-| 오프라인 단위·그래프·라우트 테스트 | ✅ 전체 통과 |
+| 오프라인 단위·그래프·라우트 테스트 | ✅ 309개 통과 |
 | 실모델 통합 테스트 | 7개, 수동 실행으로 분리 |
 | 실패 테스트 | 없음 |
 | 기본 실행 네트워크 의존성 | 없음 |
@@ -328,6 +331,8 @@ source .venv/bin/activate
 ```bash
 python -m pip install -r requirements.txt
 ```
+
+> LangGraph 1.2는 Python 3.10 이상이 필요합니다. 이 저장소의 개발·CI 기준은 Python 3.11+이며, 3.9 가상환경에서는 실행하지 않습니다.
 
 개발·테스트 의존성:
 
@@ -390,6 +395,7 @@ http://127.0.0.1:8000/docs
 |---|---|
 | 🧾 [CHANGELOG.md](CHANGELOG.md) | 버전별 주요 기능·수정·보안 변경 기록 |
 | 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 `/chat` API 요청/응답 계약 |
+| 🧭 [LangGraph 상태 책임 ADR](docs/architecture/langgraph_call_flow_design.md) | 클라이언트 소유 상태, 버전 계약, 영속 checkpointer 전환 조건 |
 | 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 통합 설계, 시나리오별 구현 요약, 테스트 결과 |
 | 🎓 [Professor LangGraph README](services/flow/professor/README.md) | 교수님 카테고리 LangGraph 통합 설계, 면담 예약/과제 문의/결석 사유 전달 구현 요약, 테스트 결과 |
 | 📚 [학습 가이드](docs/learning-guide.md) | 기술 선택과 구현 원칙을 질문·답 형식으로 설명 |
@@ -407,8 +413,9 @@ http://127.0.0.1:8000/docs
 | 교수님 적용 범위 | 면담 예약, 과제 문의, 결석 사유 전달 |
 | 응답 안정성 | 검증된 상태만 도메인 응답 정책으로 표현하고 모델 오류는 명시적으로 전달 |
 | 추천 답변 | 현재 상태에 맞는 recommendedReplies 생성 |
-| 클라이언트 상태 유지 | scenarioState로 다음 요청에 필요한 상태 반환 |
-| 테스트 검증 | 오프라인 회귀 테스트 전체 통과, 실모델 통합 테스트 7개 분리 |
+| 클라이언트 상태 유지 | 버전과 시나리오가 검증되는 scenarioState를 모바일이 보관·재전송 |
+| 운영 경계 | 요청 ID, readiness 구성요소, 통일된 오류 envelope 제공 |
+| 테스트 검증 | 오프라인 회귀 테스트 309개 통과, 실모델 통합 테스트 7개 분리 |
 
 <table>
   <tr>

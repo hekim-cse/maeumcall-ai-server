@@ -1,264 +1,140 @@
 # API Contract
 
-이 문서는 Flutter 앱과 MaeumCall AI Server 사이의 API 연동 규칙을 정리한다.
-
-핵심 API는 모바일에 등록된 32개 시나리오를 처리하는 통화 시뮬레이션용 `/chat` API이다.
-
----
-
-## POST /chat
-
-사용자 발화와 현재 시나리오 상태를 서버로 보내면, 서버는 다음 AI 응답과 갱신된 상태를 반환한다.
-
----
-
-## Request Body
-
-### category
-
-시나리오 카테고리이다.
-
-예시:
-
-- 예약
-- 교수님
-- 회사
-- 가족, 친구, 연인
-- 배달, 시청, 고객센터
-
-### title
-
-시나리오 제목이다.
-
-예시:
-
-- 🏥 병원 예약
-- 📞 과제 문의
-
-서버는 라우팅 전에 이모지와 연속 공백을 정규화하므로 모바일 표시 제목을 그대로 전송할 수 있다.
-
-### description
-
-시나리오 설명이다.
-
-예시:
-
-- 병원 진료 예약 전화 상황
-
-### userMessage
-
-사용자의 현재 발화이다.
-
-예시:
-
-- 내일 오후에 내과 진료 예약 가능할까요?
-- 네, 맞습니다.
-- 오후 4시로 하겠습니다.
-
-### conversationState
-
-현재 대화 상태이다.
-
-초기 요청에서는 `greeting`을 사용한다. 선언형 공통 그래프는 `opening → active → END` 상태를 사용하고, 예약·교수님 상세 그래프는 아래와 같은 도메인 상태를 사용한다.
-
-예시:
-
-- greeting
-- asking_department
-- asking_date
-- asking_time
-- confirming_info
-- checking_availability
-- reservation_available
-- reservation_unavailable
-- suggest_alternative
-- reservation_confirmed
-- closing
-- END
-
-### scenarioState
-
-서버가 이전 응답에서 내려준 시나리오 상태 객체이다.
-
-Flutter는 이 값을 그대로 저장했다가 다음 /chat 요청에 다시 전달한다.
-
-초기 요청에서는 빈 객체를 보낼 수 있다.
-
-예시:
-
-    {}
-
-### history
-
-이전 대화 기록이다.
-
-서버는 history를 사용하여 LLM 응답 반복을 줄이고, 문맥 기반 응답 검증에 활용한다.
-
-형식:
-
-- role: user 또는 assistant
-- content: 발화 내용
-
-레거시 클라이언트의 `turns` 필드도 같은 형식으로 지원한다. 둘 다 전달되면 `history`를 우선한다.
-
----
-
-## Request Example
-
-    {
-      "category": "예약",
-      "title": "🏥 병원 예약",
-      "description": "병원 진료 예약 전화 상황",
-      "userMessage": "내일 오후에 내과 진료 예약 가능할까요?",
-      "conversationState": "greeting",
-      "scenarioState": {},
-      "history": []
-    }
-
----
-
-## Response Body
-
-### response
-
-사용자에게 보여줄 AI 응답 문장이다.
-
-Flutter의 채팅 UI에는 이 값을 표시한다.
-
-### etiquetteTip
-
-통화 예절 또는 말하기 팁이다.
-
-현재는 null일 수 있다.
-
-### recommendedReplies
-
-사용자에게 추천할 답변 목록이다.
-
-Flutter에서는 추천 답변 버튼 또는 칩 UI로 표시할 수 있다.
-
-### conversationState
-
-서버가 갱신한 현재 대화 상태이다.
-
-Flutter는 이 값을 저장한 뒤 다음 요청의 conversationState로 다시 전달한다.
-
-### shouldEndCall
-
-통화를 종료해야 하는지 여부이다.
-
-true이면 Flutter는 통화 종료 처리 또는 결과 화면 이동을 수행한다.
-
-### scenarioState
-
-갱신된 시나리오 상태 객체이다.
-
-Flutter는 이 값을 그대로 저장한 뒤 다음 요청에 다시 전달한다.
-
----
-
-## Response Example
-
-    {
-      "response": "네, 내일 오후 3시에 내과 진료 예약이 가능합니다. 이 시간으로 진행하시겠습니까?",
-      "etiquetteTip": null,
-      "recommendedReplies": [
-        "네, 그 시간으로 예약하고 싶습니다.",
-        "다른 시간도 확인할 수 있을까요?",
-        "잠시만요, 시간을 다시 확인해볼게요."
-      ],
-      "conversationState": "reservation_available",
-      "shouldEndCall": false,
-      "scenarioState": {
-        "intent": "reservation",
-        "department": "내과",
-        "date": "내일",
-        "time": "오후",
-        "conversation_state": "reservation_available",
-        "availability_status": "available",
-        "available_time": "오후 3시",
-        "alternative_times": [],
-        "reservation_confirmed": null
-      }
-    }
-
----
-
-## Flutter 저장 규칙
-
-Flutter는 /chat 응답을 받은 뒤 다음 값을 저장해야 한다.
-
-- conversationState
-- scenarioState
-- recommendedReplies
-- shouldEndCall
-
-다음 요청에서는 저장된 conversationState와 scenarioState를 다시 서버에 전달해야 한다.
-
----
-
-## history 누적 규칙
-
-Flutter는 사용자의 발화와 AI 응답을 순서대로 누적한다.
-
-예시:
-
-    [
-      {
-        "role": "user",
-        "content": "내일 오후에 진료 예약 가능할까요?"
-      },
-      {
-        "role": "assistant",
-        "content": "원하시는 진료과를 알려주시겠어요?"
-      }
-    ]
-
-주의 사항:
-
-- 현재 전송하는 userMessage와 history의 마지막 user 발화가 중복되지 않도록 관리한다.
-- 서버는 history를 LLM 응답 생성 및 검증에 참고한다.
-
----
-
-## 통화 종료 규칙
-
-서버 응답에서 shouldEndCall이 true이면 Flutter는 통화를 종료한다.
-
-예시:
-
-    {
-      "conversationState": "END",
-      "shouldEndCall": true
-    }
-
-Flutter 처리 예시:
-
-- STT 중지
-- 녹음 종료
-- 음성 분석 요청
-- 통화 결과 화면 이동
-
----
-
-## 오류 응답 계약
-
-AI 처리 오류는 정상 응답 문장으로 바꾸지 않고 HTTP 상태와 오류 코드로 전달한다.
-
-    {
-      "error": {
-        "code": "AI_RESPONSE_VALIDATION_FAILED",
-        "message": "AI 응답을 검증하지 못했습니다. 요청을 다시 시도해 주세요."
-      }
-    }
-
-| HTTP 상태 | code | 의미 |
+이 문서는 Flutter 앱과 MaeumCall AI Server 2.1 사이의 통화 상태 계약을 정의한다. 필드가 추가되거나 잘못된 타입이 전달되면 서버는 이를 무시하지 않고 `422 REQUEST_VALIDATION_FAILED`로 거부한다.
+
+## POST `/chat`
+
+### 요청
+
+| 필드 | 타입 | 필수 | 규칙 |
+|---|---|---:|---|
+| `category` | string | 예 | 등록된 시나리오 카테고리, 1~50자 |
+| `title` | string | 예 | 등록된 시나리오 제목, 1~100자 |
+| `description` | string | 예 | 화면에 등록된 시나리오 설명, 최대 2,000자 |
+| `userMessage` | string | 예 | 현재 사용자 발화, 1~4,000자 |
+| `nickname` | string/null | 아니요 | 사용자 표시 이름, 최대 50자 |
+| `turns` | array | 아니요 | 완료된 이전 턴, 최대 100개 |
+| `history` | array | 아니요 | `turns`와 동일한 대체 필드 |
+| `conversationState` | string | 아니요 | 직전 서버 응답의 값 |
+| `scenarioState` | object | 아니요 | 직전 서버 응답의 값, 최대 64개 필드 |
+
+`turns`와 `history`는 동시에 보낼 수 없다. 신규 클라이언트는 `turns`를 사용한다. 각 턴은 아래 두 필드만 허용한다.
+
+```json
+{
+  "role": "user",
+  "text": "내일 오후에 예약하고 싶습니다."
+}
+```
+
+- `role`: `user` 또는 `assistant`
+- `text`: 1~4,000자의 완료된 발화
+- 현재 `userMessage`와 아직 응답이 완성되지 않은 UI placeholder는 `turns`에 넣지 않는다.
+
+초기 요청은 상태를 생략하거나 `scenarioState`를 빈 객체로 보낼 수 있다.
+
+```json
+{
+  "category": "예약",
+  "title": "🏥 병원 예약",
+  "description": "병원 진료 예약 전화 상황",
+  "userMessage": "내일 오후에 내과 진료 예약 가능할까요?",
+  "conversationState": "greeting",
+  "scenarioState": {},
+  "turns": []
+}
+```
+
+### 응답
+
+성공 응답은 다음 필드를 항상 반환한다.
+
+| 필드 | 타입 | 의미 |
 |---|---|---|
-| 422 | `UNSUPPORTED_SCENARIO` | 등록되지 않은 category/title 조합 |
-| 422 | `INVALID_SCENARIO_STATE` | `scenarioState` 내부 상태 계약 위반 |
+| `response` | string | 상대 역할의 다음 발화 |
+| `etiquetteTip` | string/null | 현재 턴에 적용할 통화 팁 |
+| `recommendedReplies` | string[] | 사용자 답변 후보, 최대 10개 |
+| `conversationState` | string | 갱신된 대화 상태 |
+| `shouldEndCall` | boolean | 클라이언트가 종료 절차를 시작해야 하는지 여부 |
+| `scenarioState` | object | 다음 요청에 그대로 전달할 버전 지정 상태 |
+
+```json
+{
+  "response": "내일 오후 내과 진료로 확인했습니다. 원하시는 시간을 말씀해 주세요.",
+  "etiquetteTip": null,
+  "recommendedReplies": [
+    "오후 3시가 가능할까요?",
+    "가능한 오후 시간을 알려주세요.",
+    "가장 빠른 시간으로 부탁드립니다."
+  ],
+  "conversationState": "asking_time",
+  "shouldEndCall": false,
+  "scenarioState": {
+    "scenario_key": "예약:병원 예약",
+    "state_version": 1,
+    "intent": "reservation",
+    "department": "내과",
+    "date": "내일",
+    "time": "오후",
+    "conversation_state": "asking_time"
+  }
+}
+```
+
+## 상태 소유권 규칙
+
+1. 서버만 `conversationState`와 `scenarioState`를 생성·변경한다.
+2. 모바일은 성공 응답의 두 상태를 함께 저장하고 다음 `/chat` 요청에 그대로 전달한다.
+3. `scenario_key`는 상태가 현재 `category/title`에 속하는지 검증한다.
+4. `state_version`은 서버가 해석할 수 있는 상태 스키마인지 검증한다.
+5. 최상위 `conversationState`와 `scenarioState.conversation_state`가 다르면 요청을 거부한다.
+6. `END` 상태에 새 발화를 보내면 `409 CONVERSATION_ALREADY_ENDED`를 반환한다.
+7. 실패 응답은 대화 기록이나 상태에 반영하지 않는다.
+
+## 종료 처리
+
+`shouldEndCall`이 `true`이면 모바일은 새 대화 요청을 만들지 않고 STT 중지, 녹음 종료, 음성 분석, 결과 화면 이동 순서로 종료한다.
+
+## 보조 API
+
+- 추천 답변: `POST /chat/suggest`
+- 대화 개선: `POST /chat/improve`
+- 음성 분석: `POST /voice/analyze`
+- 음성 기준선 조회: `GET /voice/baseline`
+- 캘리브레이션 확정: `POST /voice/calibrate/finalize`
+
+이전 `/suggest`, `/improve`, `/analyze` 별칭은 제공하지 않는다. 클라이언트와 서버의 경로 불일치를 404로 드러내 배포 계약 오류를 조기에 발견한다.
+
+## 오류 응답
+
+검증 및 서비스 오류는 같은 envelope를 사용한다.
+
+```json
+{
+  "error": {
+    "code": "SCENARIO_STATE_MISMATCH",
+    "message": "현재 시나리오와 전달된 상태가 일치하지 않습니다. 통화를 다시 시작해 주세요."
+  }
+}
+```
+
+요청 스키마 오류에는 `error.details`가 추가된다.
+
+| HTTP | code | 의미 |
+|---:|---|---|
+| 409 | `CONVERSATION_ALREADY_ENDED` | 종료된 통화에 새 발화를 전송함 |
+| 422 | `REQUEST_VALIDATION_FAILED` | 타입, 길이, 필드 또는 턴 계약 위반 |
+| 422 | `UNSUPPORTED_SCENARIO` | 등록되지 않은 `category/title` 조합 |
+| 422 | `SCENARIO_STATE_MISMATCH` | 다른 시나리오의 상태 전달 |
+| 422 | `SCENARIO_STATE_VERSION_UNSUPPORTED` | 지원하지 않는 상태 버전 |
+| 422 | `SCENARIO_STATE_INVALID` | 허용하지 않은 상태 필드 포함 |
+| 422 | `CONVERSATION_STATE_MISMATCH` | 두 상태 표현이 서로 다름 |
 | 500 | `PROMPT_CONFIGURATION_ERROR` | 프롬프트 레지스트리 또는 파일 구성 오류 |
 | 502 | `AI_PROVIDER_EXECUTION_FAILED` | 모델 호출 실행 실패 |
-| 502 | `AI_RESPONSE_VALIDATION_FAILED` | 재요청 후에도 구조화 출력 계약 위반 |
-| 503 | `AI_PROVIDER_UNAVAILABLE` | API 키, SDK 또는 로컬 모델을 사용할 수 없음 |
+| 502 | `AI_RESPONSE_VALIDATION_FAILED` | 제한 재요청 후에도 출력 계약 위반 |
+| 503 | `AI_PROVIDER_UNAVAILABLE` | 모델 제공자를 사용할 수 없음 |
+| 503 | `VOICE_BASELINE_SECURITY_NOT_CONFIGURED` | 음성 기준선 ID 보호 비밀값 미설정 |
 
-클라이언트는 5xx 응답을 성공 대화로 저장하지 않으며, 같은 사용자 발화를 자동으로 반복 전송할 때는 중복 요청 정책을 별도로 적용해야 한다.
+음성 API도 같은 envelope를 사용하며 `VOICE_MODE_INVALID`, `VOICE_FILE_TOO_LARGE`, `VOICE_CONVERTER_UNAVAILABLE`, `VOICE_CONVERSION_FAILED`, `VOICE_ANALYSIS_FAILED`, `VOICE_BASELINE_NOT_FOUND`, `VOICE_CALIBRATION_EMPTY`처럼 단계별 코드를 반환한다. 재캘리브레이션의 reset은 진행 중 샘플만 제거하며 마지막으로 확정된 기준선은 finalize 성공 전까지 유지한다.
+
+모바일은 408, 429, 5xx만 제한적으로 재요청할 수 있다. 4xx 계약 오류는 같은 payload로 재시도하지 않고 사용자에게 명시적으로 알린다.

@@ -2,6 +2,34 @@
 
 이 프로젝트의 주요 변경 사항을 기록합니다. 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 따르고 버전은 Semantic Versioning을 사용합니다.
 
+## [2.1.0] - 2026-08-17
+
+### Added
+
+- `scenario_key`, `state_version`, 필드 allowlist 기반의 클라이언트 상태 계약
+- 요청별 `X-Request-ID`와 모델·음성 보안·ffmpeg를 확인하는 `/health/ready`
+- 상태 변조, 종료 후 요청, 단어 빈도 입력, 정확한 수신 통화 정책 회귀 테스트
+
+### Changed
+
+- LangGraph를 1.2.11로 올리고 Python 3.11+ 실행 기준을 명확화
+- 7개 상세 그래프의 API 응답 조립을 공통 상태 계약으로 통합
+- `/chat`, `/chat/suggest`, `/chat/improve`, 음성 API의 입력 타입과 오류 envelope 강화
+- Flutter가 완료된 이전 턴과 서버 상태를 보존하고 서버 종료 신호를 실행하도록 연동
+- 재캘리브레이션 시작 시 확정된 음성 기준선은 유지하고 진행 중 샘플만 초기화
+
+### Removed
+
+- 경로 불일치를 숨기던 `/suggest`, `/improve`, `/analyze` 호환 별칭
+- 서버 장애를 정상 대화처럼 표시하던 모바일 고정 응답
+- 역할과 시나리오 제목을 추정하는 문자열 휴리스틱
+
+### Security
+
+- 실제 사용자 ID 대신 운영 비밀값 기반 HMAC-SHA256 식별자로 음성 기준선 저장
+- 기준선 식별자 비밀값이 없으면 저장 기능을 명시적으로 중단하도록 변경
+- 음성 변환 내부 오류를 노출하지 않고 타입이 있는 공개 오류로 통일
+
 ## [2.0.0] - 2026-08-17
 
 ### Added
