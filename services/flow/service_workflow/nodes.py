@@ -64,7 +64,12 @@ def build_decide_node(spec: ServiceWorkflowSpec) -> Node:
                 "should_end_call": False,
             }
         if current_state == "cancelled":
-            return _close_or_stay(user_action, "cancelled", missing_fields)
+            return _close_or_stay(
+                user_action,
+                "cancelled",
+                missing_fields,
+                workflow_status="cancelled",
+            )
         if current_state == "closing":
             return {
                 "conversation_state": "closing",
@@ -137,7 +142,27 @@ def build_decide_node(spec: ServiceWorkflowSpec) -> Node:
             }
 
         if current_state == spec.ready_state:
-            return _close_or_stay(user_action, spec.ready_state, missing_fields, ready=True)
+            if user_action == "complete_simulation":
+                return {
+                    "conversation_state": spec.completed_state,
+                    "workflow_status": "completed",
+                    "missing_fields": missing_fields,
+                    "should_end_call": False,
+                }
+            return {
+                "conversation_state": spec.ready_state,
+                "workflow_status": "ready",
+                "missing_fields": missing_fields,
+                "should_end_call": False,
+            }
+
+        if current_state == spec.completed_state:
+            return _close_or_stay(
+                user_action,
+                spec.completed_state,
+                missing_fields,
+                workflow_status="completed",
+            )
 
         next_state = spec.collecting_state if missing_fields else spec.confirming_state
         return {
@@ -164,6 +189,8 @@ def build_response_node(spec: ServiceWorkflowSpec) -> Node:
             message = f"{spec.confirmation_prefix} {summary}. 맞습니까?"
         elif conversation_state == spec.ready_state:
             message = spec.ready_message_for(fields)
+        elif conversation_state == spec.completed_state:
+            message = spec.simulation_completion_message_for(fields)
         elif conversation_state == "cancelled":
             message = spec.cancelled_message
         elif conversation_state == "closing":
@@ -191,6 +218,8 @@ def build_replies_node(spec: ServiceWorkflowSpec) -> Node:
             replies = ["네, 맞습니다.", "수정할 내용이 있습니다.", "진행을 취소하겠습니다."]
         elif conversation_state == spec.ready_state:
             replies = list(spec.ready_replies)
+        elif conversation_state == spec.completed_state:
+            replies = ["네, 결과를 확인했습니다.", "통화를 마칠게요."]
         elif conversation_state == "cancelled":
             replies = ["네, 통화를 마치겠습니다."]
         elif conversation_state == "closing":
@@ -226,7 +255,7 @@ def _close_or_stay(
     current_state: str,
     missing_fields: list[str],
     *,
-    ready: bool = False,
+    workflow_status: str,
 ) -> dict[str, Any]:
     if user_action == "go_closing":
         return {
@@ -236,7 +265,7 @@ def _close_or_stay(
         }
     return {
         "conversation_state": current_state,
-        "workflow_status": "ready" if ready else "cancelled",
+        "workflow_status": workflow_status,
         "missing_fields": missing_fields,
         "should_end_call": False,
     }

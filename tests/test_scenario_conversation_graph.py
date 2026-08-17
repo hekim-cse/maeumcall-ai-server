@@ -33,6 +33,8 @@ def test_all_registered_scenarios_route_through_graph(monkeypatch, config):
     assert len(response.recommendedReplies) == 3
     assert response.scenarioState["scenario_key"] == config.key
     assert response.scenarioState["turn_count"] == 1
+    assert response.simulation.mode == "simulation"
+    assert response.simulation.externalEffect is False
 
 
 def test_scenario_graph_preserves_turn_count(monkeypatch):

@@ -89,6 +89,7 @@ def test_each_detailed_workflow_collects_confirms_and_reaches_ready_state(
         (
             _analysis(spec, values=values),
             _analysis(spec, action="confirm_details"),
+            _analysis(spec, action="complete_simulation"),
         )
     )
     monkeypatch.setattr(
@@ -117,6 +118,15 @@ def test_each_detailed_workflow_collects_confirms_and_reaches_ready_state(
     assert second["workflow_status"] == "ready"
     assert "확인" in second["ai_message"]
     assert any(token in second["ai_message"] for token in ("실제", "조회", "확인"))
+
+    completed = contract.graph.invoke(
+        {**second, "user_message": "네, 전화 연습 결과를 진행해 주세요."}
+    )
+    assert completed["conversation_state"] == spec.completed_state
+    assert completed["workflow_status"] == "completed"
+    assert "시뮬레이션" in completed["ai_message"]
+    assert "실제 기관·업체 시스템" in completed["ai_message"]
+    assert completed["fields"] == values
 
 
 @pytest.mark.parametrize("spec,contract", WORKFLOWS)

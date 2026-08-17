@@ -82,6 +82,7 @@
 | `conversationState` | string | 갱신된 대화 상태 |
 | `shouldEndCall` | boolean | 클라이언트가 종료 절차를 시작해야 하는지 여부 |
 | `scenarioState` | object | 다음 요청에 그대로 전달할 버전 지정 상태 |
+| `simulation` | object | `mode: simulation`, `externalEffect: false` 고정 메타데이터 |
 
 ```json
 {
@@ -102,9 +103,15 @@
     "date": "내일",
     "time": "오후",
     "conversation_state": "asking_time"
+  },
+  "simulation": {
+    "mode": "simulation",
+    "externalEffect": false
   }
 }
 ```
+
+`simulation.externalEffect`는 항상 `false`다. 예약 확정, 환불 승인, A/S 접수 완료 같은 문장은 전화 연습 그래프 안의 모의 결과이며 실제 기관·업체 시스템에 영향을 주지 않는다. 배달·시청·고객센터 상세 그래프는 `정보 확인 → 처리 준비 → 모의 처리 완료` 순서를 지키며, 사용자가 처리 진행을 명시한 경우에만 완료 상태로 전이한다.
 
 ## 상태 소유권 규칙
 

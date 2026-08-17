@@ -99,5 +99,9 @@ def test_chat_route_dispatches_detailed_registration(monkeypatch):
 
     assert response.status_code == 200
     body = response.json()
+    assert body["simulation"] == {
+        "mode": "simulation",
+        "externalEffect": False,
+    }
     assert body["scenarioState"]["scenario_key"] == "예약:병원 예약"
     assert body["conversationState"] == "asking_department"

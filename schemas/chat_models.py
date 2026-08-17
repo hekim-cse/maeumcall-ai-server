@@ -58,6 +58,11 @@ class ChatRequest(BaseModel):
         return [turn.model_dump() for turn in (turns or [])]
 
 
+class SimulationMetadata(APIModel):
+    mode: Literal["simulation"] = "simulation"
+    externalEffect: Literal[False] = False
+
+
 class ChatResponse(APIModel):
     response: str = Field(min_length=1, max_length=4_000)
     etiquetteTip: str | None = Field(default=None, max_length=1_000)
@@ -67,6 +72,7 @@ class ChatResponse(APIModel):
     conversationState: str = Field(min_length=1, max_length=100)
     shouldEndCall: bool
     scenarioState: dict[str, Any]
+    simulation: SimulationMetadata = Field(default_factory=SimulationMetadata)
 
 
 # === 짧은 제안(suggest) ===

@@ -24,7 +24,7 @@ def analyze_service_workflow_message(
     current_fields_json = json.dumps(current_fields, ensure_ascii=False, sort_keys=True)
     field_keys_json = json.dumps(list(spec.field_keys), ensure_ascii=False)
     closing_states_json = json.dumps(
-        [spec.ready_state, "cancelled", *(guard.state for guard in spec.guards)],
+        [spec.completed_state, "cancelled", *(guard.state for guard in spec.guards)],
         ensure_ascii=False,
     )
     prompt = f"""
@@ -51,6 +51,7 @@ def analyze_service_workflow_message(
 행동 기준:
 - 새 업무 정보를 말하면 provide_details
 - {spec.confirming_state}에서 정보가 맞다고 명시적으로 확인하면 confirm_details
+- {spec.ready_state}에서 모의 처리를 진행해 달라고 명시하면 complete_simulation
 - 이미 말한 정보를 수정하려 하면 change_detail, change_field는 {field_keys_json} 중 하나
 - 업무 진행을 취소하면 cancel_workflow
 - {closing_states_json} 중 한 상태에서 안전 조치 확인 또는 마무리 의사를 밝히면 go_closing

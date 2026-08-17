@@ -12,6 +12,7 @@ WORKFLOW_ACTIONS = frozenset(
     {
         "provide_details",
         "confirm_details",
+        "complete_simulation",
         "change_detail",
         "cancel_workflow",
         "go_closing",
@@ -19,7 +20,7 @@ WORKFLOW_ACTIONS = frozenset(
         "unknown",
     }
 )
-WORKFLOW_STATUSES = frozenset({"in_progress", "ready", "cancelled", "blocked"})
+WORKFLOW_STATUSES = frozenset({"in_progress", "ready", "completed", "cancelled", "blocked"})
 MAX_WORKFLOW_FIELD_LENGTH = 1_000
 
 
@@ -85,6 +86,7 @@ class ServiceWorkflowSpec:
     fields: tuple[FieldContract, ...]
     confirmation_prefix: str
     ready_message: str
+    simulation_completion_message: str
     cancelled_message: str
     closing_message: str
     ready_replies: tuple[str, ...]
@@ -98,18 +100,34 @@ class ServiceWorkflowSpec:
             raise ValueError("workflow identity metadata must not be empty")
         if not self.fields or len(field_keys) != len(set(field_keys)):
             raise ValueError(f"workflow fields must be non-empty and unique: {self.graph_name}")
-        states = {self.collecting_state, self.confirming_state, self.ready_state}
-        if len(states) != 3 or "END" in states:
+        states = {
+            self.collecting_state,
+            self.confirming_state,
+            self.ready_state,
+            self.completed_state,
+        }
+        if len(states) != 4 or "END" in states:
             raise ValueError(f"workflow state names must be unique: {self.graph_name}")
         if not all(
             (
                 self.confirmation_prefix,
                 self.ready_message,
+                self.simulation_completion_message,
                 self.cancelled_message,
                 self.closing_message,
             )
         ):
             raise ValueError(f"workflow response messages must not be empty: {self.graph_name}")
+        if "{branch_label}" not in self.simulation_completion_message:
+            raise ValueError(
+                f"workflow simulation completion message must include branch_label: {self.graph_name}"
+            )
+        try:
+            self.simulation_completion_message.format(branch_label="검증 값")
+        except (IndexError, KeyError, ValueError) as exc:
+            raise ValueError(
+                f"workflow simulation completion message is invalid: {self.graph_name}"
+            ) from exc
         if not self.ready_replies or any(not reply.strip() for reply in self.ready_replies):
             raise ValueError(f"workflow ready replies must not be empty: {self.graph_name}")
         branch_messages = dict(self.ready_messages_by_branch)
@@ -154,6 +172,7 @@ class ServiceWorkflowSpec:
                 self.collecting_state,
                 self.confirming_state,
                 self.ready_state,
+                self.completed_state,
                 "cancelled",
                 "closing",
                 "END",
@@ -164,6 +183,28 @@ class ServiceWorkflowSpec:
     def ready_message_for(self, fields: dict[str, str | None]) -> str:
         branch_value = fields.get(self.branch_field) if self.branch_field else None
         return dict(self.ready_messages_by_branch).get(branch_value, self.ready_message)
+
+    @property
+    def completed_state(self) -> str:
+        return f"{self.intent}_simulation_completed"
+
+    def simulation_completion_message_for(self, fields: dict[str, str | None]) -> str:
+        branch_value = fields.get(self.branch_field) if self.branch_field else None
+        branch_contract = next(
+            (field for field in self.fields if field.key == self.branch_field),
+            None,
+        )
+        branch_label = (
+            branch_contract.display_value(branch_value)
+            if branch_contract is not None
+            else self.title
+        )
+        if not isinstance(branch_label, str) or not branch_label:
+            raise ValueError(f"workflow branch label is required: {self.graph_name}")
+        return (
+            self.simulation_completion_message.format(branch_label=branch_label)
+            + " 실제 기관·업체 시스템에는 접수·승인·변경이 반영되지 않았습니다."
+        )
 
     def matching_guard(self, fields: dict[str, str | None]) -> GuardContract | None:
         return next(
@@ -240,13 +281,22 @@ def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: dict[str, 
     if conversation_state not in {"closing", "END"}:
         expected_statuses = {
             spec.ready_state: "ready",
+            spec.completed_state: "completed",
             "cancelled": "cancelled",
             **{guard.state: "blocked" for guard in spec.guards},
         }
         expected_status = expected_statuses.get(conversation_state, "in_progress")
         if workflow_status != expected_status:
             _invalid_state()
-    if conversation_state in {spec.confirming_state, spec.ready_state} and actual_missing:
+    if (
+        conversation_state
+        in {
+            spec.confirming_state,
+            spec.ready_state,
+            spec.completed_state,
+        }
+        and actual_missing
+    ):
         _invalid_state()
 
 

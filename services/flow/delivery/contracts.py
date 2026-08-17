@@ -69,10 +69,13 @@ ORDER_CHANGE_SPEC = ServiceWorkflowSpec(
         "변경 요청 정보와 최종 확인이 완료되었습니다. 실제 변경 가능 여부는 주문 시스템의 "
         "접수·조리 상태를 조회한 뒤 확정해야 하며, 현재 통화에서는 변경 완료로 처리하지 않습니다."
     ),
+    simulation_completion_message=(
+        "주문 변경 시뮬레이션에서 요청을 검토해 '{branch_label}' 방식으로 처리 완료했습니다."
+    ),
     cancelled_message="주문 변경 요청을 취소했습니다. 실제 주문 상태에는 변경이 없습니다.",
     closing_message="확인했습니다. 주문 상태 조회나 실제 변경 처리가 필요하면 연결된 주문 시스템에서 이어서 진행해야 합니다.",
     ready_replies=(
-        "네, 확인했습니다.",
+        "네, 모의 처리를 진행해 주세요.",
         "변경 가능 여부를 조회해 주세요.",
         "수정할 내용이 있습니다.",
     ),
@@ -147,10 +150,13 @@ DELIVERY_DELAY_SPEC = ServiceWorkflowSpec(
         "지연 문의에 필요한 정보가 확인되었습니다. 실제 위치·도착 예정 시간·지연 사유는 "
         "주문 및 배달 추적 시스템을 조회해야 하므로 현재 통화에서 임의로 안내하지 않습니다."
     ),
+    simulation_completion_message=(
+        "배달 지연 시뮬레이션에서 '{branch_label}' 후속 조치 안내를 완료했습니다."
+    ),
     cancelled_message="배달 지연 조회 요청을 취소했습니다. 주문 상태에는 변경이 없습니다.",
     closing_message="확인했습니다. 최신 배달 상태는 연결된 주문·배달 추적 시스템에서 이어서 확인해야 합니다.",
     ready_replies=(
-        "네, 조회를 진행해 주세요.",
+        "네, 모의 처리를 진행해 주세요.",
         "수정할 내용이 있습니다.",
         "상담원 연결이 필요해요.",
     ),
@@ -233,9 +239,16 @@ REFUND_REDELIVERY_SPEC = ServiceWorkflowSpec(
         "문제 내용과 희망 처리가 확인되어 검토 요청을 전달할 준비가 되었습니다. "
         "환불·재배달 승인이나 완료는 주문·결제 시스템의 확인 전에는 확정하지 않습니다."
     ),
+    simulation_completion_message=(
+        "환불·재배달 시뮬레이션에서 '{branch_label}' 요청을 승인하고 모의 처리를 완료했습니다."
+    ),
     cancelled_message="환불·재배달 검토 요청을 취소했습니다. 실제 주문이나 결제 상태에는 변경이 없습니다.",
     closing_message="확인했습니다. 실제 승인과 처리는 연결된 주문·결제 시스템에서 이어서 진행해야 합니다.",
-    ready_replies=("네, 검토를 진행해 주세요.", "수정할 내용이 있습니다.", "처리를 취소할게요."),
+    ready_replies=(
+        "네, 모의 처리를 진행해 주세요.",
+        "수정할 내용이 있습니다.",
+        "처리를 취소할게요.",
+    ),
     branch_field="resolution_preference",
     ready_messages_by_branch=(
         (
