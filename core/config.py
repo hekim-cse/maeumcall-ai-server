@@ -32,6 +32,30 @@ def getenv_int(name: str, default: int, *, minimum: int = 1) -> int:
         raise ValueError(f"{name} must be at least {minimum}")
     return value
 
+
+def getenv_secret(name: str, default: str = "") -> str:
+    """Load a secret from an environment value or an absolute-path secret file."""
+    direct_value = getenv(name)
+    secret_file = getenv(f"{name}_FILE")
+    if direct_value and secret_file:
+        raise ValueError(f"Set only one of {name} and {name}_FILE")
+    if direct_value:
+        return direct_value
+    if not secret_file:
+        return default
+
+    path = Path(secret_file)
+    if not path.is_absolute():
+        raise ValueError(f"{name}_FILE must be an absolute path")
+    try:
+        value = path.read_text(encoding="utf-8").strip()
+    except OSError as exc:
+        raise ValueError(f"Unable to read {name}_FILE") from exc
+    if not value:
+        raise ValueError(f"{name}_FILE must not be empty")
+    return value
+
+
 OPENAI_API_KEY = getenv("OPENAI_API_KEY", "")
 OPENAI_MODEL = getenv("OPENAI_MODEL", "gpt-4o-mini")
 OPENAI_TIMEOUT = getenv_int("OPENAI_TIMEOUT", 8)
@@ -50,12 +74,12 @@ HF_MODEL_REVISION = getenv(
 _cors_origins = getenv("CORS_ALLOW_ORIGINS", "*")
 CORS_ALLOW_ORIGINS = [item.strip() for item in _cors_origins.split(",") if item.strip()]
 AUDIO_UPLOAD_MAX_BYTES = getenv_int("AUDIO_UPLOAD_MAX_MB", 20) * 1024 * 1024
-BASELINE_ID_HMAC_SECRET = getenv("BASELINE_ID_HMAC_SECRET", "")
+BASELINE_ID_HMAC_SECRET = getenv_secret("BASELINE_ID_HMAC_SECRET", "")
 DATABASE_URL = getenv("DATABASE_URL", "")
 DATABASE_POOL_SIZE = getenv_int("DATABASE_POOL_SIZE", 5)
 DATABASE_MAX_OVERFLOW = getenv_int("DATABASE_MAX_OVERFLOW", 10, minimum=0)
 DATABASE_CONNECT_TIMEOUT = getenv_int("DATABASE_CONNECT_TIMEOUT", 3)
 KAKAO_APP_ID = getenv("KAKAO_APP_ID", "")
 FIREBASE_PROJECT_ID = getenv("FIREBASE_PROJECT_ID", "")
-AUTH_SUBJECT_HMAC_SECRET = getenv("AUTH_SUBJECT_HMAC_SECRET", "")
+AUTH_SUBJECT_HMAC_SECRET = getenv_secret("AUTH_SUBJECT_HMAC_SECRET", "")
 KAKAO_TOKEN_VERIFY_TIMEOUT = getenv_int("KAKAO_TOKEN_VERIFY_TIMEOUT", 5)

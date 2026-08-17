@@ -20,7 +20,7 @@ def test_app_metadata_and_health_contract():
     assert root.status_code == 200
     assert root.json() == {
         "name": "MaeumCall AI Server",
-        "version": "2.1.0",
+        "version": "2.2.0",
         "docs": "/docs",
     }
 

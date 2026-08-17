@@ -53,7 +53,7 @@ app = FastAPI(
         "마음콜의 고도화 프로젝트: LangGraph 기반 상태 관리, 검증 가능한 "
         "응답 생성, 통화 음성 분석을 제공하는 AI 서버"
     ),
-    version="2.1.0",
+    version="2.2.0",
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,

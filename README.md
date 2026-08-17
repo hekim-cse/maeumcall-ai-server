@@ -363,7 +363,7 @@ cp .env.example .env
 
 ### 10-3. PostgreSQL 시작과 스키마 적용
 
-`.env.example`을 기준으로 실제 로컬 비밀값과 `DATABASE_URL`을 `.env`에 설정한 뒤 실행합니다. 사용자 인증 기능에는 `KAKAO_APP_ID`, `FIREBASE_PROJECT_ID`, 32바이트 이상의 별도 `AUTH_SUBJECT_HMAC_SECRET`, Firebase Admin 자격 증명이 필요합니다. 인증용 HMAC 비밀값은 음성 기준선 식별자 비밀값과 분리합니다.
+`.env.example`을 기준으로 실제 로컬 설정과 `DATABASE_URL`을 `.env`에 지정한 뒤 실행합니다. 사용자 인증 기능에는 `KAKAO_APP_ID`, `FIREBASE_PROJECT_ID`, 32바이트 이상의 별도 인증용 HMAC 비밀값, Firebase Admin 자격 증명이 필요합니다. 비밀값은 환경 변수에 직접 넣거나 `AUTH_SUBJECT_HMAC_SECRET_FILE`·`BASELINE_ID_HMAC_SECRET_FILE`에 저장소 밖 절대 경로를 지정하며, 같은 비밀값의 두 방식을 동시에 설정하지 않습니다. 로컬 파일은 소유자만 읽을 수 있도록 권한을 제한하고, 인증용 HMAC 비밀값은 음성 기준선 식별자 비밀값과 분리합니다.
 
 ```bash
 docker compose up -d postgres

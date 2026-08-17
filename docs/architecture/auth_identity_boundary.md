@@ -47,7 +47,7 @@ sequenceDiagram
 
 기존 버전은 `users/{Kakao ID}`에 데이터를 저장했다. 새 규칙을 먼저 배포하면 기존 문서에 접근할 수 없으므로 다음 순서를 지킨다.
 
-1. 운영 자격 증명과 운영용 `AUTH_SUBJECT_HMAC_SECRET`을 안전한 비밀 저장소에서 주입한다.
+1. 운영 자격 증명과 운영용 인증 HMAC 비밀값을 안전한 비밀 저장소에서 주입한다. 로컬·파일 마운트 환경은 `AUTH_SUBJECT_HMAC_SECRET_FILE`에 저장소 밖 절대 경로를 지정할 수 있다.
 2. 실제 이관 대상만 적은 저장소 밖 manifest로 dry-run을 실행한다.
 3. 모든 대상이 `READY` 또는 `ALREADY_COPIED`인지 검토한다.
 4. 같은 manifest에 `--apply`를 사용해 문서별 트랜잭션을 실행한다.
@@ -55,6 +55,19 @@ sequenceDiagram
 6. Firebase Console에서 레거시 문서가 남지 않았는지 별도로 확인한다.
 
 `DESTINATION_CONFLICT`는 자동 병합하지 않는다. 새 UID 문서에 다른 내용이 있다는 뜻이므로 어떤 데이터가 최신인지 업무 판단 후 별도 처리해야 한다. `SOURCE_NOT_FOUND`도 대상을 추측하지 않고 manifest 또는 운영 데이터를 확인한다.
+
+### 2026-08-18 운영 이관 검증
+
+- 대상 프로젝트: `call-phobia-app`
+- 대상 컬렉션: `users`
+- 이관 전: 숫자형 Kakao subject 문서 5개, 내부 UID 문서 0개
+- dry-run: `READY` 5개, 누락·충돌 0개
+- 트랜잭션 적용: `MIGRATED` 5개
+- 이관 후: 내부 UID 문서 5개, 숫자형 레거시 문서 0개
+- 데이터 보존: 이관 전후 문서 수와 필드 구조 분포 동일
+- 민감정보 정리: 실제 subject를 담았던 저장소 밖 manifest는 검증 직후 삭제
+
+이 결과는 특정 사용자 ID를 문서나 로그에 복사하지 않고 건수·상태·필드 구조만으로 검증했다. Firestore Security Rules는 새 모바일 인증 버전 배포와 함께 활성화해 구버전 클라이언트 차단 시점을 통제한다.
 
 ## 오류 경계
 
