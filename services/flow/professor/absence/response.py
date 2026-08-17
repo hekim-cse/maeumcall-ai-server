@@ -4,6 +4,26 @@ from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.professor.absence.graph import professor_absence_graph
 from services.flow.professor.absence.policy import compact_professor_absence_state
 from services.flow.common.scenario_keys import scenario_matches
+from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
+
+
+_CONTRACT = DetailedGraphContract(
+    category="교수님",
+    title="결석 사유 전달",
+    graph=professor_absence_graph,
+    compact_state=compact_professor_absence_state,
+    defaults={"professor_name": "교수님"},
+    allowed_conversation_states=frozenset(
+        {
+            "greeting",
+            "collecting_absence_info",
+            "confirming_absence_info",
+            "absence_noted",
+            "closing",
+            "END",
+        }
+    ),
+)
 
 
 def is_professor_absence_request(req: ChatRequest) -> bool:
@@ -19,35 +39,4 @@ def is_professor_absence_request(req: ChatRequest) -> bool:
 
 
 def complete_professor_absence_with_graph(req: ChatRequest) -> ChatResponse:
-    previous_state = getattr(req, "scenarioState", None) or {}
-    history = getattr(req, "history", None) or previous_state.get("history") or []
-
-    initial_state = {
-        **previous_state,
-        "user_message": getattr(req, "userMessage", "") or "",
-        "professor_name": previous_state.get("professor_name") or "교수님",
-        "conversation_state": (
-            getattr(req, "conversationState", None)
-            or previous_state.get("conversation_state")
-            or "greeting"
-        ),
-        "history": history,
-        "recommended_replies": [],
-        "should_end_call": False,
-    }
-
-    result = professor_absence_graph.invoke(initial_state)
-
-    ai_message = result["ai_message"]
-    conversation_state = result["conversation_state"]
-    recommended_replies = result["recommended_replies"]
-    should_end_call = result["should_end_call"]
-
-    return ChatResponse(
-        response=ai_message,
-        etiquetteTip=None,
-        recommendedReplies=recommended_replies,
-        conversationState=conversation_state,
-        shouldEndCall=should_end_call,
-        scenarioState=compact_professor_absence_state(result),
-    )
+    return complete_detailed_graph(req, _CONTRACT)

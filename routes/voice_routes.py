@@ -19,12 +19,19 @@ from services.analysis_service import (
     accumulate_baseline,
 )
 from services.baseline_store import (
-    normalize_user_id,
-    finalize_calibration_simple, delete_baseline
+    BaselineStoreError, normalize_user_id,
+    clear_calib_cache, finalize_calibration_simple, delete_baseline
 )
 
 router = APIRouter(prefix="/voice", tags=["voice"])
 logger = logging.getLogger(__name__)
+
+
+def _voice_error(status_code: int, code: str, message: str) -> JSONResponse:
+    return JSONResponse(
+        status_code=status_code,
+        content={"error": {"code": code, "message": message}},
+    )
 
 
 def _safe_unlink(path: Optional[str]) -> None:
@@ -53,13 +60,13 @@ async def analyze_audio_endpoint(
     logger.debug("Voice analysis requested: mode=%s mime=%s", mode, file.content_type)
 
     if mode not in {"normal", "calibrate"}:
-        return JSONResponse(status_code=422, content={"ok": False, "error": "invalid_mode"})
+        return _voice_error(422, "VOICE_MODE_INVALID", "지원하지 않는 음성 분석 모드입니다.")
     if strategy not in {"welford", "simple"}:
-        return JSONResponse(status_code=422, content={"ok": False, "error": "invalid_strategy"})
+        return _voice_error(422, "VOICE_STRATEGY_INVALID", "지원하지 않는 기준선 계산 방식입니다.")
 
     content = await file.read(AUDIO_UPLOAD_MAX_BYTES + 1)
     if len(content) > AUDIO_UPLOAD_MAX_BYTES:
-        return JSONResponse(status_code=413, content={"ok": False, "error": "file_too_large"})
+        return _voice_error(413, "VOICE_FILE_TOO_LARGE", "업로드한 음성 파일이 허용 크기를 초과했습니다.")
 
     suffix = Path(file.filename or "").suffix.lower()
     if len(suffix) > 10 or not suffix.replace(".", "").isalnum():
@@ -80,10 +87,7 @@ async def analyze_audio_endpoint(
             try:
                 subprocess.run(["ffmpeg", "-version"], check=True, capture_output=True, timeout=10)
             except (FileNotFoundError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
-                return JSONResponse(
-                    status_code=400,
-                    content={"ok": False, "error": "convert_missing", "detail": "ffmpeg 미설치/실행 불가"},
-                )
+                return _voice_error(503, "VOICE_CONVERTER_UNAVAILABLE", "음성 변환기를 사용할 수 없습니다.")
             converted_tmp = f"{tmp_in}.wav"
             try:
                 subprocess.run(
@@ -93,21 +97,15 @@ async def analyze_audio_endpoint(
                     timeout=60,
                 )
             except subprocess.TimeoutExpired:
-                return JSONResponse(
-                    status_code=408,
-                    content={"ok": False, "error": "convert_timeout"},
-                )
-            except subprocess.CalledProcessError as e:
-                return JSONResponse(
-                    status_code=400,
-                    content={"ok": False, "error": "convert_failed", "detail": e.stderr.decode("utf-8", "ignore")},
-                )
+                return _voice_error(408, "VOICE_CONVERSION_TIMEOUT", "음성 변환 시간이 제한을 초과했습니다.")
+            except subprocess.CalledProcessError:
+                return _voice_error(422, "VOICE_CONVERSION_FAILED", "지원되는 음성 파일로 변환하지 못했습니다.")
             tmp_for_praat = converted_tmp
 
         # 실제 Praat 분석
         cur = analyze_audio(tmp_for_praat)
         if not isinstance(cur, dict):
-            return JSONResponse(status_code=400, content={"ok": False, "error": "analyze_invalid"})
+            return _voice_error(502, "VOICE_ANALYSIS_INVALID", "음성 분석 결과가 계약과 일치하지 않습니다.")
 
         # 사용자 ID 정규화
         uid = normalize_user_id(user_id) if user_id else None
@@ -134,12 +132,11 @@ async def analyze_audio_endpoint(
 
         return JSONResponse(content={"ok": True, "mode": mode, "data": payload})
 
+    except BaselineStoreError:
+        raise
     except Exception:
         logger.exception("Voice analysis failed")
-        return JSONResponse(
-            status_code=500,
-            content={"ok": False, "error": "analyze_failed"},
-        )
+        return _voice_error(500, "VOICE_ANALYSIS_FAILED", "음성 분석을 완료하지 못했습니다.")
 
     finally:
         _safe_unlink(tmp_in)
@@ -152,6 +149,8 @@ def baseline_get(user_id: str = Query(...)):
     """기준선 조회"""
     uid = normalize_user_id(user_id)
     res = get_baseline(uid)
+    if not res.get("ok"):
+        return _voice_error(404, "VOICE_BASELINE_NOT_FOUND", "저장된 음성 기준선이 없습니다.")
     return JSONResponse(content=res)
 
 
@@ -159,6 +158,8 @@ def baseline_get(user_id: str = Query(...)):
 def calibrate_finalize(user_id: str = Form(...)):
     """샘플 모음을 평균내서 기존 값을 덮어쓰기"""
     res = finalize_calibration_simple(normalize_user_id(user_id))
+    if not res.get("ok"):
+        return _voice_error(409, "VOICE_CALIBRATION_EMPTY", "확정할 캘리브레이션 샘플이 없습니다.")
     return JSONResponse(content=res)
 
 
@@ -167,17 +168,17 @@ def api_delete_baseline(user_id: str = Form(None), q_user_id: str = Query(None))
     """user_id는 POST form 또는 GET query 중 하나로 받음"""
     raw = user_id or q_user_id
     if not raw:
-        return {"ok": False, "error": "missing user_id"}
+        return _voice_error(422, "VOICE_USER_ID_REQUIRED", "사용자 식별자가 필요합니다.")
     uid = normalize_user_id(raw)
     return delete_baseline(uid)
 
 
 @router.post("/calibrate/reset")
 def calibrate_reset(user_id: str = Form(...)):
-    """메모리 캐시/DB 기준선 리셋"""
+    """진행 중인 샘플만 비우고 확정된 기준선은 유지한다."""
     uid = normalize_user_id(user_id)
-    result = delete_baseline(uid)
-    return JSONResponse(content={"ok": True, "deleted": result["deleted"]})
+    clear_calib_cache(uid)
+    return JSONResponse(content={"ok": True})
 
 
 @router.get("/health")

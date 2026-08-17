@@ -1,8 +1,8 @@
 # routes/wordfreq_router.py
 from __future__ import annotations
 from fastapi import APIRouter
-from pydantic import BaseModel, Field
-from typing import List, Tuple, Dict, Optional, Literal, Any
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+from typing import Dict, List, Literal, Optional, Tuple
 from collections import Counter
 import re, unicodedata
 
@@ -36,33 +36,33 @@ def _tokenize(messages: List[str]) -> List[str]:
 
 # ---------- 공통 헬퍼: 사용자 메시지 추출 ----------
 class Turn(BaseModel):
-    role: Literal["user","assistant","system"]
-    text: str
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
-def _pick_user_messages(messages: Optional[List[str]], turns: Optional[List[Turn]]) -> List[str]:
-    """
-    우선순위:
-    1) turns 가 있으면 role=='user' 인 text만 사용
-    2) 없으면 messages 사용
-    """
-    if turns:
-        return [t.text for t in turns if t.role == "user" and (t.text or "").strip()]
-    return [m for m in (messages or []) if (m or "").strip()]
+    role: Literal["user","assistant","system"]
+    text: str = Field(min_length=1, max_length=4_000)
 
 # ─────────────────────────────────────────────────────────
 # ① 단일 엔드포인트 (/analysis/wordfreq)
 # ─────────────────────────────────────────────────────────
 class WordFreqRequest(BaseModel):
-    messages: Optional[List[str]] = None
-    turns: Optional[List[Dict[str, Any]]] = None  # [{role, text}] 형식
+    model_config = ConfigDict(extra="forbid")
+
+    messages: Optional[List[str]] = Field(default=None, max_length=1_000)
+    turns: Optional[List[Turn]] = Field(default=None, max_length=1_000)
     scope: Literal["user", "assistant", "all"] = "user"
     top_k: int = Field(default=5, ge=1, le=100)
     min_count: int = Field(default=1, ge=1)
 
+    @model_validator(mode="after")
+    def require_exactly_one_input(self) -> "WordFreqRequest":
+        if (self.messages is None) == (self.turns is None):
+            raise ValueError("exactly one of messages or turns is required")
+        return self
+
 @router.post("/wordfreq")
 def wordfreq_single(req: WordFreqRequest):
     # ⬇︎ 여기 한 줄로 사용자만/어시만/전체 중 필터 적용
-    user_texts = _select_texts(req.model_dump())
+    user_texts = _select_texts(req.messages, req.turns, req.scope)
 
     tokens = _tokenize(user_texts)
     total_words = len(tokens)
@@ -100,8 +100,14 @@ def wordfreq_single(req: WordFreqRequest):
 # ─────────────────────────────────────────────────────────
 class WordFreqByCategoryItem(BaseModel):
     category: str
-    messages: Optional[List[str]] = None
-    turns: Optional[List[Dict[str, Any]]] = None  # [{role, text}] 형식
+    messages: Optional[List[str]] = Field(default=None, max_length=1_000)
+    turns: Optional[List[Turn]] = Field(default=None, max_length=1_000)
+
+    @model_validator(mode="after")
+    def require_exactly_one_input(self) -> "WordFreqByCategoryItem":
+        if (self.messages is None) == (self.turns is None):
+            raise ValueError("exactly one of messages or turns is required")
+        return self
 
 class WordFreqByCategoryRequest(BaseModel):
     items: List[WordFreqByCategoryItem]
@@ -114,13 +120,7 @@ class WordFreqByCategoryRequest(BaseModel):
 def wordfreq_by_category(req: WordFreqByCategoryRequest):
     summary: Dict[str, Dict] = {}
     for item in req.items:
-        # ⬇︎ 항목별 payload 구성해서 동일 헬퍼 재사용
-        payload = {
-            "messages": item.messages,
-            "turns": item.turns,
-            "scope": req.scope,
-        }
-        user_texts = _select_texts(payload)
+        user_texts = _select_texts(item.messages, item.turns, req.scope)
 
         tokens = _tokenize(user_texts)
         total_words = len(tokens)
@@ -165,34 +165,15 @@ def wordfreq_by_category(req: WordFreqByCategoryRequest):
 # ─────────────────────────────────────────
 # 공통 유틸: 입력(normalize) + 역할별 필터
 # ─────────────────────────────────────────
-def _select_texts(payload: Dict[str, Any]) -> List[str]:
-    scope = (payload.get("scope") or "user").lower()
-    if scope not in {"user", "assistant", "all"}:
-        scope = "user"
-
-    # ✅ turns가 있으면 messages는 완전히 무시
-    turns = payload.get("turns")
-    if isinstance(turns, list) and turns:
-        def norm_role(r: str) -> str:
-            v = (r or "").strip().lower()
-            if v in {"ai","bot","agent"}: return "assistant"
-            if v in {"user","assistant","system"}: return v
-            return ""  # 모르면 제외
-
-        out = []
-        for t in turns:
-            role = norm_role(str(t.get("role", "")))
-            text = str(t.get("text", "")).strip()
-            if not role or not text:
-                continue
-            if scope == "all":
-                out.append(text)
-            elif scope == "user" and role == "user":
-                out.append(text)
-            elif scope == "assistant" and role == "assistant":
-                out.append(text)
-        return out
-
-    # 입력 우선순위: turns가 없을 때만 messages 사용
-    msgs = payload.get("messages") or []
-    return [str(x).strip() for x in msgs if str(x).strip()]
+def _select_texts(
+    messages: Optional[List[str]],
+    turns: Optional[List[Turn]],
+    scope: Literal["user", "assistant", "all"],
+) -> List[str]:
+    if turns is not None:
+        return [
+            turn.text
+            for turn in turns
+            if scope == "all" or turn.role == scope
+        ]
+    return [message.strip() for message in (messages or []) if message.strip()]

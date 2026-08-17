@@ -1,7 +1,7 @@
 # llm/client.py
 from __future__ import annotations
 from typing import Optional, List, Dict, Any, TYPE_CHECKING
-from core.config import OPENAI_API_KEY, OPENAI_MODEL
+from core.config import OPENAI_API_KEY, OPENAI_MODEL, OPENAI_TIMEOUT
 import logging
 from llm.errors import AIProviderExecutionError, AIProviderUnavailableError
 
@@ -32,7 +32,7 @@ def _get_client() -> Optional[OpenAIClient]:
 def _call_openai_sync(
     model: str,
     messages: List[Dict],
-    timeout_s: int = 8,
+    timeout_s: int = OPENAI_TIMEOUT,
     *,
     json_mode: bool = False,
 ) -> str:
@@ -57,11 +57,11 @@ def _call_openai_sync(
         logger.exception("OpenAI call failed")
         raise AIProviderExecutionError("OpenAI request failed") from exc
 
-def complete_messages(messages: List[Dict], timeout_s: int = 8) -> str:
+def complete_messages(messages: List[Dict], timeout_s: int = OPENAI_TIMEOUT) -> str:
     return _call_openai_sync(model=OPENAI_MODEL, messages=messages, timeout_s=timeout_s)
 
 
-def complete_json_messages(messages: List[Dict], timeout_s: int = 8) -> str:
+def complete_json_messages(messages: List[Dict], timeout_s: int = OPENAI_TIMEOUT) -> str:
     return _call_openai_sync(
         model=OPENAI_MODEL,
         messages=messages,

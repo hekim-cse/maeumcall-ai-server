@@ -1,23 +1,33 @@
 # 📄 main.py
 from __future__ import annotations
 
-from typing import Optional
+import logging
+import shutil
+import time
+import uuid
 
-from fastapi import FastAPI, UploadFile, File, Form, Request
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from core.config import CORS_ALLOW_ORIGINS
-from routes.chat_routes import router as chat_router
-from routes.suggest_routes import (
-    router as suggest_router,
-    router_compat as suggest_router_compat,  # ← 추가
+from core.config import (
+    BASELINE_ID_HMAC_SECRET,
+    CORS_ALLOW_ORIGINS,
+    HF_LOCAL_MODEL_ENABLED,
+    OPENAI_API_KEY,
 )
+from routes.chat_routes import router as chat_router
+from routes.suggest_routes import router as suggest_router
 from routes.voice_routes import router as voice_router
-from routes.voice_routes import analyze_audio_endpoint  # 레거시 별칭용
 from routes.wordfreq_router import router as wordfreq_router
 from server.api_call import router as call_router
 from llm.errors import AIServiceError
+from services.flow.common.state_contract import ScenarioStateContractError
+from services.baseline_store import BaselineStoreError
+
+logger = logging.getLogger("maeumcall.http")
 
 app = FastAPI(
     title="MaeumCall AI Server",
@@ -25,7 +35,7 @@ app = FastAPI(
         "마음콜의 고도화 프로젝트: LangGraph 기반 상태 관리, 검증 가능한 "
         "응답 생성, 통화 음성 분석을 제공하는 AI 서버"
     ),
-    version="2.0.0",
+    version="2.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -40,6 +50,34 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def add_request_context(request: Request, call_next):
+    request_id = str(uuid.uuid4())
+    request.state.request_id = request_id
+    started_at = time.perf_counter()
+    try:
+        response = await call_next(request)
+    except Exception:
+        logger.exception(
+            "request_failed request_id=%s method=%s path=%s",
+            request_id,
+            request.method,
+            request.url.path,
+        )
+        raise
+    elapsed_ms = (time.perf_counter() - started_at) * 1_000
+    response.headers["X-Request-ID"] = request_id
+    logger.info(
+        "request_completed request_id=%s method=%s path=%s status=%d elapsed_ms=%.2f",
+        request_id,
+        request.method,
+        request.url.path,
+        response.status_code,
+        elapsed_ms,
+    )
+    return response
+
+
 @app.exception_handler(AIServiceError)
 async def handle_ai_service_error(_: Request, exc: AIServiceError):
     return JSONResponse(
@@ -47,9 +85,61 @@ async def handle_ai_service_error(_: Request, exc: AIServiceError):
         content={"error": {"code": exc.code, "message": exc.public_message}},
     )
 
+
+@app.exception_handler(ScenarioStateContractError)
+async def handle_scenario_state_error(_: Request, exc: ScenarioStateContractError):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": exc.code, "message": exc.public_message}},
+    )
+
+
+@app.exception_handler(BaselineStoreError)
+async def handle_baseline_store_error(_: Request, exc: BaselineStoreError):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": exc.code, "message": exc.public_message}},
+    )
+
+
+@app.exception_handler(StarletteHTTPException)
+async def handle_http_error(_: Request, exc: StarletteHTTPException):
+    if isinstance(exc.detail, dict):
+        code = str(exc.detail.get("code") or "HTTP_ERROR")
+        message = str(exc.detail.get("message") or "요청을 처리하지 못했습니다.")
+    else:
+        code = "HTTP_ERROR"
+        message = str(exc.detail)
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": code, "message": message}},
+        headers=exc.headers,
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def handle_request_validation_error(_: Request, exc: RequestValidationError):
+    details = [
+        {
+            "location": [str(part) for part in error["loc"]],
+            "message": error["msg"],
+            "type": error["type"],
+        }
+        for error in exc.errors()
+    ]
+    return JSONResponse(
+        status_code=422,
+        content={
+            "error": {
+                "code": "REQUEST_VALIDATION_FAILED",
+                "message": "요청 형식이 API 계약과 일치하지 않습니다.",
+                "details": details,
+            }
+        },
+    )
+
 app.include_router(chat_router)
-app.include_router(suggest_router)         # /chat/suggest, /chat/improve
-app.include_router(suggest_router_compat)  # /suggest, /improve
+app.include_router(suggest_router)
 app.include_router(voice_router)
 app.include_router(wordfreq_router)
 app.include_router(call_router)
@@ -58,6 +148,26 @@ app.include_router(call_router)
 def health():
     return {"ok": True}
 
+
+@app.get("/health/ready")
+def readiness():
+    components = {
+        "openai": {"ready": bool(OPENAI_API_KEY)},
+        "local_nlu": {"ready": HF_LOCAL_MODEL_ENABLED},
+        "voice_baseline_security": {
+            "ready": len(BASELINE_ID_HMAC_SECRET) >= 32,
+        },
+        "ffmpeg": {"ready": shutil.which("ffmpeg") is not None},
+    }
+    ready = all(component["ready"] for component in components.values())
+    return JSONResponse(
+        status_code=200 if ready else 503,
+        content={
+            "status": "ready" if ready else "not_ready",
+            "components": components,
+        },
+    )
+
 @app.get("/")
 def root():
     return {
@@ -65,12 +175,3 @@ def root():
         "version": app.version,
         "docs": "/docs",
     }
-
-@app.post("/analyze", include_in_schema=False)
-async def analyze_legacy(
-    file: UploadFile = File(...),
-    user_id: Optional[str] = Form(None),
-    mode: str = Form("normal"),
-    strategy: str = Form("simple"),
-):
-    return await analyze_audio_endpoint(file=file, user_id=user_id, mode=mode, strategy=strategy)

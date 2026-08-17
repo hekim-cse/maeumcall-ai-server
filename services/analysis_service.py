@@ -4,7 +4,7 @@ from typing import Dict, Any, Optional
 
 from services.baseline_store import (
     normalize_user_id,
-    load_db,
+    get_persisted_baseline,
     update_baseline_persisted,
     append_calib_sample,
     finalize_calibration_simple,
@@ -49,8 +49,7 @@ def finalize_calibration(user_id: str) -> Dict[str, Any]:
 def get_baseline(user_id: str) -> Dict[str, Any]:
     """현재 저장된 기준선 조회"""
     uid = normalize_user_id(user_id)
-    db = load_db()
-    b = db.get(uid)
+    b = get_persisted_baseline(uid)
     if not b:
         return {"ok": False, "error": "not_found"}
     return {"ok": True, "baseline": b}

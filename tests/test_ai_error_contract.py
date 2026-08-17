@@ -57,4 +57,4 @@ def test_unregistered_scenario_returns_contract_error():
     response = TestClient(app).post("/chat", json=payload)
 
     assert response.status_code == 422
-    assert response.json()["detail"]["code"] == "UNSUPPORTED_SCENARIO"
+    assert response.json()["error"]["code"] == "UNSUPPORTED_SCENARIO"

@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 from fastapi import APIRouter
-from pydantic import BaseModel
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field
 from services.call_policy import is_incoming_scenario, random_connect_delay_ms, choose_opening
 
 router = APIRouter(prefix="/call", tags=["call"])
 
 class CallSetupReq(BaseModel):
-    category: str
-    title: str
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    category: str = Field(min_length=1, max_length=50)
+    title: str = Field(min_length=1, max_length=100)
 
 class CallSetupResp(BaseModel):
-    direction: str          # "incoming" | "outgoing"
-    who_starts: str         # "agent" | "user"
-    delay_ms: int           # 발신일 때 1000~3000, 수신이면 0
-    opening: str            # 첫 멘트
+    direction: Literal["incoming", "outgoing"]
+    who_starts: Literal["agent", "user"]
+    delay_ms: int = Field(ge=0, le=3_000)
+    opening: str = Field(min_length=1, max_length=500)
 
 @router.post("/setup", response_model=CallSetupResp)
 def setup_call(req: CallSetupReq):

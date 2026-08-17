@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException
 from typing import Any, Dict, List
 
+from core.config import OPENAI_TIMEOUT
 from llm.client import complete_json_messages
 from llm.structured_output import complete_validated_json
 from schemas.chat_models import (
@@ -14,7 +15,6 @@ from services.flow.common.scenario_keys import canonicalize_scenario_label
 from services.prompt_registry import is_registered_prompt
 
 router = APIRouter(prefix="/chat", tags=["chat-improve"])
-router_compat = APIRouter(prefix="", tags=["chat-improve-compat"])
 
 def _suggest_prompt(req: SuggestRequest) -> str:
     cat = canonicalize_scenario_label(req.category)
@@ -72,7 +72,10 @@ def suggest(req: SuggestRequest):
         )
     items = complete_validated_json(
         [{"role": "user", "content": _suggest_prompt(req)}],
-        completion=lambda messages: complete_json_messages(messages, timeout_s=8),
+        completion=lambda messages: complete_json_messages(
+            messages,
+            timeout_s=OPENAI_TIMEOUT,
+        ),
         validator=_validate_suggestions,
     )
     return SuggestResponse(suggestions=items)
@@ -81,12 +84,3 @@ def suggest(req: SuggestRequest):
 async def improve(req: ImproveRequest):
     improved, tags = await improve_messages(req.messages, req.category)
     return ImproveResponse(improved=improved, tags=tags)
-
-# 호환 엔드포인트
-@router_compat.post("/suggest", response_model=SuggestResponse)
-def suggest_compat(req: SuggestRequest):
-    return suggest(req)
-
-@router_compat.post("/improve", response_model=ImproveResponse)
-async def improve_compat(req: ImproveRequest):
-    return await improve(req)

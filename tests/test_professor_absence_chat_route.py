@@ -193,6 +193,8 @@ def test_chat_route_professor_absence_confirm_moves_to_noted(monkeypatch):
         conversationState="confirming_absence_info",
         scenarioState={
             "intent": "absence_notice",
+            "scenario_key": "교수님:결석 사유 전달",
+            "state_version": 1,
             "professor_name": "교수님",
             "absence_date": "오늘",
             "absence_reason": "몸이 좋지 않음",
@@ -220,6 +222,8 @@ def test_chat_route_professor_absence_change_reason_resets_reason(monkeypatch):
         conversationState="confirming_absence_info",
         scenarioState={
             "intent": "absence_notice",
+            "scenario_key": "교수님:결석 사유 전달",
+            "state_version": 1,
             "professor_name": "교수님",
             "absence_date": "오늘",
             "absence_reason": "몸이 좋지 않음",
@@ -249,6 +253,8 @@ def test_chat_route_professor_absence_noted_moves_to_closing(monkeypatch):
         conversationState="absence_noted",
         scenarioState={
             "intent": "absence_notice",
+            "scenario_key": "교수님:결석 사유 전달",
+            "state_version": 1,
             "professor_name": "교수님",
             "absence_date": "오늘",
             "absence_reason": "몸이 좋지 않음",
@@ -276,6 +282,8 @@ def test_chat_route_professor_absence_closing_moves_to_end(monkeypatch):
         conversationState="closing",
         scenarioState={
             "intent": "absence_notice",
+            "scenario_key": "교수님:결석 사유 전달",
+            "state_version": 1,
             "professor_name": "교수님",
             "conversation_state": "closing",
         },

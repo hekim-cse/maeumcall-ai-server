@@ -12,24 +12,19 @@ from services.flow.scenario.registry import get_scenario_config
 from services.flow.scenario.state import ScenarioConversationState
 
 
-def _safe_turns(turns: Any, current_user_message: str) -> List[Dict[str, str]]:
-    safe: List[Dict[str, str]] = []
+def _conversation_messages(turns: Any) -> List[Dict[str, str]]:
+    messages: List[Dict[str, str]] = []
     for turn in turns or []:
         if not isinstance(turn, dict):
-            continue
-        role = str(turn.get("role") or turn.get("sender") or "user").lower()
-        text = str(turn.get("text") or turn.get("content") or "").strip()
-        if role in {"ai", "bot", "agent"}:
-            role = "assistant"
-        if role in {"user", "assistant"} and text:
-            safe.append({"role": role, "content": text})
-    if (
-        safe
-        and safe[-1]["role"] == "user"
-        and safe[-1]["content"] == current_user_message.strip()
-    ):
-        safe.pop()
-    return safe
+            raise ValueError("history turns must be objects")
+        role = turn.get("role")
+        text = turn.get("text")
+        if role not in {"user", "assistant"}:
+            raise ValueError("history role must be user or assistant")
+        if not isinstance(text, str) or not text.strip():
+            raise ValueError("history text must be a non-empty string")
+        messages.append({"role": role, "content": text.strip()})
+    return messages
 
 
 def _validate_turn_result(data: Dict[str, Any]) -> Dict[str, Any]:
@@ -63,8 +58,7 @@ def generate_turn_node(state: ScenarioConversationState) -> Dict[str, Any]:
     payload = dict(state.get("request_payload") or {})
     request = ChatRequest(**payload)
     system_prompt, user_prompt = generate_prompts(request)
-    current_user_message = state.get("user_message") or ""
-    history = _safe_turns(state.get("history"), current_user_message)
+    history = _conversation_messages(state.get("history"))
 
     contract = (
         "반드시 다음 JSON 객체 하나만 출력한다: "

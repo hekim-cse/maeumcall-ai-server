@@ -7,6 +7,7 @@ from typing import Dict, Any
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.reservation.hospital.graph import hospital_reservation_graph
 from services.flow.common.scenario_keys import scenario_matches
+from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 
 
 def is_hospital_reservation_request(req: ChatRequest) -> bool:
@@ -29,7 +30,7 @@ def is_hospital_reservation_request(req: ChatRequest) -> bool:
     )
 
 
-def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
+def compact_hospital_state(result: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "intent": result.get("intent"),
         "service_name": result.get("service_name"),
@@ -52,37 +53,32 @@ def _compact_scenario_state(result: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+_CONTRACT = DetailedGraphContract(
+    category="예약",
+    title="병원 예약",
+    graph=hospital_reservation_graph,
+    compact_state=compact_hospital_state,
+    defaults={"service_name": "마음병원"},
+    allowed_conversation_states=frozenset(
+        {
+            "greeting",
+            "asking_purpose",
+            "asking_department",
+            "asking_date",
+            "asking_time",
+            "confirming_info",
+            "checking_availability",
+            "reservation_lookup",
+            "reservation_available",
+            "reservation_unavailable",
+            "suggest_alternative",
+            "reservation_confirmed",
+            "closing",
+            "END",
+        }
+    ),
+)
+
+
 def complete_hospital_reservation_with_graph(req: ChatRequest) -> ChatResponse:
-    previous_state = getattr(req, "scenarioState", None) or {}
-
-    history = getattr(req, "history", None) or previous_state.get("history") or []
-
-    initial_state = {
-        **previous_state,
-        "user_message": getattr(req, "userMessage", "") or "",
-        "service_name": previous_state.get("service_name") or "마음병원",
-        "conversation_state": (
-            getattr(req, "conversationState", None)
-            or previous_state.get("conversation_state")
-            or "greeting"
-        ),
-        "history": history,
-        "recommended_replies": [],
-        "should_end_call": False,
-    }
-
-    result = hospital_reservation_graph.invoke(initial_state)
-
-    ai_message = result["ai_message"]
-    conversation_state = result["conversation_state"]
-    recommended_replies = result["recommended_replies"]
-    should_end_call = result["should_end_call"]
-
-    return ChatResponse(
-        response=ai_message,
-        etiquetteTip=None,
-        recommendedReplies=recommended_replies,
-        conversationState=conversation_state,
-        shouldEndCall=should_end_call,
-        scenarioState=_compact_scenario_state(result),
-    )
+    return complete_detailed_graph(req, _CONTRACT)

@@ -1,14 +1,41 @@
 from __future__ import annotations
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
-import json, math, time, re, unicodedata, os
+import hashlib
+import hmac
+import json
+import math
+import os
+import time
+import unicodedata
 import threading
 import numpy as np
-from urllib.parse import unquote
+
+from core.config import BASELINE_ID_HMAC_SECRET
 
 
 class BaselineStoreError(RuntimeError):
     """Raised when persisted voice baseline data cannot be read safely."""
+
+    code = "VOICE_BASELINE_STORE_FAILED"
+    public_message = "음성 기준선 저장소를 처리하지 못했습니다."
+    status_code = 500
+
+
+class BaselineIdentityError(BaselineStoreError):
+    """Raised when a user identifier cannot be safely pseudonymized."""
+
+    code = "VOICE_BASELINE_ID_INVALID"
+    public_message = "유효하지 않은 사용자 식별자입니다."
+    status_code = 422
+
+
+class BaselineIdentityConfigurationError(BaselineStoreError):
+    """Raised when baseline pseudonymization is not configured."""
+
+    code = "VOICE_BASELINE_SECURITY_NOT_CONFIGURED"
+    public_message = "음성 기준선 보안 설정이 완료되지 않았습니다."
+    status_code = 503
 
 # 데이터 파일 경로
 DB_PATH = (Path(__file__).resolve().parents[1] / "data" / "baseline_db.json")
@@ -21,21 +48,37 @@ __all__ = (
     "update_baseline_persisted",
     "append_calib_sample", "clear_calib_cache",
     "finalize_calibration_simple", "delete_baseline",
-    "pct", "z", "normalize_user_id",
+    "get_persisted_baseline",
+    "pct", "z", "normalize_user_id", "pseudonymize_user_id",
 )
 
 
 def normalize_user_id(user_id: str | None) -> str:
-    """카카오 ID나 문자열 user_id를 안전하게 정규화"""
-    if not user_id:
-        return "guest"
-    user_id = unquote(user_id)
-    user_id = unicodedata.normalize("NFKC", user_id)
-    user_id = user_id.strip()
-    user_id = re.sub(r"\s+", " ", user_id)
-    if len(user_id) > 64:
-        user_id = user_id[:64]
-    return user_id
+    """Validate the opaque account identifier received from the client."""
+    if not isinstance(user_id, str):
+        raise BaselineIdentityError("user_id must be a string")
+    normalized = unicodedata.normalize("NFKC", user_id).strip()
+    if not normalized:
+        raise BaselineIdentityError("user_id must not be empty")
+    if len(normalized) > 128:
+        raise BaselineIdentityError("user_id must be at most 128 characters")
+    if any(unicodedata.category(char).startswith("C") for char in normalized):
+        raise BaselineIdentityError("user_id contains control characters")
+    return normalized
+
+
+def pseudonymize_user_id(user_id: str) -> str:
+    normalized = normalize_user_id(user_id)
+    if len(BASELINE_ID_HMAC_SECRET) < 32:
+        raise BaselineIdentityConfigurationError(
+            "BASELINE_ID_HMAC_SECRET must contain at least 32 characters"
+        )
+    digest = hmac.new(
+        BASELINE_ID_HMAC_SECRET.encode("utf-8"),
+        normalized.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    return f"user_hmac_sha256:{digest}"
 
 
 def _ensure_parent():
@@ -93,10 +136,10 @@ def _extract(analysis: Dict[str, Any]) -> Tuple[float, float, float]:
 
 
 def update_baseline_welford(db: Dict[str, Any], user_id: str, analysis: Dict[str, Any]) -> Dict[str, Any]:
-    user_id = normalize_user_id(user_id)
+    user_key = pseudonymize_user_id(user_id)
     p, j, s = _extract(analysis)
 
-    b = db.get(user_id, {
+    b = db.get(user_key, {
         "n": 0,
         "pitchHz": 0.0, "pitchStdHz": 0.0, "pitch_m2": 0.0,
         "jitterLocal": 0.0, "jitterStd": 0.0, "jitter_m2": 0.0,
@@ -124,7 +167,7 @@ def update_baseline_welford(db: Dict[str, Any], user_id: str, analysis: Dict[str
         "samples": n,
         "ts": int(time.time()),
     })
-    db[user_id] = b
+    db[user_key] = b
     return b
 
 
@@ -139,9 +182,9 @@ def update_baseline_persisted(user_id: str, analysis: Dict[str, Any]) -> Dict[st
 
 def append_calib_sample(user_id: str, analysis: Dict[str, Any]) -> Dict[str, Any]:
     with _STORE_LOCK:
-        user_id = normalize_user_id(user_id)
+        user_key = pseudonymize_user_id(user_id)
         p, j, s = _extract(analysis)
-        lst = CALIB_CACHE.setdefault(user_id, [])
+        lst = CALIB_CACHE.setdefault(user_key, [])
         lst.append((p, j, s))
         n = len(lst)
         mean_p = sum(x[0] for x in lst) / n
@@ -164,14 +207,14 @@ def append_calib_sample(user_id: str, analysis: Dict[str, Any]) -> Dict[str, Any
 
 def clear_calib_cache(user_id: str) -> None:
     with _STORE_LOCK:
-        user_id = normalize_user_id(user_id)
-        CALIB_CACHE.pop(user_id, None)
+        user_key = pseudonymize_user_id(user_id)
+        CALIB_CACHE.pop(user_key, None)
 
 
 def finalize_calibration_simple(user_id: str) -> Dict[str, Any]:
     with _STORE_LOCK:
-        user_id = normalize_user_id(user_id)
-        samples = list(CALIB_CACHE.get(user_id, []))
+        user_key = pseudonymize_user_id(user_id)
+        samples = list(CALIB_CACHE.get(user_key, []))
         if not samples:
             return {"ok": False, "error": "no samples"}
         arr = np.array(samples, dtype=float)
@@ -184,19 +227,24 @@ def finalize_calibration_simple(user_id: str) -> Dict[str, Any]:
             "ts": int(time.time()),
         }
         db = load_db()
-        db[user_id] = baseline
+        db[user_key] = baseline
         save_db(db)
-        CALIB_CACHE.pop(user_id, None)
+        CALIB_CACHE.pop(user_key, None)
         return {"ok": True, "baseline": baseline}
 
 
 def delete_baseline(user_id: str) -> Dict[str, Any]:
     with _STORE_LOCK:
-        user_id = normalize_user_id(user_id)
+        user_key = pseudonymize_user_id(user_id)
         db = load_db()
-        existed = user_id in db
+        existed = user_key in db
         if existed:
-            db.pop(user_id, None)
+            db.pop(user_key, None)
             save_db(db)
-        CALIB_CACHE.pop(user_id, None)
+        CALIB_CACHE.pop(user_key, None)
         return {"ok": True, "deleted": existed}
+
+
+def get_persisted_baseline(user_id: str) -> Dict[str, Any] | None:
+    user_key = pseudonymize_user_id(user_id)
+    return load_db().get(user_key)

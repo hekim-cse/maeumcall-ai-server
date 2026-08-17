@@ -46,7 +46,12 @@ def test_scenario_graph_preserves_turn_count(monkeypatch):
         description="편한 통화",
         userMessage="아까 이야기 이어서 할게.",
         conversationState="active",
-        scenarioState={"turn_count": 2},
+        scenarioState={
+            "scenario_key": "친구:심심해서 거는 전화",
+            "state_version": 1,
+            "conversation_state": "active",
+            "turn_count": 2,
+        },
     )
 
     response = complete_scenario_graph_if_supported(request)
@@ -90,7 +95,7 @@ def test_registry_normalizes_emoji_and_spacing():
     assert get_scenario_config(" 고객센터 ", "📶 인터넷/통화 문제 문의") is not None
 
 
-def test_scenario_graph_does_not_send_current_user_message_twice(monkeypatch):
+def test_scenario_graph_appends_current_message_after_prior_history(monkeypatch):
     captured = {}
 
     def complete(messages):
@@ -103,7 +108,7 @@ def test_scenario_graph_does_not_send_current_user_message_twice(monkeypatch):
         title="심심해서 거는 전화",
         description="편한 통화",
         userMessage="지금 통화 괜찮아?",
-        turns=[{"role": "user", "text": "지금 통화 괜찮아?"}],
+        turns=[{"role": "assistant", "text": "응, 지금은 괜찮아."}],
     )
 
     complete_scenario_graph_if_supported(request)

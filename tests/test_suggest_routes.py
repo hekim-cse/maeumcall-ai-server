@@ -31,7 +31,7 @@ def test_suggestion_contract_requires_three_unique_items():
 
 def test_suggest_rejects_unregistered_scenario():
     response = TestClient(app).post(
-        "/suggest",
+        "/chat/suggest",
         json={
             "category": "회사",
             "title": "등록되지 않은 업무",
@@ -40,12 +40,12 @@ def test_suggest_rejects_unregistered_scenario():
     )
 
     assert response.status_code == 422
-    assert response.json()["detail"]["code"] == "UNSUPPORTED_SCENARIO"
+    assert response.json()["error"]["code"] == "UNSUPPORTED_SCENARIO"
 
 
 def test_improve_rejects_unregistered_category_before_model_call():
     response = TestClient(app).post(
-        "/improve",
+        "/chat/improve",
         json={
             "category": "기타",
             "messages": [{"role": "user", "text": "안녕하세요"}],

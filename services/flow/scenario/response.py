@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.scenario.graph import scenario_conversation_graph
 from services.flow.scenario.registry import get_scenario_config
+from services.flow.common.state_contract import envelope_state, validate_client_state
 
 
 def complete_scenario_graph_if_supported(req: ChatRequest) -> Optional[ChatResponse]:
@@ -12,9 +13,15 @@ def complete_scenario_graph_if_supported(req: ChatRequest) -> Optional[ChatRespo
     if config is None:
         return None
 
-    previous: Dict[str, Any] = dict(req.scenarioState or {})
-    history = req.history or req.turns or []
-    payload = req.model_dump() if hasattr(req, "model_dump") else req.dict()
+    previous = validate_client_state(
+        req,
+        category=config.category,
+        title=config.title,
+        allowed_fields={"conversation_state", "turn_count", "last_ai_message"},
+        allowed_conversation_states={"greeting", "opening", "active", "END"},
+    )
+    history = req.serialized_history()
+    payload = req.model_dump()
     initial_state: Dict[str, Any] = {
         **previous,
         "request_payload": payload,
@@ -29,12 +36,15 @@ def complete_scenario_graph_if_supported(req: ChatRequest) -> Optional[ChatRespo
         "should_end_call": False,
     }
     result = scenario_conversation_graph.invoke(initial_state)
-    scenario_state = {
-        "scenario_key": config.key,
-        "conversation_state": result["conversation_state"],
-        "turn_count": result["turn_count"],
-        "last_ai_message": result["ai_message"],
-    }
+    scenario_state = envelope_state(
+        {
+            "conversation_state": result["conversation_state"],
+            "turn_count": result["turn_count"],
+            "last_ai_message": result["ai_message"],
+        },
+        category=config.category,
+        title=config.title,
+    )
     return ChatResponse(
         response=result["ai_message"],
         etiquetteTip=result.get("etiquette_tip"),
