@@ -1,0 +1,66 @@
+# Qwen3-TTS 공급자와 음색 선정 경계
+
+## 상태
+
+Accepted · 2026-08-18
+
+## 결정
+
+마음콜의 한국어 음성 합성 엔진으로 `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice`를 사용한다. 모델은 `85e237c12c027371202489a0ec509ded67b5e4b5` 리비전으로 고정한다. 모델과 공식 `qwen-tts` 패키지는 Apache-2.0이다.
+
+서버는 TTS를 다음 경계로 분리한다.
+
+1. `/chat`은 검증된 텍스트와 LangGraph 상태만 반환한다.
+2. `/tts/voices`는 사용할 수 있는 9개 고정 음색과 모델 리비전을 공개한다.
+3. 인증된 `/tts/synthesize`는 허용된 음색과 한국어 텍스트만 받아 24kHz·16비트·모노 WAV를 반환한다.
+4. `TTSProvider`는 모델별 로딩과 합성을 감추고, API 계약은 Qwen 내부 타입에 의존하지 않는다.
+5. 기능 비활성화, 장치 부재, 리비전 누락, 합성 실패를 각각 타입이 있는 오류로 반환한다.
+
+## 선택 근거
+
+| 후보 | 판단 |
+|---|---|
+| Qwen3-TTS 0.6B CustomVoice | Apache-2.0, 한국어 포함 10개 언어, 9개 고정 음색, Python 3.11과 Apple MPS 실합성 검증 |
+| MeloTTS Korean | MIT와 CPU 실시간 실행은 장점이지만 공개 한국어 화자가 하나라 비교·배역 구성이 제한됨 |
+| KaniTTS | 모델 카드의 라이선스 메타데이터와 본문 표기가 일치하지 않아 포트폴리오·배포 기준으로 채택하지 않음 |
+| CosyVoice 3 | Apache-2.0과 다국어 품질은 적합하지만 약 9.7GB 배포 파일은 현재 로컬·모바일 연동 검증 범위에 비해 큼 |
+| 비공식 브라우저 TTS 호출 | 외부 서비스 약관·인증·가용성을 프로젝트가 통제할 수 없어 제외 |
+
+공식 자료: [Qwen3-TTS GitHub](https://github.com/QwenLM/Qwen3-TTS), [0.6B CustomVoice 모델 카드](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice)
+
+## 런타임 계약
+
+- Python: 3.11
+- 패키지: `qwen-tts==0.1.1`, `torch==2.8.0`, `torchaudio==2.8.0`
+- 시스템 도구: SoX 14.4.2 이상
+- 모델 파일: 약 2.5GB, 런타임에는 고정 리비전만 허용
+- 로컬 검증 장치: Apple MPS + bfloat16
+- attention 구현: Apple MPS에서 지원되는 PyTorch eager 경로
+- 기본 운영값: TTS 비활성화, 로컬 파일만 사용
+- CPU 사용 시 dtype은 float32만 허용
+- 한 프로세스의 공급자는 합성을 직렬화하고 동시 요청은 `429 TTS_BUSY`로 거부해 모델 객체와 메모리를 보호함
+
+Qwen 패키지가 데모용 Gradio도 의존하므로 `requirements-tts.txt`에서 FastAPI와 호환되는 버전을 함께 고정했다. 기본 서버 설치에는 이 무거운 선택 의존성을 넣지 않는다.
+
+## 음색 선정 절차
+
+`scripts.generate_tts_auditions`는 9개 음색에 동일한 한국어 문장을 입력한다. 출력 디렉터리가 기존 WAV를 포함하면 덮어쓰지 않고 중단하며, manifest에 모델·리비전·장치·dtype·문장·샘플레이트·파일 SHA-256을 기록한다.
+
+```bash
+python -m pip install -r requirements-tts.txt
+python -m scripts.generate_tts_auditions \
+  --output-dir /absolute/path/to/voice-auditions \
+  --device mps \
+  --dtype bfloat16
+```
+
+시나리오별 음색 매핑은 청취 평가 이후 별도 변경으로 확정한다. 0.6B 모델에는 공식 기능 표에서 보장되지 않은 말투 지시나 감정 프롬프트를 넣지 않는다.
+
+## 운영 주의사항
+
+- 합성 API는 GPU·메모리 남용을 막기 위해 Firebase 인증을 요구한다.
+- 합성 음성은 사용자 발화를 포함할 수 있으므로 응답 캐시를 금지한다.
+- 모바일은 텍스트 응답을 먼저 보존하고 TTS 실패를 대화 상태 실패로 취급하지 않는다.
+- 모델을 여러 API worker에 각각 적재하면 메모리가 worker 수만큼 증가한다. 로컬 MPS 운영은 단일 worker를 사용한다.
+- 생성 WAV는 비교 산출물이므로 Git에 커밋하지 않는다. 선택 결과와 생성 명령만 문서와 코드로 관리한다.
+- 0.6B 음색의 한국어 품질은 각 음색의 원어와 다를 수 있다. 설명만으로 역할을 정하지 않고 실제 청취 결과를 사용한다.

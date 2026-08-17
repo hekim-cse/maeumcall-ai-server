@@ -14,6 +14,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
 <img src="https://img.shields.io/badge/LangGraph-1.2.11-143D60?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Kanana_1.5-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"/>
+<img src="https://img.shields.io/badge/Qwen3--TTS_0.6B-FF6F00?style=for-the-badge&logo=huggingface&logoColor=white"/>
 <img src="https://img.shields.io/badge/Pytest-offline_suite_passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white"/>
 
 <br/>
@@ -84,6 +85,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | 🪪 사용자 소유권 검증 | 카카오 토큰을 서버에서 검증하고 Firebase ID token의 UID로 사용자 데이터 소유권 확정 |
 | 🗄 트랜잭션 기준선 저장 | PostgreSQL 행 잠금과 트랜잭션으로 캘리브레이션 샘플·확정 기준선을 영속화 |
 | 📈 LangGraph 관측성 | 노드별 시도·재시도·성공/실패·latency와 계약 실패를 Prometheus 지표로 노출 |
+| 🔊 한국어 TTS | SHA로 고정한 Qwen3-TTS의 9개 음색을 인증된 24kHz WAV 합성 API로 제공 |
 
 ---
 
@@ -112,6 +114,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | Alembic | 운영 데이터베이스의 테이블과 제약조건 변경 이력을 코드와 함께 관리하기 위해 사용했습니다. |
 | Prometheus Python Client | LangGraph 노드 지연 시간 분포와 재시도·계약 실패 횟수를 낮은 카디널리티 지표로 수집하기 위해 사용했습니다. |
 | Firebase Admin SDK | 모바일이 보낸 Firebase ID token을 신뢰하기 전에 서버에서 서명·만료·프로젝트를 검증하고 UID를 소유권 기준으로 사용하기 위해 선택했습니다. |
+| Qwen3-TTS 0.6B CustomVoice | Apache-2.0, 한국어, 9개 고정 음색, 로컬 실행을 지원하며 Apple MPS에서 실제 WAV 합성까지 검증해 선택했습니다. |
 
 <table>
   <tr>
@@ -144,6 +147,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | 🧠 Response Generation | 상세 그래프의 도메인 응답 정책과 등록형 그래프의 구조화된 LLM 턴 생성 |
 | 🛡 Contract Enforcement | 구조화 출력 검증, 제한 재시도, 명시적 오류 처리 |
 | 💬 Recommended Replies | 현재 상태에 맞는 추천 답변 생성 |
+| 🔊 TTS Provider | 고정 모델 리비전과 허용 음색으로 한국어 WAV 생성 |
 
 <table>
   <tr>
@@ -284,7 +288,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 
 | 구분 | 결과 |
 |---|---|
-| 오프라인 단위·그래프·라우트 테스트 | ✅ 430개 통과 |
+| 오프라인 단위·그래프·라우트 테스트 | ✅ 435개 통과 |
 | 실모델 통합 테스트 | 16개, 수동 실행으로 분리 |
 | 실패 테스트 | 없음 |
 | 기본 실행 네트워크 의존성 | 없음 |
@@ -307,6 +311,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
     ├── schemas/
     ├── scripts/
     ├── services/
+    │   ├── tts/
     │   └── flow/
     │       ├── common/
     │       ├── scenario/
@@ -329,6 +334,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 | `services/flow/delivery/`, `cityhall/`, `support/` | 9개 업무 시나리오의 독립 필드·상태·분기 계약 |
 | `services/flow/professor/` | 교수님 시나리오 3개의 상세 LangGraph |
 | `services/flow/reservation/` | 예약 시나리오 4개의 상세 LangGraph |
+| `services/tts/` | Qwen3-TTS 모델 로딩, 장치 검증, 직렬 합성과 WAV 응답 공급자 경계 |
 | `llm/` | LLM provider, prompt builder, 구조화 출력 계약과 오류 타입 |
 | `data/scenario/` | 시나리오 샘플 데이터 |
 | `data/prompts/` | 시나리오별 프롬프트 데이터 |
@@ -360,7 +366,7 @@ source .venv/bin/activate
 
 ### 10-3. 선택 의존성 설치
 
-기본 서버·개발·테스트 의존성은 구성 스크립트가 설치합니다. 로컬 Kanana 모델이 필요한 경우에만 ML 의존성을 추가합니다.
+기본 서버·개발·테스트 의존성은 구성 스크립트가 설치합니다. 로컬 Kanana 모델이나 TTS가 필요한 경우에만 선택 의존성을 추가합니다.
 
 로컬 Kanana 실행 의존성(선택):
 
@@ -370,6 +376,29 @@ cp .env.example .env
 # .env에서 HF_LOCAL_MODEL_ENABLED=1 설정
 # 최초 다운로드 후 HF_LOCAL_FILES_ONLY=1로 전환 권장
 ```
+
+로컬 Qwen3-TTS 실행 의존성(선택):
+
+```bash
+# macOS. 다른 운영체제에서도 SoX 실행 파일을 먼저 설치합니다.
+brew install sox
+python -m pip install -r requirements-tts.txt
+cp .env.example .env
+# Apple Silicon 검증값: TTS_ENABLED=1, TTS_DEVICE=mps, TTS_DTYPE=bfloat16
+# 고정 리비전을 내려받은 뒤 TTS_LOCAL_FILES_ONLY=1 유지
+```
+
+9개 음색을 같은 문장으로 비교하려면 기존 WAV가 없는 절대 경로를 지정합니다. 결과 WAV는 Git에 넣지 않고 manifest의 모델 리비전과 SHA-256으로 식별합니다.
+
+```bash
+python -m scripts.generate_tts_auditions \
+  --output-dir /absolute/path/to/voice-auditions \
+  --device mps \
+  --dtype bfloat16 \
+  --allow-network
+```
+
+첫 생성 이후에는 `--allow-network`를 제거해 고정 리비전의 로컬 캐시만 사용합니다. Apple MPS는 FlashAttention을 지원하지 않으므로 코드가 명시적으로 PyTorch eager attention 경로를 사용합니다.
 
 ### 10-4. PostgreSQL 시작과 스키마 적용
 
@@ -452,6 +481,7 @@ http://127.0.0.1:8000/docs
 | 📚 [학습 가이드](docs/learning-guide.md) | 기술 선택과 구현 원칙을 질문·답 형식으로 설명 |
 | 🗄 [음성 기준선 PostgreSQL 설계](docs/architecture/voice_baseline_postgresql.md) | 테이블, 행 잠금, 트랜잭션, JSON 이관 절차와 용어 설명 |
 | 📈 [LangGraph 관측성 설계](docs/architecture/langgraph_observability.md) | 노드 latency, 재시도, 계약 실패 지표, PromQL과 용어 설명 |
+| 🔊 [Qwen3-TTS 공급자 경계](docs/architecture/tts_provider_boundary.md) | 모델 선정, 고정 리비전, 인증된 합성 API, 9개 음색 청취 절차와 운영 제약 |
 
 ---
 
@@ -473,7 +503,8 @@ http://127.0.0.1:8000/docs
 | 음성 데이터 영속성 | PostgreSQL 트랜잭션으로 확정 기준선과 진행 중 캘리브레이션 샘플 보존 |
 | 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패 Prometheus 지표 제공 |
 | 한국어 단어 분석 | Kiwi 형태소 원형과 품사 계약으로 내용어·감탄사를 분리하며 분석기 장애는 503 오류와 readiness로 공개 |
-| 테스트 검증 | 오프라인 회귀 테스트 430개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 16개 분리 |
+| 한국어 음성 합성 | Qwen3-TTS 0.6B의 9개 음색을 고정 리비전·인증·WAV 계약으로 제공하고 청취 전 시나리오 매핑은 보류 |
+| 테스트 검증 | 오프라인 회귀 테스트 435개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 16개 분리 |
 
 <table>
   <tr>

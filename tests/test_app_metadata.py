@@ -42,6 +42,7 @@ def test_readiness_reports_each_runtime_dependency():
         "reservation_availability",
         "authentication",
         "korean_text_analyzer",
+        "tts",
     }
 
 

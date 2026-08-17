@@ -1,0 +1,13 @@
+-r requirements-ml.txt
+
+# Qwen3-TTS 0.6B CustomVoice runtime. Keep the versions aligned with the
+# qwen-tts package metadata so the API and local NLU environments resolve to
+# one reproducible Python 3.11 dependency set.
+qwen-tts==0.1.1
+torchaudio==2.8.0
+gradio==6.15.1
+librosa==0.11.0
+soundfile==0.14.0
+sox==1.5.0
+onnxruntime==1.28.0
+einops==0.8.2

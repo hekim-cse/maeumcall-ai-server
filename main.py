@@ -21,6 +21,7 @@ from core.config import (
     CORS_ALLOW_ORIGINS,
     HF_LOCAL_MODEL_ENABLED,
     OPENAI_API_KEY,
+    TTS_ENABLED,
 )
 from core.database import database_is_ready, dispose_engine
 from core.observability import record_contract_failure, render_metrics
@@ -28,6 +29,7 @@ from llm.errors import AIServiceError
 from routes.auth_routes import router as auth_router
 from routes.chat_routes import router as chat_router
 from routes.suggest_routes import router as suggest_router
+from routes.tts_routes import router as tts_router
 from routes.voice_routes import router as voice_router
 from routes.wordfreq_router import router as wordfreq_router
 from server.api_call import router as call_router
@@ -41,6 +43,8 @@ from services.korean_text_analyzer import (
     KoreanTextAnalyzerError,
     korean_text_analyzer,
 )
+from services.tts.errors import TTSServiceError
+from services.tts.service import tts_runtime_ready
 
 logger = logging.getLogger("maeumcall.http")
 
@@ -144,6 +148,14 @@ async def handle_authentication_error(_: Request, exc: AuthenticationError):
     )
 
 
+@app.exception_handler(TTSServiceError)
+async def handle_tts_service_error(_: Request, exc: TTSServiceError):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": exc.code, "message": exc.public_message}},
+    )
+
+
 @app.exception_handler(StarletteHTTPException)
 async def handle_http_error(_: Request, exc: StarletteHTTPException):
     if isinstance(exc.detail, dict):
@@ -190,6 +202,7 @@ app.include_router(voice_router)
 app.include_router(wordfreq_router)
 app.include_router(call_router)
 app.include_router(auth_router)
+app.include_router(tts_router)
 
 
 @app.get("/health")
@@ -221,6 +234,7 @@ async def readiness():
         "reservation_availability": {"ready": reservation_availability_ready},
         "authentication": {"ready": authentication_configuration_ready()},
         "korean_text_analyzer": {"ready": korean_text_analyzer.is_ready()},
+        "tts": {"ready": tts_runtime_ready(), "enabled": TTS_ENABLED},
     }
     ready = all(component["ready"] for component in components.values())
     return JSONResponse(

@@ -85,3 +85,24 @@ KAKAO_APP_ID = getenv("KAKAO_APP_ID", "")
 FIREBASE_PROJECT_ID = getenv("FIREBASE_PROJECT_ID", "")
 AUTH_SUBJECT_HMAC_SECRET = getenv_secret("AUTH_SUBJECT_HMAC_SECRET", "")
 KAKAO_TOKEN_VERIFY_TIMEOUT = getenv_int("KAKAO_TOKEN_VERIFY_TIMEOUT", 5)
+
+TTS_ENABLED = getenv_bool("TTS_ENABLED", False)
+TTS_MODEL_NAME = getenv(
+    "TTS_MODEL_NAME",
+    "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+)
+TTS_MODEL_REVISION = getenv(
+    "TTS_MODEL_REVISION",
+    "85e237c12c027371202489a0ec509ded67b5e4b5",
+)
+TTS_LOCAL_FILES_ONLY = getenv_bool("TTS_LOCAL_FILES_ONLY", True)
+TTS_DEVICE = getenv("TTS_DEVICE", "")
+TTS_DTYPE = getenv("TTS_DTYPE", "")
+TTS_MAX_TEXT_LENGTH = getenv_int("TTS_MAX_TEXT_LENGTH", 500)
+TTS_MAX_NEW_TOKENS = getenv_int("TTS_MAX_NEW_TOKENS", 1_200)
+
+if TTS_ENABLED:
+    if TTS_DEVICE not in {"cpu", "mps", "cuda"}:
+        raise ValueError("TTS_DEVICE must be one of: cpu, mps, cuda")
+    if TTS_DTYPE not in {"float32", "float16", "bfloat16"}:
+        raise ValueError("TTS_DTYPE must be one of: float32, float16, bfloat16")

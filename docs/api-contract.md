@@ -137,10 +137,25 @@
 - 음성 기준선 삭제: `POST /voice/baseline/delete`
 - 캘리브레이션 진행 데이터 초기화: `POST /voice/calibrate/reset`
 - 운영 지표: `GET /metrics` (Prometheus text format, OpenAPI 문서에서는 숨김)
+- TTS 음색 목록: `GET /tts/voices`
+- 한국어 음성 합성: `POST /tts/synthesize`
 
 `GET /voice/baseline`, 캘리브레이션 분석·확정·초기화, 기준선 삭제는 Firebase ID token이 필수다. `POST /voice/analyze`의 일반 분석은 익명 호출도 허용하지만 기준선은 적용하지 않는다. 음성 API는 body, form, query의 `user_id`를 소유권 근거로 받지 않는다.
 
 `/metrics`는 LangGraph 노드의 시도·재시도·실행 시간, 구조화 출력 재생성, 계약 실패를 집계한다. 사용자 ID, HMAC 키, 요청 ID, 발화 내용은 지표 라벨로 노출하지 않는다.
+
+### TTS 합성 계약
+
+`GET /tts/voices`는 서버가 허용하는 Qwen3-TTS 고정 음색 9개와 모델 리비전을 반환한다. `POST /tts/synthesize`는 Firebase ID token이 필요한 계산 자원 API다.
+
+```json
+{
+  "text": "안녕하세요. 무엇을 도와드릴까요?",
+  "voice": "sohee"
+}
+```
+
+성공 응답은 `audio/wav` 본문이다. `X-TTS-Provider`, `X-TTS-Model`, `X-TTS-Model-Revision`, `X-TTS-Voice`, `X-Audio-Sample-Rate` 헤더로 실제 합성 조건을 함께 전달한다. 발화에 개인정보가 포함될 수 있어 `Cache-Control: private, no-store`를 사용한다. 언어는 한국어로 고정하며, 음색은 목록에 공개된 ID만 허용한다. 시나리오별 음색은 청취 검토 전까지 서버가 임의로 선택하지 않는다.
 
 이전 `/suggest`, `/improve`, `/analyze` 별칭은 제공하지 않는다. 클라이언트와 서버의 경로 불일치를 404로 드러내 배포 계약 오류를 조기에 발견한다.
 
@@ -186,6 +201,13 @@
 | 503 | `VOICE_BASELINE_SECURITY_NOT_CONFIGURED` | 음성 기준선 ID 보호 비밀값 미설정 |
 | 503 | `VOICE_BASELINE_DATABASE_NOT_CONFIGURED` | PostgreSQL 연결 설정 미완료 |
 | 500 | `VOICE_BASELINE_STORE_FAILED` | PostgreSQL 기준선 트랜잭션 또는 조회 실패 |
+| 502 | `TTS_SYNTHESIS_FAILED` | 고정 모델이 요청 음성을 생성하지 못함 |
+| 429 | `TTS_BUSY` | 한 프로세스에서 다른 합성 요청을 처리 중임 |
+| 503 | `TTS_NOT_ENABLED` | 서버에서 TTS 기능을 활성화하지 않음 |
+| 503 | `TTS_RUNTIME_UNAVAILABLE` | Qwen3-TTS 실행 패키지를 불러오지 못함 |
+| 503 | `TTS_MODEL_UNAVAILABLE` | 고정 리비전의 모델 파일을 찾거나 내려받지 못함 |
+| 503 | `TTS_DEVICE_UNAVAILABLE` | 설정한 CPU·MPS·CUDA 장치를 사용할 수 없음 |
+| 503 | `TTS_MODEL_LOAD_FAILED` | 모델 가중치를 실행 장치 메모리에 올리지 못함 |
 
 음성 API도 같은 envelope를 사용하며 `VOICE_MODE_INVALID`, `VOICE_FILE_TOO_LARGE`, `VOICE_CONVERTER_UNAVAILABLE`, `VOICE_CONVERSION_FAILED`, `VOICE_ANALYSIS_FAILED`, `VOICE_BASELINE_NOT_FOUND`, `VOICE_CALIBRATION_EMPTY`처럼 단계별 코드를 반환한다. 재캘리브레이션의 reset은 진행 중 샘플만 제거하며 마지막으로 확정된 기준선은 finalize 성공 전까지 유지한다.
 
