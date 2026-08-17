@@ -2,6 +2,23 @@ from routes.chat_routes import chat
 from schemas.chat_models import ChatRequest
 
 
+def _absence_state(conversation_state: str) -> dict:
+    return {
+        "intent": "absence_notice",
+        "scenario_key": "교수님:결석 사유 전달",
+        "state_version": 2,
+        "professor_name": "교수님",
+        "class_name": "자료구조",
+        "absence_date": "오늘",
+        "absence_reason": "몸이 좋지 않음",
+        "user_name": "김개굴",
+        "conversation_state": conversation_state,
+        "missing_fields": [],
+        "last_ai_message": "결석 사유를 확인했습니다.",
+        "user_action": "provide_absence_info",
+    }
+
+
 def _patch_absence_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":
@@ -194,16 +211,7 @@ def test_chat_route_professor_absence_confirm_moves_to_noted(monkeypatch):
         description="교수님께 결석 사유를 전달하는 상황",
         userMessage="네, 맞습니다.",
         conversationState="confirming_absence_info",
-        scenarioState={
-            "intent": "absence_notice",
-            "scenario_key": "교수님:결석 사유 전달",
-            "state_version": 2,
-            "professor_name": "교수님",
-            "absence_date": "오늘",
-            "absence_reason": "몸이 좋지 않음",
-            "user_name": "김개굴",
-            "conversation_state": "confirming_absence_info",
-        },
+        scenarioState=_absence_state("confirming_absence_info"),
         history=[],
     )
 
@@ -223,16 +231,7 @@ def test_chat_route_professor_absence_change_reason_resets_reason(monkeypatch):
         description="교수님께 결석 사유를 전달하는 상황",
         userMessage="결석 사유를 다시 말씀드리겠습니다.",
         conversationState="confirming_absence_info",
-        scenarioState={
-            "intent": "absence_notice",
-            "scenario_key": "교수님:결석 사유 전달",
-            "state_version": 2,
-            "professor_name": "교수님",
-            "absence_date": "오늘",
-            "absence_reason": "몸이 좋지 않음",
-            "user_name": "김개굴",
-            "conversation_state": "confirming_absence_info",
-        },
+        scenarioState=_absence_state("confirming_absence_info"),
         history=[],
     )
 
@@ -254,16 +253,7 @@ def test_chat_route_professor_absence_noted_moves_to_closing(monkeypatch):
         description="교수님께 결석 사유를 전달하는 상황",
         userMessage="네, 감사합니다.",
         conversationState="absence_noted",
-        scenarioState={
-            "intent": "absence_notice",
-            "scenario_key": "교수님:결석 사유 전달",
-            "state_version": 2,
-            "professor_name": "교수님",
-            "absence_date": "오늘",
-            "absence_reason": "몸이 좋지 않음",
-            "user_name": "김개굴",
-            "conversation_state": "absence_noted",
-        },
+        scenarioState=_absence_state("absence_noted"),
         history=[],
     )
 
@@ -283,13 +273,7 @@ def test_chat_route_professor_absence_closing_moves_to_end(monkeypatch):
         description="교수님께 결석 사유를 전달하는 상황",
         userMessage="네, 감사합니다.",
         conversationState="closing",
-        scenarioState={
-            "intent": "absence_notice",
-            "scenario_key": "교수님:결석 사유 전달",
-            "state_version": 2,
-            "professor_name": "교수님",
-            "conversation_state": "closing",
-        },
+        scenarioState=_absence_state("closing"),
         history=[],
     )
 

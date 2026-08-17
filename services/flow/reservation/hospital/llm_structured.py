@@ -19,6 +19,23 @@ DEFAULT_HOSPITAL_STRUCTURED_RESULT: Dict[str, Any] = {
     "user_action": "unknown",
     "selected_time": None,
 }
+HOSPITAL_USER_ACTIONS = frozenset(
+    {
+        "continue_collecting",
+        "confirm_reservation_info",
+        "change_department",
+        "change_date",
+        "change_time",
+        "change_user_name",
+        "lookup_availability",
+        "confirm_available_time",
+        "ask_other_time",
+        "select_alternative_time",
+        "go_closing",
+        "end_call",
+        "unknown",
+    }
+)
 
 
 def analyze_hospital_reservation_user_message(
@@ -146,22 +163,8 @@ def _normalize_hospital_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any
     for key in ["department", "date", "time", "user_name", "selected_time"]:
         result[key] = optional_string(parsed, key)
 
-    allowed_actions = {
-        "continue_collecting",
-        "confirm_reservation_info",
-        "change_department",
-        "change_date",
-        "change_time",
-        "change_user_name",
-        "lookup_availability",
-        "confirm_available_time",
-        "ask_other_time",
-        "select_alternative_time",
-        "go_closing",
-        "end_call",
-        "unknown",
-    }
-
-    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
+    result["user_action"] = allowed_string(
+        parsed, "user_action", HOSPITAL_USER_ACTIONS
+    )
 
     return result

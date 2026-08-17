@@ -6,8 +6,29 @@ from typing import Dict, Any
 
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.reservation.hospital.graph import hospital_reservation_graph
+from services.flow.reservation.hospital.llm_structured import HOSPITAL_USER_ACTIONS
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
+from services.flow.common.detailed_state_validation import ReservationStateContract
+
+
+HOSPITAL_STATE_CONTRACT = ReservationStateContract(
+    identity_field="service_name",
+    required_fields=("department", "date", "time", "user_name"),
+    allowed_actions=HOSPITAL_USER_ACTIONS,
+    information_complete_states=frozenset(
+        {
+            "confirming_info",
+            "checking_availability",
+            "reservation_lookup",
+            "reservation_available",
+            "reservation_unavailable",
+            "suggest_alternative",
+            "reservation_confirmed",
+        }
+    ),
+    allowed_intents=frozenset({"reservation", None}),
+)
 
 
 def is_hospital_reservation_request(req: ChatRequest) -> bool:
@@ -78,6 +99,7 @@ HOSPITAL_RESERVATION_CONTRACT = DetailedGraphContract(
             "END",
         }
     ),
+    validate_state=HOSPITAL_STATE_CONTRACT.validate,
 )
 
 

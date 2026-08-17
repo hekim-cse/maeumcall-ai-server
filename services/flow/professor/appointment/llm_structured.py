@@ -18,6 +18,19 @@ DEFAULT_APPOINTMENT_STRUCTURED_RESULT: Dict[str, Any] = {
     "user_name": None,
     "user_action": "unknown",
 }
+PROFESSOR_APPOINTMENT_USER_ACTIONS = frozenset(
+    {
+        "provide_appointment_info",
+        "confirm_info",
+        "change_purpose",
+        "change_date",
+        "change_time",
+        "change_user_name",
+        "go_closing",
+        "end_call",
+        "unknown",
+    }
+)
 
 
 def analyze_professor_appointment_user_message(
@@ -120,18 +133,8 @@ def _normalize_appointment_analysis_result(parsed: Dict[str, Any]) -> Dict[str, 
     for key in ["appointment_purpose", "date", "time", "user_name"]:
         result[key] = optional_string(parsed, key)
 
-    allowed_actions = {
-        "provide_appointment_info",
-        "confirm_info",
-        "change_purpose",
-        "change_date",
-        "change_time",
-        "change_user_name",
-        "go_closing",
-        "end_call",
-        "unknown",
-    }
-
-    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
+    result["user_action"] = allowed_string(
+        parsed, "user_action", PROFESSOR_APPOINTMENT_USER_ACTIONS
+    )
 
     return result

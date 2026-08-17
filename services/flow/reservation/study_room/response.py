@@ -2,9 +2,27 @@ from __future__ import annotations
 
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.reservation.study_room.graph import study_room_reservation_graph
+from services.flow.reservation.study_room.llm_structured import STUDY_ROOM_USER_ACTIONS
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
+from services.flow.common.detailed_state_validation import ReservationStateContract
 from services.flow.reservation.study_room.policy import compact_study_room_state
+
+
+STUDY_ROOM_STATE_CONTRACT = ReservationStateContract(
+    identity_field="service_name",
+    required_fields=("date", "start_time", "duration", "party_size", "user_name"),
+    allowed_actions=STUDY_ROOM_USER_ACTIONS,
+    information_complete_states=frozenset(
+        {
+            "confirming_info",
+            "checking_availability",
+            "reservation_available",
+            "reservation_unavailable",
+            "reservation_confirmed",
+        }
+    ),
+)
 
 
 STUDY_ROOM_RESERVATION_CONTRACT = DetailedGraphContract(
@@ -26,6 +44,7 @@ STUDY_ROOM_RESERVATION_CONTRACT = DetailedGraphContract(
             "END",
         }
     ),
+    validate_state=STUDY_ROOM_STATE_CONTRACT.validate,
 )
 
 

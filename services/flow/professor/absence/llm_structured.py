@@ -18,6 +18,19 @@ DEFAULT_ABSENCE_STRUCTURED_RESULT: Dict[str, Any] = {
     "user_name": None,
     "user_action": "unknown",
 }
+PROFESSOR_ABSENCE_USER_ACTIONS = frozenset(
+    {
+        "provide_absence_info",
+        "confirm_info",
+        "change_class_name",
+        "change_absence_date",
+        "change_absence_reason",
+        "change_user_name",
+        "go_closing",
+        "end_call",
+        "unknown",
+    }
+)
 
 
 def analyze_professor_absence_user_message(
@@ -120,18 +133,8 @@ def _normalize_absence_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]
     for key in ["class_name", "absence_date", "absence_reason", "user_name"]:
         result[key] = optional_string(parsed, key)
 
-    allowed_actions = {
-        "provide_absence_info",
-        "confirm_info",
-        "change_class_name",
-        "change_absence_date",
-        "change_absence_reason",
-        "change_user_name",
-        "go_closing",
-        "end_call",
-        "unknown",
-    }
-
-    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
+    result["user_action"] = allowed_string(
+        parsed, "user_action", PROFESSOR_ABSENCE_USER_ACTIONS
+    )
 
     return result

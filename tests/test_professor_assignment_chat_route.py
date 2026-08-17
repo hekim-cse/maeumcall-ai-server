@@ -2,6 +2,23 @@ from routes.chat_routes import chat
 from schemas.chat_models import ChatRequest
 
 
+def _assignment_state(conversation_state: str) -> dict:
+    return {
+        "intent": "assignment_inquiry",
+        "scenario_key": "교수님:과제 문의",
+        "state_version": 2,
+        "professor_name": "교수님",
+        "course_name": "자료구조",
+        "assignment_topic": "제출 형식",
+        "question": "과제 제출 형식을 여쭤보고 싶습니다.",
+        "user_name": "김개굴",
+        "conversation_state": conversation_state,
+        "missing_fields": [],
+        "last_ai_message": "과제 문의 내용을 확인했습니다.",
+        "user_action": "provide_assignment_info",
+    }
+
+
 def _patch_assignment_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":
@@ -160,16 +177,7 @@ def test_chat_route_professor_assignment_answering_moves_to_closing(monkeypatch)
         description="교수님께 과제 관련 내용을 문의하는 상황",
         userMessage="네, 알겠습니다.",
         conversationState="answering_assignment_question",
-        scenarioState={
-            "intent": "assignment_inquiry",
-            "scenario_key": "교수님:과제 문의",
-            "state_version": 2,
-            "professor_name": "교수님",
-            "assignment_topic": "제출 형식",
-            "question": "과제 제출 형식을 여쭤보고 싶습니다.",
-            "user_name": "김개굴",
-            "conversation_state": "answering_assignment_question",
-        },
+        scenarioState=_assignment_state("answering_assignment_question"),
         history=[],
     )
 
@@ -189,13 +197,7 @@ def test_chat_route_professor_assignment_closing_moves_to_end(monkeypatch):
         description="교수님께 과제 관련 내용을 문의하는 상황",
         userMessage="네, 감사합니다.",
         conversationState="closing",
-        scenarioState={
-            "intent": "assignment_inquiry",
-            "scenario_key": "교수님:과제 문의",
-            "state_version": 2,
-            "professor_name": "교수님",
-            "conversation_state": "closing",
-        },
+        scenarioState=_assignment_state("closing"),
         history=[],
     )
 

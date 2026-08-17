@@ -20,6 +20,24 @@ DEFAULT_STUDY_ROOM_STRUCTURED_RESULT: Dict[str, Any] = {
     "user_action": "unknown",
     "selected_time": None,
 }
+STUDY_ROOM_USER_ACTIONS = frozenset(
+    {
+        "continue_collecting",
+        "confirm",
+        "change_date",
+        "change_start_time",
+        "change_duration",
+        "change_party_size",
+        "change_user_name",
+        "change_info",
+        "confirm_reservation",
+        "ask_other_time",
+        "select_alternative_time",
+        "go_closing",
+        "end_call",
+        "unknown",
+    }
+)
 
 
 def analyze_study_room_reservation_user_message(
@@ -147,23 +165,8 @@ def _normalize_study_room_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
     ]:
         result[key] = optional_string(parsed, key)
 
-    allowed_actions = {
-        "continue_collecting",
-        "confirm",
-        "change_date",
-        "change_start_time",
-        "change_duration",
-        "change_party_size",
-        "change_user_name",
-        "change_info",
-        "confirm_reservation",
-        "ask_other_time",
-        "select_alternative_time",
-        "go_closing",
-        "end_call",
-        "unknown",
-    }
-
-    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
+    result["user_action"] = allowed_string(
+        parsed, "user_action", STUDY_ROOM_USER_ACTIONS
+    )
 
     return result

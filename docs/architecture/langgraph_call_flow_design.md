@@ -104,6 +104,7 @@ versioned scenarioState + recommendedReplies + shouldEndCall
 - `scenario_key`: 다른 통화의 상태 혼입 차단
 - `state_version`: 배포 전후 상태 스키마 불일치 차단
 - allowlist: 시나리오가 소유하지 않는 필드 차단
+- 상세 그래프 도메인 계약: 필드 자료형·문자열 길이·action·필수 필드·예약 가능 상태의 조합 검증
 - 이중 상태 일치 검사: 최상위와 내부 `conversation_state`의 충돌 차단
 - 종료 상태 보호: `END` 이후 새 발화 차단
 

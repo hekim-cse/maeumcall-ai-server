@@ -20,6 +20,24 @@ DEFAULT_HAIR_SALON_STRUCTURED_RESULT: Dict[str, Any] = {
     "user_action": "unknown",
     "selected_time": None,
 }
+HAIR_SALON_USER_ACTIONS = frozenset(
+    {
+        "continue_collecting",
+        "confirm",
+        "change_date",
+        "change_time",
+        "change_service_type",
+        "change_designer",
+        "change_user_name",
+        "change_info",
+        "confirm_reservation",
+        "ask_other_time",
+        "select_alternative_time",
+        "go_closing",
+        "end_call",
+        "unknown",
+    }
+)
 
 
 def analyze_hair_salon_reservation_user_message(
@@ -131,23 +149,8 @@ def _normalize_hair_salon_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
     ]:
         result[key] = optional_string(parsed, key)
 
-    allowed_actions = {
-        "continue_collecting",
-        "confirm",
-        "change_date",
-        "change_time",
-        "change_service_type",
-        "change_designer",
-        "change_user_name",
-        "change_info",
-        "confirm_reservation",
-        "ask_other_time",
-        "select_alternative_time",
-        "go_closing",
-        "end_call",
-        "unknown",
-    }
-
-    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
+    result["user_action"] = allowed_string(
+        parsed, "user_action", HAIR_SALON_USER_ACTIONS
+    )
 
     return result

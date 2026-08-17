@@ -2,9 +2,27 @@ from __future__ import annotations
 
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.reservation.hair_salon.graph import hair_salon_reservation_graph
+from services.flow.reservation.hair_salon.llm_structured import HAIR_SALON_USER_ACTIONS
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
+from services.flow.common.detailed_state_validation import ReservationStateContract
 from services.flow.reservation.hair_salon.policy import compact_hair_salon_state
+
+
+HAIR_SALON_STATE_CONTRACT = ReservationStateContract(
+    identity_field="service_name",
+    required_fields=("date", "time", "service_type", "designer", "user_name"),
+    allowed_actions=HAIR_SALON_USER_ACTIONS | {"invalid_alternative_time"},
+    information_complete_states=frozenset(
+        {
+            "confirming_info",
+            "checking_availability",
+            "reservation_available",
+            "reservation_unavailable",
+            "reservation_confirmed",
+        }
+    ),
+)
 
 
 HAIR_SALON_RESERVATION_CONTRACT = DetailedGraphContract(
@@ -26,6 +44,7 @@ HAIR_SALON_RESERVATION_CONTRACT = DetailedGraphContract(
             "END",
         }
     ),
+    validate_state=HAIR_SALON_STATE_CONTRACT.validate,
 )
 
 

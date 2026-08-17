@@ -18,6 +18,15 @@ DEFAULT_ASSIGNMENT_STRUCTURED_RESULT: Dict[str, Any] = {
     "user_name": None,
     "user_action": "unknown",
 }
+PROFESSOR_ASSIGNMENT_USER_ACTIONS = frozenset(
+    {
+        "provide_assignment_info",
+        "ask_follow_up",
+        "go_closing",
+        "end_call",
+        "unknown",
+    }
+)
 
 
 def analyze_professor_assignment_user_message(
@@ -114,14 +123,8 @@ def _normalize_assignment_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
     for key in ["course_name", "assignment_topic", "question", "user_name"]:
         result[key] = optional_string(parsed, key)
 
-    allowed_actions = {
-        "provide_assignment_info",
-        "ask_follow_up",
-        "go_closing",
-        "end_call",
-        "unknown",
-    }
-
-    result["user_action"] = allowed_string(parsed, "user_action", allowed_actions)
+    result["user_action"] = allowed_string(
+        parsed, "user_action", PROFESSOR_ASSIGNMENT_USER_ACTIONS
+    )
 
     return result
