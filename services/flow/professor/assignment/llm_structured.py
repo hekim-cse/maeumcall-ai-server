@@ -12,6 +12,7 @@ from llm.structured_output import (
 
 DEFAULT_ASSIGNMENT_STRUCTURED_RESULT: Dict[str, Any] = {
     "intent": "assignment_inquiry",
+    "course_name": None,
     "assignment_topic": None,
     "question": None,
     "user_name": None,
@@ -27,6 +28,7 @@ def analyze_professor_assignment_user_message(
     교수님 과제 문의 사용자 발화를 LLM structured output으로 분석한다.
 
     분석 대상:
+    - course_name: 수업명 또는 과목명
     - assignment_topic: 과제 주제 또는 유형
     - question: 사용자의 과제 관련 질문
     - user_name: 학생 이름
@@ -71,6 +73,7 @@ def build_professor_assignment_analysis_prompt(
 반환 JSON schema:
 {{
   "intent": "assignment_inquiry",
+  "course_name": string 또는 null,
   "assignment_topic": string 또는 null,
   "question": string 또는 null,
   "user_name": string 또는 null,
@@ -78,6 +81,7 @@ def build_professor_assignment_analysis_prompt(
 }}
 
 필드 기준:
+- course_name: 과제를 부여한 수업명 또는 과목명. 예: 자료구조, 알고리즘
 - assignment_topic: 과제 제출 형식, 제출 기한, 보고서, 발표, 팀플 등 문의 대상
 - question: 사용자가 실제로 궁금해하는 질문 내용
 - user_name: 학생 이름. 이름이 없으면 null
@@ -107,7 +111,7 @@ def _normalize_assignment_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
     if parsed.get("intent") != "assignment_inquiry":
         raise ValueError("intent must be assignment_inquiry")
 
-    for key in ["assignment_topic", "question", "user_name"]:
+    for key in ["course_name", "assignment_topic", "question", "user_name"]:
         result[key] = optional_string(parsed, key)
 
     allowed_actions = {

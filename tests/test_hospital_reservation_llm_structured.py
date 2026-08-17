@@ -16,6 +16,7 @@ def test_hospital_structured_analysis_extracts_full_info(monkeypatch):
           "department": "내과",
           "date": "내일",
           "time": "오후 3시",
+          "user_name": "김개굴",
           "user_action": "continue_collecting",
           "selected_time": null
         }
@@ -31,6 +32,7 @@ def test_hospital_structured_analysis_extracts_full_info(monkeypatch):
     assert result["department"] == "내과"
     assert result["date"] == "내일"
     assert result["time"] == "오후 3시"
+    assert result["user_name"] == "김개굴"
     assert result["user_action"] == "continue_collecting"
     assert result["selected_time"] is None
 
@@ -40,7 +42,7 @@ def test_hospital_structured_analysis_handles_markdown_json(monkeypatch):
         """```json
         {"intent":"reservation"}
         ```""",
-        '{"intent":"reservation","department":"피부과","date":"모레","time":"오전 10시","user_action":"confirm_reservation_info","selected_time":null}',
+        '{"intent":"reservation","department":"피부과","date":"모레","time":"오전 10시","user_name":"김개굴","user_action":"confirm_reservation_info","selected_time":null}',
     ])
     monkeypatch.setattr(
         "services.flow.reservation.hospital.llm_structured.complete_hf_json",
@@ -68,6 +70,7 @@ def test_hospital_structured_analysis_extracts_selected_time(monkeypatch):
           "department": null,
           "date": null,
           "time": null,
+          "user_name": null,
           "user_action": "select_alternative_time",
           "selected_time": "오후 4시"
         }
@@ -102,6 +105,7 @@ def test_hospital_structured_analysis_rejects_invalid_action(monkeypatch):
           "department": "내과",
           "date": "내일",
           "time": "오후 3시",
+          "user_name": "김개굴",
           "user_action": "invalid_action",
           "selected_time": null
         }

@@ -15,6 +15,7 @@ DEFAULT_HOSPITAL_STRUCTURED_RESULT: Dict[str, Any] = {
     "department": None,
     "date": None,
     "time": None,
+    "user_name": None,
     "user_action": "unknown",
     "selected_time": None,
 }
@@ -32,6 +33,7 @@ def analyze_hospital_reservation_user_message(
     - department: 진료과
     - date: 예약 날짜
     - time: 예약 시간
+    - user_name: 예약자 이름
     - user_action: 현재 상태에서 사용자의 행동
     - selected_time: 대안 시간 선택값
     """
@@ -67,6 +69,7 @@ markdown, 설명, 코드블록, 따옴표 밖 문장은 출력하지 않는다.
   "department": string | null,
   "date": string | null,
   "time": string | null,
+  "user_name": string | null,
   "user_action": string,
   "selected_time": string | null
 }
@@ -76,6 +79,7 @@ markdown, 설명, 코드블록, 따옴표 밖 문장은 출력하지 않는다.
 - department는 내과, 피부과, 정형외과, 이비인후과 같은 진료과이다.
 - date는 오늘, 내일, 모레, 다음 주 월요일, 6월 10일 같은 예약 날짜이다.
 - time은 오전, 오후, 오전 10시, 오후 3시 같은 시간 표현이다.
+- user_name은 예약자 이름이며 발화에 없으면 null이다.
 - selected_time은 사용자가 대안 시간 중 하나를 고른 경우에만 채운다.
 - 알 수 없는 값은 null로 둔다.
 
@@ -86,6 +90,7 @@ conversation_state별 user_action 규칙:
 - 진료과를 바꾸려 하면 "change_department"
 - 날짜를 바꾸려 하면 "change_date"
 - 시간을 바꾸려 하면 "change_time"
+- 예약자 이름을 바꾸려 하면 "change_user_name"
 - 알 수 없으면 "unknown"
 
 2) checking_availability
@@ -138,7 +143,7 @@ def _normalize_hospital_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any
     result = DEFAULT_HOSPITAL_STRUCTURED_RESULT.copy()
     result["intent"] = intent
 
-    for key in ["department", "date", "time", "selected_time"]:
+    for key in ["department", "date", "time", "user_name", "selected_time"]:
         result[key] = optional_string(parsed, key)
 
     allowed_actions = {
@@ -147,6 +152,7 @@ def _normalize_hospital_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any
         "change_department",
         "change_date",
         "change_time",
+        "change_user_name",
         "lookup_availability",
         "confirm_available_time",
         "ask_other_time",

@@ -11,6 +11,8 @@ from services.flow.common.state_contract import (
     build_scenario_key,
     complete_detailed_graph,
 )
+from services.flow.cityhall.contracts import CITYHALL_CONTRACTS
+from services.flow.delivery.contracts import DELIVERY_CONTRACTS
 from services.flow.professor.absence.response import PROFESSOR_ABSENCE_CONTRACT
 from services.flow.professor.appointment.response import PROFESSOR_APPOINTMENT_CONTRACT
 from services.flow.professor.assignment.response import PROFESSOR_ASSIGNMENT_CONTRACT
@@ -20,6 +22,7 @@ from services.flow.reservation.restaurant.response import RESTAURANT_RESERVATION
 from services.flow.reservation.study_room.response import STUDY_ROOM_RESERVATION_CONTRACT
 from services.flow.scenario.registry import SCENARIOS, ScenarioConfig
 from services.flow.scenario.response import complete_scenario_graph_if_supported
+from services.flow.support.contracts import SUPPORT_CONTRACTS
 
 
 class FlowExecutionMode(str, Enum):
@@ -60,6 +63,9 @@ DETAILED_GRAPH_CONTRACTS: Tuple[DetailedGraphContract, ...] = (
     PROFESSOR_APPOINTMENT_CONTRACT,
     PROFESSOR_ASSIGNMENT_CONTRACT,
     PROFESSOR_ABSENCE_CONTRACT,
+    *DELIVERY_CONTRACTS,
+    *CITYHALL_CONTRACTS,
+    *SUPPORT_CONTRACTS,
 )
 
 

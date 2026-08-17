@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import AbstractSet, Any, Callable, Dict, FrozenSet, Mapping, Protocol, Set
+from typing import AbstractSet, Any, Callable, Dict, FrozenSet, Mapping, Optional, Protocol, Set
 
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.common.scenario_keys import canonicalize_scenario_label
@@ -25,6 +25,7 @@ class CompiledGraph(Protocol):
 
 
 CompactState = Callable[[Dict[str, Any]], Dict[str, Any]]
+ValidateState = Callable[[Dict[str, Any]], None]
 
 
 def build_scenario_key(category: str, title: str) -> str:
@@ -124,6 +125,7 @@ class DetailedGraphContract:
     defaults: Mapping[str, Any]
     allowed_conversation_states: FrozenSet[str]
     initial_conversation_state: str = "greeting"
+    validate_state: Optional[ValidateState] = None
 
     @property
     def allowed_state_fields(self) -> Set[str]:
@@ -141,6 +143,8 @@ def complete_detailed_graph(
         allowed_fields=contract.allowed_state_fields,
         allowed_conversation_states=contract.allowed_conversation_states,
     )
+    if contract.validate_state is not None:
+        contract.validate_state(previous_state)
     conversation_state = (
         req.conversationState
         or previous_state.get("conversation_state")

@@ -5,7 +5,7 @@
 ## 설계 원칙
 
 1. `category`와 `title`의 정확한 등록 키로 그래프를 선택합니다.
-2. 예약·교수님 시나리오의 상태 전이 데이터는 검증된 LLM JSON만 사용합니다.
+2. 16개 상세 시나리오의 상태 전이 데이터는 검증된 LLM JSON만 사용합니다.
 3. 중앙 실행 레지스트리는 각 시나리오를 상세 또는 등록형 중 하나의 실행 유형에만 연결합니다.
 4. 모델 출력이 계약을 위반하면 오류 원인을 포함해 한 번 재시도합니다.
 5. 재시도 실패나 모델 미설정은 `AIServiceError`로 전달하며 추정값을 만들지 않습니다.
@@ -17,8 +17,8 @@
 ```text
 POST /chat
   └─ central flow registry
-       ├─ detailed ─ 예약 4개·교수님 3개 상세 그래프
-       └─ registered ─ 나머지 25개 등록 시나리오 공통 그래프
+       ├─ detailed ─ 예약 4개·교수님 3개·배달 3개·시청 3개·고객센터 3개
+       └─ registered ─ 가족·친구·연인·회사 16개 등록 시나리오 공통 그래프
 ```
 
 상세 그래프의 처리 경계는 다음과 같습니다.
@@ -57,6 +57,17 @@ services/flow/
 │   ├── state.py
 │   ├── graph.py
 │   └── response.py
+├── service_workflow/
+│   ├── contracts.py
+│   ├── structured.py
+│   ├── nodes.py
+│   └── graph.py
+├── delivery/
+│   └── contracts.py
+├── cityhall/
+│   └── contracts.py
+├── support/
+│   └── contracts.py
 ├── reservation/
 │   ├── hospital/
 │   ├── restaurant/
@@ -68,6 +79,8 @@ services/flow/
     ├── assignment/
     └── absence/
 ```
+
+`service_workflow`은 배달·시청·고객센터의 상태 실행 코드를 공유한다. 필드, 코드형 업무 분기, 상태 이름, 확인 문장, 외부 처리 경계는 각 카테고리의 `contracts.py`에 명시하므로 9개 시나리오는 서로 다른 독립 그래프로 컴파일된다. A/S 안전 이상은 `safety_action_required` 보호 상태로 먼저 전환되어 일반 진단과 접수를 중단한다.
 
 상세 시나리오에서 자주 사용하는 파일의 책임은 다음과 같습니다.
 
@@ -101,6 +114,9 @@ services/flow/
 - markdown이나 설명이 섞인 출력의 재시도
 - 허용되지 않은 action의 명시적 실패
 - 필수 정보 재수집과 단일 필드 변경
+- 업무 취소와 분기별 처리 준비 상태
+- 중첩 `fields`의 키·타입·누락 목록·상태 일관성 검증
+- 외부 조회 결과를 만들지 않는 처리 경계
 - 예약 가능/불가/대안/확정/종료 전이
 - 모바일 이모지 제목의 등록 키 정규화
 - 모델 장애의 API 오류 계약

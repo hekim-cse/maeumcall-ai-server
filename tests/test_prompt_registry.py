@@ -2,7 +2,7 @@ import pytest
 
 from llm.errors import PromptConfigurationError
 from llm.prompt_builder import load_scenario_prompt
-from services.flow.scenario.registry import SCENARIOS
+from services.flow.registry import FLOW_REGISTRY
 from services.prompt_loader import _load_json
 from services.prompt_registry import CATEGORY_DIR_MAP, category_dir_path, get_prompt_path
 
@@ -10,11 +10,11 @@ from services.prompt_registry import CATEGORY_DIR_MAP, category_dir_path, get_pr
 pytestmark = pytest.mark.unit
 
 
-@pytest.mark.parametrize("config", list(SCENARIOS.values()), ids=lambda item: item.key)
-def test_registered_scenario_prompt_files_exist(config):
-    path = get_prompt_path(config.category, f"📞 {config.title}")
+@pytest.mark.parametrize("registration", list(FLOW_REGISTRY.values()), ids=lambda item: item.key)
+def test_product_scenario_prompt_files_exist(registration):
+    path = get_prompt_path(registration.category, f"📞 {registration.title}")
 
-    assert path.exists(), f"missing prompt mapping: {config.key}"
+    assert path.exists(), f"missing prompt mapping: {registration.key}"
 
 
 def test_json_dialogue_is_loaded_as_prompt_examples():

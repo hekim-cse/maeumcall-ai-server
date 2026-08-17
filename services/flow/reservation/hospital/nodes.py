@@ -36,6 +36,7 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
         "department": analysis.get("department") or state.get("department"),
         "date": analysis.get("date") or state.get("date"),
         "time": next_time,
+        "user_name": analysis.get("user_name") or state.get("user_name"),
         "last_ai_message": state.get("last_ai_message"),
 
         "user_action": analysis.get("user_action") or "unknown",
@@ -113,6 +114,13 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
                 "should_end_call": False,
             }
 
+        if user_action == "change_user_name":
+            return {
+                "conversation_state": "asking_user_name",
+                "user_name": None,
+                "should_end_call": False,
+            }
+
         return {
             "conversation_state": "confirming_info",
             "should_end_call": False,
@@ -122,6 +130,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
     department = state.get("department")
     date = state.get("date")
     time = state.get("time")
+    user_name = state.get("user_name")
 
     if current_state in ["greeting", "asking_purpose"]:
         if intent == "reservation":
@@ -138,6 +147,11 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
             if not time:
                 return {
                     "conversation_state": "asking_time",
+                    "should_end_call": False,
+                }
+            if not user_name:
+                return {
+                    "conversation_state": "asking_user_name",
                     "should_end_call": False,
                 }
             return {
@@ -162,6 +176,11 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
                     "conversation_state": "asking_time",
                     "should_end_call": False,
                 }
+            if not user_name:
+                return {
+                    "conversation_state": "asking_user_name",
+                    "should_end_call": False,
+                }
             return {
                 "conversation_state": "confirming_info",
                 "should_end_call": False,
@@ -179,6 +198,11 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
                     "conversation_state": "asking_time",
                     "should_end_call": False,
                 }
+            if not user_name:
+                return {
+                    "conversation_state": "asking_user_name",
+                    "should_end_call": False,
+                }
             return {
                 "conversation_state": "confirming_info",
                 "should_end_call": False,
@@ -191,6 +215,11 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
 
     if current_state == "asking_time":
         if time:
+            if not user_name:
+                return {
+                    "conversation_state": "asking_user_name",
+                    "should_end_call": False,
+                }
             return {
                 "conversation_state": "confirming_info",
                 "should_end_call": False,
@@ -198,6 +227,17 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
 
         return {
             "conversation_state": "asking_time",
+            "should_end_call": False,
+        }
+
+    if current_state == "asking_user_name":
+        if user_name:
+            return {
+                "conversation_state": "confirming_info",
+                "should_end_call": False,
+            }
+        return {
+            "conversation_state": "asking_user_name",
             "should_end_call": False,
         }
     

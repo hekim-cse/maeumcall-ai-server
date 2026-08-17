@@ -13,6 +13,7 @@ def test_professor_assignment_structured_analysis_extracts_full_info(monkeypatch
         lambda messages: """
         {
           "intent": "assignment_inquiry",
+          "course_name": "자료구조",
           "assignment_topic": "제출 형식",
           "question": "과제 제출 형식을 여쭤보고 싶습니다.",
           "user_name": "김개굴",
@@ -27,6 +28,7 @@ def test_professor_assignment_structured_analysis_extracts_full_info(monkeypatch
     )
 
     assert result["intent"] == "assignment_inquiry"
+    assert result["course_name"] == "자료구조"
     assert result["assignment_topic"] == "제출 형식"
     assert result["question"] == "과제 제출 형식을 여쭤보고 싶습니다."
     assert result["user_name"] == "김개굴"
@@ -38,7 +40,7 @@ def test_professor_assignment_structured_analysis_handles_markdown_json(monkeypa
         """```json
         {"intent":"assignment_inquiry"}
         ```""",
-        '{"intent":"assignment_inquiry","assignment_topic":"제출 기한","question":"제출 기한을 확인하고 싶습니다.","user_name":null,"user_action":"provide_assignment_info"}',
+        '{"intent":"assignment_inquiry","course_name":"자료구조","assignment_topic":"제출 기한","question":"제출 기한을 확인하고 싶습니다.","user_name":null,"user_action":"provide_assignment_info"}',
     ])
     monkeypatch.setattr(
         "services.flow.professor.assignment.llm_structured.complete_hf_json",
@@ -72,6 +74,7 @@ def test_professor_assignment_structured_analysis_rejects_invalid_action(monkeyp
         lambda messages: """
         {
           "intent": "assignment_inquiry",
+          "course_name": "자료구조",
           "assignment_topic": "보고서",
           "question": "보고서 분량을 여쭤보고 싶습니다.",
           "user_name": "김개굴",

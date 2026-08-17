@@ -8,11 +8,15 @@ def get_missing_professor_assignment_fields(state: Dict) -> List[str]:
     교수님 과제 문의에 필요한 필수 정보 중 아직 없는 값을 반환한다.
 
     필수 정보:
+    - course_name: 수업명 또는 과목명
     - assignment_topic: 과제 주제/유형
     - question: 질문 내용
     - user_name: 학생 이름
     """
     missing_fields = []
+
+    if not state.get("course_name"):
+        missing_fields.append("course_name")
 
     if not state.get("assignment_topic"):
         missing_fields.append("assignment_topic")

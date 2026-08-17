@@ -9,8 +9,8 @@ def get_professor_assignment_recommended_replies(conversation_state: str) -> Lis
     """
     if conversation_state == "collecting_assignment_info":
         return [
+            "자료구조 수업 과제입니다.",
             "과제 제출 형식을 여쭤보고 싶습니다.",
-            "과제 제출 기한을 확인하고 싶습니다.",
             "김개굴 학생입니다.",
         ]
 
@@ -27,7 +27,7 @@ def get_professor_assignment_recommended_replies(conversation_state: str) -> Lis
         ]
 
     return [
+        "자료구조 수업 과제입니다.",
         "과제 제출 형식을 여쭤보고 싶습니다.",
-        "과제 제출 기한을 확인하고 싶습니다.",
         "김개굴 학생입니다.",
     ]

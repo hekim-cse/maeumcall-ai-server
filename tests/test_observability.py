@@ -74,6 +74,7 @@ def test_structured_output_retry_and_contract_failure_are_recorded(monkeypatch):
             (
                 '{"intent":"reservation","department":"내과",'
                 '"date":"내일","time":"오후 3시",'
+                '"user_name":"김개굴",'
                 '"user_action":"continue_collecting","selected_time":null}'
             ),
         ]

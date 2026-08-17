@@ -10,6 +10,8 @@ def build_professor_absence_response(conversation_state: str, state: Dict) -> st
 
     if conversation_state == "collecting_absence_info":
         missing = state.get("missing_fields") or []
+        if "class_name" in missing:
+            return f"네, {professor_name}입니다. 어떤 수업에 결석하게 되는지 말씀해주시겠습니까?"
         if "absence_date" in missing:
             return f"네, {professor_name}입니다. 결석하게 되는 날짜를 말씀해주시겠습니까?"
         if "absence_reason" in missing:
@@ -29,9 +31,8 @@ def build_professor_absence_response(conversation_state: str, state: Dict) -> st
 
 
 def _confirmation(state: Dict) -> str:
-    class_name = state.get("class_name")
-    class_part = f"{class_name} 수업 " if class_name else ""
     return (
         f"{state.get('user_name') or '학생'} 학생, {state.get('absence_date') or '결석 날짜'} "
-        f"{class_part}결석 사유가 {state.get('absence_reason') or '결석 사유'}인 것으로 확인했습니다. 맞습니까?"
+        f"{state.get('class_name') or '수업'} 수업 결석 사유가 "
+        f"{state.get('absence_reason') or '결석 사유'}인 것으로 확인했습니다. 맞습니까?"
     )

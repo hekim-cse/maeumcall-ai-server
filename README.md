@@ -46,7 +46,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 
 사용자가 통화 상황에서 말한 내용을 서버로 전달하면, 서버는 현재 시나리오 상태를 판단하고 다음 AI 응답을 생성합니다.
 
-단순히 LLM에게 답변 생성을 맡기는 구조가 아니라, 전용 흐름 7개와 등록형 시나리오 흐름 25개를 LangGraph로 오케스트레이션합니다. 중앙 실행 레지스트리가 32개 시나리오를 상세·등록형 중 정확히 하나의 계약에 연결하며, 중복이나 미등록 조합을 명시적으로 차단합니다. 상세 그래프는 검증된 구조화 출력만 상태 전이에 사용하고, 확정된 서버 상태는 도메인 응답 정책으로 표현합니다. 모델 계약 위반은 제한 재시도 후 명시적 API 오류로 처리합니다.
+단순히 LLM에게 답변 생성을 맡기는 구조가 아니라, 상세 흐름 16개와 등록형 시나리오 흐름 16개를 LangGraph로 오케스트레이션합니다. 중앙 실행 레지스트리가 32개 시나리오를 상세·등록형 중 정확히 하나의 계약에 연결하며, 중복이나 미등록 조합을 명시적으로 차단합니다. 상세 그래프는 검증된 구조화 출력만 상태 전이에 사용하고, 확정된 서버 상태는 도메인 응답 정책으로 표현합니다. 모델 계약 위반은 제한 재시도 후 명시적 API 오류로 처리합니다.
 
 <p align="center">
   <img src="docs/assets/service_flow.png" width="75%" alt="Service Flow" />
@@ -236,7 +236,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 
 ## 7. LangGraph 적용 구조
 
-MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하지 않습니다. 예약·교수님 시나리오는 도메인별 상세 상태 그래프를 사용하고, 나머지 시나리오는 선언형 설정 기반 공통 그래프로 일관된 상태·종료·추천 답변을 관리합니다.
+MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하지 않습니다. 예약·교수님·배달·시청·고객센터 시나리오는 도메인별 상세 상태 그래프를 사용하고, 가족·친구·연인·회사 시나리오는 선언형 설정 기반 공통 그래프로 일관된 상태·종료·추천 답변을 관리합니다.
 
 메인 README에서는 전체 적용 현황만 간단히 정리하고, 각 카테고리별 상세 설계는 별도 README에서 관리합니다.
 
@@ -248,9 +248,9 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 | 👪 가족 | ✅ 선언형 공통 그래프 3개 | [Flow README](services/flow/README.md) |
 | 🧑‍🤝‍🧑 친구 | ✅ 선언형 공통 그래프 5개 | [Flow README](services/flow/README.md) |
 | 💑 연인 | ✅ 선언형 공통 그래프 4개 | [Flow README](services/flow/README.md) |
-| 🎧 고객센터 | ✅ 선언형 공통 그래프 3개 | [Flow README](services/flow/README.md) |
-| 🛵 배달 | ✅ 선언형 공통 그래프 3개 | [Flow README](services/flow/README.md) |
-| 🏛 시청 | ✅ 선언형 공통 그래프 3개 | [Flow README](services/flow/README.md) |
+| 🎧 고객센터 | ✅ 업무별 상세 그래프 3개 | [Flow README](services/flow/README.md) |
+| 🛵 배달 | ✅ 업무별 상세 그래프 3개 | [Flow README](services/flow/README.md) |
+| 🏛 시청 | ✅ 업무별 상세 그래프 3개 | [Flow README](services/flow/README.md) |
 
 <table>
   <tr>
@@ -280,8 +280,8 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 
 | 구분 | 결과 |
 |---|---|
-| 오프라인 단위·그래프·라우트 테스트 | ✅ 341개 통과 |
-| 실모델 통합 테스트 | 7개, 수동 실행으로 분리 |
+| 오프라인 단위·그래프·라우트 테스트 | ✅ 394개 통과 |
+| 실모델 통합 테스트 | 16개, 수동 실행으로 분리 |
 | 실패 테스트 | 없음 |
 | 기본 실행 네트워크 의존성 | 없음 |
 
@@ -320,7 +320,9 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 | `routes/` | FastAPI 라우터와 채팅·인증·음성 엔드포인트 |
 | `schemas/` | 요청/응답 데이터 모델 |
 | `services/flow/registry.py` | 32개 시나리오의 상세·등록형 LangGraph 실행 계약과 단일 디스패처 |
-| `services/flow/scenario/` | 25개 등록 시나리오의 구조화된 턴 생성 LangGraph |
+| `services/flow/scenario/` | 가족·친구·연인·회사 16개 등록 시나리오의 구조화된 턴 생성 LangGraph |
+| `services/flow/service_workflow/` | 배달·시청·고객센터 상세 그래프의 엄격한 필드·분기·확인 실행 엔진 |
+| `services/flow/delivery/`, `cityhall/`, `support/` | 9개 업무 시나리오의 독립 필드·상태·분기 계약 |
 | `services/flow/professor/` | 교수님 시나리오 3개의 상세 LangGraph |
 | `services/flow/reservation/` | 예약 시나리오 4개의 상세 LangGraph |
 | `llm/` | LLM provider, prompt builder, 구조화 출력 계약과 오류 타입 |
@@ -465,7 +467,7 @@ http://127.0.0.1:8000/docs
 | 사용자 인증 | 카카오 access token 검증 후 가명 UID 기반 Firebase 세션을 발급하고 서버에서 데이터 소유권 검증 |
 | 음성 데이터 영속성 | PostgreSQL 트랜잭션으로 확정 기준선과 진행 중 캘리브레이션 샘플 보존 |
 | 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패 Prometheus 지표 제공 |
-| 테스트 검증 | 오프라인 회귀 테스트 341개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 7개 분리 |
+| 테스트 검증 | 오프라인 회귀 테스트 394개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 16개 분리 |
 
 <table>
   <tr>

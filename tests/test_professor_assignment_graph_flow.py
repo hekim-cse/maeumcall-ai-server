@@ -69,7 +69,10 @@ def _patch_assignment_analysis(monkeypatch):
 
     monkeypatch.setattr(
         "services.flow.professor.assignment.nodes.analyze_professor_assignment_user_message",
-        fake_analyze,
+        lambda conversation_state, user_message: {
+            "course_name": "자료구조",
+            **fake_analyze(conversation_state, user_message),
+        },
     )
 
 
@@ -114,6 +117,34 @@ def test_professor_assignment_missing_user_name_keeps_collecting(monkeypatch):
     assert result["user_name"] is None
     assert result["missing_fields"] == ["user_name"]
     assert result["conversation_state"] == "collecting_assignment_info"
+
+
+def test_professor_assignment_missing_course_name_keeps_collecting(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.assignment.nodes.analyze_professor_assignment_user_message",
+        lambda conversation_state, user_message: {
+            "intent": "assignment_inquiry",
+            "course_name": None,
+            "assignment_topic": "제출 형식",
+            "question": "과제 제출 형식을 여쭤보고 싶습니다.",
+            "user_name": "김개굴",
+            "user_action": "provide_assignment_info",
+        },
+    )
+    result = professor_assignment_graph.invoke(
+        {
+            "user_message": "김개굴 학생입니다. 과제 제출 형식을 문의드립니다.",
+            "conversation_state": "greeting",
+            "professor_name": "교수님",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["missing_fields"] == ["course_name"]
+    assert result["conversation_state"] == "collecting_assignment_info"
+    assert "어떤 수업" in result["ai_message"]
 
 
 def test_professor_assignment_partial_info_is_preserved(monkeypatch):
@@ -295,4 +326,3 @@ def test_professor_assignment_closing_unknown_keeps_state(monkeypatch):
 
     assert result["conversation_state"] == "closing"
     assert result["should_end_call"] is False
-

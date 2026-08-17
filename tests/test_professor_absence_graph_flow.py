@@ -106,7 +106,10 @@ def _patch_absence_analysis(monkeypatch):
 
     monkeypatch.setattr(
         "services.flow.professor.absence.nodes.analyze_professor_absence_user_message",
-        fake_analyze,
+        lambda conversation_state, user_message: {
+            **fake_analyze(conversation_state, user_message),
+            "class_name": "자료구조",
+        },
     )
 
 
@@ -151,6 +154,34 @@ def test_professor_absence_missing_user_name_keeps_collecting(monkeypatch):
     assert result["user_name"] is None
     assert result["missing_fields"] == ["user_name"]
     assert result["conversation_state"] == "collecting_absence_info"
+
+
+def test_professor_absence_missing_class_name_keeps_collecting(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.professor.absence.nodes.analyze_professor_absence_user_message",
+        lambda conversation_state, user_message: {
+            "intent": "absence_notice",
+            "class_name": None,
+            "absence_date": "오늘",
+            "absence_reason": "몸이 좋지 않음",
+            "user_name": "김개굴",
+            "user_action": "provide_absence_info",
+        },
+    )
+    result = professor_absence_graph.invoke(
+        {
+            "user_message": "김개굴 학생입니다. 오늘 몸이 좋지 않아 결석합니다.",
+            "conversation_state": "greeting",
+            "professor_name": "교수님",
+            "history": [],
+            "recommended_replies": [],
+            "should_end_call": False,
+        }
+    )
+
+    assert result["missing_fields"] == ["class_name"]
+    assert result["conversation_state"] == "collecting_absence_info"
+    assert "어떤 수업" in result["ai_message"]
 
 
 def test_professor_absence_partial_info_is_preserved(monkeypatch):
@@ -382,4 +413,3 @@ def test_professor_absence_closing_unknown_keeps_state(monkeypatch):
 
     assert result["conversation_state"] == "closing"
     assert result["should_end_call"] is False
-

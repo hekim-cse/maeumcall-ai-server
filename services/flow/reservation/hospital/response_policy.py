@@ -33,6 +33,7 @@ def build_hospital_response(conversation_state: str, state: Dict = None) -> str:
     date = state.get("date") or "원하시는 날짜"
     time = state.get("time") or "원하시는 시간대"
     final_time = resolve_final_reservation_time(state) or time
+    user_name = state.get("user_name") or "예약자"
 
     if conversation_state in {"asking_purpose", "asking_department"}:
         if date != "원하시는 날짜" and time != "원하시는 시간대":
@@ -65,11 +66,20 @@ def build_hospital_response(conversation_state: str, state: Dict = None) -> str:
             state,
         )
 
+    if conversation_state == "asking_user_name":
+        return _select_policy_message(
+            [
+                f"{date} {time} {department} 예약으로 확인했습니다. 예약자 성함을 말씀해주시겠어요?",
+                "예약하시는 분의 성함을 말씀해주시겠어요?",
+            ],
+            state,
+        )
+
     if conversation_state == "confirming_info":
         return _select_policy_message(
             [
                 f"{date} {final_time} {department} 진료 예약을 원하시는 것이 맞으실까요?",
-                f"{date} {final_time} {department} 진료 예약으로 확인해도 될까요?",
+                f"{user_name}님, {date} {final_time} {department} 진료 예약으로 확인해도 될까요?",
             ],
             state,
         )

@@ -91,6 +91,7 @@ def build_professor_absence_analysis_prompt(
     - 불명확하면 "unknown"
   - confirming_absence_info 상태:
     - 수집된 정보가 맞다고 확인하면 "confirm_info"
+    - 수업명을 바꾸려 하면 "change_class_name"
     - 결석 날짜를 바꾸려 하면 "change_absence_date"
     - 결석 사유를 바꾸려 하면 "change_absence_reason"
     - 이름을 바꾸려 하면 "change_user_name"
@@ -122,6 +123,7 @@ def _normalize_absence_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]
     allowed_actions = {
         "provide_absence_info",
         "confirm_info",
+        "change_class_name",
         "change_absence_date",
         "change_absence_reason",
         "change_user_name",

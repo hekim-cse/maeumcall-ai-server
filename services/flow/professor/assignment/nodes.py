@@ -33,7 +33,6 @@ def extract_professor_assignment_info_node(state: ProfessorAssignmentState) -> D
         "intent": analyzed.get("intent") or state.get("intent") or "assignment_inquiry",
         "professor_name": state.get("professor_name") or "교수님",
         "course_name": analyzed.get("course_name") or state.get("course_name"),
-        "course_name": analyzed.get("course_name") or state.get("course_name"),
         "assignment_topic": analyzed.get("assignment_topic")
         or state.get("assignment_topic"),
         "question": analyzed.get("question") or state.get("question"),

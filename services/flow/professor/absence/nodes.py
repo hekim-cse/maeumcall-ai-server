@@ -69,6 +69,16 @@ def decide_professor_absence_state_node(state: ProfessorAbsenceState) -> Dict:
                 }
             )
 
+        if user_action == "change_class_name":
+            return _reset_fields(
+                {
+                    "user_action": user_action,
+                    "class_name": None,
+                    "conversation_state": "collecting_absence_info",
+                    "should_end_call": False,
+                }
+            )
+
         if user_action == "change_absence_reason":
             return _reset_fields(
                 {

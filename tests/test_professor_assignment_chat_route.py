@@ -50,7 +50,10 @@ def _patch_assignment_analysis(monkeypatch):
 
     monkeypatch.setattr(
         "services.flow.professor.assignment.nodes.analyze_professor_assignment_user_message",
-        fake_analyze,
+        lambda conversation_state, user_message: {
+            "course_name": "자료구조",
+            **fake_analyze(conversation_state, user_message),
+        },
     )
 
 

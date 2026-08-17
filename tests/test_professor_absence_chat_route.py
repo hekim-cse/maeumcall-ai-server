@@ -85,7 +85,10 @@ def _patch_absence_analysis(monkeypatch):
 
     monkeypatch.setattr(
         "services.flow.professor.absence.nodes.analyze_professor_absence_user_message",
-        fake_analyze,
+        lambda conversation_state, user_message: {
+            **fake_analyze(conversation_state, user_message),
+            "class_name": "자료구조",
+        },
     )
 
 

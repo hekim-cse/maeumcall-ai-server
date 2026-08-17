@@ -37,6 +37,7 @@ def compact_hospital_state(result: Dict[str, Any]) -> Dict[str, Any]:
         "department": result.get("department"),
         "date": result.get("date"),
         "time": result.get("time"),
+        "user_name": result.get("user_name"),
         "conversation_state": result.get("conversation_state"),
         "last_ai_message": result.get("ai_message"),
 
@@ -65,6 +66,7 @@ HOSPITAL_RESERVATION_CONTRACT = DetailedGraphContract(
             "asking_department",
             "asking_date",
             "asking_time",
+            "asking_user_name",
             "confirming_info",
             "checking_availability",
             "reservation_lookup",

@@ -13,7 +13,7 @@
   → 추천 답변과 scenarioState 반환
 ```
 
-모델은 `appointment_purpose`, `assignment_topic`, `absence_reason`, `user_action`을 추출합니다. 서버는 허용된 필드 타입과 action만 상태에 병합합니다. 계약 위반은 원인을 포함해 한 번 재요청하고, 반복 실패는 `AI_RESPONSE_VALIDATION_FAILED`로 반환합니다.
+모델은 `appointment_purpose`, `course_name`, `assignment_topic`, `class_name`, `absence_reason`, `user_action`을 추출합니다. 서버는 허용된 필드 타입과 action만 상태에 병합합니다. 계약 위반은 원인을 포함해 한 번 재요청하고, 반복 실패는 `AI_RESPONSE_VALIDATION_FAILED`로 반환합니다.
 
 교수님 역할의 문장은 검증된 상태를 기반으로 응답 정책이 만듭니다. 따라서 모델 장애나 말투 변동이 상태 결과를 바꾸지 않습니다.
 
@@ -40,7 +40,7 @@ collecting_assignment_info
   → END
 ```
 
-필수 필드는 과제 주제, 실제 질문, 학생 이름입니다. 후속 질문을 선택하면 질문 필드만 다시 수집합니다.
+필수 필드는 수업명, 과제 주제, 실제 질문, 학생 이름입니다. 후속 질문을 선택하면 과제 주제와 질문을 다시 수집하되 수업명과 학생 이름은 유지합니다.
 
 ### 결석 사유 전달
 
@@ -52,7 +52,7 @@ collecting_absence_info
   → END
 ```
 
-필수 필드는 결석 날짜, 사유, 학생 이름입니다. 수업명은 선택 필드입니다.
+필수 필드는 수업명, 결석 날짜, 사유, 학생 이름입니다. 교수님이 여러 수업을 담당할 때 결석 대상을 잘못 연결하지 않도록 수업명을 필수로 검증합니다.
 
 ## 테스트 기준
 

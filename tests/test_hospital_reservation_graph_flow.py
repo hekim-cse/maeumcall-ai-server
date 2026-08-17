@@ -200,7 +200,10 @@ def _patch_hospital_analysis(monkeypatch):
 
     monkeypatch.setattr(
         "services.flow.reservation.hospital.nodes.analyze_hospital_reservation_user_message",
-        fake_analyze,
+        lambda conversation_state, user_message: {
+            "user_name": "김개굴",
+            **fake_analyze(conversation_state, user_message),
+        },
     )
 
 
@@ -1161,10 +1164,9 @@ def test_policy_message_builder_handles_asking_department():
     assert "성함" not in message
 
 
-def test_confirming_info_recommended_replies_do_not_include_name_or_phone(monkeypatch):
+def test_confirming_info_recommended_replies_do_not_collect_phone(monkeypatch):
     """
-    현재 MVP에서는 성함/연락처를 수집하지 않으므로
-    confirming_info 추천 답변에 성함/연락처 관련 문구가 포함되면 안 된다.
+    예약자 이름은 수집하지만 불필요한 연락처는 수집하지 않는다.
     """
     from services.flow.reservation.hospital import graph as graph_module
 
@@ -1189,7 +1191,6 @@ def test_confirming_info_recommended_replies_do_not_include_name_or_phone(monkey
 
     assert recommended_replies
     assert "연락처" not in joined_replies
-    assert "성함" not in joined_replies
     assert "네, 맞습니다." in recommended_replies
     assert any("시간" in reply for reply in recommended_replies)
     assert any("날짜" in reply or "진료과" in reply for reply in recommended_replies)

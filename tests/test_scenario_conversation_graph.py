@@ -67,9 +67,9 @@ def test_scenario_graph_ends_call_from_validated_model_action(monkeypatch):
         lambda messages: '{"action":"end","response":"문의해 주셔서 감사합니다.","etiquette_tip":null}',
     )
     request = ChatRequest(
-        category="시청",
-        title="🛂 여권 발급 문의",
-        description="여권 문의",
+        category="회사",
+        title="📄 보고서 제출",
+        description="보고서 제출 문의",
         userMessage="네, 감사합니다.",
     )
 
@@ -92,7 +92,7 @@ def test_unknown_scenario_is_not_claimed_by_registry():
 
 
 def test_registry_normalizes_emoji_and_spacing():
-    assert get_scenario_config(" 고객센터 ", "📶 인터넷/통화 문제 문의") is not None
+    assert get_scenario_config(" 친구 ", "🎉 생일 축하 전화") is not None
 
 
 def test_scenario_graph_appends_current_message_after_prior_history(monkeypatch):
