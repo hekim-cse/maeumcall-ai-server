@@ -41,6 +41,7 @@ def test_readiness_reports_each_runtime_dependency():
         "ffmpeg",
         "reservation_availability",
         "authentication",
+        "korean_text_analyzer",
     }
 
 

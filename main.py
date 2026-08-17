@@ -32,6 +32,10 @@ from routes.wordfreq_router import router as wordfreq_router
 from routes.auth_routes import router as auth_router
 from server.api_call import router as call_router
 from services.baseline_store import BaselineStoreError
+from services.korean_text_analyzer import (
+    KoreanTextAnalyzerError,
+    korean_text_analyzer,
+)
 from services.flow.common.state_contract import ScenarioStateContractError
 from services.flow.reservation.common.availability_provider import (
     AvailabilityProviderConfigurationError,
@@ -115,6 +119,14 @@ async def handle_scenario_state_error(_: Request, exc: ScenarioStateContractErro
 
 @app.exception_handler(BaselineStoreError)
 async def handle_baseline_store_error(_: Request, exc: BaselineStoreError):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": exc.code, "message": exc.public_message}},
+    )
+
+
+@app.exception_handler(KoreanTextAnalyzerError)
+async def handle_korean_text_analyzer_error(_: Request, exc: KoreanTextAnalyzerError):
     return JSONResponse(
         status_code=exc.status_code,
         content={"error": {"code": exc.code, "message": exc.public_message}},
@@ -208,6 +220,7 @@ async def readiness():
         "ffmpeg": {"ready": shutil.which("ffmpeg") is not None},
         "reservation_availability": {"ready": reservation_availability_ready},
         "authentication": {"ready": authentication_configuration_ready()},
+        "korean_text_analyzer": {"ready": korean_text_analyzer.is_ready()},
     }
     ready = all(component["ready"] for component in components.values())
     return JSONResponse(
