@@ -14,6 +14,7 @@
 
 - `/chat` 라우팅을 카테고리별 순차 분기에서 중앙 실행 레지스트리 단일 디스패치로 변경
 - 로컬 서버·Makefile 명령이 프로젝트의 Python 3.11 가상환경만 사용하도록 실행 경계 강화
+- GitHub Actions를 Node.js 24 기반 공식 액션으로 갱신하고 `.python-version`을 CI 런타임 기준으로 연결
 
 ### Removed
 
