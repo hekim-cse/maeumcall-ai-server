@@ -7,7 +7,7 @@ from services.flow.common.state_contract import DetailedGraphContract, complete_
 from services.flow.reservation.restaurant.policy import compact_restaurant_state
 
 
-_CONTRACT = DetailedGraphContract(
+RESTAURANT_RESERVATION_CONTRACT = DetailedGraphContract(
     category="예약",
     title="식당 예약",
     graph=restaurant_reservation_graph,
@@ -49,4 +49,4 @@ def is_restaurant_reservation_request(req: ChatRequest) -> bool:
 
 
 def complete_restaurant_reservation_with_graph(req: ChatRequest) -> ChatResponse:
-    return complete_detailed_graph(req, _CONTRACT)
+    return complete_detailed_graph(req, RESTAURANT_RESERVATION_CONTRACT)

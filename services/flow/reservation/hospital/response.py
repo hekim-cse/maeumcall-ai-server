@@ -52,7 +52,7 @@ def compact_hospital_state(result: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-_CONTRACT = DetailedGraphContract(
+HOSPITAL_RESERVATION_CONTRACT = DetailedGraphContract(
     category="예약",
     title="병원 예약",
     graph=hospital_reservation_graph,
@@ -80,4 +80,4 @@ _CONTRACT = DetailedGraphContract(
 
 
 def complete_hospital_reservation_with_graph(req: ChatRequest) -> ChatResponse:
-    return complete_detailed_graph(req, _CONTRACT)
+    return complete_detailed_graph(req, HOSPITAL_RESERVATION_CONTRACT)

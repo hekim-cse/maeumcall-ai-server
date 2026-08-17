@@ -7,7 +7,7 @@ from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 
 
-_CONTRACT = DetailedGraphContract(
+PROFESSOR_ABSENCE_CONTRACT = DetailedGraphContract(
     category="교수님",
     title="결석 사유 전달",
     graph=professor_absence_graph,
@@ -39,4 +39,4 @@ def is_professor_absence_request(req: ChatRequest) -> bool:
 
 
 def complete_professor_absence_with_graph(req: ChatRequest) -> ChatResponse:
-    return complete_detailed_graph(req, _CONTRACT)
+    return complete_detailed_graph(req, PROFESSOR_ABSENCE_CONTRACT)

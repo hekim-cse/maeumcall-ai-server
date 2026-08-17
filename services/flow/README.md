@@ -6,18 +6,19 @@
 
 1. `category`와 `title`의 정확한 등록 키로 그래프를 선택합니다.
 2. 예약·교수님 시나리오의 상태 전이 데이터는 검증된 LLM JSON만 사용합니다.
-3. 모델 출력이 계약을 위반하면 오류 원인을 포함해 한 번 재시도합니다.
-4. 재시도 실패나 모델 미설정은 `AIServiceError`로 전달하며 추정값을 만들지 않습니다.
-5. 예약 결과처럼 서버가 이미 확정한 사실은 도메인 응답 정책이 문장으로 표현합니다.
-6. 등록되지 않은 시나리오는 일반 모델로 우회하지 않고 `422 UNSUPPORTED_SCENARIO`를 반환합니다.
+3. 중앙 실행 레지스트리는 각 시나리오를 상세 또는 등록형 중 하나의 실행 유형에만 연결합니다.
+4. 모델 출력이 계약을 위반하면 오류 원인을 포함해 한 번 재시도합니다.
+5. 재시도 실패나 모델 미설정은 `AIServiceError`로 전달하며 추정값을 만들지 않습니다.
+6. 예약 결과처럼 서버가 이미 확정한 사실은 도메인 응답 정책이 문장으로 표현합니다.
+7. 등록되지 않은 시나리오는 일반 모델로 우회하지 않고 `422 UNSUPPORTED_SCENARIO`를 반환합니다.
 
 ## 요청 흐름
 
 ```text
 POST /chat
-  ├─ reservation router ─ 병원·식당·미용실·스터디룸 상세 그래프
-  ├─ professor router ─ 면담·과제·결석 상세 그래프
-  └─ scenario registry ─ 나머지 25개 등록 시나리오 그래프
+  └─ central flow registry
+       ├─ detailed ─ 예약 4개·교수님 3개 상세 그래프
+       └─ registered ─ 나머지 25개 등록 시나리오 공통 그래프
 ```
 
 상세 그래프의 처리 경계는 다음과 같습니다.
@@ -47,6 +48,7 @@ POST /chat
 
 ```text
 services/flow/
+├── registry.py
 ├── common/
 │   ├── scenario_keys.py
 │   └── state_contract.py
@@ -60,19 +62,18 @@ services/flow/
 │   ├── restaurant/
 │   ├── hair_salon/
 │   ├── study_room/
-│   ├── common/
-│   └── router.py
+│   └── common/
 └── professor/
     ├── appointment/
     ├── assignment/
-    ├── absence/
-    └── router.py
+    └── absence/
 ```
 
 상세 시나리오에서 자주 사용하는 파일의 책임은 다음과 같습니다.
 
 | 파일 | 책임 |
 |---|---|
+| `registry.py` | 32개 시나리오 키와 상세·등록형 실행 계약의 단일 진입점 |
 | `state.py` | 그래프 공유 상태 타입 |
 | `llm_structured.py` | 엄격한 JSON 계약과 시나리오별 필드 검증 |
 | `nodes.py` | 정보 병합, 필수 필드 계산, 상태 전이 |

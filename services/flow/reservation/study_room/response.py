@@ -7,7 +7,7 @@ from services.flow.common.state_contract import DetailedGraphContract, complete_
 from services.flow.reservation.study_room.policy import compact_study_room_state
 
 
-_CONTRACT = DetailedGraphContract(
+STUDY_ROOM_RESERVATION_CONTRACT = DetailedGraphContract(
     category="예약",
     title="스터디룸 예약",
     graph=study_room_reservation_graph,
@@ -45,4 +45,4 @@ def is_study_room_reservation_request(req: ChatRequest) -> bool:
 
 
 def complete_study_room_reservation_with_graph(req: ChatRequest) -> ChatResponse:
-    return complete_detailed_graph(req, _CONTRACT)
+    return complete_detailed_graph(req, STUDY_ROOM_RESERVATION_CONTRACT)

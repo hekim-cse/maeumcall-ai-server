@@ -10,7 +10,7 @@ AI 응답과 추천 답변을 생성하는 서버입니다.
 
 <br/>
 
-<img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
+<img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white"/>
 <img src="https://img.shields.io/badge/LangGraph-1.2.11-143D60?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Kanana_1.5-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"/>
@@ -46,7 +46,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 
 사용자가 통화 상황에서 말한 내용을 서버로 전달하면, 서버는 현재 시나리오 상태를 판단하고 다음 AI 응답을 생성합니다.
 
-단순히 LLM에게 답변 생성을 맡기는 구조가 아니라, 전용 흐름 7개와 등록형 시나리오 흐름 25개를 LangGraph로 오케스트레이션합니다. 상세 그래프는 검증된 구조화 출력만 상태 전이에 사용하고, 확정된 서버 상태는 도메인 응답 정책으로 표현합니다. 모델 계약 위반은 제한 재시도 후 명시적 API 오류로 처리합니다.
+단순히 LLM에게 답변 생성을 맡기는 구조가 아니라, 전용 흐름 7개와 등록형 시나리오 흐름 25개를 LangGraph로 오케스트레이션합니다. 중앙 실행 레지스트리가 32개 시나리오를 상세·등록형 중 정확히 하나의 계약에 연결하며, 중복이나 미등록 조합을 명시적으로 차단합니다. 상세 그래프는 검증된 구조화 출력만 상태 전이에 사용하고, 확정된 서버 상태는 도메인 응답 정책으로 표현합니다. 모델 계약 위반은 제한 재시도 후 명시적 API 오류로 처리합니다.
 
 <p align="center">
   <img src="docs/assets/service_flow.png" width="75%" alt="Service Flow" />
@@ -98,7 +98,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | 기술 | 선택 이유 |
 |---|---|
 | FastAPI | 비동기 API 서버 구현이 간단하고, `/chat` API처럼 요청/응답 구조가 명확한 서버를 빠르게 구성할 수 있기 때문에 사용했습니다. |
-| Python 3.11+ | 타입 표현력, 비동기 서버 성능, 최신 AI 라이브러리 호환성을 고려해 기준 런타임으로 사용했습니다. |
+| Python 3.11 | CI와 로컬의 재현성을 맞추고 LangGraph·음성 분석 라이브러리의 검증된 조합을 유지하기 위해 기준 런타임으로 고정했습니다. |
 | LangGraph | 단순 프롬프트 호출이 아니라, 예약 시나리오처럼 상태 전이가 필요한 대화 흐름을 명확하게 관리하기 위해 사용했습니다. |
 | Kanana 1.5 Hugging Face | 한국어 사용자 발화를 도메인 필드와 action으로 구조화하는 로컬 NLU 경계를 구성하기 위해 사용했습니다. |
 | Pytest | action parser, extractor, graph flow, routing 등 서버 내부 로직을 기능 단위로 검증하기 위해 사용했습니다. |
@@ -319,6 +319,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 | `core/` | 설정, 인증, 데이터베이스, 관측성 등 공통 운영 경계 |
 | `routes/` | FastAPI 라우터와 채팅·인증·음성 엔드포인트 |
 | `schemas/` | 요청/응답 데이터 모델 |
+| `services/flow/registry.py` | 32개 시나리오의 상세·등록형 LangGraph 실행 계약과 단일 디스패처 |
 | `services/flow/scenario/` | 25개 등록 시나리오의 구조화된 턴 생성 LangGraph |
 | `services/flow/professor/` | 교수님 시나리오 3개의 상세 LangGraph |
 | `services/flow/reservation/` | 예약 시나리오 4개의 상세 LangGraph |
@@ -332,25 +333,28 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 
 ## 10. 실행 방법
 
-### 10-1. 가상환경 활성화
+### 10-1. Python 3.11 개발 환경 구성
+
+`.python-version`을 단일 버전 기준으로 사용합니다. Python 3.11 설치 후 저장소의 구성 스크립트를 실행합니다.
+
+```bash
+# macOS Homebrew 예시
+brew install python@3.11
+
+./scripts/bootstrap_python.sh
+```
+
+다른 운영체제에서는 `python3.11` 명령을 제공하도록 Python 3.11을 설치한 뒤 같은 스크립트를 실행합니다. 기존 `.venv`가 다른 Python 버전이면 스크립트는 덮어쓰지 않고 중단합니다.
+
+### 10-2. 가상환경 활성화
 
 ```bash
 source .venv/bin/activate
 ```
 
-### 10-2. 의존성 설치
+### 10-3. 선택 의존성 설치
 
-```bash
-python -m pip install -r requirements.txt
-```
-
-> LangGraph 1.2는 Python 3.10 이상이 필요합니다. 이 저장소의 개발·CI 기준은 Python 3.11+이며, 3.9 가상환경에서는 실행하지 않습니다.
-
-개발·테스트 의존성:
-
-```bash
-python -m pip install -r requirements-dev.txt
-```
+기본 서버·개발·테스트 의존성은 구성 스크립트가 설치합니다. 로컬 Kanana 모델이 필요한 경우에만 ML 의존성을 추가합니다.
 
 로컬 Kanana 실행 의존성(선택):
 
@@ -361,7 +365,7 @@ cp .env.example .env
 # 최초 다운로드 후 HF_LOCAL_FILES_ONLY=1로 전환 권장
 ```
 
-### 10-3. PostgreSQL 시작과 스키마 적용
+### 10-4. PostgreSQL 시작과 스키마 적용
 
 `.env.example`을 기준으로 실제 로컬 설정과 `DATABASE_URL`을 `.env`에 지정한 뒤 실행합니다. 사용자 인증 기능에는 `KAKAO_APP_ID`, `FIREBASE_PROJECT_ID`, 32바이트 이상의 별도 인증용 HMAC 비밀값, Firebase Admin 자격 증명이 필요합니다. 비밀값은 환경 변수에 직접 넣거나 `AUTH_SUBJECT_HMAC_SECRET_FILE`·`BASELINE_ID_HMAC_SECRET_FILE`에 저장소 밖 절대 경로를 지정하며, 같은 비밀값의 두 방식을 동시에 설정하지 않습니다. 로컬 파일은 소유자만 읽을 수 있도록 권한을 제한하고, 인증용 HMAC 비밀값은 음성 기준선 식별자 비밀값과 분리합니다.
 
@@ -385,7 +389,7 @@ python -m scripts.migrate_firestore_user_documents /secure/path/users.identity-m
 
 이관 명령은 대상 문서가 이미 다른 내용으로 존재하면 덮어쓰지 않고 중단합니다. 로그에는 원래 카카오 식별값을 남기지 않습니다.
 
-### 10-4. 서버 실행
+### 10-5. 서버 실행
 
 ```bash
 python -m uvicorn main:app --reload
@@ -397,7 +401,7 @@ python -m uvicorn main:app --reload
 ./run_server.sh --reload
 ```
 
-### 10-5. 테스트
+### 10-6. 테스트
 
 ```bash
 # 네트워크 없이 재현 가능한 기본 검증
@@ -412,7 +416,7 @@ TEST_DATABASE_URL="$DATABASE_URL" \
   python -m pytest -m postgres tests/integration -v
 ```
 
-### 10-6. 접속 주소
+### 10-7. 접속 주소
 
 기본 실행 주소:
 

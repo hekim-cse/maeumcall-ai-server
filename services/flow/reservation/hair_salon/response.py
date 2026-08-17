@@ -7,7 +7,7 @@ from services.flow.common.state_contract import DetailedGraphContract, complete_
 from services.flow.reservation.hair_salon.policy import compact_hair_salon_state
 
 
-_CONTRACT = DetailedGraphContract(
+HAIR_SALON_RESERVATION_CONTRACT = DetailedGraphContract(
     category="예약",
     title="미용실 예약",
     graph=hair_salon_reservation_graph,
@@ -45,4 +45,4 @@ def is_hair_salon_reservation_request(req: ChatRequest) -> bool:
 
 
 def complete_hair_salon_reservation_with_graph(req: ChatRequest) -> ChatResponse:
-    return complete_detailed_graph(req, _CONTRACT)
+    return complete_detailed_graph(req, HAIR_SALON_RESERVATION_CONTRACT)
