@@ -113,13 +113,13 @@ def validate_pseudonymous_key(user_key: str) -> str:
 
 def pct(cur: float, base: float) -> float:
     if base == 0:
-        return 0.0
+        raise BaselineMeasurementError("percentage delta requires a non-zero baseline")
     return round((cur - base) / base * 100.0, 3)
 
 
 def z(cur: float, mean: float, std: float) -> float:
-    if std == 0:
-        return 0.0
+    if std <= 0:
+        raise BaselineMeasurementError("z-score requires a positive standard deviation")
     return round((cur - mean) / std, 3)
 
 

@@ -1,40 +1,116 @@
 # services/analysis_service.py
 from __future__ import annotations
+
+from math import isfinite
 from typing import Dict, Any, Optional
 
 from services.baseline_store import (
+    BaselineMeasurementError,
+    extract_measurement,
     normalize_user_id,
     get_persisted_baseline,
     update_baseline_persisted,
     append_calib_sample,
     finalize_calibration_simple,
-    pct, z,
+    pct,
+    z,
 )
 
-def build_payload(cur: Dict[str, Any], baseline: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+
+BASELINE_REQUIRED_FIELDS = (
+    "pitchHz",
+    "pitchStdHz",
+    "jitterLocal",
+    "jitterStd",
+    "shimmerLocal",
+    "shimmerStd",
+    "samples",
+    "ts",
+)
+
+
+def build_payload(
+    cur: Dict[str, Any], baseline: Optional[Dict[str, Any]]
+) -> Dict[str, Any]:
     """클라이언트가 기대하는 공통 포맷으로 패킹"""
+    cp, cj, cs = extract_measurement(cur)
     payload = {
-        "pitch":   {"mean": float(cur["pitch"]["mean"]),     "comment": cur["pitch"]["comment"]},
-        "jitter":  {"value": float(cur["jitter"]["value"]),  "comment": cur["jitter"]["comment"]},
-        "shimmer": {"value": float(cur["shimmer"]["value"]), "comment": cur["shimmer"]["comment"]},
+        "pitch": {"mean": cp, "comment": _comment(cur, "pitch")},
+        "jitter": {"value": cj, "comment": _comment(cur, "jitter")},
+        "shimmer": {"value": cs, "comment": _comment(cur, "shimmer")},
     }
     if baseline:
-        cp, cj, cs = float(cur["pitch"]["mean"]), float(cur["jitter"]["value"]), float(cur["shimmer"]["value"])
-        bp = float(baseline.get("pitchHz", 0))
-        bj = float(baseline.get("jitterLocal", 0))
-        bs = float(baseline.get("shimmerLocal", 0))
-        sp = float(baseline.get("pitchStdHz", 0))
-        sj = float(baseline.get("jitterStd", 0))
-        ss = float(baseline.get("shimmerStd", 0))
+        normalized = _validated_baseline(baseline)
+        bp = normalized["pitchHz"]
+        bj = normalized["jitterLocal"]
+        bs = normalized["shimmerLocal"]
+        sp = normalized["pitchStdHz"]
+        sj = normalized["jitterStd"]
+        ss = normalized["shimmerStd"]
 
         payload["baseline"] = {
-            k: baseline[k]
-            for k in ("pitchHz","pitchStdHz","pitchIqrHz","jitterLocal","jitterStd","shimmerLocal","shimmerStd","samples","ts")
-            if k in baseline
+            key: normalized[key]
+            for key in (*BASELINE_REQUIRED_FIELDS, "pitchIqrHz")
+            if key in normalized
         }
-        payload["z"] = {"pitch": z(cp, bp, sp), "jitter": z(cj, bj, sj), "shimmer": z(cs, bs, ss)}
-        payload["deltaPct"] = {"pitch": pct(cp, bp), "jitter": pct(cj, bj), "shimmer": pct(cs, bs)}
+        if all(std > 0 for std in (sp, sj, ss)):
+            payload["z"] = {
+                "pitch": z(cp, bp, sp),
+                "jitter": z(cj, bj, sj),
+                "shimmer": z(cs, bs, ss),
+            }
+        if all(value > 0 for value in (bp, bj, bs)):
+            payload["deltaPct"] = {
+                "pitch": pct(cp, bp),
+                "jitter": pct(cj, bj),
+                "shimmer": pct(cs, bs),
+            }
     return payload
+
+
+def _comment(cur: Dict[str, Any], metric: str) -> str:
+    value = cur.get(metric)
+    comment = value.get("comment") if isinstance(value, dict) else None
+    if not isinstance(comment, str) or not comment.strip():
+        raise BaselineMeasurementError("voice measurement comment is invalid")
+    return comment.strip()
+
+
+def _validated_baseline(baseline: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        normalized: Dict[str, Any] = {
+            "pitchHz": float(baseline["pitchHz"]),
+            "pitchStdHz": float(baseline["pitchStdHz"]),
+            "jitterLocal": float(baseline["jitterLocal"]),
+            "jitterStd": float(baseline["jitterStd"]),
+            "shimmerLocal": float(baseline["shimmerLocal"]),
+            "shimmerStd": float(baseline["shimmerStd"]),
+            "samples": int(baseline["samples"]),
+            "ts": int(baseline["ts"]),
+        }
+        if baseline.get("pitchIqrHz") is not None:
+            normalized["pitchIqrHz"] = float(baseline["pitchIqrHz"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise BaselineMeasurementError("baseline fields are incomplete") from exc
+
+    numeric = [
+        value
+        for key, value in normalized.items()
+        if key not in {"samples", "ts"}
+    ]
+    if (
+        normalized["samples"] <= 0
+        or not all(isfinite(value) for value in numeric)
+        or normalized["pitchHz"] <= 0
+        or normalized["jitterLocal"] < 0
+        or normalized["shimmerLocal"] < 0
+        or normalized["pitchStdHz"] < 0
+        or normalized["jitterStd"] < 0
+        or normalized["shimmerStd"] < 0
+        or normalized.get("pitchIqrHz", 0.0) < 0
+    ):
+        raise BaselineMeasurementError("baseline values are out of range")
+    return normalized
 
 
 async def finalize_calibration(user_id: str) -> Dict[str, Any]:

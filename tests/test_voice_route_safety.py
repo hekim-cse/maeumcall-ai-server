@@ -48,8 +48,11 @@ class BaselineRepositoryDouble:
         count = len(values)
         return {
             "pitchHz": sum(value[0] for value in values) / count,
+            "pitchStdHz": 0.0,
             "jitterLocal": sum(value[1] for value in values) / count,
+            "jitterStd": 0.0,
             "shimmerLocal": sum(value[2] for value in values) / count,
+            "shimmerStd": 0.0,
             "samples": count,
             "ts": 1,
         }
@@ -61,8 +64,11 @@ class BaselineRepositoryDouble:
         count = len(values)
         baseline = {
             "pitchHz": sum(value[0] for value in values) / count,
+            "pitchStdHz": 0.0,
             "jitterLocal": sum(value[1] for value in values) / count,
+            "jitterStd": 0.0,
             "shimmerLocal": sum(value[2] for value in values) / count,
+            "shimmerStd": 0.0,
             "samples": count,
             "ts": 1,
         }
@@ -217,3 +223,23 @@ def test_baseline_storage_refuses_plain_user_id_without_hmac_secret(monkeypatch)
 def test_invalid_voice_measurements_are_rejected(analysis):
     with pytest.raises(baseline_store.BaselineMeasurementError):
         baseline_store.extract_measurement(analysis)
+
+
+def test_unmeasurable_voice_returns_a_typed_client_error(monkeypatch):
+    from praat_voice_analysis import VoiceAnalysisError
+
+    def reject_unvoiced_audio(path: str):
+        raise VoiceAnalysisError(
+            "VOICE_NO_VOICED_AUDIO",
+            "목소리가 감지되지 않았습니다.",
+        )
+
+    monkeypatch.setattr(voice_routes, "analyze_audio", reject_unvoiced_audio)
+
+    response = TestClient(app).post(
+        "/voice/analyze",
+        files={"file": ("voice.wav", b"audio", "audio/wav")},
+    )
+
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "VOICE_NO_VOICED_AUDIO"

@@ -56,6 +56,14 @@ erDiagram
 
 3번이나 4번에서 실패하면 전체 작업이 롤백되므로 “기준선은 바뀌었는데 샘플은 남는 상태”가 발생하지 않는다.
 
+## 측정 실패와 파생 통계 계약
+
+업로드 파일과 ffmpeg 변환 파일은 요청별 임시 경로에만 만들고 응답 성공 여부와 관계없이 삭제한다. Praat 분석과 ffmpeg 실행은 FastAPI 이벤트 루프를 막지 않도록 작업 스레드에서 실행한다.
+
+목소리가 없거나 pitch·jitter·shimmer를 유한한 값으로 측정할 수 없으면 0으로 대체하지 않는다. `VOICE_NO_VOICED_AUDIO` 또는 `VOICE_MEASUREMENT_UNAVAILABLE` 오류를 반환해 사용자가 다시 녹음하도록 한다. 기준선 필드가 누락된 경우에도 기본값을 채우지 않고 기준선 계약 오류로 처리한다.
+
+표준편차가 0이면 z-score가 정의되지 않고, 기준값이 0이면 백분율 변화가 정의되지 않는다. 이 경우 API는 각각 `z` 또는 `deltaPct` 필드를 생략한다. 0을 “변화 없음”으로 표시하지 않는다.
+
 ## 실행
 
 `.env`에 `POSTGRES_PASSWORD`, `DATABASE_URL`, `BASELINE_ID_HMAC_SECRET`을 실제 운영 환경 값으로 설정한다. 값은 Git에 커밋하지 않는다.
@@ -106,9 +114,13 @@ python -m scripts.migrate_baseline_json /secure/path/baseline_db.json
 
 아니다. 테스트 더블은 API 계약과 계산을 빠르게 검증하기 위한 테스트 코드에만 존재한다. 애플리케이션이 실제 요청을 처리할 때는 PostgreSQL 설정이 없으면 503 오류를 반환하고 readiness도 준비되지 않은 상태를 보고한다.
 
+### Q. 왜 측정 실패를 0으로 저장하지 않는가?
+
+0은 오류 표시가 아니라 실제 숫자다. 측정 실패를 0 Hz 또는 0%로 저장하면 평균과 변화율이 정상 데이터처럼 계산되어 사용자 피드백을 왜곡한다. 따라서 원시 측정 실패는 타입이 있는 오류로, 계산할 수 없는 파생 통계는 선택 필드 생략으로 표현한다.
+
 ## 검증 기준
 
-- Python 3.12 전체 오프라인 테스트 통과
+- Python 3.11 전체 오프라인 테스트 통과
 - Alembic PostgreSQL DDL 오프라인 생성 성공
 - Docker Compose 구성 검사 성공
 - PostgreSQL 18.6 컨테이너에서 `alembic upgrade head` 적용 성공
