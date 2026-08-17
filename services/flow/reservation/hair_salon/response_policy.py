@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-from typing import Dict
-
 from services.flow.reservation.hair_salon.policy import (
     get_missing_hair_salon_fields,
 )
-
 
 HAIR_SALON_FIELD_LABELS = {
     "date": "날짜",
@@ -16,7 +13,7 @@ HAIR_SALON_FIELD_LABELS = {
 }
 
 
-def build_hair_salon_response(conversation_state: str, state: Dict) -> str:
+def build_hair_salon_response(conversation_state: str, state: dict) -> str:
     date = state.get("date") or "원하시는 날짜"
     time = state.get("time") or "원하시는 시간"
     service_type = state.get("service_type") or "원하시는 시술"
@@ -30,13 +27,13 @@ def build_hair_salon_response(conversation_state: str, state: Dict) -> str:
         if missing == ["designer"]:
             return "원하시는 디자이너가 있으신가요? 없으시면 가능한 디자이너로 도와드리겠습니다."
         if not missing:
-            raise ValueError(
-                "collecting_reservation_info requires at least one missing field"
-            )
+            raise ValueError("collecting_reservation_info requires at least one missing field")
         fields = ", ".join(HAIR_SALON_FIELD_LABELS[field] for field in missing)
         return f"예약 도와드리겠습니다. 다음 정보를 편하게 말씀해주시겠어요? {fields}."
     if conversation_state == "confirming_info":
-        return f"{date} {time}에 {designer} 선생님으로 {service_type} 예약을 원하시는 것이 맞으실까요?"
+        return (
+            f"{date} {time}에 {designer} 선생님으로 {service_type} 예약을 원하시는 것이 맞으실까요?"
+        )
     if conversation_state == "checking_availability":
         return "잠시만요. 예약 가능한지 확인해보겠습니다."
     if conversation_state == "reservation_available":

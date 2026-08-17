@@ -1,17 +1,17 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 from types import MappingProxyType
-from typing import Mapping, Optional, Tuple
 
 from schemas.chat_models import ChatRequest, ChatResponse
+from services.flow.cityhall.contracts import CITYHALL_CONTRACTS
 from services.flow.common.state_contract import (
     DetailedGraphContract,
     build_scenario_key,
     complete_detailed_graph,
 )
-from services.flow.cityhall.contracts import CITYHALL_CONTRACTS
 from services.flow.delivery.contracts import DELIVERY_CONTRACTS
 from services.flow.professor.absence.response import PROFESSOR_ABSENCE_CONTRACT
 from services.flow.professor.appointment.response import PROFESSOR_APPOINTMENT_CONTRACT
@@ -25,7 +25,7 @@ from services.flow.scenario.response import complete_scenario_graph_if_supported
 from services.flow.support.contracts import SUPPORT_CONTRACTS
 
 
-class FlowExecutionMode(str, Enum):
+class FlowExecutionMode(StrEnum):
     DETAILED = "detailed"
     REGISTERED = "registered"
 
@@ -35,7 +35,7 @@ class FlowRegistration:
     category: str
     title: str
     mode: FlowExecutionMode
-    detailed_contract: Optional[DetailedGraphContract] = None
+    detailed_contract: DetailedGraphContract | None = None
 
     @property
     def key(self) -> str:
@@ -55,7 +55,7 @@ class FlowRegistration:
         return response
 
 
-DETAILED_GRAPH_CONTRACTS: Tuple[DetailedGraphContract, ...] = (
+DETAILED_GRAPH_CONTRACTS: tuple[DetailedGraphContract, ...] = (
     HOSPITAL_RESERVATION_CONTRACT,
     RESTAURANT_RESERVATION_CONTRACT,
     HAIR_SALON_RESERVATION_CONTRACT,
@@ -102,11 +102,11 @@ def _build_flow_registry() -> Mapping[str, FlowRegistration]:
 FLOW_REGISTRY = _build_flow_registry()
 
 
-def get_flow_registration(category: str, title: str) -> Optional[FlowRegistration]:
+def get_flow_registration(category: str, title: str) -> FlowRegistration | None:
     return FLOW_REGISTRY.get(build_scenario_key(category, title))
 
 
-def complete_graph_if_supported(request: ChatRequest) -> Optional[ChatResponse]:
+def complete_graph_if_supported(request: ChatRequest) -> ChatResponse | None:
     registration = get_flow_registration(request.category, request.title)
     if registration is None:
         return None

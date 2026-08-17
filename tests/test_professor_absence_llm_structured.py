@@ -1,16 +1,18 @@
 import pytest
+
 from llm.errors import AIResponseValidationError
 from services.flow.professor.absence.llm_structured import (
     analyze_professor_absence_user_message,
 )
 
-
-
 pytestmark = pytest.mark.unit
+
+
 def test_professor_absence_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.professor.absence.llm_structured.complete_hf_json",
-        lambda messages: """
+        lambda messages: (
+            """
         {
           "intent": "absence_notice",
           "class_name": "자료구조",
@@ -19,7 +21,8 @@ def test_professor_absence_structured_analysis_extracts_full_info(monkeypatch):
           "user_name": "김개굴",
           "user_action": "provide_absence_info"
         }
-        """,
+        """
+        ),
     )
 
     result = analyze_professor_absence_user_message(
@@ -36,12 +39,14 @@ def test_professor_absence_structured_analysis_extracts_full_info(monkeypatch):
 
 
 def test_professor_absence_structured_analysis_handles_markdown_json(monkeypatch):
-    responses = iter([
-        """```json
+    responses = iter(
+        [
+            """```json
         {"intent":"absence_notice"}
         ```""",
-        '{"intent":"absence_notice","class_name":null,"absence_date":"내일","absence_reason":"병원 방문","user_name":null,"user_action":"provide_absence_info"}',
-    ])
+            '{"intent":"absence_notice","class_name":null,"absence_date":"내일","absence_reason":"병원 방문","user_name":null,"user_action":"provide_absence_info"}',
+        ]
+    )
     monkeypatch.setattr(
         "services.flow.professor.absence.llm_structured.complete_hf_json",
         lambda messages: next(responses),
@@ -66,13 +71,16 @@ def test_professor_absence_structured_analysis_rejects_invalid_json_after_retry(
     )
 
     with pytest.raises(AIResponseValidationError):
-        analyze_professor_absence_user_message("greeting", "결석 사유를 말씀드리려고 연락드렸습니다.")
+        analyze_professor_absence_user_message(
+            "greeting", "결석 사유를 말씀드리려고 연락드렸습니다."
+        )
 
 
 def test_professor_absence_structured_analysis_rejects_invalid_action(monkeypatch):
     monkeypatch.setattr(
         "services.flow.professor.absence.llm_structured.complete_hf_json",
-        lambda messages: """
+        lambda messages: (
+            """
         {
           "intent": "absence_notice",
           "class_name": "자료구조",
@@ -81,7 +89,8 @@ def test_professor_absence_structured_analysis_rejects_invalid_action(monkeypatc
           "user_name": "김개굴",
           "user_action": "invalid_action"
         }
-        """,
+        """
+        ),
     )
 
     with pytest.raises(AIResponseValidationError):

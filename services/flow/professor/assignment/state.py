@@ -1,26 +1,26 @@
 from __future__ import annotations
 
-from typing import TypedDict, Optional, Dict, List
+from typing import TypedDict
 
 
 class ProfessorAssignmentState(TypedDict, total=False):
     user_message: str
     conversation_state: str
 
-    professor_name: Optional[str]
-    intent: Optional[str]
-    course_name: Optional[str]
-    assignment_topic: Optional[str]
-    question: Optional[str]
-    user_name: Optional[str]
+    professor_name: str | None
+    intent: str | None
+    course_name: str | None
+    assignment_topic: str | None
+    question: str | None
+    user_name: str | None
 
-    user_action: Optional[str]
-    missing_fields: List[str]
+    user_action: str | None
+    missing_fields: list[str]
 
-    ai_message: Optional[str]
-    last_ai_message: Optional[str]
+    ai_message: str | None
+    last_ai_message: str | None
 
-    history: List[Dict[str, str]]
+    history: list[dict[str, str]]
 
-    recommended_replies: List[str]
+    recommended_replies: list[str]
     should_end_call: bool

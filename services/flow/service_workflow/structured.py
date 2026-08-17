@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, Optional
+from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import allowed_string, complete_validated_json, optional_string
 from services.flow.service_workflow.contracts import (
-    FieldContract,
     MAX_WORKFLOW_FIELD_LENGTH,
-    ServiceWorkflowSpec,
     WORKFLOW_ACTIONS,
+    FieldContract,
+    ServiceWorkflowSpec,
 )
 
 
@@ -17,9 +17,9 @@ def analyze_service_workflow_message(
     spec: ServiceWorkflowSpec,
     *,
     conversation_state: str,
-    current_fields: Dict[str, Optional[str]],
+    current_fields: dict[str, str | None],
     user_message: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     field_schema = "\n".join(_field_instruction(field) for field in spec.fields)
     current_fields_json = json.dumps(current_fields, ensure_ascii=False, sort_keys=True)
     field_keys_json = json.dumps(list(spec.field_keys), ensure_ascii=False)
@@ -39,7 +39,7 @@ def analyze_service_workflow_message(
 {{
   "intent": "{spec.intent}",
   "fields": {{
-    {', '.join(f'"{key}": string 또는 null' for key in spec.field_keys)}
+    {", ".join(f'"{key}": string 또는 null' for key in spec.field_keys)}
   }},
   "user_action": string,
   "change_field": string 또는 null
@@ -80,7 +80,7 @@ def analyze_service_workflow_message(
     )
 
 
-def _validate_analysis(spec: ServiceWorkflowSpec, parsed: Dict[str, Any]) -> Dict[str, Any]:
+def _validate_analysis(spec: ServiceWorkflowSpec, parsed: dict[str, Any]) -> dict[str, Any]:
     expected_keys = {"intent", "fields", "user_action", "change_field"}
     if set(parsed) != expected_keys:
         raise ValueError(f"response keys must be exactly {sorted(expected_keys)}")
@@ -90,13 +90,11 @@ def _validate_analysis(spec: ServiceWorkflowSpec, parsed: Dict[str, Any]) -> Dic
     raw_fields = parsed.get("fields")
     if not isinstance(raw_fields, dict) or set(raw_fields) != set(spec.field_keys):
         raise ValueError(f"fields keys must be exactly {sorted(spec.field_keys)}")
-    fields: Dict[str, Optional[str]] = {}
+    fields: dict[str, str | None] = {}
     for field in spec.fields:
         value = optional_string(raw_fields, field.key)
         if value is not None and len(value) > MAX_WORKFLOW_FIELD_LENGTH:
-            raise ValueError(
-                f"{field.key} must be at most {MAX_WORKFLOW_FIELD_LENGTH} characters"
-            )
+            raise ValueError(f"{field.key} must be at most {MAX_WORKFLOW_FIELD_LENGTH} characters")
         if value is not None and field.options:
             allowed_values = {option.value for option in field.options}
             if value not in allowed_values:
@@ -122,9 +120,7 @@ def _validate_analysis(spec: ServiceWorkflowSpec, parsed: Dict[str, Any]) -> Dic
 def _field_instruction(field: FieldContract) -> str:
     if not field.options:
         return f"- {field.key}: string 또는 null — {field.description}"
-    options = ", ".join(
-        f'"{option.value}"({option.label})' for option in field.options
-    )
+    options = ", ".join(f'"{option.value}"({option.label})' for option in field.options)
     return (
         f"- {field.key}: 다음 코드 또는 null [{options}] — {field.description}. "
         "사용자 표현을 의미가 맞는 코드로만 분류합니다."

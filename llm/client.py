@@ -1,8 +1,10 @@
 # llm/client.py
 from __future__ import annotations
-from typing import Optional, List, Dict, Any, TYPE_CHECKING
-from core.config import OPENAI_API_KEY, OPENAI_MODEL, OPENAI_TIMEOUT
+
 import logging
+from typing import TYPE_CHECKING, Any
+
+from core.config import OPENAI_API_KEY, OPENAI_MODEL, OPENAI_TIMEOUT
 from llm.errors import AIProviderExecutionError, AIProviderUnavailableError
 
 logger = logging.getLogger(__name__)
@@ -17,9 +19,10 @@ if TYPE_CHECKING:
 else:
     OpenAIClient = Any  # type: ignore
 
-_client: Optional[OpenAIClient] = None
+_client: OpenAIClient | None = None
 
-def _get_client() -> Optional[OpenAIClient]:
+
+def _get_client() -> OpenAIClient | None:
     global _client
     if _client is not None:
         return _client
@@ -29,9 +32,10 @@ def _get_client() -> Optional[OpenAIClient]:
     _client = _OpenAIClientRuntime(api_key=OPENAI_API_KEY)
     return _client
 
+
 def _call_openai_sync(
     model: str,
-    messages: List[Dict],
+    messages: list[dict],
     timeout_s: int = OPENAI_TIMEOUT,
     *,
     json_mode: bool = False,
@@ -40,7 +44,7 @@ def _call_openai_sync(
     if not client:
         raise AIProviderUnavailableError("OpenAI SDK or API key is unavailable")
     try:
-        request: Dict[str, Any] = {
+        request: dict[str, Any] = {
             "model": model,
             "messages": messages,
             "temperature": 0 if json_mode else 0.2,
@@ -57,11 +61,12 @@ def _call_openai_sync(
         logger.exception("OpenAI call failed")
         raise AIProviderExecutionError("OpenAI request failed") from exc
 
-def complete_messages(messages: List[Dict], timeout_s: int = OPENAI_TIMEOUT) -> str:
+
+def complete_messages(messages: list[dict], timeout_s: int = OPENAI_TIMEOUT) -> str:
     return _call_openai_sync(model=OPENAI_MODEL, messages=messages, timeout_s=timeout_s)
 
 
-def complete_json_messages(messages: List[Dict], timeout_s: int = OPENAI_TIMEOUT) -> str:
+def complete_json_messages(messages: list[dict], timeout_s: int = OPENAI_TIMEOUT) -> str:
     return _call_openai_sync(
         model=OPENAI_MODEL,
         messages=messages,

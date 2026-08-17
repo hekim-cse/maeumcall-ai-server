@@ -1,23 +1,21 @@
 from __future__ import annotations
 
 import pytest
-from typing_extensions import TypedDict
-
 from fastapi.testclient import TestClient
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import RetryPolicy
 from prometheus_client import REGISTRY
+from typing_extensions import TypedDict
 
 from core.observability import observe_graph_node
 from main import app
 from schemas.chat_models import ChatRequest
 from services.flow.common.state_contract import ScenarioStateContractError
-from services.flow.scenario import graph as graph_module
-from services.flow.scenario.response import complete_scenario_graph_if_supported
 from services.flow.reservation.hospital.llm_structured import (
     analyze_hospital_reservation_user_message,
 )
-
+from services.flow.scenario import graph as graph_module
+from services.flow.scenario.response import complete_scenario_graph_if_supported
 
 pytestmark = pytest.mark.unit
 
@@ -44,8 +42,7 @@ def test_langgraph_node_attempt_and_duration_are_recorded(monkeypatch):
         graph_module,
         "complete_json_messages",
         lambda messages: (
-            '{"action":"continue","response":"계속 말씀해 주세요.",'
-            '"etiquette_tip":null}'
+            '{"action":"continue","response":"계속 말씀해 주세요.","etiquette_tip":null}'
         ),
     )
 
@@ -59,9 +56,7 @@ def test_langgraph_node_attempt_and_duration_are_recorded(monkeypatch):
     )
 
     assert response is not None
-    assert _sample("maeumcall_langgraph_node_attempts_total", labels) == (
-        attempts_before + 1
-    )
+    assert _sample("maeumcall_langgraph_node_attempts_total", labels) == (attempts_before + 1)
     assert _sample("maeumcall_langgraph_node_duration_seconds_count", labels) == (
         observations_before + 1
     )
@@ -106,9 +101,7 @@ def test_structured_output_retry_and_contract_failure_are_recorded(monkeypatch):
     assert _sample("maeumcall_structured_output_retries_total", retry_labels) == (
         retries_before + 1
     )
-    assert _sample("maeumcall_contract_failures_total", failure_labels) == (
-        failures_before + 1
-    )
+    assert _sample("maeumcall_contract_failures_total", failure_labels) == (failures_before + 1)
 
 
 def test_scenario_state_contract_failure_is_recorded():
@@ -168,9 +161,7 @@ def test_langgraph_retry_attempt_is_recorded():
 
     assert result["value"] == 2
     assert calls == 2
-    assert _sample("maeumcall_langgraph_node_retries_total", retry_labels) == (
-        retries_before + 1
-    )
+    assert _sample("maeumcall_langgraph_node_retries_total", retry_labels) == (retries_before + 1)
 
 
 def test_metrics_endpoint_uses_prometheus_text_format_without_identity_labels():

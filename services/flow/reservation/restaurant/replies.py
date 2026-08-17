@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import List
 
-
-def get_restaurant_recommended_replies(conversation_state: str) -> List[str]:
+def get_restaurant_recommended_replies(conversation_state: str) -> list[str]:
     """
     식당 예약 상태별 추천 답변을 반환한다.
     사용자가 다음 단계에서 말해볼 수 있는 문장 중심으로 구성한다.

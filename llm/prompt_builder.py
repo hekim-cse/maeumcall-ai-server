@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import asdict
-from typing import Any, Dict, List
+from typing import Any
 
 from llm.system_prompts import build_system_prompt
 from schemas.chat_models import ChatRequest
 from services.flow.common.scenario_keys import canonicalize_scenario_label
 from services.prompt_loader import load_prompt_config
-
 
 COMMON_CONVERSATION_RULES = """
 [대화 규칙]
@@ -31,14 +30,14 @@ REPORT_SUBMISSION_RULES = """
 """.strip()
 
 
-def load_scenario_prompt(category: str, title: str) -> Dict[str, Any]:
+def load_scenario_prompt(category: str, title: str) -> dict[str, Any]:
     config = load_prompt_config(category, title)
     data = asdict(config)
     meta = data.pop("meta", {})
     return {**meta, **data}
 
 
-def _format_lines(values: List[str], *, empty: str) -> str:
+def _format_lines(values: list[str], *, empty: str) -> str:
     cleaned = [str(value).strip() for value in values if str(value).strip()]
     if not cleaned:
         return f"- {empty}"
@@ -83,9 +82,9 @@ def generate_prompts(request: ChatRequest) -> tuple[str, str]:
 {scenario_rules}
 
 [역할]
-- 상대역: {scenario.get('gpt_role', '통화 상대방')}
-- 사용자 역할: {scenario.get('user_role', '사용자')}
-- 사용자 호칭: {scenario.get('address_user') or '관계에 맞는 호칭'}
+- 상대역: {scenario.get("gpt_role", "통화 상대방")}
+- 사용자 역할: {scenario.get("user_role", "사용자")}
+- 사용자 호칭: {scenario.get("address_user") or "관계에 맞는 호칭"}
 
 [상황]
 - 카테고리: {request.category}
@@ -96,7 +95,7 @@ def generate_prompts(request: ChatRequest) -> tuple[str, str]:
 {request.userMessage}
 
 [응답 정책]
-- 톤: {scenario.get('tone', '자연스럽고 간결한 한국어 구어체')}
+- 톤: {scenario.get("tone", "자연스럽고 간결한 한국어 구어체")}
 - 권장 표현:
 {preferred_expressions}
 - 금지 표현:

@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.professor.assignment.graph import professor_assignment_graph
 
-
 pytestmark = pytest.mark.graph_flow
+
+
 def _patch_assignment_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":
@@ -79,7 +81,6 @@ def _patch_assignment_analysis(monkeypatch):
 def test_professor_assignment_full_info_moves_to_answering(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     result = professor_assignment_graph.invoke(
         {
             "user_message": "김개굴 학생입니다. 과제 제출 형식을 여쭤보고 싶습니다.",
@@ -99,7 +100,6 @@ def test_professor_assignment_full_info_moves_to_answering(monkeypatch):
 
 def test_professor_assignment_missing_user_name_keeps_collecting(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
-
 
     result = professor_assignment_graph.invoke(
         {
@@ -150,7 +150,6 @@ def test_professor_assignment_missing_course_name_keeps_collecting(monkeypatch):
 def test_professor_assignment_partial_info_is_preserved(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     first = professor_assignment_graph.invoke(
         {
             "user_message": "과제 제출 형식을 여쭤보고 싶습니다.",
@@ -178,7 +177,6 @@ def test_professor_assignment_partial_info_is_preserved(monkeypatch):
 def test_professor_assignment_casual_llm_response_falls_back(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     result = professor_assignment_graph.invoke(
         {
             "user_message": "김개굴 학생입니다. 과제 제출 형식을 여쭤보고 싶습니다.",
@@ -200,7 +198,6 @@ def test_professor_assignment_casual_llm_response_falls_back(monkeypatch):
 def test_professor_assignment_answering_moves_to_closing(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     result = professor_assignment_graph.invoke(
         {
             "user_message": "네, 알겠습니다.",
@@ -221,7 +218,6 @@ def test_professor_assignment_answering_moves_to_closing(monkeypatch):
 
 def test_professor_assignment_answering_follow_up_resets_question(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
-
 
     result = professor_assignment_graph.invoke(
         {
@@ -246,7 +242,6 @@ def test_professor_assignment_answering_follow_up_resets_question(monkeypatch):
 def test_professor_assignment_closing_moves_to_end(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     result = professor_assignment_graph.invoke(
         {
             "user_message": "네, 감사합니다.",
@@ -260,6 +255,7 @@ def test_professor_assignment_closing_moves_to_end(monkeypatch):
 
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
+
 
 def test_professor_assignment_answering_unknown_keeps_state(monkeypatch):
     monkeypatch.setattr(

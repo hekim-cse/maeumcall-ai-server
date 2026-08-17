@@ -1,28 +1,26 @@
 from __future__ import annotations
 
-from typing import Dict, List
-
 from services.flow.reservation.common.time_utils import (
     format_time_options,
     resolve_final_reservation_time,
 )
 
 
-def _select_policy_message(candidates: List[str], state: Dict) -> str:
+def _select_policy_message(candidates: list[str], state: dict) -> str:
     if not candidates:
         raise ValueError("response policy requires at least one candidate")
     previous = state.get("last_ai_message")
     return next((message for message in candidates if message != previous), candidates[0])
 
 
-def _with_service_greeting(message: str, state: Dict) -> str:
+def _with_service_greeting(message: str, state: dict) -> str:
     if state.get("history") or state.get("last_ai_message"):
         return message
     service_name = state.get("service_name") or "마음병원"
     return f"네, {service_name}입니다. {message}"
 
 
-def build_hospital_response(conversation_state: str, state: Dict = None) -> str:
+def build_hospital_response(conversation_state: str, state: dict = None) -> str:
     """Build a deterministic response from validated reservation state.
 
     This is a product response policy, not an LLM failure recovery path.
@@ -140,7 +138,10 @@ def build_hospital_response(conversation_state: str, state: Dict = None) -> str:
 
     if conversation_state == "closing":
         return _select_policy_message(
-            ["다른 문의 없으시면 통화 마무리하겠습니다.", "더 궁금한 점 없으시면 여기서 마무리하겠습니다."],
+            [
+                "다른 문의 없으시면 통화 마무리하겠습니다.",
+                "더 궁금한 점 없으시면 여기서 마무리하겠습니다.",
+            ],
             state,
         )
 

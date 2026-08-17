@@ -1,22 +1,19 @@
 from __future__ import annotations
 
-from typing import Dict
-
-from services.flow.reservation.restaurant.state import RestaurantReservationState
+from services.flow.reservation.restaurant.availability import resolve_restaurant_availability
+from services.flow.reservation.restaurant.generation import generate_restaurant_ai_message
 from services.flow.reservation.restaurant.llm_structured import (
     analyze_restaurant_reservation_user_message,
 )
 from services.flow.reservation.restaurant.policy import (
-    decide_restaurant_next_state,
     get_missing_restaurant_fields,
 )
 from services.flow.reservation.restaurant.replies import get_restaurant_recommended_replies
 from services.flow.reservation.restaurant.response_policy import build_restaurant_response
-from services.flow.reservation.restaurant.availability import resolve_restaurant_availability
-from services.flow.reservation.restaurant.generation import generate_restaurant_ai_message
+from services.flow.reservation.restaurant.state import RestaurantReservationState
 
 
-def extract_restaurant_info_node(state: RestaurantReservationState) -> Dict:
+def extract_restaurant_info_node(state: RestaurantReservationState) -> dict:
     """
     사용자 발화를 LLM structured output으로 분석한다.
 
@@ -52,7 +49,7 @@ def extract_restaurant_info_node(state: RestaurantReservationState) -> Dict:
     }
 
 
-def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
+def decide_restaurant_state_node(state: RestaurantReservationState) -> dict:
     """
     식당 예약 상태를 결정한다.
 
@@ -130,7 +127,9 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
     # 2) 예약 가능 안내 후 사용자가 확정한 경우
     if current_state == "reservation_available":
         if user_action == "confirm_reservation":
-            final_time = state.get("available_time") or state.get("selected_time") or state.get("time")
+            final_time = (
+                state.get("available_time") or state.get("selected_time") or state.get("time")
+            )
 
             return {
                 "user_action": user_action,
@@ -253,7 +252,7 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> Dict:
     }
 
 
-def generate_restaurant_response_node(state: RestaurantReservationState) -> Dict:
+def generate_restaurant_response_node(state: RestaurantReservationState) -> dict:
     """
     식당 예약 응답 생성 노드이다.
 
@@ -262,7 +261,7 @@ def generate_restaurant_response_node(state: RestaurantReservationState) -> Dict
     return generate_restaurant_ai_message(state)
 
 
-def attach_restaurant_recommended_replies_node(state: RestaurantReservationState) -> Dict:
+def attach_restaurant_recommended_replies_node(state: RestaurantReservationState) -> dict:
     """
     현재 상태에 맞는 추천 답변을 붙인다.
     """
@@ -344,7 +343,7 @@ def _build_asking_user_name_message(state: RestaurantReservationState) -> str:
     return f"{date} {time}에 {party_size} 예약으로 확인했습니다. 예약자 성함은 어떻게 남겨드릴까요?"
 
 
-def check_restaurant_availability_node(state: RestaurantReservationState) -> Dict:
+def check_restaurant_availability_node(state: RestaurantReservationState) -> dict:
     """
     식당 통화 훈련 시나리오의 예약 가능 여부를 확인한다.
     """

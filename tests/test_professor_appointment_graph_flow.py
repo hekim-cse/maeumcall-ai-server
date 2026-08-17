@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.professor.appointment.graph import professor_appointment_graph
 
-
 pytestmark = pytest.mark.graph_flow
+
+
 def _patch_appointment_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":
@@ -123,7 +125,6 @@ def _patch_appointment_analysis(monkeypatch):
 def test_professor_appointment_full_info_moves_to_confirming_info(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-
     result = professor_appointment_graph.invoke(
         {
             "user_message": "김개굴 학생입니다. 진로 상담 관련해서 이번 주 수요일 오후 3시에 면담 가능할까요?",
@@ -144,7 +145,6 @@ def test_professor_appointment_full_info_moves_to_confirming_info(monkeypatch):
 
 def test_professor_appointment_missing_user_name_keeps_collecting_info(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
-
 
     result = professor_appointment_graph.invoke(
         {
@@ -167,7 +167,6 @@ def test_professor_appointment_missing_user_name_keeps_collecting_info(monkeypat
 
 def test_professor_appointment_partial_info_is_preserved(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
-
 
     first = professor_appointment_graph.invoke(
         {
@@ -197,7 +196,6 @@ def test_professor_appointment_partial_info_is_preserved(monkeypatch):
 def test_professor_appointment_casual_llm_response_falls_back(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-
     result = professor_appointment_graph.invoke(
         {
             "user_message": "김개굴 학생입니다. 진로 상담 관련해서 이번 주 수요일 오후 3시에 면담 가능할까요?",
@@ -217,7 +215,6 @@ def test_professor_appointment_casual_llm_response_falls_back(monkeypatch):
 
 def test_professor_appointment_confirm_moves_to_confirmed(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
-
 
     result = professor_appointment_graph.invoke(
         {
@@ -240,7 +237,6 @@ def test_professor_appointment_confirm_moves_to_confirmed(monkeypatch):
 
 def test_professor_appointment_change_time_resets_time(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
-
 
     result = professor_appointment_graph.invoke(
         {
@@ -267,7 +263,6 @@ def test_professor_appointment_change_time_resets_time(monkeypatch):
 def test_professor_appointment_change_purpose_resets_purpose(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-
     result = professor_appointment_graph.invoke(
         {
             "user_message": "면담 목적을 다시 말씀드리겠습니다.",
@@ -293,7 +288,6 @@ def test_professor_appointment_change_purpose_resets_purpose(monkeypatch):
 def test_professor_appointment_confirmed_moves_to_closing(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-
     result = professor_appointment_graph.invoke(
         {
             "user_message": "네, 감사합니다.",
@@ -316,7 +310,6 @@ def test_professor_appointment_confirmed_moves_to_closing(monkeypatch):
 def test_professor_appointment_closing_moves_to_end(monkeypatch):
     _patch_appointment_analysis(monkeypatch)
 
-
     result = professor_appointment_graph.invoke(
         {
             "user_message": "네, 감사합니다.",
@@ -330,6 +323,7 @@ def test_professor_appointment_closing_moves_to_end(monkeypatch):
 
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
+
 
 def test_professor_appointment_change_user_name_resets_user_name_only(monkeypatch):
     monkeypatch.setattr(
@@ -400,4 +394,3 @@ def test_professor_appointment_closing_unknown_keeps_state(monkeypatch):
 
     assert result["conversation_state"] == "closing"
     assert result["should_end_call"] is False
-

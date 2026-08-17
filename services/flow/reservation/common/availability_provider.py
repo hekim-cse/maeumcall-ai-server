@@ -5,13 +5,12 @@ import os
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict, List, Protocol
+from typing import Protocol
 
 from llm.errors import AIServiceError, ScenarioStateValidationError
 from services.flow.reservation.common.availability_contract import (
     validate_availability_result,
 )
-
 
 CATALOG_SCHEMA_VERSION = 1
 DEFAULT_CATALOG_PATH = (
@@ -32,7 +31,7 @@ class AvailabilityQuery:
 
 
 class AvailabilityProvider(Protocol):
-    def resolve(self, query: AvailabilityQuery) -> Dict[str, object]: ...
+    def resolve(self, query: AvailabilityQuery) -> dict[str, object]: ...
 
 
 class CatalogAvailabilityProvider:
@@ -42,12 +41,10 @@ class CatalogAvailabilityProvider:
         self._catalog_path = catalog_path
         self._scenarios = self._load_catalog(catalog_path)
 
-    def resolve(self, query: AvailabilityQuery) -> Dict[str, object]:
+    def resolve(self, query: AvailabilityQuery) -> dict[str, object]:
         requested_time = query.requested_time.strip()
         if not requested_time:
-            raise ScenarioStateValidationError(
-                "requested_time is required for availability lookup"
-            )
+            raise ScenarioStateValidationError("requested_time is required for availability lookup")
 
         scenario = self._scenarios.get(query.scenario_key)
         if scenario is None:
@@ -78,7 +75,7 @@ class CatalogAvailabilityProvider:
             raise AvailabilityProviderConfigurationError(str(exc)) from exc
 
     @staticmethod
-    def _load_catalog(catalog_path: Path) -> Dict[str, Dict[str, Dict[str, str]]]:
+    def _load_catalog(catalog_path: Path) -> dict[str, dict[str, dict[str, str]]]:
         try:
             raw = json.loads(catalog_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
@@ -97,7 +94,7 @@ class CatalogAvailabilityProvider:
                 "availability catalog scenarios must be a non-empty object"
             )
 
-        validated: Dict[str, Dict[str, Dict[str, str]]] = {}
+        validated: dict[str, dict[str, dict[str, str]]] = {}
         for scenario_key, value in scenarios.items():
             if not isinstance(scenario_key, str) or not scenario_key.strip():
                 raise AvailabilityProviderConfigurationError(

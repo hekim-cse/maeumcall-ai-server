@@ -4,14 +4,13 @@ from llm.errors import ScenarioStateValidationError
 from services.flow.reservation.common.availability_contract import (
     validate_availability_result,
 )
-from services.flow.reservation.restaurant.availability import (
-    resolve_restaurant_availability,
-)
 from services.flow.reservation.common.availability_provider import (
     AvailabilityProviderConfigurationError,
     CatalogAvailabilityProvider,
 )
-
+from services.flow.reservation.restaurant.availability import (
+    resolve_restaurant_availability,
+)
 
 pytestmark = pytest.mark.unit
 

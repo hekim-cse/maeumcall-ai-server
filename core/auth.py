@@ -4,9 +4,10 @@ import asyncio
 import base64
 import hashlib
 import hmac
+from collections.abc import Mapping
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Any, Mapping, Optional, Protocol
+from typing import Any, Protocol
 
 import firebase_admin
 import httpx
@@ -19,7 +20,6 @@ from core.config import (
     KAKAO_APP_ID,
     KAKAO_TOKEN_VERIFY_TIMEOUT,
 )
-
 
 KAKAO_TOKEN_INFO_URL = "https://kapi.kakao.com/v1/user/access_token_info"
 
@@ -68,16 +68,14 @@ def derive_internal_uid(kakao_subject: str, secret: str) -> str:
         )
     digest = hmac.new(
         _require_secret(secret),
-        f"kakao:{normalized}".encode("utf-8"),
+        f"kakao:{normalized}".encode(),
         hashlib.sha256,
     ).digest()
     encoded = base64.urlsafe_b64encode(digest).decode("ascii").rstrip("=")
     return f"user_{encoded}"
 
 
-def validate_kakao_token_info(
-    payload: Mapping[str, Any], *, expected_app_id: str
-) -> str:
+def validate_kakao_token_info(payload: Mapping[str, Any], *, expected_app_id: str) -> str:
     if str(payload.get("app_id", "")) != expected_app_id:
         raise AuthenticationError(
             "KAKAO_TOKEN_AUDIENCE_MISMATCH",
@@ -179,9 +177,7 @@ class FirebaseAdminIdentityProvider:
             self._app = firebase_admin.get_app()
         except ValueError:
             try:
-                self._app = firebase_admin.initialize_app(
-                    options={"projectId": project_id.strip()}
-                )
+                self._app = firebase_admin.initialize_app(options={"projectId": project_id.strip()})
             except Exception as exc:
                 raise AuthenticationError(
                     "AUTH_CONFIGURATION_INVALID",
@@ -259,13 +255,11 @@ def get_identity_service() -> IdentityService:
 
 def authentication_configuration_ready() -> bool:
     return bool(
-        KAKAO_APP_ID
-        and FIREBASE_PROJECT_ID
-        and len(AUTH_SUBJECT_HMAC_SECRET.encode("utf-8")) >= 32
+        KAKAO_APP_ID and FIREBASE_PROJECT_ID and len(AUTH_SUBJECT_HMAC_SECRET.encode("utf-8")) >= 32
     )
 
 
-def parse_bearer_token(authorization: Optional[str]) -> str:
+def parse_bearer_token(authorization: str | None) -> str:
     if not authorization:
         raise AuthenticationError(
             "AUTHORIZATION_REQUIRED",
@@ -283,15 +277,15 @@ def parse_bearer_token(authorization: Optional[str]) -> str:
 
 
 async def require_authenticated_user(
-    authorization: Optional[str] = Header(default=None),
+    authorization: str | None = Header(default=None),
 ) -> AuthenticatedUser:
     token = parse_bearer_token(authorization)
     return await get_identity_service().authenticate_firebase_token(token)
 
 
 async def optional_authenticated_user(
-    authorization: Optional[str] = Header(default=None),
-) -> Optional[AuthenticatedUser]:
+    authorization: str | None = Header(default=None),
+) -> AuthenticatedUser | None:
     if authorization is None:
         return None
     token = parse_bearer_token(authorization)

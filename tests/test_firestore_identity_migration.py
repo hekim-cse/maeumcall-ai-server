@@ -9,7 +9,6 @@ from scripts.migrate_firestore_user_documents import (
     load_targets,
 )
 
-
 pytestmark = pytest.mark.unit
 
 SECRET = "authentication-test-secret-32-bytes-minimum"
@@ -28,9 +27,7 @@ def test_manifest_requires_explicit_unique_subjects(tmp_path):
 
 def test_manifest_creates_pseudonymous_destination_and_safe_audit_id(tmp_path):
     manifest = tmp_path / "targets.json"
-    manifest.write_text(
-        json.dumps({"kakao_subjects": ["123456789"]}), encoding="utf-8"
-    )
+    manifest.write_text(json.dumps({"kakao_subjects": ["123456789"]}), encoding="utf-8")
 
     target = load_targets(manifest, secret=SECRET)[0]
 
@@ -49,7 +46,5 @@ def test_manifest_creates_pseudonymous_destination_and_safe_audit_id(tmp_path):
         ({"nickname": "마음"}, {"nickname": "다름"}, "DESTINATION_CONFLICT"),
     ],
 )
-def test_migration_never_overwrites_conflicting_destination(
-    source, destination, expected
-):
+def test_migration_never_overwrites_conflicting_destination(source, destination, expected):
     assert classify_documents(source, destination) == expected

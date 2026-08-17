@@ -30,9 +30,7 @@ def validate_database_url(url: str) -> str:
     if not normalized:
         raise DatabaseConfigurationError("DATABASE_URL is required")
     if not normalized.startswith("postgresql+asyncpg://"):
-        raise DatabaseConfigurationError(
-            "DATABASE_URL must use the postgresql+asyncpg driver"
-        )
+        raise DatabaseConfigurationError("DATABASE_URL must use the postgresql+asyncpg driver")
     return normalized
 
 

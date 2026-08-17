@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from fastapi import APIRouter, Header
 from pydantic import BaseModel, ConfigDict, Field
 
 from core.auth import IdentityService, get_identity_service, parse_bearer_token
-
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -19,7 +16,7 @@ class AuthSessionResponse(BaseModel):
 
 @router.post("/kakao/exchange", response_model=AuthSessionResponse)
 async def exchange_kakao_session(
-    authorization: Optional[str] = Header(default=None),
+    authorization: str | None = Header(default=None),
 ) -> AuthSessionResponse:
     kakao_access_token = parse_bearer_token(authorization)
     identity_service: IdentityService = get_identity_service()

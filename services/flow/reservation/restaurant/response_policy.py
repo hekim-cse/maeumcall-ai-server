@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from typing import List
-
 from services.flow.reservation.restaurant.policy import (
     get_missing_restaurant_fields,
 )
 
 
-def choose_message(candidates: List[str], state: dict) -> str:
+def choose_message(candidates: list[str], state: dict) -> str:
     """
     직전 AI 응답과 다른 문장을 우선 선택한다.
     테스트 재현성을 위해 random은 사용하지 않는다.

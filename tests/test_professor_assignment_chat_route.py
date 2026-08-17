@@ -77,7 +77,6 @@ def _patch_assignment_analysis(monkeypatch):
 def test_chat_route_handles_professor_assignment_with_graph(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="과제 문의",
@@ -101,7 +100,6 @@ def test_chat_route_handles_professor_assignment_with_graph(monkeypatch):
 def test_chat_route_professor_assignment_full_info_moves_to_answering(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="과제 문의",
@@ -123,7 +121,6 @@ def test_chat_route_professor_assignment_full_info_moves_to_answering(monkeypatc
 
 def test_chat_route_professor_assignment_missing_user_name_keeps_collecting(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
-
 
     req = ChatRequest(
         category="교수님",
@@ -147,7 +144,6 @@ def test_chat_route_professor_assignment_missing_user_name_keeps_collecting(monk
 def test_chat_route_professor_assignment_casual_llm_response_falls_back(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="과제 문의",
@@ -170,7 +166,6 @@ def test_chat_route_professor_assignment_casual_llm_response_falls_back(monkeypa
 def test_chat_route_professor_assignment_answering_moves_to_closing(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="과제 문의",
@@ -189,7 +184,6 @@ def test_chat_route_professor_assignment_answering_moves_to_closing(monkeypatch)
 
 def test_chat_route_professor_assignment_closing_moves_to_end(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
-
 
     req = ChatRequest(
         category="교수님",

@@ -11,7 +11,6 @@ from core.config import DATABASE_URL
 from core.database import validate_database_url
 from core.models import Base
 
-
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

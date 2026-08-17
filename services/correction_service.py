@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from llm.client import complete_json_messages
 from llm.structured_output import allowed_string, complete_validated_json, optional_string
 from schemas.chat_models import ChatMessage
 
-
-CATEGORY_TONE_POLICY: Dict[str, str] = {
+CATEGORY_TONE_POLICY: dict[str, str] = {
     "교수님": "존댓말을 사용하고 목적·일정·요청을 정중하고 명확하게 표현한다.",
     "가족": "원문의 반말 또는 존댓말을 유지하며 따뜻하고 배려 있게 표현한다.",
     "친구": "원문의 말투를 유지하며 친근하되 무례한 표현은 사용하지 않는다.",
@@ -24,7 +23,7 @@ CATEGORY_TONE_POLICY: Dict[str, str] = {
 ALLOWED_TAGS = {"정중함", "명확성", "간결성", "문법", "자연스러움"}
 
 
-def _build_rewrite_messages(text: str, category: str) -> List[Dict[str, str]]:
+def _build_rewrite_messages(text: str, category: str) -> list[dict[str, str]]:
     policy = CATEGORY_TONE_POLICY[category]
     return [
         {
@@ -49,7 +48,7 @@ def _build_rewrite_messages(text: str, category: str) -> List[Dict[str, str]]:
     ]
 
 
-def _validate_rewrite_result(data: Dict[str, Any]) -> Dict[str, Any]:
+def _validate_rewrite_result(data: dict[str, Any]) -> dict[str, Any]:
     changed = data.get("changed")
     if not isinstance(changed, bool):
         raise ValueError("changed must be a boolean")
@@ -70,7 +69,7 @@ def _validate_rewrite_result(data: Dict[str, Any]) -> Dict[str, Any]:
     return {"changed": changed, "improved_text": improved_text, "tags": unique_tags}
 
 
-def _rewrite_message(text: str, category: str) -> Dict[str, Any]:
+def _rewrite_message(text: str, category: str) -> dict[str, Any]:
     return complete_validated_json(
         _build_rewrite_messages(text, category),
         completion=complete_json_messages,
@@ -80,15 +79,15 @@ def _rewrite_message(text: str, category: str) -> Dict[str, Any]:
 
 
 async def improve_messages(
-    messages: List[ChatMessage],
-    category: Optional[str],
-) -> Tuple[List[Optional[str]], List[Optional[List[str]]]]:
+    messages: list[ChatMessage],
+    category: str | None,
+) -> tuple[list[str | None], list[list[str] | None]]:
     selected_category = (category or "일반").strip()
     if selected_category not in CATEGORY_TONE_POLICY:
         raise ValueError(f"unsupported correction category: {selected_category}")
 
-    improved: List[Optional[str]] = [None] * len(messages)
-    tags: List[Optional[List[str]]] = [None] * len(messages)
+    improved: list[str | None] = [None] * len(messages)
+    tags: list[list[str] | None] = [None] * len(messages)
 
     for index, message in enumerate(messages):
         text = (message.text or "").strip()

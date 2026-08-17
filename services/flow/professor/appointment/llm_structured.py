@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
@@ -9,8 +9,7 @@ from llm.structured_output import (
     optional_string,
 )
 
-
-DEFAULT_APPOINTMENT_STRUCTURED_RESULT: Dict[str, Any] = {
+DEFAULT_APPOINTMENT_STRUCTURED_RESULT: dict[str, Any] = {
     "intent": "appointment_booking",
     "appointment_purpose": None,
     "date": None,
@@ -36,7 +35,7 @@ PROFESSOR_APPOINTMENT_USER_ACTIONS = frozenset(
 def analyze_professor_appointment_user_message(
     conversation_state: str,
     user_message: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     교수님 면담 예약 사용자 발화를 LLM structured output으로 분석한다.
 
@@ -124,7 +123,7 @@ def build_professor_appointment_analysis_prompt(
 """
 
 
-def _normalize_appointment_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]:
+def _normalize_appointment_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
     result = DEFAULT_APPOINTMENT_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "appointment_booking":

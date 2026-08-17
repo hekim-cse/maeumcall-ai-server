@@ -1,16 +1,18 @@
 import pytest
+
 from llm.errors import AIResponseValidationError
 from services.flow.professor.appointment.llm_structured import (
     analyze_professor_appointment_user_message,
 )
 
-
-
 pytestmark = pytest.mark.unit
+
+
 def test_professor_appointment_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.professor.appointment.llm_structured.complete_hf_json",
-        lambda messages: """
+        lambda messages: (
+            """
         {
           "intent": "appointment_booking",
           "appointment_purpose": "진로 상담",
@@ -19,7 +21,8 @@ def test_professor_appointment_structured_analysis_extracts_full_info(monkeypatc
           "user_name": "김개굴",
           "user_action": "provide_appointment_info"
         }
-        """,
+        """
+        ),
     )
 
     result = analyze_professor_appointment_user_message(
@@ -36,12 +39,14 @@ def test_professor_appointment_structured_analysis_extracts_full_info(monkeypatc
 
 
 def test_professor_appointment_structured_analysis_handles_markdown_json(monkeypatch):
-    responses = iter([
-        """```json
+    responses = iter(
+        [
+            """```json
         {"intent":"appointment_booking"}
         ```""",
-        '{"intent":"appointment_booking","appointment_purpose":"과제","date":"다음 주 월요일","time":"오전 10시","user_name":null,"user_action":"provide_appointment_info"}',
-    ])
+            '{"intent":"appointment_booking","appointment_purpose":"과제","date":"다음 주 월요일","time":"오전 10시","user_name":null,"user_action":"provide_appointment_info"}',
+        ]
+    )
     monkeypatch.setattr(
         "services.flow.professor.appointment.llm_structured.complete_hf_json",
         lambda messages: next(responses),
@@ -72,7 +77,8 @@ def test_professor_appointment_structured_analysis_rejects_invalid_json_after_re
 def test_professor_appointment_structured_analysis_rejects_invalid_action(monkeypatch):
     monkeypatch.setattr(
         "services.flow.professor.appointment.llm_structured.complete_hf_json",
-        lambda messages: """
+        lambda messages: (
+            """
         {
           "intent": "appointment_booking",
           "appointment_purpose": "진로 상담",
@@ -81,7 +87,8 @@ def test_professor_appointment_structured_analysis_rejects_invalid_action(monkey
           "user_name": "김개굴",
           "user_action": "invalid_action"
         }
-        """,
+        """
+        ),
     )
 
     with pytest.raises(AIResponseValidationError):

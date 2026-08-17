@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, List
 
-
-def get_missing_professor_appointment_fields(state: Dict) -> List[str]:
+def get_missing_professor_appointment_fields(state: dict) -> list[str]:
     """
     교수님 면담 예약에 필요한 필수 정보 중 아직 없는 값을 반환한다.
 
@@ -30,7 +28,7 @@ def get_missing_professor_appointment_fields(state: Dict) -> List[str]:
     return missing_fields
 
 
-def compact_professor_appointment_state(result: Dict) -> Dict:
+def compact_professor_appointment_state(result: dict) -> dict:
     """
     클라이언트에 저장할 교수님 면담 예약 상태만 정리한다.
     """

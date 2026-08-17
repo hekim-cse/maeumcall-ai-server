@@ -3,9 +3,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any
 
 import firebase_admin
 from firebase_admin import firestore
@@ -67,12 +68,10 @@ def classify_documents(
 def _firebase_app():
     try:
         return firebase_admin.get_app()
-    except ValueError:
+    except ValueError as exc:
         if not FIREBASE_PROJECT_ID.strip():
-            raise RuntimeError("FIREBASE_PROJECT_ID가 설정되지 않았습니다.")
-        return firebase_admin.initialize_app(
-            options={"projectId": FIREBASE_PROJECT_ID.strip()}
-        )
+            raise RuntimeError("FIREBASE_PROJECT_ID가 설정되지 않았습니다.") from exc
+        return firebase_admin.initialize_app(options={"projectId": FIREBASE_PROJECT_ID.strip()})
 
 
 def inspect_target(db, target: MigrationTarget) -> str:
@@ -137,9 +136,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    targets = load_targets(
-        args.manifest.resolve(), secret=AUTH_SUBJECT_HMAC_SECRET
-    )
+    targets = load_targets(args.manifest.resolve(), secret=AUTH_SUBJECT_HMAC_SECRET)
     return migrate(targets, apply=args.apply)
 
 

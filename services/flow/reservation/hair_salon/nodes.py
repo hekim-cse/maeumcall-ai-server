@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from typing import Dict
-
-from services.flow.reservation.hair_salon.state import HairSalonReservationState
-from services.flow.reservation.hair_salon.llm_structured import analyze_hair_salon_reservation_user_message
+from services.flow.reservation.hair_salon.availability import resolve_hair_salon_availability
 from services.flow.reservation.hair_salon.generation import generate_hair_salon_ai_message
+from services.flow.reservation.hair_salon.llm_structured import (
+    analyze_hair_salon_reservation_user_message,
+)
 from services.flow.reservation.hair_salon.policy import get_missing_hair_salon_fields
 from services.flow.reservation.hair_salon.replies import get_hair_salon_recommended_replies
-from services.flow.reservation.hair_salon.availability import resolve_hair_salon_availability
+from services.flow.reservation.hair_salon.state import HairSalonReservationState
 
 
-def extract_hair_salon_info_node(state: HairSalonReservationState) -> Dict:
+def extract_hair_salon_info_node(state: HairSalonReservationState) -> dict:
     """
     사용자 발화를 LLM structured output으로 분석한다.
 
@@ -42,7 +42,7 @@ def extract_hair_salon_info_node(state: HairSalonReservationState) -> Dict:
     }
 
 
-def decide_hair_salon_state_node(state: HairSalonReservationState) -> Dict:
+def decide_hair_salon_state_node(state: HairSalonReservationState) -> dict:
     """
     미용실 예약 상태를 결정한다.
 
@@ -130,7 +130,9 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> Dict:
 
     if current_state == "reservation_available":
         if user_action == "confirm_reservation":
-            final_time = state.get("available_time") or state.get("selected_time") or state.get("time")
+            final_time = (
+                state.get("available_time") or state.get("selected_time") or state.get("time")
+            )
 
             return {
                 "user_action": user_action,
@@ -267,7 +269,7 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> Dict:
     }
 
 
-def generate_hair_salon_response_node(state: HairSalonReservationState) -> Dict:
+def generate_hair_salon_response_node(state: HairSalonReservationState) -> dict:
     """
     미용실 예약 응답 생성 노드이다.
 
@@ -281,7 +283,7 @@ def generate_hair_salon_response_node(state: HairSalonReservationState) -> Dict:
     }
 
 
-def attach_hair_salon_recommended_replies_node(state: HairSalonReservationState) -> Dict:
+def attach_hair_salon_recommended_replies_node(state: HairSalonReservationState) -> dict:
     """
     현재 상태에 맞는 추천 답변을 붙인다.
     """
@@ -292,7 +294,7 @@ def attach_hair_salon_recommended_replies_node(state: HairSalonReservationState)
     }
 
 
-def check_hair_salon_availability_node(state: HairSalonReservationState) -> Dict:
+def check_hair_salon_availability_node(state: HairSalonReservationState) -> dict:
     """
     미용실 예약 가능 여부를 확인하는 노드이다.
     """
@@ -302,9 +304,7 @@ def check_hair_salon_availability_node(state: HairSalonReservationState) -> Dict
     elif result["availability_status"] == "unavailable":
         next_state = "reservation_unavailable"
     else:
-        raise ValueError(
-            f"unsupported availability status: {result['availability_status']}"
-        )
+        raise ValueError(f"unsupported availability status: {result['availability_status']}")
 
     return {
         "availability_status": result["availability_status"],

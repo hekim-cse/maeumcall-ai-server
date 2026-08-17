@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass
-from typing import AbstractSet, Any, Callable, Dict, FrozenSet, Mapping, Optional, Protocol, Set
+from typing import Any, Protocol
 
+from core.observability import record_contract_failure
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.common.scenario_keys import canonicalize_scenario_label
-from core.observability import record_contract_failure
-
 
 SCENARIO_STATE_VERSION = 2
 
@@ -21,18 +21,15 @@ class ScenarioStateContractError(ValueError):
 
 
 class CompiledGraph(Protocol):
-    def invoke(self, input: Mapping[str, Any], *args: Any, **kwargs: Any) -> Dict[str, Any]: ...
+    def invoke(self, input: Mapping[str, Any], *args: Any, **kwargs: Any) -> dict[str, Any]: ...
 
 
-CompactState = Callable[[Dict[str, Any]], Dict[str, Any]]
-ValidateState = Callable[[Dict[str, Any]], None]
+CompactState = Callable[[dict[str, Any]], dict[str, Any]]
+ValidateState = Callable[[dict[str, Any]], None]
 
 
 def build_scenario_key(category: str, title: str) -> str:
-    return (
-        f"{canonicalize_scenario_label(category)}:"
-        f"{canonicalize_scenario_label(title)}"
-    )
+    return f"{canonicalize_scenario_label(category)}:{canonicalize_scenario_label(title)}"
 
 
 def validate_client_state(
@@ -40,16 +37,13 @@ def validate_client_state(
     *,
     category: str,
     title: str,
-    allowed_fields: Set[str],
-    allowed_conversation_states: AbstractSet[str],
-) -> Dict[str, Any]:
+    allowed_fields: set[str],
+    allowed_conversation_states: Collection[str],
+) -> dict[str, Any]:
     raw = dict(req.scenarioState or {})
     embedded_conversation_state = raw.get("conversation_state")
     for conversation_state in (req.conversationState, embedded_conversation_state):
-        if (
-            conversation_state is not None
-            and conversation_state not in allowed_conversation_states
-        ):
+        if conversation_state is not None and conversation_state not in allowed_conversation_states:
             raise ScenarioStateContractError(
                 "CONVERSATION_STATE_INVALID",
                 "현재 시나리오에서 허용되지 않는 대화 상태입니다.",
@@ -104,11 +98,11 @@ def validate_client_state(
 
 
 def envelope_state(
-    state: Dict[str, Any],
+    state: dict[str, Any],
     *,
     category: str,
     title: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     return {
         "scenario_key": build_scenario_key(category, title),
         "state_version": SCENARIO_STATE_VERSION,
@@ -123,12 +117,12 @@ class DetailedGraphContract:
     graph: CompiledGraph
     compact_state: CompactState
     defaults: Mapping[str, Any]
-    allowed_conversation_states: FrozenSet[str]
+    allowed_conversation_states: frozenset[str]
     initial_conversation_state: str = "greeting"
-    validate_state: Optional[ValidateState] = None
+    validate_state: ValidateState | None = None
 
     @property
-    def allowed_state_fields(self) -> Set[str]:
+    def allowed_state_fields(self) -> set[str]:
         return set(self.compact_state({}))
 
 
@@ -150,12 +144,9 @@ def complete_detailed_graph(
         or previous_state.get("conversation_state")
         or contract.initial_conversation_state
     )
-    initial_state: Dict[str, Any] = {
+    initial_state: dict[str, Any] = {
         **previous_state,
-        **{
-            key: previous_state.get(key) or value
-            for key, value in contract.defaults.items()
-        },
+        **{key: previous_state.get(key) or value for key, value in contract.defaults.items()},
         "user_message": req.userMessage,
         "conversation_state": conversation_state,
         "history": req.serialized_history(),

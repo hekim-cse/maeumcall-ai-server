@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from langgraph.graph import StateGraph, START, END
-from core.observability import add_observed_node
+from langgraph.graph import END, START, StateGraph
 
-from services.flow.reservation.study_room.state import StudyRoomReservationState
+from core.observability import add_observed_node
 from services.flow.reservation.study_room.nodes import (
-    extract_study_room_info_node,
-    decide_study_room_state_node,
-    check_study_room_availability_node,
-    generate_study_room_response_node,
     attach_study_room_recommended_replies_node,
+    check_study_room_availability_node,
+    decide_study_room_state_node,
+    extract_study_room_info_node,
+    generate_study_room_response_node,
 )
+from services.flow.reservation.study_room.state import StudyRoomReservationState
 
 
 def route_after_study_room_decide(state: StudyRoomReservationState) -> str:
@@ -29,12 +29,8 @@ def build_study_room_reservation_graph():
     graph_name = "study_room_reservation"
     add_observed_node(builder, graph_name, "extract_info", extract_study_room_info_node)
     add_observed_node(builder, graph_name, "decide_state", decide_study_room_state_node)
-    add_observed_node(
-        builder, graph_name, "check_availability", check_study_room_availability_node
-    )
-    add_observed_node(
-        builder, graph_name, "generate_response", generate_study_room_response_node
-    )
+    add_observed_node(builder, graph_name, "check_availability", check_study_room_availability_node)
+    add_observed_node(builder, graph_name, "generate_response", generate_study_room_response_node)
     add_observed_node(
         builder,
         graph_name,

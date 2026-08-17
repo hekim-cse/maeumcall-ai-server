@@ -1,14 +1,13 @@
 import pytest
 
 from schemas.chat_models import ChatRequest
+from services.flow.professor.absence.response import is_professor_absence_request
+from services.flow.professor.appointment.response import is_professor_appointment_request
+from services.flow.professor.assignment.response import is_professor_assignment_request
 from services.flow.reservation.hair_salon.response import is_hair_salon_reservation_request
 from services.flow.reservation.hospital.response import is_hospital_reservation_request
 from services.flow.reservation.restaurant.response import is_restaurant_reservation_request
 from services.flow.reservation.study_room.response import is_study_room_reservation_request
-from services.flow.professor.appointment.response import is_professor_appointment_request
-from services.flow.professor.assignment.response import is_professor_assignment_request
-from services.flow.professor.absence.response import is_professor_absence_request
-
 
 pytestmark = pytest.mark.unit
 

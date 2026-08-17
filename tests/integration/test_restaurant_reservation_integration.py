@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.reservation.restaurant.graph import restaurant_reservation_graph
 
-
 pytestmark = pytest.mark.integration
+
+
 def test_restaurant_reservation_integration_real_hf():
     result = restaurant_reservation_graph.invoke(
         {

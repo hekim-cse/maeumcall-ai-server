@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.professor.appointment.graph import professor_appointment_graph
 
-
 pytestmark = pytest.mark.integration
+
+
 def test_professor_appointment_integration_real_hf():
     result = professor_appointment_graph.invoke(
         {

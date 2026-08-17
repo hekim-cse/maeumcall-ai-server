@@ -6,7 +6,6 @@ from services.flow.registry import FLOW_REGISTRY
 from services.prompt_loader import _load_json
 from services.prompt_registry import CATEGORY_DIR_MAP, category_dir_path, get_prompt_path
 
-
 pytestmark = pytest.mark.unit
 
 

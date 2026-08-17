@@ -7,7 +7,6 @@ from services.flow.reservation.study_room.response_policy import (
     build_study_room_response,
 )
 
-
 pytestmark = pytest.mark.unit
 
 

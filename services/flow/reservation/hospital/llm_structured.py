@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
@@ -9,8 +9,7 @@ from llm.structured_output import (
     optional_string,
 )
 
-
-DEFAULT_HOSPITAL_STRUCTURED_RESULT: Dict[str, Any] = {
+DEFAULT_HOSPITAL_STRUCTURED_RESULT: dict[str, Any] = {
     "intent": None,
     "department": None,
     "date": None,
@@ -41,7 +40,7 @@ HOSPITAL_USER_ACTIONS = frozenset(
 def analyze_hospital_reservation_user_message(
     conversation_state: str,
     user_message: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     병원 예약 사용자 발화를 structured output(JSON)으로 분석한다.
 
@@ -150,7 +149,7 @@ user_message: {user_message}
 """.strip()
 
 
-def _normalize_hospital_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]:
+def _normalize_hospital_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
     if "intent" not in parsed:
         raise ValueError("intent is required")
     intent = parsed.get("intent")
@@ -163,8 +162,6 @@ def _normalize_hospital_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any
     for key in ["department", "date", "time", "user_name", "selected_time"]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(
-        parsed, "user_action", HOSPITAL_USER_ACTIONS
-    )
+    result["user_action"] = allowed_string(parsed, "user_action", HOSPITAL_USER_ACTIONS)
 
     return result

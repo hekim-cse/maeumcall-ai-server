@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 import random
+from collections.abc import Mapping
+from dataclasses import dataclass
 from types import MappingProxyType
-from typing import Literal, Mapping, Tuple
+from typing import Literal
 
 from services.flow.common.state_contract import build_scenario_key
 from services.flow.registry import FLOW_REGISTRY
-
 
 NEUTRAL_OUTGOING_OPENINGS = (
     "네, 전화 받았습니다. 무슨 용건이신가요?",
@@ -39,8 +39,8 @@ COMPANY_INCOMING_OPENINGS = {
 @dataclass(frozen=True)
 class CallPolicy:
     direction: Literal["incoming", "outgoing"]
-    delay_options_ms: Tuple[int, ...]
-    openings: Tuple[str, ...]
+    delay_options_ms: tuple[int, ...]
+    openings: tuple[str, ...]
 
     def __post_init__(self) -> None:
         if not self.delay_options_ms or any(delay < 0 for delay in self.delay_options_ms):

@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from schemas.chat_models import ChatRequest, ChatResponse
-from services.flow.reservation.restaurant.graph import restaurant_reservation_graph
-from services.flow.reservation.restaurant.llm_structured import RESTAURANT_USER_ACTIONS
+from services.flow.common.detailed_state_validation import ReservationStateContract
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
-from services.flow.common.detailed_state_validation import ReservationStateContract
+from services.flow.reservation.restaurant.graph import restaurant_reservation_graph
+from services.flow.reservation.restaurant.llm_structured import RESTAURANT_USER_ACTIONS
 from services.flow.reservation.restaurant.policy import compact_restaurant_state
-
 
 RESTAURANT_STATE_CONTRACT = ReservationStateContract(
     identity_field="service_name",
@@ -64,7 +63,6 @@ def is_restaurant_reservation_request(req: ChatRequest) -> bool:
         expected_category="예약",
         expected_title="식당 예약",
     )
-
 
 
 def complete_restaurant_reservation_with_graph(req: ChatRequest) -> ChatResponse:

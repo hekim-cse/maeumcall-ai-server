@@ -1,11 +1,11 @@
 # 📄 main.py
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
 import logging
 import shutil
 import time
 import uuid
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -15,6 +15,7 @@ from prometheus_client import CONTENT_TYPE_LATEST
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import Response
 
+from core.auth import AuthenticationError, authentication_configuration_ready
 from core.config import (
     BASELINE_ID_HMAC_SECRET,
     CORS_ALLOW_ORIGINS,
@@ -23,23 +24,22 @@ from core.config import (
 )
 from core.database import database_is_ready, dispose_engine
 from core.observability import record_contract_failure, render_metrics
-from core.auth import AuthenticationError, authentication_configuration_ready
 from llm.errors import AIServiceError
+from routes.auth_routes import router as auth_router
 from routes.chat_routes import router as chat_router
 from routes.suggest_routes import router as suggest_router
 from routes.voice_routes import router as voice_router
 from routes.wordfreq_router import router as wordfreq_router
-from routes.auth_routes import router as auth_router
 from server.api_call import router as call_router
 from services.baseline_store import BaselineStoreError
-from services.korean_text_analyzer import (
-    KoreanTextAnalyzerError,
-    korean_text_analyzer,
-)
 from services.flow.common.state_contract import ScenarioStateContractError
 from services.flow.reservation.common.availability_provider import (
     AvailabilityProviderConfigurationError,
     get_availability_provider,
+)
+from services.korean_text_analyzer import (
+    KoreanTextAnalyzerError,
+    korean_text_analyzer,
 )
 
 logger = logging.getLogger("maeumcall.http")

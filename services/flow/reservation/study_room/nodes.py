@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Dict
-
 from services.flow.reservation.study_room.availability import (
     resolve_study_room_availability,
 )
@@ -17,7 +15,7 @@ from services.flow.reservation.study_room.policy import (
 from services.flow.reservation.study_room.state import StudyRoomReservationState
 
 
-def extract_study_room_info_node(state: StudyRoomReservationState) -> Dict:
+def extract_study_room_info_node(state: StudyRoomReservationState) -> dict:
     """
     사용자 발화를 LLM structured output으로 분석하여 스터디룸 예약 정보를 추출한다.
     """
@@ -52,7 +50,7 @@ def extract_study_room_info_node(state: StudyRoomReservationState) -> Dict:
     }
 
 
-def decide_study_room_state_node(state: StudyRoomReservationState) -> Dict:
+def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
     """
     스터디룸 예약 상태를 결정한다.
     """
@@ -118,9 +116,7 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> Dict:
     if current_state == "reservation_available":
         if user_action == "confirm_reservation":
             final_time = (
-                state.get("available_time")
-                or state.get("selected_time")
-                or state.get("start_time")
+                state.get("available_time") or state.get("selected_time") or state.get("start_time")
             )
 
             return {
@@ -235,7 +231,7 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> Dict:
     }
 
 
-def check_study_room_availability_node(state: StudyRoomReservationState) -> Dict:
+def check_study_room_availability_node(state: StudyRoomReservationState) -> dict:
     """
     스터디룸 예약 가능 여부를 확인한다.
     """
@@ -245,9 +241,7 @@ def check_study_room_availability_node(state: StudyRoomReservationState) -> Dict
     elif result["availability_status"] == "unavailable":
         next_state = "reservation_unavailable"
     else:
-        raise ValueError(
-            f"unsupported availability status: {result['availability_status']}"
-        )
+        raise ValueError(f"unsupported availability status: {result['availability_status']}")
 
     return {
         "availability_status": result["availability_status"],
@@ -260,7 +254,7 @@ def check_study_room_availability_node(state: StudyRoomReservationState) -> Dict
     }
 
 
-def generate_study_room_response_node(state: StudyRoomReservationState) -> Dict:
+def generate_study_room_response_node(state: StudyRoomReservationState) -> dict:
     """
     스터디룸 예약 응답 생성 노드이다.
 
@@ -274,7 +268,7 @@ def generate_study_room_response_node(state: StudyRoomReservationState) -> Dict:
     }
 
 
-def attach_study_room_recommended_replies_node(state: StudyRoomReservationState) -> Dict:
+def attach_study_room_recommended_replies_node(state: StudyRoomReservationState) -> dict:
     """
     현재 상태에 맞는 추천 답변을 붙인다.
     """
@@ -317,7 +311,7 @@ def attach_study_room_recommended_replies_node(state: StudyRoomReservationState)
     }
 
 
-def _reset_lookup_state(extra: Dict) -> Dict:
+def _reset_lookup_state(extra: dict) -> dict:
     """
     예약 조회와 확정에 관련된 값을 초기화한다.
     """

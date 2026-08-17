@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Dict
-
 from services.flow.professor.absence.generation import (
     generate_professor_absence_ai_message,
 )
@@ -17,7 +15,7 @@ from services.flow.professor.absence.replies import (
 from services.flow.professor.absence.state import ProfessorAbsenceState
 
 
-def extract_professor_absence_info_node(state: ProfessorAbsenceState) -> Dict:
+def extract_professor_absence_info_node(state: ProfessorAbsenceState) -> dict:
     """
     사용자 발화를 LLM structured output으로 분석하여 결석 사유 전달 정보를 추출한다.
     """
@@ -44,7 +42,7 @@ def extract_professor_absence_info_node(state: ProfessorAbsenceState) -> Dict:
     }
 
 
-def decide_professor_absence_state_node(state: ProfessorAbsenceState) -> Dict:
+def decide_professor_absence_state_node(state: ProfessorAbsenceState) -> dict:
     """
     교수님 결석 사유 전달 상태를 결정한다.
     """
@@ -146,7 +144,7 @@ def decide_professor_absence_state_node(state: ProfessorAbsenceState) -> Dict:
     }
 
 
-def generate_professor_absence_response_node(state: ProfessorAbsenceState) -> Dict:
+def generate_professor_absence_response_node(state: ProfessorAbsenceState) -> dict:
     """
     교수님 결석 사유 전달 응답 생성 노드이다.
 
@@ -162,20 +160,18 @@ def generate_professor_absence_response_node(state: ProfessorAbsenceState) -> Di
 
 def attach_professor_absence_recommended_replies_node(
     state: ProfessorAbsenceState,
-) -> Dict:
+) -> dict:
     """
     현재 상태에 맞는 추천 답변을 붙인다.
     """
     conversation_state = state.get("conversation_state") or "collecting_absence_info"
 
     return {
-        "recommended_replies": get_professor_absence_recommended_replies(
-            conversation_state
-        ),
+        "recommended_replies": get_professor_absence_recommended_replies(conversation_state),
     }
 
 
-def _reset_fields(extra: Dict) -> Dict:
+def _reset_fields(extra: dict) -> dict:
     """
     사용자가 일부 결석 정보를 변경하면 해당 필드를 비우고 다시 수집한다.
     """

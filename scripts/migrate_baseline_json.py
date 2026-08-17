@@ -24,9 +24,7 @@ def load_source(path: Path) -> dict[str, dict[str, Any]]:
     for user_key, baseline in decoded.items():
         if not isinstance(user_key, str) or not isinstance(baseline, dict):
             raise ValueError("기준선 JSON 항목의 키와 값 형식이 올바르지 않습니다.")
-        validated[validate_pseudonymous_key(user_key)] = validate_imported_baseline(
-            baseline
-        )
+        validated[validate_pseudonymous_key(user_key)] = validate_imported_baseline(baseline)
     return validated
 
 

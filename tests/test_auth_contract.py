@@ -7,11 +7,10 @@ from core.auth import (
     AuthenticationError,
     IdentityService,
     derive_internal_uid,
-    validate_kakao_token_info,
     validate_firebase_identity,
+    validate_kakao_token_info,
 )
 from main import app
-
 
 pytestmark = pytest.mark.unit
 
@@ -71,17 +70,13 @@ def test_short_identity_secret_is_rejected():
 
 def test_kakao_token_info_requires_the_configured_application():
     with pytest.raises(AuthenticationError) as error:
-        validate_kakao_token_info(
-            {"app_id": 999, "id": 123456789}, expected_app_id="100"
-        )
+        validate_kakao_token_info({"app_id": 999, "id": 123456789}, expected_app_id="100")
 
     assert error.value.code == "KAKAO_TOKEN_AUDIENCE_MISMATCH"
 
 
 def test_kakao_token_info_returns_the_verified_subject():
-    subject = validate_kakao_token_info(
-        {"app_id": 100, "id": 123456789}, expected_app_id="100"
-    )
+    subject = validate_kakao_token_info({"app_id": 100, "id": 123456789}, expected_app_id="100")
 
     assert subject == "123456789"
 
@@ -96,9 +91,7 @@ def test_firebase_identity_requires_kakao_provider_claim():
 
 def test_firebase_identity_returns_uid_for_kakao_session():
     assert (
-        validate_firebase_identity(
-            {"uid": "internal-user", "identity_provider": "kakao"}
-        )
+        validate_firebase_identity({"uid": "internal-user", "identity_provider": "kakao"})
         == "internal-user"
     )
 
@@ -114,13 +107,9 @@ def test_kakao_exchange_returns_firebase_custom_token(monkeypatch):
     assert response.status_code == 200
     assert kakao.tokens == ["kakao-access-token"]
     assert firebase.issued_uids == [
-        derive_internal_uid(
-            "123456789", "authentication-test-secret-32-bytes-minimum"
-        )
+        derive_internal_uid("123456789", "authentication-test-secret-32-bytes-minimum")
     ]
-    assert response.json()["firebaseCustomToken"].startswith(
-        "firebase-custom-token:user_"
-    )
+    assert response.json()["firebaseCustomToken"].startswith("firebase-custom-token:user_")
 
 
 def test_kakao_exchange_requires_bearer_token():

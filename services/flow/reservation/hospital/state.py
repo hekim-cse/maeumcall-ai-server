@@ -1,33 +1,33 @@
 from __future__ import annotations
 
-from typing import TypedDict, Optional, Dict, List
+from typing import TypedDict
 
 
 class HospitalReservationState(TypedDict, total=False):
     user_message: str
     conversation_state: str
-    service_name: Optional[str]
+    service_name: str | None
 
-    intent: Optional[str]
-    department: Optional[str]
-    date: Optional[str]
-    time: Optional[str]
-    user_name: Optional[str]
-    phone_number: Optional[str]
+    intent: str | None
+    department: str | None
+    date: str | None
+    time: str | None
+    user_name: str | None
+    phone_number: str | None
 
-    user_action: Optional[str]
-    selected_time: Optional[str]
+    user_action: str | None
+    selected_time: str | None
 
-    availability_status: Optional[str]
-    availability_reason: Optional[str]
-    available_time: Optional[str]
-    alternative_times: List[str]
-    availability_message_hint: Optional[str]
-    reservation_confirmed: Optional[bool]
-    ai_message: Optional[str]
-    last_ai_message: Optional[str]
+    availability_status: str | None
+    availability_reason: str | None
+    available_time: str | None
+    alternative_times: list[str]
+    availability_message_hint: str | None
+    reservation_confirmed: bool | None
+    ai_message: str | None
+    last_ai_message: str | None
 
-    history: List[Dict[str, str]]
+    history: list[dict[str, str]]
 
-    recommended_replies: List[str]
+    recommended_replies: list[str]
     should_end_call: bool

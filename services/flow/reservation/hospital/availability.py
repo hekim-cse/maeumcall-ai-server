@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional
-
 from services.flow.reservation.common.availability_provider import (
     AvailabilityProvider,
     AvailabilityQuery,
@@ -10,10 +8,10 @@ from services.flow.reservation.common.availability_provider import (
 
 
 def resolve_hospital_availability(
-    state: Dict[str, object],
+    state: dict[str, object],
     *,
-    provider: Optional[AvailabilityProvider] = None,
-) -> Dict[str, object]:
+    provider: AvailabilityProvider | None = None,
+) -> dict[str, object]:
     """
     서버가 소유한 버전 지정 훈련 일정표로 예약 가능 여부를 결정한다.
     """
@@ -52,9 +50,9 @@ def build_availability_message_hint(
     date: str,
     time: str,
     status: str,
-    reason: Optional[str],
-    available_time: Optional[str],
-    alternative_times: List[str],
+    reason: str | None,
+    available_time: str | None,
+    alternative_times: list[str],
 ) -> str:
     if status == "available":
         safe_time = available_time or time
@@ -62,11 +60,15 @@ def build_availability_message_hint(
 
     if reason == "requested_time_full":
         alternatives = format_alternative_times(alternative_times)
-        return f"{date} {time}에는 예약이 모두 차 있습니다. 대신 {alternatives} 시간대는 가능합니다."
+        return (
+            f"{date} {time}에는 예약이 모두 차 있습니다. 대신 {alternatives} 시간대는 가능합니다."
+        )
 
     if reason == "doctor_unavailable":
         alternatives = format_alternative_times(alternative_times)
-        return f"{date} {time}에는 담당 의사 진료가 없습니다. 대신 {alternatives} 예약이 가능합니다."
+        return (
+            f"{date} {time}에는 담당 의사 진료가 없습니다. 대신 {alternatives} 예약이 가능합니다."
+        )
 
     if reason == "hospital_closed":
         alternatives = format_alternative_times(alternative_times)
@@ -76,7 +78,7 @@ def build_availability_message_hint(
     return f"{date} {time}에는 예약이 어렵습니다. 대신 {alternatives} 예약이 가능합니다."
 
 
-def format_alternative_times(alternative_times: List[str]) -> str:
+def format_alternative_times(alternative_times: list[str]) -> str:
     if not alternative_times:
         return "다른 시간대"
 

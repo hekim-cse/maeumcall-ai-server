@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-from typing import List
-
 from services.flow.reservation.study_room.policy import (
     get_missing_study_room_fields,
 )
-
 
 STUDY_ROOM_FIELD_LABELS = {
     "date": "이용 날짜",
@@ -16,7 +13,7 @@ STUDY_ROOM_FIELD_LABELS = {
 }
 
 
-def choose_message(candidates: List[str], state: dict) -> str:
+def choose_message(candidates: list[str], state: dict) -> str:
     last_ai_message = state.get("last_ai_message")
 
     for message in candidates:
@@ -44,14 +41,14 @@ def build_study_room_response(conversation_state: str, state: dict = None) -> st
         if missing == ["user_name"]:
             return "예약자 성함을 말씀해주시겠어요?"
         if not missing:
-            raise ValueError(
-                "collecting_reservation_info requires at least one missing field"
-            )
+            raise ValueError("collecting_reservation_info requires at least one missing field")
         fields = ", ".join(STUDY_ROOM_FIELD_LABELS[field] for field in missing)
         return f"스터디룸 예약 도와드리겠습니다. 필요한 정보는 {fields}입니다."
 
     if conversation_state == "confirming_info":
-        return f"{date} {start_time}부터 {duration}, {party_size} 예약으로 확인했습니다. 맞으실까요?"
+        return (
+            f"{date} {start_time}부터 {duration}, {party_size} 예약으로 확인했습니다. 맞으실까요?"
+        )
 
     if conversation_state == "checking_availability":
         return "잠시만요. 예약 가능한지 확인해보겠습니다."

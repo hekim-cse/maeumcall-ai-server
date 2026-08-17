@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, FrozenSet, Tuple
+from typing import Any
 
 from services.flow.common.state_contract import ScenarioStateContractError
-
 
 MAX_STATE_TEXT_LENGTH = 1_000
 MAX_AI_MESSAGE_LENGTH = 4_000
@@ -14,13 +13,13 @@ MAX_ALTERNATIVE_TIMES = 20
 @dataclass(frozen=True)
 class ReservationStateContract:
     identity_field: str
-    required_fields: Tuple[str, ...]
-    allowed_actions: FrozenSet[str]
-    information_complete_states: FrozenSet[str]
-    allowed_intents: FrozenSet[str | None] = frozenset({"reservation"})
+    required_fields: tuple[str, ...]
+    allowed_actions: frozenset[str]
+    information_complete_states: frozenset[str]
+    allowed_intents: frozenset[str | None] = frozenset({"reservation"})
 
     @property
-    def expected_fields(self) -> FrozenSet[str]:
+    def expected_fields(self) -> frozenset[str]:
         return frozenset(
             {
                 "intent",
@@ -39,7 +38,7 @@ class ReservationStateContract:
             }
         )
 
-    def validate(self, state: Dict[str, Any]) -> None:
+    def validate(self, state: dict[str, Any]) -> None:
         if not state:
             return
         if set(state) != set(self.expected_fields):
@@ -56,9 +55,7 @@ class ReservationStateContract:
             _validate_optional_text(
                 state.get(field),
                 max_length=(
-                    MAX_AI_MESSAGE_LENGTH
-                    if field == "last_ai_message"
-                    else MAX_STATE_TEXT_LENGTH
+                    MAX_AI_MESSAGE_LENGTH if field == "last_ai_message" else MAX_STATE_TEXT_LENGTH
                 ),
             )
 
@@ -105,8 +102,7 @@ class ReservationStateContract:
         if conversation_state == "reservation_available" and availability_status != "available":
             _invalid_state()
         if (
-            conversation_state
-            in {"reservation_unavailable", "suggest_alternative"}
+            conversation_state in {"reservation_unavailable", "suggest_alternative"}
             and availability_status != "unavailable"
         ):
             _invalid_state()
@@ -125,12 +121,12 @@ class ReservationStateContract:
 @dataclass(frozen=True)
 class ProfessorStateContract:
     intent: str
-    required_fields: Tuple[str, ...]
-    allowed_actions: FrozenSet[str]
-    information_complete_states: FrozenSet[str]
+    required_fields: tuple[str, ...]
+    allowed_actions: frozenset[str]
+    information_complete_states: frozenset[str]
 
     @property
-    def expected_fields(self) -> FrozenSet[str]:
+    def expected_fields(self) -> frozenset[str]:
         return frozenset(
             {
                 "intent",
@@ -143,7 +139,7 @@ class ProfessorStateContract:
             }
         )
 
-    def validate(self, state: Dict[str, Any]) -> None:
+    def validate(self, state: dict[str, Any]) -> None:
         if not state:
             return
         if set(state) != set(self.expected_fields) or state.get("intent") != self.intent:
@@ -153,9 +149,7 @@ class ProfessorStateContract:
             _validate_optional_text(
                 state.get(field),
                 max_length=(
-                    MAX_AI_MESSAGE_LENGTH
-                    if field == "last_ai_message"
-                    else MAX_STATE_TEXT_LENGTH
+                    MAX_AI_MESSAGE_LENGTH if field == "last_ai_message" else MAX_STATE_TEXT_LENGTH
                 ),
             )
         if state.get("professor_name") is None or state.get("conversation_state") is None:
@@ -164,19 +158,14 @@ class ProfessorStateContract:
             _invalid_state()
 
         missing_fields = state.get("missing_fields")
-        actual_missing = [
-            field for field in self.required_fields if state.get(field) is None
-        ]
+        actual_missing = [field for field in self.required_fields if state.get(field) is None]
         if not isinstance(missing_fields, list):
             _invalid_state()
         if any(field not in self.required_fields for field in missing_fields):
             _invalid_state()
         if len(missing_fields) != len(set(missing_fields)) or missing_fields != actual_missing:
             _invalid_state()
-        if (
-            state["conversation_state"] in self.information_complete_states
-            and actual_missing
-        ):
+        if state["conversation_state"] in self.information_complete_states and actual_missing:
             _invalid_state()
 
 

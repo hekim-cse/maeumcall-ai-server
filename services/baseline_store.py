@@ -1,17 +1,18 @@
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
-from datetime import datetime, timezone
-from math import isfinite, sqrt
-from typing import Any, AsyncIterator, Mapping, Protocol
 import hashlib
 import hmac
 import unicodedata
+from collections.abc import AsyncIterator, Mapping
+from contextlib import asynccontextmanager
+from datetime import UTC, datetime
+from math import isfinite, sqrt
+from typing import Any, Protocol
 
 from sqlalchemy import delete, func, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from core.config import BASELINE_ID_HMAC_SECRET
 from core.database import DatabaseConfigurationError, get_session_factory
@@ -67,9 +68,7 @@ class BaselineRepository(Protocol):
 
     async def delete_subject(self, user_key: str) -> bool: ...
 
-    async def import_baseline(
-        self, user_key: str, baseline: Mapping[str, Any]
-    ) -> None: ...
+    async def import_baseline(self, user_key: str, baseline: Mapping[str, Any]) -> None: ...
 
 
 def normalize_user_id(user_id: str | None) -> str:
@@ -133,12 +132,7 @@ def extract_measurement(analysis: Mapping[str, Any]) -> tuple[float, float, floa
     except (KeyError, TypeError, ValueError) as exc:
         raise BaselineMeasurementError("voice measurement fields are invalid") from exc
     pitch, jitter, shimmer = measurement
-    if (
-        not all(isfinite(value) for value in measurement)
-        or pitch <= 0
-        or jitter < 0
-        or shimmer < 0
-    ):
+    if not all(isfinite(value) for value in measurement) or pitch <= 0 or jitter < 0 or shimmer < 0:
         raise BaselineMeasurementError("voice measurement values are out of range")
     return measurement
 
@@ -164,13 +158,9 @@ def calculate_welford(
         return mean, m2, std
 
     pitch_mean, pitch_m2, pitch_std = update(pitch, "pitchHz", "pitch_m2")
-    jitter_mean, jitter_m2, jitter_std = update(
-        jitter, "jitterLocal", "jitter_m2"
-    )
-    shimmer_mean, shimmer_m2, shimmer_std = update(
-        shimmer, "shimmerLocal", "shimmer_m2"
-    )
-    timestamp = measured_at or datetime.now(timezone.utc)
+    jitter_mean, jitter_m2, jitter_std = update(jitter, "jitterLocal", "jitter_m2")
+    shimmer_mean, shimmer_m2, shimmer_std = update(shimmer, "shimmerLocal", "shimmer_m2")
+    timestamp = measured_at or datetime.now(UTC)
     return {
         "n": count,
         "pitchHz": round(pitch_mean, 6),
@@ -207,11 +197,7 @@ def validate_imported_baseline(value: Mapping[str, Any]) -> dict[str, Any]:
             normalized["pitchIqrHz"] = float(value["pitchIqrHz"])
     except (KeyError, TypeError, ValueError) as exc:
         raise BaselineMeasurementError("imported baseline fields are invalid") from exc
-    numeric_values = [
-        number
-        for key, number in normalized.items()
-        if key != "samples"
-    ]
+    numeric_values = [number for key, number in normalized.items() if key != "samples"]
     if (
         sample_count <= 0
         or not all(isfinite(number) for number in numeric_values)
@@ -257,9 +243,7 @@ class PostgresBaselineRepository:
             .on_conflict_do_nothing(index_elements=[VoiceSubject.user_key])
         )
         await session.execute(
-            select(VoiceSubject.user_key)
-            .where(VoiceSubject.user_key == user_key)
-            .with_for_update()
+            select(VoiceSubject.user_key).where(VoiceSubject.user_key == user_key).with_for_update()
         )
 
     @staticmethod
@@ -293,9 +277,7 @@ class PostgresBaselineRepository:
         async with self._transaction() as session:
             await self._lock_subject(session, user_key)
             baseline = await session.scalar(
-                select(VoiceBaseline)
-                .where(VoiceBaseline.user_key == user_key)
-                .with_for_update()
+                select(VoiceBaseline).where(VoiceBaseline.user_key == user_key).with_for_update()
             )
             current = self._baseline_dict(baseline) if baseline else None
             calculated = calculate_welford(current, measurement)
@@ -361,9 +343,7 @@ class PostgresBaselineRepository:
                 session.add(baseline)
             self._apply_baseline(baseline, calculated)
             await session.execute(
-                delete(VoiceCalibrationSample).where(
-                    VoiceCalibrationSample.user_key == user_key
-                )
+                delete(VoiceCalibrationSample).where(VoiceCalibrationSample.user_key == user_key)
             )
             await session.flush()
             return self._baseline_dict(baseline)
@@ -372,9 +352,7 @@ class PostgresBaselineRepository:
         async with self._transaction() as session:
             await self._lock_subject(session, user_key)
             await session.execute(
-                delete(VoiceCalibrationSample).where(
-                    VoiceCalibrationSample.user_key == user_key
-                )
+                delete(VoiceCalibrationSample).where(VoiceCalibrationSample.user_key == user_key)
             )
 
     async def delete_subject(self, user_key: str) -> bool:
@@ -384,9 +362,7 @@ class PostgresBaselineRepository:
             )
             return bool(result.rowcount)
 
-    async def import_baseline(
-        self, user_key: str, baseline: Mapping[str, Any]
-    ) -> None:
+    async def import_baseline(self, user_key: str, baseline: Mapping[str, Any]) -> None:
         validated_key = validate_pseudonymous_key(user_key)
         value = validate_imported_baseline(baseline)
         async with self._transaction() as session:
@@ -400,7 +376,7 @@ class PostgresBaselineRepository:
     @staticmethod
     def _aggregate_dict(row: Any) -> dict[str, Any]:
         count, pitch, jitter, shimmer, pitch_std, jitter_std, shimmer_std = row
-        timestamp = datetime.now(timezone.utc)
+        timestamp = datetime.now(UTC)
         return {
             "n": int(count),
             "pitchHz": float(pitch),
@@ -431,7 +407,7 @@ class PostgresBaselineRepository:
         baseline.shimmer_local = float(value["shimmerLocal"])
         baseline.shimmer_std = float(value.get("shimmerStd", 0.0))
         baseline.shimmer_m2 = float(value.get("shimmer_m2", 0.0))
-        baseline.updated_at = datetime.now(timezone.utc)
+        baseline.updated_at = datetime.now(UTC)
 
 
 _repository: BaselineRepository | None = None
@@ -454,44 +430,32 @@ def set_baseline_repository(repository: BaselineRepository | None) -> None:
 
 
 async def get_persisted_baseline(user_id: str) -> dict[str, Any] | None:
-    return await get_baseline_repository().get_baseline(
-        pseudonymize_user_id(user_id)
-    )
+    return await get_baseline_repository().get_baseline(pseudonymize_user_id(user_id))
 
 
-async def update_baseline_persisted(
-    user_id: str, analysis: Mapping[str, Any]
-) -> dict[str, Any]:
+async def update_baseline_persisted(user_id: str, analysis: Mapping[str, Any]) -> dict[str, Any]:
     return await get_baseline_repository().update_welford(
         pseudonymize_user_id(user_id), extract_measurement(analysis)
     )
 
 
-async def append_calib_sample(
-    user_id: str, analysis: Mapping[str, Any]
-) -> dict[str, Any]:
+async def append_calib_sample(user_id: str, analysis: Mapping[str, Any]) -> dict[str, Any]:
     return await get_baseline_repository().append_calibration_sample(
         pseudonymize_user_id(user_id), extract_measurement(analysis)
     )
 
 
 async def clear_calib_cache(user_id: str) -> None:
-    await get_baseline_repository().clear_calibration(
-        pseudonymize_user_id(user_id)
-    )
+    await get_baseline_repository().clear_calibration(pseudonymize_user_id(user_id))
 
 
 async def finalize_calibration_simple(user_id: str) -> dict[str, Any]:
-    baseline = await get_baseline_repository().finalize_calibration(
-        pseudonymize_user_id(user_id)
-    )
+    baseline = await get_baseline_repository().finalize_calibration(pseudonymize_user_id(user_id))
     if baseline is None:
         return {"ok": False, "error": "no samples"}
     return {"ok": True, "baseline": baseline}
 
 
 async def delete_baseline(user_id: str) -> dict[str, Any]:
-    deleted = await get_baseline_repository().delete_subject(
-        pseudonymize_user_id(user_id)
-    )
+    deleted = await get_baseline_repository().delete_subject(pseudonymize_user_id(user_id))
     return {"ok": True, "deleted": deleted}

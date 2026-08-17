@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.professor.absence.graph import professor_absence_graph
 
-
 pytestmark = pytest.mark.integration
+
+
 def test_professor_absence_integration_real_hf():
     result = professor_absence_graph.invoke(
         {

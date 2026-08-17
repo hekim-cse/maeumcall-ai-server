@@ -8,23 +8,22 @@ import subprocess
 import tempfile
 import uuid
 from pathlib import Path
-from typing import Optional
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import JSONResponse
 
-from core.config import AUDIO_UPLOAD_MAX_BYTES
 from core.auth import (
     AuthenticatedUser,
     AuthenticationError,
     optional_authenticated_user,
     require_authenticated_user,
 )
+from core.config import AUDIO_UPLOAD_MAX_BYTES
 from praat_voice_analysis import VoiceAnalysisError, analyze_audio
 from services.analysis_service import (
+    accumulate_baseline,
     build_payload,
     get_baseline,
-    accumulate_baseline,
 )
 from services.baseline_store import (
     BaselineStoreError,
@@ -45,7 +44,7 @@ def _voice_error(status_code: int, code: str, message: str) -> JSONResponse:
     )
 
 
-async def _safe_unlink(path: Optional[str]) -> None:
+async def _safe_unlink(path: str | None) -> None:
     if not path:
         return
     try:
@@ -61,9 +60,7 @@ async def analyze_audio_endpoint(
     file: UploadFile = File(...),
     mode: str = Form("normal"),  # "normal" | "calibrate"
     strategy: str = Form("simple"),  # "simple" | "welford"
-    authenticated_user: Optional[AuthenticatedUser] = Depends(
-        optional_authenticated_user
-    ),
+    authenticated_user: AuthenticatedUser | None = Depends(optional_authenticated_user),
 ):
     """
     업로드된 오디오를 분석하여 통일된 JSON 포맷으로 반환합니다.
@@ -115,13 +112,11 @@ async def analyze_audio_endpoint(
     mime = file.content_type or (mimetypes.guess_type(file.filename or "")[0] or "")
     tmp_for_praat = tmp_in
     converted_tmp = None
-    cur: Optional[dict] = None
+    cur: dict | None = None
 
     try:
         # WAV가 아니면 변환
-        is_wav = mime.endswith("/wav") or (file.filename or "").lower().endswith(
-            ".wav"
-        )
+        is_wav = mime.endswith("/wav") or (file.filename or "").lower().endswith(".wav")
         if not is_wav:
             converted_tmp = f"{tmp_in}.wav"
             try:
@@ -174,11 +169,7 @@ async def analyze_audio_endpoint(
             )
 
         # 사용자 ID 정규화
-        uid = (
-            normalize_user_id(authenticated_user.uid)
-            if authenticated_user is not None
-            else None
-        )
+        uid = normalize_user_id(authenticated_user.uid) if authenticated_user is not None else None
         baseline = None
         if uid:
             if mode == "calibrate":

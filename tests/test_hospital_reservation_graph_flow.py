@@ -1,9 +1,9 @@
 import pytest
-from services.flow.reservation.hospital import graph as graph_module
-from services.flow.reservation.hospital import generation as generation_module
 
+from services.flow.reservation.hospital import graph as graph_module
 
 pytestmark = pytest.mark.graph_flow
+
 
 def _patch_hospital_analysis(monkeypatch):
     def fake_analyze(conversation_state, user_message):
@@ -205,7 +205,6 @@ def _patch_hospital_analysis(monkeypatch):
             **fake_analyze(conversation_state, user_message),
         },
     )
-
 
 
 @pytest.fixture(autouse=True)
@@ -433,6 +432,7 @@ def test_invalid_alternative_time_does_not_confirm(monkeypatch):
 # 8차 보강 통합 테스트 케이스
 # =========================
 
+
 def test_confirming_info_change_time_flow(monkeypatch):
     state = _invoke(
         {
@@ -637,7 +637,6 @@ def test_reservation_unavailable_change_date_clears_lookup_fields(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "다른 날짜로 확인해주세요.",
@@ -676,7 +675,6 @@ def test_reservation_unavailable_change_date_clears_time_too(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "다른 날짜로 확인해주세요.",
@@ -712,7 +710,6 @@ def test_asking_date_after_change_date_moves_to_asking_time(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "모레로 확인해주세요.",
@@ -739,7 +736,6 @@ def test_checking_availability_uses_domain_response_policy(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "네, 맞습니다.",
@@ -765,7 +761,6 @@ def test_closing_uses_domain_response_policy(monkeypatch):
     검증된 상태를 도메인 응답 정책으로 표현해야 한다.
     """
     from services.flow.reservation.hospital import graph as graph_module
-
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -794,7 +789,6 @@ def test_end_uses_domain_response_policy(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "네, 감사합니다.",
@@ -821,7 +815,6 @@ def test_reservation_confirmed_uses_domain_response_policy(monkeypatch):
     검증된 상태를 도메인 응답 정책으로 표현해야 한다.
     """
     from services.flow.reservation.hospital import graph as graph_module
-
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -855,7 +848,6 @@ def test_reservation_confirmed_policy_uses_selected_time_first(monkeypatch):
     reservation_confirmed 도메인 정책 응답은 selected_time을 우선 사용해야 한다.
     """
     from services.flow.reservation.hospital import graph as graph_module
-
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -892,7 +884,6 @@ def test_reservation_available_uses_domain_response_policy(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "네, 기다리겠습니다.",
@@ -921,7 +912,6 @@ def test_reservation_available_policy_keeps_recommended_replies(monkeypatch):
     recommended_replies는 기존처럼 유지되어야 한다.
     """
     from services.flow.reservation.hospital import graph as graph_module
-
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -1025,7 +1015,6 @@ def test_asking_date_uses_domain_response_policy(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "내과 진료를 예약하고 싶습니다.",
@@ -1041,7 +1030,11 @@ def test_asking_date_uses_domain_response_policy(monkeypatch):
 
     assert result["conversation_state"] == "asking_date"
     assert result["department"] == "내과"
-    assert "날짜" in result["ai_message"] or "언제" in result["ai_message"] or "방문" in result["ai_message"]
+    assert (
+        "날짜" in result["ai_message"]
+        or "언제" in result["ai_message"]
+        or "방문" in result["ai_message"]
+    )
     assert "시간" not in result["ai_message"]
     assert "연락처" not in result["ai_message"]
     assert result["should_end_call"] is False
@@ -1073,7 +1066,6 @@ def test_asking_time_uses_domain_response_policy(monkeypatch):
     LLM을 호출하지 않고 도메인 정책 응답을 사용해야 한다.
     """
     from services.flow.reservation.hospital import graph as graph_module
-
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -1124,7 +1116,6 @@ def test_asking_department_uses_domain_response_policy(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "저기... 내일 오후에 진료 예약 가능할까요?",
@@ -1138,7 +1129,13 @@ def test_asking_department_uses_domain_response_policy(monkeypatch):
     assert result["intent"] == "reservation"
     assert result["date"] == "내일"
     assert result["time"] == "오후"
-    assert "진료과" in result["ai_message"] or "과를" in result["ai_message"] or "진료받으실 과" in result["ai_message"] or "어느 과" in result["ai_message"] or "과 진료" in result["ai_message"]
+    assert (
+        "진료과" in result["ai_message"]
+        or "과를" in result["ai_message"]
+        or "진료받으실 과" in result["ai_message"]
+        or "어느 과" in result["ai_message"]
+        or "과 진료" in result["ai_message"]
+    )
     assert "연락처" not in result["ai_message"]
     assert "성함" not in result["ai_message"]
     assert result["should_end_call"] is False
@@ -1159,7 +1156,13 @@ def test_policy_message_builder_handles_asking_department():
         },
     )
 
-    assert "진료과" in message or "과를" in message or "진료받으실 과" in message or "어느 과" in message or "과 진료" in message
+    assert (
+        "진료과" in message
+        or "과를" in message
+        or "진료받으실 과" in message
+        or "어느 과" in message
+        or "과 진료" in message
+    )
     assert "연락처" not in message
     assert "성함" not in message
 
@@ -1169,7 +1172,6 @@ def test_confirming_info_recommended_replies_do_not_collect_phone(monkeypatch):
     예약자 이름은 수집하지만 불필요한 연락처는 수집하지 않는다.
     """
     from services.flow.reservation.hospital import graph as graph_module
-
 
     result = graph_module.hospital_reservation_graph.invoke(
         {
@@ -1203,7 +1205,6 @@ def test_confirming_info_uses_domain_response_policy(monkeypatch):
     """
     from services.flow.reservation.hospital import graph as graph_module
 
-
     result = graph_module.hospital_reservation_graph.invoke(
         {
             "user_message": "오후 3시로 하고 싶습니다.",
@@ -1224,7 +1225,12 @@ def test_confirming_info_uses_domain_response_policy(monkeypatch):
     assert "내일" in result["ai_message"]
     assert "오후 3시" in result["ai_message"]
     assert "내과" in result["ai_message"]
-    assert "맞으실까요" in result["ai_message"] or "확인" in result["ai_message"] or "맞으세요" in result["ai_message"] or "될까요" in result["ai_message"]
+    assert (
+        "맞으실까요" in result["ai_message"]
+        or "확인" in result["ai_message"]
+        or "맞으세요" in result["ai_message"]
+        or "될까요" in result["ai_message"]
+    )
     assert result["should_end_call"] is False
 
 
@@ -1249,7 +1255,9 @@ def test_policy_message_builder_handles_confirming_info():
     assert "오후 3시" in message
     assert "내과" in message
     assert "예약" in message or "진료" in message
-    assert "맞으실까요" in message or "확인" in message or "맞으세요" in message or "될까요" in message
+    assert (
+        "맞으실까요" in message or "확인" in message or "맞으세요" in message or "될까요" in message
+    )
 
 
 def test_policy_message_builder_handles_reservation_unavailable_with_alternatives():

@@ -1,20 +1,25 @@
 # routes/suggest_routes.py
 from __future__ import annotations
+
+from typing import Any
+
 from fastapi import APIRouter, HTTPException
-from typing import Any, Dict, List
 
 from core.config import OPENAI_TIMEOUT
 from llm.client import complete_json_messages
 from llm.structured_output import complete_validated_json
 from schemas.chat_models import (
-    SuggestRequest, SuggestResponse,
-    ImproveRequest, ImproveResponse,
+    ImproveRequest,
+    ImproveResponse,
+    SuggestRequest,
+    SuggestResponse,
 )
 from services.correction_service import improve_messages
 from services.flow.common.scenario_keys import canonicalize_scenario_label
 from services.prompt_registry import is_registered_prompt
 
 router = APIRouter(prefix="/chat", tags=["chat-improve"])
+
 
 def _suggest_prompt(req: SuggestRequest) -> str:
     cat = canonicalize_scenario_label(req.category)
@@ -49,7 +54,8 @@ def _suggest_prompt(req: SuggestRequest) -> str:
 {req.lastAgentUtterance}
 """.strip()
 
-def _validate_suggestions(data: Dict[str, Any]) -> List[str]:
+
+def _validate_suggestions(data: dict[str, Any]) -> list[str]:
     values = data.get("suggestions")
     if not isinstance(values, list) or len(values) != 3:
         raise ValueError("suggestions must contain exactly three items")
@@ -59,6 +65,7 @@ def _validate_suggestions(data: Dict[str, Any]) -> List[str]:
     if len(set(normalized)) != 3:
         raise ValueError("suggestions must be unique")
     return normalized
+
 
 @router.post("/suggest", response_model=SuggestResponse)
 def suggest(req: SuggestRequest):
@@ -80,6 +87,7 @@ def suggest(req: SuggestRequest):
         operation="recommended_reply_generation",
     )
     return SuggestResponse(suggestions=items)
+
 
 @router.post("/improve", response_model=ImproveResponse)
 async def improve(req: ImproveRequest):

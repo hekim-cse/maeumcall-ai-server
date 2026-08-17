@@ -3,20 +3,20 @@ from __future__ import annotations
 import os
 import tempfile
 from collections import defaultdict
-from typing import Any, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
 
-from main import app
 from core.auth import (
     AuthenticatedUser,
     optional_authenticated_user,
     require_authenticated_user,
 )
+from main import app
 from routes import voice_routes
 from services import baseline_store
-
 
 pytestmark = pytest.mark.unit
 
@@ -34,9 +34,7 @@ class BaselineRepositoryDouble:
     async def update_welford(
         self, user_key: str, measurement: tuple[float, float, float]
     ) -> dict[str, Any]:
-        value = baseline_store.calculate_welford(
-            self.baselines.get(user_key), measurement
-        )
+        value = baseline_store.calculate_welford(self.baselines.get(user_key), measurement)
         self.baselines[user_key] = value
         return value
 
@@ -85,18 +83,14 @@ class BaselineRepositoryDouble:
         self.samples.pop(user_key, None)
         return existed
 
-    async def import_baseline(
-        self, user_key: str, baseline: Mapping[str, Any]
-    ) -> None:
+    async def import_baseline(self, user_key: str, baseline: Mapping[str, Any]) -> None:
         self.baselines[user_key] = dict(baseline)
 
 
 @pytest.fixture(autouse=True)
 def baseline_repository(monkeypatch):
     repository = BaselineRepositoryDouble()
-    monkeypatch.setattr(
-        baseline_store, "BASELINE_ID_HMAC_SECRET", "test-secret-" * 4
-    )
+    monkeypatch.setattr(baseline_store, "BASELINE_ID_HMAC_SECRET", "test-secret-" * 4)
     baseline_store.set_baseline_repository(repository)
     yield repository
     baseline_store.set_baseline_repository(None)

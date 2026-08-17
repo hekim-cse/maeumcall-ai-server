@@ -1,9 +1,11 @@
 import pytest
+
 from schemas.chat_models import ChatRequest
 from services.flow.reservation.study_room.response import is_study_room_reservation_request
 
-
 pytestmark = pytest.mark.unit
+
+
 def _req(category: str, title: str) -> ChatRequest:
     return ChatRequest(
         category=category,

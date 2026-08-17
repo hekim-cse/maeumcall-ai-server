@@ -2,19 +2,20 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import Any, Callable, Dict, List, Optional, TypeVar
+from collections.abc import Callable
+from typing import Any, TypeVar
 
-from llm.errors import AIResponseValidationError
 from core.observability import record_contract_failure, record_structured_output_retry
+from llm.errors import AIResponseValidationError
 
 logger = logging.getLogger(__name__)
 
 ValidatedOutput = TypeVar("ValidatedOutput")
-Completion = Callable[[List[Dict[str, str]]], str]
-Validator = Callable[[Dict[str, Any]], ValidatedOutput]
+Completion = Callable[[list[dict[str, str]]], str]
+Validator = Callable[[dict[str, Any]], ValidatedOutput]
 
 
-def optional_string(data: Dict[str, Any], field: str) -> Optional[str]:
+def optional_string(data: dict[str, Any], field: str) -> str | None:
     if field not in data:
         raise ValueError(f"{field} is required")
     value = data.get(field)
@@ -26,7 +27,7 @@ def optional_string(data: Dict[str, Any], field: str) -> Optional[str]:
     return normalized or None
 
 
-def allowed_string(data: Dict[str, Any], field: str, allowed: set[str]) -> str:
+def allowed_string(data: dict[str, Any], field: str, allowed: set[str]) -> str:
     value = data.get(field)
     if value not in allowed:
         raise ValueError(f"{field} must be one of {sorted(allowed)}")
@@ -34,7 +35,7 @@ def allowed_string(data: Dict[str, Any], field: str, allowed: set[str]) -> str:
 
 
 def complete_validated_json(
-    messages: List[Dict[str, str]],
+    messages: list[dict[str, str]],
     *,
     completion: Completion,
     validator: Validator[ValidatedOutput],
@@ -50,7 +51,7 @@ def complete_validated_json(
         raise ValueError("max_attempts must be at least 1")
 
     retry_messages = list(messages)
-    last_error: Optional[Exception] = None
+    last_error: Exception | None = None
 
     for attempt in range(1, max_attempts + 1):
         raw = completion(retry_messages)

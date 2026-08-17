@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Dict, Optional
-
 import pytest
 from fastapi.testclient import TestClient
 
@@ -14,6 +12,7 @@ from services.flow.cityhall.contracts import (
     PASSPORT_SPEC,
     RESIDENT_CERTIFICATE_SPEC,
 )
+from services.flow.common.state_contract import build_scenario_key
 from services.flow.delivery.contracts import (
     DELIVERY_DELAY_CONTRACT,
     DELIVERY_DELAY_SPEC,
@@ -27,7 +26,6 @@ from services.flow.service_workflow.contracts import (
     ServiceWorkflowSpec,
     validate_service_workflow_state,
 )
-from services.flow.common.state_contract import build_scenario_key
 from services.flow.service_workflow.structured import _validate_analysis
 from services.flow.support.contracts import (
     NETWORK_CALL_SPEC,
@@ -37,7 +35,6 @@ from services.flow.support.contracts import (
     SUPPORT_PLAN_CONTRACT,
     SUPPORT_SERVICE_REQUEST_CONTRACT,
 )
-
 
 pytestmark = pytest.mark.unit
 
@@ -55,7 +52,7 @@ WORKFLOWS = (
 )
 
 
-def _field_values(spec: ServiceWorkflowSpec) -> Dict[str, str]:
+def _field_values(spec: ServiceWorkflowSpec) -> dict[str, str]:
     return {
         field.key: field.options[0].value if field.options else f"검증된 {field.label}"
         for field in spec.fields
@@ -65,10 +62,10 @@ def _field_values(spec: ServiceWorkflowSpec) -> Dict[str, str]:
 def _analysis(
     spec: ServiceWorkflowSpec,
     *,
-    values: Optional[Dict[str, Optional[str]]] = None,
+    values: dict[str, str | None] | None = None,
     action: str = "provide_details",
-    change_field: Optional[str] = None,
-) -> Dict:
+    change_field: str | None = None,
+) -> dict:
     return {
         "intent": spec.intent,
         "fields": values or {key: None for key in spec.field_keys},

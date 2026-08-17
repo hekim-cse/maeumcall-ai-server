@@ -4,7 +4,6 @@ import pytest
 
 from scripts.check_python_version import required_python_version
 
-
 pytestmark = pytest.mark.unit
 
 

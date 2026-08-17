@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from langgraph.graph import StateGraph, START, END
-from core.observability import add_observed_node
+from langgraph.graph import END, START, StateGraph
 
-from services.flow.professor.absence.state import ProfessorAbsenceState
+from core.observability import add_observed_node
 from services.flow.professor.absence.nodes import (
     attach_professor_absence_recommended_replies_node,
     decide_professor_absence_state_node,
     extract_professor_absence_info_node,
     generate_professor_absence_response_node,
 )
+from services.flow.professor.absence.state import ProfessorAbsenceState
 
 
 def build_professor_absence_graph():

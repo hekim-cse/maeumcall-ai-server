@@ -8,7 +8,6 @@ from pydantic import BaseModel, ConfigDict, Field
 from services.call_policy import create_call_plan
 from services.flow.registry import get_flow_registration
 
-
 CALL_SETUP_CONTRACT_VERSION = 1
 
 router = APIRouter(prefix="/call", tags=["call"])

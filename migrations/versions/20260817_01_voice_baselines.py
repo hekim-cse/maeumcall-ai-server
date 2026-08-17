@@ -4,16 +4,16 @@ Revision ID: 20260817_01
 Revises:
 Create Date: 2026-08-17
 """
-from typing import Sequence, Union
 
-from alembic import op
+from collections.abc import Sequence
+
 import sqlalchemy as sa
-
+from alembic import op
 
 revision: str = "20260817_01"
-down_revision: Union[str, Sequence[str], None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = None
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -48,41 +48,21 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.CheckConstraint(
-            "jitter_local >= 0", name="ck_voice_baseline_jitter_nonnegative"
-        ),
-        sa.CheckConstraint(
-            "jitter_m2 >= 0", name="ck_voice_baseline_jitter_m2"
-        ),
-        sa.CheckConstraint(
-            "jitter_std >= 0", name="ck_voice_baseline_jitter_std"
-        ),
+        sa.CheckConstraint("jitter_local >= 0", name="ck_voice_baseline_jitter_nonnegative"),
+        sa.CheckConstraint("jitter_m2 >= 0", name="ck_voice_baseline_jitter_m2"),
+        sa.CheckConstraint("jitter_std >= 0", name="ck_voice_baseline_jitter_std"),
         sa.CheckConstraint(
             "pitch_iqr_hz IS NULL OR pitch_iqr_hz >= 0",
             name="ck_voice_baseline_pitch_iqr",
         ),
         sa.CheckConstraint("pitch_m2 >= 0", name="ck_voice_baseline_pitch_m2"),
-        sa.CheckConstraint(
-            "pitch_hz > 0", name="ck_voice_baseline_pitch_positive"
-        ),
-        sa.CheckConstraint(
-            "pitch_std_hz >= 0", name="ck_voice_baseline_pitch_std"
-        ),
-        sa.CheckConstraint(
-            "sample_count > 0", name="ck_voice_baseline_sample_count"
-        ),
-        sa.CheckConstraint(
-            "shimmer_local >= 0", name="ck_voice_baseline_shimmer_nonnegative"
-        ),
-        sa.CheckConstraint(
-            "shimmer_m2 >= 0", name="ck_voice_baseline_shimmer_m2"
-        ),
-        sa.CheckConstraint(
-            "shimmer_std >= 0", name="ck_voice_baseline_shimmer_std"
-        ),
-        sa.ForeignKeyConstraint(
-            ["user_key"], ["voice_subjects.user_key"], ondelete="CASCADE"
-        ),
+        sa.CheckConstraint("pitch_hz > 0", name="ck_voice_baseline_pitch_positive"),
+        sa.CheckConstraint("pitch_std_hz >= 0", name="ck_voice_baseline_pitch_std"),
+        sa.CheckConstraint("sample_count > 0", name="ck_voice_baseline_sample_count"),
+        sa.CheckConstraint("shimmer_local >= 0", name="ck_voice_baseline_shimmer_nonnegative"),
+        sa.CheckConstraint("shimmer_m2 >= 0", name="ck_voice_baseline_shimmer_m2"),
+        sa.CheckConstraint("shimmer_std >= 0", name="ck_voice_baseline_shimmer_std"),
+        sa.ForeignKeyConstraint(["user_key"], ["voice_subjects.user_key"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("user_key"),
     )
     op.create_table(
@@ -98,16 +78,10 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.CheckConstraint(
-            "jitter_local >= 0", name="ck_voice_sample_jitter_nonnegative"
-        ),
+        sa.CheckConstraint("jitter_local >= 0", name="ck_voice_sample_jitter_nonnegative"),
         sa.CheckConstraint("pitch_hz > 0", name="ck_voice_sample_pitch_positive"),
-        sa.CheckConstraint(
-            "shimmer_local >= 0", name="ck_voice_sample_shimmer_nonnegative"
-        ),
-        sa.ForeignKeyConstraint(
-            ["user_key"], ["voice_subjects.user_key"], ondelete="CASCADE"
-        ),
+        sa.CheckConstraint("shimmer_local >= 0", name="ck_voice_sample_shimmer_nonnegative"),
+        sa.ForeignKeyConstraint(["user_key"], ["voice_subjects.user_key"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(

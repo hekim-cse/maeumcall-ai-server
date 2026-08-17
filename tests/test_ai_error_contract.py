@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 from main import app
 from services.flow.scenario import graph as scenario_graph
 
-
 pytestmark = pytest.mark.unit
 
 
@@ -18,7 +17,9 @@ def _scenario_payload():
 
 
 def test_invalid_model_output_returns_validation_error(monkeypatch):
-    monkeypatch.setattr(scenario_graph, "complete_json_messages", lambda messages: "JSON이 아닌 출력")
+    monkeypatch.setattr(
+        scenario_graph, "complete_json_messages", lambda messages: "JSON이 아닌 출력"
+    )
 
     response = TestClient(app).post("/chat", json=_scenario_payload())
 

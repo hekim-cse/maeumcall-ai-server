@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from typing import Any
 
 from services.flow.service_workflow.contracts import ServiceWorkflowSpec
 from services.flow.service_workflow.state import ServiceWorkflowState
 from services.flow.service_workflow.structured import analyze_service_workflow_message
 
-
-Node = Callable[[ServiceWorkflowState], Dict[str, Any]]
+Node = Callable[[ServiceWorkflowState], dict[str, Any]]
 
 
 def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
-    def extract(state: ServiceWorkflowState) -> Dict[str, Any]:
+    def extract(state: ServiceWorkflowState) -> dict[str, Any]:
         current_fields = _normalized_fields(spec, state.get("fields"))
         analyzed = analyze_service_workflow_message(
             spec,
@@ -44,7 +44,7 @@ def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
 
 
 def build_decide_node(spec: ServiceWorkflowSpec) -> Node:
-    def decide(state: ServiceWorkflowState) -> Dict[str, Any]:
+    def decide(state: ServiceWorkflowState) -> dict[str, Any]:
         current_state = state.get("conversation_state") or "greeting"
         user_action = state.get("user_action") or "unknown"
         fields = _normalized_fields(spec, state.get("fields"))
@@ -151,7 +151,7 @@ def build_decide_node(spec: ServiceWorkflowSpec) -> Node:
 
 
 def build_response_node(spec: ServiceWorkflowSpec) -> Node:
-    def generate(state: ServiceWorkflowState) -> Dict[str, Any]:
+    def generate(state: ServiceWorkflowState) -> dict[str, Any]:
         conversation_state = state.get("conversation_state") or spec.collecting_state
         fields = _normalized_fields(spec, state.get("fields"))
         missing_fields = state.get("missing_fields") or []
@@ -181,7 +181,7 @@ def build_response_node(spec: ServiceWorkflowSpec) -> Node:
 
 
 def build_replies_node(spec: ServiceWorkflowSpec) -> Node:
-    def attach(state: ServiceWorkflowState) -> Dict[str, Any]:
+    def attach(state: ServiceWorkflowState) -> dict[str, Any]:
         conversation_state = state.get("conversation_state") or spec.collecting_state
         missing_fields = state.get("missing_fields") or []
         if conversation_state == spec.collecting_state:
@@ -205,8 +205,8 @@ def build_replies_node(spec: ServiceWorkflowSpec) -> Node:
 
 def _normalized_fields(
     spec: ServiceWorkflowSpec,
-    raw_fields: Optional[Dict[str, Optional[str]]],
-) -> Dict[str, Optional[str]]:
+    raw_fields: dict[str, str | None] | None,
+) -> dict[str, str | None]:
     source = raw_fields or {}
     return {key: source.get(key) for key in spec.field_keys}
 
@@ -215,20 +215,19 @@ def _field(spec: ServiceWorkflowSpec, key: str):
     return next(field for field in spec.fields if field.key == key)
 
 
-def _field_summary(spec: ServiceWorkflowSpec, fields: Dict[str, Optional[str]]) -> str:
+def _field_summary(spec: ServiceWorkflowSpec, fields: dict[str, str | None]) -> str:
     return ", ".join(
-        f"{field.label}: {field.display_value(fields[field.key])}"
-        for field in spec.fields
+        f"{field.label}: {field.display_value(fields[field.key])}" for field in spec.fields
     )
 
 
 def _close_or_stay(
     user_action: str,
     current_state: str,
-    missing_fields: List[str],
+    missing_fields: list[str],
     *,
     ready: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     if user_action == "go_closing":
         return {
             "conversation_state": "closing",

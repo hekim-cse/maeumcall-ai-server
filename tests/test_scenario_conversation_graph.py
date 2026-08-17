@@ -5,7 +5,6 @@ from services.flow.scenario import graph as graph_module
 from services.flow.scenario.registry import SCENARIOS, get_scenario_config
 from services.flow.scenario.response import complete_scenario_graph_if_supported
 
-
 pytestmark = pytest.mark.graph_flow
 
 
@@ -14,7 +13,9 @@ def test_all_registered_scenarios_route_through_graph(monkeypatch, config):
     monkeypatch.setattr(
         graph_module,
         "complete_json_messages",
-        lambda messages: '{"action":"continue","response":"상황을 이어서 말씀해 주세요.","etiquette_tip":null}',
+        lambda messages: (
+            '{"action":"continue","response":"상황을 이어서 말씀해 주세요.","etiquette_tip":null}'
+        ),
     )
     request = ChatRequest(
         category=config.category,
@@ -38,7 +39,9 @@ def test_scenario_graph_preserves_turn_count(monkeypatch):
     monkeypatch.setattr(
         graph_module,
         "complete_json_messages",
-        lambda messages: '{"action":"continue","response":"응, 이어서 말해줘.","etiquette_tip":null}',
+        lambda messages: (
+            '{"action":"continue","response":"응, 이어서 말해줘.","etiquette_tip":null}'
+        ),
     )
     request = ChatRequest(
         category="친구",
@@ -64,7 +67,9 @@ def test_scenario_graph_ends_call_from_validated_model_action(monkeypatch):
     monkeypatch.setattr(
         graph_module,
         "complete_json_messages",
-        lambda messages: '{"action":"end","response":"문의해 주셔서 감사합니다.","etiquette_tip":null}',
+        lambda messages: (
+            '{"action":"end","response":"문의해 주셔서 감사합니다.","etiquette_tip":null}'
+        ),
     )
     request = ChatRequest(
         category="회사",
@@ -114,7 +119,6 @@ def test_scenario_graph_appends_current_message_after_prior_history(monkeypatch)
     complete_scenario_graph_if_supported(request)
 
     occurrence_count = sum(
-        message["content"].count("지금 통화 괜찮아?")
-        for message in captured["messages"]
+        message["content"].count("지금 통화 괜찮아?") for message in captured["messages"]
     )
     assert occurrence_count == 1

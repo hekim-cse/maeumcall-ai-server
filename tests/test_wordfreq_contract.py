@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 from main import app
 from services.korean_text_analyzer import KoreanTextAnalyzer, KoreanTextAnalyzerError
 
-
 pytestmark = pytest.mark.unit
 
 

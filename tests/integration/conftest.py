@@ -22,8 +22,6 @@ def pytest_collection_modifyitems(items):
         elif "integration" in item.keywords and not hf_enabled:
             item.add_marker(
                 pytest.mark.skip(
-                    reason=(
-                        "set HF_LOCAL_MODEL_ENABLED=1 to run real-model integration tests"
-                    )
+                    reason=("set HF_LOCAL_MODEL_ENABLED=1 to run real-model integration tests")
                 )
             )

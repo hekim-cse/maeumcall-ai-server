@@ -12,7 +12,6 @@ from services.flow.registry import (
 )
 from services.flow.scenario.registry import ScenarioConfig
 
-
 pytestmark = pytest.mark.unit
 
 

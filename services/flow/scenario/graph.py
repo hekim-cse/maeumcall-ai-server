@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any
 
 from langgraph.graph import END, START, StateGraph
-from core.observability import add_observed_node
 
+from core.observability import add_observed_node
 from llm.client import complete_json_messages
 from llm.prompt_builder import generate_prompts
 from llm.structured_output import allowed_string, complete_validated_json, optional_string
@@ -13,8 +13,8 @@ from services.flow.scenario.registry import get_scenario_config
 from services.flow.scenario.state import ScenarioConversationState
 
 
-def _conversation_messages(turns: Any) -> List[Dict[str, str]]:
-    messages: List[Dict[str, str]] = []
+def _conversation_messages(turns: Any) -> list[dict[str, str]]:
+    messages: list[dict[str, str]] = []
     for turn in turns or []:
         if not isinstance(turn, dict):
             raise ValueError("history turns must be objects")
@@ -28,7 +28,7 @@ def _conversation_messages(turns: Any) -> List[Dict[str, str]]:
     return messages
 
 
-def _validate_turn_result(data: Dict[str, Any]) -> Dict[str, Any]:
+def _validate_turn_result(data: dict[str, Any]) -> dict[str, Any]:
     action = allowed_string(data, "action", {"continue", "end"})
     response = optional_string(data, "response")
     if not response:
@@ -41,15 +41,15 @@ def _validate_turn_result(data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def prepare_turn_node(state: ScenarioConversationState) -> Dict[str, Any]:
+def prepare_turn_node(state: ScenarioConversationState) -> dict[str, Any]:
     try:
         previous_turn_count = max(0, int(state.get("turn_count") or 0))
-    except (TypeError, ValueError):
-        raise ValueError("turn_count must be a non-negative integer")
+    except (TypeError, ValueError) as exc:
+        raise ValueError("turn_count must be a non-negative integer") from exc
     return {"turn_count": previous_turn_count + 1}
 
 
-def generate_turn_node(state: ScenarioConversationState) -> Dict[str, Any]:
+def generate_turn_node(state: ScenarioConversationState) -> dict[str, Any]:
     category = state.get("category") or ""
     title = state.get("title") or ""
     config = get_scenario_config(category, title)
@@ -90,7 +90,7 @@ def generate_turn_node(state: ScenarioConversationState) -> Dict[str, Any]:
     }
 
 
-def attach_replies_node(state: ScenarioConversationState) -> Dict[str, Any]:
+def attach_replies_node(state: ScenarioConversationState) -> dict[str, Any]:
     if state.get("should_end_call"):
         return {"recommended_replies": []}
     config = get_scenario_config(state.get("category") or "", state.get("title") or "")

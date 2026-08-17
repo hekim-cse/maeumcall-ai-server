@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from schemas.chat_models import ChatRequest, ChatResponse
+from services.flow.common.state_contract import envelope_state, validate_client_state
 from services.flow.scenario.graph import scenario_conversation_graph
 from services.flow.scenario.registry import get_scenario_config
-from services.flow.common.state_contract import envelope_state, validate_client_state
 
 
-def complete_scenario_graph_if_supported(req: ChatRequest) -> Optional[ChatResponse]:
+def complete_scenario_graph_if_supported(req: ChatRequest) -> ChatResponse | None:
     config = get_scenario_config(req.category, req.title)
     if config is None:
         return None
@@ -22,7 +22,7 @@ def complete_scenario_graph_if_supported(req: ChatRequest) -> Optional[ChatRespo
     )
     history = req.serialized_history()
     payload = req.model_dump()
-    initial_state: Dict[str, Any] = {
+    initial_state: dict[str, Any] = {
         **previous,
         "request_payload": payload,
         "category": req.category,
@@ -30,7 +30,9 @@ def complete_scenario_graph_if_supported(req: ChatRequest) -> Optional[ChatRespo
         "scenario_key": config.key,
         "user_message": req.userMessage,
         "history": history,
-        "conversation_state": req.conversationState or previous.get("conversation_state") or "opening",
+        "conversation_state": req.conversationState
+        or previous.get("conversation_state")
+        or "opening",
         "turn_count": previous.get("turn_count") or 0,
         "recommended_replies": [],
         "should_end_call": False,

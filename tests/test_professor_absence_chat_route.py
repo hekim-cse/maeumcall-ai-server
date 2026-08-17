@@ -112,7 +112,6 @@ def _patch_absence_analysis(monkeypatch):
 def test_chat_route_handles_professor_absence_with_graph(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="결석 사유 전달",
@@ -136,7 +135,6 @@ def test_chat_route_handles_professor_absence_with_graph(monkeypatch):
 def test_chat_route_professor_absence_full_info_moves_to_confirming(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="결석 사유 전달",
@@ -157,7 +155,6 @@ def test_chat_route_professor_absence_full_info_moves_to_confirming(monkeypatch)
 
 def test_chat_route_professor_absence_missing_user_name_keeps_collecting(monkeypatch):
     _patch_absence_analysis(monkeypatch)
-
 
     req = ChatRequest(
         category="교수님",
@@ -181,7 +178,6 @@ def test_chat_route_professor_absence_missing_user_name_keeps_collecting(monkeyp
 def test_chat_route_professor_absence_casual_llm_response_falls_back(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="결석 사유 전달",
@@ -204,7 +200,6 @@ def test_chat_route_professor_absence_casual_llm_response_falls_back(monkeypatch
 def test_chat_route_professor_absence_confirm_moves_to_noted(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="결석 사유 전달",
@@ -223,7 +218,6 @@ def test_chat_route_professor_absence_confirm_moves_to_noted(monkeypatch):
 
 def test_chat_route_professor_absence_change_reason_resets_reason(monkeypatch):
     _patch_absence_analysis(monkeypatch)
-
 
     req = ChatRequest(
         category="교수님",
@@ -246,7 +240,6 @@ def test_chat_route_professor_absence_change_reason_resets_reason(monkeypatch):
 def test_chat_route_professor_absence_noted_moves_to_closing(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     req = ChatRequest(
         category="교수님",
         title="결석 사유 전달",
@@ -265,7 +258,6 @@ def test_chat_route_professor_absence_noted_moves_to_closing(monkeypatch):
 
 def test_chat_route_professor_absence_closing_moves_to_end(monkeypatch):
     _patch_absence_analysis(monkeypatch)
-
 
     req = ChatRequest(
         category="교수님",

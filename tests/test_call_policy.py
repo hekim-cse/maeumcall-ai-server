@@ -4,7 +4,6 @@ from services.call_policy import CALL_POLICY_REGISTRY, create_call_plan
 from services.flow.common.state_contract import build_scenario_key
 from services.flow.registry import FLOW_REGISTRY
 
-
 pytestmark = pytest.mark.unit
 
 

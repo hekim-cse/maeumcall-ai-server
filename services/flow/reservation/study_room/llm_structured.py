@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
@@ -9,8 +9,7 @@ from llm.structured_output import (
     optional_string,
 )
 
-
-DEFAULT_STUDY_ROOM_STRUCTURED_RESULT: Dict[str, Any] = {
+DEFAULT_STUDY_ROOM_STRUCTURED_RESULT: dict[str, Any] = {
     "intent": "reservation",
     "date": None,
     "start_time": None,
@@ -43,7 +42,7 @@ STUDY_ROOM_USER_ACTIONS = frozenset(
 def analyze_study_room_reservation_user_message(
     conversation_state: str,
     user_message: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     스터디룸 예약 사용자 발화를 LLM structured output으로 분석한다.
 
@@ -149,7 +148,7 @@ def build_study_room_reservation_analysis_prompt(
 """
 
 
-def _normalize_study_room_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]:
+def _normalize_study_room_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
     result = DEFAULT_STUDY_ROOM_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "reservation":
@@ -165,8 +164,6 @@ def _normalize_study_room_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
     ]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(
-        parsed, "user_action", STUDY_ROOM_USER_ACTIONS
-    )
+    result["user_action"] = allowed_string(parsed, "user_action", STUDY_ROOM_USER_ACTIONS)
 
     return result

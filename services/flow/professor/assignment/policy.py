@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, List
 
-
-def get_missing_professor_assignment_fields(state: Dict) -> List[str]:
+def get_missing_professor_assignment_fields(state: dict) -> list[str]:
     """
     교수님 과제 문의에 필요한 필수 정보 중 아직 없는 값을 반환한다.
 
@@ -30,7 +28,7 @@ def get_missing_professor_assignment_fields(state: Dict) -> List[str]:
     return missing_fields
 
 
-def compact_professor_assignment_state(result: Dict) -> Dict:
+def compact_professor_assignment_state(result: dict) -> dict:
     """
     클라이언트에 저장할 교수님 과제 문의 상태만 정리한다.
     """

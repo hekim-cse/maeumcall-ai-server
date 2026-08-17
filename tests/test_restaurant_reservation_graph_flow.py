@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.reservation.restaurant.graph import restaurant_reservation_graph
 
-
 pytestmark = pytest.mark.graph_flow
+
+
 def _patch_restaurant_analysis(monkeypatch):
     def fake_analyze(conversation_state, user_message):
         if conversation_state in ["greeting", "collecting_reservation_info"]:
@@ -184,10 +186,7 @@ def test_restaurant_reservation_confirm_checks_availability_unavailable(monkeypa
     assert result["conversation_state"] == "reservation_unavailable"
     assert result["availability_status"] == "unavailable"
     assert result["alternative_times"] == ["저녁 6시", "저녁 8시"]
-    assert any(
-        keyword in result["ai_message"]
-        for keyword in ["어렵", "어려운", "마감", "불가능"]
-    )
+    assert any(keyword in result["ai_message"] for keyword in ["어렵", "어려운", "마감", "불가능"])
 
 
 def test_restaurant_reservation_available_confirm_completes_reservation(monkeypatch):
@@ -280,6 +279,7 @@ def test_restaurant_reservation_unavailable_rejects_out_of_option_time(monkeypat
     assert result["conversation_state"] == "reservation_unavailable"
     assert result.get("selected_time") is None
 
+
 def test_restaurant_reservation_confirmed_moves_to_closing(monkeypatch):
     _patch_restaurant_analysis(monkeypatch)
 
@@ -328,6 +328,7 @@ def test_restaurant_reservation_closing_moves_to_end(monkeypatch):
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
     assert "감사" in result["ai_message"] or "좋은 하루" in result["ai_message"]
+
 
 def test_restaurant_reservation_change_date_clears_lookup_fields(monkeypatch):
     monkeypatch.setattr(
@@ -443,4 +444,3 @@ def test_restaurant_reservation_unavailable_unknown_keeps_state(monkeypatch):
 
     assert result["conversation_state"] == "reservation_unavailable"
     assert result["selected_time"] is None
-

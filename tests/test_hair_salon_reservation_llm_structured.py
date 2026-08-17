@@ -1,16 +1,18 @@
 import pytest
+
 from llm.errors import AIResponseValidationError
 from services.flow.reservation.hair_salon.llm_structured import (
     analyze_hair_salon_reservation_user_message,
 )
 
-
-
 pytestmark = pytest.mark.unit
+
+
 def test_hair_salon_structured_analysis_extracts_full_info(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
-        lambda messages: """
+        lambda messages: (
+            """
         {
           "intent": "reservation",
           "date": "내일",
@@ -21,7 +23,8 @@ def test_hair_salon_structured_analysis_extracts_full_info(monkeypatch):
           "user_action": "continue_collecting",
           "selected_time": null
         }
-        """,
+        """
+        ),
     )
 
     result = analyze_hair_salon_reservation_user_message(
@@ -40,12 +43,14 @@ def test_hair_salon_structured_analysis_extracts_full_info(monkeypatch):
 
 
 def test_hair_salon_structured_analysis_handles_markdown_json(monkeypatch):
-    responses = iter([
-        """```json
+    responses = iter(
+        [
+            """```json
         {"intent":"reservation"}
         ```""",
-        '{"intent":"reservation","date":"모레","time":"저녁 6시","service_type":"펌","designer":"가능한 디자이너","user_name":"김개굴","user_action":"continue_collecting","selected_time":null}',
-    ])
+            '{"intent":"reservation","date":"모레","time":"저녁 6시","service_type":"펌","designer":"가능한 디자이너","user_name":"김개굴","user_action":"continue_collecting","selected_time":null}',
+        ]
+    )
     monkeypatch.setattr(
         "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
         lambda messages: next(responses),
@@ -66,7 +71,8 @@ def test_hair_salon_structured_analysis_handles_markdown_json(monkeypatch):
 def test_hair_salon_structured_analysis_extracts_selected_time(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
-        lambda messages: """
+        lambda messages: (
+            """
         {
           "intent": "reservation",
           "date": null,
@@ -77,7 +83,8 @@ def test_hair_salon_structured_analysis_extracts_selected_time(monkeypatch):
           "user_action": "select_alternative_time",
           "selected_time": "오후 3시"
         }
-        """,
+        """
+        ),
     )
 
     result = analyze_hair_salon_reservation_user_message(
@@ -102,7 +109,8 @@ def test_hair_salon_structured_analysis_rejects_invalid_json_after_retry(monkeyp
 def test_hair_salon_structured_analysis_rejects_invalid_action(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hair_salon.llm_structured.complete_hf_json",
-        lambda messages: """
+        lambda messages: (
+            """
         {
           "intent": "reservation",
           "date": "내일",
@@ -113,7 +121,8 @@ def test_hair_salon_structured_analysis_rejects_invalid_action(monkeypatch):
           "user_action": "invalid_action",
           "selected_time": null
         }
-        """,
+        """
+        ),
     )
 
     with pytest.raises(AIResponseValidationError):

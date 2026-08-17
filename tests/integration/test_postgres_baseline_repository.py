@@ -9,7 +9,6 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from services.baseline_store import PostgresBaselineRepository
 
-
 pytestmark = [pytest.mark.integration, pytest.mark.postgres]
 
 
@@ -25,9 +24,7 @@ def test_postgres_repository_persists_and_finalizes_calibration_samples():
         try:
             assert await repository.get_baseline(user_key) is None
 
-            first_sample = await repository.append_calibration_sample(
-                user_key, (100.0, 0.01, 0.02)
-            )
+            first_sample = await repository.append_calibration_sample(user_key, (100.0, 0.01, 0.02))
             second_sample = await repository.append_calibration_sample(
                 user_key, (120.0, 0.03, 0.04)
             )
@@ -70,9 +67,7 @@ def test_postgres_repository_serializes_concurrent_writes_per_user():
                 ]
             )
 
-            assert sorted(value["samples"] for value in aggregates) == list(
-                range(1, 13)
-            )
+            assert sorted(value["samples"] for value in aggregates) == list(range(1, 13))
             baseline = await repository.finalize_calibration(user_key)
             assert baseline is not None
             assert baseline["samples"] == 12

@@ -1,10 +1,9 @@
 # llm/huggingface_provider.py
 from __future__ import annotations
 
-import time
-import threading
 import logging
-from typing import Dict, List, Optional
+import threading
+import time
 
 from core.config import (
     HF_LOCAL_FILES_ONLY,
@@ -18,8 +17,8 @@ logger = logging.getLogger(__name__)
 
 _tokenizer = None
 _model = None
-_loaded_model_name: Optional[str] = None
-_loaded_model_revision: Optional[str] = None
+_loaded_model_name: str | None = None
+_loaded_model_revision: str | None = None
 _MODEL_LOCK = threading.Lock()
 
 
@@ -30,6 +29,7 @@ def _get_device_dtype():
     실제 필요한 시점에만 torch를 import한다.
     """
     import torch
+
     if torch.cuda.is_available():
         return torch.float16
     if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
@@ -80,7 +80,7 @@ def load_hf_model(
         return _tokenizer, _model
 
 
-def _messages_to_prompt(tokenizer, messages: List[Dict[str, str]]) -> str:
+def _messages_to_prompt(tokenizer, messages: list[dict[str, str]]) -> str:
     """
     모델별 chat_template이 있으면 사용하고,
     없으면 system/user 내용을 단순 문자열로 합친다.
@@ -120,7 +120,7 @@ def _messages_to_prompt(tokenizer, messages: List[Dict[str, str]]) -> str:
 
 
 def _complete_hf_messages(
-    messages: List[Dict[str, str]],
+    messages: list[dict[str, str]],
     model_name: str = HF_MODEL_NAME,
     revision: str = HF_MODEL_REVISION,
     max_new_tokens: int = 80,
@@ -170,7 +170,7 @@ def _complete_hf_messages(
         raise AIProviderExecutionError("Hugging Face generation failed") from exc
 
 
-def complete_hf_json(messages: List[Dict[str, str]]) -> str:
+def complete_hf_json(messages: list[dict[str, str]]) -> str:
     """Generate deterministic JSON for state-transition analysis."""
     return _complete_hf_messages(
         messages,

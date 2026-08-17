@@ -2,20 +2,19 @@
 from __future__ import annotations
 
 from math import isfinite
-from typing import Dict, Any, Optional
+from typing import Any
 
 from services.baseline_store import (
     BaselineMeasurementError,
-    extract_measurement,
-    normalize_user_id,
-    get_persisted_baseline,
-    update_baseline_persisted,
     append_calib_sample,
+    extract_measurement,
     finalize_calibration_simple,
+    get_persisted_baseline,
+    normalize_user_id,
     pct,
+    update_baseline_persisted,
     z,
 )
-
 
 BASELINE_REQUIRED_FIELDS = (
     "pitchHz",
@@ -29,9 +28,7 @@ BASELINE_REQUIRED_FIELDS = (
 )
 
 
-def build_payload(
-    cur: Dict[str, Any], baseline: Optional[Dict[str, Any]]
-) -> Dict[str, Any]:
+def build_payload(cur: dict[str, Any], baseline: dict[str, Any] | None) -> dict[str, Any]:
     """클라이언트가 기대하는 공통 포맷으로 패킹"""
     cp, cj, cs = extract_measurement(cur)
     payload = {
@@ -68,7 +65,7 @@ def build_payload(
     return payload
 
 
-def _comment(cur: Dict[str, Any], metric: str) -> str:
+def _comment(cur: dict[str, Any], metric: str) -> str:
     value = cur.get(metric)
     comment = value.get("comment") if isinstance(value, dict) else None
     if not isinstance(comment, str) or not comment.strip():
@@ -76,9 +73,9 @@ def _comment(cur: Dict[str, Any], metric: str) -> str:
     return comment.strip()
 
 
-def _validated_baseline(baseline: Dict[str, Any]) -> Dict[str, Any]:
+def _validated_baseline(baseline: dict[str, Any]) -> dict[str, Any]:
     try:
-        normalized: Dict[str, Any] = {
+        normalized: dict[str, Any] = {
             "pitchHz": float(baseline["pitchHz"]),
             "pitchStdHz": float(baseline["pitchStdHz"]),
             "jitterLocal": float(baseline["jitterLocal"]),
@@ -93,11 +90,7 @@ def _validated_baseline(baseline: Dict[str, Any]) -> Dict[str, Any]:
     except (KeyError, TypeError, ValueError) as exc:
         raise BaselineMeasurementError("baseline fields are incomplete") from exc
 
-    numeric = [
-        value
-        for key, value in normalized.items()
-        if key not in {"samples", "ts"}
-    ]
+    numeric = [value for key, value in normalized.items() if key not in {"samples", "ts"}]
     if (
         normalized["samples"] <= 0
         or not all(isfinite(value) for value in numeric)
@@ -113,13 +106,13 @@ def _validated_baseline(baseline: Dict[str, Any]) -> Dict[str, Any]:
     return normalized
 
 
-async def finalize_calibration(user_id: str) -> Dict[str, Any]:
+async def finalize_calibration(user_id: str) -> dict[str, Any]:
     """Persist collected calibration samples and clear them in one transaction."""
     uid = normalize_user_id(user_id)
     return await finalize_calibration_simple(uid)
 
 
-async def get_baseline(user_id: str) -> Dict[str, Any]:
+async def get_baseline(user_id: str) -> dict[str, Any]:
     """현재 저장된 기준선 조회"""
     uid = normalize_user_id(user_id)
     b = await get_persisted_baseline(uid)
@@ -128,9 +121,7 @@ async def get_baseline(user_id: str) -> Dict[str, Any]:
     return {"ok": True, "baseline": b}
 
 
-async def accumulate_baseline(
-    user_id: str, analysis: dict, strategy: str = "welford"
-) -> dict:
+async def accumulate_baseline(user_id: str, analysis: dict, strategy: str = "welford") -> dict:
     """
     캘리브레이션 누적:
     - 'welford'  : 증분평균/표준편차를 즉시 DB에 반영 (실시간 누적형)

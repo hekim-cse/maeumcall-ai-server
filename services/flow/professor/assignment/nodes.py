@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Dict
-
 from services.flow.professor.assignment.generation import (
     generate_professor_assignment_ai_message,
 )
@@ -17,7 +15,7 @@ from services.flow.professor.assignment.replies import (
 from services.flow.professor.assignment.state import ProfessorAssignmentState
 
 
-def extract_professor_assignment_info_node(state: ProfessorAssignmentState) -> Dict:
+def extract_professor_assignment_info_node(state: ProfessorAssignmentState) -> dict:
     """
     사용자 발화를 LLM structured output으로 분석하여 과제 문의 정보를 추출한다.
     """
@@ -33,8 +31,7 @@ def extract_professor_assignment_info_node(state: ProfessorAssignmentState) -> D
         "intent": analyzed.get("intent") or state.get("intent") or "assignment_inquiry",
         "professor_name": state.get("professor_name") or "교수님",
         "course_name": analyzed.get("course_name") or state.get("course_name"),
-        "assignment_topic": analyzed.get("assignment_topic")
-        or state.get("assignment_topic"),
+        "assignment_topic": analyzed.get("assignment_topic") or state.get("assignment_topic"),
         "question": analyzed.get("question") or state.get("question"),
         "user_name": analyzed.get("user_name") or state.get("user_name"),
         "user_action": analyzed.get("user_action") or "unknown",
@@ -45,7 +42,7 @@ def extract_professor_assignment_info_node(state: ProfessorAssignmentState) -> D
     }
 
 
-def decide_professor_assignment_state_node(state: ProfessorAssignmentState) -> Dict:
+def decide_professor_assignment_state_node(state: ProfessorAssignmentState) -> dict:
     """
     교수님 과제 문의 상태를 결정한다.
     """
@@ -108,7 +105,7 @@ def decide_professor_assignment_state_node(state: ProfessorAssignmentState) -> D
     }
 
 
-def generate_professor_assignment_response_node(state: ProfessorAssignmentState) -> Dict:
+def generate_professor_assignment_response_node(state: ProfessorAssignmentState) -> dict:
     """
     교수님 과제 문의 응답 생성 노드이다.
 
@@ -124,14 +121,12 @@ def generate_professor_assignment_response_node(state: ProfessorAssignmentState)
 
 def attach_professor_assignment_recommended_replies_node(
     state: ProfessorAssignmentState,
-) -> Dict:
+) -> dict:
     """
     현재 상태에 맞는 추천 답변을 붙인다.
     """
     conversation_state = state.get("conversation_state") or "collecting_assignment_info"
 
     return {
-        "recommended_replies": get_professor_assignment_recommended_replies(
-            conversation_state
-        ),
+        "recommended_replies": get_professor_assignment_recommended_replies(conversation_state),
     }

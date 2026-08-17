@@ -1,17 +1,20 @@
 # services/prompt_loader.py
 from __future__ import annotations
-from dataclasses import dataclass, field
-from pathlib import Path
-from functools import lru_cache
-from typing import List, Dict, Any
+
 import configparser
 import json
+from dataclasses import dataclass, field
+from functools import lru_cache
+from pathlib import Path
+from typing import Any
 
-from .prompt_registry import get_prompt_path, category_dir_path
 from core.config import PROMPT_CACHE
 from llm.errors import PromptConfigurationError
 
-def _norm_lines(v: str | None) -> List[str]:
+from .prompt_registry import category_dir_path, get_prompt_path
+
+
+def _norm_lines(v: str | None) -> list[str]:
     if not v:
         return []
     lines = [s.strip() for s in v.splitlines() if s.strip()]
@@ -20,22 +23,23 @@ def _norm_lines(v: str | None) -> List[str]:
     return lines
 
 
-def _read_lines_option(cfg: configparser.ConfigParser, section: str) -> List[str]:
+def _read_lines_option(cfg: configparser.ConfigParser, section: str) -> list[str]:
     if not cfg.has_option(section, "lines"):
         return []
     return _norm_lines(cfg.get(section, "lines"))
 
+
 @dataclass
 class PromptConfig:
-    meta: Dict[str, str] = field(default_factory=dict)
-    prefer: List[str] = field(default_factory=list)
-    avoid: List[str] = field(default_factory=list)
-    examples: List[str] = field(default_factory=list)
-    openers: List[str] = field(default_factory=list)
-    closers: List[str] = field(default_factory=list)
-    topic_hints: List[str] = field(default_factory=list)
+    meta: dict[str, str] = field(default_factory=dict)
+    prefer: list[str] = field(default_factory=list)
+    avoid: list[str] = field(default_factory=list)
+    examples: list[str] = field(default_factory=list)
+    openers: list[str] = field(default_factory=list)
+    closers: list[str] = field(default_factory=list)
+    topic_hints: list[str] = field(default_factory=list)
 
-    def merge_from(self, other: "PromptConfig") -> "PromptConfig":
+    def merge_from(self, other: PromptConfig) -> PromptConfig:
         return PromptConfig(
             meta={**self.meta, **other.meta},
             prefer=[*dict.fromkeys([*self.prefer, *other.prefer])],
@@ -45,6 +49,7 @@ class PromptConfig:
             closers=[*dict.fromkeys([*self.closers, *other.closers])],
             topic_hints=[*dict.fromkeys([*self.topic_hints, *other.topic_hints])],
         )
+
 
 def _load_ini(path: Path) -> PromptConfig:
     cfg = configparser.ConfigParser(interpolation=None)
@@ -86,22 +91,16 @@ def _load_json(path: Path) -> PromptConfig:
         raise PromptConfigurationError(f"Prompt JSON is invalid: {path}") from exc
     if not isinstance(data, list):
         raise PromptConfigurationError(f"Prompt JSON must be a list: {path}")
-    examples: List[str] = []
+    examples: list[str] = []
     for index, item in enumerate(data):
         if not isinstance(item, dict):
-            raise PromptConfigurationError(
-                f"Prompt item {index} must be an object: {path}"
-            )
+            raise PromptConfigurationError(f"Prompt item {index} must be an object: {path}")
         role = str(item.get("role") or "").lower()
         text = str(item.get("text") or item.get("content") or "").strip()
         if role not in {"user", "system", "assistant"}:
-            raise PromptConfigurationError(
-                f"Prompt item {index} has an invalid role: {path}"
-            )
+            raise PromptConfigurationError(f"Prompt item {index} has an invalid role: {path}")
         if not text:
-            raise PromptConfigurationError(
-                f"Prompt item {index} has empty text: {path}"
-            )
+            raise PromptConfigurationError(f"Prompt item {index} has empty text: {path}")
         speaker = "사용자" if role == "user" else "상대역"
         examples.append(f"{speaker}: {text}")
     return PromptConfig(examples=examples)
@@ -110,16 +109,23 @@ def _load_json(path: Path) -> PromptConfig:
 def _load_prompt_file(path: Path) -> PromptConfig:
     return _load_json(path) if path.suffix.lower() == ".json" else _load_ini(path)
 
+
 def load_prompt_config(category: str, scenario_key: str) -> PromptConfig:
-    return _load_prompt_config_cached(category, scenario_key) if PROMPT_CACHE else _load_prompt_config_nocache(category, scenario_key)
+    return (
+        _load_prompt_config_cached(category, scenario_key)
+        if PROMPT_CACHE
+        else _load_prompt_config_nocache(category, scenario_key)
+    )
+
 
 @lru_cache(maxsize=256)
 def _load_prompt_config_cached(category: str, scenario_key: str) -> PromptConfig:
     return _load_prompt_config_nocache(category, scenario_key)
 
+
 def _load_prompt_config_nocache(category: str, scenario_key: str) -> PromptConfig:
     scenario_path = get_prompt_path(category, scenario_key)
-    default_ini = (category_dir_path(category) / "_default.ini")
+    default_ini = category_dir_path(category) / "_default.ini"
     base = _load_prompt_file(default_ini)
     spec = _load_prompt_file(scenario_path)
     return base.merge_from(spec)

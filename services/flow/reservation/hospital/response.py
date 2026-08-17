@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Dict, Any
+from typing import Any
 
 from schemas.chat_models import ChatRequest, ChatResponse
-from services.flow.reservation.hospital.graph import hospital_reservation_graph
-from services.flow.reservation.hospital.llm_structured import HOSPITAL_USER_ACTIONS
+from services.flow.common.detailed_state_validation import ReservationStateContract
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
-from services.flow.common.detailed_state_validation import ReservationStateContract
-
+from services.flow.reservation.hospital.graph import hospital_reservation_graph
+from services.flow.reservation.hospital.llm_structured import HOSPITAL_USER_ACTIONS
 
 HOSPITAL_STATE_CONTRACT = ReservationStateContract(
     identity_field="service_name",
@@ -51,7 +50,7 @@ def is_hospital_reservation_request(req: ChatRequest) -> bool:
     )
 
 
-def compact_hospital_state(result: Dict[str, Any]) -> Dict[str, Any]:
+def compact_hospital_state(result: dict[str, Any]) -> dict[str, Any]:
     return {
         "intent": result.get("intent"),
         "service_name": result.get("service_name"),
@@ -61,10 +60,8 @@ def compact_hospital_state(result: Dict[str, Any]) -> Dict[str, Any]:
         "user_name": result.get("user_name"),
         "conversation_state": result.get("conversation_state"),
         "last_ai_message": result.get("ai_message"),
-
         "user_action": result.get("user_action"),
         "selected_time": result.get("selected_time"),
-        
         "availability_status": result.get("availability_status"),
         "availability_reason": result.get("availability_reason"),
         "available_time": result.get("available_time"),

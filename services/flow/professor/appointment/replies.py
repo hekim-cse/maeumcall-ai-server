@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import List
 
-
-def get_professor_appointment_recommended_replies(conversation_state: str) -> List[str]:
+def get_professor_appointment_recommended_replies(conversation_state: str) -> list[str]:
     """
     교수님 면담 예약 상태별 추천 답변을 반환한다.
     """

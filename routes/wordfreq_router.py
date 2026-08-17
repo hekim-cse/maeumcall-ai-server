@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import asyncio
 from collections import Counter
-from typing import Annotated, Dict, List, Literal, Optional, Tuple
+from typing import Annotated, Literal
 
 from fastapi import APIRouter
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 from services.korean_text_analyzer import KoreanTextAnalysis, korean_text_analyzer
-
 
 router = APIRouter(prefix="/analysis", tags=["analysis"])
 
@@ -29,14 +28,14 @@ class Turn(BaseModel):
 class WordFreqRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    messages: Optional[List[MessageText]] = Field(default=None, max_length=1_000)
-    turns: Optional[List[Turn]] = Field(default=None, max_length=1_000)
+    messages: list[MessageText] | None = Field(default=None, max_length=1_000)
+    turns: list[Turn] | None = Field(default=None, max_length=1_000)
     scope: Scope = "user"
     top_k: int = Field(default=5, ge=1, le=100)
     min_count: int = Field(default=1, ge=1)
 
     @model_validator(mode="after")
-    def require_exactly_one_input(self) -> "WordFreqRequest":
+    def require_exactly_one_input(self) -> WordFreqRequest:
         if (self.messages is None) == (self.turns is None):
             raise ValueError("exactly one of messages or turns is required")
         return self
@@ -46,11 +45,11 @@ class WordFreqByCategoryItem(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
     category: str = Field(min_length=1, max_length=100)
-    messages: Optional[List[MessageText]] = Field(default=None, max_length=1_000)
-    turns: Optional[List[Turn]] = Field(default=None, max_length=1_000)
+    messages: list[MessageText] | None = Field(default=None, max_length=1_000)
+    turns: list[Turn] | None = Field(default=None, max_length=1_000)
 
     @model_validator(mode="after")
-    def require_exactly_one_input(self) -> "WordFreqByCategoryItem":
+    def require_exactly_one_input(self) -> WordFreqByCategoryItem:
         if (self.messages is None) == (self.turns is None):
             raise ValueError("exactly one of messages or turns is required")
         return self
@@ -59,14 +58,14 @@ class WordFreqByCategoryItem(BaseModel):
 class WordFreqByCategoryRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    items: List[WordFreqByCategoryItem] = Field(min_length=1, max_length=100)
+    items: list[WordFreqByCategoryItem] = Field(min_length=1, max_length=100)
     scope: Scope = "user"
     top_k: int = Field(default=5, ge=1, le=100)
     min_count_words: int = Field(default=2, ge=1)
     min_count_fillers: int = Field(default=2, ge=1)
 
     @model_validator(mode="after")
-    def require_unique_categories(self) -> "WordFreqByCategoryRequest":
+    def require_unique_categories(self) -> WordFreqByCategoryRequest:
         categories = [item.category for item in self.items]
         if len(categories) != len(set(categories)):
             raise ValueError("category values must be unique")
@@ -89,7 +88,7 @@ async def wordfreq_single(req: WordFreqRequest):
 
 @router.post("/wordfreq/by-category")
 async def wordfreq_by_category(req: WordFreqByCategoryRequest):
-    summary: Dict[str, Dict] = {}
+    summary: dict[str, dict] = {}
     for item in req.items:
         texts = _select_texts(item.messages, item.turns, req.scope)
         analysis = await asyncio.to_thread(korean_text_analyzer.analyze, texts)
@@ -118,12 +117,10 @@ def _serialize_analysis(
     top_k: int,
     min_count_words: int,
     min_count_fillers: int,
-) -> Dict:
+) -> dict:
     filler_count = sum(analysis.fillers.values())
     filler_ratio = (
-        round((filler_count / analysis.total_words) * 100, 1)
-        if analysis.total_words
-        else 0.0
+        round((filler_count / analysis.total_words) * 100, 1) if analysis.total_words else 0.0
     )
     return {
         "scope": scope,
@@ -140,17 +137,15 @@ def _top_counts(
     counts: Counter[str],
     minimum: int,
     limit: int,
-) -> List[Tuple[str, int]]:
-    return [(form, count) for form, count in counts.most_common() if count >= minimum][
-        :limit
-    ]
+) -> list[tuple[str, int]]:
+    return [(form, count) for form, count in counts.most_common() if count >= minimum][:limit]
 
 
 def _select_texts(
-    messages: Optional[List[str]],
-    turns: Optional[List[Turn]],
+    messages: list[str] | None,
+    turns: list[Turn] | None,
     scope: Scope,
-) -> List[str]:
+) -> list[str]:
     if turns is not None:
         return [turn.text for turn in turns if scope == "all" or turn.role == scope]
     return list(messages or [])

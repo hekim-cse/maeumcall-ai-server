@@ -1,19 +1,19 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Callable
 from time import perf_counter
-from typing import Any, Callable
+from typing import Any
 
 from langgraph.runtime import Runtime
 from prometheus_client import (
+    REGISTRY,
     CollectorRegistry,
     Counter,
     Histogram,
-    REGISTRY,
     generate_latest,
     multiprocess,
 )
-
 
 LANGGRAPH_NODE_ATTEMPTS = Counter(
     "maeumcall_langgraph_node_attempts_total",

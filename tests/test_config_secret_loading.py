@@ -4,7 +4,6 @@ import pytest
 
 from core.config import getenv_secret
 
-
 pytestmark = pytest.mark.unit
 
 

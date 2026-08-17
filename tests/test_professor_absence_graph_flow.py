@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.professor.absence.graph import professor_absence_graph
 
-
 pytestmark = pytest.mark.graph_flow
+
+
 def _patch_absence_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":
@@ -116,7 +118,6 @@ def _patch_absence_analysis(monkeypatch):
 def test_professor_absence_full_info_moves_to_confirming(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     result = professor_absence_graph.invoke(
         {
             "user_message": "김개굴 학생입니다. 오늘 몸이 좋지 않아 결석하게 되었습니다.",
@@ -136,7 +137,6 @@ def test_professor_absence_full_info_moves_to_confirming(monkeypatch):
 
 def test_professor_absence_missing_user_name_keeps_collecting(monkeypatch):
     _patch_absence_analysis(monkeypatch)
-
 
     result = professor_absence_graph.invoke(
         {
@@ -187,7 +187,6 @@ def test_professor_absence_missing_class_name_keeps_collecting(monkeypatch):
 def test_professor_absence_partial_info_is_preserved(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     first = professor_absence_graph.invoke(
         {
             "user_message": "오늘 몸이 좋지 않아 결석하게 되었습니다.",
@@ -215,7 +214,6 @@ def test_professor_absence_partial_info_is_preserved(monkeypatch):
 def test_professor_absence_casual_llm_response_falls_back(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     result = professor_absence_graph.invoke(
         {
             "user_message": "김개굴 학생입니다. 오늘 몸이 좋지 않아 결석하게 되었습니다.",
@@ -237,7 +235,6 @@ def test_professor_absence_casual_llm_response_falls_back(monkeypatch):
 def test_professor_absence_confirm_moves_to_noted(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     result = professor_absence_graph.invoke(
         {
             "user_message": "네, 맞습니다.",
@@ -258,7 +255,6 @@ def test_professor_absence_confirm_moves_to_noted(monkeypatch):
 
 def test_professor_absence_change_date_resets_date(monkeypatch):
     _patch_absence_analysis(monkeypatch)
-
 
     result = professor_absence_graph.invoke(
         {
@@ -283,7 +279,6 @@ def test_professor_absence_change_date_resets_date(monkeypatch):
 def test_professor_absence_change_reason_resets_reason(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     result = professor_absence_graph.invoke(
         {
             "user_message": "결석 사유를 다시 말씀드리겠습니다.",
@@ -307,7 +302,6 @@ def test_professor_absence_change_reason_resets_reason(monkeypatch):
 def test_professor_absence_noted_moves_to_closing(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     result = professor_absence_graph.invoke(
         {
             "user_message": "네, 감사합니다.",
@@ -329,7 +323,6 @@ def test_professor_absence_noted_moves_to_closing(monkeypatch):
 def test_professor_absence_closing_moves_to_end(monkeypatch):
     _patch_absence_analysis(monkeypatch)
 
-
     result = professor_absence_graph.invoke(
         {
             "user_message": "네, 감사합니다.",
@@ -343,6 +336,7 @@ def test_professor_absence_closing_moves_to_end(monkeypatch):
 
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
+
 
 def test_professor_absence_change_user_name_resets_user_name_only(monkeypatch):
     monkeypatch.setattr(

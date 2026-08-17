@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
+from scripts.migrate_baseline_json import load_source
 from services.baseline_store import (
     BaselineIdentityError,
     BaselineMeasurementError,
@@ -9,8 +10,6 @@ from services.baseline_store import (
     validate_imported_baseline,
     validate_pseudonymous_key,
 )
-from scripts.migrate_baseline_json import load_source
-
 
 pytestmark = pytest.mark.unit
 
@@ -19,12 +18,12 @@ def test_welford_calculation_preserves_count_mean_and_sample_std():
     first = calculate_welford(
         None,
         (100.0, 0.01, 0.02),
-        measured_at=datetime(2026, 8, 17, tzinfo=timezone.utc),
+        measured_at=datetime(2026, 8, 17, tzinfo=UTC),
     )
     second = calculate_welford(
         first,
         (120.0, 0.03, 0.04),
-        measured_at=datetime(2026, 8, 17, tzinfo=timezone.utc),
+        measured_at=datetime(2026, 8, 17, tzinfo=UTC),
     )
 
     assert second["samples"] == 2
@@ -68,8 +67,7 @@ def test_json_migration_loads_only_valid_pseudonymous_records(tmp_path):
     key = "user_hmac_sha256:" + "b" * 64
     source = tmp_path / "baseline_db.json"
     source.write_text(
-        '{"%s":{"samples":3,"pitchHz":150,"jitterLocal":0.005,'
-        '"shimmerLocal":0.01}}' % key,
+        f'{{"{key}":{{"samples":3,"pitchHz":150,"jitterLocal":0.005,"shimmerLocal":0.01}}}}',
         encoding="utf-8",
     )
 
@@ -83,8 +81,7 @@ def test_json_migration_loads_only_valid_pseudonymous_records(tmp_path):
     [
         "[]",
         "{not-json}",
-        '{"real-user-id":{"samples":3,"pitchHz":150,'
-        '"jitterLocal":0.005,"shimmerLocal":0.01}}',
+        '{"real-user-id":{"samples":3,"pitchHz":150,"jitterLocal":0.005,"shimmerLocal":0.01}}',
     ],
 )
 def test_json_migration_rejects_invalid_documents(tmp_path, contents):

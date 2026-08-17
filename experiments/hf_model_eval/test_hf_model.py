@@ -1,6 +1,7 @@
 import time
+
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # 4차 테스트 첫 번째 모델: Kanana
 # EXAONE 테스트 시 아래 MODEL_NAME만 변경하면 된다.

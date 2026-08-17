@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.reservation.study_room.graph import study_room_reservation_graph
 
-
 pytestmark = pytest.mark.graph_flow
+
+
 def _patch_study_room_analysis(monkeypatch):
     def fake_analyze(conversation_state: str, user_message: str):
         if conversation_state == "closing":
@@ -117,8 +119,12 @@ def _patch_study_room_analysis(monkeypatch):
             return {
                 "intent": "reservation",
                 "date": "내일" if "내일" in user_message else None,
-                "start_time": "오후 2시" if "두 시" in user_message or "2시" in user_message else None,
-                "duration": "2시간" if "두 시간" in user_message or "2시간" in user_message else None,
+                "start_time": "오후 2시"
+                if "두 시" in user_message or "2시" in user_message
+                else None,
+                "duration": "2시간"
+                if "두 시간" in user_message or "2시간" in user_message
+                else None,
                 "party_size": "4명",
                 "user_name": "김개굴",
                 "user_action": "continue_collecting",
@@ -408,6 +414,7 @@ def test_study_room_reservation_closing_moves_to_end(monkeypatch):
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
 
+
 def test_study_room_reservation_change_party_size_clears_lookup_fields(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.study_room.nodes.analyze_study_room_reservation_user_message",
@@ -549,4 +556,3 @@ def test_study_room_reservation_unavailable_unknown_keeps_state(monkeypatch):
 
     assert result["conversation_state"] == "reservation_unavailable"
     assert result["selected_time"] is None
-

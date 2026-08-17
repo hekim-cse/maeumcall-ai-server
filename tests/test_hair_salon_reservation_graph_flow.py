@@ -1,5 +1,10 @@
 import pytest
+
+from services.flow.reservation.hair_salon.graph import hair_salon_reservation_graph
+
 pytestmark = pytest.mark.graph_flow
+
+
 def _patch_hair_salon_analysis(monkeypatch):
     def fake_analyze(conversation_state, user_message):
         base = {
@@ -96,9 +101,6 @@ def _patch_hair_salon_analysis(monkeypatch):
         "services.flow.reservation.hair_salon.nodes.analyze_hair_salon_reservation_user_message",
         fake_analyze,
     )
-
-
-from services.flow.reservation.hair_salon.graph import hair_salon_reservation_graph
 
 
 def test_hair_salon_reservation_full_info_moves_to_confirming_info(monkeypatch):
@@ -216,10 +218,7 @@ def test_hair_salon_reservation_confirm_checks_availability_unavailable(monkeypa
     assert result["conversation_state"] == "reservation_unavailable"
     assert result["availability_status"] == "unavailable"
     assert result["alternative_times"] == ["오후 2시", "오후 4시"]
-    assert any(
-        keyword in result["ai_message"]
-        for keyword in ["어렵", "어려운", "마감", "불가능"]
-    )
+    assert any(keyword in result["ai_message"] for keyword in ["어렵", "어려운", "마감", "불가능"])
 
 
 def test_hair_salon_reservation_available_confirm_completes_reservation(monkeypatch):
@@ -348,6 +347,7 @@ def test_hair_salon_reservation_closing_moves_to_end(monkeypatch):
 
     assert result["conversation_state"] == "END"
     assert result["should_end_call"] is True
+
 
 def test_hair_salon_reservation_change_designer_clears_lookup_fields(monkeypatch):
     monkeypatch.setattr(
@@ -489,4 +489,3 @@ def test_hair_salon_reservation_unavailable_unknown_keeps_state(monkeypatch):
 
     assert result["conversation_state"] == "reservation_unavailable"
     assert result["selected_time"] is None
-

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
@@ -8,7 +8,6 @@ from llm.structured_output import (
     complete_validated_json,
     optional_string,
 )
-
 
 DEFAULT_RESTAURANT_STRUCTURED_RESULT = {
     "intent": "reservation",
@@ -41,7 +40,7 @@ RESTAURANT_USER_ACTIONS = frozenset(
 def analyze_restaurant_reservation_user_message(
     conversation_state: str,
     user_message: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     식당 예약 사용자 발화를 structured output으로 분석한다.
     """
@@ -116,7 +115,7 @@ def analyze_restaurant_reservation_user_message(
     )
 
 
-def _normalize_restaurant_analysis_result(parsed: Dict[str, Any]) -> Dict[str, Any]:
+def _normalize_restaurant_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
     result = DEFAULT_RESTAURANT_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "reservation":
@@ -125,8 +124,6 @@ def _normalize_restaurant_analysis_result(parsed: Dict[str, Any]) -> Dict[str, A
     for key in ["date", "time", "party_size", "user_name", "selected_time"]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(
-        parsed, "user_action", RESTAURANT_USER_ACTIONS
-    )
+    result["user_action"] = allowed_string(parsed, "user_action", RESTAURANT_USER_ACTIONS)
 
     return result

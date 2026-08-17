@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from langgraph.graph import StateGraph, START, END
-from core.observability import add_observed_node
+from langgraph.graph import END, START, StateGraph
 
-from services.flow.reservation.restaurant.state import RestaurantReservationState
+from core.observability import add_observed_node
 from services.flow.reservation.restaurant.nodes import (
     attach_restaurant_recommended_replies_node,
     check_restaurant_availability_node,
@@ -11,6 +10,7 @@ from services.flow.reservation.restaurant.nodes import (
     extract_restaurant_info_node,
     generate_restaurant_response_node,
 )
+from services.flow.reservation.restaurant.state import RestaurantReservationState
 
 
 def route_after_restaurant_decide(state: RestaurantReservationState) -> str:
@@ -31,12 +31,8 @@ def build_restaurant_reservation_graph():
     graph_name = "restaurant_reservation"
     add_observed_node(builder, graph_name, "extract_info", extract_restaurant_info_node)
     add_observed_node(builder, graph_name, "decide_state", decide_restaurant_state_node)
-    add_observed_node(
-        builder, graph_name, "check_availability", check_restaurant_availability_node
-    )
-    add_observed_node(
-        builder, graph_name, "generate_response", generate_restaurant_response_node
-    )
+    add_observed_node(builder, graph_name, "check_availability", check_restaurant_availability_node)
+    add_observed_node(builder, graph_name, "generate_response", generate_restaurant_response_node)
     add_observed_node(
         builder,
         graph_name,

@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict
 
-
-def build_professor_absence_response(conversation_state: str, state: Dict) -> str:
+def build_professor_absence_response(conversation_state: str, state: dict) -> str:
     professor_name = state.get("professor_name") or "교수님"
     absence_date = state.get("absence_date") or "결석 날짜"
     user_name = state.get("user_name") or "학생"
@@ -30,7 +28,7 @@ def build_professor_absence_response(conversation_state: str, state: Dict) -> st
     raise ValueError(f"unsupported professor absence state: {conversation_state}")
 
 
-def _confirmation(state: Dict) -> str:
+def _confirmation(state: dict) -> str:
     return (
         f"{state.get('user_name') or '학생'} 학생, {state.get('absence_date') or '결석 날짜'} "
         f"{state.get('class_name') or '수업'} 수업 결석 사유가 "

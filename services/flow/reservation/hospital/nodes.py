@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-from typing import Dict, Any
-
-from services.flow.reservation.hospital.state import HospitalReservationState
-from services.flow.reservation.hospital.llm_structured import analyze_hospital_reservation_user_message
-from services.flow.reservation.hospital.availability import resolve_hospital_availability
-from services.flow.reservation.hospital.replies import get_recommended_replies
-from services.flow.reservation.hospital.policy import clear_reservation_lookup_fields
 from services.flow.reservation.common.time_utils import (
     is_time_in_options,
 )
+from services.flow.reservation.hospital.availability import resolve_hospital_availability
+from services.flow.reservation.hospital.llm_structured import (
+    analyze_hospital_reservation_user_message,
+)
+from services.flow.reservation.hospital.policy import clear_reservation_lookup_fields
+from services.flow.reservation.hospital.replies import get_recommended_replies
+from services.flow.reservation.hospital.state import HospitalReservationState
 
 
-def extract_info_node(state: HospitalReservationState) -> Dict:
+def extract_info_node(state: HospitalReservationState) -> dict:
     """
     사용자 발화를 structured output으로 분석해 병원 예약 정보를 추출한다.
 
@@ -38,10 +38,8 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
         "time": next_time,
         "user_name": analysis.get("user_name") or state.get("user_name"),
         "last_ai_message": state.get("last_ai_message"),
-
         "user_action": analysis.get("user_action") or "unknown",
         "selected_time": analysis.get("selected_time") or state.get("selected_time"),
-
         "history": state.get("history") or [],
         "availability_status": state.get("availability_status"),
         "availability_reason": state.get("availability_reason"),
@@ -52,7 +50,7 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
     }
 
 
-def parse_user_action_node(state: HospitalReservationState) -> Dict:
+def parse_user_action_node(state: HospitalReservationState) -> dict:
     """
     structured 분석 단계에서 이미 user_action을 만들었으므로
     이 노드는 상태 전이에 필요한 값을 그대로 전달한다.
@@ -74,7 +72,7 @@ def parse_user_action_node(state: HospitalReservationState) -> Dict:
     }
 
 
-def decide_next_state_node(state: HospitalReservationState) -> Dict:
+def decide_next_state_node(state: HospitalReservationState) -> dict:
     """
     현재까지 수집된 정보를 기준으로 다음 conversation_state를 결정한다.
     """
@@ -240,7 +238,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
             "conversation_state": "asking_user_name",
             "should_end_call": False,
         }
-    
+
     if current_state == "checking_availability":
         return {
             "conversation_state": "reservation_lookup",
@@ -279,7 +277,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         if user_action == "select_alternative_time":
             selected_time = state.get("selected_time")
             alternative_times = state.get("alternative_times") or []
-            
+
             if is_time_in_options(selected_time, alternative_times):
                 return {
                     "conversation_state": "reservation_confirmed",
@@ -287,13 +285,13 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
                     "selected_time": selected_time,
                     "should_end_call": False,
                 }
-            
+
             return {
                 "conversation_state": "suggest_alternative",
                 "selected_time": None,
                 "should_end_call": False,
             }
-            
+
         if user_action == "ask_other_time":
             return {
                 "conversation_state": "suggest_alternative",
@@ -309,7 +307,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
         if user_action == "select_alternative_time":
             selected_time = state.get("selected_time")
             alternative_times = state.get("alternative_times") or []
-            
+
             if is_time_in_options(selected_time, alternative_times):
                 return {
                     "conversation_state": "reservation_confirmed",
@@ -317,7 +315,7 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
                     "selected_time": selected_time,
                     "should_end_call": False,
                 }
-            
+
             return {
                 "conversation_state": "suggest_alternative",
                 "selected_time": None,
@@ -355,14 +353,14 @@ def decide_next_state_node(state: HospitalReservationState) -> Dict:
     }
 
 
-def attach_recommended_replies_node(state: HospitalReservationState) -> Dict:
+def attach_recommended_replies_node(state: HospitalReservationState) -> dict:
     conversation_state = state.get("conversation_state") or "asking_purpose"
     replies = get_recommended_replies(conversation_state)
 
     return {"recommended_replies": replies}
 
 
-def check_availability_node(state: HospitalReservationState) -> Dict:
+def check_availability_node(state: HospitalReservationState) -> dict:
     """
     checking_availability 상태에서 통화 훈련 시나리오 결과를 결정한다.
     """
@@ -373,9 +371,7 @@ def check_availability_node(state: HospitalReservationState) -> Dict:
     elif result["availability_status"] == "unavailable":
         next_state = "reservation_unavailable"
     else:
-        raise ValueError(
-            f"unsupported availability status: {result['availability_status']}"
-        )
+        raise ValueError(f"unsupported availability status: {result['availability_status']}")
 
     return {
         **result,

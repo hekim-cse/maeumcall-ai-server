@@ -5,7 +5,6 @@ from main import app
 from services.flow.common.state_contract import SCENARIO_STATE_VERSION
 from services.flow.scenario import graph as scenario_graph
 
-
 pytestmark = pytest.mark.unit
 
 
@@ -14,8 +13,7 @@ def _client(monkeypatch) -> TestClient:
         scenario_graph,
         "complete_json_messages",
         lambda messages: (
-            '{"action":"continue","response":"계속 말씀해 주세요.",'
-            '"etiquette_tip":null}'
+            '{"action":"continue","response":"계속 말씀해 주세요.","etiquette_tip":null}'
         ),
     )
     return TestClient(app)

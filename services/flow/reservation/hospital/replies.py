@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
-
 RECOMMENDED_REPLIES = {
     "greeting": [
         "진료 예약을 하고 싶습니다.",
@@ -73,5 +70,5 @@ RECOMMENDED_REPLIES = {
 }
 
 
-def get_recommended_replies(conversation_state: str) -> List[str]:
+def get_recommended_replies(conversation_state: str) -> list[str]:
     return RECOMMENDED_REPLIES.get(conversation_state, [])

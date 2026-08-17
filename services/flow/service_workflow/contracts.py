@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, FrozenSet, Optional, Tuple
+from typing import Any
 
 from services.flow.common.state_contract import (
     DetailedGraphContract,
     ScenarioStateContractError,
 )
-
 
 WORKFLOW_ACTIONS = frozenset(
     {
@@ -40,8 +39,8 @@ class FieldContract:
     label: str
     description: str
     question: str
-    replies: Tuple[str, ...]
-    options: Tuple[FieldOption, ...] = ()
+    replies: tuple[str, ...]
+    options: tuple[FieldOption, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.key or not self.label or not self.description or not self.question:
@@ -52,7 +51,7 @@ class FieldContract:
         if len(option_values) != len(set(option_values)):
             raise ValueError(f"workflow field options must be unique: {self.key}")
 
-    def display_value(self, value: Optional[str]) -> Optional[str]:
+    def display_value(self, value: str | None) -> str | None:
         for option in self.options:
             if option.value == value:
                 return option.label
@@ -65,7 +64,7 @@ class GuardContract:
     value: str
     state: str
     message: str
-    replies: Tuple[str, ...]
+    replies: tuple[str, ...]
 
     def __post_init__(self) -> None:
         if not self.field_key or not self.value or not self.state or not self.message:
@@ -83,15 +82,15 @@ class ServiceWorkflowSpec:
     collecting_state: str
     confirming_state: str
     ready_state: str
-    fields: Tuple[FieldContract, ...]
+    fields: tuple[FieldContract, ...]
     confirmation_prefix: str
     ready_message: str
     cancelled_message: str
     closing_message: str
-    ready_replies: Tuple[str, ...]
-    branch_field: Optional[str] = None
-    ready_messages_by_branch: Tuple[Tuple[str, str], ...] = ()
-    guards: Tuple[GuardContract, ...] = ()
+    ready_replies: tuple[str, ...]
+    branch_field: str | None = None
+    ready_messages_by_branch: tuple[tuple[str, str], ...] = ()
+    guards: tuple[GuardContract, ...] = ()
 
     def __post_init__(self) -> None:
         field_keys = self.field_keys
@@ -135,16 +134,20 @@ class ServiceWorkflowSpec:
             field = next((item for item in self.fields if item.key == guard.field_key), None)
             if field is None or guard.value not in {option.value for option in field.options}:
                 raise ValueError(f"workflow guard value is not declared: {self.graph_name}")
-            if guard.state in guard_states or guard.state in states or guard.state in {"greeting", "closing", "cancelled", "END"}:
+            if (
+                guard.state in guard_states
+                or guard.state in states
+                or guard.state in {"greeting", "closing", "cancelled", "END"}
+            ):
                 raise ValueError(f"workflow guard state must be unique: {self.graph_name}")
             guard_states.add(guard.state)
 
     @property
-    def field_keys(self) -> Tuple[str, ...]:
+    def field_keys(self) -> tuple[str, ...]:
         return tuple(field.key for field in self.fields)
 
     @property
-    def allowed_conversation_states(self) -> FrozenSet[str]:
+    def allowed_conversation_states(self) -> frozenset[str]:
         return frozenset(
             {
                 "greeting",
@@ -158,25 +161,23 @@ class ServiceWorkflowSpec:
             }
         )
 
-    def ready_message_for(self, fields: Dict[str, Optional[str]]) -> str:
+    def ready_message_for(self, fields: dict[str, str | None]) -> str:
         branch_value = fields.get(self.branch_field) if self.branch_field else None
         return dict(self.ready_messages_by_branch).get(branch_value, self.ready_message)
 
-    def matching_guard(self, fields: Dict[str, Optional[str]]) -> Optional[GuardContract]:
+    def matching_guard(self, fields: dict[str, str | None]) -> GuardContract | None:
         return next(
-            (
-                guard
-                for guard in self.guards
-                if fields.get(guard.field_key) == guard.value
-            ),
+            (guard for guard in self.guards if fields.get(guard.field_key) == guard.value),
             None,
         )
 
-    def guard_for_state(self, state: str) -> Optional[GuardContract]:
+    def guard_for_state(self, state: str) -> GuardContract | None:
         return next((guard for guard in self.guards if guard.state == state), None)
 
 
-def compact_service_workflow_state(spec: ServiceWorkflowSpec, result: Dict[str, Any]) -> Dict[str, Any]:
+def compact_service_workflow_state(
+    spec: ServiceWorkflowSpec, result: dict[str, Any]
+) -> dict[str, Any]:
     raw_fields = result.get("fields") or {}
     return {
         "intent": result.get("intent") or spec.intent,
@@ -190,7 +191,7 @@ def compact_service_workflow_state(spec: ServiceWorkflowSpec, result: Dict[str, 
     }
 
 
-def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: Dict[str, Any]) -> None:
+def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: dict[str, Any]) -> None:
     if not state:
         return
 

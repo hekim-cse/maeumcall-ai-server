@@ -7,7 +7,6 @@ from services.flow.service_workflow import (
     build_service_workflow_contract,
 )
 
-
 ORDER_CHANGE_SPEC = ServiceWorkflowSpec(
     category="배달",
     title="주문 변경",
@@ -29,7 +28,11 @@ ORDER_CHANGE_SPEC = ServiceWorkflowSpec(
             "변경 항목",
             "주소, 메뉴·수량, 옵션, 연락처 중 변경하려는 항목",
             "어떤 주문 정보를 변경하시겠습니까?",
-            ("배송 주소를 변경하고 싶어요.", "메뉴 옵션을 변경하고 싶어요.", "연락처를 변경하고 싶어요."),
+            (
+                "배송 주소를 변경하고 싶어요.",
+                "메뉴 옵션을 변경하고 싶어요.",
+                "연락처를 변경하고 싶어요.",
+            ),
             (
                 FieldOption("delivery_address", "배송 주소"),
                 FieldOption("menu_or_quantity", "메뉴 또는 수량"),
@@ -49,7 +52,11 @@ ORDER_CHANGE_SPEC = ServiceWorkflowSpec(
             "변경 불가 시 처리",
             "가게 접수 또는 조리 진행으로 변경할 수 없을 때 원하는 후속 처리",
             "이미 처리가 시작되어 변경할 수 없다면 어떻게 안내받기를 원하시나요?",
-            ("취소 가능 여부를 확인해 주세요.", "현재 주문을 그대로 진행할게요.", "상담원 연결을 원해요."),
+            (
+                "취소 가능 여부를 확인해 주세요.",
+                "현재 주문을 그대로 진행할게요.",
+                "상담원 연결을 원해요.",
+            ),
             (
                 FieldOption("check_cancellation", "취소 가능 여부 확인"),
                 FieldOption("keep_order", "기존 주문 유지"),
@@ -64,7 +71,11 @@ ORDER_CHANGE_SPEC = ServiceWorkflowSpec(
     ),
     cancelled_message="주문 변경 요청을 취소했습니다. 실제 주문 상태에는 변경이 없습니다.",
     closing_message="확인했습니다. 주문 상태 조회나 실제 변경 처리가 필요하면 연결된 주문 시스템에서 이어서 진행해야 합니다.",
-    ready_replies=("네, 확인했습니다.", "변경 가능 여부를 조회해 주세요.", "수정할 내용이 있습니다."),
+    ready_replies=(
+        "네, 확인했습니다.",
+        "변경 가능 여부를 조회해 주세요.",
+        "수정할 내용이 있습니다.",
+    ),
     branch_field="unavailable_preference",
     ready_messages_by_branch=(
         (
@@ -107,7 +118,11 @@ DELIVERY_DELAY_SPEC = ServiceWorkflowSpec(
             "확인할 내용",
             "현재 위치, 예상 도착 시간, 지연 사유 중 확인하려는 내용",
             "어떤 내용을 우선 확인해드릴까요?",
-            ("예상 도착 시간을 알고 싶어요.", "현재 배달 위치를 확인해 주세요.", "지연 사유를 알고 싶어요."),
+            (
+                "예상 도착 시간을 알고 싶어요.",
+                "현재 배달 위치를 확인해 주세요.",
+                "지연 사유를 알고 싶어요.",
+            ),
             (
                 FieldOption("estimated_arrival", "예상 도착 시간"),
                 FieldOption("delivery_location", "현재 배달 위치"),
@@ -134,7 +149,11 @@ DELIVERY_DELAY_SPEC = ServiceWorkflowSpec(
     ),
     cancelled_message="배달 지연 조회 요청을 취소했습니다. 주문 상태에는 변경이 없습니다.",
     closing_message="확인했습니다. 최신 배달 상태는 연결된 주문·배달 추적 시스템에서 이어서 확인해야 합니다.",
-    ready_replies=("네, 조회를 진행해 주세요.", "수정할 내용이 있습니다.", "상담원 연결이 필요해요."),
+    ready_replies=(
+        "네, 조회를 진행해 주세요.",
+        "수정할 내용이 있습니다.",
+        "상담원 연결이 필요해요.",
+    ),
     branch_field="delay_resolution",
     ready_messages_by_branch=(
         (
@@ -219,9 +238,18 @@ REFUND_REDELIVERY_SPEC = ServiceWorkflowSpec(
     ready_replies=("네, 검토를 진행해 주세요.", "수정할 내용이 있습니다.", "처리를 취소할게요."),
     branch_field="resolution_preference",
     ready_messages_by_branch=(
-        ("refund", "환불 검토에 필요한 정보와 사용자 확인이 완료되었습니다. 실제 환불 승인·결제 취소는 주문 및 결제 시스템 검증 후 처리해야 합니다."),
-        ("redelivery", "재배달 검토에 필요한 정보와 사용자 확인이 완료되었습니다. 실제 재배달 가능 여부와 접수 결과는 매장·주문 시스템 확인 후 확정해야 합니다."),
-        ("agent_review", "상담원 검토에 필요한 정보와 사용자 확인이 완료되었습니다. 실제 상담 이관은 고객지원 시스템 연동 후 진행해야 합니다."),
+        (
+            "refund",
+            "환불 검토에 필요한 정보와 사용자 확인이 완료되었습니다. 실제 환불 승인·결제 취소는 주문 및 결제 시스템 검증 후 처리해야 합니다.",
+        ),
+        (
+            "redelivery",
+            "재배달 검토에 필요한 정보와 사용자 확인이 완료되었습니다. 실제 재배달 가능 여부와 접수 결과는 매장·주문 시스템 확인 후 확정해야 합니다.",
+        ),
+        (
+            "agent_review",
+            "상담원 검토에 필요한 정보와 사용자 확인이 완료되었습니다. 실제 상담 이관은 고객지원 시스템 연동 후 진행해야 합니다.",
+        ),
     ),
 )
 

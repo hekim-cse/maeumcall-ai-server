@@ -1,29 +1,29 @@
 from __future__ import annotations
 
-from collections import Counter
-from dataclasses import dataclass
 import threading
-from typing import Protocol, Sequence
 import unicodedata
-
+from collections import Counter
+from collections.abc import Sequence
+from dataclasses import dataclass
+from typing import Protocol
 
 CONTENT_POS_TAGS = frozenset(
     {
         "NNG",  # 일반 명사
         "NNP",  # 고유 명사
         "NNB",  # 의존 명사
-        "NR",   # 수사
-        "NP",   # 대명사
-        "VV",   # 동사
-        "VA",   # 형용사
-        "VX",   # 보조 용언
-        "MM",   # 관형사
+        "NR",  # 수사
+        "NP",  # 대명사
+        "VV",  # 동사
+        "VA",  # 형용사
+        "VX",  # 보조 용언
+        "MM",  # 관형사
         "MAG",  # 일반 부사
         "MAJ",  # 접속 부사
-        "XR",   # 어근
-        "SL",   # 외국어
-        "SH",   # 한자
-        "SN",   # 숫자
+        "XR",  # 어근
+        "SL",  # 외국어
+        "SH",  # 한자
+        "SN",  # 숫자
     }
 )
 FILLER_POS_TAGS = frozenset({"IC"})  # 감탄사

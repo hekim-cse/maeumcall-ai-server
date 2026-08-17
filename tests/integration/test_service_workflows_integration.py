@@ -27,7 +27,6 @@ from services.flow.support.contracts import (
     SUPPORT_SERVICE_REQUEST_CONTRACT,
 )
 
-
 pytestmark = pytest.mark.integration
 
 

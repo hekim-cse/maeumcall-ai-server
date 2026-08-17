@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any
 
 from llm.errors import ScenarioStateValidationError
-
 
 AVAILABILITY_FIELDS = {
     "availability_status",
@@ -13,7 +12,7 @@ AVAILABILITY_FIELDS = {
 }
 
 
-def validate_availability_result(value: Any) -> Dict[str, Any]:
+def validate_availability_result(value: Any) -> dict[str, Any]:
     """Validate an externally supplied reservation simulation outcome."""
     if not isinstance(value, dict):
         raise ScenarioStateValidationError("availability result must be an object")
@@ -40,7 +39,7 @@ def validate_availability_result(value: Any) -> Dict[str, Any]:
     ):
         raise ScenarioStateValidationError("alternative_times must be a string array")
 
-    normalized_alternatives: List[str] = [item.strip() for item in alternative_times]
+    normalized_alternatives: list[str] = [item.strip() for item in alternative_times]
     if len(normalized_alternatives) != len(set(normalized_alternatives)):
         raise ScenarioStateValidationError("alternative_times must be unique")
 
@@ -57,8 +56,6 @@ def validate_availability_result(value: Any) -> Dict[str, Any]:
     return {
         "availability_status": status,
         "availability_reason": reason.strip() if isinstance(reason, str) else None,
-        "available_time": (
-            available_time.strip() if isinstance(available_time, str) else None
-        ),
+        "available_time": (available_time.strip() if isinstance(available_time, str) else None),
         "alternative_times": normalized_alternatives,
     }

@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional
-
 from services.flow.reservation.restaurant.state import RestaurantReservationState
-
 
 REQUIRED_FIELDS = ["date", "time", "party_size", "user_name"]
 
 
-def get_missing_restaurant_fields(state: RestaurantReservationState) -> List[str]:
+def get_missing_restaurant_fields(state: RestaurantReservationState) -> list[str]:
     """
     식당 예약에 필요한 필수 정보 중 아직 없는 값을 반환한다.
 
@@ -67,7 +64,7 @@ def route_after_restaurant_decide(state: RestaurantReservationState) -> str:
     return "generate_response"
 
 
-def compact_restaurant_state(result: Dict) -> Dict:
+def compact_restaurant_state(result: dict) -> dict:
     """
     클라이언트에 저장할 식당 예약 상태만 정리한다.
     """

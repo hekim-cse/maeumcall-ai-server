@@ -1,8 +1,10 @@
 import pytest
+
 from services.flow.reservation.study_room.graph import study_room_reservation_graph
 
-
 pytestmark = pytest.mark.integration
+
+
 def test_study_room_reservation_integration_real_hf():
     result = study_room_reservation_graph.invoke(
         {

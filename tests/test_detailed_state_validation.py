@@ -34,7 +34,6 @@ from services.flow.reservation.study_room.response import (
     STUDY_ROOM_STATE_CONTRACT,
 )
 
-
 pytestmark = pytest.mark.unit
 
 
@@ -151,9 +150,7 @@ def _reservation_state(contract) -> dict:
     state = {field: None for field in contract.expected_fields}
     state.update(
         {
-            "intent": next(
-                intent for intent in contract.allowed_intents if intent is not None
-            ),
+            "intent": next(intent for intent in contract.allowed_intents if intent is not None),
             contract.identity_field: "서비스",
             "conversation_state": "greeting",
             "last_ai_message": "무엇을 도와드릴까요?",

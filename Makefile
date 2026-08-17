@@ -2,11 +2,19 @@
 
 PYTHON := .venv/bin/python
 
-.PHONY: check-python test-unit test-graph test-fast test-integration test-all db-up db-migrate db-current db-test
+.PHONY: check-python lint format test-unit test-graph test-fast test-integration test-all db-up db-migrate db-current db-test
 
 check-python:
 	@test -x "$(PYTHON)" || (echo ".venv가 없습니다. ./scripts/bootstrap_python.sh를 실행해 주세요." >&2; exit 1)
 	@$(PYTHON) -m scripts.check_python_version
+
+lint: check-python
+	$(PYTHON) -m ruff check .
+	$(PYTHON) -m ruff format --check .
+
+format: check-python
+	$(PYTHON) -m ruff check . --fix
+	$(PYTHON) -m ruff format .
 
 test-unit: check-python
 	$(PYTHON) -m pytest tests -m unit -v

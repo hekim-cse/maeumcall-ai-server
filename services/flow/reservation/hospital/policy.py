@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Dict, Any
+from typing import Any
 
 from services.flow.reservation.hospital.state import HospitalReservationState
 
 
-def clear_reservation_lookup_fields() -> Dict[str, Any]:
+def clear_reservation_lookup_fields() -> dict[str, Any]:
     """
     날짜/시간/진료과 변경처럼 예약 조건이 바뀌는 경우,
     이전 예약 가능 여부 조회 결과를 초기화한다.

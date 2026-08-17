@@ -20,6 +20,7 @@ CATEGORY_DIR_MAP = {
     "배달": "delivery",
 }
 
+
 def category_dir_path(category: str) -> Path:
     normalized = canonicalize_scenario_label(category)
     directory = CATEGORY_DIR_MAP.get(normalized)
@@ -27,11 +28,13 @@ def category_dir_path(category: str) -> Path:
         raise PromptConfigurationError(f"Unregistered prompt category: {category}")
     return PROMPT_ROOT / directory
 
+
 def _normalize_key(category: str, title: str) -> tuple[str, str]:
     return (
         canonicalize_scenario_label(category),
         canonicalize_scenario_label(title),
     )
+
 
 _SCENARIO_FILES = {
     ("가족", "안부인사"): "family/greeting.ini",
@@ -73,13 +76,12 @@ ALIASES = {
     for (category, title), relative_path in _SCENARIO_FILES.items()
 }
 
+
 def get_prompt_path(category: str, title: str) -> Path:
     key = _normalize_key(category, title)
     path = ALIASES.get(key)
     if path is None:
-        raise PromptConfigurationError(
-            f"Unregistered prompt scenario: {category} / {title}"
-        )
+        raise PromptConfigurationError(f"Unregistered prompt scenario: {category} / {title}")
     return path
 
 

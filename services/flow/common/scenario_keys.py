@@ -20,7 +20,6 @@ def scenario_matches(
     expected_category: str,
     expected_title: str,
 ) -> bool:
-    return (
-        canonicalize_scenario_label(category) == canonicalize_scenario_label(expected_category)
-        and canonicalize_scenario_label(title) == canonicalize_scenario_label(expected_title)
-    )
+    return canonicalize_scenario_label(category) == canonicalize_scenario_label(
+        expected_category
+    ) and canonicalize_scenario_label(title) == canonicalize_scenario_label(expected_title)

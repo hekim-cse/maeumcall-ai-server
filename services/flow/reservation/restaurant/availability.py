@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import Any
 
 from services.flow.reservation.common.availability_provider import (
     AvailabilityProvider,
@@ -10,10 +10,10 @@ from services.flow.reservation.common.availability_provider import (
 
 
 def resolve_restaurant_availability(
-    state: Dict[str, object],
+    state: dict[str, object],
     *,
-    provider: Optional[AvailabilityProvider] = None,
-) -> Dict[str, object]:
+    provider: AvailabilityProvider | None = None,
+) -> dict[str, object]:
     """
     서버가 소유한 버전 지정 훈련 일정표로 예약 가능 여부를 결정한다.
     """
@@ -34,15 +34,13 @@ def resolve_restaurant_availability(
 
 
 def _build_restaurant_message(
-    decision: Dict[str, Any],
+    decision: dict[str, Any],
     date: str,
     requested_time: str,
     party_size: str,
 ) -> str:
     if decision["availability_status"] == "available":
-        return (
-            f"{date} {decision['available_time']}에 {party_size} 예약이 가능합니다."
-        )
+        return f"{date} {decision['available_time']}에 {party_size} 예약이 가능합니다."
     alternatives = decision["alternative_times"]
     if alternatives:
         return (

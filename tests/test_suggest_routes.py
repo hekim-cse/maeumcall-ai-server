@@ -5,13 +5,14 @@ from main import app
 from routes.suggest_routes import _suggest_prompt, _validate_suggestions
 from schemas.chat_models import SuggestRequest
 
-
 pytestmark = pytest.mark.unit
 
 
 def test_company_suggest_prompt_keeps_business_rules():
     prompt = _suggest_prompt(
-        SuggestRequest(category="회사", title="보고서 제출", lastAgentUtterance="몇 시까지 가능합니까?")
+        SuggestRequest(
+            category="회사", title="보고서 제출", lastAgentUtterance="몇 시까지 가능합니까?"
+        )
     )
 
     assert "격식/존댓말" in prompt
@@ -59,9 +60,7 @@ def test_suggest_accepts_the_exact_mobile_request_contract(monkeypatch):
     )
 
     assert response.status_code == 200
-    assert response.json() == {
-        "suggestions": ["첫 번째 답변", "두 번째 답변", "세 번째 답변"]
-    }
+    assert response.json() == {"suggestions": ["첫 번째 답변", "두 번째 답변", "세 번째 답변"]}
 
 
 def test_improve_rejects_unregistered_category_before_model_call():

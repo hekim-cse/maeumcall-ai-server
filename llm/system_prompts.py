@@ -1,6 +1,7 @@
 # llm/system_prompts.py
 from __future__ import annotations
 
+
 def build_system_prompt(category: str | None, nickname: str | None) -> str:
     cat = (category or "").strip()
     ident = "네, 전화 받았습니다."
