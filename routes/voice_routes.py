@@ -112,9 +112,9 @@ async def analyze_audio_endpoint(
         baseline = None
         if uid:
             if mode == "calibrate":
-                baseline = accumulate_baseline(uid, cur, strategy=strategy)
+                baseline = await accumulate_baseline(uid, cur, strategy=strategy)
             else:
-                baseline = get_baseline(uid).get("baseline")
+                baseline = (await get_baseline(uid)).get("baseline")
 
         # 클라이언트로 보낼 payload 생성
         payload = build_payload(cur, baseline)
@@ -145,39 +145,39 @@ async def analyze_audio_endpoint(
 
 
 @router.get("/baseline")
-def baseline_get(user_id: str = Query(...)):
+async def baseline_get(user_id: str = Query(...)):
     """기준선 조회"""
     uid = normalize_user_id(user_id)
-    res = get_baseline(uid)
+    res = await get_baseline(uid)
     if not res.get("ok"):
         return _voice_error(404, "VOICE_BASELINE_NOT_FOUND", "저장된 음성 기준선이 없습니다.")
     return JSONResponse(content=res)
 
 
 @router.post("/calibrate/finalize")
-def calibrate_finalize(user_id: str = Form(...)):
+async def calibrate_finalize(user_id: str = Form(...)):
     """샘플 모음을 평균내서 기존 값을 덮어쓰기"""
-    res = finalize_calibration_simple(normalize_user_id(user_id))
+    res = await finalize_calibration_simple(normalize_user_id(user_id))
     if not res.get("ok"):
         return _voice_error(409, "VOICE_CALIBRATION_EMPTY", "확정할 캘리브레이션 샘플이 없습니다.")
     return JSONResponse(content=res)
 
 
 @router.post("/baseline/delete")
-def api_delete_baseline(user_id: str = Form(None), q_user_id: str = Query(None)):
+async def api_delete_baseline(user_id: str = Form(None), q_user_id: str = Query(None)):
     """user_id는 POST form 또는 GET query 중 하나로 받음"""
     raw = user_id or q_user_id
     if not raw:
         return _voice_error(422, "VOICE_USER_ID_REQUIRED", "사용자 식별자가 필요합니다.")
     uid = normalize_user_id(raw)
-    return delete_baseline(uid)
+    return await delete_baseline(uid)
 
 
 @router.post("/calibrate/reset")
-def calibrate_reset(user_id: str = Form(...)):
+async def calibrate_reset(user_id: str = Form(...)):
     """진행 중인 샘플만 비우고 확정된 기준선은 유지한다."""
     uid = normalize_user_id(user_id)
-    clear_calib_cache(uid)
+    await clear_calib_cache(uid)
     return JSONResponse(content={"ok": True})
 
 

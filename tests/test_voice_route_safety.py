@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 import os
 import tempfile
+from collections import defaultdict
+from typing import Any, Mapping
 
 import pytest
 from fastapi.testclient import TestClient
@@ -12,51 +16,121 @@ from services import baseline_store
 pytestmark = pytest.mark.unit
 
 
-def test_voice_route_rejects_invalid_mode_before_analysis():
-    client = TestClient(app)
+class BaselineRepositoryDouble:
+    """Contract-level test double; production always uses PostgreSQL."""
 
-    response = client.post(
+    def __init__(self) -> None:
+        self.baselines: dict[str, dict[str, Any]] = {}
+        self.samples: dict[str, list[tuple[float, float, float]]] = defaultdict(list)
+
+    async def get_baseline(self, user_key: str) -> dict[str, Any] | None:
+        return self.baselines.get(user_key)
+
+    async def update_welford(
+        self, user_key: str, measurement: tuple[float, float, float]
+    ) -> dict[str, Any]:
+        value = baseline_store.calculate_welford(
+            self.baselines.get(user_key), measurement
+        )
+        self.baselines[user_key] = value
+        return value
+
+    async def append_calibration_sample(
+        self, user_key: str, measurement: tuple[float, float, float]
+    ) -> dict[str, Any]:
+        self.samples[user_key].append(measurement)
+        values = self.samples[user_key]
+        count = len(values)
+        return {
+            "pitchHz": sum(value[0] for value in values) / count,
+            "jitterLocal": sum(value[1] for value in values) / count,
+            "shimmerLocal": sum(value[2] for value in values) / count,
+            "samples": count,
+            "ts": 1,
+        }
+
+    async def finalize_calibration(self, user_key: str) -> dict[str, Any] | None:
+        values = self.samples.get(user_key, [])
+        if not values:
+            return None
+        count = len(values)
+        baseline = {
+            "pitchHz": sum(value[0] for value in values) / count,
+            "jitterLocal": sum(value[1] for value in values) / count,
+            "shimmerLocal": sum(value[2] for value in values) / count,
+            "samples": count,
+            "ts": 1,
+        }
+        self.baselines[user_key] = baseline
+        self.samples.pop(user_key, None)
+        return baseline
+
+    async def clear_calibration(self, user_key: str) -> None:
+        self.samples.pop(user_key, None)
+
+    async def delete_subject(self, user_key: str) -> bool:
+        existed = user_key in self.baselines or user_key in self.samples
+        self.baselines.pop(user_key, None)
+        self.samples.pop(user_key, None)
+        return existed
+
+    async def import_baseline(
+        self, user_key: str, baseline: Mapping[str, Any]
+    ) -> None:
+        self.baselines[user_key] = dict(baseline)
+
+
+@pytest.fixture(autouse=True)
+def baseline_repository(monkeypatch):
+    repository = BaselineRepositoryDouble()
+    monkeypatch.setattr(
+        baseline_store, "BASELINE_ID_HMAC_SECRET", "test-secret-" * 4
+    )
+    baseline_store.set_baseline_repository(repository)
+    yield repository
+    baseline_store.set_baseline_repository(None)
+
+
+def _analysis() -> dict[str, dict[str, float | str]]:
+    return {
+        "pitch": {"mean": 150.0, "comment": "measurement"},
+        "jitter": {"value": 0.005, "comment": "measurement"},
+        "shimmer": {"value": 0.01, "comment": "measurement"},
+    }
+
+
+def test_voice_route_rejects_invalid_mode_before_analysis():
+    response = TestClient(app).post(
         "/voice/analyze",
         data={"mode": "unsupported"},
         files={"file": ("voice.wav", b"audio", "audio/wav")},
     )
-
     assert response.status_code == 422
     assert response.json()["error"]["code"] == "VOICE_MODE_INVALID"
 
 
 def test_voice_route_enforces_upload_limit(monkeypatch):
     monkeypatch.setattr(voice_routes, "AUDIO_UPLOAD_MAX_BYTES", 4)
-    client = TestClient(app)
-
-    response = client.post(
+    response = TestClient(app).post(
         "/voice/analyze",
         files={"file": ("voice.wav", b"12345", "audio/wav")},
     )
-
     assert response.status_code == 413
     assert response.json()["error"]["code"] == "VOICE_FILE_TOO_LARGE"
 
 
 def test_voice_route_never_uses_uploaded_path(monkeypatch):
-    analyzed_paths = []
+    analyzed_paths: list[str] = []
 
-    def fake_analyze(path):
+    def fake_analyze(path: str) -> dict[str, Any]:
         analyzed_paths.append(path)
-        return {
-            "pitch": {"mean": 150.0, "comment": "ok"},
-            "jitter": {"value": 0.005, "comment": "ok"},
-            "shimmer": {"value": 0.01, "comment": "ok"},
-        }
+        return _analysis()
 
     monkeypatch.setattr(voice_routes, "analyze_audio", fake_analyze)
-    client = TestClient(app)
-
-    response = client.post(
+    response = TestClient(app).post(
         "/voice/analyze",
         files={"file": ("../../escape.wav", b"fake wav", "audio/wav")},
     )
-
     assert response.status_code == 200
     assert len(analyzed_paths) == 1
     assert os.path.dirname(analyzed_paths[0]) == tempfile.gettempdir()
@@ -64,19 +138,10 @@ def test_voice_route_never_uses_uploaded_path(monkeypatch):
     assert not os.path.exists(analyzed_paths[0])
 
 
-def test_default_calibration_strategy_accumulates_until_finalize(monkeypatch, tmp_path):
-    monkeypatch.setattr(baseline_store, "DB_PATH", tmp_path / "baseline.json")
-    monkeypatch.setattr(baseline_store, "BASELINE_ID_HMAC_SECRET", "test-secret-" * 4)
-    baseline_store.CALIB_CACHE.clear()
-    monkeypatch.setattr(
-        voice_routes,
-        "analyze_audio",
-        lambda path: {
-            "pitch": {"mean": 150.0, "comment": "measurement"},
-            "jitter": {"value": 0.005, "comment": "measurement"},
-            "shimmer": {"value": 0.01, "comment": "measurement"},
-        },
-    )
+def test_calibration_samples_survive_requests_until_transactional_finalize(
+    monkeypatch, baseline_repository
+):
+    monkeypatch.setattr(voice_routes, "analyze_audio", lambda path: _analysis())
     client = TestClient(app)
 
     for expected_samples in (1, 2):
@@ -89,74 +154,52 @@ def test_default_calibration_strategy_accumulates_until_finalize(monkeypatch, tm
         assert response.json()["samples"] == expected_samples
 
     finalized = client.post(
-        "/voice/calibrate/finalize",
-        data={"user_id": "voice-user"},
+        "/voice/calibrate/finalize", data={"user_id": "voice-user"}
     )
-
     assert finalized.status_code == 200
-    assert finalized.json()["ok"] is True
     assert finalized.json()["baseline"]["samples"] == 2
-    persisted = (tmp_path / "baseline.json").read_text("utf-8")
-    assert "voice-user" not in persisted
-    assert "user_hmac_sha256:" in persisted
-    baseline_store.CALIB_CACHE.clear()
-
-
-def test_corrupted_baseline_store_is_not_treated_as_empty(monkeypatch, tmp_path):
-    path = tmp_path / "baseline.json"
-    path.write_text("not-json", encoding="utf-8")
-    monkeypatch.setattr(baseline_store, "DB_PATH", path)
-
-    with pytest.raises(baseline_store.BaselineStoreError):
-        baseline_store.load_db()
-
-
-def test_calibration_reset_preserves_last_confirmed_baseline(monkeypatch, tmp_path):
-    monkeypatch.setattr(baseline_store, "DB_PATH", tmp_path / "baseline.json")
-    monkeypatch.setattr(baseline_store, "BASELINE_ID_HMAC_SECRET", "test-secret-" * 4)
-    baseline_store.CALIB_CACHE.clear()
-    analysis = {
-        "pitch": {"mean": 150.0, "comment": "measurement"},
-        "jitter": {"value": 0.005, "comment": "measurement"},
-        "shimmer": {"value": 0.01, "comment": "measurement"},
-    }
-    baseline_store.update_baseline_persisted("voice-user", analysis)
-    baseline_store.append_calib_sample("voice-user", analysis)
-
-    response = TestClient(app).post(
-        "/voice/calibrate/reset",
-        data={"user_id": "voice-user"},
-    )
-
-    assert response.status_code == 200
-    assert baseline_store.get_persisted_baseline("voice-user") is not None
     user_key = baseline_store.pseudonymize_user_id("voice-user")
-    assert user_key not in baseline_store.CALIB_CACHE
+    assert user_key in baseline_repository.baselines
+    assert user_key not in baseline_repository.samples
 
 
-def test_finalize_requires_collected_samples(monkeypatch, tmp_path):
-    monkeypatch.setattr(baseline_store, "DB_PATH", tmp_path / "baseline.json")
-    monkeypatch.setattr(baseline_store, "BASELINE_ID_HMAC_SECRET", "test-secret-" * 4)
-    baseline_store.CALIB_CACHE.clear()
+def test_calibration_reset_preserves_last_confirmed_baseline(baseline_repository):
+    user_key = baseline_store.pseudonymize_user_id("voice-user")
+    baseline_repository.baselines[user_key] = {"samples": 1}
+    baseline_repository.samples[user_key].append((150.0, 0.005, 0.01))
 
     response = TestClient(app).post(
-        "/voice/calibrate/finalize",
-        data={"user_id": "voice-user"},
+        "/voice/calibrate/reset", data={"user_id": "voice-user"}
     )
+    assert response.status_code == 200
+    assert user_key in baseline_repository.baselines
+    assert user_key not in baseline_repository.samples
 
+
+def test_finalize_requires_collected_samples():
+    response = TestClient(app).post(
+        "/voice/calibrate/finalize", data={"user_id": "voice-user"}
+    )
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "VOICE_CALIBRATION_EMPTY"
 
 
-def test_baseline_storage_refuses_plain_user_id_without_hmac_secret(monkeypatch, tmp_path):
-    monkeypatch.setattr(baseline_store, "DB_PATH", tmp_path / "baseline.json")
+def test_baseline_storage_refuses_plain_user_id_without_hmac_secret(monkeypatch):
     monkeypatch.setattr(baseline_store, "BASELINE_ID_HMAC_SECRET", "")
-
     response = TestClient(app).get(
-        "/voice/baseline",
-        params={"user_id": "real-account-id"},
+        "/voice/baseline", params={"user_id": "real-account-id"}
     )
-
     assert response.status_code == 503
     assert response.json()["error"]["code"] == "VOICE_BASELINE_SECURITY_NOT_CONFIGURED"
-    assert not (tmp_path / "baseline.json").exists()
+
+
+@pytest.mark.parametrize(
+    "analysis",
+    [
+        {"pitch": {"mean": 0}, "jitter": {"value": 0.1}, "shimmer": {"value": 0.1}},
+        {"pitch": {"mean": 120}, "jitter": {"value": -0.1}, "shimmer": {"value": 0.1}},
+    ],
+)
+def test_invalid_voice_measurements_are_rejected(analysis):
+    with pytest.raises(baseline_store.BaselineMeasurementError):
+        baseline_store.extract_measurement(analysis)

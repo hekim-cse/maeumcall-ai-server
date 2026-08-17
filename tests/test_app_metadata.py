@@ -37,6 +37,7 @@ def test_readiness_reports_each_runtime_dependency():
         "openai",
         "local_nlu",
         "voice_baseline_security",
+        "postgresql",
         "ffmpeg",
     }
 

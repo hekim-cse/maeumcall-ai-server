@@ -134,6 +134,8 @@
 | 502 | `AI_RESPONSE_VALIDATION_FAILED` | 제한 재요청 후에도 출력 계약 위반 |
 | 503 | `AI_PROVIDER_UNAVAILABLE` | 모델 제공자를 사용할 수 없음 |
 | 503 | `VOICE_BASELINE_SECURITY_NOT_CONFIGURED` | 음성 기준선 ID 보호 비밀값 미설정 |
+| 503 | `VOICE_BASELINE_DATABASE_NOT_CONFIGURED` | PostgreSQL 연결 설정 미완료 |
+| 500 | `VOICE_BASELINE_STORE_FAILED` | PostgreSQL 기준선 트랜잭션 또는 조회 실패 |
 
 음성 API도 같은 envelope를 사용하며 `VOICE_MODE_INVALID`, `VOICE_FILE_TOO_LARGE`, `VOICE_CONVERTER_UNAVAILABLE`, `VOICE_CONVERSION_FAILED`, `VOICE_ANALYSIS_FAILED`, `VOICE_BASELINE_NOT_FOUND`, `VOICE_CALIBRATION_EMPTY`처럼 단계별 코드를 반환한다. 재캘리브레이션의 reset은 진행 중 샘플만 제거하며 마지막으로 확정된 기준선은 finalize 성공 전까지 유지한다.
 

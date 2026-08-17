@@ -51,3 +51,7 @@ _cors_origins = getenv("CORS_ALLOW_ORIGINS", "*")
 CORS_ALLOW_ORIGINS = [item.strip() for item in _cors_origins.split(",") if item.strip()]
 AUDIO_UPLOAD_MAX_BYTES = getenv_int("AUDIO_UPLOAD_MAX_MB", 20) * 1024 * 1024
 BASELINE_ID_HMAC_SECRET = getenv("BASELINE_ID_HMAC_SECRET", "")
+DATABASE_URL = getenv("DATABASE_URL", "")
+DATABASE_POOL_SIZE = getenv_int("DATABASE_POOL_SIZE", 5)
+DATABASE_MAX_OVERFLOW = getenv_int("DATABASE_MAX_OVERFLOW", 10, minimum=0)
+DATABASE_CONNECT_TIMEOUT = getenv_int("DATABASE_CONNECT_TIMEOUT", 3)

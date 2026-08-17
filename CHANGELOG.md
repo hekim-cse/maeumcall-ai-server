@@ -9,6 +9,7 @@
 - `scenario_key`, `state_version`, 필드 allowlist 기반의 클라이언트 상태 계약
 - 요청별 `X-Request-ID`와 모델·음성 보안·ffmpeg를 확인하는 `/health/ready`
 - 상태 변조, 종료 후 요청, 단어 빈도 입력, 정확한 수신 통화 정책 회귀 테스트
+- PostgreSQL 18 개발 구성, SQLAlchemy 비동기 저장소, Alembic 초기 스키마와 JSON 이관 명령
 
 ### Changed
 
@@ -17,12 +18,14 @@
 - `/chat`, `/chat/suggest`, `/chat/improve`, 음성 API의 입력 타입과 오류 envelope 강화
 - Flutter가 완료된 이전 턴과 서버 상태를 보존하고 서버 종료 신호를 실행하도록 연동
 - 재캘리브레이션 시작 시 확정된 음성 기준선은 유지하고 진행 중 샘플만 초기화
+- 확정 기준선 JSON과 프로세스 메모리 샘플을 사용자별 행 잠금 기반 PostgreSQL 트랜잭션으로 전환
 
 ### Removed
 
 - 경로 불일치를 숨기던 `/suggest`, `/improve`, `/analyze` 호환 별칭
 - 서버 장애를 정상 대화처럼 표시하던 모바일 고정 응답
 - 역할과 시나리오 제목을 추정하는 문자열 휴리스틱
+- 런타임 `baseline_db.json` 파일 저장과 프로세스 전용 캘리브레이션 캐시
 
 ### Security
 

@@ -1,6 +1,7 @@
 # 📄 main.py
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
 import logging
 import shutil
 import time
@@ -18,6 +19,7 @@ from core.config import (
     HF_LOCAL_MODEL_ENABLED,
     OPENAI_API_KEY,
 )
+from core.database import database_is_ready, dispose_engine
 from routes.chat_routes import router as chat_router
 from routes.suggest_routes import router as suggest_router
 from routes.voice_routes import router as voice_router
@@ -29,6 +31,13 @@ from services.baseline_store import BaselineStoreError
 
 logger = logging.getLogger("maeumcall.http")
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    yield
+    await dispose_engine()
+
+
 app = FastAPI(
     title="MaeumCall AI Server",
     description=(
@@ -38,6 +47,7 @@ app = FastAPI(
     version="2.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 allow_all_origins = CORS_ALLOW_ORIGINS == ["*"]
@@ -150,13 +160,14 @@ def health():
 
 
 @app.get("/health/ready")
-def readiness():
+async def readiness():
     components = {
         "openai": {"ready": bool(OPENAI_API_KEY)},
         "local_nlu": {"ready": HF_LOCAL_MODEL_ENABLED},
         "voice_baseline_security": {
             "ready": len(BASELINE_ID_HMAC_SECRET) >= 32,
         },
+        "postgresql": {"ready": await database_is_ready()},
         "ffmpeg": {"ready": shutil.which("ffmpeg") is not None},
     }
     ready = all(component["ready"] for component in components.values())

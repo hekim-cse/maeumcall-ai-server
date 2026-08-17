@@ -37,36 +37,35 @@ def build_payload(cur: Dict[str, Any], baseline: Optional[Dict[str, Any]]) -> Di
     return payload
 
 
-def finalize_calibration(user_id: str) -> Dict[str, Any]:
-    """
-    CALIB_CACHE에 누적된 샘플을 평균내서 baseline_db.json에 '덮어쓰기' 저장.
-    완료 후 캐시는 비워짐.
-    """
+async def finalize_calibration(user_id: str) -> Dict[str, Any]:
+    """Persist collected calibration samples and clear them in one transaction."""
     uid = normalize_user_id(user_id)
-    return finalize_calibration_simple(uid)
+    return await finalize_calibration_simple(uid)
 
 
-def get_baseline(user_id: str) -> Dict[str, Any]:
+async def get_baseline(user_id: str) -> Dict[str, Any]:
     """현재 저장된 기준선 조회"""
     uid = normalize_user_id(user_id)
-    b = get_persisted_baseline(uid)
+    b = await get_persisted_baseline(uid)
     if not b:
         return {"ok": False, "error": "not_found"}
     return {"ok": True, "baseline": b}
 
 
-def accumulate_baseline(user_id: str, analysis: dict, strategy: str = "welford") -> dict:
+async def accumulate_baseline(
+    user_id: str, analysis: dict, strategy: str = "welford"
+) -> dict:
     """
     캘리브레이션 누적:
     - 'welford'  : 증분평균/표준편차를 즉시 DB에 반영 (실시간 누적형)
-    - 'simple': 메모리 캐시에 누적하고 finalize 시 산술 평균을 DB에 반영
+    - 'simple': PostgreSQL 샘플 테이블에 누적하고 finalize 시 한 트랜잭션으로 확정
     """
     uid = normalize_user_id(user_id)
 
     if strategy == "welford":
-        return update_baseline_persisted(uid, analysis)
+        return await update_baseline_persisted(uid, analysis)
 
     if strategy == "simple":
-        return append_calib_sample(uid, analysis)
+        return await append_calib_sample(uid, analysis)
 
     raise ValueError(f"unsupported calibration strategy: {strategy}")

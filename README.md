@@ -79,6 +79,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | 📦 상태 유지 | 시나리오 키와 스키마 버전이 포함된 scenarioState를 모바일이 보관하고 서버가 매 턴 검증 |
 | 📞 통화 종료 제어 | shouldEndCall 값으로 종료 흐름 관리 |
 | 🔐 기준선 식별자 보호 | 실제 사용자 ID 대신 비밀키 기반 HMAC 식별자로 음성 기준선 저장 |
+| 🗄 트랜잭션 기준선 저장 | PostgreSQL 행 잠금과 트랜잭션으로 캘리브레이션 샘플·확정 기준선을 영속화 |
 
 ---
 
@@ -101,6 +102,9 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | Pytest | action parser, extractor, graph flow, routing 등 서버 내부 로직을 기능 단위로 검증하기 위해 사용했습니다. |
 | Flutter | 실제 앱 클라이언트와 연동되는 구조를 고려해, 서버 응답이 모바일 화면에서 바로 사용될 수 있도록 설계했습니다. |
 | JSON | Flutter와 FastAPI 간 데이터 교환 형식으로 사용하며, AI 응답뿐 아니라 상태값과 추천 답변을 함께 전달하기에 적합하다고 판단했습니다. |
+| PostgreSQL 18 | 다중 프로세스에서도 사용자별 음성 기준선과 캘리브레이션 샘플을 트랜잭션으로 보존하기 위해 사용했습니다. |
+| SQLAlchemy 2 + asyncpg | FastAPI 요청마다 독립 비동기 세션을 사용하고 연결 풀과 명시적 트랜잭션 경계를 관리하기 위해 사용했습니다. |
+| Alembic | 운영 데이터베이스의 테이블과 제약조건 변경 이력을 코드와 함께 관리하기 위해 사용했습니다. |
 
 <table>
   <tr>
@@ -349,7 +353,22 @@ cp .env.example .env
 # 최초 다운로드 후 HF_LOCAL_FILES_ONLY=1로 전환 권장
 ```
 
-### 10-3. 서버 실행
+### 10-3. PostgreSQL 시작과 스키마 적용
+
+`.env.example`을 기준으로 실제 로컬 비밀값과 `DATABASE_URL`을 `.env`에 설정한 뒤 실행합니다.
+
+```bash
+docker compose up -d postgres
+alembic upgrade head
+```
+
+기존 HMAC 가명화 JSON 기준선이 있다면 스키마 적용 후 이관합니다.
+
+```bash
+python -m scripts.migrate_baseline_json /secure/path/baseline_db.json
+```
+
+### 10-4. 서버 실행
 
 ```bash
 python -m uvicorn main:app --reload
@@ -361,7 +380,7 @@ python -m uvicorn main:app --reload
 ./run_server.sh --reload
 ```
 
-### 10-4. 테스트
+### 10-5. 테스트
 
 ```bash
 # 네트워크 없이 재현 가능한 기본 검증
@@ -369,10 +388,14 @@ python -m pytest -q
 
 # 로컬 모델을 포함한 수동 통합 검증
 HF_LOCAL_MODEL_ENABLED=1 HF_LOCAL_FILES_ONLY=0 \
-  python -m pytest -m integration tests/integration -v
+  python -m pytest -m "integration and not postgres" tests/integration -v
+
+# 실제 PostgreSQL 저장소 통합 검증
+TEST_DATABASE_URL="$DATABASE_URL" \
+  python -m pytest -m postgres tests/integration -v
 ```
 
-### 10-5. 접속 주소
+### 10-6. 접속 주소
 
 기본 실행 주소:
 
@@ -399,6 +422,7 @@ http://127.0.0.1:8000/docs
 | 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 통합 설계, 시나리오별 구현 요약, 테스트 결과 |
 | 🎓 [Professor LangGraph README](services/flow/professor/README.md) | 교수님 카테고리 LangGraph 통합 설계, 면담 예약/과제 문의/결석 사유 전달 구현 요약, 테스트 결과 |
 | 📚 [학습 가이드](docs/learning-guide.md) | 기술 선택과 구현 원칙을 질문·답 형식으로 설명 |
+| 🗄 [음성 기준선 PostgreSQL 설계](docs/architecture/voice_baseline_postgresql.md) | 테이블, 행 잠금, 트랜잭션, JSON 이관 절차와 용어 설명 |
 
 ---
 
@@ -415,7 +439,8 @@ http://127.0.0.1:8000/docs
 | 추천 답변 | 현재 상태에 맞는 recommendedReplies 생성 |
 | 클라이언트 상태 유지 | 버전과 시나리오가 검증되는 scenarioState를 모바일이 보관·재전송 |
 | 운영 경계 | 요청 ID, readiness 구성요소, 통일된 오류 envelope 제공 |
-| 테스트 검증 | 오프라인 회귀 테스트 309개 통과, 실모델 통합 테스트 7개 분리 |
+| 음성 데이터 영속성 | PostgreSQL 트랜잭션으로 확정 기준선과 진행 중 캘리브레이션 샘플 보존 |
+| 테스트 검증 | 오프라인 회귀 테스트 317개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 7개 분리 |
 
 <table>
   <tr>
