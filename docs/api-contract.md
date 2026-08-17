@@ -1,6 +1,19 @@
 # API Contract
 
-이 문서는 Flutter 앱과 MaeumCall AI Server 2.1 사이의 통화 상태 계약을 정의한다. 필드가 추가되거나 잘못된 타입이 전달되면 서버는 이를 무시하지 않고 `422 REQUEST_VALIDATION_FAILED`로 거부한다.
+이 문서는 Flutter 앱과 MaeumCall AI Server 2.2 사이의 통화 상태 계약을 정의한다. 필드가 추가되거나 잘못된 타입이 전달되면 서버는 이를 무시하지 않고 `422 REQUEST_VALIDATION_FAILED`로 거부한다.
+
+## POST `/call/setup`
+
+모바일은 대화를 시작하기 전에 등록된 시나리오와 통화 방향을 확인한다. 요청에는 `contract_version: 1`, `category`, `title`만 보낸다. 서버는 중앙 LangGraph 레지스트리에서 조합을 한 번 조회하고 다음 값을 반환한다.
+
+- `contract_version`: 모바일이 해석할 수 있는 통화 준비 스키마 버전
+- `scenario_key`: 서버가 정규화하고 확정한 시나리오 식별 키
+- `direction`: `incoming` 또는 `outgoing`
+- `who_starts`: 첫 발화 주체
+- `delay_ms`: 연결 연출 시간
+- `opening`: 첫 에이전트 발화
+
+미등록 시나리오는 `UNSUPPORTED_SCENARIO`, 지원하지 않는 버전은 `CALL_SETUP_VERSION_UNSUPPORTED`로 거부한다. 모바일은 누락 필드에 빈 문자열이나 0을 넣지 않고 응답 전체를 계약 오류로 처리한다.
 
 ## POST `/auth/kakao/exchange`
 
