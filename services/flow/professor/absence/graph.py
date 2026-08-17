@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from langgraph.graph import StateGraph, START, END
+from core.observability import add_observed_node
 
 from services.flow.professor.absence.state import ProfessorAbsenceState
 from services.flow.professor.absence.nodes import (
@@ -14,10 +15,21 @@ from services.flow.professor.absence.nodes import (
 def build_professor_absence_graph():
     builder = StateGraph(ProfessorAbsenceState)
 
-    builder.add_node("extract_info", extract_professor_absence_info_node)
-    builder.add_node("decide_state", decide_professor_absence_state_node)
-    builder.add_node("generate_response", generate_professor_absence_response_node)
-    builder.add_node("attach_replies", attach_professor_absence_recommended_replies_node)
+    graph_name = "professor_absence"
+    add_observed_node(builder, graph_name, "extract_info", extract_professor_absence_info_node)
+    add_observed_node(builder, graph_name, "decide_state", decide_professor_absence_state_node)
+    add_observed_node(
+        builder,
+        graph_name,
+        "generate_response",
+        generate_professor_absence_response_node,
+    )
+    add_observed_node(
+        builder,
+        graph_name,
+        "attach_replies",
+        attach_professor_absence_recommended_replies_node,
+    )
 
     builder.add_edge(START, "extract_info")
     builder.add_edge("extract_info", "decide_state")

@@ -50,6 +50,7 @@ def analyze_hospital_reservation_user_message(
         messages,
         completion=complete_hf_json,
         validator=_normalize_hospital_analysis_result,
+        operation="hospital_extraction",
     )
 
 

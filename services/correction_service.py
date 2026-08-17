@@ -75,6 +75,7 @@ def _rewrite_message(text: str, category: str) -> Dict[str, Any]:
         _build_rewrite_messages(text, category),
         completion=complete_json_messages,
         validator=_validate_rewrite_result,
+        operation="message_correction",
     )
 
 

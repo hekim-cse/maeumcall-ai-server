@@ -9,9 +9,11 @@ import uuid
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from prometheus_client import CONTENT_TYPE_LATEST
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.responses import Response
 
 from core.config import (
     BASELINE_ID_HMAC_SECRET,
@@ -20,14 +22,15 @@ from core.config import (
     OPENAI_API_KEY,
 )
 from core.database import database_is_ready, dispose_engine
+from core.observability import record_contract_failure, render_metrics
+from llm.errors import AIServiceError
 from routes.chat_routes import router as chat_router
 from routes.suggest_routes import router as suggest_router
 from routes.voice_routes import router as voice_router
 from routes.wordfreq_router import router as wordfreq_router
 from server.api_call import router as call_router
-from llm.errors import AIServiceError
-from services.flow.common.state_contract import ScenarioStateContractError
 from services.baseline_store import BaselineStoreError
+from services.flow.common.state_contract import ScenarioStateContractError
 
 logger = logging.getLogger("maeumcall.http")
 
@@ -120,6 +123,8 @@ async def handle_http_error(_: Request, exc: StarletteHTTPException):
     else:
         code = "HTTP_ERROR"
         message = str(exc.detail)
+    if 400 <= exc.status_code < 500:
+        record_contract_failure("http_request", code)
     return JSONResponse(
         status_code=exc.status_code,
         content={"error": {"code": code, "message": message}},
@@ -129,6 +134,7 @@ async def handle_http_error(_: Request, exc: StarletteHTTPException):
 
 @app.exception_handler(RequestValidationError)
 async def handle_request_validation_error(_: Request, exc: RequestValidationError):
+    record_contract_failure("request_body", "REQUEST_VALIDATION_FAILED")
     details = [
         {
             "location": [str(part) for part in error["loc"]],
@@ -148,15 +154,22 @@ async def handle_request_validation_error(_: Request, exc: RequestValidationErro
         },
     )
 
+
 app.include_router(chat_router)
 app.include_router(suggest_router)
 app.include_router(voice_router)
 app.include_router(wordfreq_router)
 app.include_router(call_router)
 
+
 @app.get("/health")
 def health():
     return {"ok": True}
+
+
+@app.get("/metrics", include_in_schema=False)
+def metrics():
+    return Response(content=render_metrics(), media_type=CONTENT_TYPE_LATEST)
 
 
 @app.get("/health/ready")
@@ -178,6 +191,7 @@ async def readiness():
             "components": components,
         },
     )
+
 
 @app.get("/")
 def root():

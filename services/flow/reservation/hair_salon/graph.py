@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from langgraph.graph import StateGraph, START, END
+from core.observability import add_observed_node
 
 from services.flow.reservation.hair_salon.state import HairSalonReservationState
 from services.flow.reservation.hair_salon.nodes import (
@@ -25,11 +26,21 @@ def route_after_hair_salon_decide(state: HairSalonReservationState) -> str:
 def build_hair_salon_reservation_graph():
     builder = StateGraph(HairSalonReservationState)
 
-    builder.add_node("extract_info", extract_hair_salon_info_node)
-    builder.add_node("decide_state", decide_hair_salon_state_node)
-    builder.add_node("check_availability", check_hair_salon_availability_node)
-    builder.add_node("generate_response", generate_hair_salon_response_node)
-    builder.add_node("attach_replies", attach_hair_salon_recommended_replies_node)
+    graph_name = "hair_salon_reservation"
+    add_observed_node(builder, graph_name, "extract_info", extract_hair_salon_info_node)
+    add_observed_node(builder, graph_name, "decide_state", decide_hair_salon_state_node)
+    add_observed_node(
+        builder, graph_name, "check_availability", check_hair_salon_availability_node
+    )
+    add_observed_node(
+        builder, graph_name, "generate_response", generate_hair_salon_response_node
+    )
+    add_observed_node(
+        builder,
+        graph_name,
+        "attach_replies",
+        attach_hair_salon_recommended_replies_node,
+    )
 
     builder.add_edge(START, "extract_info")
     builder.add_edge("extract_info", "decide_state")

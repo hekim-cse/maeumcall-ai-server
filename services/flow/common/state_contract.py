@@ -5,6 +5,7 @@ from typing import AbstractSet, Any, Callable, Dict, FrozenSet, Mapping, Protoco
 
 from schemas.chat_models import ChatRequest, ChatResponse
 from services.flow.common.scenario_keys import canonicalize_scenario_label
+from core.observability import record_contract_failure
 
 
 SCENARIO_STATE_VERSION = 1
@@ -13,6 +14,7 @@ SCENARIO_STATE_VERSION = 1
 class ScenarioStateContractError(ValueError):
     def __init__(self, code: str, public_message: str, *, status_code: int = 422):
         super().__init__(public_message)
+        record_contract_failure("scenario_state", code)
         self.code = code
         self.public_message = public_message
         self.status_code = status_code

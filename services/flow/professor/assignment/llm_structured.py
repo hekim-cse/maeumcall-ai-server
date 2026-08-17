@@ -50,6 +50,7 @@ def analyze_professor_assignment_user_message(
         ],
         completion=complete_hf_json,
         validator=_normalize_assignment_analysis_result,
+        operation="professor_assignment_extraction",
     )
 
 

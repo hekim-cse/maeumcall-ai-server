@@ -80,6 +80,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | 📞 통화 종료 제어 | shouldEndCall 값으로 종료 흐름 관리 |
 | 🔐 기준선 식별자 보호 | 실제 사용자 ID 대신 비밀키 기반 HMAC 식별자로 음성 기준선 저장 |
 | 🗄 트랜잭션 기준선 저장 | PostgreSQL 행 잠금과 트랜잭션으로 캘리브레이션 샘플·확정 기준선을 영속화 |
+| 📈 LangGraph 관측성 | 노드별 시도·재시도·성공/실패·latency와 계약 실패를 Prometheus 지표로 노출 |
 
 ---
 
@@ -105,6 +106,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | PostgreSQL 18 | 다중 프로세스에서도 사용자별 음성 기준선과 캘리브레이션 샘플을 트랜잭션으로 보존하기 위해 사용했습니다. |
 | SQLAlchemy 2 + asyncpg | FastAPI 요청마다 독립 비동기 세션을 사용하고 연결 풀과 명시적 트랜잭션 경계를 관리하기 위해 사용했습니다. |
 | Alembic | 운영 데이터베이스의 테이블과 제약조건 변경 이력을 코드와 함께 관리하기 위해 사용했습니다. |
+| Prometheus Python Client | LangGraph 노드 지연 시간 분포와 재시도·계약 실패 횟수를 낮은 카디널리티 지표로 수집하기 위해 사용했습니다. |
 
 <table>
   <tr>
@@ -423,6 +425,7 @@ http://127.0.0.1:8000/docs
 | 🎓 [Professor LangGraph README](services/flow/professor/README.md) | 교수님 카테고리 LangGraph 통합 설계, 면담 예약/과제 문의/결석 사유 전달 구현 요약, 테스트 결과 |
 | 📚 [학습 가이드](docs/learning-guide.md) | 기술 선택과 구현 원칙을 질문·답 형식으로 설명 |
 | 🗄 [음성 기준선 PostgreSQL 설계](docs/architecture/voice_baseline_postgresql.md) | 테이블, 행 잠금, 트랜잭션, JSON 이관 절차와 용어 설명 |
+| 📈 [LangGraph 관측성 설계](docs/architecture/langgraph_observability.md) | 노드 latency, 재시도, 계약 실패 지표, PromQL과 용어 설명 |
 
 ---
 
@@ -440,7 +443,8 @@ http://127.0.0.1:8000/docs
 | 클라이언트 상태 유지 | 버전과 시나리오가 검증되는 scenarioState를 모바일이 보관·재전송 |
 | 운영 경계 | 요청 ID, readiness 구성요소, 통일된 오류 envelope 제공 |
 | 음성 데이터 영속성 | PostgreSQL 트랜잭션으로 확정 기준선과 진행 중 캘리브레이션 샘플 보존 |
-| 테스트 검증 | 오프라인 회귀 테스트 317개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 7개 분리 |
+| 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패 Prometheus 지표 제공 |
+| 테스트 검증 | 오프라인 회귀 테스트 322개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 7개 분리 |
 
 <table>
   <tr>

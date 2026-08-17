@@ -102,6 +102,9 @@
 - 음성 분석: `POST /voice/analyze`
 - 음성 기준선 조회: `GET /voice/baseline`
 - 캘리브레이션 확정: `POST /voice/calibrate/finalize`
+- 운영 지표: `GET /metrics` (Prometheus text format, OpenAPI 문서에서는 숨김)
+
+`/metrics`는 LangGraph 노드의 시도·재시도·실행 시간, 구조화 출력 재생성, 계약 실패를 집계한다. 사용자 ID, HMAC 키, 요청 ID, 발화 내용은 지표 라벨로 노출하지 않는다.
 
 이전 `/suggest`, `/improve`, `/analyze` 별칭은 제공하지 않는다. 클라이언트와 서버의 경로 불일치를 404로 드러내 배포 계약 오류를 조기에 발견한다.
 

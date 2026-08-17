@@ -77,6 +77,7 @@ def suggest(req: SuggestRequest):
             timeout_s=OPENAI_TIMEOUT,
         ),
         validator=_validate_suggestions,
+        operation="recommended_reply_generation",
     )
     return SuggestResponse(suggestions=items)
 

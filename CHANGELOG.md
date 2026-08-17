@@ -10,6 +10,7 @@
 - 요청별 `X-Request-ID`와 모델·음성 보안·ffmpeg를 확인하는 `/health/ready`
 - 상태 변조, 종료 후 요청, 단어 빈도 입력, 정확한 수신 통화 정책 회귀 테스트
 - PostgreSQL 18 개발 구성, SQLAlchemy 비동기 저장소, Alembic 초기 스키마와 JSON 이관 명령
+- Prometheus 형식의 LangGraph 노드 지연·시도·재시도·계약 실패 지표와 `/metrics`
 
 ### Changed
 
@@ -19,6 +20,7 @@
 - Flutter가 완료된 이전 턴과 서버 상태를 보존하고 서버 종료 신호를 실행하도록 연동
 - 재캘리브레이션 시작 시 확정된 음성 기준선은 유지하고 진행 중 샘플만 초기화
 - 확정 기준선 JSON과 프로세스 메모리 샘플을 사용자별 행 잠금 기반 PostgreSQL 트랜잭션으로 전환
+- 모든 상세·등록형 LangGraph 노드를 공통 계측 경계로 연결하고 구조화 출력 재시도를 작업별로 분리
 
 ### Removed
 

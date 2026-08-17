@@ -46,6 +46,7 @@ def analyze_hair_salon_reservation_user_message(
         ],
         completion=complete_hf_json,
         validator=_normalize_hair_salon_analysis_result,
+        operation="hair_salon_extraction",
     )
 
 

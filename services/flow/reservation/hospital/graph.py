@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from langgraph.graph import StateGraph, START, END
+from core.observability import add_observed_node
 from services.flow.reservation.hospital.state import HospitalReservationState
 from services.flow.reservation.hospital.policy import route_after_decide
 from services.flow.reservation.hospital.response_policy import build_hospital_response
@@ -24,12 +25,18 @@ __all__ = [
 def build_hospital_reservation_graph():
     builder = StateGraph(HospitalReservationState)
 
-    builder.add_node("extract_info", extract_info_node)
-    builder.add_node("parse_user_action", parse_user_action_node)
-    builder.add_node("decide_next_state", decide_next_state_node)
-    builder.add_node("check_availability", check_availability_node)
-    builder.add_node("generate_ai_message", generate_ai_message_node)
-    builder.add_node("attach_recommended_replies", attach_recommended_replies_node)
+    graph_name = "hospital_reservation"
+    add_observed_node(builder, graph_name, "extract_info", extract_info_node)
+    add_observed_node(builder, graph_name, "parse_user_action", parse_user_action_node)
+    add_observed_node(builder, graph_name, "decide_next_state", decide_next_state_node)
+    add_observed_node(builder, graph_name, "check_availability", check_availability_node)
+    add_observed_node(builder, graph_name, "generate_ai_message", generate_ai_message_node)
+    add_observed_node(
+        builder,
+        graph_name,
+        "attach_recommended_replies",
+        attach_recommended_replies_node,
+    )
 
     builder.add_edge(START, "extract_info")
     builder.add_edge("extract_info", "parse_user_action")

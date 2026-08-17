@@ -52,6 +52,7 @@ def analyze_professor_absence_user_message(
         ],
         completion=complete_hf_json,
         validator=_normalize_absence_analysis_result,
+        operation="professor_absence_extraction",
     )
 
 

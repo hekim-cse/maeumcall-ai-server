@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, List
 
 from langgraph.graph import END, START, StateGraph
+from core.observability import add_observed_node
 
 from llm.client import complete_json_messages
 from llm.prompt_builder import generate_prompts
@@ -77,6 +78,7 @@ def generate_turn_node(state: ScenarioConversationState) -> Dict[str, Any]:
         messages,
         completion=complete_json_messages,
         validator=_validate_turn_result,
+        operation="registered_scenario_turn",
     )
     should_end = result["action"] == "end"
     return {
@@ -99,9 +101,10 @@ def attach_replies_node(state: ScenarioConversationState) -> Dict[str, Any]:
 
 def build_scenario_conversation_graph():
     builder = StateGraph(ScenarioConversationState)
-    builder.add_node("prepare_turn", prepare_turn_node)
-    builder.add_node("generate_turn", generate_turn_node)
-    builder.add_node("attach_replies", attach_replies_node)
+    graph_name = "registered_scenario"
+    add_observed_node(builder, graph_name, "prepare_turn", prepare_turn_node)
+    add_observed_node(builder, graph_name, "generate_turn", generate_turn_node)
+    add_observed_node(builder, graph_name, "attach_replies", attach_replies_node)
     builder.add_edge(START, "prepare_turn")
     builder.add_edge("prepare_turn", "generate_turn")
     builder.add_edge("generate_turn", "attach_replies")

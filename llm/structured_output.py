@@ -5,6 +5,7 @@ import logging
 from typing import Any, Callable, Dict, List, Optional, TypeVar
 
 from llm.errors import AIResponseValidationError
+from core.observability import record_contract_failure, record_structured_output_retry
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,7 @@ def complete_validated_json(
     *,
     completion: Completion,
     validator: Validator[ValidatedOutput],
+    operation: str,
     max_attempts: int = 2,
 ) -> ValidatedOutput:
     """Generate one strict JSON object and validate its domain contract.
@@ -62,6 +64,8 @@ def complete_validated_json(
             return validator(parsed)
         except (json.JSONDecodeError, TypeError, ValueError) as exc:
             last_error = exc
+            failure_reason = type(exc).__name__
+            record_contract_failure("structured_output", failure_reason)
             logger.warning(
                 "Structured response validation failed (attempt %d/%d): %s",
                 attempt,
@@ -69,6 +73,7 @@ def complete_validated_json(
                 type(exc).__name__,
             )
             if attempt < max_attempts:
+                record_structured_output_retry(operation, failure_reason)
                 retry_messages.extend(
                     [
                         {"role": "assistant", "content": raw},
@@ -81,5 +86,5 @@ def complete_validated_json(
                         },
                     ]
                 )
-
+    record_contract_failure("structured_output", "RETRIES_EXHAUSTED")
     raise AIResponseValidationError("Structured response failed validation") from last_error

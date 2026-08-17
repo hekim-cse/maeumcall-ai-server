@@ -56,6 +56,7 @@ def analyze_study_room_reservation_user_message(
         ],
         completion=complete_hf_json,
         validator=_normalize_study_room_analysis_result,
+        operation="study_room_extraction",
     )
 
 

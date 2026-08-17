@@ -52,6 +52,7 @@ def analyze_professor_appointment_user_message(
         ],
         completion=complete_hf_json,
         validator=_normalize_appointment_analysis_result,
+        operation="professor_appointment_extraction",
     )
 
 
