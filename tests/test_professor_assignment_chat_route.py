@@ -160,7 +160,7 @@ def test_chat_route_professor_assignment_answering_moves_to_closing(monkeypatch)
         scenarioState={
             "intent": "assignment_inquiry",
             "scenario_key": "교수님:과제 문의",
-            "state_version": 1,
+            "state_version": 2,
             "professor_name": "교수님",
             "assignment_topic": "제출 형식",
             "question": "과제 제출 형식을 여쭤보고 싶습니다.",
@@ -189,7 +189,7 @@ def test_chat_route_professor_assignment_closing_moves_to_end(monkeypatch):
         scenarioState={
             "intent": "assignment_inquiry",
             "scenario_key": "교수님:과제 문의",
-            "state_version": 1,
+            "state_version": 2,
             "professor_name": "교수님",
             "conversation_state": "closing",
         },

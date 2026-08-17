@@ -9,12 +9,12 @@
   → Kanana 구조화 출력
   → 예약 JSON 계약 검증
   → 필수 정보 수집
-  → 가능 여부 시뮬레이션
+  → 버전 지정 훈련 일정 조회
   → 예약 상태 전이
   → 도메인 응답 정책
 ```
 
-모델은 날짜, 시간, 인원, 서비스 종류와 `user_action`을 구조화합니다. 서버는 검증된 값만 상태에 병합하며, 예약 가능 여부와 확정 결과는 모델이 아니라 서버 로직이 결정합니다.
+모델은 날짜, 시간, 인원, 서비스 종류와 `user_action`을 구조화합니다. 서버는 검증된 값만 상태에 병합합니다. 예약 가능 여부는 `data/reservation_availability_catalog.json`의 명시된 요청 시간과 슬롯만 사용하며, 목록에 없는 시간을 예약 가능으로 추측하지 않습니다.
 
 ## 시나리오
 
@@ -45,11 +45,13 @@ collecting_reservation_info
 
 - LLM: 사용자 발화를 명시된 JSON 스키마로 변환
 - LangGraph: 현재 상태에서 허용된 action과 다음 상태 결정
-- availability: 예약 가능 시간과 대안 시간 계산
+- availability provider: 버전 지정 일정표에서 예약 가능 시간과 대안 시간 조회
 - response policy: 서버가 확정한 사실을 사용자 문장으로 표현
 - response adapter: 모바일이 이어서 보낼 `scenarioState` 구성
 
 예약 불가 상태에서 대안 시간이 없으면 다른 날짜나 시간을 요청하는 승인 문장을 사용합니다. 존재하지 않는 대안 시간이나 예약 결과를 모델이 생성할 수 없습니다.
+
+클라이언트가 보낸 `scenarioState`에는 가용성 공급자 원본 결과를 포함하지 않습니다. 모바일은 서버가 확정해 반환한 상태만 보관하며, 일정표 경로는 `RESERVATION_AVAILABILITY_CATALOG_PATH`로 운영 환경에서 교체할 수 있습니다. 일정표가 없거나 스키마가 올바르지 않으면 성공 결과를 만들지 않고 `AVAILABILITY_PROVIDER_CONFIGURATION_ERROR`로 실패합니다.
 
 ## 테스트 기준
 

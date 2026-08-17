@@ -24,8 +24,6 @@ class StudyRoomReservationState(TypedDict, total=False):
     alternative_times: List[str]
     availability_message_hint: Optional[str]
     reservation_confirmed: Optional[bool]
-    simulation_result: Optional[Dict[str, Any]]
-
     ai_message: Optional[str]
     last_ai_message: Optional[str]
 

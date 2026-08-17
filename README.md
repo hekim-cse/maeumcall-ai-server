@@ -218,7 +218,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
       "shouldEndCall": false,
       "scenarioState": {
         "scenario_key": "예약:식당 예약",
-        "state_version": 1,
+        "state_version": 2,
         "intent": "reservation",
         "date": "오늘",
         "time": "저녁 7시",
@@ -278,7 +278,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 
 | 구분 | 결과 |
 |---|---|
-| 오프라인 단위·그래프·라우트 테스트 | ✅ 309개 통과 |
+| 오프라인 단위·그래프·라우트 테스트 | ✅ 324개 통과 |
 | 실모델 통합 테스트 | 7개, 수동 실행으로 분리 |
 | 실패 테스트 | 없음 |
 | 기본 실행 네트워크 의존성 | 없음 |
@@ -444,7 +444,7 @@ http://127.0.0.1:8000/docs
 | 운영 경계 | 요청 ID, readiness 구성요소, 통일된 오류 envelope 제공 |
 | 음성 데이터 영속성 | PostgreSQL 트랜잭션으로 확정 기준선과 진행 중 캘리브레이션 샘플 보존 |
 | 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패 Prometheus 지표 제공 |
-| 테스트 검증 | 오프라인 회귀 테스트 322개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 7개 분리 |
+| 테스트 검증 | 오프라인 회귀 테스트 324개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 7개 분리 |
 
 <table>
   <tr>

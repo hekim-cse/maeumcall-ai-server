@@ -31,6 +31,10 @@ from routes.wordfreq_router import router as wordfreq_router
 from server.api_call import router as call_router
 from services.baseline_store import BaselineStoreError
 from services.flow.common.state_contract import ScenarioStateContractError
+from services.flow.reservation.common.availability_provider import (
+    AvailabilityProviderConfigurationError,
+    get_availability_provider,
+)
 
 logger = logging.getLogger("maeumcall.http")
 
@@ -174,6 +178,12 @@ def metrics():
 
 @app.get("/health/ready")
 async def readiness():
+    try:
+        get_availability_provider()
+        reservation_availability_ready = True
+    except AvailabilityProviderConfigurationError:
+        reservation_availability_ready = False
+
     components = {
         "openai": {"ready": bool(OPENAI_API_KEY)},
         "local_nlu": {"ready": HF_LOCAL_MODEL_ENABLED},
@@ -182,6 +192,7 @@ async def readiness():
         },
         "postgresql": {"ready": await database_is_ready()},
         "ffmpeg": {"ready": shutil.which("ffmpeg") is not None},
+        "reservation_availability": {"ready": reservation_availability_ready},
     }
     ready = all(component["ready"] for component in components.values())
     return JSONResponse(

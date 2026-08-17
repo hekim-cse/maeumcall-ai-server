@@ -16,10 +16,10 @@ AVAILABILITY_FIELDS = {
 def validate_availability_result(value: Any) -> Dict[str, Any]:
     """Validate an externally supplied reservation simulation outcome."""
     if not isinstance(value, dict):
-        raise ScenarioStateValidationError("simulation_result must be an object")
+        raise ScenarioStateValidationError("availability result must be an object")
     if set(value) != AVAILABILITY_FIELDS:
         raise ScenarioStateValidationError(
-            "simulation_result must contain the exact availability fields"
+            "availability result must contain the exact availability fields"
         )
 
     status = value["availability_status"]

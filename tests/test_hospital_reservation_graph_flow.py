@@ -112,6 +112,12 @@ def _patch_hospital_analysis(monkeypatch):
             elif "다른 시간" in user_message or "가능할까요" in user_message:
                 user_action = "ask_other_time"
                 selected_time = None
+            elif "오후 3시" in user_message:
+                user_action = "select_alternative_time"
+                selected_time = "오후 3시"
+            elif "오전 10시" in user_message:
+                user_action = "select_alternative_time"
+                selected_time = "오전 10시"
             elif "오후 4시" in user_message:
                 user_action = "select_alternative_time"
                 selected_time = "오후 4시"
@@ -132,7 +138,13 @@ def _patch_hospital_analysis(monkeypatch):
             }
 
         if conversation_state == "suggest_alternative":
-            if "오후 4시" in user_message:
+            if "오후 3시" in user_message:
+                user_action = "select_alternative_time"
+                selected_time = "오후 3시"
+            elif "오전 10시" in user_message:
+                user_action = "select_alternative_time"
+                selected_time = "오전 10시"
+            elif "오후 4시" in user_message:
                 user_action = "select_alternative_time"
                 selected_time = "오후 4시"
             elif "오후 5시" in user_message:
@@ -310,14 +322,8 @@ def test_unavailable_reservation_alternative_time_flow(monkeypatch):
         "intent": "reservation",
         "department": "내과",
         "date": "내일",
-        "time": "오후",
+        "time": "오후 4시",
         "conversation_state": "checking_availability",
-        "simulation_result": {
-            "availability_status": "unavailable",
-            "availability_reason": "requested_time_full",
-            "available_time": None,
-            "alternative_times": ["오후 4시", "오후 5시"],
-        },
         "history": [],
     }
 
@@ -331,7 +337,7 @@ def test_unavailable_reservation_alternative_time_flow(monkeypatch):
 
     assert state["conversation_state"] == "reservation_unavailable"
     assert state["availability_status"] == "unavailable"
-    assert state["alternative_times"] == ["오후 4시", "오후 5시"]
+    assert state["alternative_times"] == ["오전 10시", "오후 3시"]
 
     state = _invoke(
         {
@@ -350,7 +356,7 @@ def test_unavailable_reservation_alternative_time_flow(monkeypatch):
     state = _invoke(
         {
             **state,
-            "user_message": "오후 4시로 하겠습니다.",
+            "user_message": "오후 3시로 하겠습니다.",
             "history": [
                 {"role": "assistant", "content": state["ai_message"]},
             ],
@@ -360,7 +366,7 @@ def test_unavailable_reservation_alternative_time_flow(monkeypatch):
 
     assert state["conversation_state"] == "reservation_confirmed"
     assert state["reservation_confirmed"] is True
-    assert state["selected_time"] == "오후 4시"
+    assert state["selected_time"] == "오후 3시"
 
     state = _invoke(
         {
@@ -644,12 +650,6 @@ def test_reservation_unavailable_change_date_clears_lookup_fields(monkeypatch):
             "availability_message_hint": "내일 오후에는 예약이 모두 차 있습니다. 대신 오후 4시 또는 오후 5시 시간대는 가능합니다.",
             "selected_time": "오후 4시",
             "reservation_confirmed": True,
-            "simulation_result": {
-                "availability_status": "unavailable",
-                "availability_reason": "requested_time_full",
-                "available_time": None,
-                "alternative_times": ["오후 4시", "오후 5시"],
-            },
             "history": [],
             "should_end_call": False,
         }
@@ -663,7 +663,6 @@ def test_reservation_unavailable_change_date_clears_lookup_fields(monkeypatch):
     assert result.get("availability_message_hint") is None
     assert result.get("selected_time") is None
     assert result.get("reservation_confirmed") is None
-    assert result.get("simulation_result") is None
     assert result.get("should_end_call") is False
 
 
@@ -690,12 +689,6 @@ def test_reservation_unavailable_change_date_clears_time_too(monkeypatch):
             "availability_message_hint": "내일 오후에는 예약이 모두 차 있습니다.",
             "selected_time": "오후 4시",
             "reservation_confirmed": True,
-            "simulation_result": {
-                "availability_status": "unavailable",
-                "availability_reason": "requested_time_full",
-                "available_time": None,
-                "alternative_times": ["오후 4시", "오후 5시"],
-            },
             "history": [],
             "should_end_call": False,
         }
@@ -905,12 +898,6 @@ def test_reservation_available_uses_domain_response_policy(monkeypatch):
             "department": "내과",
             "date": "내일",
             "time": "오후",
-            "simulation_result": {
-                "availability_status": "available",
-                "availability_reason": None,
-                "available_time": "오후 3시",
-                "alternative_times": [],
-            },
             "history": [],
             "should_end_call": False,
         }
@@ -941,12 +928,6 @@ def test_reservation_available_policy_keeps_recommended_replies(monkeypatch):
             "department": "피부과",
             "date": "모레",
             "time": "오전",
-            "simulation_result": {
-                "availability_status": "available",
-                "availability_reason": None,
-                "available_time": "오전 10시",
-                "alternative_times": [],
-            },
             "history": [],
             "should_end_call": False,
         }

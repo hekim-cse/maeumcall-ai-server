@@ -71,7 +71,7 @@
   "shouldEndCall": false,
   "scenarioState": {
     "scenario_key": "예약:병원 예약",
-    "state_version": 1,
+    "state_version": 2,
     "intent": "reservation",
     "department": "내과",
     "date": "내일",
@@ -136,6 +136,7 @@
 | 502 | `AI_PROVIDER_EXECUTION_FAILED` | 모델 호출 실행 실패 |
 | 502 | `AI_RESPONSE_VALIDATION_FAILED` | 제한 재요청 후에도 출력 계약 위반 |
 | 503 | `AI_PROVIDER_UNAVAILABLE` | 모델 제공자를 사용할 수 없음 |
+| 500 | `AVAILABILITY_PROVIDER_CONFIGURATION_ERROR` | 예약 훈련 일정표 누락 또는 스키마 오류 |
 | 503 | `VOICE_BASELINE_SECURITY_NOT_CONFIGURED` | 음성 기준선 ID 보호 비밀값 미설정 |
 | 503 | `VOICE_BASELINE_DATABASE_NOT_CONFIGURED` | PostgreSQL 연결 설정 미완료 |
 | 500 | `VOICE_BASELINE_STORE_FAILED` | PostgreSQL 기준선 트랜잭션 또는 조회 실패 |

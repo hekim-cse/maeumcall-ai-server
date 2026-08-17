@@ -1,60 +1,49 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
-from services.flow.reservation.common.availability_contract import (
-    validate_availability_result,
+from services.flow.reservation.common.availability_provider import (
+    AvailabilityProvider,
+    AvailabilityQuery,
+    get_availability_provider,
 )
 
 
-HOSPITAL_TRAINING_TIME_SLOTS = {
-    "오전": "오전 10시",
-    "오후": "오후 3시",
-}
-
-
-def resolve_hospital_availability(state: Dict[str, Any]) -> Dict[str, Any]:
+def resolve_hospital_availability(
+    state: Dict[str, object],
+    *,
+    provider: Optional[AvailabilityProvider] = None,
+) -> Dict[str, object]:
     """
-    검증된 외부 결과 또는 병원 통화 훈련 시나리오 정책으로 결과를 결정한다.
+    서버가 소유한 버전 지정 훈련 일정표로 예약 가능 여부를 결정한다.
     """
 
     department = state.get("department") or "진료과"
     date = state.get("date") or "원하시는 날짜"
     time = state.get("time") or "원하시는 시간대"
 
-    simulation_result = state.get("simulation_result")
-
-    if simulation_result is not None:
-        decision = validate_availability_result(simulation_result)
-        status = decision["availability_status"]
-        reason = decision["availability_reason"]
-        available_time = decision["available_time"]
-        alternative_times = decision["alternative_times"]
-
-        return {
-            "availability_status": status,
-            "availability_reason": reason,
-            "available_time": available_time,
-            "alternative_times": alternative_times,
-            "availability_message_hint": build_availability_message_hint(
-                department=department,
-                date=date,
-                time=time,
-                status=status,
-                reason=reason,
-                available_time=available_time,
-                alternative_times=alternative_times,
-            ),
-        }
-
-    available_time = HOSPITAL_TRAINING_TIME_SLOTS.get(time, time)
+    decision = (provider or get_availability_provider()).resolve(
+        AvailabilityQuery(
+            scenario_key="hospital_reservation",
+            requested_time=str(time),
+        )
+    )
+    status = str(decision["availability_status"])
+    reason = decision["availability_reason"]
+    available_time = decision["available_time"]
+    alternative_times = list(decision["alternative_times"])
 
     return {
-        "availability_status": "available",
-        "availability_reason": None,
-        "available_time": available_time,
-        "alternative_times": [],
-        "availability_message_hint": f"{date} {available_time}에 {department} 진료 예약이 가능합니다.",
+        **decision,
+        "availability_message_hint": build_availability_message_hint(
+            department=str(department),
+            date=str(date),
+            time=str(time),
+            status=status,
+            reason=str(reason) if reason is not None else None,
+            available_time=str(available_time) if available_time is not None else None,
+            alternative_times=[str(item) for item in alternative_times],
+        ),
     }
 
 

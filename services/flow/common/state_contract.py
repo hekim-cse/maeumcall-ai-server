@@ -8,7 +8,7 @@ from services.flow.common.scenario_keys import canonicalize_scenario_label
 from core.observability import record_contract_failure
 
 
-SCENARIO_STATE_VERSION = 1
+SCENARIO_STATE_VERSION = 2
 
 
 class ScenarioStateContractError(ValueError):

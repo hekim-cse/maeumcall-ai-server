@@ -48,7 +48,7 @@ def test_scenario_graph_preserves_turn_count(monkeypatch):
         conversationState="active",
         scenarioState={
             "scenario_key": "친구:심심해서 거는 전화",
-            "state_version": 1,
+            "state_version": 2,
             "conversation_state": "active",
             "turn_count": 2,
         },

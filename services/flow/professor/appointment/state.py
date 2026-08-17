@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TypedDict, Optional, Dict, List, Any
+from typing import TypedDict, Optional, Dict, List
 
 
 class ProfessorAppointmentState(TypedDict, total=False):
@@ -24,5 +24,3 @@ class ProfessorAppointmentState(TypedDict, total=False):
 
     recommended_replies: List[str]
     should_end_call: bool
-
-    simulation_result: Optional[Dict[str, Any]]

@@ -2,6 +2,25 @@
 
 이 프로젝트의 주요 변경 사항을 기록합니다. 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 따르고 버전은 Semantic Versioning을 사용합니다.
 
+## [Unreleased]
+
+### Added
+
+- 예약 4종이 공유하는 버전 지정 가용성 일정표와 공급자 인터페이스
+- 일정표 누락·스키마 오류를 구분하는 `AVAILABILITY_PROVIDER_CONFIGURATION_ERROR`
+- 일정표 로드 가능 여부를 확인하는 `/health/ready` 구성 요소
+
+### Changed
+
+- 예약 가능 여부를 클라이언트 상태가 아니라 서버 소유 일정표에서만 조회
+- 목록에 없는 요청 시간을 예약 가능으로 추측하지 않고 대안 슬롯과 함께 예약 불가로 처리
+- 클라이언트 상태 허용 목록 변경에 맞춰 `scenarioState.state_version`을 2로 상향
+
+### Removed
+
+- 예약·교수님 상태 봉투에서 사용하지 않는 `simulation_result` 필드
+- 예약 시간이 고정 충돌 목록에 없으면 성공으로 처리하던 기본 분기
+
 ## [2.1.0] - 2026-08-17
 
 ### Added

@@ -48,7 +48,6 @@ def extract_info_node(state: HospitalReservationState) -> Dict:
         "alternative_times": state.get("alternative_times") or [],
         "availability_message_hint": state.get("availability_message_hint"),
         "reservation_confirmed": state.get("reservation_confirmed"),
-        "simulation_result": state.get("simulation_result"),
     }
 
 

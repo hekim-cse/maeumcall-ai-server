@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "scenarios": {
+    "hospital_reservation": {
+      "available_requests": {
+        "오전": "오전 10시",
+        "오전 10시": "오전 10시",
+        "오후": "오후 3시",
+        "오후 3시": "오후 3시"
+      }
+    },
+    "restaurant_reservation": {
+      "available_requests": {
+        "저녁 6시": "저녁 6시",
+        "오후 6시": "저녁 6시",
+        "6시": "저녁 6시",
+        "저녁 8시": "저녁 8시",
+        "오후 8시": "저녁 8시",
+        "8시": "저녁 8시"
+      }
+    },
+    "hair_salon_reservation": {
+      "available_requests": {
+        "오후 2시": "오후 2시",
+        "2시": "오후 2시",
+        "오후 4시": "오후 4시",
+        "4시": "오후 4시"
+      }
+    },
+    "study_room_reservation": {
+      "available_requests": {
+        "오후 1시": "오후 1시",
+        "1시": "오후 1시",
+        "오후 3시": "오후 3시",
+        "3시": "오후 3시"
+      }
+    }
+  }
+}

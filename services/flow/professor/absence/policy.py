@@ -44,5 +44,4 @@ def compact_professor_absence_state(result: Dict) -> Dict:
         "missing_fields": result.get("missing_fields") or [],
         "last_ai_message": result.get("ai_message"),
         "user_action": result.get("user_action"),
-        "simulation_result": result.get("simulation_result"),
     }

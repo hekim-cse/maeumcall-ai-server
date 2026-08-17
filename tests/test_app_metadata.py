@@ -39,6 +39,7 @@ def test_readiness_reports_each_runtime_dependency():
         "voice_baseline_security",
         "postgresql",
         "ffmpeg",
+        "reservation_availability",
     }
 
 

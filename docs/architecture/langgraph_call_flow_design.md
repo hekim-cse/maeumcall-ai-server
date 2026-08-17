@@ -59,7 +59,7 @@ versioned scenarioState + recommendedReplies + shouldEndCall
 ```json
 {
   "scenario_key": "예약:병원 예약",
-  "state_version": 1,
+  "state_version": 2,
   "conversation_state": "asking_time"
 }
 ```

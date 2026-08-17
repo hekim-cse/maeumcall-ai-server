@@ -59,5 +59,4 @@ def compact_study_room_state(result: Dict) -> Dict:
         "alternative_times": result.get("alternative_times") or [],
         "availability_message_hint": result.get("availability_message_hint"),
         "reservation_confirmed": result.get("reservation_confirmed"),
-        "simulation_result": result.get("simulation_result"),
     }

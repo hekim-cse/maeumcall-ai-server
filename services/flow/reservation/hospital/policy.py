@@ -25,7 +25,6 @@ def clear_reservation_lookup_fields() -> Dict[str, Any]:
         "availability_message_hint": None,
         "reservation_confirmed": None,
         "selected_time": None,
-        "simulation_result": None,
     }
 
 
