@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, UploadFile, File, Form, Query
+from fastapi import APIRouter, Depends, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from pathlib import Path
 from typing import Optional
@@ -12,6 +12,12 @@ import uuid
 import logging
 
 from core.config import AUDIO_UPLOAD_MAX_BYTES
+from core.auth import (
+    AuthenticatedUser,
+    AuthenticationError,
+    optional_authenticated_user,
+    require_authenticated_user,
+)
 from praat_voice_analysis import analyze_audio
 from services.analysis_service import (
     build_payload,
@@ -48,9 +54,11 @@ def _safe_unlink(path: Optional[str]) -> None:
 @router.post("/analyze")
 async def analyze_audio_endpoint(
     file: UploadFile = File(...),
-    user_id: Optional[str] = Form(None),
     mode: str = Form("normal"),       # "normal" | "calibrate"
     strategy: str = Form("simple"),  # "simple" | "welford"
+    authenticated_user: Optional[AuthenticatedUser] = Depends(
+        optional_authenticated_user
+    ),
 ):
     """
     업로드된 오디오를 분석하여 통일된 JSON 포맷으로 반환합니다.
@@ -63,6 +71,12 @@ async def analyze_audio_endpoint(
         return _voice_error(422, "VOICE_MODE_INVALID", "지원하지 않는 음성 분석 모드입니다.")
     if strategy not in {"welford", "simple"}:
         return _voice_error(422, "VOICE_STRATEGY_INVALID", "지원하지 않는 기준선 계산 방식입니다.")
+    if mode == "calibrate" and authenticated_user is None:
+        raise AuthenticationError(
+            "AUTHORIZATION_REQUIRED",
+            "음성 기준선 캘리브레이션에는 로그인이 필요합니다.",
+            status_code=401,
+        )
 
     content = await file.read(AUDIO_UPLOAD_MAX_BYTES + 1)
     if len(content) > AUDIO_UPLOAD_MAX_BYTES:
@@ -108,7 +122,11 @@ async def analyze_audio_endpoint(
             return _voice_error(502, "VOICE_ANALYSIS_INVALID", "음성 분석 결과가 계약과 일치하지 않습니다.")
 
         # 사용자 ID 정규화
-        uid = normalize_user_id(user_id) if user_id else None
+        uid = (
+            normalize_user_id(authenticated_user.uid)
+            if authenticated_user is not None
+            else None
+        )
         baseline = None
         if uid:
             if mode == "calibrate":
@@ -145,9 +163,11 @@ async def analyze_audio_endpoint(
 
 
 @router.get("/baseline")
-async def baseline_get(user_id: str = Query(...)):
+async def baseline_get(
+    authenticated_user: AuthenticatedUser = Depends(require_authenticated_user),
+):
     """기준선 조회"""
-    uid = normalize_user_id(user_id)
+    uid = normalize_user_id(authenticated_user.uid)
     res = await get_baseline(uid)
     if not res.get("ok"):
         return _voice_error(404, "VOICE_BASELINE_NOT_FOUND", "저장된 음성 기준선이 없습니다.")
@@ -155,28 +175,31 @@ async def baseline_get(user_id: str = Query(...)):
 
 
 @router.post("/calibrate/finalize")
-async def calibrate_finalize(user_id: str = Form(...)):
+async def calibrate_finalize(
+    authenticated_user: AuthenticatedUser = Depends(require_authenticated_user),
+):
     """샘플 모음을 평균내서 기존 값을 덮어쓰기"""
-    res = await finalize_calibration_simple(normalize_user_id(user_id))
+    res = await finalize_calibration_simple(normalize_user_id(authenticated_user.uid))
     if not res.get("ok"):
         return _voice_error(409, "VOICE_CALIBRATION_EMPTY", "확정할 캘리브레이션 샘플이 없습니다.")
     return JSONResponse(content=res)
 
 
 @router.post("/baseline/delete")
-async def api_delete_baseline(user_id: str = Form(None), q_user_id: str = Query(None)):
-    """user_id는 POST form 또는 GET query 중 하나로 받음"""
-    raw = user_id or q_user_id
-    if not raw:
-        return _voice_error(422, "VOICE_USER_ID_REQUIRED", "사용자 식별자가 필요합니다.")
-    uid = normalize_user_id(raw)
+async def api_delete_baseline(
+    authenticated_user: AuthenticatedUser = Depends(require_authenticated_user),
+):
+    """인증된 사용자의 확정 기준선과 진행 중인 샘플을 삭제한다."""
+    uid = normalize_user_id(authenticated_user.uid)
     return await delete_baseline(uid)
 
 
 @router.post("/calibrate/reset")
-async def calibrate_reset(user_id: str = Form(...)):
+async def calibrate_reset(
+    authenticated_user: AuthenticatedUser = Depends(require_authenticated_user),
+):
     """진행 중인 샘플만 비우고 확정된 기준선은 유지한다."""
-    uid = normalize_user_id(user_id)
+    uid = normalize_user_id(authenticated_user.uid)
     await clear_calib_cache(uid)
     return JSONResponse(content={"ok": True})
 
@@ -187,5 +210,5 @@ def voice_health():
 
 
 @router.post("/ping")
-async def voice_post_ping(user_id: Optional[str] = Form(None)):
-    return JSONResponse(content={"ok": True, "user_id": user_id or None})
+async def voice_post_ping():
+    return JSONResponse(content={"ok": True})

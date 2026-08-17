@@ -23,11 +23,13 @@ from core.config import (
 )
 from core.database import database_is_ready, dispose_engine
 from core.observability import record_contract_failure, render_metrics
+from core.auth import AuthenticationError, authentication_configuration_ready
 from llm.errors import AIServiceError
 from routes.chat_routes import router as chat_router
 from routes.suggest_routes import router as suggest_router
 from routes.voice_routes import router as voice_router
 from routes.wordfreq_router import router as wordfreq_router
+from routes.auth_routes import router as auth_router
 from server.api_call import router as call_router
 from services.baseline_store import BaselineStoreError
 from services.flow.common.state_contract import ScenarioStateContractError
@@ -119,6 +121,17 @@ async def handle_baseline_store_error(_: Request, exc: BaselineStoreError):
     )
 
 
+@app.exception_handler(AuthenticationError)
+async def handle_authentication_error(_: Request, exc: AuthenticationError):
+    if 400 <= exc.status_code < 500:
+        record_contract_failure("authentication", exc.code)
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": exc.code, "message": exc.public_message}},
+        headers={"WWW-Authenticate": "Bearer"} if exc.status_code == 401 else None,
+    )
+
+
 @app.exception_handler(StarletteHTTPException)
 async def handle_http_error(_: Request, exc: StarletteHTTPException):
     if isinstance(exc.detail, dict):
@@ -164,6 +177,7 @@ app.include_router(suggest_router)
 app.include_router(voice_router)
 app.include_router(wordfreq_router)
 app.include_router(call_router)
+app.include_router(auth_router)
 
 
 @app.get("/health")
@@ -193,6 +207,7 @@ async def readiness():
         "postgresql": {"ready": await database_is_ready()},
         "ffmpeg": {"ready": shutil.which("ffmpeg") is not None},
         "reservation_availability": {"ready": reservation_availability_ready},
+        "authentication": {"ready": authentication_configuration_ready()},
     }
     ready = all(component["ready"] for component in components.values())
     return JSONResponse(

@@ -2,6 +2,18 @@
 
 이 문서는 Flutter 앱과 MaeumCall AI Server 2.1 사이의 통화 상태 계약을 정의한다. 필드가 추가되거나 잘못된 타입이 전달되면 서버는 이를 무시하지 않고 `422 REQUEST_VALIDATION_FAILED`로 거부한다.
 
+## POST `/auth/kakao/exchange`
+
+로그인 직후 카카오 access token을 Firebase 사용자 세션으로 교환한다. 요청 body에는 사용자 ID나 토큰을 넣지 않고 `Authorization: Bearer {Kakao access token}` 헤더만 사용한다. 서버는 카카오 공식 token info API가 반환한 `app_id`와 식별값을 검증한 뒤 가명 내부 UID의 Firebase custom token을 반환한다.
+
+```json
+{
+  "firebaseCustomToken": "Firebase custom token"
+}
+```
+
+모바일은 이 토큰을 `signInWithCustomToken`에 전달한다. 이후 사용자 소유 데이터 API에는 Firebase ID token을 Bearer token으로 사용하며 Kakao access token을 재사용하지 않는다.
+
 ## POST `/chat`
 
 ### 요청
@@ -102,7 +114,11 @@
 - 음성 분석: `POST /voice/analyze`
 - 음성 기준선 조회: `GET /voice/baseline`
 - 캘리브레이션 확정: `POST /voice/calibrate/finalize`
+- 음성 기준선 삭제: `POST /voice/baseline/delete`
+- 캘리브레이션 진행 데이터 초기화: `POST /voice/calibrate/reset`
 - 운영 지표: `GET /metrics` (Prometheus text format, OpenAPI 문서에서는 숨김)
+
+`GET /voice/baseline`, 캘리브레이션 분석·확정·초기화, 기준선 삭제는 Firebase ID token이 필수다. `POST /voice/analyze`의 일반 분석은 익명 호출도 허용하지만 기준선은 적용하지 않는다. 음성 API는 body, form, query의 `user_id`를 소유권 근거로 받지 않는다.
 
 `/metrics`는 LangGraph 노드의 시도·재시도·실행 시간, 구조화 출력 재생성, 계약 실패를 집계한다. 사용자 ID, HMAC 키, 요청 ID, 발화 내용은 지표 라벨로 노출하지 않는다.
 
@@ -136,6 +152,16 @@
 | 502 | `AI_PROVIDER_EXECUTION_FAILED` | 모델 호출 실행 실패 |
 | 502 | `AI_RESPONSE_VALIDATION_FAILED` | 제한 재요청 후에도 출력 계약 위반 |
 | 503 | `AI_PROVIDER_UNAVAILABLE` | 모델 제공자를 사용할 수 없음 |
+| 401 | `AUTHORIZATION_REQUIRED` | 인증이 필요한 요청에 Bearer token이 없음 |
+| 401 | `AUTHORIZATION_INVALID` | Authorization 헤더가 Bearer 형식이 아님 |
+| 401 | `KAKAO_TOKEN_INVALID` | 카카오 access token이 만료되었거나 유효하지 않음 |
+| 401 | `KAKAO_TOKEN_AUDIENCE_MISMATCH` | 다른 카카오 앱의 토큰이 전달됨 |
+| 401 | `FIREBASE_TOKEN_INVALID` | Firebase ID token 검증 실패 |
+| 403 | `FIREBASE_IDENTITY_PROVIDER_FORBIDDEN` | 유효한 Firebase 세션이지만 카카오 인증 계정이 아님 |
+| 502 | `AUTH_PROVIDER_RESPONSE_INVALID` | 카카오 token info 응답 계약 위반 |
+| 503 | `AUTH_PROVIDER_UNAVAILABLE` | 카카오 인증 API를 사용할 수 없음 |
+| 503 | `AUTH_CONFIGURATION_INVALID` | 인증 환경변수 또는 Firebase Admin 설정 미완료 |
+| 503 | `AUTH_TOKEN_ISSUE_FAILED` | Firebase custom token 발급 실패 |
 | 500 | `AVAILABILITY_PROVIDER_CONFIGURATION_ERROR` | 예약 훈련 일정표 누락 또는 스키마 오류 |
 | 503 | `VOICE_BASELINE_SECURITY_NOT_CONFIGURED` | 음성 기준선 ID 보호 비밀값 미설정 |
 | 503 | `VOICE_BASELINE_DATABASE_NOT_CONFIGURED` | PostgreSQL 연결 설정 미완료 |

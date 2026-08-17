@@ -40,6 +40,7 @@ def test_readiness_reports_each_runtime_dependency():
         "postgresql",
         "ffmpeg",
         "reservation_availability",
+        "authentication",
     }
 
 

@@ -9,6 +9,11 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
+from core.auth import (
+    AuthenticatedUser,
+    optional_authenticated_user,
+    require_authenticated_user,
+)
 from routes import voice_routes
 from services import baseline_store
 
@@ -91,6 +96,23 @@ def baseline_repository(monkeypatch):
     baseline_store.set_baseline_repository(None)
 
 
+@pytest.fixture(autouse=True)
+def authenticated_voice_user():
+    user = AuthenticatedUser(uid="authenticated-user")
+
+    async def require_user() -> AuthenticatedUser:
+        return user
+
+    async def optional_user() -> AuthenticatedUser:
+        return user
+
+    app.dependency_overrides[require_authenticated_user] = require_user
+    app.dependency_overrides[optional_authenticated_user] = optional_user
+    yield user
+    app.dependency_overrides.pop(require_authenticated_user, None)
+    app.dependency_overrides.pop(optional_authenticated_user, None)
+
+
 def _analysis() -> dict[str, dict[str, float | str]]:
     return {
         "pitch": {"mean": 150.0, "comment": "measurement"},
@@ -147,48 +169,40 @@ def test_calibration_samples_survive_requests_until_transactional_finalize(
     for expected_samples in (1, 2):
         response = client.post(
             "/voice/analyze",
-            data={"mode": "calibrate", "user_id": "voice-user"},
+            data={"mode": "calibrate"},
             files={"file": ("voice.wav", b"audio", "audio/wav")},
         )
         assert response.status_code == 200
         assert response.json()["samples"] == expected_samples
 
-    finalized = client.post(
-        "/voice/calibrate/finalize", data={"user_id": "voice-user"}
-    )
+    finalized = client.post("/voice/calibrate/finalize")
     assert finalized.status_code == 200
     assert finalized.json()["baseline"]["samples"] == 2
-    user_key = baseline_store.pseudonymize_user_id("voice-user")
+    user_key = baseline_store.pseudonymize_user_id("authenticated-user")
     assert user_key in baseline_repository.baselines
     assert user_key not in baseline_repository.samples
 
 
 def test_calibration_reset_preserves_last_confirmed_baseline(baseline_repository):
-    user_key = baseline_store.pseudonymize_user_id("voice-user")
+    user_key = baseline_store.pseudonymize_user_id("authenticated-user")
     baseline_repository.baselines[user_key] = {"samples": 1}
     baseline_repository.samples[user_key].append((150.0, 0.005, 0.01))
 
-    response = TestClient(app).post(
-        "/voice/calibrate/reset", data={"user_id": "voice-user"}
-    )
+    response = TestClient(app).post("/voice/calibrate/reset")
     assert response.status_code == 200
     assert user_key in baseline_repository.baselines
     assert user_key not in baseline_repository.samples
 
 
 def test_finalize_requires_collected_samples():
-    response = TestClient(app).post(
-        "/voice/calibrate/finalize", data={"user_id": "voice-user"}
-    )
+    response = TestClient(app).post("/voice/calibrate/finalize")
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "VOICE_CALIBRATION_EMPTY"
 
 
 def test_baseline_storage_refuses_plain_user_id_without_hmac_secret(monkeypatch):
     monkeypatch.setattr(baseline_store, "BASELINE_ID_HMAC_SECRET", "")
-    response = TestClient(app).get(
-        "/voice/baseline", params={"user_id": "real-account-id"}
-    )
+    response = TestClient(app).get("/voice/baseline")
     assert response.status_code == 503
     assert response.json()["error"]["code"] == "VOICE_BASELINE_SECURITY_NOT_CONFIGURED"
 

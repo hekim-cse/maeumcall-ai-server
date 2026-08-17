@@ -79,6 +79,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | 📦 상태 유지 | 시나리오 키와 스키마 버전이 포함된 scenarioState를 모바일이 보관하고 서버가 매 턴 검증 |
 | 📞 통화 종료 제어 | shouldEndCall 값으로 종료 흐름 관리 |
 | 🔐 기준선 식별자 보호 | 실제 사용자 ID 대신 비밀키 기반 HMAC 식별자로 음성 기준선 저장 |
+| 🪪 사용자 소유권 검증 | 카카오 토큰을 서버에서 검증하고 Firebase ID token의 UID로 사용자 데이터 소유권 확정 |
 | 🗄 트랜잭션 기준선 저장 | PostgreSQL 행 잠금과 트랜잭션으로 캘리브레이션 샘플·확정 기준선을 영속화 |
 | 📈 LangGraph 관측성 | 노드별 시도·재시도·성공/실패·latency와 계약 실패를 Prometheus 지표로 노출 |
 
@@ -107,6 +108,7 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | SQLAlchemy 2 + asyncpg | FastAPI 요청마다 독립 비동기 세션을 사용하고 연결 풀과 명시적 트랜잭션 경계를 관리하기 위해 사용했습니다. |
 | Alembic | 운영 데이터베이스의 테이블과 제약조건 변경 이력을 코드와 함께 관리하기 위해 사용했습니다. |
 | Prometheus Python Client | LangGraph 노드 지연 시간 분포와 재시도·계약 실패 횟수를 낮은 카디널리티 지표로 수집하기 위해 사용했습니다. |
+| Firebase Admin SDK | 모바일이 보낸 Firebase ID token을 신뢰하기 전에 서버에서 서명·만료·프로젝트를 검증하고 UID를 소유권 기준으로 사용하기 위해 선택했습니다. |
 
 <table>
   <tr>
@@ -278,7 +280,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 
 | 구분 | 결과 |
 |---|---|
-| 오프라인 단위·그래프·라우트 테스트 | ✅ 324개 통과 |
+| 오프라인 단위·그래프·라우트 테스트 | ✅ 341개 통과 |
 | 실모델 통합 테스트 | 7개, 수동 실행으로 분리 |
 | 실패 테스트 | 없음 |
 | 기본 실행 네트워크 의존성 | 없음 |
@@ -290,6 +292,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 ## 9. 프로젝트 구조
 
     maeumcall-ai-server/
+    ├── core/
     ├── data/
     │   ├── prompts/
     │   └── scenario/
@@ -298,6 +301,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
     ├── llm/
     ├── routes/
     ├── schemas/
+    ├── scripts/
     ├── services/
     │   └── flow/
     │       ├── common/
@@ -312,7 +316,8 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 
 | 경로 | 설명 |
 |---|---|
-| `routes/` | FastAPI 라우터 및 `/chat` 엔드포인트 |
+| `core/` | 설정, 인증, 데이터베이스, 관측성 등 공통 운영 경계 |
+| `routes/` | FastAPI 라우터와 채팅·인증·음성 엔드포인트 |
 | `schemas/` | 요청/응답 데이터 모델 |
 | `services/flow/scenario/` | 25개 등록 시나리오의 구조화된 턴 생성 LangGraph |
 | `services/flow/professor/` | 교수님 시나리오 3개의 상세 LangGraph |
@@ -320,6 +325,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 | `llm/` | LLM provider, prompt builder, 구조화 출력 계약과 오류 타입 |
 | `data/scenario/` | 시나리오 샘플 데이터 |
 | `data/prompts/` | 시나리오별 프롬프트 데이터 |
+| `scripts/` | 검증 가능한 운영 데이터 이관 명령 |
 | `tests/` | 단위 테스트 및 통합 테스트 |
 
 ---
@@ -357,7 +363,7 @@ cp .env.example .env
 
 ### 10-3. PostgreSQL 시작과 스키마 적용
 
-`.env.example`을 기준으로 실제 로컬 비밀값과 `DATABASE_URL`을 `.env`에 설정한 뒤 실행합니다.
+`.env.example`을 기준으로 실제 로컬 비밀값과 `DATABASE_URL`을 `.env`에 설정한 뒤 실행합니다. 사용자 인증 기능에는 `KAKAO_APP_ID`, `FIREBASE_PROJECT_ID`, 32바이트 이상의 별도 `AUTH_SUBJECT_HMAC_SECRET`, Firebase Admin 자격 증명이 필요합니다. 인증용 HMAC 비밀값은 음성 기준선 식별자 비밀값과 분리합니다.
 
 ```bash
 docker compose up -d postgres
@@ -369,6 +375,15 @@ alembic upgrade head
 ```bash
 python -m scripts.migrate_baseline_json /secure/path/baseline_db.json
 ```
+
+기존 Firestore `users/{Kakao ID}` 문서는 새 보안 규칙을 배포하기 전에 내부 UID로 이관합니다. 대상 파일은 저장소 밖의 제한된 경로에 두며 `kakao_subjects` 배열만 포함합니다. 기본 실행은 읽기 전용 dry-run이고, 충돌이 없음을 확인한 뒤에만 `--apply`를 사용합니다.
+
+```bash
+python -m scripts.migrate_firestore_user_documents /secure/path/users.identity-migration.json
+python -m scripts.migrate_firestore_user_documents /secure/path/users.identity-migration.json --apply
+```
+
+이관 명령은 대상 문서가 이미 다른 내용으로 존재하면 덮어쓰지 않고 중단합니다. 로그에는 원래 카카오 식별값을 남기지 않습니다.
 
 ### 10-4. 서버 실행
 
@@ -420,6 +435,7 @@ http://127.0.0.1:8000/docs
 |---|---|
 | 🧾 [CHANGELOG.md](CHANGELOG.md) | 버전별 주요 기능·수정·보안 변경 기록 |
 | 📡 [api-contract.md](docs/api-contract.md) | Flutter 연동용 `/chat` API 요청/응답 계약 |
+| 🪪 [사용자 인증·소유권 경계](docs/architecture/auth_identity_boundary.md) | 카카오 검증, Firebase 세션 교환, HMAC 가명화, Firestore 이관 절차와 Q&A |
 | 🧭 [LangGraph 상태 책임 ADR](docs/architecture/langgraph_call_flow_design.md) | 클라이언트 소유 상태, 버전 계약, 영속 checkpointer 전환 조건 |
 | 📞 [Reservation LangGraph README](services/flow/reservation/README.md) | 예약 카테고리 LangGraph 통합 설계, 시나리오별 구현 요약, 테스트 결과 |
 | 🎓 [Professor LangGraph README](services/flow/professor/README.md) | 교수님 카테고리 LangGraph 통합 설계, 면담 예약/과제 문의/결석 사유 전달 구현 요약, 테스트 결과 |
@@ -442,9 +458,10 @@ http://127.0.0.1:8000/docs
 | 추천 답변 | 현재 상태에 맞는 recommendedReplies 생성 |
 | 클라이언트 상태 유지 | 버전과 시나리오가 검증되는 scenarioState를 모바일이 보관·재전송 |
 | 운영 경계 | 요청 ID, readiness 구성요소, 통일된 오류 envelope 제공 |
+| 사용자 인증 | 카카오 access token 검증 후 가명 UID 기반 Firebase 세션을 발급하고 서버에서 데이터 소유권 검증 |
 | 음성 데이터 영속성 | PostgreSQL 트랜잭션으로 확정 기준선과 진행 중 캘리브레이션 샘플 보존 |
 | 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패 Prometheus 지표 제공 |
-| 테스트 검증 | 오프라인 회귀 테스트 324개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 7개 분리 |
+| 테스트 검증 | 오프라인 회귀 테스트 341개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 7개 분리 |
 
 <table>
   <tr>

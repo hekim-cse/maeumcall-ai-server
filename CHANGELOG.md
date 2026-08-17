@@ -9,17 +9,28 @@
 - 예약 4종이 공유하는 버전 지정 가용성 일정표와 공급자 인터페이스
 - 일정표 누락·스키마 오류를 구분하는 `AVAILABILITY_PROVIDER_CONFIGURATION_ERROR`
 - 일정표 로드 가능 여부를 확인하는 `/health/ready` 구성 요소
+- 카카오 access token을 검증하고 Firebase custom token으로 교환하는 `POST /auth/kakao/exchange`
+- Firebase ID token에서 사용자 소유권을 확정하는 음성 기준선 인증 경계
+- 명시적 대상 목록, dry-run, 트랜잭션, 충돌 중단을 지원하는 Firestore 사용자 문서 이관 명령
 
 ### Changed
 
 - 예약 가능 여부를 클라이언트 상태가 아니라 서버 소유 일정표에서만 조회
 - 목록에 없는 요청 시간을 예약 가능으로 추측하지 않고 대안 슬롯과 함께 예약 불가로 처리
 - 클라이언트 상태 허용 목록 변경에 맞춰 `scenarioState.state_version`을 2로 상향
+- 음성 기준선 API가 클라이언트 `user_id` 대신 검증된 Firebase UID만 사용하도록 변경
 
 ### Removed
 
 - 예약·교수님 상태 봉투에서 사용하지 않는 `simulation_result` 필드
 - 예약 시간이 고정 충돌 목록에 없으면 성공으로 처리하던 기본 분기
+- 음성 기준선 요청의 `user_id` 폼·쿼리 필드
+
+### Security
+
+- 카카오 사용자 식별값을 별도 인증 비밀값으로 HMAC-SHA256 처리해 Firebase UID로 가명화
+- 다른 카카오 앱의 access token과 유효하지 않은 Firebase 세션을 명시적으로 거부
+- 운영 이관 로그에는 원래 카카오 식별값 대신 비가역 audit fingerprint만 기록
 
 ## [2.1.0] - 2026-08-17
 

@@ -1,5 +1,6 @@
 .DS_Store
 .env
+*.identity-migration.json
 .env.*
 !.env.example
 .pytest_cache/

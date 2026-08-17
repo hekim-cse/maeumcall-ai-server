@@ -43,6 +43,27 @@ def test_suggest_rejects_unregistered_scenario():
     assert response.json()["error"]["code"] == "UNSUPPORTED_SCENARIO"
 
 
+def test_suggest_accepts_the_exact_mobile_request_contract(monkeypatch):
+    monkeypatch.setattr(
+        "routes.suggest_routes.complete_validated_json",
+        lambda *args, **kwargs: ["첫 번째 답변", "두 번째 답변", "세 번째 답변"],
+    )
+
+    response = TestClient(app).post(
+        "/chat/suggest",
+        json={
+            "category": "예약",
+            "title": "병원 예약",
+            "lastAgentUtterance": "예약자 성함을 말씀해 주세요.",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "suggestions": ["첫 번째 답변", "두 번째 답변", "세 번째 답변"]
+    }
+
+
 def test_improve_rejects_unregistered_category_before_model_call():
     response = TestClient(app).post(
         "/chat/improve",
