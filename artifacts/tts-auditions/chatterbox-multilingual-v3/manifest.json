@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-08-18T06:17:00.020787+00:00",
+  "provider": "chatterbox-multilingual-v3",
+  "executionMode": "local-isolated-evaluation",
+  "model": "ResembleAI/chatterbox",
+  "modelRevision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+  "modelFiles": [
+    "Cangjie5_TC.json",
+    "conds.pt",
+    "grapheme_mtl_merged_expanded_v1.json",
+    "s3gen.pt",
+    "t3_mtl23ls_v3.safetensors",
+    "ve.pt"
+  ],
+  "t3Model": "t3_mtl23ls_v3.safetensors",
+  "runtimeVersion": "0.1.7",
+  "runtimeSourceRevision": "5de7a54aa4e5e2baadb0182dde554908b48b85c2",
+  "language": "Korean",
+  "languageId": "ko",
+  "device": "mps",
+  "text": "안녕하세요. 마음콜 통화 연습을 시작하겠습니다. 천천히 말씀해 주세요.",
+  "seed": 42,
+  "exaggeration": 0.5,
+  "cfgWeight": 0.5,
+  "voiceSource": "model-builtin-conditionals",
+  "watermark": {
+    "type": "PerTh",
+    "detected": true,
+    "score": 1.0
+  },
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "builtin",
+      "description": "Chatterbox Multilingual V3 내장 기준 음성",
+      "filename": "01_builtin.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 4720,
+      "sha256": "ad43adccb1478cb9b58d8ecbc21ab69517e2652f502520540193faa2e3601f2c"
+    }
+  ]
+}

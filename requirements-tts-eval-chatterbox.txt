@@ -1,0 +1,5 @@
+# Evaluation-only dependency set. Chatterbox pins a different Torch and
+# Transformers stack from the production Qwen TTS runtime, so install it in a
+# dedicated Python 3.11 virtual environment.
+setuptools==80.9.0
+chatterbox-tts @ git+https://github.com/resemble-ai/chatterbox.git@5de7a54aa4e5e2baadb0182dde554908b48b85c2

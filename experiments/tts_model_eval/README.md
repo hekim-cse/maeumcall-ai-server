@@ -15,12 +15,30 @@
 | Qwen3-TTS 0.6B CustomVoice | Apple MPS 로컬 실행 | 현재 운영 후보 9개 음색의 기준선 |
 | NVIDIA MagpieTTS v2607 | NVIDIA 공식 Hugging Face Space | 한국어를 지원하는 5개 고정 음성 비교 |
 | MeloTTS Korean | 격리된 Python 3.11 CPU 환경 | 단일 한국어 경량 모델의 속도·품질 기준선 |
+| Chatterbox Multilingual V3 | 격리된 Python 3.11 Apple MPS 환경 | 호출 한도 없는 한국어 로컬 생성과 음성 복제 후보 |
 
 Magpie 공식 Space 호출은 평가 전용이다. 입력 문장이 외부 NVIDIA Hugging Face Space로 전송되므로 실제 사용자 발화나 개인정보를 사용하지 않는다. 운영 API 공급자로 채택하려면 공개 데모가 아닌 고정 체크포인트 또는 정식 운영 엔드포인트를 별도로 구성해야 한다.
 
 로컬에서 실행하는 Qwen과 MeloTTS는 Python·NumPy·PyTorch 난수 시드를 42로 고정하고 manifest에 기록한다. Magpie 공식 데모 API는 시드 입력을 제공하지 않으므로 모델·Space 리비전과 생성 파일 해시는 기록하되, 동일 WAV 바이트의 재생성을 보장하는 후보로 취급하지 않는다.
 
 MeloTTS는 `transformers==4.27.4`와 `librosa==0.9.1`을 요구한다. 현재 서버와 Qwen TTS의 의존성을 낮추지 않도록 반드시 별도 Linux 컨테이너에서만 실행한다. Librosa 0.9.1이 사용하는 `pkg_resources`를 제공하기 위해 평가 환경의 `setuptools`도 80.9.0으로 고정한다. 직접 관리하는 요구사항과 실제 합성에 성공한 전체 전이 의존성 잠금 파일을 분리해, 후보 갱신 의도와 재현 가능한 설치 결과를 함께 관리한다. 한국어 텍스트 처리에 내부적으로 사용하는 `kykim/bert-kor-base`는 현재 Hub SHA를 검증한 뒤 그 SHA 자체로 내려받고 manifest에 함께 기록한다.
+
+Chatterbox는 `torch==2.6.0`과 `transformers==5.2.0`을 사용하므로 Qwen 운영 환경과 분리한다. PyPI 0.1.7 배포본에는 V3 모델 선택 API가 없어서, V3 API가 포함된 공식 소스 커밋을 고정했다. Perth 워터마킹 패키지가 선언하지 않은 `pkg_resources` 런타임 요구사항은 `setuptools==80.9.0`으로 명시한다. 워터마크를 비활성화하거나 V2를 V3로 기록하는 우회는 허용하지 않는다.
+
+## 호출 한도 없는 로컬 후보 결정
+
+Hugging Face는 모델 파일을 배포하는 저장소와 연산을 대신 수행하는 Space·Inference 서비스를 함께 제공한다. 모델 가중치를 한 번 내려받아 로컬에서 실행하면 요청 횟수 한도는 없지만, 공개 Space를 호출하면 서비스의 GPU 사용 한도를 적용받는다.
+
+| 후보 | 라이선스·한국어 | 역할 음성 구성 | 현재 결정 |
+|---|---|---|---|
+| Chatterbox Multilingual V3 | MIT·한국어 공식 지원 | 내장 기준 음성 1개, 권리 확보된 기준 음성으로 복제 | Apple MPS 합성 성공, 1순위 추가 청취 후보 |
+| OpenVoice V2 | MIT·한국어 공식 지원 | 기준 음성의 음색 복제 | 의존성이 오래됐고 별도 기준 음성이 필요해 2순위 |
+| Fun-CosyVoice 3 | Apache-2.0·한국어 공식 지원 | 제로샷 음성 복제와 지시 기반 운율 | 향후 NVIDIA GPU 운영 서버 후보 |
+| MeloTTS Korean | MIT·한국어 공식 지원 | 한국어 고정 음성 1개 | 경량 CPU 기준선 유지 |
+
+Meta MMS-TTS Korean은 CC-BY-NC 4.0, XTTS-v2는 Coqui Public Model License, Fish Speech는 상업 이용에 별도 계약이 필요한 라이선스이므로 장기 운영 후보에서 제외한다. Piper는 공식 음성 목록에 한국어가 없고, VibeVoice 1.5B 공식 모델은 영어·중국어용이므로 제외한다.
+
+Chatterbox·OpenVoice·CosyVoice로 여러 배역을 만들 때는 본인 녹음 또는 사용 범위에 명시적으로 동의한 성우 음성만 기준 음성으로 사용한다. 인터넷 영상이나 다른 TTS 결과를 임의로 복제하지 않는다. 공급자를 바꾸면 `Sofia`, `Aria` 같은 기존 모델의 음색 이름과 정체성도 이전되지 않으므로, 새 음성을 직접 듣고 새 배역 버전으로 승인해야 한다.
 
 ## 생성 명령
 
@@ -32,6 +50,15 @@ python -m scripts.generate_tts_auditions \
 
 python -m scripts.generate_magpie_tts_auditions \
   --output-dir /absolute/path/to/magpie \
+  --allow-network
+
+python3.11 -m venv /absolute/path/to/chatterbox-eval
+/absolute/path/to/chatterbox-eval/bin/python -m pip install \
+  -r requirements-tts-eval-chatterbox.lock.txt
+/absolute/path/to/chatterbox-eval/bin/python \
+  -m scripts.generate_chatterbox_audition \
+  --output-dir artifacts/tts-auditions/chatterbox-multilingual-v3 \
+  --device mps \
   --allow-network
 
 docker build \

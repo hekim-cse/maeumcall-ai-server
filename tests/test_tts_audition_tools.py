@@ -6,6 +6,16 @@ from pathlib import Path
 
 import pytest
 
+from scripts.generate_chatterbox_audition import (
+    MODEL_FILES as CHATTERBOX_MODEL_FILES,
+)
+from scripts.generate_chatterbox_audition import (
+    MODEL_REVISION as CHATTERBOX_MODEL_REVISION,
+)
+from scripts.generate_chatterbox_audition import (
+    RUNTIME_SOURCE_REVISION as CHATTERBOX_SOURCE_REVISION,
+)
+from scripts.generate_chatterbox_audition import RUNTIME_VERSION as CHATTERBOX_VERSION
 from scripts.generate_magpie_tts_auditions import MODEL_VERSION, SPEAKERS
 from scripts.generate_melotts_audition import BERT_MODEL_REVISION, MELOTTS_SOURCE_REVISION
 from scripts.tts_audition_common import (
@@ -68,6 +78,10 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert len(SPEAKERS) == 5
     assert len(MELOTTS_SOURCE_REVISION) == 40
     assert len(BERT_MODEL_REVISION) == 40
+    assert CHATTERBOX_VERSION == "0.1.7"
+    assert len(CHATTERBOX_SOURCE_REVISION) == 40
+    assert len(CHATTERBOX_MODEL_REVISION) == 40
+    assert "t3_mtl23ls_v3.safetensors" in CHATTERBOX_MODEL_FILES
 
 
 def test_committed_audition_manifests_share_the_same_contract():
@@ -75,16 +89,20 @@ def test_committed_audition_manifests_share_the_same_contract():
         REPOSITORY_ROOT / "artifacts/tts-auditions/qwen3-tts-0.6b/manifest.json",
         REPOSITORY_ROOT / "artifacts/tts-auditions/magpie-v2607/manifest.json",
         REPOSITORY_ROOT / "artifacts/tts-auditions/melotts-korean/manifest.json",
+        REPOSITORY_ROOT
+        / "artifacts/tts-auditions/chatterbox-multilingual-v3/manifest.json",
     )
     manifests = [
         json.loads(path.read_text(encoding="utf-8")) for path in manifest_paths
     ]
 
     assert {manifest["text"] for manifest in manifests} == {DEFAULT_AUDITION_TEXT}
-    assert [len(manifest["artifacts"]) for manifest in manifests] == [9, 5, 1]
+    assert [len(manifest["artifacts"]) for manifest in manifests] == [9, 5, 1, 1]
     assert manifests[0]["seed"] == 42
     assert "seed" not in manifests[1]
     assert manifests[2]["seed"] == 42
+    assert manifests[3]["seed"] == 42
+    assert manifests[3]["watermark"]["detected"] is True
     assert all(
         len(artifact["sha256"]) == 64
         for manifest in manifests
