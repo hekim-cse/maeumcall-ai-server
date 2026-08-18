@@ -5,7 +5,8 @@
   "voiceId": "reference_warm_everyday_mature_age_restrained_prosody",
   "validationStatus": "rejected-by-user",
   "userFeedback": {
-    "prosody": "unnatural-word-ending-intonation"
+    "prosody": "insufficient-intonation-intensity",
+    "continuity": "syllable-boundaries-too-distinct"
   },
   "provider": "qwen3-tts-voice-clone",
   "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
@@ -40,14 +41,15 @@
     "tensorDtypes": {
       "ref_code": "torch.int64",
       "ref_spk_embedding": "torch.bfloat16"
-    }
+    },
+    "reusedFromManifest": "artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base/manifest.json"
   },
   "generation": {
     "seed": 42,
     "maxNewTokens": 1200,
     "language": "Korean",
-    "nonStreamingMode": false,
-    "temperature": 0.9,
+    "nonStreamingMode": true,
+    "temperature": 1.05,
     "subtalkerTemperature": 0.9
   },
   "artifacts": [
@@ -59,19 +61,19 @@
       "sampleRate": 24000,
       "channels": 1,
       "bitDepth": 16,
-      "durationMs": 6480,
-      "sha256": "3a6ef4dd4682af9ea60e7e52a87d067529c854cf8b3494786905a9a8d6d1597a",
-      "text": "그래, 오늘도 수고 많았어. 무슨 일이 있었는지 엄마한테 천천히 말해 봐.",
+      "durationMs": 6800,
+      "sha256": "b77d009ddf1ae86b7b9f83b46a36d26903149cb6665ebe3fe603e2958bd157fe",
+      "text": "그래, 오늘도 수고 많았어, 무슨 일이 있었는지 엄마한테 천천히 말해 봐.",
       "seed": 42,
       "pitchAnalysis": {
         "algorithm": "praat-autocorrelation",
         "timeStepSeconds": 0.01,
         "pitchFloorHz": 65.0,
         "pitchCeilingHz": 400.0,
-        "medianF0Hz": 198.6,
-        "p25F0Hz": 170.9,
-        "p75F0Hz": 229.4,
-        "voicedFrames": 350
+        "medianF0Hz": 190.7,
+        "p25F0Hz": 173.9,
+        "p75F0Hz": 209.9,
+        "voicedFrames": 367
       }
     }
   ],

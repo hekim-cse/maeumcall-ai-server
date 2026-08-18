@@ -11,12 +11,17 @@ import pytest
 
 from scripts.build_qwen_mother_voice_clone import (
     CAST_VERSION,
+    DEFAULT_AUDITION_TEXT,
+    DEFAULT_SUBTALKER_TEMPERATURE,
+    DEFAULT_TEMPERATURE,
     MODEL_ID,
     MODEL_REVISION,
+    NON_STREAMING_MODE,
     QWEN_TTS_VERSION,
     ROLE_ID,
     VOICE_ID,
     load_reference_artifact,
+    load_voice_clone_prompt,
 )
 
 pytestmark = pytest.mark.unit
@@ -36,6 +41,12 @@ def test_voice_clone_runtime_contract_is_pinned():
     assert MODEL_ID == "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
     assert MODEL_REVISION == "fd4b254389122332181a7c3db7f27e918eec64e3"
     assert QWEN_TTS_VERSION == "0.1.1"
+    assert NON_STREAMING_MODE is True
+    assert DEFAULT_TEMPERATURE == 0.9
+    assert DEFAULT_SUBTALKER_TEMPERATURE == 0.9
+    assert DEFAULT_AUDITION_TEXT == (
+        "그래 오늘도 수고 많았어, 무슨 일이 있었는지 엄마한테 천천히 말해 봐."
+    )
     assert CAST_VERSION == 2
     assert ROLE_ID == "family_mother"
     assert VOICE_ID == "reference_warm_everyday_mature_age_restrained_prosody"
@@ -128,7 +139,7 @@ importlib.import_module("scripts.build_qwen_mother_voice_clone")
     assert result.returncode == 0, result.stderr
 
 
-def test_committed_voice_clone_manifest_remains_a_pending_listening_gate():
+def test_initial_voice_clone_manifest_records_user_rejection():
     manifest_path = (
         REPOSITORY_ROOT
         / "artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base/manifest.json"
@@ -139,7 +150,10 @@ def test_committed_voice_clone_manifest_remains_a_pending_listening_gate():
     assert manifest["castVersion"] == 2
     assert manifest["roleId"] == ROLE_ID
     assert manifest["voiceId"] == VOICE_ID
-    assert manifest["validationStatus"] == "awaiting-user-listening"
+    assert manifest["validationStatus"] == "rejected-by-user"
+    assert manifest["userFeedback"] == {
+        "prosody": "unnatural-word-ending-intonation",
+    }
     assert manifest["model"] == MODEL_ID
     assert manifest["modelRevision"] == MODEL_REVISION
     assert manifest["runtimeVersion"] == QWEN_TTS_VERSION
@@ -147,9 +161,197 @@ def test_committed_voice_clone_manifest_remains_a_pending_listening_gate():
     assert manifest["prompt"]["format"] == "safetensors"
     assert manifest["prompt"]["xVectorOnlyMode"] is False
     assert manifest["prompt"]["iclMode"] is True
+    assert manifest["generation"]["nonStreamingMode"] is False
+    assert manifest["generation"]["temperature"] == 0.9
+    assert manifest["generation"]["subtalkerTemperature"] == 0.9
     assert len(manifest["prompt"]["sha256"]) == 64
     assert manifest["reference"]["sha256"] == (
         "a6ffd23a20a9858cd30b0af531b3e5e83786e53ee711797244b806f0fdeabf83"
     )
     assert len(manifest["artifacts"]) == 1
     assert len(manifest["artifacts"][0]["sha256"]) == 64
+
+
+def test_controlled_non_streaming_candidate_reuses_the_rejected_prompt_exactly():
+    initial_manifest_path = (
+        REPOSITORY_ROOT
+        / "artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base/manifest.json"
+    )
+    candidate_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-non-streaming-icl/manifest.json"
+    )
+    initial = json.loads(initial_manifest_path.read_text(encoding="utf-8"))
+    candidate = json.loads(candidate_manifest_path.read_text(encoding="utf-8"))
+
+    assert candidate["validationStatus"] == "rejected-by-user"
+    assert candidate["userFeedback"] == {"prosody": "choppy-word-boundaries"}
+    assert candidate["model"] == initial["model"] == MODEL_ID
+    assert candidate["modelRevision"] == initial["modelRevision"] == MODEL_REVISION
+    assert candidate["reference"] == initial["reference"]
+    assert candidate["generation"]["seed"] == initial["generation"]["seed"]
+    assert candidate["generation"]["maxNewTokens"] == initial["generation"]["maxNewTokens"]
+    assert candidate["generation"]["language"] == initial["generation"]["language"]
+    assert candidate["generation"]["nonStreamingMode"] is True
+    assert initial["generation"]["nonStreamingMode"] is False
+    assert candidate["prompt"]["sha256"] == initial["prompt"]["sha256"]
+    assert candidate["prompt"]["reusedFromManifest"] == (
+        "artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base/manifest.json"
+    )
+
+
+def test_connected_phrasing_candidate_changes_only_punctuation_from_previous_text():
+    previous_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-non-streaming-icl/manifest.json"
+    )
+    candidate_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-connected-phrasing-icl/manifest.json"
+    )
+    previous = json.loads(previous_manifest_path.read_text(encoding="utf-8"))
+    candidate = json.loads(candidate_manifest_path.read_text(encoding="utf-8"))
+
+    assert candidate["validationStatus"] == "rejected-by-user"
+    assert candidate["userFeedback"] == {"prosody": "insufficient-intonation"}
+    assert candidate["model"] == previous["model"] == MODEL_ID
+    assert candidate["modelRevision"] == previous["modelRevision"] == MODEL_REVISION
+    assert candidate["reference"] == previous["reference"]
+    assert candidate["prompt"] == previous["prompt"]
+    assert candidate["generation"] == previous["generation"]
+    previous_text = previous["artifacts"][0]["text"]
+    candidate_text = candidate["artifacts"][0]["text"]
+    assert previous_text.translate(str.maketrans("", "", ",.")) == candidate_text
+    assert " " in candidate_text
+    assert not ({",", "."} & set(candidate_text))
+
+
+def test_balanced_prosody_candidate_adds_one_natural_clause_boundary():
+    connected_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-connected-phrasing-icl/manifest.json"
+    )
+    candidate_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-balanced-prosody-icl/manifest.json"
+    )
+    connected = json.loads(connected_manifest_path.read_text(encoding="utf-8"))
+    candidate = json.loads(candidate_manifest_path.read_text(encoding="utf-8"))
+
+    assert candidate["validationStatus"] == "rejected-by-user"
+    assert candidate["userFeedback"] == {"prosody": "insufficient-intonation-intensity"}
+    assert candidate["model"] == connected["model"] == MODEL_ID
+    assert candidate["modelRevision"] == connected["modelRevision"] == MODEL_REVISION
+    assert candidate["reference"] == connected["reference"]
+    assert candidate["prompt"] == connected["prompt"]
+    assert candidate["generation"] == connected["generation"]
+    connected_text = connected["artifacts"][0]["text"]
+    candidate_text = candidate["artifacts"][0]["text"]
+    assert candidate_text.replace(",", "") == connected_text
+    assert candidate_text.count(",") == 1
+    assert "." not in candidate_text
+    assert "많았어, 무슨 일이" in candidate_text
+
+
+def test_expressive_connected_candidate_uses_only_semantic_boundaries():
+    balanced_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-balanced-prosody-icl/manifest.json"
+    )
+    candidate_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-expressive-connected-prosody-icl/manifest.json"
+    )
+    balanced = json.loads(balanced_manifest_path.read_text(encoding="utf-8"))
+    candidate = json.loads(candidate_manifest_path.read_text(encoding="utf-8"))
+
+    assert candidate["validationStatus"] == "rejected-by-user"
+    assert candidate["userFeedback"] == {"prosody": "insufficient-intonation-intensity"}
+    assert candidate["model"] == balanced["model"] == MODEL_ID
+    assert candidate["modelRevision"] == balanced["modelRevision"] == MODEL_REVISION
+    assert candidate["reference"] == balanced["reference"]
+    assert candidate["prompt"] == balanced["prompt"]
+    assert candidate["generation"] == balanced["generation"]
+    balanced_text = balanced["artifacts"][0]["text"]
+    candidate_text = candidate["artifacts"][0]["text"]
+    assert candidate_text.translate(str.maketrans("", "", ",.")) == balanced_text.replace(",", "")
+    assert candidate_text.count(",") == 2
+    assert candidate_text.count(".") == 1
+    assert candidate_text.startswith("그래, 오늘도")
+    assert "많았어, 무슨 일이" in candidate_text
+    assert candidate_text.endswith("말해 봐.")
+
+
+def test_enhanced_prosody_candidate_changes_only_main_talker_temperature():
+    expressive_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-expressive-connected-prosody-icl/manifest.json"
+    )
+    candidate_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-enhanced-prosody-temperature-icl/manifest.json"
+    )
+    expressive = json.loads(expressive_manifest_path.read_text(encoding="utf-8"))
+    candidate = json.loads(candidate_manifest_path.read_text(encoding="utf-8"))
+
+    assert candidate["validationStatus"] == "rejected-by-user"
+    assert candidate["userFeedback"] == {
+        "prosody": "insufficient-intonation-intensity",
+        "continuity": "syllable-boundaries-too-distinct",
+    }
+    assert candidate["model"] == expressive["model"] == MODEL_ID
+    assert candidate["modelRevision"] == expressive["modelRevision"] == MODEL_REVISION
+    assert candidate["reference"] == expressive["reference"]
+    assert candidate["prompt"] == expressive["prompt"]
+    assert candidate["artifacts"][0]["text"] == expressive["artifacts"][0]["text"]
+    expressive_generation = dict(expressive["generation"])
+    candidate_generation = dict(candidate["generation"])
+    assert expressive_generation.pop("temperature") == 0.9
+    assert candidate_generation.pop("temperature") == 1.05
+    assert candidate_generation == expressive_generation
+    assert candidate_generation["subtalkerTemperature"] == 0.9
+
+
+def test_high_prosody_smooth_candidate_changes_temperature_and_first_boundary():
+    enhanced_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-enhanced-prosody-temperature-icl/manifest.json"
+    )
+    candidate_manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-clone-prompts/cast-v2/"
+        "family-mother-qwen3-1.7b-base-high-prosody-smooth-phrasing-icl/manifest.json"
+    )
+    enhanced = json.loads(enhanced_manifest_path.read_text(encoding="utf-8"))
+    candidate = json.loads(candidate_manifest_path.read_text(encoding="utf-8"))
+
+    assert candidate["validationStatus"] == "approved-by-user"
+    assert candidate["model"] == enhanced["model"] == MODEL_ID
+    assert candidate["modelRevision"] == enhanced["modelRevision"] == MODEL_REVISION
+    assert candidate["reference"] == enhanced["reference"]
+    assert candidate["prompt"] == enhanced["prompt"]
+    enhanced_generation = dict(enhanced["generation"])
+    candidate_generation = dict(candidate["generation"])
+    assert enhanced_generation.pop("temperature") == 1.05
+    assert candidate_generation.pop("temperature") == 1.15
+    assert candidate_generation == enhanced_generation
+    assert candidate_generation["subtalkerTemperature"] == 0.9
+    enhanced_text = enhanced["artifacts"][0]["text"]
+    candidate_text = candidate["artifacts"][0]["text"]
+    assert enhanced_text.replace("그래,", "그래", 1) == candidate_text
+    assert candidate_text.count(",") == 1
+    assert candidate_text.count(".") == 1
+    assert candidate_text.startswith("그래 오늘도")
+    assert "많았어, 무슨 일이" in candidate_text
+
+
+def test_reusable_clone_prompt_rejects_missing_binary():
+    manifest_path = (
+        REPOSITORY_ROOT
+        / "artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base/manifest.json"
+    )
+    prompt_path = manifest_path.parent / "family_mother_cast_v2.safetensors"
+    if prompt_path.exists():
+        pytest.skip("The local ignored prompt exists; missing-binary behavior is covered in CI.")
+
+    with pytest.raises(RuntimeError, match="hash does not match"):
+        load_voice_clone_prompt(manifest_path)

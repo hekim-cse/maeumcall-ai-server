@@ -75,9 +75,34 @@ Voice Clone 검증은 공식 Qwen Voice Design → Voice Clone 절차에 맞춰
 그 WAV를 생성한 정확한 문장을 함께 사용하는 ICL 프롬프트를 만들고, 안전한 `safetensors`
 형식으로 저장한다. 프롬프트와 검증 WAV는 로컬 운영 자산이며 Git에는 해시와 manifest만 남긴다.
 
-현재 복제 검증 manifest의 상태는 `awaiting-user-listening`이다. 음역 중심이 기준과 가깝더라도
-음색·억양·연령감은 직접 청취해야 하므로, 이 상태에서는 `castVersion: 1`을 교체하거나 모바일
-재생 경로를 활성화하지 않는다.
+첫 복제 결과는 어절 끝 억양이 부자연스럽다는 사용자 평가로 거절했다. 당시
+`non_streaming_mode=False`여서 전체 문장을 스트리밍 입력처럼 나눠 처리했다. 후속 후보는 최초
+프롬프트 SHA `c01d0a8fef64247f5141f034bffd9b3079c33b9e2f6bf330e9a987a7180a9639`를 그대로 재사용하고
+`non_streaming_mode=True`만 적용했으나, 단어 경계가 딱딱하게 끊긴다는 청취 평가로 거절했다.
+프롬프트를 다시 추출하면 음색 조건도 달라지므로 통제 비교로 인정하지 않는다.
+
+세 번째 후보는 같은 프롬프트·시드·전체 문장 처리 모드를 유지하고 합성 대사의 쉼표와 마침표를
+모두 제거했다. 단어 사이는 부드러워졌지만 억양이 부족하다는 청취 평가로 거절했다. 네 번째
+후보는 한국어 띄어쓰기를 그대로 유지하면서 두 의미 절 사이에만 쉼표 하나를 뒀다. 연결감은
+유지됐지만 억양 강도가 부족하다는 청취 평가로 거절했다. 다섯 번째 후보는 도입부와 공감부 뒤에
+쉼표를 하나씩 두고 문장 끝 마침표를 복원했다. 중간 마침표는 사용하지 않아 한 문장으로 이어
+읽게 하면서 도입·공감·권유라는 의미 구간에만 억양 변화를 줬지만, 억양 강도를 더 높여 달라는
+청취 평가로 거절했다.
+
+Qwen Base Voice Clone에는 별도의 억양 강도 인자가 없다. 여섯 번째 후보는 문장·문장부호·음색·
+ICL 프롬프트·시드·보조 화자 온도를 그대로 두고, 공식 음성 코드 생성 인자인 주 화자
+`temperature`만 모델 기본값 `0.9`에서 `1.05`로 높인다. 이는 음높이 사후 가공이 아니라 같은
+문장에서 생성 가능한 음성 코드의 변화 폭을 넓히는 통제 비교다.
+
+여섯 번째 후보도 억양을 더 높이고 음절 경계의 분절감을 다시 줄여 달라는 청취 평가로 거절했다.
+일곱 번째 후보는 주 화자 `temperature`를 `1.05`에서 `1.15`로 한 단계 더 높이고, 짧은 도입부
+`그래` 뒤의 쉼표를 제거한다. 공감부 뒤 쉼표와 문장 끝 마침표는 유지해 핵심 억양 경계는
+보존하고, 보조 화자 온도는 `0.9`로 고정해 발음 세부의 안정성을 유지한다.
+
+일곱 번째 후보는 사용자 청취에서 최종 승인됐다. 승인 manifest는 주 화자 온도 `1.15`, 보조
+화자 온도 `0.9`, 전체 문장 처리 모드, 승인된 ICL 프롬프트 SHA, 검증 문장과 WAV 해시를 함께
+고정한다. 이 승인은 Voice Clone 검증 완료를 뜻하며, 모바일 재생 경로 활성화와 운영 배포는
+별도의 통합 검증을 거쳐야 한다.
 
 청취 피드백으로 음높이나 연령감을 조정할 때는 완성 WAV에 단순 피치 시프트를 적용하지 않는다. 기본 음높이와 함께 공명, 억양 폭, 발화 속도를 VoiceDesign 지시문에서 다시 설계하고 원본 후보 ID를 계보로 기록한다. 그래야 인위적인 음질 변화 없이 어떤 결정에서 파생된 음색인지 재현할 수 있다.
 
@@ -105,9 +130,15 @@ Voice Clone 검증은 공식 Qwen Voice Design → Voice Clone 절차에 맞춰
 python -m scripts.build_qwen_mother_voice_clone \
   --reference-manifest artifacts/tts-role-auditions/cast-v2/\
 qwen3-voice-design-family-mother-mature-age-restrained-prosody/manifest.json \
-  --output-dir artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base \
+  --reuse-prompt-manifest artifacts/tts-clone-prompts/cast-v2/\
+family-mother-qwen3-1.7b-base/manifest.json \
+  --output-dir artifacts/tts-clone-prompts/cast-v2/\
+family-mother-qwen3-1.7b-base-high-prosody-smooth-phrasing-icl \
   --device mps \
-  --dtype bfloat16
+  --dtype bfloat16 \
+  --temperature 1.15 \
+  --subtalker-temperature 0.9 \
+  --audition-text "그래 오늘도 수고 많았어, 무슨 일이 있었는지 엄마한테 천천히 말해 봐."
 ```
 
 첫 실행 전에 Base 모델의 고정 리비전을 내려받아야 한다. 운영에서는 네트워크 다운로드를 허용하지

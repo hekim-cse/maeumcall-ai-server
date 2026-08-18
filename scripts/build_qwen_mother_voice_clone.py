@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import importlib.metadata
 import json
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -23,7 +24,10 @@ ROLE_ID = "family_mother"
 VOICE_ID = "reference_warm_everyday_mature_age_restrained_prosody"
 DEFAULT_SEED = 42
 DEFAULT_MAX_NEW_TOKENS = 1_200
-DEFAULT_AUDITION_TEXT = "그래, 오늘도 수고 많았어. 무슨 일이 있었는지 엄마한테 천천히 말해 봐."
+DEFAULT_TEMPERATURE = 0.9
+DEFAULT_SUBTALKER_TEMPERATURE = 0.9
+NON_STREAMING_MODE = True
+DEFAULT_AUDITION_TEXT = "그래 오늘도 수고 많았어, 무슨 일이 있었는지 엄마한테 천천히 말해 봐."
 
 
 def sha256_file(path: Path) -> str:
@@ -126,6 +130,54 @@ def save_voice_clone_prompt(
     }
 
 
+def load_voice_clone_prompt(
+    manifest_path: Path,
+) -> tuple[Any, Path, dict[str, Any]]:
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("model") != MODEL_ID or manifest.get("modelRevision") != MODEL_REVISION:
+        raise RuntimeError(
+            "Reusable clone prompt model contract does not match the pinned Base model."
+        )
+    if manifest.get("voiceId") != VOICE_ID or manifest.get("roleId") != ROLE_ID:
+        raise RuntimeError("Reusable clone prompt role contract does not match the mother voice.")
+    prompt_artifact = manifest.get("prompt")
+    if not isinstance(prompt_artifact, dict):
+        raise RuntimeError("Reusable clone prompt manifest is missing prompt metadata.")
+    prompt_path = manifest_path.parent / prompt_artifact["filename"]
+    if not prompt_path.is_file() or sha256_file(prompt_path) != prompt_artifact.get("sha256"):
+        raise RuntimeError("Reusable clone prompt hash does not match its manifest.")
+
+    from qwen_tts import VoiceClonePromptItem
+    from safetensors import safe_open
+
+    with safe_open(str(prompt_path), framework="pt", device="cpu") as prompt_file:
+        metadata = prompt_file.metadata()
+        ref_code = prompt_file.get_tensor("ref_code")
+        ref_spk_embedding = prompt_file.get_tensor("ref_spk_embedding")
+    expected_metadata = {
+        "schemaVersion": "1",
+        "castVersion": str(CAST_VERSION),
+        "roleId": ROLE_ID,
+        "voiceId": VOICE_ID,
+        "model": MODEL_ID,
+        "modelRevision": MODEL_REVISION,
+        "referenceSha256": manifest["reference"]["sha256"],
+        "referenceText": manifest["reference"]["text"],
+        "xVectorOnlyMode": "false",
+        "iclMode": "true",
+    }
+    if metadata != expected_metadata:
+        raise RuntimeError("Reusable clone prompt safetensors metadata is invalid.")
+    prompt_item = VoiceClonePromptItem(
+        ref_code=ref_code,
+        ref_spk_embedding=ref_spk_embedding,
+        x_vector_only_mode=False,
+        icl_mode=True,
+        ref_text=metadata["referenceText"],
+    )
+    return prompt_item, prompt_path, prompt_artifact
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -143,7 +195,21 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--max-new-tokens", type=int, default=DEFAULT_MAX_NEW_TOKENS)
+    parser.add_argument("--temperature", type=float, default=DEFAULT_TEMPERATURE)
+    parser.add_argument(
+        "--subtalker-temperature",
+        type=float,
+        default=DEFAULT_SUBTALKER_TEMPERATURE,
+    )
     parser.add_argument("--audition-text", default=DEFAULT_AUDITION_TEXT)
+    parser.add_argument(
+        "--reuse-prompt-manifest",
+        type=Path,
+        help=(
+            "Reuse the exact safetensors prompt from a previous manifest so only generation "
+            "parameters change during a controlled comparison."
+        ),
+    )
     parser.add_argument(
         "--allow-network",
         action="store_true",
@@ -157,6 +223,10 @@ def main() -> None:
     audition_text = args.audition_text.strip()
     if not audition_text:
         raise RuntimeError("Voice clone validation text must not be blank.")
+    if args.temperature <= 0:
+        raise RuntimeError("Voice clone temperature must be greater than zero.")
+    if args.subtalker_temperature <= 0:
+        raise RuntimeError("Voice clone subtalker temperature must be greater than zero.")
     output_dir = prepare_output_directory(args.output_dir)
     reference_manifest_path = args.reference_manifest.resolve()
     reference_artifact, reference_path, reference_text = load_reference_artifact(
@@ -187,28 +257,45 @@ def main() -> None:
         dtype=torch_dtype,
         attn_implementation="eager",
     )
-    prompt_items = model.create_voice_clone_prompt(
-        ref_audio=str(reference_path),
-        ref_text=reference_text,
-        x_vector_only_mode=False,
-    )
-    if len(prompt_items) != 1:
-        raise RuntimeError("Expected exactly one reusable mother voice clone prompt.")
-    prompt_item = prompt_items[0]
     prompt_path = output_dir / "family_mother_cast_v2.safetensors"
-    prompt_artifact = save_voice_clone_prompt(
-        prompt_item,
-        prompt_path,
-        reference_text=reference_text,
-        reference_sha256=reference_artifact["sha256"],
-    )
+    reused_prompt_manifest: str | None = None
+    if args.reuse_prompt_manifest is None:
+        seed_local_inference(args.seed)
+        prompt_items = model.create_voice_clone_prompt(
+            ref_audio=str(reference_path),
+            ref_text=reference_text,
+            x_vector_only_mode=False,
+        )
+        if len(prompt_items) != 1:
+            raise RuntimeError("Expected exactly one reusable mother voice clone prompt.")
+        prompt_item = prompt_items[0]
+        prompt_artifact = save_voice_clone_prompt(
+            prompt_item,
+            prompt_path,
+            reference_text=reference_text,
+            reference_sha256=reference_artifact["sha256"],
+        )
+    else:
+        reusable_manifest_path = args.reuse_prompt_manifest.resolve()
+        prompt_item, reusable_prompt_path, original_prompt_artifact = load_voice_clone_prompt(
+            reusable_manifest_path
+        )
+        shutil.copyfile(reusable_prompt_path, prompt_path)
+        prompt_artifact = dict(original_prompt_artifact)
+        prompt_artifact["filename"] = prompt_path.name
+        prompt_artifact["sha256"] = sha256_file(prompt_path)
+        reused_prompt_manifest = str(reusable_manifest_path.relative_to(Path.cwd()))
+        prompt_items = [prompt_item]
 
     seed_local_inference(args.seed)
     wavs, sample_rate = model.generate_voice_clone(
         text=audition_text,
         language="Korean",
         voice_clone_prompt=prompt_items,
+        non_streaming_mode=NON_STREAMING_MODE,
         max_new_tokens=args.max_new_tokens,
+        temperature=args.temperature,
+        subtalker_temperature=args.subtalker_temperature,
     )
     audition_path = output_dir / "01_family_mother_voice_clone_validation.wav"
     sf.write(audition_path, wavs[0], sample_rate, format="WAV", subtype="PCM_16")
@@ -248,10 +335,15 @@ def main() -> None:
             "seed": args.seed,
             "maxNewTokens": args.max_new_tokens,
             "language": "Korean",
+            "nonStreamingMode": NON_STREAMING_MODE,
+            "temperature": args.temperature,
+            "subtalkerTemperature": args.subtalker_temperature,
         },
         "artifacts": [audition_artifact],
         "officialWorkflow": "voice-design-then-icl-voice-clone",
     }
+    if reused_prompt_manifest is not None:
+        manifest["prompt"]["reusedFromManifest"] = reused_prompt_manifest
     manifest_path = write_manifest(output_dir, manifest)
     print(f"manifest {manifest_path}", flush=True)
 

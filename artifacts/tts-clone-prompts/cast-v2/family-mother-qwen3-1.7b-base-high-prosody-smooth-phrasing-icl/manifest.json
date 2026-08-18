@@ -3,10 +3,7 @@
   "castVersion": 2,
   "roleId": "family_mother",
   "voiceId": "reference_warm_everyday_mature_age_restrained_prosody",
-  "validationStatus": "rejected-by-user",
-  "userFeedback": {
-    "prosody": "unnatural-word-ending-intonation"
-  },
+  "validationStatus": "approved-by-user",
   "provider": "qwen3-tts-voice-clone",
   "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
   "modelRevision": "fd4b254389122332181a7c3db7f27e918eec64e3",
@@ -40,14 +37,15 @@
     "tensorDtypes": {
       "ref_code": "torch.int64",
       "ref_spk_embedding": "torch.bfloat16"
-    }
+    },
+    "reusedFromManifest": "artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base/manifest.json"
   },
   "generation": {
     "seed": 42,
     "maxNewTokens": 1200,
     "language": "Korean",
-    "nonStreamingMode": false,
-    "temperature": 0.9,
+    "nonStreamingMode": true,
+    "temperature": 1.15,
     "subtalkerTemperature": 0.9
   },
   "artifacts": [
@@ -59,18 +57,18 @@
       "sampleRate": 24000,
       "channels": 1,
       "bitDepth": 16,
-      "durationMs": 6480,
-      "sha256": "3a6ef4dd4682af9ea60e7e52a87d067529c854cf8b3494786905a9a8d6d1597a",
-      "text": "그래, 오늘도 수고 많았어. 무슨 일이 있었는지 엄마한테 천천히 말해 봐.",
+      "durationMs": 6080,
+      "sha256": "9a05409125306ead997e8a69dd47e3513c41ba68ade0fe877e8ab289bb319382",
+      "text": "그래 오늘도 수고 많았어, 무슨 일이 있었는지 엄마한테 천천히 말해 봐.",
       "seed": 42,
       "pitchAnalysis": {
         "algorithm": "praat-autocorrelation",
         "timeStepSeconds": 0.01,
         "pitchFloorHz": 65.0,
         "pitchCeilingHz": 400.0,
-        "medianF0Hz": 198.6,
-        "p25F0Hz": 170.9,
-        "p75F0Hz": 229.4,
+        "medianF0Hz": 191.4,
+        "p25F0Hz": 173.6,
+        "p75F0Hz": 208.4,
         "voicedFrames": 350
       }
     }
