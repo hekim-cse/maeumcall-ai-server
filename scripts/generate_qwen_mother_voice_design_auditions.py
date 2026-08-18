@@ -32,6 +32,7 @@ class MotherVoiceDesign:
     seed_offset: int
     parent_id: str | None = None
     requires_acoustic_reference: bool = False
+    controlled_axis: str | None = None
 
 
 MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
@@ -168,8 +169,45 @@ REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
     ),
 )
 
+CONTROLLED_MOTHER_VOICE_REFINEMENTS: tuple[MotherVoiceDesign, ...] = (
+    MotherVoiceDesign(
+        id="reference_warm_everyday_natural_prosody",
+        direction=(
+            "A Korean woman in her fifties speaking naturally to her adult child on the phone. "
+            "Keep the same warm, full, lower-mid vocal body and ordinary medium speaking pitch. "
+            "Use plain everyday Korean conversational prosody: connect phrases smoothly, place "
+            "only small emphasis on meaning-bearing words, and let sentence endings settle "
+            "gently without a repeated melodic pattern. The timing should feel spontaneous, "
+            "not read aloud. Do not sound like an announcer, actor, audiobook narrator, or "
+            "customer-service agent. Avoid sing-song intonation and exaggerated concern."
+        ),
+        seed_offset=9,
+        parent_id="reference_warm_everyday",
+        requires_acoustic_reference=True,
+        controlled_axis="prosody-naturalness",
+    ),
+    MotherVoiceDesign(
+        id="reference_warm_everyday_mature_age",
+        direction=(
+            "A Korean mother in her late fifties to early sixties speaking to her adult child on "
+            "the phone. Keep an ordinary conversational delivery and medium-low speaking pitch, "
+            "but give the voice a more mature physical presence through a settled full vocal body, "
+            "rounded lower-mid resonance, steady breath support, and an unhurried cadence. She "
+            "should sound experienced and familiar rather than youthful. Do not imitate frailty, "
+            "trembling, rasp, breathiness, an elderly stereotype, or an artificially forced bass."
+        ),
+        seed_offset=9,
+        parent_id="reference_warm_everyday",
+        requires_acoustic_reference=True,
+        controlled_axis="perceived-age",
+    ),
+)
+
 ALL_MOTHER_VOICE_DESIGNS = (
-    MOTHER_VOICE_DESIGNS + MOTHER_VOICE_REFINEMENTS + REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS
+    MOTHER_VOICE_DESIGNS
+    + MOTHER_VOICE_REFINEMENTS
+    + REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS
+    + CONTROLLED_MOTHER_VOICE_REFINEMENTS
 )
 
 
@@ -368,6 +406,8 @@ def main() -> None:
             )
         if design.parent_id is not None:
             artifact["parentCandidateId"] = design.parent_id
+        if design.controlled_axis is not None:
+            artifact["controlledAxis"] = design.controlled_axis
         artifacts.append(artifact)
         print(f"generated {position:02d}/{len(selected_designs)} {design.id}", flush=True)
 

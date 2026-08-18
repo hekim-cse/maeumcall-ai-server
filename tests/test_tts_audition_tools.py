@@ -28,14 +28,15 @@ from scripts.generate_chatterbox_audition import RUNTIME_VERSION as CHATTERBOX_V
 from scripts.generate_magpie_tts_auditions import MODEL_VERSION, SPEAKERS
 from scripts.generate_melotts_audition import BERT_MODEL_REVISION, MELOTTS_SOURCE_REVISION
 from scripts.generate_qwen_mother_voice_design_auditions import (
-    MODEL_REVISION as QWEN_VOICE_DESIGN_REVISION,
-)
-from scripts.generate_qwen_mother_voice_design_auditions import (
+    CONTROLLED_MOTHER_VOICE_REFINEMENTS,
     MOTHER_VOICE_DESIGNS,
     MOTHER_VOICE_REFINEMENTS,
     REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS,
     evaluate_pitch_against_reference,
     load_acoustic_reference,
+)
+from scripts.generate_qwen_mother_voice_design_auditions import (
+    MODEL_REVISION as QWEN_VOICE_DESIGN_REVISION,
 )
 from scripts.generate_qwen_role_casting_auditions import ROLE_AUDITIONS
 from scripts.tts_audition_common import (
@@ -133,6 +134,15 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert len(MOTHER_VOICE_DESIGNS) == 5
     assert len(MOTHER_VOICE_REFINEMENTS) == 4
     assert len(REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS) == 3
+    assert len(CONTROLLED_MOTHER_VOICE_REFINEMENTS) == 2
+    assert {design.seed_offset for design in CONTROLLED_MOTHER_VOICE_REFINEMENTS} == {9}
+    assert {design.controlled_axis for design in CONTROLLED_MOTHER_VOICE_REFINEMENTS} == {
+        "prosody-naturalness",
+        "perceived-age",
+    }
+    assert {design.parent_id for design in CONTROLLED_MOTHER_VOICE_REFINEMENTS} == {
+        "reference_warm_everyday"
+    }
 
 
 def test_acoustic_reference_loader_accepts_only_the_mother_calibration_contract(
@@ -302,11 +312,16 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
                     "artifacts/tts-role-auditions/cast-v2/"
                     "qwen3-voice-design-family-mother-reference-calibrated/manifest.json"
                 ),
+                (
+                    "artifacts/tts-role-auditions/cast-v2/"
+                    "qwen3-voice-design-family-mother-controlled-refinements/manifest.json"
+                ),
             ],
             "activeCandidateIds": [
-                "reference_warm_everyday",
+                "reference_warm_everyday_natural_prosody",
+                "reference_warm_everyday_mature_age",
             ],
-            "selectionReason": "no-approved-candidate-relative-preference-only",
+            "selectionReason": "awaiting-controlled-axis-user-listening",
         }
     ]
     rejected_candidates = {
@@ -325,6 +340,10 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
             "sourceSha256": ("41d8d1c5c3296e0905430d712b007b0b95527373501abe708119689af5c1c9db"),
             "decision": "retained-as-refinement-parent",
             "reason": "preferred-relative-to-current-audition-set-but-not-approved",
+            "userFeedback": {
+                "intonation": "unnatural",
+                "perceivedAge": "younger-than-late-fifties-to-sixties",
+            },
             "acousticReferenceEvaluation": {
                 "referenceP25F0Hz": 187.1,
                 "referenceP75F0Hz": 229.2,
@@ -515,3 +534,33 @@ def test_reference_calibrated_mother_candidates_record_aggregate_screening():
         "reference_gentle_lived_in": "within-reference-interquartile-range",
     }
     assert all(len(artifact["sha256"]) == 64 for artifact in manifest["artifacts"])
+
+
+def test_controlled_mother_refinements_change_one_documented_axis_each():
+    manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/"
+        "qwen3-voice-design-family-mother-controlled-refinements/manifest.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest["designIds"] == [design.id for design in CONTROLLED_MOTHER_VOICE_REFINEMENTS]
+    assert {artifact["seed"] for artifact in manifest["artifacts"]} == {51}
+    assert {artifact["parentCandidateId"] for artifact in manifest["artifacts"]} == {
+        "reference_warm_everyday"
+    }
+    assert {artifact["controlledAxis"] for artifact in manifest["artifacts"]} == {
+        "prosody-naturalness",
+        "perceived-age",
+    }
+    measured_pitch = {
+        artifact["voice"]: artifact["pitchAnalysis"]["medianF0Hz"]
+        for artifact in manifest["artifacts"]
+    }
+    assert measured_pitch == {
+        "reference_warm_everyday_natural_prosody": 255.3,
+        "reference_warm_everyday_mature_age": 174.6,
+    }
+    assert all(
+        artifact["acousticReferenceEvaluation"]["result"] == "outside-reference-interquartile-range"
+        for artifact in manifest["artifacts"]
+    )

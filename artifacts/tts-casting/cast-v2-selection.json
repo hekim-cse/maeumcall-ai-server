@@ -62,12 +62,14 @@
       "candidateManifests": [
         "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother/manifest.json",
         "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections/manifest.json",
-        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/manifest.json"
+        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/manifest.json",
+        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-controlled-refinements/manifest.json"
       ],
       "activeCandidateIds": [
-        "reference_warm_everyday"
+        "reference_warm_everyday_natural_prosody",
+        "reference_warm_everyday_mature_age"
       ],
-      "selectionReason": "no-approved-candidate-relative-preference-only"
+      "selectionReason": "awaiting-controlled-axis-user-listening"
     }
   ],
   "refinementParentCandidates": [
@@ -79,6 +81,10 @@
       "sourceSha256": "41d8d1c5c3296e0905430d712b007b0b95527373501abe708119689af5c1c9db",
       "decision": "retained-as-refinement-parent",
       "reason": "preferred-relative-to-current-audition-set-but-not-approved",
+      "userFeedback": {
+        "intonation": "unnatural",
+        "perceivedAge": "younger-than-late-fifties-to-sixties"
+      },
       "acousticReferenceEvaluation": {
         "referenceP25F0Hz": 187.1,
         "referenceP75F0Hz": 229.2,
