@@ -304,17 +304,15 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
                 ),
             ],
             "activeCandidateIds": [
-                "natural_everyday",
-                "reference_calm_reassuring",
-                "reference_gentle_lived_in",
+                "reference_warm_everyday",
             ],
-            "selectionReason": "awaiting-user-listening-after-aihub-multi-speaker-calibration",
+            "selectionReason": "no-approved-candidate-relative-preference-only",
         }
     ]
     rejected_candidates = {
         candidate["candidateId"]: candidate for candidate in selection["rejectedCandidates"]
     }
-    assert selection["screenedCandidates"] == [
+    assert selection["refinementParentCandidates"] == [
         {
             "roleId": "family_mother",
             "candidateId": "reference_warm_everyday",
@@ -325,14 +323,14 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
                 "01_reference_warm_everyday.wav"
             ),
             "sourceSha256": ("41d8d1c5c3296e0905430d712b007b0b95527373501abe708119689af5c1c9db"),
-            "decision": "available-for-listening-not-shortlisted",
-            "reason": "below-aihub-reference-interquartile-range",
+            "decision": "retained-as-refinement-parent",
+            "reason": "preferred-relative-to-current-audition-set-but-not-approved",
             "acousticReferenceEvaluation": {
                 "referenceP25F0Hz": 187.1,
                 "referenceP75F0Hz": 229.2,
                 "candidateMedianF0Hz": 168.3,
                 "result": "outside-reference-interquartile-range",
-                "decisionBoundary": "acoustic-screening-only-requires-user-listening",
+                "decisionBoundary": "user-preference-over-acoustic-screen-without-approval",
             },
         }
     ]
@@ -343,13 +341,15 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
         "natural_everyday_mature_low": "rejected-by-user",
         "natural_everyday_contralto": "rejected-by-user",
         "natural_everyday_deep_alto": "rejected-by-pitch-contract",
+        "reference_calm_reassuring": "rejected-by-user",
+        "reference_gentle_lived_in": "rejected-by-user",
         "natural_everyday_warm_husky": "rejected-by-pitch-contract",
     }
     assert all(
         candidate["pitchComparison"]["candidateMedianF0Hz"]
         > candidate["pitchComparison"]["parentMedianF0Hz"]
         for candidate_id, candidate in rejected_candidates.items()
-        if candidate_id != "natural_everyday_contralto"
+        if candidate_id != "natural_everyday_contralto" and "pitchComparison" in candidate
     )
     assert (
         rejected_candidates["natural_everyday_contralto"]["pitchComparison"]["candidateMedianF0Hz"]

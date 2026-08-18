@@ -65,28 +65,26 @@
         "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/manifest.json"
       ],
       "activeCandidateIds": [
-        "natural_everyday",
-        "reference_calm_reassuring",
-        "reference_gentle_lived_in"
+        "reference_warm_everyday"
       ],
-      "selectionReason": "awaiting-user-listening-after-aihub-multi-speaker-calibration"
+      "selectionReason": "no-approved-candidate-relative-preference-only"
     }
   ],
-  "screenedCandidates": [
+  "refinementParentCandidates": [
     {
       "roleId": "family_mother",
       "candidateId": "reference_warm_everyday",
       "parentCandidateId": "natural_everyday",
       "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/01_reference_warm_everyday.wav",
       "sourceSha256": "41d8d1c5c3296e0905430d712b007b0b95527373501abe708119689af5c1c9db",
-      "decision": "available-for-listening-not-shortlisted",
-      "reason": "below-aihub-reference-interquartile-range",
+      "decision": "retained-as-refinement-parent",
+      "reason": "preferred-relative-to-current-audition-set-but-not-approved",
       "acousticReferenceEvaluation": {
         "referenceP25F0Hz": 187.1,
         "referenceP75F0Hz": 229.2,
         "candidateMedianF0Hz": 168.3,
         "result": "outside-reference-interquartile-range",
-        "decisionBoundary": "acoustic-screening-only-requires-user-listening"
+        "decisionBoundary": "user-preference-over-acoustic-screen-without-approval"
       }
     }
   ],
@@ -138,6 +136,38 @@
         "referenceCandidateId": "natural_everyday",
         "parentMedianF0Hz": 196.9,
         "candidateMedianF0Hz": 203.2
+      }
+    },
+    {
+      "roleId": "family_mother",
+      "candidateId": "reference_calm_reassuring",
+      "parentCandidateId": "natural_everyday",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/02_reference_calm_reassuring.wav",
+      "sourceSha256": "1776e4d05671b315dfbd49160448850b1e631cecb0f7b4323faf0dbf7026c15a",
+      "decision": "rejected-by-user",
+      "reason": "current-audition-set-rejected-relative-preference-was-reference-warm-everyday",
+      "acousticReferenceEvaluation": {
+        "referenceP25F0Hz": 187.1,
+        "referenceP75F0Hz": 229.2,
+        "candidateMedianF0Hz": 197.6,
+        "result": "within-reference-interquartile-range",
+        "decisionBoundary": "user-listening-overrides-acoustic-screen"
+      }
+    },
+    {
+      "roleId": "family_mother",
+      "candidateId": "reference_gentle_lived_in",
+      "parentCandidateId": "natural_everyday",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/03_reference_gentle_lived_in.wav",
+      "sourceSha256": "11623ddd4f2149c315ad98bb64dd21233d0cbf22e25eebf7e948b1ea5e2302dd",
+      "decision": "rejected-by-user",
+      "reason": "current-audition-set-rejected-relative-preference-was-reference-warm-everyday",
+      "acousticReferenceEvaluation": {
+        "referenceP25F0Hz": 187.1,
+        "referenceP75F0Hz": 229.2,
+        "candidateMedianF0Hz": 213.3,
+        "result": "within-reference-interquartile-range",
+        "decisionBoundary": "user-listening-overrides-acoustic-screen"
       }
     },
     {
