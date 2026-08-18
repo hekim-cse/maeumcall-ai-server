@@ -104,13 +104,9 @@ def main() -> None:
         bits_per_sample=16,
     )
     saved_audio, saved_sample_rate = librosa.load(output_path, sr=None)
-    watermark_score = float(
-        model.watermarker.get_watermark(saved_audio, saved_sample_rate).item()
-    )
+    watermark_score = float(model.watermarker.get_watermark(saved_audio, saved_sample_rate).item())
     if watermark_score < 0.5:
-        raise RuntimeError(
-            f"Chatterbox output watermark was not detected: {watermark_score}"
-        )
+        raise RuntimeError(f"Chatterbox output watermark was not detected: {watermark_score}")
     artifact = describe_wav(
         output_path,
         position=1,

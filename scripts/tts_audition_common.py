@@ -7,9 +7,7 @@ import wave
 from pathlib import Path
 from typing import Any
 
-DEFAULT_AUDITION_TEXT = (
-    "안녕하세요. 마음콜 통화 연습을 시작하겠습니다. 천천히 말씀해 주세요."
-)
+DEFAULT_AUDITION_TEXT = "안녕하세요. 마음콜 통화 연습을 시작하겠습니다. 천천히 말씀해 주세요."
 
 
 def seed_local_inference(seed: int) -> None:

@@ -16,6 +16,7 @@
 | NVIDIA MagpieTTS v2607 | NVIDIA 공식 Hugging Face Space | 한국어를 지원하는 5개 고정 음성 비교 |
 | MeloTTS Korean | 격리된 Python 3.11 CPU 환경 | 단일 한국어 경량 모델의 속도·품질 기준선 |
 | Chatterbox Multilingual V3 | 격리된 Python 3.11 Apple MPS 환경 | 호출 한도 없는 한국어 로컬 생성과 음성 복제 후보 |
+| Bark Small | Python 3.11 Apple MPS 로컬 실행 | 기준 음성 없이 선택 가능한 한국어 프리셋 10개 비교 |
 
 Magpie 공식 Space 호출은 평가 전용이다. 입력 문장이 외부 NVIDIA Hugging Face Space로 전송되므로 실제 사용자 발화나 개인정보를 사용하지 않는다. 운영 API 공급자로 채택하려면 공개 데모가 아닌 고정 체크포인트 또는 정식 운영 엔드포인트를 별도로 구성해야 한다.
 
@@ -31,7 +32,8 @@ Hugging Face는 모델 파일을 배포하는 저장소와 연산을 대신 수�
 
 | 후보 | 라이선스·한국어 | 역할 음성 구성 | 현재 결정 |
 |---|---|---|---|
-| Chatterbox Multilingual V3 | MIT·한국어 공식 지원 | 내장 기준 음성 1개, 권리 확보된 기준 음성으로 복제 | Apple MPS 합성 성공, 1순위 추가 청취 후보 |
+| Chatterbox Multilingual V3 | MIT·한국어 공식 지원 | 내장 기준 음성 1개, 권리 확보된 기준 음성으로 복제 | Apple MPS 합성은 성공했으나 사용자 청취 평가에서 탈락 |
+| Bark Small | MIT·한국어 공식 지원 | 한국어 V2 프리셋 10개 | 다음 로컬 다중 음색 청취 후보 |
 | OpenVoice V2 | MIT·한국어 공식 지원 | 기준 음성의 음색 복제 | 의존성이 오래됐고 별도 기준 음성이 필요해 2순위 |
 | Fun-CosyVoice 3 | Apache-2.0·한국어 공식 지원 | 제로샷 음성 복제와 지시 기반 운율 | 향후 NVIDIA GPU 운영 서버 후보 |
 | MeloTTS Korean | MIT·한국어 공식 지원 | 한국어 고정 음성 1개 | 경량 CPU 기준선 유지 |
@@ -39,6 +41,8 @@ Hugging Face는 모델 파일을 배포하는 저장소와 연산을 대신 수�
 Meta MMS-TTS Korean은 CC-BY-NC 4.0, XTTS-v2는 Coqui Public Model License, Fish Speech는 상업 이용에 별도 계약이 필요한 라이선스이므로 장기 운영 후보에서 제외한다. Piper는 공식 음성 목록에 한국어가 없고, VibeVoice 1.5B 공식 모델은 영어·중국어용이므로 제외한다.
 
 Chatterbox·OpenVoice·CosyVoice로 여러 배역을 만들 때는 본인 녹음 또는 사용 범위에 명시적으로 동의한 성우 음성만 기준 음성으로 사용한다. 인터넷 영상이나 다른 TTS 결과를 임의로 복제하지 않는다. 공급자를 바꾸면 `Sofia`, `Aria` 같은 기존 모델의 음색 이름과 정체성도 이전되지 않으므로, 새 음성을 직접 듣고 새 배역 버전으로 승인해야 한다.
+
+Bark는 전통적인 음소 기반 TTS가 아니라 생성형 text-to-audio 모델이다. 한국어 프리셋이 다양하다는 장점이 있지만 대본을 벗어난 발화나 비언어 소리를 만들 수 있으므로, 음색뿐 아니라 대본 충실도 검증을 반드시 함께 통과해야 한다.
 
 ## 생성 명령
 
@@ -59,6 +63,12 @@ python3.11 -m venv /absolute/path/to/chatterbox-eval
   -m scripts.generate_chatterbox_audition \
   --output-dir artifacts/tts-auditions/chatterbox-multilingual-v3 \
   --device mps \
+  --allow-network
+
+python -m scripts.generate_bark_korean_auditions \
+  --output-dir artifacts/tts-auditions/bark-small-korean \
+  --device mps \
+  --seed 42 \
   --allow-network
 
 docker build \

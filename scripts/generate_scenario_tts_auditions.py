@@ -235,9 +235,7 @@ def main() -> None:
     selected_provider = TTSProviderId(args.provider)
     if selected_provider is TTSProviderId.NVIDIA_MAGPIE and not args.allow_network:
         raise RuntimeError("Magpie scenario auditions require explicit --allow-network.")
-    if selected_provider is TTSProviderId.QWEN3_TTS and (
-        args.device is None or args.dtype is None
-    ):
+    if selected_provider is TTSProviderId.QWEN3_TTS and (args.device is None or args.dtype is None):
         raise RuntimeError("Qwen scenario auditions require --device and --dtype.")
     validate_audition_contract()
     output_dir = prepare_output_directory(args.output_dir)
@@ -258,9 +256,7 @@ def main() -> None:
         client_context = nullcontext(None)
     else:
         assert_remote_revisions()
-        client_context = TemporaryDirectory(
-            prefix="maeum-call-scenario-auditions-"
-        )
+        client_context = TemporaryDirectory(prefix="maeum-call-scenario-auditions-")
 
     selected_scenarios = [
         (position, scenario_key, registration)

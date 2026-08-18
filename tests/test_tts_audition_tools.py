@@ -6,6 +6,12 @@ from pathlib import Path
 
 import pytest
 
+from scripts.generate_bark_korean_auditions import (
+    KOREAN_VOICE_PRESETS as BARK_KOREAN_VOICE_PRESETS,
+)
+from scripts.generate_bark_korean_auditions import (
+    MODEL_REVISION as BARK_MODEL_REVISION,
+)
 from scripts.generate_chatterbox_audition import (
     MODEL_FILES as CHATTERBOX_MODEL_FILES,
 )
@@ -68,9 +74,7 @@ def test_describe_wav_records_reproducibility_metadata(tmp_path: Path):
 def test_write_manifest_preserves_korean_text(tmp_path: Path):
     manifest_path = write_manifest(tmp_path, {"text": DEFAULT_AUDITION_TEXT})
 
-    assert json.loads(manifest_path.read_text(encoding="utf-8"))["text"] == (
-        DEFAULT_AUDITION_TEXT
-    )
+    assert json.loads(manifest_path.read_text(encoding="utf-8"))["text"] == (DEFAULT_AUDITION_TEXT)
 
 
 def test_candidate_runtime_versions_are_explicitly_pinned():
@@ -82,6 +86,8 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert len(CHATTERBOX_SOURCE_REVISION) == 40
     assert len(CHATTERBOX_MODEL_REVISION) == 40
     assert "t3_mtl23ls_v3.safetensors" in CHATTERBOX_MODEL_FILES
+    assert len(BARK_MODEL_REVISION) == 40
+    assert BARK_KOREAN_VOICE_PRESETS == tuple(f"v2/ko_speaker_{index}" for index in range(10))
 
 
 def test_committed_audition_manifests_share_the_same_contract():
@@ -89,20 +95,19 @@ def test_committed_audition_manifests_share_the_same_contract():
         REPOSITORY_ROOT / "artifacts/tts-auditions/qwen3-tts-0.6b/manifest.json",
         REPOSITORY_ROOT / "artifacts/tts-auditions/magpie-v2607/manifest.json",
         REPOSITORY_ROOT / "artifacts/tts-auditions/melotts-korean/manifest.json",
-        REPOSITORY_ROOT
-        / "artifacts/tts-auditions/chatterbox-multilingual-v3/manifest.json",
+        REPOSITORY_ROOT / "artifacts/tts-auditions/chatterbox-multilingual-v3/manifest.json",
+        REPOSITORY_ROOT / "artifacts/tts-auditions/bark-small-korean/manifest.json",
     )
-    manifests = [
-        json.loads(path.read_text(encoding="utf-8")) for path in manifest_paths
-    ]
+    manifests = [json.loads(path.read_text(encoding="utf-8")) for path in manifest_paths]
 
     assert {manifest["text"] for manifest in manifests} == {DEFAULT_AUDITION_TEXT}
-    assert [len(manifest["artifacts"]) for manifest in manifests] == [9, 5, 1, 1]
+    assert [len(manifest["artifacts"]) for manifest in manifests] == [9, 5, 1, 1, 10]
     assert manifests[0]["seed"] == 42
     assert "seed" not in manifests[1]
     assert manifests[2]["seed"] == 42
     assert manifests[3]["seed"] == 42
     assert manifests[3]["watermark"]["detected"] is True
+    assert manifests[4]["baseSeed"] == 42
     assert all(
         len(artifact["sha256"]) == 64
         for manifest in manifests

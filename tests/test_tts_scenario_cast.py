@@ -43,9 +43,7 @@ def test_user_selected_cast_is_explicit_for_every_category():
 
     for scenario_key, registration in FLOW_REGISTRY.items():
         assignment = SCENARIO_VOICE_CAST[scenario_key]
-        assert (assignment.provider.value, assignment.voice) == expected[
-            registration.category
-        ]
+        assert (assignment.provider.value, assignment.voice) == expected[registration.category]
 
 
 def test_cast_provider_counts_match_selected_32_scenarios():
@@ -74,8 +72,7 @@ def test_audition_lines_are_short_public_role_lines():
 
 def test_committed_qwen_cast_manifest_matches_approved_scenarios():
     manifest_path = (
-        REPOSITORY_ROOT
-        / "artifacts/tts-scenario-auditions/cast-v1/qwen3-tts/manifest.json"
+        REPOSITORY_ROOT / "artifacts/tts-scenario-auditions/cast-v1/qwen3-tts/manifest.json"
     )
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     artifacts = manifest["artifacts"]
