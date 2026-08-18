@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import wave
 from collections import Counter
 from pathlib import Path
@@ -36,6 +37,7 @@ from scripts.generate_qwen_role_casting_auditions import ROLE_AUDITIONS
 from scripts.tts_audition_common import (
     DEFAULT_AUDITION_TEXT,
     describe_wav,
+    describe_wav_pitch,
     prepare_output_directory,
     write_manifest,
 )
@@ -80,6 +82,32 @@ def test_describe_wav_records_reproducibility_metadata(tmp_path: Path):
     assert len(artifact["sha256"]) == 64
 
 
+def test_describe_wav_pitch_measures_a_known_sine_wave(tmp_path: Path):
+    import numpy as np
+
+    sample_rate = 16_000
+    expected_frequency = 160.0
+    samples = np.array(
+        [
+            math.sin(2 * math.pi * expected_frequency * index / sample_rate)
+            for index in range(sample_rate)
+        ],
+        dtype=np.float32,
+    )
+    output_path = tmp_path / "sine.wav"
+    with wave.open(str(output_path), "wb") as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        wav_file.writeframes((samples * 16_000).astype("<i2").tobytes())
+
+    analysis = describe_wav_pitch(output_path)
+
+    assert analysis["algorithm"] == "praat-autocorrelation"
+    assert analysis["medianF0Hz"] == pytest.approx(expected_frequency, abs=1.0)
+    assert analysis["voicedFrames"] > 0
+
+
 def test_write_manifest_preserves_korean_text(tmp_path: Path):
     manifest_path = write_manifest(tmp_path, {"text": DEFAULT_AUDITION_TEXT})
 
@@ -99,7 +127,7 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert BARK_KOREAN_VOICE_PRESETS == tuple(f"v2/ko_speaker_{index}" for index in range(10))
     assert len(QWEN_VOICE_DESIGN_REVISION) == 40
     assert len(MOTHER_VOICE_DESIGNS) == 5
-    assert len(MOTHER_VOICE_REFINEMENTS) == 1
+    assert len(MOTHER_VOICE_REFINEMENTS) == 4
 
 
 def test_committed_audition_manifests_share_the_same_contract():
@@ -185,12 +213,32 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
                 (
                     "artifacts/tts-role-auditions/cast-v2/"
                     "qwen3-voice-design-family-mother-refinements/"
-                    "natural-everyday-mature-low/manifest.json"
+                    "lower-fuller-corrections/manifest.json"
                 ),
+            ],
+            "activeCandidateIds": [
+                "natural_everyday",
+                "natural_everyday_contralto",
             ],
             "selectionReason": "no-approved-custom-voice-candidate",
         }
     ]
+    rejected_candidates = {
+        candidate["candidateId"]: candidate for candidate in selection["rejectedCandidates"]
+    }
+    assert {
+        candidate_id: candidate["decision"]
+        for candidate_id, candidate in rejected_candidates.items()
+    } == {
+        "natural_everyday_mature_low": "rejected-by-user",
+        "natural_everyday_deep_alto": "rejected-by-pitch-contract",
+        "natural_everyday_warm_husky": "rejected-by-pitch-contract",
+    }
+    assert all(
+        candidate["pitchComparison"]["candidateMedianF0Hz"]
+        > candidate["pitchComparison"]["parentMedianF0Hz"]
+        for candidate in rejected_candidates.values()
+    )
     assert {tuple(role["categories"]) for role in selection["retainedRoles"]} == {
         ("교수님",),
         ("친구",),
@@ -271,6 +319,10 @@ def test_committed_qwen_voice_design_manifest_matches_mother_candidates():
     assert [artifact["description"] for artifact in manifest["artifacts"]] == [
         design.direction for design in MOTHER_VOICE_DESIGNS
     ]
+    assert all(
+        artifact["pitchAnalysis"]["algorithm"] == "praat-autocorrelation"
+        for artifact in manifest["artifacts"]
+    )
     assert all(len(artifact["sha256"]) == 64 for artifact in manifest["artifacts"])
 
 
@@ -291,4 +343,29 @@ def test_mother_voice_refinement_preserves_parent_candidate_lineage():
     assert artifact["description"] == refinement.direction
     assert artifact["parentCandidateId"] == refinement.parent_id == "natural_everyday"
     assert artifact["seed"] == 42 + refinement.seed_offset == 47
+    assert artifact["pitchAnalysis"]["medianF0Hz"] == 237.1
     assert len(artifact["sha256"]) == 64
+
+
+def test_lower_fuller_corrections_keep_only_the_candidate_with_lower_measured_pitch():
+    manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/"
+        "qwen3-voice-design-family-mother-refinements/"
+        "lower-fuller-corrections/manifest.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    refinements = MOTHER_VOICE_REFINEMENTS[1:]
+
+    assert manifest["designIds"] == [design.id for design in refinements]
+    assert [artifact["parentCandidateId"] for artifact in manifest["artifacts"]] == [
+        design.parent_id for design in refinements
+    ]
+    measured_pitch = {
+        artifact["voice"]: artifact["pitchAnalysis"]["medianF0Hz"]
+        for artifact in manifest["artifacts"]
+    }
+    assert {
+        candidate_id
+        for candidate_id, median_f0_hz in measured_pitch.items()
+        if median_f0_hz < 196.9
+    } == {"natural_everyday_contralto"}

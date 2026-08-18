@@ -11,6 +11,7 @@ from huggingface_hub import HfApi, snapshot_download
 from scripts.generate_tts_auditions import DEFAULT_MAX_NEW_TOKENS, DEFAULT_SEED
 from scripts.tts_audition_common import (
     describe_wav,
+    describe_wav_pitch,
     prepare_output_directory,
     seed_local_inference,
     write_manifest,
@@ -85,6 +86,40 @@ MOTHER_VOICE_REFINEMENTS: tuple[MotherVoiceDesign, ...] = (
         ),
         seed_offset=5,
         parent_id="natural_everyday",
+    ),
+    MotherVoiceDesign(
+        id="natural_everyday_deep_alto",
+        direction=(
+            "A Korean woman in her late fifties with a distinctly low fundamental pitch, "
+            "a deep and full-bodied alto timbre, and strong chest resonance. Keep the natural, "
+            "unpolished feeling of an everyday family phone call. Speak at a relaxed pace with "
+            "restrained intonation. Do not sound high-pitched, thin, bright, youthful, airy, "
+            "breathy, nasal, or falsetto."
+        ),
+        seed_offset=6,
+        parent_id="natural_everyday_mature_low",
+    ),
+    MotherVoiceDesign(
+        id="natural_everyday_contralto",
+        direction=(
+            "A mature Korean mother around sixty with a low-register contralto voice, dense warm "
+            "vocal body, and a low center of resonance in the chest. Use a calm, slightly slow, "
+            "natural conversational delivery. Avoid head voice, narrow thin tone, high pitch, "
+            "youthful brightness, excessive breathiness, and exaggerated elderly trembling."
+        ),
+        seed_offset=7,
+        parent_id="natural_everyday_mature_low",
+    ),
+    MotherVoiceDesign(
+        id="natural_everyday_warm_husky",
+        direction=(
+            "A Korean woman in her late fifties with a low, rich, gently husky voice and solid "
+            "low-mid chest resonance. She sounds warm and familiar like a real mother speaking "
+            "to her adult child on the phone, with measured pacing and small pitch movements. "
+            "The voice must not be high, thin, girlish, airy, sharp, nasal, or artificially aged."
+        ),
+        seed_offset=8,
+        parent_id="natural_everyday_mature_low",
     ),
 )
 
@@ -191,6 +226,7 @@ def main() -> None:
             description=design.direction,
         )
         artifact["seed"] = seed
+        artifact["pitchAnalysis"] = describe_wav_pitch(output_path)
         if design.parent_id is not None:
             artifact["parentCandidateId"] = design.parent_id
         artifacts.append(artifact)

@@ -61,9 +61,57 @@
       "candidateProvider": "qwen3-tts-voice-design",
       "candidateManifests": [
         "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother/manifest.json",
-        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/natural-everyday-mature-low/manifest.json"
+        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections/manifest.json"
+      ],
+      "activeCandidateIds": [
+        "natural_everyday",
+        "natural_everyday_contralto"
       ],
       "selectionReason": "no-approved-custom-voice-candidate"
+    }
+  ],
+  "rejectedCandidates": [
+    {
+      "roleId": "family_mother",
+      "candidateId": "natural_everyday_mature_low",
+      "parentCandidateId": "natural_everyday",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/natural-everyday-mature-low/01_natural_everyday_mature_low.wav",
+      "sourceSha256": "64388289d3c03743a93ff80eb2ae35d42ffc38f7ee476e9293aa3f1b677e051b",
+      "decision": "rejected-by-user",
+      "reason": "perceived-higher-and-thinner-than-parent-candidate",
+      "pitchComparison": {
+        "referenceCandidateId": "natural_everyday",
+        "parentMedianF0Hz": 196.9,
+        "candidateMedianF0Hz": 237.1
+      }
+    },
+    {
+      "roleId": "family_mother",
+      "candidateId": "natural_everyday_deep_alto",
+      "parentCandidateId": "natural_everyday_mature_low",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections/01_natural_everyday_deep_alto.wav",
+      "sourceSha256": "92b38a40fa7601e0d29d29073d17a05c245f0bdd2189a73abb4cb5dd21077c4f",
+      "decision": "rejected-by-pitch-contract",
+      "reason": "median-f0-not-lower-than-parent-candidate",
+      "pitchComparison": {
+        "referenceCandidateId": "natural_everyday",
+        "parentMedianF0Hz": 196.9,
+        "candidateMedianF0Hz": 203.2
+      }
+    },
+    {
+      "roleId": "family_mother",
+      "candidateId": "natural_everyday_warm_husky",
+      "parentCandidateId": "natural_everyday_mature_low",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections/03_natural_everyday_warm_husky.wav",
+      "sourceSha256": "b775a3092b4fb30c7c2f48619f911e6e333f9f4fd57291c42eb86ae56ed12814",
+      "decision": "rejected-by-pitch-contract",
+      "reason": "median-f0-not-lower-than-parent-candidate",
+      "pitchComparison": {
+        "referenceCandidateId": "natural_everyday",
+        "parentMedianF0Hz": 196.9,
+        "candidateMedianF0Hz": 207.0
+      }
     }
   ],
   "retainedRoles": [

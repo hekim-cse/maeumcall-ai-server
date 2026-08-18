@@ -1,0 +1,94 @@
+{
+  "castVersion": 2,
+  "roleId": "family_mother",
+  "selectionStatus": "awaiting-user-selection",
+  "generatedAt": "2026-08-18T08:45:44.003888+00:00",
+  "provider": "qwen3-tts-voice-design",
+  "executionMode": "local-evaluation",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "modelRevision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "runtimeVersion": "0.1.1",
+  "language": "Korean",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+  "maxNewTokens": 1200,
+  "baseSeed": 42,
+  "seedStrategy": "base-seed-plus-stable-design-offset",
+  "designIds": [
+    "natural_everyday_deep_alto",
+    "natural_everyday_contralto",
+    "natural_everyday_warm_husky"
+  ],
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "natural_everyday_deep_alto",
+      "description": "A Korean woman in her late fifties with a distinctly low fundamental pitch, a deep and full-bodied alto timbre, and strong chest resonance. Keep the natural, unpolished feeling of an everyday family phone call. Speak at a relaxed pace with restrained intonation. Do not sound high-pitched, thin, bright, youthful, airy, breathy, nasal, or falsetto.",
+      "filename": "01_natural_everyday_deep_alto.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6960,
+      "sha256": "92b38a40fa7601e0d29d29073d17a05c245f0bdd2189a73abb4cb5dd21077c4f",
+      "seed": 48,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 203.2,
+        "p25F0Hz": 185.3,
+        "p75F0Hz": 253.0,
+        "voicedFrames": 409
+      },
+      "parentCandidateId": "natural_everyday_mature_low"
+    },
+    {
+      "position": 2,
+      "voice": "natural_everyday_contralto",
+      "description": "A mature Korean mother around sixty with a low-register contralto voice, dense warm vocal body, and a low center of resonance in the chest. Use a calm, slightly slow, natural conversational delivery. Avoid head voice, narrow thin tone, high pitch, youthful brightness, excessive breathiness, and exaggerated elderly trembling.",
+      "filename": "02_natural_everyday_contralto.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 8000,
+      "sha256": "11d94a040f0bdd8018b0d0c7276d7f64d615dc3e5a8acf5faed972629d640cf7",
+      "seed": 49,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 162.4,
+        "p25F0Hz": 153.1,
+        "p75F0Hz": 180.2,
+        "voicedFrames": 319
+      },
+      "parentCandidateId": "natural_everyday_mature_low"
+    },
+    {
+      "position": 3,
+      "voice": "natural_everyday_warm_husky",
+      "description": "A Korean woman in her late fifties with a low, rich, gently husky voice and solid low-mid chest resonance. She sounds warm and familiar like a real mother speaking to her adult child on the phone, with measured pacing and small pitch movements. The voice must not be high, thin, girlish, airy, sharp, nasal, or artificially aged.",
+      "filename": "03_natural_everyday_warm_husky.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6560,
+      "sha256": "b775a3092b4fb30c7c2f48619f911e6e333f9f4fd57291c42eb86ae56ed12814",
+      "seed": 50,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 207.0,
+        "p25F0Hz": 186.4,
+        "p75F0Hz": 220.2,
+        "voicedFrames": 405
+      },
+      "parentCandidateId": "natural_everyday_mature_low"
+    }
+  ]
+}

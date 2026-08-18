@@ -58,6 +58,36 @@ def describe_wav(
     }
 
 
+def describe_wav_pitch(
+    path: Path,
+    *,
+    pitch_floor_hz: float = 65.0,
+    pitch_ceiling_hz: float = 400.0,
+) -> dict[str, str | int | float]:
+    import numpy as np
+    import parselmouth
+
+    pitch = parselmouth.Sound(str(path)).to_pitch_ac(
+        time_step=0.01,
+        pitch_floor=pitch_floor_hz,
+        pitch_ceiling=pitch_ceiling_hz,
+    )
+    voiced_frequencies = pitch.selected_array["frequency"]
+    voiced_frequencies = voiced_frequencies[voiced_frequencies > 0]
+    if not voiced_frequencies.size:
+        raise RuntimeError(f"No voiced pitch frames were detected: {path}")
+    return {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": pitch_floor_hz,
+        "pitchCeilingHz": pitch_ceiling_hz,
+        "medianF0Hz": round(float(np.median(voiced_frequencies)), 1),
+        "p25F0Hz": round(float(np.percentile(voiced_frequencies, 25)), 1),
+        "p75F0Hz": round(float(np.percentile(voiced_frequencies, 75)), 1),
+        "voicedFrames": int(voiced_frequencies.size),
+    }
+
+
 def write_manifest(output_dir: Path, manifest: dict[str, Any]) -> Path:
     manifest_path = output_dir / "manifest.json"
     manifest_path.write_text(

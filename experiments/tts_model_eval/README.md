@@ -94,6 +94,14 @@ python -m scripts.generate_qwen_mother_voice_design_auditions \
   --dtype bfloat16 \
   --design-id natural_everyday_mature_low
 
+python -m scripts.generate_qwen_mother_voice_design_auditions \
+  --output-dir artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections \
+  --device mps \
+  --dtype bfloat16 \
+  --design-id natural_everyday_deep_alto \
+  --design-id natural_everyday_contralto \
+  --design-id natural_everyday_warm_husky
+
 docker build \
   --file experiments/tts_model_eval/melotts.Dockerfile \
   --tag maeum-call-melotts-eval:2026-08-18 \

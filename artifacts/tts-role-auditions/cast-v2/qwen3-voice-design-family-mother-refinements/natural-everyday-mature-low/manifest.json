@@ -30,6 +30,16 @@
       "durationMs": 5600,
       "sha256": "64388289d3c03743a93ff80eb2ae35d42ffc38f7ee476e9293aa3f1b677e051b",
       "seed": 47,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 237.1,
+        "p25F0Hz": 210.5,
+        "p75F0Hz": 283.7,
+        "voicedFrames": 351
+      },
       "parentCandidateId": "natural_everyday"
     }
   ]

@@ -33,7 +33,17 @@
       "bitDepth": 16,
       "durationMs": 5920,
       "sha256": "946ea1f0e2a2448aec221249e6cbed5aac68d6a5de80445b653f2c8e494bb28b",
-      "seed": 42
+      "seed": 42,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 203.6,
+        "p25F0Hz": 183.7,
+        "p75F0Hz": 228.8,
+        "voicedFrames": 325
+      }
     },
     {
       "position": 2,
@@ -45,7 +55,17 @@
       "bitDepth": 16,
       "durationMs": 6800,
       "sha256": "dfed6eaf2da0245de3e9e225f7e59e1aafde68ca1d1b042801a5911d4394edcc",
-      "seed": 43
+      "seed": 43,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 196.9,
+        "p25F0Hz": 176.0,
+        "p75F0Hz": 216.2,
+        "voicedFrames": 287
+      }
     },
     {
       "position": 3,
@@ -57,7 +77,17 @@
       "bitDepth": 16,
       "durationMs": 6720,
       "sha256": "3f01d2fe5b081472208def01e44d649ed5753ea424afec793d4265ebdd28f745",
-      "seed": 44
+      "seed": 44,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 239.1,
+        "p25F0Hz": 204.4,
+        "p75F0Hz": 263.8,
+        "voicedFrames": 333
+      }
     },
     {
       "position": 4,
@@ -69,7 +99,17 @@
       "bitDepth": 16,
       "durationMs": 7280,
       "sha256": "a06b1fe523fe78a434aee74f7f04367da65b7373fac1aff9214871f591ce5b69",
-      "seed": 45
+      "seed": 45,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 220.4,
+        "p25F0Hz": 190.7,
+        "p75F0Hz": 264.5,
+        "voicedFrames": 421
+      }
     },
     {
       "position": 5,
@@ -81,7 +121,17 @@
       "bitDepth": 16,
       "durationMs": 7200,
       "sha256": "ecbeac1bd53293f95977d435ddd97ed818cd4335355a1fe27880be204eba63d7",
-      "seed": 46
+      "seed": 46,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 260.0,
+        "p25F0Hz": 242.9,
+        "p75F0Hz": 298.8,
+        "voicedFrames": 484
+      }
     }
   ]
 }
