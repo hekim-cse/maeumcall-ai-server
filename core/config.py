@@ -100,6 +100,15 @@ TTS_DEVICE = getenv("TTS_DEVICE", "")
 TTS_DTYPE = getenv("TTS_DTYPE", "")
 TTS_MAX_TEXT_LENGTH = getenv_int("TTS_MAX_TEXT_LENGTH", 500)
 TTS_MAX_NEW_TOKENS = getenv_int("TTS_MAX_NEW_TOKENS", 1_200)
+TTS_BARK_MODEL_NAME = getenv("TTS_BARK_MODEL_NAME", "suno/bark-small")
+TTS_BARK_MODEL_REVISION = getenv(
+    "TTS_BARK_MODEL_REVISION",
+    "1dbd7a128513b8ae4a4e2130fed57b7ac9da5bcd",
+)
+_tts_voice_clone_manifest = getenv("TTS_VOICE_CLONE_MANIFEST_PATH", "")
+TTS_VOICE_CLONE_MANIFEST_PATH = (
+    Path(_tts_voice_clone_manifest) if _tts_voice_clone_manifest else None
+)
 
 if TTS_ENABLED:
     if TTS_DEVICE not in {"cpu", "mps", "cuda"}:

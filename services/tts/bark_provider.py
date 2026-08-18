@@ -5,13 +5,14 @@ import threading
 from pathlib import Path
 from typing import Any
 
-from services.tts.catalog import TTSVoiceId
 from services.tts.errors import TTSServiceError
 from services.tts.provider import SynthesizedSpeech
 
 
-class QwenTTSProvider:
-    provider_name = "qwen3-tts"
+class BarkTTSProvider:
+    provider_name = "bark-small"
+    supported_voice = "ko_speaker_5"
+    generation_seed = 47
 
     def __init__(
         self,
@@ -20,16 +21,14 @@ class QwenTTSProvider:
         model_revision: str,
         local_files_only: bool,
         device: str,
-        dtype: str,
-        max_new_tokens: int,
     ) -> None:
         self.model_name = model_name
         self.model_revision = model_revision
         self.local_files_only = local_files_only
         self.device = device
-        self.dtype = dtype
-        self.max_new_tokens = max_new_tokens
         self._model: Any | None = None
+        self._processor: Any | None = None
+        self._history_prompt: dict[str, Any] | None = None
         self._model_path: Path | None = None
         self._lock = threading.Lock()
 
@@ -47,18 +46,11 @@ class QwenTTSProvider:
         except Exception as exc:
             raise TTSServiceError(
                 "TTS_MODEL_UNAVAILABLE",
-                "고정된 음성 합성 모델을 불러오지 못했습니다.",
+                "고정된 Bark 음성 합성 모델을 불러오지 못했습니다.",
                 status_code=503,
             ) from exc
         self._model_path = Path(resolved)
         return self._model_path
-
-    def _torch_dtype(self, torch: Any) -> Any:
-        return {
-            "float32": torch.float32,
-            "float16": torch.float16,
-            "bfloat16": torch.bfloat16,
-        }[self.dtype]
 
     def _validate_device(self, torch: Any) -> None:
         if self.device == "mps" and not torch.backends.mps.is_available():
@@ -73,59 +65,73 @@ class QwenTTSProvider:
                 "설정한 CUDA 음성 합성 장치를 사용할 수 없습니다.",
                 status_code=503,
             )
-        if self.device == "cpu" and self.dtype != "float32":
-            raise TTSServiceError(
-                "TTS_DTYPE_INVALID",
-                "CPU 음성 합성은 float32 정밀도로 설정해야 합니다.",
-                status_code=503,
-            )
 
     def probe(self) -> None:
         try:
             import torch
-            from qwen_tts import Qwen3TTSModel  # noqa: F401
+            from transformers import AutoProcessor, BarkModel  # noqa: F401
         except Exception as exc:
             raise TTSServiceError(
                 "TTS_RUNTIME_UNAVAILABLE",
-                "음성 합성 실행 패키지를 불러오지 못했습니다.",
+                "Bark 음성 합성 실행 패키지를 불러오지 못했습니다.",
                 status_code=503,
             ) from exc
         self._validate_device(torch)
-        self._resolve_model_path()
+        model_path = self._resolve_model_path()
+        preset_prefix = f"speaker_embeddings/v2/{self.supported_voice}"
+        required = tuple(
+            model_path / f"{preset_prefix}_{component}_prompt.npy"
+            for component in ("semantic", "coarse", "fine")
+        )
+        if not all(path.is_file() for path in required):
+            raise TTSServiceError(
+                "TTS_VOICE_ASSET_UNAVAILABLE",
+                "승인된 Bark 한국어 음색 파일을 찾지 못했습니다.",
+                status_code=503,
+            )
 
-    def _load_model(self) -> Any:
-        if self._model is not None:
-            return self._model
+    def _load_runtime(self) -> tuple[Any, Any, dict[str, Any]]:
+        if self._model is not None and self._processor is not None and self._history_prompt:
+            return self._processor, self._model, self._history_prompt
         try:
+            import numpy as np
             import torch
-            from qwen_tts import Qwen3TTSModel
+            from transformers import AutoProcessor, BarkModel
 
             self._validate_device(torch)
-            self._model = Qwen3TTSModel.from_pretrained(
-                str(self._resolve_model_path()),
-                device_map=self.device,
-                dtype=self._torch_dtype(torch),
-                attn_implementation="eager",
-            )
+            model_path = self._resolve_model_path()
+            processor = AutoProcessor.from_pretrained(str(model_path), local_files_only=True)
+            model = BarkModel.from_pretrained(
+                str(model_path),
+                local_files_only=True,
+                dtype=torch.float32,
+            ).to(self.device)
+            model.eval()
+            preset_prefix = f"speaker_embeddings/v2/{self.supported_voice}"
+            history_prompt = {
+                key: np.load(model_path / f"{preset_prefix}_{key}.npy")
+                for key in ("semantic_prompt", "coarse_prompt", "fine_prompt")
+            }
         except TTSServiceError:
             raise
         except Exception as exc:
             raise TTSServiceError(
                 "TTS_MODEL_LOAD_FAILED",
-                "음성 합성 모델을 메모리에 올리지 못했습니다.",
+                "Bark 음성 합성 모델을 메모리에 올리지 못했습니다.",
                 status_code=503,
             ) from exc
-        return self._model
+        self._processor = processor
+        self._model = model
+        self._history_prompt = history_prompt
+        return processor, model, history_prompt
 
     def synthesize(self, *, text: str, voice: str) -> SynthesizedSpeech:
-        try:
-            voice_id = TTSVoiceId(voice)
-        except ValueError as exc:
+        if voice != self.supported_voice:
             raise TTSServiceError(
                 "TTS_VOICE_UNSUPPORTED",
-                "선택한 Qwen 음색을 사용할 수 없습니다.",
+                "승인되지 않은 Bark 음색입니다.",
                 status_code=422,
-            ) from exc
+            )
         if not self._lock.acquire(blocking=False):
             raise TTSServiceError(
                 "TTS_BUSY",
@@ -134,22 +140,29 @@ class QwenTTSProvider:
             )
         try:
             import soundfile as sf
+            import torch
 
-            model = self._load_model()
-            wavs, sample_rate = model.generate_custom_voice(
-                text=text,
-                language="Korean",
-                speaker=voice_id.value,
-                max_new_tokens=self.max_new_tokens,
-            )
+            processor, model, history_prompt = self._load_runtime()
+            torch.manual_seed(self.generation_seed)
+            inputs = processor(
+                text,
+                voice_preset=history_prompt,
+                return_tensors="pt",
+            ).to(self.device)
+            if "attention_mask" not in inputs:
+                inputs["attention_mask"] = torch.ones_like(inputs["input_ids"])
+            with torch.inference_mode():
+                audio = model.generate(**inputs)
+            samples = audio.detach().cpu().float().numpy().squeeze()
+            sample_rate = int(model.generation_config.sample_rate)
             output = io.BytesIO()
-            sf.write(output, wavs[0], sample_rate, format="WAV", subtype="PCM_16")
+            sf.write(output, samples, sample_rate, format="WAV", subtype="PCM_16")
         except TTSServiceError:
             raise
         except Exception as exc:
             raise TTSServiceError(
                 "TTS_SYNTHESIS_FAILED",
-                "음성 합성을 완료하지 못했습니다.",
+                "Bark 음성 합성을 완료하지 못했습니다.",
                 status_code=502,
             ) from exc
         finally:
@@ -157,8 +170,8 @@ class QwenTTSProvider:
         return SynthesizedSpeech(
             audio=output.getvalue(),
             media_type="audio/wav",
-            sample_rate=int(sample_rate),
-            voice=voice_id.value,
+            sample_rate=sample_rate,
+            voice=voice,
             provider=self.provider_name,
             model=self.model_name,
             model_revision=self.model_revision,
@@ -167,6 +180,8 @@ class QwenTTSProvider:
     def unload(self) -> None:
         had_model = self._model is not None
         self._model = None
+        self._processor = None
+        self._history_prompt = None
         if not had_model:
             return
         import torch

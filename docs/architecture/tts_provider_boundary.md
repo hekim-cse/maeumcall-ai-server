@@ -1,4 +1,4 @@
-# Qwen3-TTS 공급자와 음색 선정 경계
+# TTS 배역 계약과 다중 공급자 실행 경계
 
 ## 상태
 
@@ -6,15 +6,32 @@ Accepted · 2026-08-18
 
 ## 결정
 
-마음콜의 한국어 음성 합성 엔진으로 `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice`를 사용한다. 모델은 `85e237c12c027371202489a0ec509ded67b5e4b5` 리비전으로 고정한다. 모델과 공식 `qwen-tts` 패키지는 Apache-2.0이다.
+마음콜의 배역 버전 2는 실제 청취로 승인한 Qwen3-TTS CustomVoice, Bark Small, Qwen3-TTS Voice Clone을 역할별로 사용한다. 모델 이름만 저장하지 않고 각 Hugging Face 리비전, 배역 버전, 역할 ID와 음색 ID를 함께 고정한다.
 
 서버는 TTS를 다음 경계로 분리한다.
 
 1. `/chat`은 검증된 텍스트와 LangGraph 상태만 반환한다.
-2. `/tts/voices`는 사용할 수 있는 9개 고정 음색과 모델 리비전을 공개한다.
-3. 인증된 `/tts/synthesize`는 허용된 음색과 한국어 텍스트만 받아 24kHz·16비트·모노 WAV를 반환한다.
-4. `TTSProvider`는 모델별 로딩과 합성을 감추고, API 계약은 Qwen 내부 타입에 의존하지 않는다.
-5. 기능 비활성화, 장치 부재, 리비전 누락, 합성 실패를 각각 타입이 있는 오류로 반환한다.
+2. 모바일은 인증된 `/tts/scenario/synthesize`에 텍스트·시나리오 키·배역 버전·선택적 가족 역할만 보낸다.
+3. 서버는 32개 시나리오 전체를 덮는 승인 배역표에서 공급자와 음색을 결정한다.
+4. `/tts/synthesize`와 `/tts/voices`는 개발·청취 비교를 위한 Qwen 직접 경로로 유지한다.
+5. `TTSProvider`는 모델별 로딩과 합성을 감추고 API 계약은 특정 모델 내부 타입에 의존하지 않는다.
+6. 런타임은 한 번에 모델 하나만 메모리에 유지하며 공급자가 바뀌면 이전 모델을 명시적으로 해제한다.
+7. 기능 비활성화, 장치 부재, 자산·리비전 누락, 승인되지 않은 배역, 합성 실패를 각각 타입이 있는 오류로 반환한다.
+
+### 배역 버전 2
+
+| 역할 | 시나리오 범위 | 공급자 | 음색 |
+|---|---|---|---|
+| 서비스 상담원 | 예약·시청·고객센터 | Qwen3-TTS | `ryan` |
+| 교수님 | 교수님 | Qwen3-TTS | `eric` |
+| 배달 상담원 | 배달 | Qwen3-TTS | `vivian` |
+| 아빠 | 가족 + `personaId=father` | Qwen3-TTS | `aiden` |
+| 엄마 | 가족 + `personaId=mother` | Qwen3-TTS Voice Clone | 승인 ICL 프롬프트 |
+| 친구 | 친구 | Qwen3-TTS | `serena` |
+| 연인 | 연인 | Qwen3-TTS | `uncle_fu` |
+| 회사 상사 | 회사 | Bark Small | `v2/ko_speaker_5` |
+
+배역 버전은 앱 버전과 독립적이다. 음색 변경이 필요하면 기존 의미를 조용히 바꾸지 않고 새 배역 버전을 만든다. 모바일은 원시 음색을 저장하지 않으므로 서버 배역 정책을 한곳에서 감사하고 회귀 테스트할 수 있다.
 
 ## 선택 근거
 
@@ -38,7 +55,10 @@ Accepted · 2026-08-18
 - attention 구현: Apple MPS에서 지원되는 PyTorch eager 경로
 - 기본 운영값: TTS 비활성화, 로컬 파일만 사용
 - CPU 사용 시 dtype은 float32만 허용
-- 한 프로세스의 공급자는 합성을 직렬화하고 동시 요청은 `429 TTS_BUSY`로 거부해 모델 객체와 메모리를 보호함
+- 한 프로세스의 전체 TTS 런타임은 공급자를 가로질러 합성을 직렬화하고 동시 요청은 `429 TTS_BUSY`로 거부해 모델 객체와 메모리를 보호함
+- Bark Small: `suno/bark-small` 리비전 `1dbd7a128513b8ae4a4e2130fed57b7ac9da5bcd`
+- 엄마 Voice Clone: `Qwen/Qwen3-TTS-12Hz-1.7B-Base` 리비전 `fd4b254389122332181a7c3db7f27e918eec64e3`
+- 엄마 음성의 manifest와 `safetensors`는 Git 밖의 운영 자산으로 배치하고 절대 경로로 주입함
 
 Qwen 패키지가 데모용 Gradio도 의존하므로 `requirements-tts.txt`에서 FastAPI와 호환되는 버전을 함께 고정했다. 기본 서버 설치에는 이 무거운 선택 의존성을 넣지 않는다.
 

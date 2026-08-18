@@ -138,7 +138,8 @@
 - 캘리브레이션 진행 데이터 초기화: `POST /voice/calibrate/reset`
 - 운영 지표: `GET /metrics` (Prometheus text format, OpenAPI 문서에서는 숨김)
 - TTS 음색 목록: `GET /tts/voices`
-- 한국어 음성 합성: `POST /tts/synthesize`
+- 운영 시나리오 음성 합성: `POST /tts/scenario/synthesize`
+- 개발·청취용 직접 음성 합성: `POST /tts/synthesize`
 
 `GET /voice/baseline`, 캘리브레이션 분석·확정·초기화, 기준선 삭제는 Firebase ID token이 필수다. `POST /voice/analyze`의 일반 분석은 익명 호출도 허용하지만 기준선은 적용하지 않는다. 음성 API는 body, form, query의 `user_id`를 소유권 근거로 받지 않는다.
 
@@ -146,7 +147,21 @@
 
 ### TTS 합성 계약
 
-`GET /tts/voices`는 서버가 허용하는 Qwen3-TTS 고정 음색 9개와 모델 리비전을 반환한다. `POST /tts/synthesize`는 Firebase ID token이 필요한 계산 자원 API다.
+`GET /tts/voices`는 서버가 허용하는 Qwen3-TTS 고정 음색 9개와 모델 리비전을 반환한다. 두 합성 API는 모두 Firebase ID token이 필요한 계산 자원 API다. 모바일 운영 경로는 음색 ID를 직접 보내지 않고 `POST /tts/scenario/synthesize`를 호출한다.
+
+```json
+{
+  "text": "예약 날짜를 확인해 드릴게요.",
+  "scenarioKey": "예약:병원 예약",
+  "castVersion": 2
+}
+```
+
+가족 시나리오의 배역 버전 2 요청에는 `personaId`가 필수이며 `mother` 또는 `father`만 허용한다. 가족 이외의 요청에 `personaId`를 보내면 계약 오류로 거절한다. 서버는 등록된 시나리오와 승인된 배역표를 대조해 공급자와 음색을 결정한다. 클라이언트가 공급자·음색을 임의로 덮어쓸 수 없다.
+
+성공 응답은 `audio/wav` 본문이다. 공통 헤더에 더해 운영 경로는 `X-TTS-Cast-Version`, URL 인코딩된 `X-TTS-Scenario-Key`, `X-TTS-Role`과 선택적 `X-TTS-Persona`를 반환한다.
+
+`POST /tts/synthesize`는 관리자가 허용된 Qwen 음색을 직접 비교하는 개발·청취 경로다.
 
 ```json
 {
@@ -155,7 +170,7 @@
 }
 ```
 
-성공 응답은 `audio/wav` 본문이다. `X-TTS-Provider`, `X-TTS-Model`, `X-TTS-Model-Revision`, `X-TTS-Voice`, `X-Audio-Sample-Rate` 헤더로 실제 합성 조건을 함께 전달한다. 발화에 개인정보가 포함될 수 있어 `Cache-Control: private, no-store`를 사용한다. 언어는 한국어로 고정하며, 음색은 목록에 공개된 ID만 허용한다. 시나리오별 음색은 청취 검토 전까지 서버가 임의로 선택하지 않는다.
+`X-TTS-Provider`, `X-TTS-Model`, `X-TTS-Model-Revision`, `X-TTS-Voice`, `X-Audio-Sample-Rate` 헤더로 실제 합성 조건을 함께 전달한다. 발화에 개인정보가 포함될 수 있어 `Cache-Control: private, no-store`를 사용한다. 언어는 한국어로 고정하며, 승인되지 않은 공급자·음색으로 자동 대체하지 않는다.
 
 이전 `/suggest`, `/improve`, `/analyze` 별칭은 제공하지 않는다. 클라이언트와 서버의 경로 불일치를 404로 드러내 배포 계약 오류를 조기에 발견한다.
 

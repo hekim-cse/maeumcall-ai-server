@@ -334,7 +334,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 | `services/flow/delivery/`, `cityhall/`, `support/` | 9개 업무 시나리오의 독립 필드·상태·분기 계약 |
 | `services/flow/professor/` | 교수님 시나리오 3개의 상세 LangGraph |
 | `services/flow/reservation/` | 예약 시나리오 4개의 상세 LangGraph |
-| `services/tts/` | Qwen3-TTS 모델 로딩, 장치 검증, 직렬 합성과 WAV 응답 공급자 경계 |
+| `services/tts/` | 배역 버전, Qwen·Bark·Voice Clone 모델 전환, 장치·자산 검증과 직렬 WAV 합성 경계 |
 | `llm/` | LLM provider, prompt builder, 구조화 출력 계약과 오류 타입 |
 | `data/scenario/` | 시나리오 샘플 데이터 |
 | `data/prompts/` | 시나리오별 프롬프트 데이터 |
@@ -377,7 +377,7 @@ cp .env.example .env
 # 최초 다운로드 후 HF_LOCAL_FILES_ONLY=1로 전환 권장
 ```
 
-로컬 Qwen3-TTS 실행 의존성(선택):
+로컬 다중 TTS 실행 의존성(선택):
 
 ```bash
 # macOS. 다른 운영체제에서도 SoX 실행 파일을 먼저 설치합니다.
@@ -386,6 +386,8 @@ python -m pip install -r requirements-tts.txt
 cp .env.example .env
 # Apple Silicon 검증값: TTS_ENABLED=1, TTS_DEVICE=mps, TTS_DTYPE=bfloat16
 # 고정 리비전을 내려받은 뒤 TTS_LOCAL_FILES_ONLY=1 유지
+# 엄마 배역은 승인 manifest와 safetensors가 있는 저장소 밖 절대 경로를
+# TTS_VOICE_CLONE_MANIFEST_PATH에 지정
 ```
 
 9개 음색을 같은 문장으로 비교하려면 기존 WAV가 없는 절대 경로를 지정합니다. 결과 WAV는 Git에 넣지 않고 manifest의 모델 리비전과 SHA-256으로 식별합니다.
@@ -481,7 +483,7 @@ http://127.0.0.1:8000/docs
 | 📚 [학습 가이드](docs/learning-guide.md) | 기술 선택과 구현 원칙을 질문·답 형식으로 설명 |
 | 🗄 [음성 기준선 PostgreSQL 설계](docs/architecture/voice_baseline_postgresql.md) | 테이블, 행 잠금, 트랜잭션, JSON 이관 절차와 용어 설명 |
 | 📈 [LangGraph 관측성 설계](docs/architecture/langgraph_observability.md) | 노드 latency, 재시도, 계약 실패 지표, PromQL과 용어 설명 |
-| 🔊 [Qwen3-TTS 공급자 경계](docs/architecture/tts_provider_boundary.md) | 모델 선정, 고정 리비전, 인증된 합성 API, 9개 음색 청취 절차와 운영 제약 |
+| 🔊 [TTS 배역·공급자 경계](docs/architecture/tts_provider_boundary.md) | 배역 버전 2, Qwen·Bark·Voice Clone 모델 전환, 인증된 합성 API와 운영 제약 |
 | 🎚️ [AI Hub 다화자 음향 기준](docs/architecture/tts_voice_reference_data.md) | 50·60대 여성 55명의 익명 집계, 균형 표본, 개인정보·라이선스 경계와 엄마 음성 선정 기준 |
 
 ---

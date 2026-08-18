@@ -6,6 +6,9 @@
 
 ### Added
 
+- 32개 시나리오와 가족 엄마·아빠 역할을 덮는 서버 소유 `castVersion: 2` 배역 계약
+- 인증된 `/tts/scenario/synthesize` API와 Qwen3-TTS·Bark Small·Qwen Voice Clone 공급자
+- 승인된 엄마 Voice Clone manifest·safetensors 해시 검증과 공급자 전환 시 모델 메모리 해제
 - Apache-2.0 Qwen3-TTS 0.6B CustomVoice의 SHA 고정 로컬 공급자, 9개 음색 목록, 인증된 WAV 합성 API
 - 동일 한국어 문장으로 9개 음색을 생성하고 파일 해시를 기록하는 청취 비교 명령
 - 모든 대화의 외부 반영 없음 메타데이터와 9개 업무 상세 그래프의 사용자 확인 후 모의 처리 완료 상태
@@ -21,6 +24,8 @@
 
 ### Changed
 
+- 모바일 운영 TTS 요청이 원시 음색 대신 시나리오 키·배역 버전·선택적 가족 역할을 사용하도록 경계 분리
+- 한 프로세스의 TTS 합성을 공급자 전체에서 직렬화하고 활성 모델을 하나만 유지하도록 실행 구조 강화
 - 로컬 NLU와 TTS가 함께 설치될 수 있도록 Transformers·Accelerate 버전을 Qwen3-TTS 공식 패키지 계약과 통일
 - 배달·시청·고객센터 흐름을 처리 준비에서 종료하지 않고 명시적 진행 의사 뒤 모의 승인·안내·접수 완료까지 확장
 - Python 코드를 3.11 타입 표기와 단일 Ruff 포맷 기준으로 정리

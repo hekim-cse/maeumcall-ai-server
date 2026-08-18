@@ -11,6 +11,8 @@ from scripts.generate_scenario_tts_auditions import (
 from services.flow.registry import FLOW_REGISTRY
 from services.tts.casting import (
     SCENARIO_VOICE_CAST,
+    SCENARIO_VOICE_CAST_V2,
+    TTSPersonaId,
     TTSProviderId,
     get_scenario_voice_assignment,
 )
@@ -61,6 +63,43 @@ def test_mobile_label_variants_resolve_to_the_approved_cast():
     assert assignment is not None
     assert assignment.provider is TTSProviderId.NVIDIA_MAGPIE
     assert assignment.voice == "sofia"
+
+
+def test_cast_v2_covers_every_flow_and_both_family_personas():
+    assert {key for key, _ in SCENARIO_VOICE_CAST_V2} == set(FLOW_REGISTRY)
+    family_keys = {
+        key for key, registration in FLOW_REGISTRY.items() if registration.category == "가족"
+    }
+    for scenario_key in family_keys:
+        assert (scenario_key, TTSPersonaId.MOTHER) in SCENARIO_VOICE_CAST_V2
+        assert (scenario_key, TTSPersonaId.FATHER) in SCENARIO_VOICE_CAST_V2
+
+
+def test_cast_v2_matches_every_approved_role_selection():
+    expected = {
+        "예약": ("qwen3-tts", "ryan"),
+        "교수님": ("qwen3-tts", "eric"),
+        "배달": ("qwen3-tts", "vivian"),
+        "시청": ("qwen3-tts", "ryan"),
+        "고객센터": ("qwen3-tts", "ryan"),
+        "친구": ("qwen3-tts", "serena"),
+        "연인": ("qwen3-tts", "uncle_fu"),
+        "회사": ("bark-small", "ko_speaker_5"),
+    }
+    for scenario_key, registration in FLOW_REGISTRY.items():
+        if registration.category == "가족":
+            continue
+        assignment = SCENARIO_VOICE_CAST_V2[(scenario_key, None)]
+        assert (assignment.provider.value, assignment.voice) == expected[registration.category]
+
+    for scenario_key, registration in FLOW_REGISTRY.items():
+        if registration.category != "가족":
+            continue
+        father = SCENARIO_VOICE_CAST_V2[(scenario_key, TTSPersonaId.FATHER)]
+        mother = SCENARIO_VOICE_CAST_V2[(scenario_key, TTSPersonaId.MOTHER)]
+        assert (father.provider.value, father.voice) == ("qwen3-tts", "aiden")
+        assert mother.provider is TTSProviderId.QWEN3_TTS_VOICE_CLONE
+        assert mother.voice == "reference_warm_everyday_mature_age_restrained_prosody"
 
 
 def test_audition_lines_are_short_public_role_lines():
