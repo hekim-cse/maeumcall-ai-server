@@ -1,0 +1,61 @@
+{
+  "castVersion": 2,
+  "roleId": "family_mother",
+  "selectionStatus": "awaiting-user-selection",
+  "generatedAt": "2026-08-18T10:28:49.787053+00:00",
+  "provider": "qwen3-tts-voice-design",
+  "executionMode": "local-evaluation",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "modelRevision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "runtimeVersion": "0.1.1",
+  "language": "Korean",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+  "maxNewTokens": 1200,
+  "baseSeed": 42,
+  "seedStrategy": "base-seed-plus-stable-design-offset",
+  "designIds": [
+    "reference_warm_everyday_mature_age_natural_prosody"
+  ],
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "reference_warm_everyday_mature_age_natural_prosody",
+      "description": "A Korean mother in her late fifties to early sixties speaking to her adult child on the phone. Preserve the settled full vocal body, rounded lower-mid resonance, steady breath support, medium-low speaking pitch, and mature physical presence of the source candidate. Keep the unhurried cadence, but make the Korean intonation slightly more natural and conversational: join each phrase smoothly, use only subtle emphasis on meaning-bearing words, and finish each sentence softly without a repeated melodic pattern. Do not change the perceived age or make the delivery noticeably brighter, faster, more animated, theatrical, sing-song, or announcer-like. Do not imitate frailty, trembling, rasp, breathiness, or an artificially forced bass.",
+      "filename": "01_reference_warm_everyday_mature_age_natural_prosody.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6800,
+      "sha256": "a0f2aae65b10de2884f776720d44d9bb6836dd79a90c49923a2c8e36520a9e56",
+      "seed": 51,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 191.6,
+        "p25F0Hz": 171.2,
+        "p75F0Hz": 203.8,
+        "voicedFrames": 388
+      },
+      "acousticReferenceEvaluation": {
+        "referenceManifestSha256": "a4f088b815d5df8e0ef8f6c1c1ebed0bd6ea942bf69583a27ce5b14b055a38b4",
+        "referenceP25F0Hz": 187.1,
+        "referenceP75F0Hz": 229.2,
+        "candidateMedianF0Hz": 191.6,
+        "result": "within-reference-interquartile-range",
+        "decisionBoundary": "acoustic-screening-only-requires-user-listening"
+      },
+      "parentCandidateId": "reference_warm_everyday_mature_age",
+      "controlledAxis": "prosody-naturalness"
+    }
+  ],
+  "acousticReference": {
+    "manifestSha256": "a4f088b815d5df8e0ef8f6c1c1ebed0bd6ea942bf69583a27ce5b14b055a38b4",
+    "p25F0Hz": 187.1,
+    "medianF0Hz": 203.3,
+    "p75F0Hz": 229.2
+  }
+}

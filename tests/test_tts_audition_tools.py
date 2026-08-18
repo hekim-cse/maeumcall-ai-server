@@ -29,9 +29,13 @@ from scripts.generate_magpie_tts_auditions import MODEL_VERSION, SPEAKERS
 from scripts.generate_melotts_audition import BERT_MODEL_REVISION, MELOTTS_SOURCE_REVISION
 from scripts.generate_qwen_mother_voice_design_auditions import (
     CONTROLLED_MOTHER_VOICE_REFINEMENTS,
+    MATURE_AGE_PROSODY_REFINEMENTS,
     MOTHER_VOICE_DESIGNS,
     MOTHER_VOICE_REFINEMENTS,
     REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS,
+    USER_DIRECTED_FLAT_TELEPHONE_CONTOUR,
+    USER_DIRECTED_PROSODY_CONTOUR,
+    USER_DIRECTED_PROSODY_TEXT,
     evaluate_pitch_against_reference,
     load_acoustic_reference,
 )
@@ -135,6 +139,7 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert len(MOTHER_VOICE_REFINEMENTS) == 4
     assert len(REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS) == 3
     assert len(CONTROLLED_MOTHER_VOICE_REFINEMENTS) == 2
+    assert len(MATURE_AGE_PROSODY_REFINEMENTS) == 6
     assert {design.seed_offset for design in CONTROLLED_MOTHER_VOICE_REFINEMENTS} == {9}
     assert {design.controlled_axis for design in CONTROLLED_MOTHER_VOICE_REFINEMENTS} == {
         "prosody-naturalness",
@@ -143,6 +148,28 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert {design.parent_id for design in CONTROLLED_MOTHER_VOICE_REFINEMENTS} == {
         "reference_warm_everyday"
     }
+    assert {design.seed_offset for design in MATURE_AGE_PROSODY_REFINEMENTS} == {9}
+    assert {design.controlled_axis for design in MATURE_AGE_PROSODY_REFINEMENTS} == {
+        "delivery-warmth",
+        "prosody-naturalness",
+        "prosody-range",
+        "user-directed-prosody",
+        "vocal-warmth",
+    }
+    assert {design.parent_id for design in MATURE_AGE_PROSODY_REFINEMENTS} == {
+        "reference_warm_everyday_mature_age",
+        "reference_warm_everyday_mature_age_restrained_prosody",
+        "reference_warm_everyday_mature_age_understated_warmth",
+        "reference_warm_everyday_mature_age_user_directed_contour",
+    }
+    directed_design = MATURE_AGE_PROSODY_REFINEMENTS[-2]
+    assert directed_design.audition_text == USER_DIRECTED_PROSODY_TEXT
+    assert directed_design.prosody_contour == USER_DIRECTED_PROSODY_CONTOUR
+    assert "전↓화↑" in USER_DIRECTED_PROSODY_CONTOUR
+    assert "천↑천↑히↑" in USER_DIRECTED_PROSODY_CONTOUR
+    flat_telephone_design = MATURE_AGE_PROSODY_REFINEMENTS[-1]
+    assert flat_telephone_design.prosody_contour == USER_DIRECTED_FLAT_TELEPHONE_CONTOUR
+    assert "전→화→" in USER_DIRECTED_FLAT_TELEPHONE_CONTOUR
 
 
 def test_acoustic_reference_loader_accepts_only_the_mother_calibration_contract(
@@ -248,7 +275,7 @@ def test_committed_audition_manifests_share_the_same_contract():
     )
 
 
-def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
+def test_cast_v2_role_selection_is_complete_and_artifacts_are_immutable():
     selection_path = REPOSITORY_ROOT / "artifacts/tts-casting/cast-v2-selection.json"
     selection = json.loads(selection_path.read_text(encoding="utf-8"))
     bark_manifest = json.loads(
@@ -261,9 +288,16 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
             REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/qwen3-tts/manifest.json"
         ).read_text(encoding="utf-8")
     )
+    mother_manifest = json.loads(
+        (
+            REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/"
+            "qwen3-voice-design-family-mother-mature-age-restrained-prosody/manifest.json"
+        ).read_text(encoding="utf-8")
+    )
 
     assert selection["castVersion"] == 2
-    assert selection["selectionStatus"] == "in-progress"
+    assert selection["selectionStatus"] == "complete"
+    assert mother_manifest["selectionStatus"] == "approved-by-user"
     approved_roles = {role["roleId"]: role for role in selection["approvedRoles"]}
     assert {
         role_id: (role["provider"], role["voice"]) for role_id, role in approved_roles.items()
@@ -272,8 +306,13 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
         "service_agent": ("qwen3-tts", "ryan"),
         "delivery_agent": ("qwen3-tts", "vivian"),
         "family_father": ("qwen3-tts", "aiden"),
+        "family_mother": (
+            "qwen3-tts-voice-design",
+            "reference_warm_everyday_mature_age_restrained_prosody",
+        ),
     }
     assert approved_roles["family_father"]["personaId"] == "father"
+    assert approved_roles["family_mother"]["personaId"] == "mother"
     assert all(role["decision"] == "approved-by-user" for role in approved_roles.values())
     bark_voice = next(
         artifact for artifact in bark_manifest["artifacts"] if artifact["voice"] == "ko_speaker_5"
@@ -292,67 +331,23 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
             qwen_artifacts[(evaluated_role_id, voice)]["sha256"]
             == approved_roles[role_id]["sourceSha256"]
         )
-    assert selection["rolesAwaitingSelection"] == [
-        {
-            "roleId": "family_mother",
-            "categories": ["가족"],
-            "personaId": "mother",
-            "candidateProvider": "qwen3-tts-voice-design",
-            "candidateManifests": [
-                (
-                    "artifacts/tts-role-auditions/cast-v2/"
-                    "qwen3-voice-design-family-mother/manifest.json"
-                ),
-                (
-                    "artifacts/tts-role-auditions/cast-v2/"
-                    "qwen3-voice-design-family-mother-refinements/"
-                    "lower-fuller-corrections/manifest.json"
-                ),
-                (
-                    "artifacts/tts-role-auditions/cast-v2/"
-                    "qwen3-voice-design-family-mother-reference-calibrated/manifest.json"
-                ),
-                (
-                    "artifacts/tts-role-auditions/cast-v2/"
-                    "qwen3-voice-design-family-mother-controlled-refinements/manifest.json"
-                ),
-            ],
-            "activeCandidateIds": [
-                "reference_warm_everyday_natural_prosody",
-                "reference_warm_everyday_mature_age",
-            ],
-            "selectionReason": "awaiting-controlled-axis-user-listening",
-        }
-    ]
+    selected_mother = mother_manifest["artifacts"][0]
+    assert selected_mother["voice"] == approved_roles["family_mother"]["voice"]
+    assert selected_mother["sha256"] == approved_roles["family_mother"]["sourceSha256"]
+    assert selection["rolesAwaitingSelection"] == []
     rejected_candidates = {
         candidate["candidateId"]: candidate for candidate in selection["rejectedCandidates"]
     }
-    assert selection["refinementParentCandidates"] == [
-        {
-            "roleId": "family_mother",
-            "candidateId": "reference_warm_everyday",
-            "parentCandidateId": "natural_everyday",
-            "sourceArtifact": (
-                "artifacts/tts-role-auditions/cast-v2/"
-                "qwen3-voice-design-family-mother-reference-calibrated/"
-                "01_reference_warm_everyday.wav"
-            ),
-            "sourceSha256": ("41d8d1c5c3296e0905430d712b007b0b95527373501abe708119689af5c1c9db"),
-            "decision": "retained-as-refinement-parent",
-            "reason": "preferred-relative-to-current-audition-set-but-not-approved",
-            "userFeedback": {
-                "intonation": "unnatural",
-                "perceivedAge": "younger-than-late-fifties-to-sixties",
-            },
-            "acousticReferenceEvaluation": {
-                "referenceP25F0Hz": 187.1,
-                "referenceP75F0Hz": 229.2,
-                "candidateMedianF0Hz": 168.3,
-                "result": "outside-reference-interquartile-range",
-                "decisionBoundary": "user-preference-over-acoustic-screen-without-approval",
-            },
-        }
-    ]
+    refinement_parents = {
+        candidate["candidateId"]: candidate for candidate in selection["refinementParentCandidates"]
+    }
+    assert set(refinement_parents) == {
+        "reference_warm_everyday",
+        "reference_warm_everyday_mature_age",
+    }
+    assert refinement_parents["reference_warm_everyday_mature_age"]["decision"] == (
+        "retained-as-selected-candidate-parent"
+    )
     assert {
         candidate_id: candidate["decision"]
         for candidate_id, candidate in rejected_candidates.items()
@@ -374,6 +369,18 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
         rejected_candidates["natural_everyday_contralto"]["pitchComparison"]["candidateMedianF0Hz"]
         < rejected_candidates["natural_everyday_contralto"]["pitchComparison"]["parentMedianF0Hz"]
     )
+    superseded = selection["supersededEvaluationArtifacts"]
+    assert len(superseded) == 7
+    assert all(item["decision"] == "superseded-by-final-user-selection" for item in superseded)
+    for item in superseded:
+        artifact_path = REPOSITORY_ROOT / item["sourceArtifact"]
+        manifest = json.loads((artifact_path.parent / "manifest.json").read_text(encoding="utf-8"))
+        manifest_artifact = next(
+            artifact
+            for artifact in manifest["artifacts"]
+            if artifact["filename"] == artifact_path.name
+        )
+        assert manifest_artifact["sha256"] == item["sourceSha256"]
     assert {tuple(role["categories"]) for role in selection["retainedRoles"]} == {
         ("교수님",),
         ("친구",),

@@ -1,0 +1,40 @@
+{
+  "roleId": "family_mother",
+  "selectionStatus": "awaiting-user-selection",
+  "transformation": "reference-register-preserving-prosody-resynthesis",
+  "algorithm": "praat-overlap-add-pitch-tier-scaling",
+  "sourceManifestSha256": "318394c3bc54a29d941e840141718d2fb6ff888fb2837fc1a9361becfc11a84a",
+  "referenceManifestSha256": "37a57e6bc6235e3c857f25f39e44f12e2026c8966e8577ea2537e686147518b4",
+  "sourceVoice": "reference_warm_everyday_mature_age_user_directed_flat_telephone",
+  "registerReferenceVoice": "reference_warm_everyday_mature_age",
+  "sourceMedianF0Hz": 240.1,
+  "targetMedianF0Hz": 174.6,
+  "pitchScale": 0.727197,
+  "relativeProsodyPreserved": true,
+  "formantsShifted": false,
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "reference_warm_everyday_mature_age_user_directed_flat_telephone_register_preserved",
+      "description": "Relative prosody preserved from the source artifact; absolute pitch register restored from the approved parent candidate.",
+      "filename": "01_reference_warm_everyday_mature_age_user_directed_flat_telephone_register_preserved.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 8400,
+      "sha256": "bad2c2ee4a32feb9d250c05a61e444e143e9deb3532e1b36d853f5a9926d8597",
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 174.9,
+        "p25F0Hz": 163.3,
+        "p75F0Hz": 186.5,
+        "voicedFrames": 373
+      },
+      "sourceSha256": "5235467c07931e6bb8ec9b74fc5002cd69fef7ad93dfda847954b2c9a715a359",
+      "registerReferenceSha256": "899bdd873dc9e1bf6abf406ab1345bdd22c536b873805d26c43d9e24054b9721"
+    }
+  ]
+}

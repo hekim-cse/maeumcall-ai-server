@@ -1,0 +1,62 @@
+{
+  "castVersion": 2,
+  "roleId": "family_mother",
+  "selectionStatus": "awaiting-user-selection",
+  "generatedAt": "2026-08-18T10:48:59.696564+00:00",
+  "provider": "qwen3-tts-voice-design",
+  "executionMode": "local-evaluation",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "modelRevision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "runtimeVersion": "0.1.1",
+  "language": "Korean",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "text": "어, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+  "maxNewTokens": 1200,
+  "baseSeed": 42,
+  "seedStrategy": "base-seed-plus-stable-design-offset",
+  "designIds": [
+    "reference_warm_everyday_mature_age_user_directed_flat_telephone"
+  ],
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "reference_warm_everyday_mature_age_user_directed_flat_telephone",
+      "description": "A warm Korean mother in her late fifties to early sixties speaking gently to her adult child. Keep the entire voice in the same mature medium-low register with a settled full vocal body and rounded lower-mid resonance. Do not raise or lower the overall speaking pitch. Follow this syllable-level Korean contour exactly: '어→, 전→화→ 잘→ 받↓았↑어→. 오늘은→ 어↓떻↑게→ 지↓냈↑는↓지→ 천↑천↑히↑ 이↓야↑기↑ 해봐→.' The arrows are relative local intonation directions around the unchanged medium-low baseline and must never be pronounced. A right arrow means level pitch, a down arrow means a small smooth fall, and an up arrow means a small smooth rise. Pronounce both syllables of '전화' on the same level pitch. Connect all syllables naturally without choppy breaks. Keep every local movement small and rounded, including the consecutive rises in '천천히' and '이야기'. Preserve quiet maternal warmth through vocal color and relaxed breath, not through a higher register or exaggerated melody. Never sound youthful, overly sweet, theatrical, sing-song, robotic, or customer-service-like.",
+      "filename": "01_reference_warm_everyday_mature_age_user_directed_flat_telephone.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 8400,
+      "sha256": "5235467c07931e6bb8ec9b74fc5002cd69fef7ad93dfda847954b2c9a715a359",
+      "seed": 51,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 240.1,
+        "p25F0Hz": 222.7,
+        "p75F0Hz": 255.5,
+        "voicedFrames": 379
+      },
+      "acousticReferenceEvaluation": {
+        "referenceManifestSha256": "a4f088b815d5df8e0ef8f6c1c1ebed0bd6ea942bf69583a27ce5b14b055a38b4",
+        "referenceP25F0Hz": 187.1,
+        "referenceP75F0Hz": 229.2,
+        "candidateMedianF0Hz": 240.1,
+        "result": "outside-reference-interquartile-range",
+        "decisionBoundary": "acoustic-screening-only-requires-user-listening"
+      },
+      "parentCandidateId": "reference_warm_everyday_mature_age_user_directed_contour",
+      "controlledAxis": "user-directed-prosody",
+      "prosodyContour": "어→, 전→화→ 잘→ 받↓았↑어→. 오늘은→ 어↓떻↑게→ 지↓냈↑는↓지→ 천↑천↑히↑ 이↓야↑기↑ 해봐→."
+    }
+  ],
+  "acousticReference": {
+    "manifestSha256": "a4f088b815d5df8e0ef8f6c1c1ebed0bd6ea942bf69583a27ce5b14b055a38b4",
+    "p25F0Hz": 187.1,
+    "medianF0Hz": 203.3,
+    "p75F0Hz": 229.2
+  }
+}

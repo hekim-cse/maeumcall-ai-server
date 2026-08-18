@@ -1,0 +1,61 @@
+{
+  "castVersion": 2,
+  "roleId": "family_mother",
+  "selectionStatus": "awaiting-user-selection",
+  "generatedAt": "2026-08-18T10:36:52.707604+00:00",
+  "provider": "qwen3-tts-voice-design",
+  "executionMode": "local-evaluation",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "modelRevision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "runtimeVersion": "0.1.1",
+  "language": "Korean",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+  "maxNewTokens": 1200,
+  "baseSeed": 42,
+  "seedStrategy": "base-seed-plus-stable-design-offset",
+  "designIds": [
+    "reference_warm_everyday_mature_age_soft_warm_prosody"
+  ],
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "reference_warm_everyday_mature_age_soft_warm_prosody",
+      "description": "A Korean mother in her late fifties to early sixties speaking gently to her adult child on the phone. Preserve the mature medium-low pitch, settled full vocal body, rounded lower-mid resonance, and steady breath support of the source candidate. Let quiet affection and reassuring warmth sit naturally in the voice, as if she is glad to hear her child and wants them to feel at ease. Connect phrases very smoothly with soft edges, light consonant attacks, and an unhurried conversational flow. Keep the pitch range compact, avoid strong word stress, and let sentence endings rest gently instead of rising or dropping sharply. Sound intimate and motherly without becoming bright, youthful, overly sweet, sleepy, whispery, theatrical, sing-song, customer-service-like, or artificially aged.",
+      "filename": "01_reference_warm_everyday_mature_age_soft_warm_prosody.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7440,
+      "sha256": "4b117dd4b9b05f418c185126a1a669f8ef9e6f8f801cfd403771df779bb9587e",
+      "seed": 51,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 219.5,
+        "p25F0Hz": 192.6,
+        "p75F0Hz": 249.9,
+        "voicedFrames": 343
+      },
+      "acousticReferenceEvaluation": {
+        "referenceManifestSha256": "a4f088b815d5df8e0ef8f6c1c1ebed0bd6ea942bf69583a27ce5b14b055a38b4",
+        "referenceP25F0Hz": 187.1,
+        "referenceP75F0Hz": 229.2,
+        "candidateMedianF0Hz": 219.5,
+        "result": "within-reference-interquartile-range",
+        "decisionBoundary": "acoustic-screening-only-requires-user-listening"
+      },
+      "parentCandidateId": "reference_warm_everyday_mature_age_restrained_prosody",
+      "controlledAxis": "delivery-warmth"
+    }
+  ],
+  "acousticReference": {
+    "manifestSha256": "a4f088b815d5df8e0ef8f6c1c1ebed0bd6ea942bf69583a27ce5b14b055a38b4",
+    "p25F0Hz": 187.1,
+    "medianF0Hz": 203.3,
+    "p75F0Hz": 229.2
+  }
+}

@@ -21,6 +21,13 @@ MODEL_ID = "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
 MODEL_REVISION = "5ecdb67327fd37bb2e042aab12ff7391903235d3"
 QWEN_TTS_VERSION = "0.1.1"
 AUDITION_TEXT = "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐."
+USER_DIRECTED_PROSODY_TEXT = "어, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐."
+USER_DIRECTED_PROSODY_CONTOUR = (
+    "어→, 전↓화↑ 잘→ 받↓았↑어→. 오늘은→ 어↓떻↑게→ 지↓냈↑는↓지→ 천↑천↑히↑ 이↓야↑기↑ 해봐→."
+)
+USER_DIRECTED_FLAT_TELEPHONE_CONTOUR = (
+    "어→, 전→화→ 잘→ 받↓았↑어→. 오늘은→ 어↓떻↑게→ 지↓냈↑는↓지→ 천↑천↑히↑ 이↓야↑기↑ 해봐→."
+)
 
 
 @dataclass(frozen=True)
@@ -31,6 +38,8 @@ class MotherVoiceDesign:
     parent_id: str | None = None
     requires_acoustic_reference: bool = False
     controlled_axis: str | None = None
+    audition_text: str = AUDITION_TEXT
+    prosody_contour: str | None = None
 
 
 MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
@@ -201,11 +210,135 @@ CONTROLLED_MOTHER_VOICE_REFINEMENTS: tuple[MotherVoiceDesign, ...] = (
     ),
 )
 
+MATURE_AGE_PROSODY_REFINEMENTS: tuple[MotherVoiceDesign, ...] = (
+    MotherVoiceDesign(
+        id="reference_warm_everyday_mature_age_natural_prosody",
+        direction=(
+            "A Korean mother in her late fifties to early sixties speaking to her adult child on "
+            "the phone. Preserve the settled full vocal body, rounded lower-mid resonance, steady "
+            "breath support, medium-low speaking pitch, and mature physical presence of the source "
+            "candidate. Keep the unhurried cadence, but make the Korean intonation slightly more "
+            "natural and conversational: join each phrase smoothly, use only subtle emphasis on "
+            "meaning-bearing words, and finish each sentence softly without a repeated melodic "
+            "pattern. Do not change the perceived age or make the delivery noticeably brighter, "
+            "faster, more animated, theatrical, sing-song, or announcer-like. Do not imitate "
+            "frailty, trembling, rasp, breathiness, or an artificially forced bass."
+        ),
+        seed_offset=9,
+        parent_id="reference_warm_everyday_mature_age",
+        requires_acoustic_reference=True,
+        controlled_axis="prosody-naturalness",
+    ),
+    MotherVoiceDesign(
+        id="reference_warm_everyday_mature_age_restrained_prosody",
+        direction=(
+            "A Korean mother in her late fifties to early sixties speaking quietly to her adult "
+            "child on the phone. Preserve the settled full vocal body, rounded lower-mid "
+            "resonance, steady breath support, medium-low speaking pitch, and mature physical "
+            "presence of the source candidate. Use restrained everyday Korean intonation with "
+            "a narrow pitch range and a stable baseline. Avoid sharp rises, deep falls, dramatic "
+            "stress, and repeated melodic contours. Keep word emphasis light and let sentence "
+            "endings settle only a little. Maintain enough small variation to sound human and "
+            "warm, never flat, robotic, theatrical, sing-song, or announcer-like. Do not change "
+            "the perceived age or imitate frailty, trembling, rasp, breathiness, or forced bass."
+        ),
+        seed_offset=9,
+        parent_id="reference_warm_everyday_mature_age",
+        requires_acoustic_reference=True,
+        controlled_axis="prosody-range",
+    ),
+    MotherVoiceDesign(
+        id="reference_warm_everyday_mature_age_soft_warm_prosody",
+        direction=(
+            "A Korean mother in her late fifties to early sixties speaking gently to her adult "
+            "child on the phone. Preserve the mature medium-low pitch, settled full vocal body, "
+            "rounded lower-mid resonance, and steady breath support of the source candidate. "
+            "Let quiet affection and reassuring warmth sit naturally in the voice, as if she is "
+            "glad to hear her child and wants them to feel at ease. Connect phrases very smoothly "
+            "with soft edges, light consonant attacks, and an unhurried conversational flow. Keep "
+            "the pitch range compact, avoid strong word stress, and let sentence endings rest "
+            "gently instead of rising or dropping sharply. Sound intimate and motherly without "
+            "becoming bright, youthful, overly sweet, sleepy, whispery, theatrical, sing-song, "
+            "customer-service-like, or artificially aged."
+        ),
+        seed_offset=9,
+        parent_id="reference_warm_everyday_mature_age_restrained_prosody",
+        requires_acoustic_reference=True,
+        controlled_axis="delivery-warmth",
+    ),
+    MotherVoiceDesign(
+        id="reference_warm_everyday_mature_age_understated_warmth",
+        direction=(
+            "A Korean mother in her late fifties to early sixties having a quiet, familiar phone "
+            "conversation with her adult child. Preserve the mature medium-low pitch, settled "
+            "full vocal body, rounded lower-mid resonance, compact pitch range, and restrained "
+            "everyday intonation of the source candidate. Express warmth only through a soft "
+            "rounded vocal color, steady relaxed breath, gentle consonant onsets, close intimate "
+            "presence, and unhurried pacing—not through a brighter pitch or larger melodic "
+            "movement. Keep emphasis small, connect phrases smoothly, and let sentence endings "
+            "land softly with minimal rise or fall. She should sound quietly caring and familiar, "
+            "never cold, flat, robotic, youthful, overly sweet, excited, sleepy, whispery, "
+            "theatrical, sing-song, customer-service-like, or artificially aged."
+        ),
+        seed_offset=9,
+        parent_id="reference_warm_everyday_mature_age_restrained_prosody",
+        requires_acoustic_reference=True,
+        controlled_axis="vocal-warmth",
+    ),
+    MotherVoiceDesign(
+        id="reference_warm_everyday_mature_age_user_directed_contour",
+        direction=(
+            "A warm Korean mother in her late fifties to early sixties speaking gently to her "
+            "adult child. Preserve the mature medium-low pitch, settled full vocal body, rounded "
+            "lower-mid resonance, soft vocal edges, and quietly affectionate presence of the "
+            "source candidate. Follow this syllable-level Korean pitch contour exactly: "
+            f"'{USER_DIRECTED_PROSODY_CONTOUR}' The arrows describe pitch direction only and "
+            "must never be pronounced. A right arrow means level pitch, a down arrow means a "
+            "small smooth fall, and an up arrow means a small smooth rise. Connect all marked "
+            "syllables naturally without choppy breaks. Keep every rise and fall rounded and "
+            "moderate, including the consecutive rises in '천천히' and '이야기'. Retain warmth "
+            "through vocal color and relaxed breath rather than exaggerated melody. Never sound "
+            "youthful, overly sweet, theatrical, sing-song, robotic, or customer-service-like."
+        ),
+        seed_offset=9,
+        parent_id="reference_warm_everyday_mature_age_understated_warmth",
+        requires_acoustic_reference=True,
+        controlled_axis="user-directed-prosody",
+        audition_text=USER_DIRECTED_PROSODY_TEXT,
+        prosody_contour=USER_DIRECTED_PROSODY_CONTOUR,
+    ),
+    MotherVoiceDesign(
+        id="reference_warm_everyday_mature_age_user_directed_flat_telephone",
+        direction=(
+            "A warm Korean mother in her late fifties to early sixties speaking gently to her "
+            "adult child. Keep the entire voice in the same mature medium-low register with a "
+            "settled full vocal body and rounded lower-mid resonance. Do not raise or lower the "
+            "overall speaking pitch. Follow this syllable-level Korean contour exactly: "
+            f"'{USER_DIRECTED_FLAT_TELEPHONE_CONTOUR}' The arrows are relative local intonation "
+            "directions around the unchanged medium-low baseline and must never be pronounced. "
+            "A right arrow means level pitch, a down arrow means a small smooth fall, and an up "
+            "arrow means a small smooth rise. Pronounce both syllables of '전화' on the same "
+            "level pitch. Connect all syllables naturally without choppy breaks. Keep every local "
+            "movement small and rounded, including the consecutive rises in '천천히' and "
+            "'이야기'. Preserve quiet maternal warmth through vocal color and relaxed breath, "
+            "not through a higher register or exaggerated melody. Never sound youthful, overly "
+            "sweet, theatrical, sing-song, robotic, or customer-service-like."
+        ),
+        seed_offset=9,
+        parent_id="reference_warm_everyday_mature_age_user_directed_contour",
+        requires_acoustic_reference=True,
+        controlled_axis="user-directed-prosody",
+        audition_text=USER_DIRECTED_PROSODY_TEXT,
+        prosody_contour=USER_DIRECTED_FLAT_TELEPHONE_CONTOUR,
+    ),
+)
+
 ALL_MOTHER_VOICE_DESIGNS = (
     MOTHER_VOICE_DESIGNS
     + MOTHER_VOICE_REFINEMENTS
     + REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS
     + CONTROLLED_MOTHER_VOICE_REFINEMENTS
+    + MATURE_AGE_PROSODY_REFINEMENTS
 )
 
 
@@ -305,7 +438,7 @@ def resolve_model_snapshot(*, allow_network: bool) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate five controlled Korean mother-role candidates with Qwen VoiceDesign."
+        description="Generate controlled Korean mother-role candidates with Qwen VoiceDesign."
     )
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--device", choices=("cpu", "mps", "cuda"), required=True)
@@ -344,6 +477,17 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     output_dir = prepare_output_directory(args.output_dir)
+    designs_by_id = {design.id: design for design in ALL_MOTHER_VOICE_DESIGNS}
+    selected_designs = (
+        tuple(designs_by_id[design_id] for design_id in dict.fromkeys(args.design_id))
+        if args.design_id
+        else MOTHER_VOICE_DESIGNS
+    )
+    selected_texts = {design.audition_text for design in selected_designs}
+    if len(selected_texts) != 1:
+        raise RuntimeError("One generation batch cannot mix different audition texts.")
+    audition_text = next(iter(selected_texts))
+
     runtime_version = importlib.metadata.version("qwen-tts")
     if runtime_version != QWEN_TTS_VERSION:
         raise RuntimeError(
@@ -374,12 +518,6 @@ def main() -> None:
         attn_implementation="eager",
     )
 
-    designs_by_id = {design.id: design for design in ALL_MOTHER_VOICE_DESIGNS}
-    selected_designs = (
-        tuple(designs_by_id[design_id] for design_id in dict.fromkeys(args.design_id))
-        if args.design_id
-        else MOTHER_VOICE_DESIGNS
-    )
     reference_required = any(design.requires_acoustic_reference for design in selected_designs)
     if reference_required and args.acoustic_reference is None:
         raise RuntimeError("Reference-calibrated designs require --acoustic-reference.")
@@ -394,7 +532,7 @@ def main() -> None:
         seed = args.seed + design.seed_offset
         seed_local_inference(seed)
         wavs, sample_rate = model.generate_voice_design(
-            text=AUDITION_TEXT,
+            text=design.audition_text,
             language="Korean",
             instruct=design.direction,
             max_new_tokens=args.max_new_tokens,
@@ -420,6 +558,8 @@ def main() -> None:
             artifact["parentCandidateId"] = design.parent_id
         if design.controlled_axis is not None:
             artifact["controlledAxis"] = design.controlled_axis
+        if design.prosody_contour is not None:
+            artifact["prosodyContour"] = design.prosody_contour
         artifacts.append(artifact)
         print(f"generated {position:02d}/{len(selected_designs)} {design.id}", flush=True)
 
@@ -436,7 +576,7 @@ def main() -> None:
         "language": "Korean",
         "device": args.device,
         "dtype": args.dtype,
-        "text": AUDITION_TEXT,
+        "text": audition_text,
         "maxNewTokens": args.max_new_tokens,
         "baseSeed": args.seed,
         "seedStrategy": "base-seed-plus-stable-design-offset",

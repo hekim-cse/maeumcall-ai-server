@@ -1,6 +1,6 @@
 {
   "castVersion": 2,
-  "selectionStatus": "in-progress",
+  "selectionStatus": "complete",
   "approvedRoles": [
     {
       "roleId": "company_manager",
@@ -49,29 +49,24 @@
       "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-tts/family_mother/01_aiden.wav",
       "sourceSha256": "0857f545c723d91d97aca339a727fc0d7e77e1ce9ff1747dab712bc4a203adf9",
       "decision": "approved-by-user"
-    }
-  ],
-  "rolesAwaitingSelection": [
+    },
     {
       "roleId": "family_mother",
       "categories": [
         "가족"
       ],
       "personaId": "mother",
-      "candidateProvider": "qwen3-tts-voice-design",
-      "candidateManifests": [
-        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother/manifest.json",
-        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections/manifest.json",
-        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/manifest.json",
-        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-controlled-refinements/manifest.json"
-      ],
-      "activeCandidateIds": [
-        "reference_warm_everyday_natural_prosody",
-        "reference_warm_everyday_mature_age"
-      ],
-      "selectionReason": "awaiting-controlled-axis-user-listening"
+      "provider": "qwen3-tts-voice-design",
+      "voice": "reference_warm_everyday_mature_age_restrained_prosody",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-mature-age-restrained-prosody/01_reference_warm_everyday_mature_age_restrained_prosody.wav",
+      "sourceSha256": "a6ffd23a20a9858cd30b0af531b3e5e83786e53ee711797244b806f0fdeabf83",
+      "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+      "modelRevision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+      "medianF0Hz": 193.4,
+      "decision": "approved-by-user"
     }
   ],
+  "rolesAwaitingSelection": [],
   "refinementParentCandidates": [
     {
       "roleId": "family_mother",
@@ -91,6 +86,24 @@
         "candidateMedianF0Hz": 168.3,
         "result": "outside-reference-interquartile-range",
         "decisionBoundary": "user-preference-over-acoustic-screen-without-approval"
+      }
+    },
+    {
+      "roleId": "family_mother",
+      "candidateId": "reference_warm_everyday_mature_age",
+      "parentCandidateId": "reference_warm_everyday",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-controlled-refinements/02_reference_warm_everyday_mature_age.wav",
+      "sourceSha256": "899bdd873dc9e1bf6abf406ab1345bdd22c536b873805d26c43d9e24054b9721",
+      "decision": "retained-as-selected-candidate-parent",
+      "reason": "approved-age-character-required-more-restrained-intonation",
+      "userFeedback": {
+        "perceivedAge": "approved",
+        "intonation": "too-strong"
+      },
+      "pitchAnalysis": {
+        "medianF0Hz": 174.6,
+        "p25F0Hz": 154.6,
+        "p75F0Hz": 213.3
       }
     }
   ],
@@ -189,6 +202,50 @@
         "parentMedianF0Hz": 196.9,
         "candidateMedianF0Hz": 207.0
       }
+    }
+  ],
+  "supersededEvaluationArtifacts": [
+    {
+      "candidateId": "reference_warm_everyday_mature_age_natural_prosody",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-mature-age-prosody-refinement/01_reference_warm_everyday_mature_age_natural_prosody.wav",
+      "sourceSha256": "a0f2aae65b10de2884f776720d44d9bb6836dd79a90c49923a2c8e36520a9e56",
+      "decision": "superseded-by-final-user-selection"
+    },
+    {
+      "candidateId": "reference_warm_everyday_mature_age_soft_warm_prosody",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-mature-age-soft-warm-prosody/01_reference_warm_everyday_mature_age_soft_warm_prosody.wav",
+      "sourceSha256": "4b117dd4b9b05f418c185126a1a669f8ef9e6f8f801cfd403771df779bb9587e",
+      "decision": "superseded-by-final-user-selection"
+    },
+    {
+      "candidateId": "reference_warm_everyday_mature_age_understated_warmth",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-mature-age-understated-warmth/01_reference_warm_everyday_mature_age_understated_warmth.wav",
+      "sourceSha256": "ec927a09aa15fba031411c0875ad825f7f0524d68ef59c216283ae82ca92ab08",
+      "decision": "superseded-by-final-user-selection"
+    },
+    {
+      "candidateId": "reference_warm_everyday_mature_age_user_directed_contour",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-user-directed-contour/01_reference_warm_everyday_mature_age_user_directed_contour.wav",
+      "sourceSha256": "c9f74f68de49d392ef377e3b66c14d1b775925135c7b3a2c7c5ba658ad9b33d2",
+      "decision": "superseded-by-final-user-selection"
+    },
+    {
+      "candidateId": "reference_warm_everyday_mature_age_user_directed_flat_telephone",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-user-directed-flat-telephone/01_reference_warm_everyday_mature_age_user_directed_flat_telephone.wav",
+      "sourceSha256": "5235467c07931e6bb8ec9b74fc5002cd69fef7ad93dfda847954b2c9a715a359",
+      "decision": "superseded-by-final-user-selection"
+    },
+    {
+      "candidateId": "reference_warm_everyday_mature_age_user_directed_flat_telephone_register_preserved",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-user-directed-flat-telephone-register-preserved/01_reference_warm_everyday_mature_age_user_directed_flat_telephone_register_preserved.wav",
+      "sourceSha256": "bad2c2ee4a32feb9d250c05a61e444e143e9deb3532e1b36d853f5a9926d8597",
+      "decision": "superseded-by-final-user-selection"
+    },
+    {
+      "candidateId": "reference_warm_everyday_mature_age_user_directed_flat_telephone_register_preserved_timing_prosody_refined",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-compact-timing-softened-prosody/01_reference_warm_everyday_mature_age_user_directed_flat_telephone_register_preserved_timing_prosody_refined.wav",
+      "sourceSha256": "d3ab93f521443d9a9244f33454c878325a4c36e4c3ec338773e56766040625fd",
+      "decision": "superseded-by-final-user-selection"
     }
   ],
   "retainedRoles": [
