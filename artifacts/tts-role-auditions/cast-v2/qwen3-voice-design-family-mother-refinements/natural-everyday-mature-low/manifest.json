@@ -1,0 +1,36 @@
+{
+  "castVersion": 2,
+  "roleId": "family_mother",
+  "selectionStatus": "awaiting-user-selection",
+  "generatedAt": "2026-08-18T08:41:07.430933+00:00",
+  "provider": "qwen3-tts-voice-design",
+  "executionMode": "local-evaluation",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "modelRevision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "runtimeVersion": "0.1.1",
+  "language": "Korean",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+  "maxNewTokens": 1200,
+  "baseSeed": 42,
+  "seedStrategy": "base-seed-plus-stable-design-offset",
+  "designIds": [
+    "natural_everyday_mature_low"
+  ],
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "natural_everyday_mature_low",
+      "description": "50대 한국인 여성 목소리. 실제 가족 통화처럼 꾸미지 않고 생활감 있게 말한다. 기본 음높이를 낮게 유지하고 두터운 중저음 공명을 사용하며, 억양의 폭을 줄이고 조금 느긋한 속도로 다정하게 말한다. 인위적으로 눌러 말하거나 노인처럼 떨리는 목소리는 피한다.",
+      "filename": "01_natural_everyday_mature_low.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 5600,
+      "sha256": "64388289d3c03743a93ff80eb2ae35d42ffc38f7ee476e9293aa3f1b677e051b",
+      "seed": 47,
+      "parentCandidateId": "natural_everyday"
+    }
+  ]
+}

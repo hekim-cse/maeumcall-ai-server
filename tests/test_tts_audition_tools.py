@@ -28,7 +28,10 @@ from scripts.generate_melotts_audition import BERT_MODEL_REVISION, MELOTTS_SOURC
 from scripts.generate_qwen_mother_voice_design_auditions import (
     MODEL_REVISION as QWEN_VOICE_DESIGN_REVISION,
 )
-from scripts.generate_qwen_mother_voice_design_auditions import MOTHER_VOICE_DESIGNS
+from scripts.generate_qwen_mother_voice_design_auditions import (
+    MOTHER_VOICE_DESIGNS,
+    MOTHER_VOICE_REFINEMENTS,
+)
 from scripts.generate_qwen_role_casting_auditions import ROLE_AUDITIONS
 from scripts.tts_audition_common import (
     DEFAULT_AUDITION_TEXT,
@@ -96,6 +99,7 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert BARK_KOREAN_VOICE_PRESETS == tuple(f"v2/ko_speaker_{index}" for index in range(10))
     assert len(QWEN_VOICE_DESIGN_REVISION) == 40
     assert len(MOTHER_VOICE_DESIGNS) == 5
+    assert len(MOTHER_VOICE_REFINEMENTS) == 1
 
 
 def test_committed_audition_manifests_share_the_same_contract():
@@ -173,10 +177,17 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
             "categories": ["가족"],
             "personaId": "mother",
             "candidateProvider": "qwen3-tts-voice-design",
-            "candidateManifest": (
-                "artifacts/tts-role-auditions/cast-v2/"
-                "qwen3-voice-design-family-mother/manifest.json"
-            ),
+            "candidateManifests": [
+                (
+                    "artifacts/tts-role-auditions/cast-v2/"
+                    "qwen3-voice-design-family-mother/manifest.json"
+                ),
+                (
+                    "artifacts/tts-role-auditions/cast-v2/"
+                    "qwen3-voice-design-family-mother-refinements/"
+                    "natural-everyday-mature-low/manifest.json"
+                ),
+            ],
             "selectionReason": "no-approved-custom-voice-candidate",
         }
     ]
@@ -252,6 +263,8 @@ def test_committed_qwen_voice_design_manifest_matches_mother_candidates():
     assert manifest["modelRevision"] == QWEN_VOICE_DESIGN_REVISION
     assert manifest["runtimeVersion"] == "0.1.1"
     assert manifest["baseSeed"] == 42
+    assert manifest["seedStrategy"] == "base-seed-plus-stable-design-offset"
+    assert manifest["designIds"] == [design.id for design in MOTHER_VOICE_DESIGNS]
     assert [artifact["voice"] for artifact in manifest["artifacts"]] == [
         design.id for design in MOTHER_VOICE_DESIGNS
     ]
@@ -259,3 +272,23 @@ def test_committed_qwen_voice_design_manifest_matches_mother_candidates():
         design.direction for design in MOTHER_VOICE_DESIGNS
     ]
     assert all(len(artifact["sha256"]) == 64 for artifact in manifest["artifacts"])
+
+
+def test_mother_voice_refinement_preserves_parent_candidate_lineage():
+    manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/"
+        "qwen3-voice-design-family-mother-refinements/"
+        "natural-everyday-mature-low/manifest.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    refinement = MOTHER_VOICE_REFINEMENTS[0]
+    artifact = manifest["artifacts"][0]
+
+    assert manifest["modelRevision"] == QWEN_VOICE_DESIGN_REVISION
+    assert manifest["seedStrategy"] == "base-seed-plus-stable-design-offset"
+    assert manifest["designIds"] == [refinement.id]
+    assert artifact["voice"] == refinement.id
+    assert artifact["description"] == refinement.direction
+    assert artifact["parentCandidateId"] == refinement.parent_id == "natural_everyday"
+    assert artifact["seed"] == 42 + refinement.seed_offset == 47
+    assert len(artifact["sha256"]) == 64

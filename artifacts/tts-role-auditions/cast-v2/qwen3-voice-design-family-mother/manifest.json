@@ -14,7 +14,14 @@
   "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
   "maxNewTokens": 1200,
   "baseSeed": 42,
-  "seedStrategy": "base-seed-plus-zero-based-position",
+  "seedStrategy": "base-seed-plus-stable-design-offset",
+  "designIds": [
+    "warm_calm_midlow",
+    "natural_everyday",
+    "mature_reassuring",
+    "bright_affectionate",
+    "gentle_concerned"
+  ],
   "artifacts": [
     {
       "position": 1,

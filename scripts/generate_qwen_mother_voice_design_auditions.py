@@ -26,6 +26,8 @@ AUDITION_TEXT = "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천
 class MotherVoiceDesign:
     id: str
     direction: str
+    seed_offset: int
+    parent_id: str | None = None
 
 
 MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
@@ -36,6 +38,7 @@ MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
             "엄마가 자녀의 하루를 따뜻하고 차분하게 물어보듯 자연스럽게 말한다. "
             "과장된 연기와 지나치게 젊은 느낌은 피한다."
         ),
+        seed_offset=0,
     ),
     MotherVoiceDesign(
         id="natural_everyday",
@@ -43,6 +46,7 @@ MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
             "40대에서 50대의 한국인 여성 목소리. 실제 가족 통화처럼 편안하고 생활감 있게, "
             "꾸미지 않은 발성과 안정된 속도로 다정하게 말한다."
         ),
+        seed_offset=1,
     ),
     MotherVoiceDesign(
         id="mature_reassuring",
@@ -50,6 +54,7 @@ MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
             "50대 한국인 여성의 성숙하고 안정적인 목소리. 낮고 포근한 음색으로, "
             "자녀가 안심할 수 있도록 여유 있고 믿음직스럽게 말한다."
         ),
+        seed_offset=2,
     ),
     MotherVoiceDesign(
         id="bright_affectionate",
@@ -57,6 +62,7 @@ MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
             "40대 후반 한국인 여성의 밝고 다정한 목소리. 반가움이 느껴지되 들뜨거나 "
             "어리게 들리지 않도록, 따뜻한 미소를 머금고 자연스럽게 말한다."
         ),
+        seed_offset=3,
     ),
     MotherVoiceDesign(
         id="gentle_concerned",
@@ -64,8 +70,25 @@ MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
             "50대 한국인 여성의 온화하고 세심한 목소리. 자녀의 상태를 걱정하면서도 "
             "부담을 주지 않도록 부드러운 중저음과 느긋한 호흡으로 말한다."
         ),
+        seed_offset=4,
     ),
 )
+
+MOTHER_VOICE_REFINEMENTS: tuple[MotherVoiceDesign, ...] = (
+    MotherVoiceDesign(
+        id="natural_everyday_mature_low",
+        direction=(
+            "50대 한국인 여성 목소리. 실제 가족 통화처럼 꾸미지 않고 생활감 있게 말한다. "
+            "기본 음높이를 낮게 유지하고 두터운 중저음 공명을 사용하며, 억양의 폭을 줄이고 "
+            "조금 느긋한 속도로 다정하게 말한다. 인위적으로 눌러 말하거나 노인처럼 떨리는 "
+            "목소리는 피한다."
+        ),
+        seed_offset=5,
+        parent_id="natural_everyday",
+    ),
+)
+
+ALL_MOTHER_VOICE_DESIGNS = MOTHER_VOICE_DESIGNS + MOTHER_VOICE_REFINEMENTS
 
 
 def parse_args() -> argparse.Namespace:
@@ -81,6 +104,15 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--max-new-tokens", type=int, default=DEFAULT_MAX_NEW_TOKENS)
+    parser.add_argument(
+        "--design-id",
+        action="append",
+        choices=tuple(design.id for design in ALL_MOTHER_VOICE_DESIGNS),
+        help=(
+            "Generate only the selected design. Repeat the option for multiple designs. "
+            "When omitted, the five base candidates are generated."
+        ),
+    )
     parser.add_argument(
         "--allow-network",
         action="store_true",
@@ -133,9 +165,16 @@ def main() -> None:
         attn_implementation="eager",
     )
 
+    designs_by_id = {design.id: design for design in ALL_MOTHER_VOICE_DESIGNS}
+    selected_designs = (
+        tuple(designs_by_id[design_id] for design_id in dict.fromkeys(args.design_id))
+        if args.design_id
+        else MOTHER_VOICE_DESIGNS
+    )
+
     artifacts: list[dict[str, str | int]] = []
-    for position, design in enumerate(MOTHER_VOICE_DESIGNS, start=1):
-        seed = args.seed + position - 1
+    for position, design in enumerate(selected_designs, start=1):
+        seed = args.seed + design.seed_offset
         seed_local_inference(seed)
         wavs, sample_rate = model.generate_voice_design(
             text=AUDITION_TEXT,
@@ -152,8 +191,10 @@ def main() -> None:
             description=design.direction,
         )
         artifact["seed"] = seed
+        if design.parent_id is not None:
+            artifact["parentCandidateId"] = design.parent_id
         artifacts.append(artifact)
-        print(f"generated {position:02d}/{len(MOTHER_VOICE_DESIGNS)} {design.id}", flush=True)
+        print(f"generated {position:02d}/{len(selected_designs)} {design.id}", flush=True)
 
     manifest = {
         "castVersion": 2,
@@ -171,7 +212,8 @@ def main() -> None:
         "text": AUDITION_TEXT,
         "maxNewTokens": args.max_new_tokens,
         "baseSeed": args.seed,
-        "seedStrategy": "base-seed-plus-zero-based-position",
+        "seedStrategy": "base-seed-plus-stable-design-offset",
+        "designIds": [design.id for design in selected_designs],
         "artifacts": artifacts,
     }
     manifest_path = write_manifest(output_dir, manifest)

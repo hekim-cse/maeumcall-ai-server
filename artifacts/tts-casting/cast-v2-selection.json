@@ -59,7 +59,10 @@
       ],
       "personaId": "mother",
       "candidateProvider": "qwen3-tts-voice-design",
-      "candidateManifest": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother/manifest.json",
+      "candidateManifests": [
+        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother/manifest.json",
+        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/natural-everyday-mature-low/manifest.json"
+      ],
       "selectionReason": "no-approved-custom-voice-candidate"
     }
   ],
