@@ -1,0 +1,80 @@
+{
+  "castVersion": 2,
+  "roleId": "family_mother",
+  "selectionStatus": "awaiting-user-selection",
+  "generatedAt": "2026-08-18T07:53:03.391326+00:00",
+  "provider": "qwen3-tts-voice-design",
+  "executionMode": "local-evaluation",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "modelRevision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "runtimeVersion": "0.1.1",
+  "language": "Korean",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+  "maxNewTokens": 1200,
+  "baseSeed": 42,
+  "seedStrategy": "base-seed-plus-zero-based-position",
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "warm_calm_midlow",
+      "description": "40대 후반에서 50대 초반의 한국인 여성 목소리. 부드러운 중저음으로, 엄마가 자녀의 하루를 따뜻하고 차분하게 물어보듯 자연스럽게 말한다. 과장된 연기와 지나치게 젊은 느낌은 피한다.",
+      "filename": "01_warm_calm_midlow.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 5920,
+      "sha256": "946ea1f0e2a2448aec221249e6cbed5aac68d6a5de80445b653f2c8e494bb28b",
+      "seed": 42
+    },
+    {
+      "position": 2,
+      "voice": "natural_everyday",
+      "description": "40대에서 50대의 한국인 여성 목소리. 실제 가족 통화처럼 편안하고 생활감 있게, 꾸미지 않은 발성과 안정된 속도로 다정하게 말한다.",
+      "filename": "02_natural_everyday.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6800,
+      "sha256": "dfed6eaf2da0245de3e9e225f7e59e1aafde68ca1d1b042801a5911d4394edcc",
+      "seed": 43
+    },
+    {
+      "position": 3,
+      "voice": "mature_reassuring",
+      "description": "50대 한국인 여성의 성숙하고 안정적인 목소리. 낮고 포근한 음색으로, 자녀가 안심할 수 있도록 여유 있고 믿음직스럽게 말한다.",
+      "filename": "03_mature_reassuring.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6720,
+      "sha256": "3f01d2fe5b081472208def01e44d649ed5753ea424afec793d4265ebdd28f745",
+      "seed": 44
+    },
+    {
+      "position": 4,
+      "voice": "bright_affectionate",
+      "description": "40대 후반 한국인 여성의 밝고 다정한 목소리. 반가움이 느껴지되 들뜨거나 어리게 들리지 않도록, 따뜻한 미소를 머금고 자연스럽게 말한다.",
+      "filename": "04_bright_affectionate.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7280,
+      "sha256": "a06b1fe523fe78a434aee74f7f04367da65b7373fac1aff9214871f591ce5b69",
+      "seed": 45
+    },
+    {
+      "position": 5,
+      "voice": "gentle_concerned",
+      "description": "50대 한국인 여성의 온화하고 세심한 목소리. 자녀의 상태를 걱정하면서도 부담을 주지 않도록 부드러운 중저음과 느긋한 호흡으로 말한다.",
+      "filename": "05_gentle_concerned.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7200,
+      "sha256": "ecbeac1bd53293f95977d435ddd97ed818cd4335355a1fe27880be204eba63d7",
+      "seed": 46
+    }
+  ]
+}

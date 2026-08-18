@@ -25,6 +25,10 @@ from scripts.generate_chatterbox_audition import (
 from scripts.generate_chatterbox_audition import RUNTIME_VERSION as CHATTERBOX_VERSION
 from scripts.generate_magpie_tts_auditions import MODEL_VERSION, SPEAKERS
 from scripts.generate_melotts_audition import BERT_MODEL_REVISION, MELOTTS_SOURCE_REVISION
+from scripts.generate_qwen_mother_voice_design_auditions import (
+    MODEL_REVISION as QWEN_VOICE_DESIGN_REVISION,
+)
+from scripts.generate_qwen_mother_voice_design_auditions import MOTHER_VOICE_DESIGNS
 from scripts.generate_qwen_role_casting_auditions import ROLE_AUDITIONS
 from scripts.tts_audition_common import (
     DEFAULT_AUDITION_TEXT,
@@ -90,6 +94,8 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert "t3_mtl23ls_v3.safetensors" in CHATTERBOX_MODEL_FILES
     assert len(BARK_MODEL_REVISION) == 40
     assert BARK_KOREAN_VOICE_PRESETS == tuple(f"v2/ko_speaker_{index}" for index in range(10))
+    assert len(QWEN_VOICE_DESIGN_REVISION) == 40
+    assert len(MOTHER_VOICE_DESIGNS) == 5
 
 
 def test_committed_audition_manifests_share_the_same_contract():
@@ -125,50 +131,77 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
             encoding="utf-8"
         )
     )
+    qwen_role_manifest = json.loads(
+        (
+            REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/qwen3-tts/manifest.json"
+        ).read_text(encoding="utf-8")
+    )
 
     assert selection["castVersion"] == 2
     assert selection["selectionStatus"] == "in-progress"
-    assert selection["approvedRoles"] == [
-        {
-            "roleId": "company_manager",
-            "categories": ["회사"],
-            "provider": "bark-small",
-            "voice": "ko_speaker_5",
-            "preset": "v2/ko_speaker_5",
-            "sourceArtifact": ("artifacts/tts-auditions/bark-small-korean/06_ko_speaker_5.wav"),
-            "sourceSha256": ("40863316b576109571333561f2273d6a8ca472352bab825565e76082706eb42a"),
-            "decision": "approved-by-user",
-        }
-    ]
+    approved_roles = {role["roleId"]: role for role in selection["approvedRoles"]}
+    assert {
+        role_id: (role["provider"], role["voice"]) for role_id, role in approved_roles.items()
+    } == {
+        "company_manager": ("bark-small", "ko_speaker_5"),
+        "service_agent": ("qwen3-tts", "ryan"),
+        "delivery_agent": ("qwen3-tts", "vivian"),
+        "family_father": ("qwen3-tts", "aiden"),
+    }
+    assert approved_roles["family_father"]["personaId"] == "father"
+    assert all(role["decision"] == "approved-by-user" for role in approved_roles.values())
     bark_voice = next(
         artifact for artifact in bark_manifest["artifacts"] if artifact["voice"] == "ko_speaker_5"
     )
-    assert bark_voice["sha256"] == selection["approvedRoles"][0]["sourceSha256"]
-    expected_open_roles = {
-        role["roleId"]: tuple(role["categories"]) for role in selection["rolesAwaitingSelection"]
+    assert bark_voice["sha256"] == approved_roles["company_manager"]["sourceSha256"]
+    qwen_artifacts = {
+        (artifact["roleId"], artifact["voice"]): artifact
+        for artifact in qwen_role_manifest["artifacts"]
     }
-    assert expected_open_roles == {role.id: role.categories for role in ROLE_AUDITIONS}
+    for role_id, evaluated_role_id, voice in (
+        ("service_agent", "service_agent", "ryan"),
+        ("delivery_agent", "delivery_agent", "vivian"),
+        ("family_father", "family_mother", "aiden"),
+    ):
+        assert (
+            qwen_artifacts[(evaluated_role_id, voice)]["sha256"]
+            == approved_roles[role_id]["sourceSha256"]
+        )
+    assert selection["rolesAwaitingSelection"] == [
+        {
+            "roleId": "family_mother",
+            "categories": ["가족"],
+            "personaId": "mother",
+            "candidateProvider": "qwen3-tts-voice-design",
+            "candidateManifest": (
+                "artifacts/tts-role-auditions/cast-v2/"
+                "qwen3-voice-design-family-mother/manifest.json"
+            ),
+            "selectionReason": "no-approved-custom-voice-candidate",
+        }
+    ]
     assert {tuple(role["categories"]) for role in selection["retainedRoles"]} == {
         ("교수님",),
         ("친구",),
         ("연인",),
     }
-    category_counts = Counter(
-        category
+    role_coverage = {
+        (role.get("roleId", "retained"), category, role.get("personaId"))
         for section in ("approvedRoles", "rolesAwaitingSelection", "retainedRoles")
         for role in selection[section]
         for category in role["categories"]
-    )
-    assert category_counts == {
-        "예약": 1,
-        "교수님": 1,
-        "배달": 1,
-        "시청": 1,
-        "고객센터": 1,
-        "가족": 1,
-        "친구": 1,
-        "연인": 1,
-        "회사": 1,
+    }
+    assert role_coverage == {
+        ("service_agent", "예약", None),
+        ("service_agent", "시청", None),
+        ("service_agent", "고객센터", None),
+        ("delivery_agent", "배달", None),
+        ("family_father", "가족", "father"),
+        ("family_mother", "가족", "mother"),
+        ("company_manager", "회사", None),
+        ("retained", "교수님", None),
+        ("retained", "친구", None),
+        ("retained", "연인", None),
     }
 
 
@@ -203,3 +236,26 @@ def test_committed_qwen_cast_v2_auditions_cover_every_voice_for_each_open_role()
         assert {artifact["text"] for artifact in role_artifacts} == {role.text}
         assert {tuple(artifact["categories"]) for artifact in role_artifacts} == {role.categories}
         assert all(len(artifact["sha256"]) == 64 for artifact in role_artifacts)
+
+
+def test_committed_qwen_voice_design_manifest_matches_mother_candidates():
+    manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/"
+        "qwen3-voice-design-family-mother/manifest.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest["castVersion"] == 2
+    assert manifest["roleId"] == "family_mother"
+    assert manifest["selectionStatus"] == "awaiting-user-selection"
+    assert manifest["provider"] == "qwen3-tts-voice-design"
+    assert manifest["modelRevision"] == QWEN_VOICE_DESIGN_REVISION
+    assert manifest["runtimeVersion"] == "0.1.1"
+    assert manifest["baseSeed"] == 42
+    assert [artifact["voice"] for artifact in manifest["artifacts"]] == [
+        design.id for design in MOTHER_VOICE_DESIGNS
+    ]
+    assert [artifact["description"] for artifact in manifest["artifacts"]] == [
+        design.direction for design in MOTHER_VOICE_DESIGNS
+    ]
+    assert all(len(artifact["sha256"]) == 64 for artifact in manifest["artifacts"])

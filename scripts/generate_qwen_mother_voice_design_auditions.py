@@ -1,0 +1,182 @@
+from __future__ import annotations
+
+import argparse
+import importlib.metadata
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
+
+from huggingface_hub import HfApi, snapshot_download
+
+from scripts.generate_tts_auditions import DEFAULT_MAX_NEW_TOKENS, DEFAULT_SEED
+from scripts.tts_audition_common import (
+    describe_wav,
+    prepare_output_directory,
+    seed_local_inference,
+    write_manifest,
+)
+
+MODEL_ID = "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
+MODEL_REVISION = "5ecdb67327fd37bb2e042aab12ff7391903235d3"
+QWEN_TTS_VERSION = "0.1.1"
+AUDITION_TEXT = "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐."
+
+
+@dataclass(frozen=True)
+class MotherVoiceDesign:
+    id: str
+    direction: str
+
+
+MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
+    MotherVoiceDesign(
+        id="warm_calm_midlow",
+        direction=(
+            "40대 후반에서 50대 초반의 한국인 여성 목소리. 부드러운 중저음으로, "
+            "엄마가 자녀의 하루를 따뜻하고 차분하게 물어보듯 자연스럽게 말한다. "
+            "과장된 연기와 지나치게 젊은 느낌은 피한다."
+        ),
+    ),
+    MotherVoiceDesign(
+        id="natural_everyday",
+        direction=(
+            "40대에서 50대의 한국인 여성 목소리. 실제 가족 통화처럼 편안하고 생활감 있게, "
+            "꾸미지 않은 발성과 안정된 속도로 다정하게 말한다."
+        ),
+    ),
+    MotherVoiceDesign(
+        id="mature_reassuring",
+        direction=(
+            "50대 한국인 여성의 성숙하고 안정적인 목소리. 낮고 포근한 음색으로, "
+            "자녀가 안심할 수 있도록 여유 있고 믿음직스럽게 말한다."
+        ),
+    ),
+    MotherVoiceDesign(
+        id="bright_affectionate",
+        direction=(
+            "40대 후반 한국인 여성의 밝고 다정한 목소리. 반가움이 느껴지되 들뜨거나 "
+            "어리게 들리지 않도록, 따뜻한 미소를 머금고 자연스럽게 말한다."
+        ),
+    ),
+    MotherVoiceDesign(
+        id="gentle_concerned",
+        direction=(
+            "50대 한국인 여성의 온화하고 세심한 목소리. 자녀의 상태를 걱정하면서도 "
+            "부담을 주지 않도록 부드러운 중저음과 느긋한 호흡으로 말한다."
+        ),
+    ),
+)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Generate five controlled Korean mother-role candidates with Qwen VoiceDesign."
+    )
+    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--device", choices=("cpu", "mps", "cuda"), required=True)
+    parser.add_argument(
+        "--dtype",
+        choices=("float32", "float16", "bfloat16"),
+        required=True,
+    )
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    parser.add_argument("--max-new-tokens", type=int, default=DEFAULT_MAX_NEW_TOKENS)
+    parser.add_argument(
+        "--allow-network",
+        action="store_true",
+        help="Allow checking and downloading the exact pinned model revision.",
+    )
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+    output_dir = prepare_output_directory(args.output_dir)
+    runtime_version = importlib.metadata.version("qwen-tts")
+    if runtime_version != QWEN_TTS_VERSION:
+        raise RuntimeError(
+            f"qwen-tts version mismatch: expected {QWEN_TTS_VERSION}, received {runtime_version}"
+        )
+
+    if args.allow_network:
+        model_info = HfApi().model_info(MODEL_ID)
+        if model_info.sha != MODEL_REVISION:
+            raise RuntimeError(
+                f"Qwen VoiceDesign revision changed: expected {MODEL_REVISION}, "
+                f"received {model_info.sha}"
+            )
+    model_path = snapshot_download(
+        repo_id=MODEL_ID,
+        revision=MODEL_REVISION,
+        local_files_only=not args.allow_network,
+    )
+
+    import soundfile as sf
+    import torch
+    from qwen_tts import Qwen3TTSModel
+
+    if args.device == "mps" and not torch.backends.mps.is_available():
+        raise RuntimeError("Qwen VoiceDesign requested MPS, but MPS is not available.")
+    if args.device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("Qwen VoiceDesign requested CUDA, but CUDA is not available.")
+    if args.device == "cpu" and args.dtype != "float32":
+        raise RuntimeError("Qwen VoiceDesign CPU execution requires float32.")
+    torch_dtype = {
+        "float32": torch.float32,
+        "float16": torch.float16,
+        "bfloat16": torch.bfloat16,
+    }[args.dtype]
+    model = Qwen3TTSModel.from_pretrained(
+        model_path,
+        device_map=args.device,
+        dtype=torch_dtype,
+        attn_implementation="eager",
+    )
+
+    artifacts: list[dict[str, str | int]] = []
+    for position, design in enumerate(MOTHER_VOICE_DESIGNS, start=1):
+        seed = args.seed + position - 1
+        seed_local_inference(seed)
+        wavs, sample_rate = model.generate_voice_design(
+            text=AUDITION_TEXT,
+            language="Korean",
+            instruct=design.direction,
+            max_new_tokens=args.max_new_tokens,
+        )
+        output_path = output_dir / f"{position:02d}_{design.id}.wav"
+        sf.write(output_path, wavs[0], sample_rate, format="WAV", subtype="PCM_16")
+        artifact = describe_wav(
+            output_path,
+            position=position,
+            voice=design.id,
+            description=design.direction,
+        )
+        artifact["seed"] = seed
+        artifacts.append(artifact)
+        print(f"generated {position:02d}/{len(MOTHER_VOICE_DESIGNS)} {design.id}", flush=True)
+
+    manifest = {
+        "castVersion": 2,
+        "roleId": "family_mother",
+        "selectionStatus": "awaiting-user-selection",
+        "generatedAt": datetime.now(UTC).isoformat(),
+        "provider": "qwen3-tts-voice-design",
+        "executionMode": "local-evaluation",
+        "model": MODEL_ID,
+        "modelRevision": MODEL_REVISION,
+        "runtimeVersion": runtime_version,
+        "language": "Korean",
+        "device": args.device,
+        "dtype": args.dtype,
+        "text": AUDITION_TEXT,
+        "maxNewTokens": args.max_new_tokens,
+        "baseSeed": args.seed,
+        "seedStrategy": "base-seed-plus-zero-based-position",
+        "artifacts": artifacts,
+    }
+    manifest_path = write_manifest(output_dir, manifest)
+    print(f"manifest {manifest_path}", flush=True)
+
+
+if __name__ == "__main__":
+    main()

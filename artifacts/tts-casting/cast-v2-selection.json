@@ -13,9 +13,7 @@
       "sourceArtifact": "artifacts/tts-auditions/bark-small-korean/06_ko_speaker_5.wav",
       "sourceSha256": "40863316b576109571333561f2273d6a8ca472352bab825565e76082706eb42a",
       "decision": "approved-by-user"
-    }
-  ],
-  "rolesAwaitingSelection": [
+    },
     {
       "roleId": "service_agent",
       "categories": [
@@ -23,21 +21,46 @@
         "시청",
         "고객센터"
       ],
-      "candidateProvider": "qwen3-tts"
+      "provider": "qwen3-tts",
+      "voice": "ryan",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-tts/service_agent/05_ryan.wav",
+      "sourceSha256": "6576f8ac2c4d9bc6998a88d27343bfca440bf22d2f0e7b231fd21286ae72485f",
+      "decision": "approved-by-user"
     },
     {
       "roleId": "delivery_agent",
       "categories": [
         "배달"
       ],
-      "candidateProvider": "qwen3-tts"
+      "provider": "qwen3-tts",
+      "voice": "vivian",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-tts/delivery_agent/09_vivian.wav",
+      "sourceSha256": "c48ebdcd5be203d97fe0e295ee799b9f6217db86f92730820ff29c4650a637ed",
+      "decision": "approved-by-user"
     },
+    {
+      "roleId": "family_father",
+      "categories": [
+        "가족"
+      ],
+      "personaId": "father",
+      "provider": "qwen3-tts",
+      "voice": "aiden",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-tts/family_mother/01_aiden.wav",
+      "sourceSha256": "0857f545c723d91d97aca339a727fc0d7e77e1ce9ff1747dab712bc4a203adf9",
+      "decision": "approved-by-user"
+    }
+  ],
+  "rolesAwaitingSelection": [
     {
       "roleId": "family_mother",
       "categories": [
         "가족"
       ],
-      "candidateProvider": "qwen3-tts"
+      "personaId": "mother",
+      "candidateProvider": "qwen3-tts-voice-design",
+      "candidateManifest": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother/manifest.json",
+      "selectionReason": "no-approved-custom-voice-candidate"
     }
   ],
   "retainedRoles": [
