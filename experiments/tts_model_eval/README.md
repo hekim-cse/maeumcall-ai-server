@@ -62,3 +62,39 @@ Dockerfile 전용 ignore 규칙은 빌드 컨텍스트에 평가 요구사항 �
 5. 운영성: 모델 크기, 생성 시간, 실행 장비, 라이선스를 지속해서 관리할 수 있는가.
 
 공식 지표의 CER와 WER는 평가 데이터와 단위가 달라 공급자 사이의 절대 순위로 사용하지 않는다. 최종 음색 배정은 동일 문장 청취 결과와 실제 시나리오 문장 평가를 모두 통과한 뒤 확정한다.
+
+## 시나리오 배역 청취
+
+사용자가 직접 청취해 선택한 `castVersion: 1` 배역은 다음과 같다.
+
+| 카테고리 | 공급자 | 음색 | 시나리오 수 |
+|---|---|---|---:|
+| 예약 | NVIDIA Magpie | Sofia | 4 |
+| 교수님 | Qwen3-TTS | Eric | 3 |
+| 배달 | NVIDIA Magpie | Jason | 3 |
+| 시청 | NVIDIA Magpie | Sofia | 3 |
+| 고객센터 | NVIDIA Magpie | Sofia | 3 |
+| 가족 | NVIDIA Magpie | Aria | 3 |
+| 친구 | Qwen3-TTS | Serena | 5 |
+| 연인 | Qwen3-TTS | Uncle Fu | 4 |
+| 회사 | NVIDIA Magpie | Leo | 4 |
+
+`services.tts.casting`은 현재 32개 시나리오 키를 모두 명시한다. 카테고리만 보고 새 시나리오에 음색을 자동 상속하지 않으며, 중앙 LangGraph 레지스트리와 배역 키가 달라지면 테스트가 실패한다.
+
+시나리오별 대사는 해당 상세 그래프의 첫 업무 질문 또는 등록형 역할의 대표 응답으로 작성한다. 공급자 제한이 한쪽 결과를 지우지 않도록 로컬 Qwen 12개와 공식 Space 기반 Magpie 20개를 별도 산출물로 생성한다.
+
+```bash
+python -m scripts.generate_scenario_tts_auditions \
+  --output-dir artifacts/tts-scenario-auditions/cast-v1/qwen3-tts \
+  --provider qwen3-tts \
+  --device mps \
+  --dtype bfloat16 \
+  --seed 42
+
+python -m scripts.generate_scenario_tts_auditions \
+  --output-dir artifacts/tts-scenario-auditions/cast-v1/nvidia-magpie \
+  --provider nvidia-magpie \
+  --allow-network
+```
+
+Magpie 생성은 Hugging Face ZeroGPU 사용 한도의 적용을 받는다. 한도가 소진되면 다른 공개 Space나 다른 음색으로 우회하지 않고 공식 한도 복구 후 다시 실행한다.

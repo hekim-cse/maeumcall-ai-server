@@ -68,10 +68,16 @@ def main() -> None:
     assert_remote_revisions()
 
     from gradio_client import Client
+    from huggingface_hub import get_token
 
     artifacts: list[dict[str, str | int]] = []
     with TemporaryDirectory(prefix="maeum-call-magpie-download-") as download_dir:
-        client = Client(SPACE_ID, verbose=False, download_files=download_dir)
+        client = Client(
+            SPACE_ID,
+            token=get_token(),
+            verbose=False,
+            download_files=download_dir,
+        )
         for position, (speaker, description) in enumerate(SPEAKERS, start=1):
             downloaded_path = client.predict(
                 args.text,
