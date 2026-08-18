@@ -15,7 +15,7 @@ from services.tts.casting import (
 )
 from services.tts.catalog import TTS_VOICE_CATALOG
 from services.tts.provider import SynthesizedSpeech
-from services.tts.service import TTSRuntime, get_tts_runtime
+from services.tts.service import TTSRuntime, TTSRuntimeResult, get_tts_runtime
 
 router = APIRouter(prefix="/tts", tags=["tts"])
 
@@ -70,22 +70,30 @@ async def synthesize_scenario_speech(
 
 
 def _audio_response(
-    result: SynthesizedSpeech,
+    result: TTSRuntimeResult,
     *,
     extra_headers: dict[str, str] | None = None,
 ) -> Response:
+    speech: SynthesizedSpeech = result.speech
+    timing = result.timing
     headers = {
-        "X-TTS-Provider": result.provider,
-        "X-TTS-Model": result.model,
-        "X-TTS-Model-Revision": result.model_revision,
-        "X-TTS-Voice": result.voice,
-        "X-Audio-Sample-Rate": str(result.sample_rate),
+        "X-TTS-Provider": speech.provider,
+        "X-TTS-Model": speech.model,
+        "X-TTS-Model-Revision": speech.model_revision,
+        "X-TTS-Voice": speech.voice,
+        "X-TTS-Model-State": timing.model_state,
+        "X-Audio-Sample-Rate": str(speech.sample_rate),
+        "Server-Timing": (
+            f"tts_transition;dur={timing.transition_seconds * 1000:.3f}, "
+            f"tts_synthesis;dur={timing.synthesis_seconds * 1000:.3f}, "
+            f"tts_total;dur={timing.total_seconds * 1000:.3f}"
+        ),
         "Cache-Control": "private, no-store",
     }
     if extra_headers:
         headers.update(extra_headers)
     return Response(
-        content=result.audio,
-        media_type=result.media_type,
+        content=speech.audio,
+        media_type=speech.media_type,
         headers=headers,
     )

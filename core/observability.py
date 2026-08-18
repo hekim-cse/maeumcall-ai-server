@@ -55,6 +55,33 @@ CONTRACT_FAILURES = Counter(
     "Application contract failures grouped by bounded contract and code values.",
     ("contract", "code"),
 )
+TTS_SYNTHESIS_ATTEMPTS = Counter(
+    "maeumcall_tts_synthesis_attempts_total",
+    "TTS synthesis attempts grouped by provider, model state, and outcome.",
+    ("provider", "model_state", "outcome"),
+)
+TTS_SYNTHESIS_DURATION = Histogram(
+    "maeumcall_tts_synthesis_duration_seconds",
+    "TTS runtime phase duration in seconds.",
+    ("provider", "phase", "model_state", "outcome"),
+    buckets=(
+        0.001,
+        0.005,
+        0.01,
+        0.025,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        1,
+        2.5,
+        5,
+        10,
+        30,
+        60,
+        120,
+    ),
+)
 
 
 def observe_graph_node(
@@ -109,6 +136,29 @@ def record_structured_output_retry(operation: str, reason: str) -> None:
 
 def record_contract_failure(contract: str, code: str) -> None:
     CONTRACT_FAILURES.labels(contract=contract, code=code).inc()
+
+
+def record_tts_synthesis(
+    *,
+    provider: str,
+    model_state: str,
+    outcome: str,
+    phase_durations: dict[str, float],
+) -> None:
+    """Record bounded TTS runtime labels without text or user identifiers."""
+
+    TTS_SYNTHESIS_ATTEMPTS.labels(
+        provider=provider,
+        model_state=model_state,
+        outcome=outcome,
+    ).inc()
+    for phase, duration in phase_durations.items():
+        TTS_SYNTHESIS_DURATION.labels(
+            provider=provider,
+            phase=phase,
+            model_state=model_state,
+            outcome=outcome,
+        ).observe(max(duration, 0.0))
 
 
 def render_metrics() -> bytes:

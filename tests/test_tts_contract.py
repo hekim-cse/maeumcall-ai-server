@@ -9,7 +9,11 @@ from services.tts.casting import ScenarioVoiceAssignment
 from services.tts.catalog import TTSVoiceId
 from services.tts.errors import TTSServiceError
 from services.tts.provider import SynthesizedSpeech
-from services.tts.service import get_tts_runtime
+from services.tts.service import (
+    TTSRuntimeResult,
+    TTSRuntimeTiming,
+    get_tts_runtime,
+)
 
 pytestmark = pytest.mark.unit
 
@@ -26,16 +30,24 @@ class TTSRuntimeDouble:
         *,
         text: str,
         assignment: ScenarioVoiceAssignment,
-    ) -> SynthesizedSpeech:
+    ) -> TTSRuntimeResult:
         self.requests.append((text, assignment))
-        return SynthesizedSpeech(
-            audio=b"RIFF-test-wave",
-            media_type="audio/wav",
-            sample_rate=24_000,
-            voice=assignment.voice,
-            provider=assignment.provider.value,
-            model="Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
-            model_revision="fixed-revision",
+        return TTSRuntimeResult(
+            speech=SynthesizedSpeech(
+                audio=b"RIFF-test-wave",
+                media_type="audio/wav",
+                sample_rate=24_000,
+                voice=assignment.voice,
+                provider=assignment.provider.value,
+                model="Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+                model_revision="fixed-revision",
+            ),
+            timing=TTSRuntimeTiming(
+                model_state="warm",
+                transition_seconds=0.012,
+                synthesis_seconds=1.234,
+                total_seconds=1.246,
+            ),
         )
 
 
@@ -88,6 +100,12 @@ def test_tts_synthesis_returns_audio_and_reproducibility_headers():
     assert response.headers["x-tts-model-revision"] == "fixed-revision"
     assert response.headers["x-tts-voice"] == "sohee"
     assert response.headers["x-audio-sample-rate"] == "24000"
+    assert response.headers["x-tts-model-state"] == "warm"
+    assert response.headers["server-timing"] == (
+        "tts_transition;dur=12.000, "
+        "tts_synthesis;dur=1234.000, "
+        "tts_total;dur=1246.000"
+    )
     assert response.headers["cache-control"] == "private, no-store"
     assert len(runtime.requests) == 1
     text, assignment = runtime.requests[0]
@@ -114,7 +132,7 @@ def test_tts_provider_failure_uses_typed_error_contract():
             *,
             text: str,
             assignment: ScenarioVoiceAssignment,
-        ) -> SynthesizedSpeech:
+        ) -> TTSRuntimeResult:
             raise TTSServiceError(
                 "TTS_SYNTHESIS_FAILED",
                 "음성 합성을 완료하지 못했습니다.",

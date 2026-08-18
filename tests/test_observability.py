@@ -171,5 +171,6 @@ def test_metrics_endpoint_uses_prometheus_text_format_without_identity_labels():
     assert response.headers["content-type"].startswith("text/plain")
     assert "maeumcall_langgraph_node_duration_seconds" in response.text
     assert "maeumcall_contract_failures_total" in response.text
+    assert "maeumcall_tts_synthesis_duration_seconds" in response.text
     assert "user_id=" not in response.text
     assert "request_id=" not in response.text

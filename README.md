@@ -84,8 +84,8 @@ MaeumCall AI Server는 기존 마음콜 프로젝트를 상태 기반 AI 시스�
 | 🔐 기준선 식별자 보호 | 실제 사용자 ID 대신 비밀키 기반 HMAC 식별자로 음성 기준선 저장 |
 | 🪪 사용자 소유권 검증 | 카카오 토큰을 서버에서 검증하고 Firebase ID token의 UID로 사용자 데이터 소유권 확정 |
 | 🗄 트랜잭션 기준선 저장 | PostgreSQL 행 잠금과 트랜잭션으로 캘리브레이션 샘플·확정 기준선을 영속화 |
-| 📈 LangGraph 관측성 | 노드별 시도·재시도·성공/실패·latency와 계약 실패를 Prometheus 지표로 노출 |
-| 🔊 한국어 TTS | SHA로 고정한 Qwen3-TTS의 9개 음색을 인증된 24kHz WAV 합성 API로 제공 |
+| 📈 실행 관측성 | LangGraph와 TTS의 성공·실패·latency를 개인정보 없는 Prometheus 지표로 노출 |
+| 🔊 한국어 TTS | 32개 시나리오 배역을 Qwen3-TTS·Bark Small·Voice Clone의 인증된 24kHz WAV로 제공 |
 
 ---
 
@@ -504,10 +504,10 @@ http://127.0.0.1:8000/docs
 | 운영 경계 | 요청 ID, readiness 구성요소, 통일된 오류 envelope 제공 |
 | 사용자 인증 | 카카오 access token 검증 후 가명 UID 기반 Firebase 세션을 발급하고 서버에서 데이터 소유권 검증 |
 | 음성 데이터 영속성 | PostgreSQL 트랜잭션으로 확정 기준선과 진행 중 캘리브레이션 샘플 보존 |
-| 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패 Prometheus 지표 제공 |
+| 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패와 TTS 모델 상태·단계별 지연 Prometheus 지표 제공 |
 | 한국어 단어 분석 | Kiwi 형태소 원형과 품사 계약으로 내용어·감탄사를 분리하며 분석기 장애는 503 오류와 readiness로 공개 |
-| 한국어 음성 합성 | Qwen3-TTS 0.6B의 9개 음색을 고정 리비전·인증·WAV 계약으로 제공하고 청취 전 시나리오 매핑은 보류 |
-| 테스트 검증 | 오프라인 회귀 테스트 435개와 실제 PostgreSQL 통합 테스트 2개 통과, 실모델 통합 테스트 16개 분리 |
+| 한국어 음성 합성 | 32개 시나리오의 배역 버전 2를 Qwen3-TTS·Bark Small·엄마 Voice Clone 공급자와 인증된 WAV 계약으로 제공 |
+| 테스트 검증 | 오프라인 회귀 테스트 487개 통과·1개 선택적 테스트 제외, 실모델 통합 테스트 18개 분리 |
 
 <table>
   <tr>

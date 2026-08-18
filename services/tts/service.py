@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import threading
 from collections.abc import Callable, Mapping
+from dataclasses import dataclass
 from functools import lru_cache
+from time import perf_counter
 
 from core.config import (
     TTS_BARK_MODEL_NAME,
@@ -16,6 +18,7 @@ from core.config import (
     TTS_MODEL_REVISION,
     TTS_VOICE_CLONE_MANIFEST_PATH,
 )
+from core.observability import record_tts_synthesis
 from services.tts.bark_provider import BarkTTSProvider
 from services.tts.casting import ScenarioVoiceAssignment, TTSProviderId
 from services.tts.errors import TTSServiceError
@@ -24,13 +27,34 @@ from services.tts.qwen_provider import QwenTTSProvider
 from services.tts.qwen_voice_clone_provider import QwenVoiceCloneTTSProvider
 
 ProviderFactory = Callable[[], TTSProvider]
+Clock = Callable[[], float]
+
+
+@dataclass(frozen=True)
+class TTSRuntimeTiming:
+    model_state: str
+    transition_seconds: float
+    synthesis_seconds: float
+    total_seconds: float
+
+
+@dataclass(frozen=True)
+class TTSRuntimeResult:
+    speech: SynthesizedSpeech
+    timing: TTSRuntimeTiming
 
 
 class TTSRuntime:
     """Own one active local model and serialize cross-provider model switching."""
 
-    def __init__(self, factories: Mapping[TTSProviderId, ProviderFactory]) -> None:
+    def __init__(
+        self,
+        factories: Mapping[TTSProviderId, ProviderFactory],
+        *,
+        clock: Clock = perf_counter,
+    ) -> None:
         self._factories = dict(factories)
+        self._clock = clock
         self._active_provider_id: TTSProviderId | None = None
         self._active_provider: TTSProvider | None = None
         self._lock = threading.Lock()
@@ -57,18 +81,85 @@ class TTSRuntime:
         *,
         text: str,
         assignment: ScenarioVoiceAssignment,
-    ) -> SynthesizedSpeech:
+    ) -> TTSRuntimeResult:
         if not self._lock.acquire(blocking=False):
+            record_tts_synthesis(
+                provider=assignment.provider.value,
+                model_state="busy",
+                outcome="rejected",
+                phase_durations={},
+            )
             raise TTSServiceError(
                 "TTS_BUSY",
                 "다른 음성 합성 요청을 처리하고 있습니다. 잠시 후 다시 시도해 주세요.",
                 status_code=429,
             )
+        started_at = self._clock()
+        model_state = self._model_state(assignment.provider)
+        transition_finished_at: float | None = None
         try:
             provider = self._activate(assignment.provider)
-            return provider.synthesize(text=text, voice=assignment.voice)
+            transition_finished_at = self._clock()
+            speech = provider.synthesize(text=text, voice=assignment.voice)
+            finished_at = self._clock()
+            timing = TTSRuntimeTiming(
+                model_state=model_state,
+                transition_seconds=transition_finished_at - started_at,
+                synthesis_seconds=finished_at - transition_finished_at,
+                total_seconds=finished_at - started_at,
+            )
+            self._record_timing(
+                assignment=assignment,
+                timing=timing,
+                outcome="success",
+            )
+            return TTSRuntimeResult(speech=speech, timing=timing)
+        except Exception:
+            finished_at = self._clock()
+            transition_end = transition_finished_at or finished_at
+            timing = TTSRuntimeTiming(
+                model_state=model_state,
+                transition_seconds=transition_end - started_at,
+                synthesis_seconds=(
+                    finished_at - transition_end
+                    if transition_finished_at is not None
+                    else 0.0
+                ),
+                total_seconds=finished_at - started_at,
+            )
+            self._record_timing(
+                assignment=assignment,
+                timing=timing,
+                outcome="error",
+            )
+            raise
         finally:
             self._lock.release()
+
+    def _model_state(self, provider_id: TTSProviderId) -> str:
+        if self._active_provider_id is None:
+            return "cold_start"
+        if self._active_provider_id is provider_id:
+            return "warm"
+        return "provider_switch"
+
+    @staticmethod
+    def _record_timing(
+        *,
+        assignment: ScenarioVoiceAssignment,
+        timing: TTSRuntimeTiming,
+        outcome: str,
+    ) -> None:
+        record_tts_synthesis(
+            provider=assignment.provider.value,
+            model_state=timing.model_state,
+            outcome=outcome,
+            phase_durations={
+                "transition": timing.transition_seconds,
+                "synthesis": timing.synthesis_seconds,
+                "total": timing.total_seconds,
+            },
+        )
 
     def probe(self) -> None:
         if not self._lock.acquire(blocking=False):

@@ -9,6 +9,7 @@
 - 32개 시나리오와 가족 엄마·아빠 역할을 덮는 서버 소유 `castVersion: 2` 배역 계약
 - 인증된 `/tts/scenario/synthesize` API와 Qwen3-TTS·Bark Small·Qwen Voice Clone 공급자
 - 승인된 엄마 Voice Clone manifest·safetensors 해시 검증과 공급자 전환 시 모델 메모리 해제
+- TTS 최초 적재·동일 모델 재사용·공급자 전환을 구분하는 Prometheus 지표와 `Server-Timing` 응답 계약
 - Apache-2.0 Qwen3-TTS 0.6B CustomVoice의 SHA 고정 로컬 공급자, 9개 음색 목록, 인증된 WAV 합성 API
 - 동일 한국어 문장으로 9개 음색을 생성하고 파일 해시를 기록하는 청취 비교 명령
 - 모든 대화의 외부 반영 없음 메타데이터와 9개 업무 상세 그래프의 사용자 확인 후 모의 처리 완료 상태

@@ -170,7 +170,9 @@
 }
 ```
 
-`X-TTS-Provider`, `X-TTS-Model`, `X-TTS-Model-Revision`, `X-TTS-Voice`, `X-Audio-Sample-Rate` 헤더로 실제 합성 조건을 함께 전달한다. 발화에 개인정보가 포함될 수 있어 `Cache-Control: private, no-store`를 사용한다. 언어는 한국어로 고정하며, 승인되지 않은 공급자·음색으로 자동 대체하지 않는다.
+`X-TTS-Provider`, `X-TTS-Model`, `X-TTS-Model-Revision`, `X-TTS-Voice`, `X-TTS-Model-State`, `X-Audio-Sample-Rate` 헤더로 실제 합성 조건을 함께 전달한다. `X-TTS-Model-State`는 최초 적재인 `cold_start`, 같은 공급자 재사용인 `warm`, 공급자 교체인 `provider_switch` 중 하나다. `Server-Timing`은 `tts_transition`, `tts_synthesis`, `tts_total`의 밀리초 값을 제공해 모델 교체와 실제 합성 시간을 분리한다.
+
+발화에 개인정보가 포함될 수 있어 `Cache-Control: private, no-store`를 사용한다. 언어는 한국어로 고정하며, 승인되지 않은 공급자·음색으로 자동 대체하지 않는다. 지표와 응답 헤더에는 발화 원문, 사용자 UID, 인증 토큰을 포함하지 않는다.
 
 이전 `/suggest`, `/improve`, `/analyze` 별칭은 제공하지 않는다. 클라이언트와 서버의 경로 불일치를 404로 드러내 배포 계약 오류를 조기에 발견한다.
 

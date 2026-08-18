@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import pytest
+from prometheus_client import REGISTRY
 
 from services.tts.casting import ScenarioVoiceAssignment, TTSProviderId
 from services.tts.errors import TTSServiceError
@@ -41,7 +42,31 @@ def _assignment(provider: TTSProviderId, voice: str) -> ScenarioVoiceAssignment:
 
 def test_runtime_reuses_the_active_provider_for_consecutive_requests():
     qwen = ProviderDouble(TTSProviderId.QWEN3_TTS)
-    runtime = TTSRuntime({TTSProviderId.QWEN3_TTS: lambda: qwen})
+    metric_labels = {
+        "provider": "qwen3-tts",
+        "model_state": "cold_start",
+        "outcome": "success",
+    }
+    attempts_before = (
+        REGISTRY.get_sample_value(
+            "maeumcall_tts_synthesis_attempts_total",
+            metric_labels,
+        )
+        or 0.0
+    )
+    duration_labels = {**metric_labels, "phase": "total"}
+    durations_before = (
+        REGISTRY.get_sample_value(
+            "maeumcall_tts_synthesis_duration_seconds_count",
+            duration_labels,
+        )
+        or 0.0
+    )
+    times = iter([10.0, 10.25, 12.75, 20.0, 20.01, 21.0])
+    runtime = TTSRuntime(
+        {TTSProviderId.QWEN3_TTS: lambda: qwen},
+        clock=lambda: next(times),
+    )
 
     first = runtime.synthesize(
         text="첫 번째",
@@ -52,9 +77,22 @@ def test_runtime_reuses_the_active_provider_for_consecutive_requests():
         assignment=_assignment(TTSProviderId.QWEN3_TTS, "serena"),
     )
 
-    assert first.audio == "첫 번째".encode()
-    assert second.voice == "serena"
+    assert first.speech.audio == "첫 번째".encode()
+    assert first.timing.model_state == "cold_start"
+    assert first.timing.transition_seconds == pytest.approx(0.25)
+    assert first.timing.synthesis_seconds == pytest.approx(2.5)
+    assert first.timing.total_seconds == pytest.approx(2.75)
+    assert second.speech.voice == "serena"
+    assert second.timing.model_state == "warm"
     assert qwen.unload_count == 0
+    assert REGISTRY.get_sample_value(
+        "maeumcall_tts_synthesis_attempts_total",
+        metric_labels,
+    ) == attempts_before + 1
+    assert REGISTRY.get_sample_value(
+        "maeumcall_tts_synthesis_duration_seconds_count",
+        duration_labels,
+    ) == durations_before + 1
 
 
 def test_runtime_unloads_the_previous_model_before_provider_switch():
@@ -78,7 +116,8 @@ def test_runtime_unloads_the_previous_model_before_provider_switch():
 
     assert qwen.unload_count == 1
     assert bark.unload_count == 0
-    assert result.provider == "bark-small"
+    assert result.speech.provider == "bark-small"
+    assert result.timing.model_state == "provider_switch"
 
 
 def test_runtime_rejects_a_provider_without_an_operational_factory():
