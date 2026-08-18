@@ -5,8 +5,9 @@ import wave
 from pathlib import Path
 
 import numpy as np
+import pytest
 
-from scripts.refine_tts_timing_and_prosody import refine_timing_and_prosody
+from scripts.refine_tts_timing_and_prosody import _read_pcm16_wav, refine_timing_and_prosody
 from scripts.tts_audition_common import describe_wav_pitch
 
 
@@ -58,3 +59,18 @@ def test_refinement_shortens_only_long_pauses_and_reduces_pitch_excursions(
         wave.open(str(output_path), "rb") as output_wav,
     ):
         assert output_wav.getnframes() < source_wav.getnframes()
+
+
+def test_timing_refinement_rejects_non_pcm16_wav(tmp_path: Path):
+    source_path = tmp_path / "pcm8.wav"
+    with wave.open(str(source_path), "wb") as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(1)
+        wav_file.setframerate(24_000)
+        wav_file.writeframes(bytes([128] * 240))
+
+    with pytest.raises(
+        ValueError,
+        match="requires an uncompressed PCM 16-bit WAV file",
+    ):
+        _read_pcm16_wav(source_path)

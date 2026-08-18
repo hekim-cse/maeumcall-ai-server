@@ -3,11 +3,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import tempfile
+import wave
 from pathlib import Path
 
 import numpy as np
 import parselmouth
-import soundfile as sf
 from parselmouth.praat import call
 
 from scripts.normalize_tts_pitch_register import (
@@ -24,6 +24,33 @@ from scripts.tts_audition_common import (
 DEFAULT_PAUSE_SCALE = 0.65
 DEFAULT_PROSODY_SCALE = 0.8
 LINGUISTIC_PAUSE_MINIMUM_SECONDS = 0.12
+
+
+def _read_pcm16_wav(path: Path) -> tuple[np.ndarray, int, int]:
+    with wave.open(str(path), "rb") as wav_file:
+        channels = wav_file.getnchannels()
+        sample_width = wav_file.getsampwidth()
+        sample_rate = wav_file.getframerate()
+        compression = wav_file.getcomptype()
+        frames = wav_file.readframes(wav_file.getnframes())
+    if sample_width != 2 or compression != "NONE":
+        raise ValueError("Timing refinement requires an uncompressed PCM 16-bit WAV file.")
+    audio = np.frombuffer(frames, dtype="<i2").reshape(-1, channels)
+    return audio, sample_rate, channels
+
+
+def _write_pcm16_wav(
+    path: Path,
+    audio: np.ndarray,
+    *,
+    sample_rate: int,
+    channels: int,
+) -> None:
+    with wave.open(str(path), "wb") as wav_file:
+        wav_file.setnchannels(channels)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        wav_file.writeframes(audio.astype("<i2", copy=False).tobytes())
 
 
 def compress_pitch_excursions(
@@ -93,7 +120,7 @@ def compress_linguistic_pauses(
 ) -> list[dict[str, float]]:
     if not 0 < pause_scale <= 1:
         raise ValueError("Pause scale must be greater than zero and at most one.")
-    audio, sample_rate = sf.read(source_path, dtype="float32", always_2d=True)
+    audio, sample_rate, channels = _read_pcm16_wav(source_path)
     pauses = detect_linguistic_pauses(source_path)
     cursor = 0
     chunks = []
@@ -119,7 +146,12 @@ def compress_linguistic_pauses(
         )
     chunks.append(audio[cursor:])
     refined = np.concatenate(chunks, axis=0)
-    sf.write(output_path, refined, sample_rate, format="WAV", subtype="PCM_16")
+    _write_pcm16_wav(
+        output_path,
+        refined,
+        sample_rate=sample_rate,
+        channels=channels,
+    )
     return changes
 
 
