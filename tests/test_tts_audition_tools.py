@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import wave
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -24,6 +25,7 @@ from scripts.generate_chatterbox_audition import (
 from scripts.generate_chatterbox_audition import RUNTIME_VERSION as CHATTERBOX_VERSION
 from scripts.generate_magpie_tts_auditions import MODEL_VERSION, SPEAKERS
 from scripts.generate_melotts_audition import BERT_MODEL_REVISION, MELOTTS_SOURCE_REVISION
+from scripts.generate_qwen_role_casting_auditions import ROLE_AUDITIONS
 from scripts.tts_audition_common import (
     DEFAULT_AUDITION_TEXT,
     describe_wav,
@@ -113,3 +115,91 @@ def test_committed_audition_manifests_share_the_same_contract():
         for manifest in manifests
         for artifact in manifest["artifacts"]
     )
+
+
+def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
+    selection_path = REPOSITORY_ROOT / "artifacts/tts-casting/cast-v2-selection.json"
+    selection = json.loads(selection_path.read_text(encoding="utf-8"))
+    bark_manifest = json.loads(
+        (REPOSITORY_ROOT / "artifacts/tts-auditions/bark-small-korean/manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert selection["castVersion"] == 2
+    assert selection["selectionStatus"] == "in-progress"
+    assert selection["approvedRoles"] == [
+        {
+            "roleId": "company_manager",
+            "categories": ["회사"],
+            "provider": "bark-small",
+            "voice": "ko_speaker_5",
+            "preset": "v2/ko_speaker_5",
+            "sourceArtifact": ("artifacts/tts-auditions/bark-small-korean/06_ko_speaker_5.wav"),
+            "sourceSha256": ("40863316b576109571333561f2273d6a8ca472352bab825565e76082706eb42a"),
+            "decision": "approved-by-user",
+        }
+    ]
+    bark_voice = next(
+        artifact for artifact in bark_manifest["artifacts"] if artifact["voice"] == "ko_speaker_5"
+    )
+    assert bark_voice["sha256"] == selection["approvedRoles"][0]["sourceSha256"]
+    expected_open_roles = {
+        role["roleId"]: tuple(role["categories"]) for role in selection["rolesAwaitingSelection"]
+    }
+    assert expected_open_roles == {role.id: role.categories for role in ROLE_AUDITIONS}
+    assert {tuple(role["categories"]) for role in selection["retainedRoles"]} == {
+        ("교수님",),
+        ("친구",),
+        ("연인",),
+    }
+    category_counts = Counter(
+        category
+        for section in ("approvedRoles", "rolesAwaitingSelection", "retainedRoles")
+        for role in selection[section]
+        for category in role["categories"]
+    )
+    assert category_counts == {
+        "예약": 1,
+        "교수님": 1,
+        "배달": 1,
+        "시청": 1,
+        "고객센터": 1,
+        "가족": 1,
+        "친구": 1,
+        "연인": 1,
+        "회사": 1,
+    }
+
+
+def test_committed_qwen_cast_v2_auditions_cover_every_voice_for_each_open_role():
+    manifest_path = REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/qwen3-tts/manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest["castVersion"] == 2
+    assert manifest["selectionStatus"] == "awaiting-user-selection"
+    assert manifest["modelRevision"] == "85e237c12c027371202489a0ec509ded67b5e4b5"
+    assert manifest["baseSeed"] == 42
+    assert len(manifest["artifacts"]) == len(ROLE_AUDITIONS) * 9
+    assert Counter(artifact["roleId"] for artifact in manifest["artifacts"]) == {
+        role.id: 9 for role in ROLE_AUDITIONS
+    }
+    expected_voices = {
+        "aiden",
+        "dylan",
+        "eric",
+        "ono_anna",
+        "ryan",
+        "serena",
+        "sohee",
+        "uncle_fu",
+        "vivian",
+    }
+    for role in ROLE_AUDITIONS:
+        role_artifacts = [
+            artifact for artifact in manifest["artifacts"] if artifact["roleId"] == role.id
+        ]
+        assert {artifact["voice"] for artifact in role_artifacts} == expected_voices
+        assert {artifact["text"] for artifact in role_artifacts} == {role.text}
+        assert {tuple(artifact["categories"]) for artifact in role_artifacts} == {role.categories}
+        assert all(len(artifact["sha256"]) == 64 for artifact in role_artifacts)

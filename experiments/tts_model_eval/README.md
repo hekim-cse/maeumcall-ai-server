@@ -33,7 +33,7 @@ Hugging Face는 모델 파일을 배포하는 저장소와 연산을 대신 수�
 | 후보 | 라이선스·한국어 | 역할 음성 구성 | 현재 결정 |
 |---|---|---|---|
 | Chatterbox Multilingual V3 | MIT·한국어 공식 지원 | 내장 기준 음성 1개, 권리 확보된 기준 음성으로 복제 | Apple MPS 합성은 성공했으나 사용자 청취 평가에서 탈락 |
-| Bark Small | MIT·한국어 공식 지원 | 한국어 V2 프리셋 10개 | 다음 로컬 다중 음색 청취 후보 |
+| Bark Small | MIT·한국어 공식 지원 | 한국어 V2 프리셋 10개 | 회사 역할에 `ko_speaker_5` 승인, 나머지 프리셋은 배역 후보에서 제외 |
 | OpenVoice V2 | MIT·한국어 공식 지원 | 기준 음성의 음색 복제 | 의존성이 오래됐고 별도 기준 음성이 필요해 2순위 |
 | Fun-CosyVoice 3 | Apache-2.0·한국어 공식 지원 | 제로샷 음성 복제와 지시 기반 운율 | 향후 NVIDIA GPU 운영 서버 후보 |
 | MeloTTS Korean | MIT·한국어 공식 지원 | 한국어 고정 음성 1개 | 경량 CPU 기준선 유지 |
@@ -43,6 +43,8 @@ Meta MMS-TTS Korean은 CC-BY-NC 4.0, XTTS-v2는 Coqui Public Model License, Fish
 Chatterbox·OpenVoice·CosyVoice로 여러 배역을 만들 때는 본인 녹음 또는 사용 범위에 명시적으로 동의한 성우 음성만 기준 음성으로 사용한다. 인터넷 영상이나 다른 TTS 결과를 임의로 복제하지 않는다. 공급자를 바꾸면 `Sofia`, `Aria` 같은 기존 모델의 음색 이름과 정체성도 이전되지 않으므로, 새 음성을 직접 듣고 새 배역 버전으로 승인해야 한다.
 
 Bark는 전통적인 음소 기반 TTS가 아니라 생성형 text-to-audio 모델이다. 한국어 프리셋이 다양하다는 장점이 있지만 대본을 벗어난 발화나 비언어 소리를 만들 수 있으므로, 음색뿐 아니라 대본 충실도 검증을 반드시 함께 통과해야 한다.
+
+사용자 청취 결과 Bark의 `v2/ko_speaker_5`는 회사 역할의 `castVersion: 2` 음성으로 승인했다. 나머지 Bark 프리셋은 배역 후보에서 제외하고, 예약·시청·고객센터 공유 상담원, 배달 상담원, 가족 역할은 Qwen3-TTS 9개 고정 음색으로 다시 비교한다. 선택이 끝나기 전에는 운영 중인 `castVersion: 1`을 덮어쓰지 않는다. 승인된 결정과 남은 역할은 `artifacts/tts-casting/cast-v2-selection.json`에서 명시적으로 추적한다.
 
 ## 생성 명령
 
@@ -70,6 +72,11 @@ python -m scripts.generate_bark_korean_auditions \
   --device mps \
   --seed 42 \
   --allow-network
+
+python -m scripts.generate_qwen_role_casting_auditions \
+  --output-dir artifacts/tts-role-auditions/cast-v2/qwen3-tts \
+  --device mps \
+  --dtype bfloat16
 
 docker build \
   --file experiments/tts_model_eval/melotts.Dockerfile \

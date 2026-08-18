@@ -1,0 +1,603 @@
+{
+  "castVersion": 2,
+  "selectionStatus": "awaiting-user-selection",
+  "generatedAt": "2026-08-18T07:18:21.558290+00:00",
+  "provider": "qwen3-tts",
+  "executionMode": "local-evaluation",
+  "model": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+  "modelRevision": "85e237c12c027371202489a0ec509ded67b5e4b5",
+  "language": "Korean",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "maxNewTokens": 1200,
+  "baseSeed": 42,
+  "seedStrategy": "base-seed-plus-zero-based-generation-position",
+  "roles": [
+    {
+      "id": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요."
+    },
+    {
+      "id": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요."
+    },
+    {
+      "id": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐."
+    }
+  ],
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "aiden",
+      "description": "맑은 중음역의 밝은 남성 음색",
+      "filename": "service_agent/01_aiden.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 8560,
+      "sha256": "8accedfdae5f873c37f5f0f2d911db75c49de556de1b04c897f946c42ed4f8ed",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "English",
+      "nativeKorean": false,
+      "seed": 42
+    },
+    {
+      "position": 2,
+      "voice": "dylan",
+      "description": "또렷하고 자연스러운 젊은 남성 음색",
+      "filename": "service_agent/02_dylan.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7520,
+      "sha256": "68c9cfae040b44cf11210f12b7917aa903a9ca05dfd6ef4f28e786d8559e985b",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "Chinese (Beijing)",
+      "nativeKorean": false,
+      "seed": 43
+    },
+    {
+      "position": 3,
+      "voice": "eric",
+      "description": "약간 허스키하고 생동감 있는 남성 음색",
+      "filename": "service_agent/03_eric.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 11760,
+      "sha256": "b8f6a8d680316c42f9e5dc041254d0b9ed9f691f0a98c1191d8b5195e37c4182",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "Chinese (Sichuan)",
+      "nativeKorean": false,
+      "seed": 44
+    },
+    {
+      "position": 4,
+      "voice": "ono_anna",
+      "description": "가볍고 경쾌한 여성 음색",
+      "filename": "service_agent/04_ono_anna.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 15600,
+      "sha256": "21cdff2513c64c6a1d7422d2726edc9faa606946ad865f98c17eabd89406803e",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "Japanese",
+      "nativeKorean": false,
+      "seed": 45
+    },
+    {
+      "position": 5,
+      "voice": "ryan",
+      "description": "리듬감 있고 역동적인 남성 음색",
+      "filename": "service_agent/05_ryan.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6800,
+      "sha256": "6576f8ac2c4d9bc6998a88d27343bfca440bf22d2f0e7b231fd21286ae72485f",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "English",
+      "nativeKorean": false,
+      "seed": 46
+    },
+    {
+      "position": 6,
+      "voice": "serena",
+      "description": "따뜻하고 부드러운 젊은 여성 음색",
+      "filename": "service_agent/06_serena.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7840,
+      "sha256": "0c91d486986fd1aae283aa7cc5e65619ff5793dd2896c302516d26bb88ef2610",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 47
+    },
+    {
+      "position": 7,
+      "voice": "sohee",
+      "description": "감정 표현이 풍부하고 따뜻한 한국어 여성 음색",
+      "filename": "service_agent/07_sohee.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 9440,
+      "sha256": "3c492296bea2c59e6db3d0672474bf1a568abf14aa849611fee5e7ceadda5ac6",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "Korean",
+      "nativeKorean": true,
+      "seed": 48
+    },
+    {
+      "position": 8,
+      "voice": "uncle_fu",
+      "description": "낮고 차분한 중년 남성 음색",
+      "filename": "service_agent/08_uncle_fu.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7440,
+      "sha256": "fb8c97ede760ba00b5e253f24851b11fe21eeb4cf7af80126412d7a8f2b106b8",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 49
+    },
+    {
+      "position": 9,
+      "voice": "vivian",
+      "description": "밝고 선명한 젊은 여성 음색",
+      "filename": "service_agent/09_vivian.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6880,
+      "sha256": "8321775a2ad7c1ba10763fd4f3d21fa29c964e82cde0866be45f646d07ec7329",
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "direction": "또렷하고 차분하게 정보를 안내하는 젊은 상담원",
+      "text": "안녕하세요. 문의하신 내용을 확인해 드리겠습니다. 필요한 정보를 차례대로 말씀해 주세요.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 50
+    },
+    {
+      "position": 10,
+      "voice": "aiden",
+      "description": "맑은 중음역의 밝은 남성 음색",
+      "filename": "delivery_agent/01_aiden.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6800,
+      "sha256": "a6341bc377eb3e342721fd01fb4948b1c6eb64df15d2e8fb8fbae19cd6996491",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "English",
+      "nativeKorean": false,
+      "seed": 51
+    },
+    {
+      "position": 11,
+      "voice": "dylan",
+      "description": "또렷하고 자연스러운 젊은 남성 음색",
+      "filename": "delivery_agent/02_dylan.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 9760,
+      "sha256": "92931f2001b35a0717f65185124ca78da440eb3493ac69cc9e08a6b5c2e59ec3",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "Chinese (Beijing)",
+      "nativeKorean": false,
+      "seed": 52
+    },
+    {
+      "position": 12,
+      "voice": "eric",
+      "description": "약간 허스키하고 생동감 있는 남성 음색",
+      "filename": "delivery_agent/03_eric.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 5600,
+      "sha256": "1cf952669a857c38973e803abeaaf329290525fe5a4a2d561b880151f5359021",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "Chinese (Sichuan)",
+      "nativeKorean": false,
+      "seed": 53
+    },
+    {
+      "position": 13,
+      "voice": "ono_anna",
+      "description": "가볍고 경쾌한 여성 음색",
+      "filename": "delivery_agent/04_ono_anna.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 10240,
+      "sha256": "7151f90e146a228b4da36dbccb981874703259ebf3993bfbe3226d67abc4da5e",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "Japanese",
+      "nativeKorean": false,
+      "seed": 54
+    },
+    {
+      "position": 14,
+      "voice": "ryan",
+      "description": "리듬감 있고 역동적인 남성 음색",
+      "filename": "delivery_agent/05_ryan.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 12560,
+      "sha256": "637c47c4a3a0d3c370da7352864eb739cdb55291a97ab0c6e142937f19beca59",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "English",
+      "nativeKorean": false,
+      "seed": 55
+    },
+    {
+      "position": 15,
+      "voice": "serena",
+      "description": "따뜻하고 부드러운 젊은 여성 음색",
+      "filename": "delivery_agent/06_serena.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 11280,
+      "sha256": "9fafa6e76e86e1b340f55897b13f2039e8a62713bd78c2a8c61ca21dd529fb87",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 56
+    },
+    {
+      "position": 16,
+      "voice": "sohee",
+      "description": "감정 표현이 풍부하고 따뜻한 한국어 여성 음색",
+      "filename": "delivery_agent/07_sohee.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 16320,
+      "sha256": "fa670e86bda644154548ad6eaed09704faacc98917900f57ffd2d51a6aa944c9",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "Korean",
+      "nativeKorean": true,
+      "seed": 57
+    },
+    {
+      "position": 17,
+      "voice": "uncle_fu",
+      "description": "낮고 차분한 중년 남성 음색",
+      "filename": "delivery_agent/08_uncle_fu.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 8320,
+      "sha256": "3144850c16bb47f911fcc4569ecd17399aba70e856ad0f1158cdece51b886afd",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 58
+    },
+    {
+      "position": 18,
+      "voice": "vivian",
+      "description": "밝고 선명한 젊은 여성 음색",
+      "filename": "delivery_agent/09_vivian.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7280,
+      "sha256": "c48ebdcd5be203d97fe0e295ee799b9f6217db86f92730820ff29c4650a637ed",
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "direction": "침착하게 문제를 확인하는 중년층 배달 상담원",
+      "text": "배달 상황을 확인해 보겠습니다. 주문번호와 현재 발생한 문제를 말씀해 주세요.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 59
+    },
+    {
+      "position": 19,
+      "voice": "aiden",
+      "description": "맑은 중음역의 밝은 남성 음색",
+      "filename": "family_mother/01_aiden.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6320,
+      "sha256": "0857f545c723d91d97aca339a727fc0d7e77e1ce9ff1747dab712bc4a203adf9",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "English",
+      "nativeKorean": false,
+      "seed": 60
+    },
+    {
+      "position": 20,
+      "voice": "dylan",
+      "description": "또렷하고 자연스러운 젊은 남성 음색",
+      "filename": "family_mother/02_dylan.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 8160,
+      "sha256": "15d5d34fb16cf2698752f7914377780e2fd3754d938bf95dba748062866b642a",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "Chinese (Beijing)",
+      "nativeKorean": false,
+      "seed": 61
+    },
+    {
+      "position": 21,
+      "voice": "eric",
+      "description": "약간 허스키하고 생동감 있는 남성 음색",
+      "filename": "family_mother/03_eric.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 8080,
+      "sha256": "8e887d47193900f53f35baeb56bbb97332ae4a55f27b0212749b941e5c203e07",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "Chinese (Sichuan)",
+      "nativeKorean": false,
+      "seed": 62
+    },
+    {
+      "position": 22,
+      "voice": "ono_anna",
+      "description": "가볍고 경쾌한 여성 음색",
+      "filename": "family_mother/04_ono_anna.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6880,
+      "sha256": "1e6c4824f3cd8109eb64dc74f696b5efc12da9e66e4730a4824f58b15e43edad",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "Japanese",
+      "nativeKorean": false,
+      "seed": 63
+    },
+    {
+      "position": 23,
+      "voice": "ryan",
+      "description": "리듬감 있고 역동적인 남성 음색",
+      "filename": "family_mother/05_ryan.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7200,
+      "sha256": "cbac53d37b08c4c84745934c300e4f5af2491ab4360d65d5b84f93f9e497cdf7",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "English",
+      "nativeKorean": false,
+      "seed": 64
+    },
+    {
+      "position": 24,
+      "voice": "serena",
+      "description": "따뜻하고 부드러운 젊은 여성 음색",
+      "filename": "family_mother/06_serena.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 9200,
+      "sha256": "3aba7ec99767d6e09657b323305125b9898778121add9731c10f65073c2f7f7e",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 65
+    },
+    {
+      "position": 25,
+      "voice": "sohee",
+      "description": "감정 표현이 풍부하고 따뜻한 한국어 여성 음색",
+      "filename": "family_mother/07_sohee.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 9600,
+      "sha256": "8299ad0ad7a04fd01fb87904b8037250bf2b134a33e678d175339372910071e4",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "Korean",
+      "nativeKorean": true,
+      "seed": 66
+    },
+    {
+      "position": 26,
+      "voice": "uncle_fu",
+      "description": "낮고 차분한 중년 남성 음색",
+      "filename": "family_mother/08_uncle_fu.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 1280,
+      "sha256": "6e3e6317229a4326777ad389e3d7675b54adcd238b0d9d69e84dffc4fa79e14c",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 67
+    },
+    {
+      "position": 27,
+      "voice": "vivian",
+      "description": "밝고 선명한 젊은 여성 음색",
+      "filename": "family_mother/09_vivian.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6080,
+      "sha256": "13880e20bfe8af596e2fb0c9ce4883428eef093aca232b8e2bcff495af69f08d",
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "direction": "엄마처럼 따뜻하게 이야기를 들어 주는 중년 여성",
+      "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐.",
+      "nativeLanguage": "Chinese",
+      "nativeKorean": false,
+      "seed": 68
+    }
+  ]
+}

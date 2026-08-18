@@ -1,0 +1,66 @@
+{
+  "castVersion": 2,
+  "selectionStatus": "in-progress",
+  "approvedRoles": [
+    {
+      "roleId": "company_manager",
+      "categories": [
+        "회사"
+      ],
+      "provider": "bark-small",
+      "voice": "ko_speaker_5",
+      "preset": "v2/ko_speaker_5",
+      "sourceArtifact": "artifacts/tts-auditions/bark-small-korean/06_ko_speaker_5.wav",
+      "sourceSha256": "40863316b576109571333561f2273d6a8ca472352bab825565e76082706eb42a",
+      "decision": "approved-by-user"
+    }
+  ],
+  "rolesAwaitingSelection": [
+    {
+      "roleId": "service_agent",
+      "categories": [
+        "예약",
+        "시청",
+        "고객센터"
+      ],
+      "candidateProvider": "qwen3-tts"
+    },
+    {
+      "roleId": "delivery_agent",
+      "categories": [
+        "배달"
+      ],
+      "candidateProvider": "qwen3-tts"
+    },
+    {
+      "roleId": "family_mother",
+      "categories": [
+        "가족"
+      ],
+      "candidateProvider": "qwen3-tts"
+    }
+  ],
+  "retainedRoles": [
+    {
+      "categories": [
+        "교수님"
+      ],
+      "provider": "qwen3-tts",
+      "voice": "eric"
+    },
+    {
+      "categories": [
+        "친구"
+      ],
+      "provider": "qwen3-tts",
+      "voice": "serena"
+    },
+    {
+      "categories": [
+        "연인"
+      ],
+      "provider": "qwen3-tts",
+      "voice": "uncle_fu"
+    }
+  ]
+}
