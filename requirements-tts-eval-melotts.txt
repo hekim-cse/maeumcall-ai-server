@@ -1,0 +1,11 @@
+# Evaluation-only dependency set. Install this in the dedicated Python 3.11
+# Linux image because MeloTTS pins older Transformers and Librosa versions that
+# conflict with the production Qwen TTS runtime and with macOS MeCab packages.
+setuptools==80.9.0
+numpy==1.26.4
+torch==2.8.0
+torchaudio==2.8.0
+huggingface_hub==0.36.2
+python-mecab-ko==1.3.7
+python-mecab-ko-dic==2.1.1.post2
+git+https://github.com/myshell-ai/MeloTTS.git@209145371cff8fc3bd60d7be902ea69cbdb7965a

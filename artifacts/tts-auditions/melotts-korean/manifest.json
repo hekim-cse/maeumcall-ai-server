@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-08-18T05:01:39.867904+00:00",
+  "provider": "melotts",
+  "executionMode": "local-isolated-evaluation",
+  "model": "myshell-ai/MeloTTS-Korean",
+  "modelRevision": "0207e5adfc90129a51b6b03d89be6d84360ed323",
+  "bertModel": "kykim/bert-kor-base",
+  "bertModelRevision": "1779cc0982ada0216dd6de0dd4e86fb78201926d",
+  "runtimeVersion": "0.1.2",
+  "runtimeSourceRevision": "209145371cff8fc3bd60d7be902ea69cbdb7965a",
+  "language": "Korean",
+  "device": "cpu",
+  "text": "안녕하세요. 마음콜 통화 연습을 시작하겠습니다. 천천히 말씀해 주세요.",
+  "seed": 42,
+  "speed": 1.0,
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "kr",
+      "description": "MeloTTS 한국어 단일 고정 음성",
+      "filename": "01_kr.wav",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 7914,
+      "sha256": "ba339eef4b4de8e2d9abad51fe9b98969be84efda26a9b2223211f64d8202b1f"
+    }
+  ]
+}

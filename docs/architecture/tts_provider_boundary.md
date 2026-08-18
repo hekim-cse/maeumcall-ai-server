@@ -44,7 +44,7 @@ Qwen 패키지가 데모용 Gradio도 의존하므로 `requirements-tts.txt`에�
 
 ## 음색 선정 절차
 
-`scripts.generate_tts_auditions`는 9개 음색에 동일한 한국어 문장을 입력한다. 출력 디렉터리가 기존 WAV를 포함하면 덮어쓰지 않고 중단하며, manifest에 모델·리비전·장치·dtype·문장·샘플레이트·파일 SHA-256을 기록한다.
+`scripts.generate_tts_auditions`는 9개 음색에 동일한 한국어 문장과 고정 난수 시드를 입력한다. 출력 디렉터리가 비어 있지 않으면 덮어쓰지 않고 중단하며, manifest에 모델·리비전·장치·dtype·난수 시드·문장·샘플레이트·파일 SHA-256을 기록한다.
 
 ```bash
 python -m pip install -r requirements-tts.txt
@@ -64,3 +64,13 @@ python -m scripts.generate_tts_auditions \
 - 모델을 여러 API worker에 각각 적재하면 메모리가 worker 수만큼 증가한다. 로컬 MPS 운영은 단일 worker를 사용한다.
 - 생성 WAV는 비교 산출물이므로 Git에 커밋하지 않는다. 선택 결과와 생성 명령만 문서와 코드로 관리한다.
 - 0.6B 음색의 한국어 품질은 각 음색의 원어와 다를 수 있다. 설명만으로 역할을 정하지 않고 실제 청취 결과를 사용한다.
+
+## 공급자 재평가 경계
+
+Qwen3-TTS는 현재 기본 공급자로 유지하되 공급자 교체 가능성을 코드 밖의 인상비교로 판단하지 않는다. `experiments/tts_model_eval`에서 동일한 한국어 문장으로 다음 후보를 재현 가능하게 비교한다.
+
+- NVIDIA MagpieTTS v2607: 5개 고정 음성을 NVIDIA 공식 Space에서 평가한다. Space와 모델의 현재 SHA가 기록된 값과 다르면 생성 스크립트가 중단된다. 공개 데모 호출은 평가 전용이며 사용자 발화와 개인정보를 전송하지 않는다.
+- MeloTTS Korean: 한국어 단일 음성을 CPU 경량 기준선으로 평가한다. 오래된 Transformers·Librosa 계약과 macOS MeCab 패키지 충돌이 운영 환경을 오염시키지 않도록 digest가 고정된 Python 3.11 Linux 컨테이너에서만 실행한다.
+- Chatterbox Multilingual V3: 참조 음성 사용 동의·보관·삭제 정책이 정해진 뒤 음성 복제 후보로 평가한다.
+
+청취 평가가 끝나기 전에는 공급자나 시나리오별 음색을 바꾸지 않는다. 모델 공개 지표는 평가 단위와 데이터셋이 다르므로 직접 순위를 매기는 근거로 사용하지 않는다.

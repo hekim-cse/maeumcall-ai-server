@@ -1,18 +1,23 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
-import json
 from datetime import UTC, datetime
 from pathlib import Path
 
+from scripts.tts_audition_common import (
+    DEFAULT_AUDITION_TEXT,
+    describe_wav,
+    prepare_output_directory,
+    seed_local_inference,
+    write_manifest,
+)
 from services.tts.catalog import TTS_VOICE_CATALOG
 from services.tts.qwen_provider import QwenTTSProvider
 
 DEFAULT_MODEL = "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice"
 DEFAULT_REVISION = "85e237c12c027371202489a0ec509ded67b5e4b5"
-DEFAULT_TEXT = "안녕하세요. 마음콜 통화 연습을 시작하겠습니다. 천천히 말씀해 주세요."
 DEFAULT_MAX_NEW_TOKENS = 1_200
+DEFAULT_SEED = 42
 
 
 def parse_args() -> argparse.Namespace:
@@ -26,10 +31,11 @@ def parse_args() -> argparse.Namespace:
         choices=("float32", "float16", "bfloat16"),
         required=True,
     )
-    parser.add_argument("--text", default=DEFAULT_TEXT)
+    parser.add_argument("--text", default=DEFAULT_AUDITION_TEXT)
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--revision", default=DEFAULT_REVISION)
     parser.add_argument("--max-new-tokens", type=int, default=DEFAULT_MAX_NEW_TOKENS)
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument(
         "--allow-network",
         action="store_true",
@@ -40,11 +46,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    output_dir: Path = args.output_dir.resolve()
-    output_dir.mkdir(parents=True, exist_ok=True)
-    existing_outputs = sorted(output_dir.glob("*.wav"))
-    if existing_outputs:
-        raise RuntimeError(f"Output directory already contains WAV files: {output_dir}")
+    output_dir = prepare_output_directory(args.output_dir)
+    seed_local_inference(args.seed)
 
     provider = QwenTTSProvider(
         model_name=args.model,
@@ -62,18 +65,15 @@ def main() -> None:
         filename = f"{position:02d}_{profile.id.value}.wav"
         output_path = output_dir / filename
         output_path.write_bytes(result.audio)
-        artifacts.append(
-            {
-                "position": position,
-                "voice": profile.id.value,
-                "description": profile.description,
-                "nativeLanguage": profile.nativeLanguage,
-                "nativeKorean": profile.nativeKorean,
-                "filename": filename,
-                "sampleRate": result.sample_rate,
-                "sha256": hashlib.sha256(result.audio).hexdigest(),
-            }
+        artifact = describe_wav(
+            output_path,
+            position=position,
+            voice=profile.id.value,
+            description=profile.description,
         )
+        artifact["nativeLanguage"] = profile.nativeLanguage
+        artifact["nativeKorean"] = profile.nativeKorean
+        artifacts.append(artifact)
         print(f"generated {filename}", flush=True)
 
     manifest = {
@@ -86,13 +86,10 @@ def main() -> None:
         "dtype": args.dtype,
         "text": args.text,
         "maxNewTokens": args.max_new_tokens,
+        "seed": args.seed,
         "artifacts": artifacts,
     }
-    manifest_path = output_dir / "manifest.json"
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    manifest_path = write_manifest(output_dir, manifest)
     print(f"manifest {manifest_path}", flush=True)
 
 

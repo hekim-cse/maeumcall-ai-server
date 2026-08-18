@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-08-18T04:24:20.785811+00:00",
+  "provider": "nvidia-magpie-official-space",
+  "executionMode": "hosted-evaluation-only",
+  "model": "nvidia/magpie_tts_multilingual_357m",
+  "modelVersion": "v2607",
+  "modelRevision": "452ef560f972c38d5fc16476259aac9456453547",
+  "space": "nvidia/magpie_tts_multilingual_demo",
+  "spaceRevision": "9010af92ce9989343a952f5fd6e4b9e1f4cff9b5",
+  "language": "Korean",
+  "text": "안녕하세요. 마음콜 통화 연습을 시작하겠습니다. 천천히 말씀해 주세요.",
+  "textNormalization": true,
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "aria",
+      "description": "NVIDIA 고정 여성 음성 Aria",
+      "filename": "01_aria.wav",
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6362,
+      "sha256": "9b32983855e23813349bfc5a00a372e64283f1c7239e743b2f8134fd6c070608"
+    },
+    {
+      "position": 2,
+      "voice": "jason",
+      "description": "NVIDIA 고정 남성 음성 Jason",
+      "filename": "02_jason.wav",
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 5526,
+      "sha256": "505a360a54506d5579d08f0b7c229ad1f0b8fa2578bbfa12b3bd0fb289d25ed7"
+    },
+    {
+      "position": 3,
+      "voice": "john",
+      "description": "NVIDIA 고정 남성 음성 John",
+      "filename": "03_john.wav",
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 5851,
+      "sha256": "d870b906294db36ee8aafe01597699e16fc0675f91c2e5a30e8071f967915453"
+    },
+    {
+      "position": 4,
+      "voice": "leo",
+      "description": "NVIDIA 고정 남성 음성 Leo",
+      "filename": "04_leo.wav",
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 5712,
+      "sha256": "0f00cdfaf9f288909dfd5c54add826b8589790c152d3bfda0817c528dc2b8278"
+    },
+    {
+      "position": 5,
+      "voice": "sofia",
+      "description": "NVIDIA 고정 여성 음성 Sofia",
+      "filename": "05_sofia.wav",
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6409,
+      "sha256": "b6df42d9c39eb38799edd129a94a3f3643925c08dadc51da0fc75e2cf5ff85d2"
+    }
+  ]
+}
