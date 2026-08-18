@@ -1,0 +1,68 @@
+{
+  "referenceContractVersion": 1,
+  "generatedAt": "2026-08-18T10:04:02.514396+00:00",
+  "purpose": "family-mother-candidate-acoustic-calibration",
+  "prohibitedUses": [
+    "speaker-identification",
+    "speaker-reidentification",
+    "single-speaker-voice-cloning"
+  ],
+  "dataset": {
+    "id": 71558,
+    "name": "중·노년층 한국어 방언 데이터 (충청도, 전라도, 제주도)",
+    "url": "https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=71558",
+    "rawDataCommitted": false
+  },
+  "eligibilityContract": {
+    "gender": "female",
+    "minimumAgeAtRecording": 50,
+    "maximumAgeAtRecording": 69,
+    "singleSpeakerRecordingOnly": true,
+    "minimumDistinctSpeakers": 20
+  },
+  "samplingContract": {
+    "method": "equal-per-speaker-stable-sha256-ranking",
+    "selectionSeed": "maeum-call-mature-female-reference-v1",
+    "maximumClipsPerSpeaker": 3
+  },
+  "coverage": {
+    "eligibleSpeakers": 55,
+    "selectedSpeakers": 55,
+    "selectedClips": 153,
+    "speakerCountByAgeBand": {
+      "50s": 36,
+      "60s": 19
+    },
+    "provinceCodes": [
+      "jj"
+    ],
+    "speechTypes": [
+      "Read"
+    ]
+  },
+  "acousticReference": {
+    "aggregationUnit": "per-speaker-median-of-selected-clip-medians",
+    "pitchAlgorithm": "praat-autocorrelation",
+    "speakerMedianF0Hz": {
+      "p25": 187.1,
+      "median": 203.3,
+      "p75": 229.2
+    },
+    "selectedClipDurationMs": {
+      "p25": 4100,
+      "median": 4720,
+      "p75": 5798
+    }
+  },
+  "sourceIntegrity": {
+    "eligibleLabelContentSha256": "74e17859d31c8f04717edd96dee15e174dc741f31fd3676d64317c75120eb0b5",
+    "selectedAudioContentSha256": "8f1c161772541a658321df6b58259e63b0877e5cbd76ecc008888e7674367fbd"
+  },
+  "privacy": {
+    "containsSpeakerIdentifiers": false,
+    "containsSourceFileNames": false,
+    "containsTranscripts": false,
+    "containsAudio": false,
+    "statisticsAreAggregateOnly": true
+  }
+}

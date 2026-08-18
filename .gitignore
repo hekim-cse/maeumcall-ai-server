@@ -9,3 +9,4 @@ __pycache__/
 *.py[cod]
 *.wav
 data/baseline_db.json
+data/aihub/

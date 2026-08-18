@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.metadata
+import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -29,6 +31,7 @@ class MotherVoiceDesign:
     direction: str
     seed_offset: int
     parent_id: str | None = None
+    requires_acoustic_reference: bool = False
 
 
 MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
@@ -123,7 +126,120 @@ MOTHER_VOICE_REFINEMENTS: tuple[MotherVoiceDesign, ...] = (
     ),
 )
 
-ALL_MOTHER_VOICE_DESIGNS = MOTHER_VOICE_DESIGNS + MOTHER_VOICE_REFINEMENTS
+REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS: tuple[MotherVoiceDesign, ...] = (
+    MotherVoiceDesign(
+        id="reference_warm_everyday",
+        direction=(
+            "A Korean woman in her fifties speaking naturally to her adult child on the phone. "
+            "Use an ordinary medium speaking pitch, a warm full vocal body, comfortable lower-mid "
+            "resonance, and small but natural intonation movements. Sound familiar and unpolished, "
+            "not like an announcer or actor. Do not force the pitch downward and do not sound "
+            "girlish, elderly, breathy, hoarse, or theatrical."
+        ),
+        seed_offset=9,
+        parent_id="natural_everyday",
+        requires_acoustic_reference=True,
+    ),
+    MotherVoiceDesign(
+        id="reference_calm_reassuring",
+        direction=(
+            "A calm Korean mother in her late fifties with a mature but ordinary conversational "
+            "voice. Keep the speaking pitch in a comfortable medium range and create age through "
+            "steady breath support, rounded resonance, measured pacing, and restrained intonation. "
+            "She should sound reassuring and attentive, without an artificially low register, "
+            "exaggerated age, excessive sweetness, or professional narration."
+        ),
+        seed_offset=10,
+        parent_id="natural_everyday",
+        requires_acoustic_reference=True,
+    ),
+    MotherVoiceDesign(
+        id="reference_gentle_lived_in",
+        direction=(
+            "A Korean woman in her fifties with a gentle, lived-in everyday voice and a warm dense "
+            "timbre. Use a natural medium pitch, relaxed timing, clear consonants, and subtle "
+            "affection as if checking on her grown child. Keep the delivery intimate and realistic. "
+            "Avoid forced bass, thin brightness, youthful excitement, breathy whispering, strong "
+            "husky rasp, and exaggerated emotional acting."
+        ),
+        seed_offset=11,
+        parent_id="natural_everyday",
+        requires_acoustic_reference=True,
+    ),
+)
+
+ALL_MOTHER_VOICE_DESIGNS = (
+    MOTHER_VOICE_DESIGNS + MOTHER_VOICE_REFINEMENTS + REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS
+)
+
+
+def load_acoustic_reference(path: Path) -> dict[str, float | str]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        dataset = payload["dataset"]
+        coverage = payload["coverage"]
+        privacy = payload["privacy"]
+        pitch_range = payload["acousticReference"]["speakerMedianF0Hz"]
+        p25 = float(pitch_range["p25"])
+        median = float(pitch_range["median"])
+        p75 = float(pitch_range["p75"])
+    except (
+        OSError,
+        UnicodeDecodeError,
+        json.JSONDecodeError,
+        KeyError,
+        TypeError,
+        ValueError,
+    ) as error:
+        raise RuntimeError(f"Invalid acoustic reference manifest: {path}") from error
+    if payload.get("referenceContractVersion") != 1:
+        raise RuntimeError("Acoustic reference contract version must be 1.")
+    if payload.get("purpose") != "family-mother-candidate-acoustic-calibration":
+        raise RuntimeError(
+            "Acoustic reference purpose does not allow mother-candidate calibration."
+        )
+    if dataset.get("id") != 71558 or dataset.get("rawDataCommitted") is not False:
+        raise RuntimeError(
+            "Acoustic reference must use the approved aggregate dataset 71558 contract."
+        )
+    if coverage.get("selectedSpeakers", 0) < 20:
+        raise RuntimeError("Acoustic reference requires at least 20 selected speakers.")
+    required_privacy_contract = {
+        "containsSpeakerIdentifiers": False,
+        "containsSourceFileNames": False,
+        "containsTranscripts": False,
+        "containsAudio": False,
+        "statisticsAreAggregateOnly": True,
+    }
+    if any(privacy.get(key) is not value for key, value in required_privacy_contract.items()):
+        raise RuntimeError("Acoustic reference does not satisfy the aggregate privacy contract.")
+    if not p25 < median < p75:
+        raise RuntimeError("Acoustic reference pitch quartiles must be strictly increasing.")
+    return {
+        "manifestSha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "p25F0Hz": p25,
+        "medianF0Hz": median,
+        "p75F0Hz": p75,
+    }
+
+
+def evaluate_pitch_against_reference(
+    median_f0_hz: float, reference: dict[str, float | str]
+) -> dict[str, float | str]:
+    p25 = float(reference["p25F0Hz"])
+    p75 = float(reference["p75F0Hz"])
+    return {
+        "referenceManifestSha256": str(reference["manifestSha256"]),
+        "referenceP25F0Hz": p25,
+        "referenceP75F0Hz": p75,
+        "candidateMedianF0Hz": median_f0_hz,
+        "result": (
+            "within-reference-interquartile-range"
+            if p25 <= median_f0_hz <= p75
+            else "outside-reference-interquartile-range"
+        ),
+        "decisionBoundary": "acoustic-screening-only-requires-user-listening",
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -152,6 +268,14 @@ def parse_args() -> argparse.Namespace:
         "--allow-network",
         action="store_true",
         help="Allow checking and downloading the exact pinned model revision.",
+    )
+    parser.add_argument(
+        "--acoustic-reference",
+        type=Path,
+        help=(
+            "Aggregate AI Hub reference manifest. Required for reference-calibrated designs; "
+            "speaker-level data and source audio are not accepted."
+        ),
     )
     return parser.parse_args()
 
@@ -206,6 +330,14 @@ def main() -> None:
         if args.design_id
         else MOTHER_VOICE_DESIGNS
     )
+    reference_required = any(design.requires_acoustic_reference for design in selected_designs)
+    if reference_required and args.acoustic_reference is None:
+        raise RuntimeError("Reference-calibrated designs require --acoustic-reference.")
+    acoustic_reference = (
+        load_acoustic_reference(args.acoustic_reference.resolve())
+        if args.acoustic_reference is not None
+        else None
+    )
 
     artifacts: list[dict[str, str | int]] = []
     for position, design in enumerate(selected_designs, start=1):
@@ -227,6 +359,13 @@ def main() -> None:
         )
         artifact["seed"] = seed
         artifact["pitchAnalysis"] = describe_wav_pitch(output_path)
+        if design.requires_acoustic_reference:
+            if acoustic_reference is None:
+                raise RuntimeError("Acoustic reference was not loaded.")
+            artifact["acousticReferenceEvaluation"] = evaluate_pitch_against_reference(
+                float(artifact["pitchAnalysis"]["medianF0Hz"]),
+                acoustic_reference,
+            )
         if design.parent_id is not None:
             artifact["parentCandidateId"] = design.parent_id
         artifacts.append(artifact)
@@ -252,6 +391,8 @@ def main() -> None:
         "designIds": [design.id for design in selected_designs],
         "artifacts": artifacts,
     }
+    if acoustic_reference is not None:
+        manifest["acousticReference"] = acoustic_reference
     manifest_path = write_manifest(output_dir, manifest)
     print(f"manifest {manifest_path}", flush=True)
 

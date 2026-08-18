@@ -61,13 +61,33 @@
       "candidateProvider": "qwen3-tts-voice-design",
       "candidateManifests": [
         "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother/manifest.json",
-        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections/manifest.json"
+        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections/manifest.json",
+        "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/manifest.json"
       ],
       "activeCandidateIds": [
         "natural_everyday",
-        "natural_everyday_contralto"
+        "reference_calm_reassuring",
+        "reference_gentle_lived_in"
       ],
-      "selectionReason": "no-approved-custom-voice-candidate"
+      "selectionReason": "awaiting-user-listening-after-aihub-multi-speaker-calibration"
+    }
+  ],
+  "screenedCandidates": [
+    {
+      "roleId": "family_mother",
+      "candidateId": "reference_warm_everyday",
+      "parentCandidateId": "natural_everyday",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-reference-calibrated/01_reference_warm_everyday.wav",
+      "sourceSha256": "41d8d1c5c3296e0905430d712b007b0b95527373501abe708119689af5c1c9db",
+      "decision": "available-for-listening-not-shortlisted",
+      "reason": "below-aihub-reference-interquartile-range",
+      "acousticReferenceEvaluation": {
+        "referenceP25F0Hz": 187.1,
+        "referenceP75F0Hz": 229.2,
+        "candidateMedianF0Hz": 168.3,
+        "result": "outside-reference-interquartile-range",
+        "decisionBoundary": "acoustic-screening-only-requires-user-listening"
+      }
     }
   ],
   "rejectedCandidates": [
@@ -83,6 +103,27 @@
         "referenceCandidateId": "natural_everyday",
         "parentMedianF0Hz": 196.9,
         "candidateMedianF0Hz": 237.1
+      }
+    },
+    {
+      "roleId": "family_mother",
+      "candidateId": "natural_everyday_contralto",
+      "parentCandidateId": "natural_everyday_mature_low",
+      "sourceArtifact": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-refinements/lower-fuller-corrections/02_natural_everyday_contralto.wav",
+      "sourceSha256": "11d94a040f0bdd8018b0d0c7276d7f64d615dc3e5a8acf5faed972629d640cf7",
+      "decision": "rejected-by-user",
+      "reason": "perceived-unnatural-after-forced-pitch-lowering",
+      "pitchComparison": {
+        "referenceCandidateId": "natural_everyday",
+        "parentMedianF0Hz": 196.9,
+        "candidateMedianF0Hz": 162.4
+      },
+      "acousticReferenceEvaluation": {
+        "referenceP25F0Hz": 187.1,
+        "referenceP75F0Hz": 229.2,
+        "candidateMedianF0Hz": 162.4,
+        "result": "outside-reference-interquartile-range",
+        "decisionBoundary": "user-listening-rejection-supported-by-acoustic-screen"
       }
     },
     {

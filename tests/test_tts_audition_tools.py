@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import wave
@@ -32,6 +33,9 @@ from scripts.generate_qwen_mother_voice_design_auditions import (
 from scripts.generate_qwen_mother_voice_design_auditions import (
     MOTHER_VOICE_DESIGNS,
     MOTHER_VOICE_REFINEMENTS,
+    REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS,
+    evaluate_pitch_against_reference,
+    load_acoustic_reference,
 )
 from scripts.generate_qwen_role_casting_auditions import ROLE_AUDITIONS
 from scripts.tts_audition_common import (
@@ -128,6 +132,85 @@ def test_candidate_runtime_versions_are_explicitly_pinned():
     assert len(QWEN_VOICE_DESIGN_REVISION) == 40
     assert len(MOTHER_VOICE_DESIGNS) == 5
     assert len(MOTHER_VOICE_REFINEMENTS) == 4
+    assert len(REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS) == 3
+
+
+def test_acoustic_reference_loader_accepts_only_the_mother_calibration_contract(
+    tmp_path: Path,
+):
+    reference_path = tmp_path / "reference.json"
+    reference_path.write_text(
+        json.dumps(
+            {
+                "referenceContractVersion": 1,
+                "purpose": "family-mother-candidate-acoustic-calibration",
+                "dataset": {"id": 71558, "rawDataCommitted": False},
+                "coverage": {"selectedSpeakers": 55},
+                "privacy": {
+                    "containsSpeakerIdentifiers": False,
+                    "containsSourceFileNames": False,
+                    "containsTranscripts": False,
+                    "containsAudio": False,
+                    "statisticsAreAggregateOnly": True,
+                },
+                "acousticReference": {
+                    "speakerMedianF0Hz": {"p25": 187.1, "median": 203.3, "p75": 229.2}
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    reference = load_acoustic_reference(reference_path)
+
+    assert reference["p25F0Hz"] == 187.1
+    assert reference["medianF0Hz"] == 203.3
+    assert reference["p75F0Hz"] == 229.2
+    assert len(str(reference["manifestSha256"])) == 64
+
+
+def test_acoustic_reference_evaluation_is_a_screen_not_an_automatic_approval():
+    reference = {
+        "manifestSha256": "a" * 64,
+        "p25F0Hz": 187.1,
+        "medianF0Hz": 203.3,
+        "p75F0Hz": 229.2,
+    }
+
+    within = evaluate_pitch_against_reference(196.9, reference)
+    outside = evaluate_pitch_against_reference(162.4, reference)
+
+    assert within["result"] == "within-reference-interquartile-range"
+    assert outside["result"] == "outside-reference-interquartile-range"
+    assert within["decisionBoundary"] == "acoustic-screening-only-requires-user-listening"
+
+
+def test_acoustic_reference_loader_rejects_speaker_level_data(tmp_path: Path):
+    reference_path = tmp_path / "reference.json"
+    reference_path.write_text(
+        json.dumps(
+            {
+                "referenceContractVersion": 1,
+                "purpose": "family-mother-candidate-acoustic-calibration",
+                "dataset": {"id": 71558, "rawDataCommitted": False},
+                "coverage": {"selectedSpeakers": 55},
+                "privacy": {
+                    "containsSpeakerIdentifiers": True,
+                    "containsSourceFileNames": False,
+                    "containsTranscripts": False,
+                    "containsAudio": False,
+                    "statisticsAreAggregateOnly": False,
+                },
+                "acousticReference": {
+                    "speakerMedianF0Hz": {"p25": 187.1, "median": 203.3, "p75": 229.2}
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RuntimeError, match="aggregate privacy contract"):
+        load_acoustic_reference(reference_path)
 
 
 def test_committed_audition_manifests_share_the_same_contract():
@@ -215,29 +298,62 @@ def test_cast_v2_role_auditions_cover_only_roles_awaiting_selection():
                     "qwen3-voice-design-family-mother-refinements/"
                     "lower-fuller-corrections/manifest.json"
                 ),
+                (
+                    "artifacts/tts-role-auditions/cast-v2/"
+                    "qwen3-voice-design-family-mother-reference-calibrated/manifest.json"
+                ),
             ],
             "activeCandidateIds": [
                 "natural_everyday",
-                "natural_everyday_contralto",
+                "reference_calm_reassuring",
+                "reference_gentle_lived_in",
             ],
-            "selectionReason": "no-approved-custom-voice-candidate",
+            "selectionReason": "awaiting-user-listening-after-aihub-multi-speaker-calibration",
         }
     ]
     rejected_candidates = {
         candidate["candidateId"]: candidate for candidate in selection["rejectedCandidates"]
     }
+    assert selection["screenedCandidates"] == [
+        {
+            "roleId": "family_mother",
+            "candidateId": "reference_warm_everyday",
+            "parentCandidateId": "natural_everyday",
+            "sourceArtifact": (
+                "artifacts/tts-role-auditions/cast-v2/"
+                "qwen3-voice-design-family-mother-reference-calibrated/"
+                "01_reference_warm_everyday.wav"
+            ),
+            "sourceSha256": ("41d8d1c5c3296e0905430d712b007b0b95527373501abe708119689af5c1c9db"),
+            "decision": "available-for-listening-not-shortlisted",
+            "reason": "below-aihub-reference-interquartile-range",
+            "acousticReferenceEvaluation": {
+                "referenceP25F0Hz": 187.1,
+                "referenceP75F0Hz": 229.2,
+                "candidateMedianF0Hz": 168.3,
+                "result": "outside-reference-interquartile-range",
+                "decisionBoundary": "acoustic-screening-only-requires-user-listening",
+            },
+        }
+    ]
     assert {
         candidate_id: candidate["decision"]
         for candidate_id, candidate in rejected_candidates.items()
     } == {
         "natural_everyday_mature_low": "rejected-by-user",
+        "natural_everyday_contralto": "rejected-by-user",
         "natural_everyday_deep_alto": "rejected-by-pitch-contract",
         "natural_everyday_warm_husky": "rejected-by-pitch-contract",
     }
     assert all(
         candidate["pitchComparison"]["candidateMedianF0Hz"]
         > candidate["pitchComparison"]["parentMedianF0Hz"]
-        for candidate in rejected_candidates.values()
+        for candidate_id, candidate in rejected_candidates.items()
+        if candidate_id != "natural_everyday_contralto"
+    )
+    assert (
+        rejected_candidates["natural_everyday_contralto"]["pitchComparison"]["candidateMedianF0Hz"]
+        < rejected_candidates["natural_everyday_contralto"]["pitchComparison"]["parentMedianF0Hz"]
     )
     assert {tuple(role["categories"]) for role in selection["retainedRoles"]} == {
         ("교수님",),
@@ -369,3 +485,33 @@ def test_lower_fuller_corrections_keep_only_the_candidate_with_lower_measured_pi
         for candidate_id, median_f0_hz in measured_pitch.items()
         if median_f0_hz < 196.9
     } == {"natural_everyday_contralto"}
+
+
+def test_reference_calibrated_mother_candidates_record_aggregate_screening():
+    manifest_path = (
+        REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/"
+        "qwen3-voice-design-family-mother-reference-calibrated/manifest.json"
+    )
+    reference_path = (
+        REPOSITORY_ROOT / "artifacts/tts-role-auditions/cast-v2/family-mother-reference/"
+        "aihub-71558-jeju-validation-v1.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest["designIds"] == [
+        design.id for design in REFERENCE_CALIBRATED_MOTHER_VOICE_DESIGNS
+    ]
+    assert (
+        manifest["acousticReference"]["manifestSha256"]
+        == hashlib.sha256(reference_path.read_bytes()).hexdigest()
+    )
+    results = {
+        artifact["voice"]: artifact["acousticReferenceEvaluation"]["result"]
+        for artifact in manifest["artifacts"]
+    }
+    assert results == {
+        "reference_warm_everyday": "outside-reference-interquartile-range",
+        "reference_calm_reassuring": "within-reference-interquartile-range",
+        "reference_gentle_lived_in": "within-reference-interquartile-range",
+    }
+    assert all(len(artifact["sha256"]) == 64 for artifact in manifest["artifacts"])

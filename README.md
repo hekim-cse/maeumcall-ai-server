@@ -482,6 +482,7 @@ http://127.0.0.1:8000/docs
 | 🗄 [음성 기준선 PostgreSQL 설계](docs/architecture/voice_baseline_postgresql.md) | 테이블, 행 잠금, 트랜잭션, JSON 이관 절차와 용어 설명 |
 | 📈 [LangGraph 관측성 설계](docs/architecture/langgraph_observability.md) | 노드 latency, 재시도, 계약 실패 지표, PromQL과 용어 설명 |
 | 🔊 [Qwen3-TTS 공급자 경계](docs/architecture/tts_provider_boundary.md) | 모델 선정, 고정 리비전, 인증된 합성 API, 9개 음색 청취 절차와 운영 제약 |
+| 🎚️ [AI Hub 다화자 음향 기준](docs/architecture/tts_voice_reference_data.md) | 50·60대 여성 55명의 익명 집계, 균형 표본, 개인정보·라이선스 경계와 엄마 음성 선정 기준 |
 
 ---
 
