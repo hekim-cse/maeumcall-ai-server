@@ -121,9 +121,7 @@ class TTSRuntime:
                 model_state=model_state,
                 transition_seconds=transition_end - started_at,
                 synthesis_seconds=(
-                    finished_at - transition_end
-                    if transition_finished_at is not None
-                    else 0.0
+                    finished_at - transition_end if transition_finished_at is not None else 0.0
                 ),
                 total_seconds=finished_at - started_at,
             )

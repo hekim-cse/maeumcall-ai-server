@@ -85,14 +85,20 @@ def test_runtime_reuses_the_active_provider_for_consecutive_requests():
     assert second.speech.voice == "serena"
     assert second.timing.model_state == "warm"
     assert qwen.unload_count == 0
-    assert REGISTRY.get_sample_value(
-        "maeumcall_tts_synthesis_attempts_total",
-        metric_labels,
-    ) == attempts_before + 1
-    assert REGISTRY.get_sample_value(
-        "maeumcall_tts_synthesis_duration_seconds_count",
-        duration_labels,
-    ) == durations_before + 1
+    assert (
+        REGISTRY.get_sample_value(
+            "maeumcall_tts_synthesis_attempts_total",
+            metric_labels,
+        )
+        == attempts_before + 1
+    )
+    assert (
+        REGISTRY.get_sample_value(
+            "maeumcall_tts_synthesis_duration_seconds_count",
+            duration_labels,
+        )
+        == durations_before + 1
+    )
 
 
 def test_runtime_unloads_the_previous_model_before_provider_switch():

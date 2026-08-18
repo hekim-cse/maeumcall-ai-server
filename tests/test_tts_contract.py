@@ -102,9 +102,7 @@ def test_tts_synthesis_returns_audio_and_reproducibility_headers():
     assert response.headers["x-audio-sample-rate"] == "24000"
     assert response.headers["x-tts-model-state"] == "warm"
     assert response.headers["server-timing"] == (
-        "tts_transition;dur=12.000, "
-        "tts_synthesis;dur=1234.000, "
-        "tts_total;dur=1246.000"
+        "tts_transition;dur=12.000, tts_synthesis;dur=1234.000, tts_total;dur=1246.000"
     )
     assert response.headers["cache-control"] == "private, no-store"
     assert len(runtime.requests) == 1
