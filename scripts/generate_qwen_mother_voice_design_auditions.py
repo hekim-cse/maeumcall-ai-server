@@ -8,8 +8,6 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from huggingface_hub import HfApi, snapshot_download
-
 from scripts.generate_tts_auditions import DEFAULT_MAX_NEW_TOKENS, DEFAULT_SEED
 from scripts.tts_audition_common import (
     describe_wav,
@@ -280,6 +278,31 @@ def evaluate_pitch_against_reference(
     }
 
 
+def resolve_model_snapshot(*, allow_network: bool) -> str:
+    try:
+        from huggingface_hub import HfApi, snapshot_download
+    except ModuleNotFoundError as error:
+        if error.name != "huggingface_hub":
+            raise
+        raise RuntimeError(
+            "Qwen VoiceDesign generation requires the optional TTS dependencies. "
+            "Install them with 'pip install -r requirements-tts.txt'."
+        ) from error
+
+    if allow_network:
+        model_info = HfApi().model_info(MODEL_ID)
+        if model_info.sha != MODEL_REVISION:
+            raise RuntimeError(
+                f"Qwen VoiceDesign revision changed: expected {MODEL_REVISION}, "
+                f"received {model_info.sha}"
+            )
+    return snapshot_download(
+        repo_id=MODEL_ID,
+        revision=MODEL_REVISION,
+        local_files_only=not allow_network,
+    )
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate five controlled Korean mother-role candidates with Qwen VoiceDesign."
@@ -327,18 +350,7 @@ def main() -> None:
             f"qwen-tts version mismatch: expected {QWEN_TTS_VERSION}, received {runtime_version}"
         )
 
-    if args.allow_network:
-        model_info = HfApi().model_info(MODEL_ID)
-        if model_info.sha != MODEL_REVISION:
-            raise RuntimeError(
-                f"Qwen VoiceDesign revision changed: expected {MODEL_REVISION}, "
-                f"received {model_info.sha}"
-            )
-    model_path = snapshot_download(
-        repo_id=MODEL_ID,
-        revision=MODEL_REVISION,
-        local_files_only=not args.allow_network,
-    )
+    model_path = resolve_model_snapshot(allow_network=args.allow_network)
 
     import soundfile as sf
     import torch
