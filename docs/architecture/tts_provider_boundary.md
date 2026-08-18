@@ -68,6 +68,17 @@ python -m scripts.generate_tts_auditions \
 가공·변형 후보는 평가 이력일 뿐 이 결정을 자동으로 덮어쓰지 않는다. 이번 결정은 배역 음성의
 선정 완료를 뜻하며, 운영 합성 연결은 공식 Voice Clone 단계와 별도 검증을 거쳐야 한다.
 
+Voice Clone 검증은 공식 Qwen Voice Design → Voice Clone 절차에 맞춰
+`Qwen/Qwen3-TTS-12Hz-1.7B-Base`의 고정 리비전
+`fd4b254389122332181a7c3db7f27e918eec64e3`으로 수행한다. 화자 임베딩만 쓰는
+`x-vector only` 모드는 품질 손실을 감수하는 경량 경로이므로 사용하지 않는다. 승인된 기준 WAV와
+그 WAV를 생성한 정확한 문장을 함께 사용하는 ICL 프롬프트를 만들고, 안전한 `safetensors`
+형식으로 저장한다. 프롬프트와 검증 WAV는 로컬 운영 자산이며 Git에는 해시와 manifest만 남긴다.
+
+현재 복제 검증 manifest의 상태는 `awaiting-user-listening`이다. 음역 중심이 기준과 가깝더라도
+음색·억양·연령감은 직접 청취해야 하므로, 이 상태에서는 `castVersion: 1`을 교체하거나 모바일
+재생 경로를 활성화하지 않는다.
+
 청취 피드백으로 음높이나 연령감을 조정할 때는 완성 WAV에 단순 피치 시프트를 적용하지 않는다. 기본 음높이와 함께 공명, 억양 폭, 발화 속도를 VoiceDesign 지시문에서 다시 설계하고 원본 후보 ID를 계보로 기록한다. 그래야 인위적인 음질 변화 없이 어떤 결정에서 파생된 음색인지 재현할 수 있다.
 
 지시문에 낮은 음높이를 적었더라도 실제 청취 결과가 높고 가늘게 들리면 해당 후보는 실패로 기록한다. 프롬프트의 의도는 검증 결과가 아니며, 모델이 지시를 따랐다고 간주하거나 이름만 보고 승인하지 않는다. 후속 후보는 실패한 음색의 해시와 사용자 평가를 보존한 상태에서 별도 시드와 더 직접적인 음향 속성으로 생성한다.
@@ -87,6 +98,20 @@ python -m scripts.generate_tts_auditions \
 - 후보 WAV는 로컬 평가 산출물로만 보관하고 Git에 커밋하지 않는다. 모델·리비전·시드·파일 해시는 manifest와 선정 명세로 버전 관리한다. 실제 사용자 발화와 운영 합성 WAV도 Git에 커밋하지 않는다.
 - 0.6B 음색의 한국어 품질은 각 음색의 원어와 다를 수 있다. 설명만으로 역할을 정하지 않고 실제 청취 결과를 사용한다.
 - VoiceDesign 자연어 지시문은 원하는 속성을 표현할 뿐 결과를 보장하지 않는다. 나이·성별·감정 적합성은 생성 음성을 직접 듣고 승인한다.
+
+### 엄마 역할 Voice Clone 검증 명령
+
+```bash
+python -m scripts.build_qwen_mother_voice_clone \
+  --reference-manifest artifacts/tts-role-auditions/cast-v2/\
+qwen3-voice-design-family-mother-mature-age-restrained-prosody/manifest.json \
+  --output-dir artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base \
+  --device mps \
+  --dtype bfloat16
+```
+
+첫 실행 전에 Base 모델의 고정 리비전을 내려받아야 한다. 운영에서는 네트워크 다운로드를 허용하지
+않고 `local_files_only` 원칙을 유지한다.
 
 ## 공급자 재평가 경계
 

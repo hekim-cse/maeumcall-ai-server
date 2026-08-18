@@ -297,6 +297,17 @@ def test_cast_v2_role_selection_is_complete_and_artifacts_are_immutable():
 
     assert selection["castVersion"] == 2
     assert selection["selectionStatus"] == "complete"
+    assert selection["operationalization"] == {
+        "status": "voice-clone-validation-pending",
+        "roleId": "family_mother",
+        "provider": "qwen3-tts-voice-clone",
+        "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+        "modelRevision": "fd4b254389122332181a7c3db7f27e918eec64e3",
+        "validationManifest": (
+            "artifacts/tts-clone-prompts/cast-v2/family-mother-qwen3-1.7b-base/manifest.json"
+        ),
+        "decisionBoundary": "requires-user-listening-before-runtime-cast-activation",
+    }
     assert mother_manifest["selectionStatus"] == "approved-by-user"
     approved_roles = {role["roleId"]: role for role in selection["approvedRoles"]}
     assert {

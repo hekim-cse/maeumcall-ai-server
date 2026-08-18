@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "castVersion": 2,
+  "roleId": "family_mother",
+  "voiceId": "reference_warm_everyday_mature_age_restrained_prosody",
+  "validationStatus": "awaiting-user-listening",
+  "provider": "qwen3-tts-voice-clone",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+  "modelRevision": "fd4b254389122332181a7c3db7f27e918eec64e3",
+  "runtimeVersion": "0.1.1",
+  "executionMode": "local-evaluation",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "reference": {
+    "manifest": "artifacts/tts-role-auditions/cast-v2/qwen3-voice-design-family-mother-mature-age-restrained-prosody/manifest.json",
+    "manifestSha256": "8361179e5d4904c7a471606fd569aee022268e67a760c4acde2a2bc7169da3ee",
+    "voice": "reference_warm_everyday_mature_age_restrained_prosody",
+    "filename": "01_reference_warm_everyday_mature_age_restrained_prosody.wav",
+    "sha256": "a6ffd23a20a9858cd30b0af531b3e5e83786e53ee711797244b806f0fdeabf83",
+    "text": "응, 전화 잘 받았어. 오늘은 어떻게 지냈는지 천천히 이야기해 봐."
+  },
+  "prompt": {
+    "filename": "family_mother_cast_v2.safetensors",
+    "format": "safetensors",
+    "sha256": "c01d0a8fef64247f5141f034bffd9b3079c33b9e2f6bf330e9a987a7180a9639",
+    "xVectorOnlyMode": false,
+    "iclMode": true,
+    "tensorShapes": {
+      "ref_code": [
+        87,
+        16
+      ],
+      "ref_spk_embedding": [
+        2048
+      ]
+    },
+    "tensorDtypes": {
+      "ref_code": "torch.int64",
+      "ref_spk_embedding": "torch.bfloat16"
+    }
+  },
+  "generation": {
+    "seed": 42,
+    "maxNewTokens": 1200,
+    "language": "Korean"
+  },
+  "artifacts": [
+    {
+      "position": 1,
+      "voice": "reference_warm_everyday_mature_age_restrained_prosody",
+      "description": "Cast version 2 family-mother voice clone validation line.",
+      "filename": "01_family_mother_voice_clone_validation.wav",
+      "sampleRate": 24000,
+      "channels": 1,
+      "bitDepth": 16,
+      "durationMs": 6480,
+      "sha256": "3a6ef4dd4682af9ea60e7e52a87d067529c854cf8b3494786905a9a8d6d1597a",
+      "text": "그래, 오늘도 수고 많았어. 무슨 일이 있었는지 엄마한테 천천히 말해 봐.",
+      "seed": 42,
+      "pitchAnalysis": {
+        "algorithm": "praat-autocorrelation",
+        "timeStepSeconds": 0.01,
+        "pitchFloorHz": 65.0,
+        "pitchCeilingHz": 400.0,
+        "medianF0Hz": 198.6,
+        "p25F0Hz": 170.9,
+        "p75F0Hz": 229.4,
+        "voicedFrames": 350
+      }
+    }
+  ],
+  "officialWorkflow": "voice-design-then-icl-voice-clone"
+}

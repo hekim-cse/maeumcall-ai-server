@@ -8,5 +8,6 @@
 __pycache__/
 *.py[cod]
 *.wav
+artifacts/tts-clone-prompts/**/*.safetensors
 data/baseline_db.json
 data/aihub/
