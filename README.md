@@ -412,9 +412,13 @@ alembic upgrade head
 ```
 
 기존 HMAC 가명화 JSON 기준선이 있다면 스키마 적용 후 이관합니다.
+기본 실행은 파일 전체를 검증하는 `dry-run`이며 PostgreSQL을 변경하지 않습니다. 검증 결과를
+확인한 뒤에만 `--apply`를 지정합니다. 실제 이관은 전체 항목을 하나의 트랜잭션으로 저장하므로
+중간 항목에서 실패하면 앞서 처리한 항목도 모두 원래 상태로 돌아갑니다.
 
 ```bash
 python -m scripts.migrate_baseline_json /secure/path/baseline_db.json
+python -m scripts.migrate_baseline_json /secure/path/baseline_db.json --apply
 ```
 
 기존 Firestore `users/{Kakao ID}` 문서는 새 보안 규칙을 배포하기 전에 내부 UID로 이관합니다. 대상 파일은 저장소 밖의 제한된 경로에 두며 `kakao_subjects` 배열만 포함합니다. 기본 실행은 읽기 전용 dry-run이고, 충돌이 없음을 확인한 뒤에만 `--apply`를 사용합니다.
@@ -452,6 +456,11 @@ HF_LOCAL_MODEL_ENABLED=1 HF_LOCAL_FILES_ONLY=0 \
 TEST_DATABASE_URL="$DATABASE_URL" \
   python -m pytest -m postgres tests/integration -v
 ```
+
+GitHub Actions의 `test-postgres`는 pull request와 `main`·`develop` push마다 격리된
+PostgreSQL 18.6 서비스를 생성합니다. 이 작업은 `upgrade → 스키마 차이 검사 → downgrade →
+upgrade` 순서로 Alembic 이력을 왕복 검증한 뒤 실제 저장·동시 쓰기·일괄 이관 롤백 테스트를
+실행하고, 작업 종료 시 CI 서비스와 데이터를 함께 폐기합니다.
 
 ### 10-7. 접속 주소
 
@@ -507,7 +516,7 @@ http://127.0.0.1:8000/docs
 | 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패와 TTS 모델 상태·단계별 지연 Prometheus 지표 제공 |
 | 한국어 단어 분석 | Kiwi 형태소 원형과 품사 계약으로 내용어·감탄사를 분리하며 분석기 장애는 503 오류와 readiness로 공개 |
 | 한국어 음성 합성 | 32개 시나리오의 배역 버전 2를 Qwen3-TTS·Bark Small·엄마 Voice Clone 공급자와 인증된 WAV 계약으로 제공 |
-| 테스트 검증 | 오프라인 회귀 테스트 487개 통과·1개 선택적 테스트 제외, 실모델 통합 테스트 18개 분리 |
+| 테스트 검증 | 오프라인 회귀 테스트 490개 통과·1개 선택적 테스트 제외, 통합 테스트 19개 분리 |
 
 <table>
   <tr>

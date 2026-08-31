@@ -1,8 +1,10 @@
+import asyncio
 from datetime import UTC, datetime
+from typing import Any
 
 import pytest
 
-from scripts.migrate_baseline_json import load_source
+from scripts.migrate_baseline_json import build_parser, load_source, migrate
 from services.baseline_store import (
     BaselineIdentityError,
     BaselineMeasurementError,
@@ -74,6 +76,59 @@ def test_json_migration_loads_only_valid_pseudonymous_records(tmp_path):
     loaded = load_source(source)
 
     assert loaded[key]["pitchHz"] == 150.0
+
+
+class BatchImportRepositoryDouble:
+    def __init__(self) -> None:
+        self.imported: dict[str, dict[str, Any]] | None = None
+
+    async def import_baselines(self, baselines):
+        self.imported = {key: dict(value) for key, value in baselines.items()}
+        return len(baselines)
+
+
+def test_json_migration_is_dry_run_by_default(tmp_path):
+    key = "user_hmac_sha256:" + "c" * 64
+    source = tmp_path / "baseline_db.json"
+    source.write_text(
+        f'{{"{key}":{{"samples":3,"pitchHz":150,"jitterLocal":0.005,"shimmerLocal":0.01}}}}',
+        encoding="utf-8",
+    )
+    repository = BatchImportRepositoryDouble()
+
+    result = asyncio.run(migrate(source, apply=False, repository=repository))
+
+    assert result.validated_count == 1
+    assert result.applied_count == 0
+    assert repository.imported is None
+
+
+def test_json_migration_applies_all_records_as_one_repository_operation(tmp_path):
+    first_key = "user_hmac_sha256:" + "d" * 64
+    second_key = "user_hmac_sha256:" + "e" * 64
+    source = tmp_path / "baseline_db.json"
+    source.write_text(
+        "{"
+        f'"{first_key}":{{"samples":3,"pitchHz":150,"jitterLocal":0.005,"shimmerLocal":0.01}},'
+        f'"{second_key}":{{"samples":4,"pitchHz":160,"jitterLocal":0.006,"shimmerLocal":0.02}}'
+        "}",
+        encoding="utf-8",
+    )
+    repository = BatchImportRepositoryDouble()
+
+    result = asyncio.run(migrate(source, apply=True, repository=repository))
+
+    assert result.validated_count == 2
+    assert result.applied_count == 2
+    assert repository.imported is not None
+    assert set(repository.imported) == {first_key, second_key}
+
+
+def test_json_migration_cli_requires_explicit_apply_flag():
+    parser = build_parser()
+
+    assert parser.parse_args(["baseline_db.json"]).apply is False
+    assert parser.parse_args(["baseline_db.json", "--apply"]).apply is True
 
 
 @pytest.mark.parametrize(

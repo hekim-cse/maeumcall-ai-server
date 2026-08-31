@@ -79,16 +79,31 @@ python -m uvicorn main:app --host 0.0.0.0 --port 8001
 먼저 마이그레이션을 적용한 뒤 이관 명령을 실행한다.
 
 ```bash
+# 읽기·계약 검증만 수행하며 PostgreSQL은 변경하지 않는다.
 python -m scripts.migrate_baseline_json /secure/path/baseline_db.json
+
+# dry-run 결과를 확인한 뒤에만 실제 이관한다.
+python -m scripts.migrate_baseline_json /secure/path/baseline_db.json --apply
 ```
 
 이 명령은 HMAC 가명 키와 필수 음성 값이 모두 유효한 항목만 받아들인다. 같은 키를 다시 실행하면 해당 기준선을 갱신하므로 이관 명령 자체는 재실행할 수 있다. 원본 JSON은 자동 삭제하지 않는다. 백업과 결과 검증 후 운영자가 보존 정책에 따라 처리한다.
+
+기본 동작은 전체 파일의 키와 값을 검증하는 `dry-run`이다. 이때 데이터베이스 연결도 만들지
+않는다. `--apply`를 지정하면 키를 정렬된 순서로 잠근 뒤 모든 기준선을 하나의 트랜잭션에서
+저장한다. 정렬된 잠금 순서는 같은 사용자를 포함한 두 이관 작업이 서로 다른 순서로 잠금을
+기다리는 상황을 줄인다. 어느 한 항목이라도 실패하면 신규 사용자 행과 기존 기준선 갱신을
+포함한 전체 변경이 롤백된다.
 
 ## 질문과 답
 
 ### Q. 트랜잭션이 무엇인가?
 
 여러 데이터 변경을 하나의 작업으로 묶는 데이터베이스 기능이다. 전부 성공하면 커밋하고, 하나라도 실패하면 전부 되돌린다.
+
+### Q. `dry-run`이 무엇인가?
+
+입력 파일을 읽고 키·필드·숫자 범위를 실제 이관과 같은 규칙으로 검사하되 데이터베이스에는
+쓰지 않는 사전 검증이다. 명령을 잘못 실행한 것만으로 운영 데이터가 바뀌는 일을 막는다.
 
 ### Q. 행 잠금은 무엇인가?
 
@@ -124,8 +139,11 @@ python -m scripts.migrate_baseline_json /secure/path/baseline_db.json
 - Alembic PostgreSQL DDL 오프라인 생성 성공
 - Docker Compose 구성 검사 성공
 - PostgreSQL 18.6 컨테이너에서 `alembic upgrade head` 적용 성공
+- 격리된 PostgreSQL에서 `upgrade → check → downgrade → upgrade` 왕복 성공
 - 실제 테이블에서 샘플 추가·확정·조회·초기화·연쇄 삭제 통합 검증 성공
 - 같은 사용자에 대한 동시 쓰기 12건의 사용자 행 잠금 직렬화 검증 성공
+- 일괄 이관 두 번째 항목의 실패 주입 시 기존 값 복원·신규 사용자 행 제거 검증 성공
+- pull request와 `main`·`develop` push에서 PostgreSQL 통합 CI 자동 실행
 
 ## 공식 참고 자료
 

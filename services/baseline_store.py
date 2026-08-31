@@ -70,6 +70,8 @@ class BaselineRepository(Protocol):
 
     async def import_baseline(self, user_key: str, baseline: Mapping[str, Any]) -> None: ...
 
+    async def import_baselines(self, baselines: Mapping[str, Mapping[str, Any]]) -> int: ...
+
 
 def normalize_user_id(user_id: str | None) -> str:
     if not isinstance(user_id, str):
@@ -363,15 +365,26 @@ class PostgresBaselineRepository:
             return bool(result.rowcount)
 
     async def import_baseline(self, user_key: str, baseline: Mapping[str, Any]) -> None:
-        validated_key = validate_pseudonymous_key(user_key)
-        value = validate_imported_baseline(baseline)
+        await self.import_baselines({user_key: baseline})
+
+    async def import_baselines(self, baselines: Mapping[str, Mapping[str, Any]]) -> int:
+        validated = sorted(
+            (
+                validate_pseudonymous_key(user_key),
+                validate_imported_baseline(baseline),
+            )
+            for user_key, baseline in baselines.items()
+        )
         async with self._transaction() as session:
-            await self._lock_subject(session, validated_key)
-            persisted = await session.get(VoiceBaseline, validated_key)
-            if persisted is None:
-                persisted = VoiceBaseline(user_key=validated_key, sample_count=1)
-                session.add(persisted)
-            self._apply_baseline(persisted, value)
+            for validated_key, value in validated:
+                await self._lock_subject(session, validated_key)
+                persisted = await session.get(VoiceBaseline, validated_key)
+                if persisted is None:
+                    persisted = VoiceBaseline(user_key=validated_key, sample_count=1)
+                    session.add(persisted)
+                self._apply_baseline(persisted, value)
+            await session.flush()
+        return len(validated)
 
     @staticmethod
     def _aggregate_dict(row: Any) -> dict[str, Any]:
