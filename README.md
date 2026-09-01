@@ -442,7 +442,28 @@ python -m uvicorn main:app --reload
 ./run_server.sh --reload
 ```
 
-### 10-6. 테스트
+로컬 실행 스크립트의 기본 포트는 8000이다.
+
+### 10-6. Docker 핵심 실행 환경
+
+`.env.example`을 기준으로 URL-safe `POSTGRES_PASSWORD`와 서버 설정을 준비한 뒤 PostgreSQL, 일회성 Alembic 마이그레이션, API를 순서대로 실행한다.
+
+```bash
+docker compose up --build --detach
+docker compose ps --all
+```
+
+Docker API는 `http://127.0.0.1:8001`을 사용한다. 현재 `core-runtime`은 대용량 로컬 NLU·TTS 패키지와 모델 자산을 포함하지 않으며 Compose에서 두 기능을 명시적으로 비활성화한다. 따라서 `/health`는 200이지만 `/health/ready`는 `local_nlu` 미준비를 503으로 공개한다. 모델 실행 계층을 검증하기 전에는 이 이미지를 완전한 운영 준비 상태로 간주하지 않는다.
+
+사용이 끝나면 영속 PostgreSQL 볼륨을 보존한 채 컨테이너를 중지한다.
+
+```bash
+docker compose down
+```
+
+구성 원리, 보안 제한, Alembic 실행 순서와 CI 검증은 [AI 서버 컨테이너 실행 경계](docs/architecture/container_runtime.md)에 정리했다.
+
+### 10-7. 테스트
 
 ```bash
 # 네트워크 없이 재현 가능한 기본 검증
@@ -462,7 +483,9 @@ PostgreSQL 18.6 서비스를 생성합니다. 이 작업은 `upgrade → 스키�
 upgrade` 순서로 Alembic 이력을 왕복 검증한 뒤 실제 저장·동시 쓰기·일괄 이관 롤백 테스트를
 실행하고, 작업 종료 시 CI 서비스와 데이터를 함께 폐기합니다.
 
-### 10-7. 접속 주소
+`test-container`는 같은 이벤트에서 Python 3.11 이미지 빌드, 비루트 실행, PostgreSQL 상태 점검, 일회성 Alembic 적용, 핵심 API HTTP 계약을 실제 Compose 환경으로 검증한다.
+
+### 10-8. 접속 주소
 
 기본 실행 주소:
 
@@ -475,6 +498,8 @@ API 문서:
 ```text
 http://127.0.0.1:8000/docs
 ```
+
+Docker Compose 실행 주소는 `http://127.0.0.1:8001`, API 문서는 `http://127.0.0.1:8001/docs`다.
 
 ---
 
@@ -491,6 +516,7 @@ http://127.0.0.1:8000/docs
 | 🎓 [Professor LangGraph README](services/flow/professor/README.md) | 교수님 카테고리 LangGraph 통합 설계, 면담 예약/과제 문의/결석 사유 전달 구현 요약, 테스트 결과 |
 | 📚 [학습 가이드](docs/learning-guide.md) | 기술 선택과 구현 원칙을 질문·답 형식으로 설명 |
 | 🗄 [음성 기준선 PostgreSQL 설계](docs/architecture/voice_baseline_postgresql.md) | 테이블, 행 잠금, 트랜잭션, JSON 이관 절차와 용어 설명 |
+| 🐳 [AI 서버 컨테이너 실행 경계](docs/architecture/container_runtime.md) | Python 3.11 이미지, 비루트 보안, PostgreSQL→Alembic→API 순서와 컨테이너 CI |
 | 📈 [LangGraph 관측성 설계](docs/architecture/langgraph_observability.md) | 노드 latency, 재시도, 계약 실패 지표, PromQL과 용어 설명 |
 | 🔊 [TTS 배역·공급자 경계](docs/architecture/tts_provider_boundary.md) | 배역 버전 2, Qwen·Bark·Voice Clone 모델 전환, 인증된 합성 API와 운영 제약 |
 | 🎚️ [AI Hub 다화자 음향 기준](docs/architecture/tts_voice_reference_data.md) | 50·60대 여성 55명의 익명 집계, 균형 표본, 개인정보·라이선스 경계와 엄마 음성 선정 기준 |

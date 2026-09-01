@@ -6,6 +6,9 @@
 
 ### Added
 
+- digest로 고정한 Python 3.11 다단계 이미지와 비루트·읽기 전용 핵심 컨테이너 실행 경계
+- PostgreSQL 준비 후 Alembic 일회성 적용과 API 시작을 보장하는 Compose 서비스 의존성
+- 이미지 빌드·마이그레이션·권한·HTTP 상태 계약을 실제 컨테이너에서 검증하는 `test-container` CI
 - 32개 시나리오와 가족 엄마·아빠 역할을 덮는 서버 소유 `castVersion: 2` 배역 계약
 - 인증된 `/tts/scenario/synthesize` API와 Qwen3-TTS·Bark Small·Qwen Voice Clone 공급자
 - 승인된 엄마 Voice Clone manifest·safetensors 해시 검증과 공급자 전환 시 모델 메모리 해제

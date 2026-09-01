@@ -1,3 +1,49 @@
+x-ai-server-image: &ai-server-image
+  image: maeum-call-ai-server:${AI_SERVER_IMAGE_TAG:-2.2.0-core}
+  build:
+    context: .
+    target: core-runtime
+
+x-ai-server-environment: &ai-server-environment
+  DATABASE_URL: postgresql+asyncpg://maeumcall:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/maeumcall
+  DATABASE_POOL_SIZE: ${DATABASE_POOL_SIZE:-5}
+  DATABASE_MAX_OVERFLOW: ${DATABASE_MAX_OVERFLOW:-10}
+  DATABASE_CONNECT_TIMEOUT: ${DATABASE_CONNECT_TIMEOUT:-3}
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+  OPENAI_TIMEOUT: ${OPENAI_TIMEOUT:-8}
+  PROMPT_CACHE: ${PROMPT_CACHE:-1}
+  HF_LOCAL_MODEL_ENABLED: "0"
+  HF_LOCAL_FILES_ONLY: "1"
+  HF_MODEL_NAME: ${HF_MODEL_NAME:-kakaocorp/kanana-1.5-2.1b-instruct-2505}
+  HF_MODEL_REVISION: ${HF_MODEL_REVISION:-7df4bc35ccd610e451809d7106e1c3cf82bfd44c}
+  CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-*}
+  AUDIO_UPLOAD_MAX_MB: ${AUDIO_UPLOAD_MAX_MB:-20}
+  BASELINE_ID_HMAC_SECRET: ${BASELINE_ID_HMAC_SECRET:-}
+  KAKAO_APP_ID: ${KAKAO_APP_ID:-}
+  FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-}
+  AUTH_SUBJECT_HMAC_SECRET: ${AUTH_SUBJECT_HMAC_SECRET:-}
+  KAKAO_TOKEN_VERIFY_TIMEOUT: ${KAKAO_TOKEN_VERIFY_TIMEOUT:-5}
+  GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS:-}
+  RESERVATION_AVAILABILITY_CATALOG_PATH: ${RESERVATION_AVAILABILITY_CATALOG_PATH:-}
+  TTS_ENABLED: "0"
+
+x-ai-server-security: &ai-server-security
+  init: true
+  read_only: true
+  tmpfs:
+    - /tmp/maeumcall:mode=1777,size=128m
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  pids_limit: 256
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
 services:
   postgres:
     image: postgres:18.6
@@ -16,6 +62,37 @@ services:
       retries: 10
       start_period: 10s
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  migrate:
+    <<: [*ai-server-image, *ai-server-security]
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      <<: *ai-server-environment
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      disable: true
+    restart: "no"
+
+  api:
+    <<: [*ai-server-image, *ai-server-security]
+    environment:
+      <<: *ai-server-environment
+    ports:
+      - "127.0.0.1:8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    stop_grace_period: 20s
 
 volumes:
   maeumcall_postgres_data:

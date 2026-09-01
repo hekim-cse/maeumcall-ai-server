@@ -1,0 +1,56 @@
+name: test-container
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+concurrency:
+  group: test-container-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      POSTGRES_PASSWORD: container_ci_database_password_2026
+      OPENAI_API_KEY: container-ci-openai-key
+      BASELINE_ID_HMAC_SECRET: container_ci_baseline_hmac_secret_2026
+      KAKAO_APP_ID: container-ci-kakao-app
+      FIREBASE_PROJECT_ID: container-ci-firebase-project
+      AUTH_SUBJECT_HMAC_SECRET: container_ci_auth_subject_secret_2026
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Validate Compose contract
+        run: docker compose --env-file /dev/null config --quiet
+
+      - name: Build and start isolated runtime
+        run: docker compose --env-file /dev/null --project-name maeumcall-container-ci up --build --detach
+
+      - name: Verify migration state
+        run: docker compose --env-file /dev/null --project-name maeumcall-container-ci run --rm migrate alembic check
+
+      - name: Verify non-root runtime and build boundary
+        run: |
+          test "$(docker compose --env-file /dev/null --project-name maeumcall-container-ci exec -T api id -u)" = "10001"
+          docker compose --env-file /dev/null --project-name maeumcall-container-ci exec -T api sh -c '! command -v gcc && ! command -v ninja'
+
+      - name: Verify HTTP runtime contract
+        run: python scripts/verify_core_container.py --deadline-seconds 60 --expected-version 2.2.0
+
+      - name: Print container logs on failure
+        if: failure()
+        run: docker compose --env-file /dev/null --project-name maeumcall-container-ci logs --no-color
+
+      - name: Stop isolated runtime
+        if: always()
+        run: docker compose --env-file /dev/null --project-name maeumcall-container-ci down --volumes --remove-orphans
