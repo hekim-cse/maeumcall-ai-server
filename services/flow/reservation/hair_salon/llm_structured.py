@@ -124,7 +124,7 @@ user_action 허용값:
 - change_service_type: 시술 종류를 바꾸려는 경우
 - change_designer: 디자이너를 바꾸려는 경우
 - change_user_name: 예약자 이름을 바꾸려는 경우
-- change_info: 어떤 정보를 바꾸려 하지만 항목이 불명확한 경우
+- change_info: 기존 예약 정보를 모두 버리고 처음부터 다시 입력하겠다고 명시한 경우
 - confirm_reservation: 예약 가능 안내 후 예약 확정을 요청하는 경우
 - ask_other_time: 다른 시간대를 요청하는 경우
 - select_alternative_time: 예약 불가 안내 후 제안된 대안 시간을 선택하는 경우
@@ -137,7 +137,8 @@ user_action 허용값:
 - confirming_info에서 "시간 바꿀게요"는 change_time
 - confirming_info에서 "시술 변경할게요"는 change_service_type
 - confirming_info에서 "디자이너 바꿀게요"는 change_designer
-- confirming_info에서 바꿀 항목을 특정하지 않고 "다시 말할게요"라고 하면 change_info
+- confirming_info에서 "예약 정보를 전부 처음부터 다시 말할게요"처럼 전체 재입력을 명시하면 change_info
+- confirming_info에서 변경 항목이나 전체 재입력 의도가 불명확하면 unknown
 - reservation_available에서 "네, 예약해주세요"는 confirm_reservation
 - reservation_available에서 "다른 시간 가능할까요"는 ask_other_time
 - reservation_unavailable에서 "오후 3시로 할게요"는 select_alternative_time, selected_time은 "오후 3시"

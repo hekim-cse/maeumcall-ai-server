@@ -144,3 +144,16 @@ def test_restaurant_structured_analysis_retries_action_from_wrong_state(monkeypa
 
     assert result["user_action"] == "continue_collecting"
     assert result["date"] == "내일"
+
+
+def test_restaurant_structured_analysis_fails_when_retried_action_stays_invalid(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
+        lambda messages: (
+            '{"intent":"reservation","date":null,"time":null,"party_size":null,'
+            '"user_name":null,"user_action":"end_call","selected_time":null}'
+        ),
+    )
+
+    with pytest.raises(AIResponseValidationError):
+        analyze_restaurant_reservation_user_message("greeting", "식당 예약하고 싶습니다.")

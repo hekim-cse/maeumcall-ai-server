@@ -95,7 +95,7 @@ def analyze_restaurant_reservation_user_message(
 - change_time
 - change_party_size
 - change_user_name
-- change_info
+- change_info: 확인 중 기존 예약 정보를 모두 버리고 처음부터 다시 입력하겠다고 명시한 경우
 - confirm_reservation
 - ask_other_time
 - select_alternative_time
@@ -106,7 +106,8 @@ def analyze_restaurant_reservation_user_message(
 상태별 판단 기준:
 - collecting_reservation_info 또는 greeting: 예약 정보를 말하면 continue_collecting
 - confirming_info: 정보가 맞다고 하면 confirm, 날짜/시간/인원/이름 변경 요청이면 해당 change 액션,
-  바꿀 항목이 불명확하면 change_info
+  전체 정보를 처음부터 다시 입력하겠다고 명시하면 change_info, 변경 항목이나 전체 재입력 의도가
+  불명확하면 unknown
 - reservation_available: 예약 진행/확정이면 confirm_reservation, 다른 시간 요청이면 ask_other_time
 - reservation_unavailable: 제안 시간 선택이면 select_alternative_time, 다른 날짜면 change_date,
   다른 시간대를 요청하면 ask_other_time, selected_time에는 선택한 시간을 넣는다

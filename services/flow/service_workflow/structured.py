@@ -5,6 +5,7 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    allowed_actions_json_for_state,
     allowed_string_for_state,
     complete_validated_json,
     optional_string,
@@ -30,9 +31,9 @@ def analyze_service_workflow_message(
         [spec.completed_state, "cancelled", *(guard.state for guard in spec.guards)],
         ensure_ascii=False,
     )
-    allowed_actions_json = json.dumps(
-        sorted(spec.actions_by_state.get(conversation_state, frozenset())),
-        ensure_ascii=False,
+    allowed_actions_json = allowed_actions_json_for_state(
+        conversation_state,
+        spec.actions_by_state,
     )
     prompt = f"""
 다음은 '{spec.category} / {spec.title}' 전화 시뮬레이션의 업무 상태 분석입니다.
