@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import json
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Collection, Mapping
+from types import MappingProxyType
 from typing import Any, TypeVar
 
 from core.observability import record_contract_failure, record_structured_output_retry
@@ -13,6 +14,20 @@ logger = logging.getLogger(__name__)
 ValidatedOutput = TypeVar("ValidatedOutput")
 Completion = Callable[[list[dict[str, str]]], str]
 Validator = Callable[[dict[str, Any]], ValidatedOutput]
+
+
+def build_state_action_contract(
+    actions_by_state: Mapping[str, Collection[str]],
+) -> tuple[Mapping[str, frozenset[str]], frozenset[str]]:
+    """Freeze one state-to-action contract and derive its complete action set."""
+    if not actions_by_state:
+        raise ValueError("state-action contract must not be empty")
+    normalized: dict[str, frozenset[str]] = {}
+    for state, actions in actions_by_state.items():
+        if not state.strip() or not actions or any(not action.strip() for action in actions):
+            raise ValueError("state-action contract entries must not be blank")
+        normalized[state] = frozenset(actions)
+    return MappingProxyType(normalized), frozenset().union(*normalized.values())
 
 
 def optional_string(data: dict[str, Any], field: str) -> str | None:
@@ -32,6 +47,31 @@ def allowed_string(data: dict[str, Any], field: str, allowed: set[str]) -> str:
     if value not in allowed:
         raise ValueError(f"{field} must be one of {sorted(allowed)}")
     return value
+
+
+def allowed_string_for_state(
+    data: dict[str, Any],
+    field: str,
+    *,
+    conversation_state: str,
+    allowed_by_state: Mapping[str, frozenset[str]],
+) -> str:
+    """Read one string whose allowed values are defined by the current state."""
+    allowed = allowed_by_state.get(conversation_state)
+    if allowed is None:
+        raise ValueError(f"unsupported conversation_state: {conversation_state}")
+    return allowed_string(data, field, set(allowed))
+
+
+def allowed_actions_json_for_state(
+    conversation_state: str,
+    allowed_by_state: Mapping[str, frozenset[str]],
+) -> str:
+    """Serialize the validator's exact action set for inclusion in a model prompt."""
+    allowed = allowed_by_state.get(conversation_state)
+    if allowed is None:
+        raise ValueError(f"unsupported conversation_state: {conversation_state}")
+    return json.dumps(sorted(allowed), ensure_ascii=False)
 
 
 def complete_validated_json(

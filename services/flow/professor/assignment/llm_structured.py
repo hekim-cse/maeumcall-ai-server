@@ -4,7 +4,9 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    allowed_string,
+    allowed_actions_json_for_state,
+    allowed_string_for_state,
+    build_state_action_contract,
     complete_validated_json,
     optional_string,
 )
@@ -17,14 +19,15 @@ DEFAULT_ASSIGNMENT_STRUCTURED_RESULT: dict[str, Any] = {
     "user_name": None,
     "user_action": "unknown",
 }
-PROFESSOR_ASSIGNMENT_USER_ACTIONS = frozenset(
-    {
-        "provide_assignment_info",
-        "ask_follow_up",
-        "go_closing",
-        "end_call",
-        "unknown",
-    }
+PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE, PROFESSOR_ASSIGNMENT_USER_ACTIONS = (
+    build_state_action_contract(
+        {
+            "greeting": frozenset({"provide_assignment_info", "unknown"}),
+            "collecting_assignment_info": frozenset({"provide_assignment_info", "unknown"}),
+            "answering_assignment_question": frozenset({"ask_follow_up", "go_closing", "unknown"}),
+            "closing": frozenset({"end_call", "unknown"}),
+        }
+    )
 )
 
 
@@ -59,7 +62,10 @@ def analyze_professor_assignment_user_message(
             {"role": "user", "content": prompt},
         ],
         completion=complete_hf_json,
-        validator=_normalize_assignment_analysis_result,
+        validator=lambda parsed: _normalize_assignment_analysis_result(
+            parsed,
+            conversation_state=conversation_state,
+        ),
         operation="professor_assignment_extraction",
     )
 
@@ -68,12 +74,18 @@ def build_professor_assignment_analysis_prompt(
     conversation_state: str,
     user_message: str,
 ) -> str:
+    allowed_actions = allowed_actions_json_for_state(
+        conversation_state,
+        PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE,
+    )
     return f"""
 다음은 교수님께 과제 관련 문의를 하는 전화 시뮬레이션입니다.
 사용자 발화를 분석해서 JSON 객체만 반환하세요.
 
 현재 conversation_state:
 {conversation_state}
+현재 상태에서 허용된 user_action:
+{allowed_actions}
 
 사용자 발화:
 {user_message}
@@ -113,7 +125,11 @@ def build_professor_assignment_analysis_prompt(
 """
 
 
-def _normalize_assignment_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
+def _normalize_assignment_analysis_result(
+    parsed: dict[str, Any],
+    *,
+    conversation_state: str,
+) -> dict[str, Any]:
     result = DEFAULT_ASSIGNMENT_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "assignment_inquiry":
@@ -122,6 +138,11 @@ def _normalize_assignment_analysis_result(parsed: dict[str, Any]) -> dict[str, A
     for key in ["course_name", "assignment_topic", "question", "user_name"]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(parsed, "user_action", PROFESSOR_ASSIGNMENT_USER_ACTIONS)
+    result["user_action"] = allowed_string_for_state(
+        parsed,
+        "user_action",
+        conversation_state=conversation_state,
+        allowed_by_state=PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE,
+    )
 
     return result

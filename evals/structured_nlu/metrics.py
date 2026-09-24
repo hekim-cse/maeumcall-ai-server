@@ -66,7 +66,9 @@ def score_predictions(
         case.id for case in cases if case.review_status is not ReviewStatus.ADJUDICATED
     )
     if unapproved_case_ids:
-        raise ValueError(f"official scoring requires adjudicated cases only: {unapproved_case_ids}")
+        raise ValueError(
+            f"evaluation scoring requires adjudicated cases only: {unapproved_case_ids}"
+        )
     case_by_id = {case.id: case for case in cases}
     prediction_by_id = {prediction.case_id: prediction for prediction in predictions}
     if len(case_by_id) != len(cases):
@@ -100,12 +102,20 @@ def score_predictions(
     for case_id, case in case_by_id.items():
         prediction = prediction_by_id[case_id]
         contract = EVALUATION_CONTRACTS[case.scenario_key]
-        first_output = _contract_valid_output(contract, prediction.attempts[0].output)
+        first_output = _contract_valid_output(
+            contract,
+            prediction.attempts[0].output,
+            conversation_state=case.conversation_state,
+        )
         if first_output is not None:
             first_passes += 1
         if len(prediction.attempts) == 2:
             retried += 1
-        output = _contract_valid_output(contract, prediction.final_output)
+        output = _contract_valid_output(
+            contract,
+            prediction.final_output,
+            conversation_state=case.conversation_state,
+        )
         if output is not None:
             final_passes += 1
             if output.intent == case.labels.intent:
@@ -207,6 +217,8 @@ def _macro_f1(
 def _contract_valid_output(
     contract: EvaluationContract,
     output: NormalizedPrediction | None,
+    *,
+    conversation_state: str,
 ) -> NormalizedPrediction | None:
     if output is None:
         return None
@@ -216,6 +228,7 @@ def _contract_valid_output(
             fields=output.fields,
             user_action=output.user_action,
             change_field=output.change_field,
+            conversation_state=conversation_state,
         )
     except ValueError:
         return None

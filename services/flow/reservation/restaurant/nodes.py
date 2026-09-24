@@ -119,6 +119,23 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> dict:
                 "conversation_state": "collecting_reservation_info",
             }
 
+        if user_action == "change_info":
+            return {
+                "user_action": user_action,
+                "date": None,
+                "time": None,
+                "party_size": None,
+                "user_name": None,
+                "selected_time": None,
+                "availability_status": None,
+                "availability_reason": None,
+                "available_time": None,
+                "alternative_times": [],
+                "availability_message_hint": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
         return {
             "user_action": user_action,
             "conversation_state": "confirming_info",

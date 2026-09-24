@@ -5,7 +5,10 @@ from services.flow.common.detailed_state_validation import ReservationStateContr
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 from services.flow.reservation.restaurant.graph import restaurant_reservation_graph
-from services.flow.reservation.restaurant.llm_structured import RESTAURANT_USER_ACTIONS
+from services.flow.reservation.restaurant.llm_structured import (
+    RESTAURANT_ACTIONS_BY_STATE,
+    RESTAURANT_USER_ACTIONS,
+)
 from services.flow.reservation.restaurant.policy import compact_restaurant_state
 
 RESTAURANT_STATE_CONTRACT = ReservationStateContract(
@@ -30,22 +33,8 @@ RESTAURANT_RESERVATION_CONTRACT = DetailedGraphContract(
     graph=restaurant_reservation_graph,
     compact_state=compact_restaurant_state,
     defaults={"service_name": "마음식당"},
-    allowed_conversation_states=frozenset(
-        {
-            "greeting",
-            "collecting_reservation_info",
-            "asking_date",
-            "asking_time",
-            "asking_party_size",
-            "confirming_info",
-            "checking_availability",
-            "reservation_available",
-            "reservation_unavailable",
-            "reservation_confirmed",
-            "closing",
-            "END",
-        }
-    ),
+    client_resumable_states=frozenset(RESTAURANT_ACTIONS_BY_STATE) | {"END"},
+    internal_transient_states=frozenset({"checking_availability"}),
     validate_state=RESTAURANT_STATE_CONTRACT.validate,
 )
 

@@ -224,6 +224,16 @@ def test_structured_contract_rejects_unknown_branch_value():
         _validate_analysis(
             ORDER_CHANGE_SPEC,
             _analysis(ORDER_CHANGE_SPEC, values=fields),
+            conversation_state=ORDER_CHANGE_SPEC.collecting_state,
+        )
+
+
+def test_structured_contract_rejects_action_that_is_invalid_for_current_state():
+    with pytest.raises(ValueError, match="user_action must be one of"):
+        _validate_analysis(
+            ORDER_CHANGE_SPEC,
+            _analysis(ORDER_CHANGE_SPEC, action="complete_simulation"),
+            conversation_state=ORDER_CHANGE_SPEC.collecting_state,
         )
 
 

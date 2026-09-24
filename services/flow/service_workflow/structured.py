@@ -4,10 +4,13 @@ import json
 from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
-from llm.structured_output import allowed_string, complete_validated_json, optional_string
+from llm.structured_output import (
+    allowed_string_for_state,
+    complete_validated_json,
+    optional_string,
+)
 from services.flow.service_workflow.contracts import (
     MAX_WORKFLOW_FIELD_LENGTH,
-    WORKFLOW_ACTIONS,
     FieldContract,
     ServiceWorkflowSpec,
 )
@@ -27,11 +30,16 @@ def analyze_service_workflow_message(
         [spec.completed_state, "cancelled", *(guard.state for guard in spec.guards)],
         ensure_ascii=False,
     )
+    allowed_actions_json = json.dumps(
+        sorted(spec.actions_by_state.get(conversation_state, frozenset())),
+        ensure_ascii=False,
+    )
     prompt = f"""
 다음은 '{spec.category} / {spec.title}' 전화 시뮬레이션의 업무 상태 분석입니다.
 현재 발화에 명시된 정보와 행동만 구조화하세요. 추측하거나 값을 만들어내지 마세요.
 
 현재 conversation_state: {conversation_state}
+현재 상태에서 허용된 user_action: {allowed_actions_json}
 현재까지 검증된 필드: {current_fields_json}
 사용자 발화: {user_message}
 
@@ -49,13 +57,14 @@ def analyze_service_workflow_message(
 {field_schema}
 
 행동 기준:
-- 새 업무 정보를 말하면 provide_details
-- {spec.confirming_state}에서 정보가 맞다고 명시적으로 확인하면 confirm_details
-- {spec.ready_state}에서 모의 처리를 진행해 달라고 명시하면 complete_simulation
-- 이미 말한 정보를 수정하려 하면 change_detail, change_field는 {field_keys_json} 중 하나
-- 업무 진행을 취소하면 cancel_workflow
-- {closing_states_json} 중 한 상태에서 안전 조치 확인 또는 마무리 의사를 밝히면 go_closing
-- closing에서 통화를 끝내려 하면 end_call
+- 현재 허용 목록에 provide_details가 있고 새 업무 정보를 말하면 provide_details
+- 현재 상태가 {spec.confirming_state}이고 정보가 맞다고 명시적으로 확인하면 confirm_details
+- 현재 상태가 {spec.ready_state}이고 모의 처리를 진행해 달라고 명시하면 complete_simulation
+- 현재 허용 목록에 change_detail이 있고 이미 말한 정보를 수정하려 하면 change_detail,
+  change_field는 {field_keys_json} 중 하나
+- 현재 허용 목록에 cancel_workflow가 있고 업무 진행을 취소하면 cancel_workflow
+- 현재 상태가 {closing_states_json} 중 하나이고 안전 조치 확인 또는 마무리 의사를 밝히면 go_closing
+- 현재 상태가 closing이고 통화를 끝내려 하면 end_call
 - 어느 기준에도 확실히 해당하지 않으면 unknown
 
 계약:
@@ -76,12 +85,21 @@ def analyze_service_workflow_message(
             {"role": "user", "content": prompt},
         ],
         completion=complete_hf_json,
-        validator=lambda parsed: _validate_analysis(spec, parsed),
+        validator=lambda parsed: _validate_analysis(
+            spec,
+            parsed,
+            conversation_state=conversation_state,
+        ),
         operation=f"{spec.graph_name}_extraction",
     )
 
 
-def _validate_analysis(spec: ServiceWorkflowSpec, parsed: dict[str, Any]) -> dict[str, Any]:
+def _validate_analysis(
+    spec: ServiceWorkflowSpec,
+    parsed: dict[str, Any],
+    *,
+    conversation_state: str,
+) -> dict[str, Any]:
     expected_keys = {"intent", "fields", "user_action", "change_field"}
     if set(parsed) != expected_keys:
         raise ValueError(f"response keys must be exactly {sorted(expected_keys)}")
@@ -102,7 +120,12 @@ def _validate_analysis(spec: ServiceWorkflowSpec, parsed: dict[str, Any]) -> dic
                 raise ValueError(f"{field.key} must be one of {sorted(allowed_values)}")
         fields[field.key] = value
 
-    user_action = allowed_string(parsed, "user_action", set(WORKFLOW_ACTIONS))
+    user_action = allowed_string_for_state(
+        parsed,
+        "user_action",
+        conversation_state=conversation_state,
+        allowed_by_state=spec.actions_by_state,
+    )
     change_field = optional_string(parsed, "change_field")
     if user_action == "change_detail":
         if change_field not in spec.field_keys:

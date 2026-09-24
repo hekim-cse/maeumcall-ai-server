@@ -30,7 +30,8 @@
         {
           "type": "string",
           "minLength": 1,
-          "maxLength": 1000
+          "maxLength": 1000,
+          "pattern": "\\S"
         },
         {
           "type": "null"
@@ -53,7 +54,8 @@
               "items": {
                 "type": "string",
                 "minLength": 1,
-                "maxLength": 1000
+                "maxLength": 1000,
+                "pattern": "\\S"
               }
             }
           }
@@ -85,7 +87,9 @@
         },
         "user_action": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 1000,
+          "pattern": "\\S"
         },
         "change_field": {
           "$ref": "#/$defs/nullableText"
@@ -97,6 +101,7 @@
       "additionalProperties": false,
       "required": [
         "id",
+        "conversation_group_id",
         "split",
         "scenario_key",
         "conversation_state",
@@ -109,6 +114,10 @@
       ],
       "properties": {
         "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$"
+        },
+        "conversation_group_id": {
           "type": "string",
           "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$"
         },
@@ -141,7 +150,9 @@
         },
         "conversation_state": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 1000,
+          "pattern": "\\S"
         },
         "current_fields": {
           "type": "object",
@@ -152,7 +163,8 @@
         "user_message": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 4000
+          "maxLength": 4000,
+          "pattern": "\\S"
         },
         "labels": {
           "$ref": "#/$defs/labels"

@@ -1,8 +1,22 @@
 import pytest
 
 from services.flow.reservation.hospital import graph as graph_module
+from services.flow.reservation.hospital.nodes import decide_next_state_node
 
 pytestmark = pytest.mark.graph_flow
+
+
+@pytest.mark.parametrize("conversation_state", ["reservation_confirmed", "closing"])
+def test_hospital_terminal_state_waits_when_end_intent_is_unknown(conversation_state):
+    result = decide_next_state_node(
+        {
+            "conversation_state": conversation_state,
+            "user_action": "unknown",
+        }
+    )
+
+    assert result["conversation_state"] == conversation_state
+    assert result["should_end_call"] is False
 
 
 def _patch_hospital_analysis(monkeypatch):

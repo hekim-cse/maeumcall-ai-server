@@ -8,18 +8,6 @@ from services.flow.common.state_contract import (
     ScenarioStateContractError,
 )
 
-WORKFLOW_ACTIONS = frozenset(
-    {
-        "provide_details",
-        "confirm_details",
-        "complete_simulation",
-        "change_detail",
-        "cancel_workflow",
-        "go_closing",
-        "end_call",
-        "unknown",
-    }
-)
 WORKFLOW_STATUSES = frozenset({"in_progress", "ready", "completed", "cancelled", "blocked"})
 MAX_WORKFLOW_FIELD_LENGTH = 1_000
 
@@ -180,6 +168,41 @@ class ServiceWorkflowSpec:
             }
         )
 
+    @property
+    def actions_by_state(self) -> dict[str, frozenset[str]]:
+        """Return the user actions that the extractor may emit for each input state."""
+        collecting_actions = frozenset(
+            {"provide_details", "change_detail", "cancel_workflow", "unknown"}
+        )
+        terminal_actions = frozenset({"go_closing", "unknown"})
+        return {
+            "greeting": collecting_actions,
+            self.collecting_state: collecting_actions,
+            self.confirming_state: frozenset(
+                {
+                    "provide_details",
+                    "confirm_details",
+                    "change_detail",
+                    "cancel_workflow",
+                    "unknown",
+                }
+            ),
+            self.ready_state: frozenset(
+                {"complete_simulation", "change_detail", "cancel_workflow", "unknown"}
+            ),
+            self.completed_state: terminal_actions,
+            "cancelled": terminal_actions,
+            "closing": frozenset({"end_call", "unknown"}),
+            **{
+                guard.state: frozenset({"change_detail", "go_closing", "unknown"})
+                for guard in self.guards
+            },
+        }
+
+    @property
+    def user_actions(self) -> frozenset[str]:
+        return frozenset().union(*self.actions_by_state.values())
+
     def ready_message_for(self, fields: dict[str, str | None]) -> str:
         branch_value = fields.get(self.branch_field) if self.branch_field else None
         return dict(self.ready_messages_by_branch).get(branch_value, self.ready_message)
@@ -241,15 +264,15 @@ def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: dict[str, 
         _invalid_state()
 
     raw_fields = state.get("fields")
-    if not isinstance(raw_fields, dict) or set(raw_fields) != set(spec.field_keys):
+    conversation_state = state.get("conversation_state")
+    try:
+        actual_missing = validate_service_workflow_context(
+            spec,
+            conversation_state=conversation_state,
+            fields=raw_fields,
+        )
+    except ValueError:
         _invalid_state()
-    for value in raw_fields.values():
-        if value is not None and (
-            not isinstance(value, str)
-            or not value.strip()
-            or len(value) > MAX_WORKFLOW_FIELD_LENGTH
-        ):
-            _invalid_state()
 
     missing_fields = state.get("missing_fields")
     if not isinstance(missing_fields, list) or len(missing_fields) != len(set(missing_fields)):
@@ -258,7 +281,7 @@ def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: dict[str, 
         _invalid_state()
 
     user_action = state.get("user_action")
-    if user_action not in WORKFLOW_ACTIONS:
+    if user_action not in spec.user_actions:
         _invalid_state()
     change_field = state.get("change_field")
     if change_field is not None and change_field not in spec.field_keys:
@@ -274,10 +297,8 @@ def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: dict[str, 
     if (user_action == "change_detail") != (change_field is not None):
         _invalid_state()
 
-    actual_missing = [key for key in spec.field_keys if not raw_fields[key]]
     if missing_fields != actual_missing:
         _invalid_state()
-    conversation_state = state.get("conversation_state")
     if conversation_state not in {"closing", "END"}:
         expected_statuses = {
             spec.ready_state: "ready",
@@ -288,6 +309,37 @@ def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: dict[str, 
         expected_status = expected_statuses.get(conversation_state, "in_progress")
         if workflow_status != expected_status:
             _invalid_state()
+
+
+def validate_service_workflow_context(
+    spec: ServiceWorkflowSpec,
+    *,
+    conversation_state: str | None,
+    fields: object,
+) -> list[str]:
+    if conversation_state not in spec.allowed_conversation_states:
+        raise ValueError("conversation state is not allowed")
+    if not isinstance(fields, dict) or set(fields) != set(spec.field_keys):
+        raise ValueError("workflow fields do not match the contract")
+
+    for field in spec.fields:
+        value = fields[field.key]
+        if value is not None and (
+            not isinstance(value, str)
+            or not value.strip()
+            or len(value) > MAX_WORKFLOW_FIELD_LENGTH
+        ):
+            raise ValueError(f"workflow field is invalid: {field.key}")
+        if field.options and value is not None:
+            allowed_values = {option.value for option in field.options}
+            if value not in allowed_values:
+                raise ValueError(f"workflow field option is invalid: {field.key}")
+
+    missing_fields = [key for key in spec.field_keys if not fields[key]]
+    if conversation_state == "greeting" and len(missing_fields) != len(spec.field_keys):
+        raise ValueError("greeting state cannot contain previously collected fields")
+    if conversation_state == spec.collecting_state and not missing_fields:
+        raise ValueError("collecting state requires at least one missing field")
     if (
         conversation_state
         in {
@@ -295,9 +347,21 @@ def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: dict[str, 
             spec.ready_state,
             spec.completed_state,
         }
-        and actual_missing
+        and missing_fields
     ):
-        _invalid_state()
+        raise ValueError("the current state requires complete fields")
+
+    matching_guard = spec.matching_guard(fields)
+    terminal_states = {"cancelled", "closing", "END"}
+    if matching_guard is not None and conversation_state not in {
+        matching_guard.state,
+        *terminal_states,
+    }:
+        raise ValueError("guard field values and conversation state do not match")
+    current_guard = spec.guard_for_state(conversation_state)
+    if current_guard is not None and matching_guard != current_guard:
+        raise ValueError("guard state does not match its required field value")
+    return missing_fields
 
 
 def _invalid_state() -> None:
@@ -320,6 +384,6 @@ def build_service_workflow_contract(spec: ServiceWorkflowSpec) -> DetailedGraphC
             "fields": {key: None for key in spec.field_keys},
             "workflow_status": "in_progress",
         },
-        allowed_conversation_states=spec.allowed_conversation_states,
+        client_resumable_states=spec.allowed_conversation_states,
         validate_state=lambda state: validate_service_workflow_state(spec, state),
     )

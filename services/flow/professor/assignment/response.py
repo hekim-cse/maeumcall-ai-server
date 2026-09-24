@@ -6,6 +6,7 @@ from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 from services.flow.professor.assignment.graph import professor_assignment_graph
 from services.flow.professor.assignment.llm_structured import (
+    PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE,
     PROFESSOR_ASSIGNMENT_USER_ACTIONS,
 )
 from services.flow.professor.assignment.policy import compact_professor_assignment_state
@@ -24,15 +25,7 @@ PROFESSOR_ASSIGNMENT_CONTRACT = DetailedGraphContract(
     graph=professor_assignment_graph,
     compact_state=compact_professor_assignment_state,
     defaults={"professor_name": "교수님"},
-    allowed_conversation_states=frozenset(
-        {
-            "greeting",
-            "collecting_assignment_info",
-            "answering_assignment_question",
-            "closing",
-            "END",
-        }
-    ),
+    client_resumable_states=frozenset(PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE) | {"END"},
     validate_state=PROFESSOR_ASSIGNMENT_STATE_CONTRACT.validate,
 )
 

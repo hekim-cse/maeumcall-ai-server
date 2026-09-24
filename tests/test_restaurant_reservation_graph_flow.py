@@ -1,8 +1,27 @@
 import pytest
 
 from services.flow.reservation.restaurant.graph import restaurant_reservation_graph
+from services.flow.reservation.restaurant.nodes import decide_restaurant_state_node
 
 pytestmark = pytest.mark.graph_flow
+
+
+def test_restaurant_change_info_reopens_all_reservation_fields():
+    result = decide_restaurant_state_node(
+        {
+            "conversation_state": "confirming_info",
+            "user_action": "change_info",
+            "date": "내일",
+            "time": "오후 6시",
+            "party_size": "2명",
+            "user_name": "김개굴",
+            "selected_time": "오후 6시",
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_reservation_info"
+    assert all(result[field] is None for field in ("date", "time", "party_size", "user_name"))
+    assert result["selected_time"] is None
 
 
 def _patch_restaurant_analysis(monkeypatch):

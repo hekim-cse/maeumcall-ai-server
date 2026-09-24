@@ -4,7 +4,9 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    allowed_string,
+    allowed_actions_json_for_state,
+    allowed_string_for_state,
+    build_state_action_contract,
     complete_validated_json,
     optional_string,
 )
@@ -18,21 +20,34 @@ DEFAULT_HOSPITAL_STRUCTURED_RESULT: dict[str, Any] = {
     "user_action": "unknown",
     "selected_time": None,
 }
-HOSPITAL_USER_ACTIONS = frozenset(
+HOSPITAL_ACTIONS_BY_STATE, HOSPITAL_USER_ACTIONS = build_state_action_contract(
     {
-        "continue_collecting",
-        "confirm_reservation_info",
-        "change_department",
-        "change_date",
-        "change_time",
-        "change_user_name",
-        "lookup_availability",
-        "confirm_available_time",
-        "ask_other_time",
-        "select_alternative_time",
-        "go_closing",
-        "end_call",
-        "unknown",
+        "greeting": frozenset({"continue_collecting", "unknown"}),
+        "asking_purpose": frozenset({"continue_collecting", "unknown"}),
+        "asking_department": frozenset({"continue_collecting", "unknown"}),
+        "asking_date": frozenset({"continue_collecting", "unknown"}),
+        "asking_time": frozenset({"continue_collecting", "unknown"}),
+        "asking_user_name": frozenset({"continue_collecting", "unknown"}),
+        "confirming_info": frozenset(
+            {
+                "confirm_reservation_info",
+                "change_department",
+                "change_date",
+                "change_time",
+                "change_user_name",
+                "unknown",
+            }
+        ),
+        "checking_availability": frozenset({"lookup_availability", "unknown"}),
+        "reservation_available": frozenset({"confirm_available_time", "ask_other_time", "unknown"}),
+        "reservation_unavailable": frozenset(
+            {"change_date", "ask_other_time", "select_alternative_time", "unknown"}
+        ),
+        "suggest_alternative": frozenset(
+            {"change_date", "ask_other_time", "select_alternative_time", "unknown"}
+        ),
+        "reservation_confirmed": frozenset({"go_closing", "unknown"}),
+        "closing": frozenset({"end_call", "unknown"}),
     }
 )
 
@@ -67,7 +82,10 @@ def analyze_hospital_reservation_user_message(
     return complete_validated_json(
         messages,
         completion=complete_hf_json,
-        validator=_normalize_hospital_analysis_result,
+        validator=lambda parsed: _normalize_hospital_analysis_result(
+            parsed,
+            conversation_state=conversation_state,
+        ),
         operation="hospital_extraction",
     )
 
@@ -111,6 +129,7 @@ conversation_state별 user_action 규칙:
 
 2) checking_availability
 - 예약 가능 여부 확인을 기다리거나 진행하면 "lookup_availability"
+- 알 수 없으면 "unknown"
 
 3) reservation_available
 - 안내된 가능 시간으로 예약하겠다고 하면 "confirm_available_time"
@@ -131,9 +150,11 @@ conversation_state별 user_action 규칙:
 
 6) reservation_confirmed
 - 감사 인사나 마무리 응답이면 "go_closing"
+- 알 수 없으면 "unknown"
 
 7) closing
 - 감사 인사나 더 이상 문의가 없다는 응답이면 "end_call"
+- 알 수 없으면 "unknown"
 
 그 외 상태:
 - 예약 정보를 말하는 중이면 "unknown" 또는 "continue_collecting"
@@ -141,15 +162,24 @@ conversation_state별 user_action 규칙:
 
 
 def _build_user_prompt(conversation_state: str, user_message: str) -> str:
+    allowed_actions = allowed_actions_json_for_state(
+        conversation_state,
+        HOSPITAL_ACTIONS_BY_STATE,
+    )
     return f"""
 conversation_state: {conversation_state}
+allowed_user_actions: {allowed_actions}
 user_message: {user_message}
 
 위 발화를 JSON으로 분석해라.
 """.strip()
 
 
-def _normalize_hospital_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
+def _normalize_hospital_analysis_result(
+    parsed: dict[str, Any],
+    *,
+    conversation_state: str,
+) -> dict[str, Any]:
     if "intent" not in parsed:
         raise ValueError("intent is required")
     intent = parsed.get("intent")
@@ -162,6 +192,11 @@ def _normalize_hospital_analysis_result(parsed: dict[str, Any]) -> dict[str, Any
     for key in ["department", "date", "time", "user_name", "selected_time"]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(parsed, "user_action", HOSPITAL_USER_ACTIONS)
+    result["user_action"] = allowed_string_for_state(
+        parsed,
+        "user_action",
+        conversation_state=conversation_state,
+        allowed_by_state=HOSPITAL_ACTIONS_BY_STATE,
+    )
 
     return result

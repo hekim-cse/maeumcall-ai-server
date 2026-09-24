@@ -108,6 +108,20 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
                 "conversation_state": "collecting_reservation_info",
             }
 
+        if user_action == "change_info":
+            return _reset_lookup_state(
+                {
+                    "user_action": user_action,
+                    "date": None,
+                    "start_time": None,
+                    "duration": None,
+                    "party_size": None,
+                    "user_name": None,
+                    "selected_time": None,
+                    "conversation_state": "collecting_reservation_info",
+                }
+            )
+
         return {
             "user_action": user_action,
             "conversation_state": "confirming_info",
@@ -130,6 +144,16 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
             return _reset_lookup_state(
                 {
                     "user_action": user_action,
+                    "start_time": None,
+                    "conversation_state": "collecting_reservation_info",
+                }
+            )
+
+        if user_action == "change_date":
+            return _reset_lookup_state(
+                {
+                    "user_action": user_action,
+                    "date": None,
                     "start_time": None,
                     "conversation_state": "collecting_reservation_info",
                 }

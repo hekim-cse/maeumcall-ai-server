@@ -5,13 +5,16 @@ from services.flow.common.detailed_state_validation import ReservationStateContr
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 from services.flow.reservation.hair_salon.graph import hair_salon_reservation_graph
-from services.flow.reservation.hair_salon.llm_structured import HAIR_SALON_USER_ACTIONS
+from services.flow.reservation.hair_salon.llm_structured import (
+    HAIR_SALON_ACTIONS_BY_STATE,
+    HAIR_SALON_USER_ACTIONS,
+)
 from services.flow.reservation.hair_salon.policy import compact_hair_salon_state
 
 HAIR_SALON_STATE_CONTRACT = ReservationStateContract(
     identity_field="service_name",
     required_fields=("date", "time", "service_type", "designer", "user_name"),
-    allowed_actions=HAIR_SALON_USER_ACTIONS | {"invalid_alternative_time"},
+    allowed_actions=HAIR_SALON_USER_ACTIONS,
     information_complete_states=frozenset(
         {
             "confirming_info",
@@ -30,19 +33,8 @@ HAIR_SALON_RESERVATION_CONTRACT = DetailedGraphContract(
     graph=hair_salon_reservation_graph,
     compact_state=compact_hair_salon_state,
     defaults={"service_name": "마음헤어"},
-    allowed_conversation_states=frozenset(
-        {
-            "greeting",
-            "collecting_reservation_info",
-            "confirming_info",
-            "checking_availability",
-            "reservation_available",
-            "reservation_unavailable",
-            "reservation_confirmed",
-            "closing",
-            "END",
-        }
-    ),
+    client_resumable_states=frozenset(HAIR_SALON_ACTIONS_BY_STATE) | {"END"},
+    internal_transient_states=frozenset({"checking_availability"}),
     validate_state=HAIR_SALON_STATE_CONTRACT.validate,
 )
 

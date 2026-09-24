@@ -124,3 +124,23 @@ def test_restaurant_structured_analysis_rejects_invalid_action(monkeypatch):
         analyze_restaurant_reservation_user_message(
             "greeting", "내일 저녁 7시에 4명 김개굴 이름으로 예약하고 싶습니다."
         )
+
+
+def test_restaurant_structured_analysis_retries_action_from_wrong_state(monkeypatch):
+    responses = iter(
+        (
+            '{"intent":"reservation","date":null,"time":null,"party_size":null,'
+            '"user_name":null,"user_action":"end_call","selected_time":null}',
+            '{"intent":"reservation","date":"내일","time":null,"party_size":null,'
+            '"user_name":null,"user_action":"continue_collecting","selected_time":null}',
+        )
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
+        lambda messages: next(responses),
+    )
+
+    result = analyze_restaurant_reservation_user_message("greeting", "내일 예약할게요.")
+
+    assert result["user_action"] == "continue_collecting"
+    assert result["date"] == "내일"

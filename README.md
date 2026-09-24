@@ -288,8 +288,8 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 
 | 구분 | 결과 |
 |---|---|
-| 오프라인 단위·그래프·라우트 테스트 | ✅ 435개 통과 |
-| 실모델 통합 테스트 | 16개, 수동 실행으로 분리 |
+| 오프라인 단위·그래프·라우트 테스트 | ✅ 526개 통과·1개 선택적 테스트 제외 |
+| 분리된 통합 테스트 | 19개(실모델 16개·PostgreSQL 3개), 수동 실행으로 분리 |
 | 실패 테스트 | 없음 |
 | 기본 실행 네트워크 의존성 | 없음 |
 
@@ -518,7 +518,7 @@ Docker Compose 실행 주소는 `http://127.0.0.1:8001`, API 문서는 `http://1
 | 🗄 [음성 기준선 PostgreSQL 설계](docs/architecture/voice_baseline_postgresql.md) | 테이블, 행 잠금, 트랜잭션, JSON 이관 절차와 용어 설명 |
 | 🐳 [AI 서버 컨테이너 실행 경계](docs/architecture/container_runtime.md) | Python 3.11 이미지, 비루트 보안, PostgreSQL→Alembic→API 순서와 컨테이너 CI |
 | 📈 [LangGraph 관측성 설계](docs/architecture/langgraph_observability.md) | 노드 latency, 재시도, 계약 실패 지표, PromQL과 용어 설명 |
-| 🧪 [구조화 NLU 모델 평가](evals/structured_nlu/README.md) | 16개 상세 그래프의 모델 선택 데이터 계약, 정확도·사실 생성·지연시간 측정 기준 |
+| 🧪 [구조화 NLU 모델 평가](evals/structured_nlu/README.md) | 16개 상세 그래프의 상태-행동 계약, 벤치마크 coverage와 현재 구축 단계 |
 | 🔊 [TTS 배역·공급자 경계](docs/architecture/tts_provider_boundary.md) | 배역 버전 2, Qwen·Bark·Voice Clone 모델 전환, 인증된 합성 API와 운영 제약 |
 | 🎚️ [AI Hub 다화자 음향 기준](docs/architecture/tts_voice_reference_data.md) | 50·60대 여성 55명의 익명 집계, 균형 표본, 개인정보·라이선스 경계와 엄마 음성 선정 기준 |
 
@@ -543,7 +543,7 @@ Docker Compose 실행 주소는 `http://127.0.0.1:8001`, API 문서는 `http://1
 | 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패와 TTS 모델 상태·단계별 지연 Prometheus 지표 제공 |
 | 한국어 단어 분석 | Kiwi 형태소 원형과 품사 계약으로 내용어·감탄사를 분리하며 분석기 장애는 503 오류와 readiness로 공개 |
 | 한국어 음성 합성 | 32개 시나리오의 배역 버전 2를 Qwen3-TTS·Bark Small·엄마 Voice Clone 공급자와 인증된 WAV 계약으로 제공 |
-| 테스트 검증 | 오프라인 회귀 테스트 496개 통과·1개 선택적 테스트 제외, 통합 테스트 19개 분리 |
+| 테스트 검증 | 오프라인 회귀 테스트 526개 통과·1개 선택적 테스트 제외, 통합 테스트 19개 분리 |
 
 <table>
   <tr>

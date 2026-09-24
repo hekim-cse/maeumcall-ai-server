@@ -80,6 +80,11 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
     user_action = state.get("user_action") or "unknown"
 
     if current_state == "closing":
+        if user_action != "end_call":
+            return {
+                "conversation_state": "closing",
+                "should_end_call": False,
+            }
         return {
             "conversation_state": "END",
             "should_end_call": True,
@@ -342,6 +347,11 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
         }
 
     if current_state == "reservation_confirmed":
+        if user_action != "go_closing":
+            return {
+                "conversation_state": "reservation_confirmed",
+                "should_end_call": False,
+            }
         return {
             "conversation_state": "closing",
             "should_end_call": False,

@@ -117,9 +117,18 @@ class DetailedGraphContract:
     graph: CompiledGraph
     compact_state: CompactState
     defaults: Mapping[str, Any]
-    allowed_conversation_states: frozenset[str]
+    client_resumable_states: frozenset[str]
+    internal_transient_states: frozenset[str] = frozenset()
     initial_conversation_state: str = "greeting"
     validate_state: ValidateState | None = None
+
+    def __post_init__(self) -> None:
+        if self.initial_conversation_state not in self.client_resumable_states:
+            raise ValueError("initial conversation state must be client-resumable")
+        if "END" not in self.client_resumable_states:
+            raise ValueError("END must be declared for the ended-call client contract")
+        if self.client_resumable_states & self.internal_transient_states:
+            raise ValueError("client-resumable and internal transient states must be disjoint")
 
     @property
     def allowed_state_fields(self) -> set[str]:
@@ -135,7 +144,7 @@ def complete_detailed_graph(
         category=contract.category,
         title=contract.title,
         allowed_fields=contract.allowed_state_fields,
-        allowed_conversation_states=contract.allowed_conversation_states,
+        allowed_conversation_states=contract.client_resumable_states,
     )
     if contract.validate_state is not None:
         contract.validate_state(previous_state)

@@ -4,7 +4,9 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    allowed_string,
+    allowed_actions_json_for_state,
+    allowed_string_for_state,
+    build_state_action_contract,
     complete_validated_json,
     optional_string,
 )
@@ -19,22 +21,30 @@ DEFAULT_STUDY_ROOM_STRUCTURED_RESULT: dict[str, Any] = {
     "user_action": "unknown",
     "selected_time": None,
 }
-STUDY_ROOM_USER_ACTIONS = frozenset(
+STUDY_ROOM_ACTIONS_BY_STATE, STUDY_ROOM_USER_ACTIONS = build_state_action_contract(
     {
-        "continue_collecting",
-        "confirm",
-        "change_date",
-        "change_start_time",
-        "change_duration",
-        "change_party_size",
-        "change_user_name",
-        "change_info",
-        "confirm_reservation",
-        "ask_other_time",
-        "select_alternative_time",
-        "go_closing",
-        "end_call",
-        "unknown",
+        "greeting": frozenset({"continue_collecting", "unknown"}),
+        "collecting_reservation_info": frozenset({"continue_collecting", "unknown"}),
+        "confirming_info": frozenset(
+            {
+                "confirm",
+                "change_date",
+                "change_start_time",
+                "change_duration",
+                "change_party_size",
+                "change_user_name",
+                "change_info",
+                "unknown",
+            }
+        ),
+        "reservation_available": frozenset(
+            {"confirm_reservation", "ask_other_time", "change_date", "unknown"}
+        ),
+        "reservation_unavailable": frozenset(
+            {"select_alternative_time", "ask_other_time", "change_date", "unknown"}
+        ),
+        "reservation_confirmed": frozenset({"go_closing", "unknown"}),
+        "closing": frozenset({"end_call", "unknown"}),
     }
 )
 
@@ -72,7 +82,10 @@ def analyze_study_room_reservation_user_message(
             {"role": "user", "content": prompt},
         ],
         completion=complete_hf_json,
-        validator=_normalize_study_room_analysis_result,
+        validator=lambda parsed: _normalize_study_room_analysis_result(
+            parsed,
+            conversation_state=conversation_state,
+        ),
         operation="study_room_extraction",
     )
 
@@ -81,12 +94,18 @@ def build_study_room_reservation_analysis_prompt(
     conversation_state: str,
     user_message: str,
 ) -> str:
+    allowed_actions = allowed_actions_json_for_state(
+        conversation_state,
+        STUDY_ROOM_ACTIONS_BY_STATE,
+    )
     return f"""
 다음은 사용자가 스터디룸 예약 전화를 연습하는 시뮬레이션입니다.
 사용자 발화를 분석해서 JSON 객체만 반환하세요.
 
 현재 conversation_state:
 {conversation_state}
+현재 상태에서 허용된 user_action:
+{allowed_actions}
 
 사용자 발화:
 {user_message}
@@ -148,7 +167,11 @@ def build_study_room_reservation_analysis_prompt(
 """
 
 
-def _normalize_study_room_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
+def _normalize_study_room_analysis_result(
+    parsed: dict[str, Any],
+    *,
+    conversation_state: str,
+) -> dict[str, Any]:
     result = DEFAULT_STUDY_ROOM_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "reservation":
@@ -164,6 +187,11 @@ def _normalize_study_room_analysis_result(parsed: dict[str, Any]) -> dict[str, A
     ]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(parsed, "user_action", STUDY_ROOM_USER_ACTIONS)
+    result["user_action"] = allowed_string_for_state(
+        parsed,
+        "user_action",
+        conversation_state=conversation_state,
+        allowed_by_state=STUDY_ROOM_ACTIONS_BY_STATE,
+    )
 
     return result

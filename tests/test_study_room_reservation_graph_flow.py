@@ -1,8 +1,46 @@
 import pytest
 
 from services.flow.reservation.study_room.graph import study_room_reservation_graph
+from services.flow.reservation.study_room.nodes import decide_study_room_state_node
 
 pytestmark = pytest.mark.graph_flow
+
+
+def test_study_room_change_info_reopens_all_reservation_fields():
+    result = decide_study_room_state_node(
+        {
+            "conversation_state": "confirming_info",
+            "user_action": "change_info",
+            "date": "내일",
+            "start_time": "오후 2시",
+            "duration": "2시간",
+            "party_size": "4명",
+            "user_name": "김개굴",
+            "selected_time": "오후 2시",
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_reservation_info"
+    assert all(
+        result[field] is None
+        for field in ("date", "start_time", "duration", "party_size", "user_name")
+    )
+    assert result["selected_time"] is None
+
+
+def test_study_room_available_date_change_reopens_date_and_time():
+    result = decide_study_room_state_node(
+        {
+            "conversation_state": "reservation_available",
+            "user_action": "change_date",
+            "date": "내일",
+            "start_time": "오후 2시",
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_reservation_info"
+    assert result["date"] is None
+    assert result["start_time"] is None
 
 
 def _patch_study_room_analysis(monkeypatch):

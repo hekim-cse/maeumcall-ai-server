@@ -5,7 +5,10 @@ from services.flow.common.detailed_state_validation import ReservationStateContr
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 from services.flow.reservation.study_room.graph import study_room_reservation_graph
-from services.flow.reservation.study_room.llm_structured import STUDY_ROOM_USER_ACTIONS
+from services.flow.reservation.study_room.llm_structured import (
+    STUDY_ROOM_ACTIONS_BY_STATE,
+    STUDY_ROOM_USER_ACTIONS,
+)
 from services.flow.reservation.study_room.policy import compact_study_room_state
 
 STUDY_ROOM_STATE_CONTRACT = ReservationStateContract(
@@ -30,19 +33,8 @@ STUDY_ROOM_RESERVATION_CONTRACT = DetailedGraphContract(
     graph=study_room_reservation_graph,
     compact_state=compact_study_room_state,
     defaults={"service_name": "마음스터디룸"},
-    allowed_conversation_states=frozenset(
-        {
-            "greeting",
-            "collecting_reservation_info",
-            "confirming_info",
-            "checking_availability",
-            "reservation_available",
-            "reservation_unavailable",
-            "reservation_confirmed",
-            "closing",
-            "END",
-        }
-    ),
+    client_resumable_states=frozenset(STUDY_ROOM_ACTIONS_BY_STATE) | {"END"},
+    internal_transient_states=frozenset({"checking_availability"}),
     validate_state=STUDY_ROOM_STATE_CONTRACT.validate,
 )
 
