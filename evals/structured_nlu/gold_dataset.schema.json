@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://maeumcall.dev/schemas/structured-nlu-gold-dataset-v1.json",
+  "title": "MaeumCall Structured NLU Gold Dataset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "dataset_version",
+    "state_contract_version",
+    "cases"
+  ],
+  "properties": {
+    "dataset_version": {
+      "const": 1
+    },
+    "state_contract_version": {
+      "const": 2
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/case"
+      }
+    }
+  },
+  "$defs": {
+    "nullableText": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "expectedField": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "accepted_values"
+          ],
+          "properties": {
+            "accepted_values": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              }
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intent",
+        "fields",
+        "user_action",
+        "change_field"
+      ],
+      "properties": {
+        "intent": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "fields": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/expectedField"
+          }
+        },
+        "user_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "change_field": {
+          "$ref": "#/$defs/nullableText"
+        }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "split",
+        "scenario_key",
+        "conversation_state",
+        "current_fields",
+        "user_message",
+        "labels",
+        "tags",
+        "provenance",
+        "review_status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$"
+        },
+        "split": {
+          "enum": [
+            "development",
+            "validation",
+            "test"
+          ]
+        },
+        "scenario_key": {
+          "enum": [
+            "예약:병원 예약",
+            "예약:식당 예약",
+            "예약:미용실 예약",
+            "예약:스터디룸 예약",
+            "교수님:면담 예약",
+            "교수님:과제 문의",
+            "교수님:결석 사유 전달",
+            "배달:주문 변경",
+            "배달:배달 지연 문의",
+            "배달:환불/재배달 문의",
+            "시청:여권 발급 문의",
+            "시청:주민등록 등본 문의",
+            "시청:대형폐기물 배출",
+            "고객센터:인터넷/통화 문제 문의",
+            "고객센터:요금/약정 상담",
+            "고객센터:a/s 접수"
+          ]
+        },
+        "conversation_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_fields": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/nullableText"
+          }
+        },
+        "user_message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "labels": {
+          "$ref": "#/$defs/labels"
+        },
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "single_field",
+              "multi_field",
+              "correction",
+              "negation",
+              "ellipsis",
+              "colloquial",
+              "ambiguous",
+              "hard_negative",
+              "confirmation",
+              "cancellation",
+              "closing",
+              "safety"
+            ]
+          }
+        },
+        "provenance": {
+          "const": "human_authored"
+        },
+        "review_status": {
+          "enum": [
+            "draft",
+            "reviewed",
+            "adjudicated"
+          ]
+        }
+      }
+    }
+  }
+}
