@@ -22,6 +22,7 @@ def _case(
     message: str,
     fields: dict[str, ExpectedField | None],
     action: str,
+    review_status: str = "adjudicated",
 ) -> EvaluationCase:
     return EvaluationCase(
         id=case_id,
@@ -38,7 +39,7 @@ def _case(
         ),
         tags=("multi_field",),
         provenance="human_authored",
-        review_status="adjudicated",
+        review_status=review_status,
     )
 
 
@@ -122,6 +123,37 @@ def test_case_rejects_unreviewed_action_outside_the_live_contract():
         )
 
 
+def test_case_rejects_workflow_gold_value_outside_live_options():
+    with pytest.raises(ValidationError, match="accepted_values are not allowed"):
+        EvaluationCase(
+            id="delivery.invalid-gold-option",
+            split="development",
+            scenario_key="배달:주문 변경",
+            conversation_state="collecting_order_change",
+            current_fields={
+                "order_number": None,
+                "change_type": None,
+                "requested_change": None,
+                "unavailable_preference": None,
+            },
+            user_message="배송지를 바꾸고 싶어요.",
+            labels=GoldLabels(
+                intent="delivery_order_change",
+                fields={
+                    "order_number": None,
+                    "change_type": ExpectedField(accepted_values=("not-a-real-option",)),
+                    "requested_change": None,
+                    "unavailable_preference": None,
+                },
+                user_action="provide_details",
+                change_field=None,
+            ),
+            tags=("single_field",),
+            provenance="human_authored",
+            review_status="adjudicated",
+        )
+
+
 def test_metrics_count_contract_retry_hallucination_omission_and_exact_values():
     cases = (
         _case(
@@ -198,6 +230,29 @@ def test_metrics_require_exactly_one_prediction_per_case():
 
     with pytest.raises(ValueError, match="prediction ids do not match cases"):
         score_predictions((case,), ())
+
+
+def test_metrics_reject_cases_that_have_not_completed_adjudication():
+    case = _case(
+        case_id="appointment.draft-case",
+        message="내일 면담 가능할까요?",
+        fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+        action="provide_appointment_info",
+        review_status="draft",
+    )
+    prediction = _prediction(
+        case.id,
+        fields={
+            "appointment_purpose": None,
+            "date": "내일",
+            "time": None,
+            "user_name": None,
+        },
+        action="provide_appointment_info",
+    )
+
+    with pytest.raises(ValueError, match="requires adjudicated cases only"):
+        score_predictions((case,), (prediction,))
 
 
 def test_metrics_count_prediction_fields_outside_the_live_contract_as_contract_failure():

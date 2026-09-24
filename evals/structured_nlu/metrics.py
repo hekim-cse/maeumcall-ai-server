@@ -9,6 +9,7 @@ from evals.structured_nlu.schema import (
     CasePrediction,
     EvaluationCase,
     NormalizedPrediction,
+    ReviewStatus,
 )
 
 
@@ -61,6 +62,11 @@ def score_predictions(
 ) -> EvaluationScores:
     if not cases:
         raise ValueError("at least one evaluation case is required")
+    unapproved_case_ids = sorted(
+        case.id for case in cases if case.review_status is not ReviewStatus.ADJUDICATED
+    )
+    if unapproved_case_ids:
+        raise ValueError(f"official scoring requires adjudicated cases only: {unapproved_case_ids}")
     case_by_id = {case.id: case for case in cases}
     prediction_by_id = {prediction.case_id: prediction for prediction in predictions}
     if len(case_by_id) != len(cases):

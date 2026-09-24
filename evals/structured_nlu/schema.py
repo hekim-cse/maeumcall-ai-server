@@ -90,6 +90,17 @@ class EvaluationCase(BaseModel):
             raise ValueError(f"intent must be one of {sorted(map(str, contract.allowed_intents))}")
         if set(self.labels.fields) != set(contract.field_names):
             raise ValueError(f"label fields must be exactly {sorted(contract.field_names)}")
+        field_options = dict(contract.field_options)
+        for field_name, expected in self.labels.fields.items():
+            allowed_values = field_options.get(field_name)
+            if expected is None or allowed_values is None:
+                continue
+            invalid_values = set(expected.accepted_values) - allowed_values
+            if invalid_values:
+                raise ValueError(
+                    f"accepted_values are not allowed for {self.scenario_key}: "
+                    f"{field_name}={sorted(invalid_values)}"
+                )
         if self.labels.user_action not in contract.user_actions:
             raise ValueError(
                 f"user_action is not allowed for {self.scenario_key}: {self.labels.user_action}"
