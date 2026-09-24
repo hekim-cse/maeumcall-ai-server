@@ -16,6 +16,13 @@ Completion = Callable[[list[dict[str, str]]], str]
 Validator = Callable[[dict[str, Any]], ValidatedOutput]
 
 
+def require_exact_keys(data: Mapping[str, Any], expected: Collection[str]) -> None:
+    """Reject missing and unknown model-output keys before domain normalization."""
+    expected_keys = set(expected)
+    if set(data) != expected_keys:
+        raise ValueError(f"response keys must be exactly {sorted(expected_keys)}")
+
+
 def build_state_action_contract(
     actions_by_state: Mapping[str, Collection[str]],
 ) -> tuple[Mapping[str, frozenset[str]], frozenset[str]]:

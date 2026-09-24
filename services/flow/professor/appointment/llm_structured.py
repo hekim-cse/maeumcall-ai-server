@@ -9,6 +9,7 @@ from llm.structured_output import (
     build_state_action_contract,
     complete_validated_json,
     optional_string,
+    require_exact_keys,
 )
 
 DEFAULT_APPOINTMENT_STRUCTURED_RESULT: dict[str, Any] = {
@@ -146,6 +147,7 @@ def _normalize_appointment_analysis_result(
     *,
     conversation_state: str,
 ) -> dict[str, Any]:
+    require_exact_keys(parsed, DEFAULT_APPOINTMENT_STRUCTURED_RESULT)
     result = DEFAULT_APPOINTMENT_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "appointment_booking":

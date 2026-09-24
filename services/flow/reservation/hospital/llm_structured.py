@@ -9,6 +9,7 @@ from llm.structured_output import (
     build_state_action_contract,
     complete_validated_json,
     optional_string,
+    require_exact_keys,
 )
 
 DEFAULT_HOSPITAL_STRUCTURED_RESULT: dict[str, Any] = {
@@ -180,6 +181,7 @@ def _normalize_hospital_analysis_result(
     *,
     conversation_state: str,
 ) -> dict[str, Any]:
+    require_exact_keys(parsed, DEFAULT_HOSPITAL_STRUCTURED_RESULT)
     if "intent" not in parsed:
         raise ValueError("intent is required")
     intent = parsed.get("intent")

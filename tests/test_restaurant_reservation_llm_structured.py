@@ -157,3 +157,31 @@ def test_restaurant_structured_analysis_fails_when_retried_action_stays_invalid(
 
     with pytest.raises(AIResponseValidationError):
         analyze_restaurant_reservation_user_message("greeting", "식당 예약하고 싶습니다.")
+
+
+def test_restaurant_structured_analysis_rejects_unknown_field_after_retry(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
+        lambda messages: (
+            '{"intent":"reservation","date":"내일","time":null,"party_size":null,'
+            '"user_name":null,"user_action":"continue_collecting","selected_time":null,'
+            '"unexpected":"허용되지 않은 값"}'
+        ),
+    )
+
+    with pytest.raises(AIResponseValidationError):
+        analyze_restaurant_reservation_user_message("greeting", "내일 예약할게요.")
+
+
+def test_restaurant_structured_analysis_normalizes_whitespace_field_to_null(monkeypatch):
+    monkeypatch.setattr(
+        "services.flow.reservation.restaurant.llm_structured.complete_hf_json",
+        lambda messages: (
+            '{"intent":"reservation","date":"   ","time":null,"party_size":null,'
+            '"user_name":null,"user_action":"continue_collecting","selected_time":null}'
+        ),
+    )
+
+    result = analyze_restaurant_reservation_user_message("greeting", "예약하고 싶습니다.")
+
+    assert result["date"] is None
