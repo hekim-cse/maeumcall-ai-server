@@ -65,6 +65,43 @@ class EvaluationContract:
     conversation_states: frozenset[str]
     user_actions: frozenset[str]
     uses_current_fields: bool
+    field_options: tuple[tuple[str, frozenset[str]], ...] = ()
+
+    def validate_prediction(
+        self,
+        *,
+        intent: str | None,
+        fields: dict[str, str | None],
+        user_action: str,
+        change_field: str | None,
+    ) -> None:
+        """Validate normalized model output against the live scenario contract."""
+        if set(fields) != set(self.field_names):
+            raise ValueError(
+                f"prediction fields do not match {self.scenario_key}: {sorted(fields)}"
+            )
+        if intent not in self.allowed_intents:
+            raise ValueError(f"prediction intent is not allowed for {self.scenario_key}: {intent}")
+        if user_action not in self.user_actions:
+            raise ValueError(
+                f"prediction user_action is not allowed for {self.scenario_key}: {user_action}"
+            )
+
+        for field_name, allowed_values in self.field_options:
+            value = fields[field_name]
+            if value is not None and value not in allowed_values:
+                raise ValueError(
+                    f"prediction {field_name} is not allowed for {self.scenario_key}: {value}"
+                )
+
+        if self.uses_current_fields:
+            if user_action == "change_detail":
+                if change_field not in self.field_names:
+                    raise ValueError("change_field must name a workflow field")
+            elif change_field is not None:
+                raise ValueError("change_field must be null unless user_action is change_detail")
+        elif change_field is not None:
+            raise ValueError("change_field is only used by service workflows")
 
 
 def _detailed_contract(
@@ -102,6 +139,11 @@ def _workflow_contract(spec: ServiceWorkflowSpec) -> EvaluationContract:
         conversation_states=spec.allowed_conversation_states - {"END"},
         user_actions=WORKFLOW_ACTIONS,
         uses_current_fields=True,
+        field_options=tuple(
+            (field.key, frozenset(option.value for option in field.options))
+            for field in spec.fields
+            if field.options
+        ),
     )
 
 

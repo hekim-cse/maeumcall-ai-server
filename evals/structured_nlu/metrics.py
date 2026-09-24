@@ -4,8 +4,12 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from typing import Any
 
-from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
-from evals.structured_nlu.schema import CasePrediction, EvaluationCase
+from evals.structured_nlu.contracts import EVALUATION_CONTRACTS, EvaluationContract
+from evals.structured_nlu.schema import (
+    CasePrediction,
+    EvaluationCase,
+    NormalizedPrediction,
+)
 
 
 @dataclass(frozen=True)
@@ -89,26 +93,14 @@ def score_predictions(
 
     for case_id, case in case_by_id.items():
         prediction = prediction_by_id[case_id]
-        if prediction.attempts[0].contract_valid:
+        contract = EVALUATION_CONTRACTS[case.scenario_key]
+        first_output = _contract_valid_output(contract, prediction.attempts[0].output)
+        if first_output is not None:
             first_passes += 1
         if len(prediction.attempts) == 2:
             retried += 1
-        output = prediction.final_output
+        output = _contract_valid_output(contract, prediction.final_output)
         if output is not None:
-            contract = EVALUATION_CONTRACTS[case.scenario_key]
-            if set(output.fields) != set(contract.field_names):
-                raise ValueError(
-                    f"prediction fields do not match {case.scenario_key}: {sorted(output.fields)}"
-                )
-            if output.intent not in contract.allowed_intents:
-                raise ValueError(
-                    f"prediction intent is not allowed for {case.scenario_key}: {output.intent}"
-                )
-            if output.user_action not in contract.user_actions:
-                raise ValueError(
-                    f"prediction user_action is not allowed for {case.scenario_key}: "
-                    f"{output.user_action}"
-                )
             final_passes += 1
             if output.intent == case.labels.intent:
                 intent_matches += 1
@@ -121,24 +113,25 @@ def score_predictions(
             action_matches += 1
             action_true_positive[gold_action] += 1
 
-        for field_name, expected in case.labels.fields.items():
-            predicted_value = output.fields.get(field_name) if output is not None else None
-            expected_present = expected is not None
-            predicted_present = predicted_value is not None
-            if expected_present:
-                gold_present += 1
-                if predicted_present:
-                    slot_tp += 1
-                    if predicted_value in expected.accepted_values:
-                        exact_matches += 1
+        if output is not None:
+            for field_name, expected in case.labels.fields.items():
+                predicted_value = output.fields[field_name]
+                expected_present = expected is not None
+                predicted_present = predicted_value is not None
+                if expected_present:
+                    gold_present += 1
+                    if predicted_present:
+                        slot_tp += 1
+                        if predicted_value in expected.accepted_values:
+                            exact_matches += 1
+                    else:
+                        slot_fn += 1
+                        omitted += 1
                 else:
-                    slot_fn += 1
-                    omitted += 1
-            else:
-                gold_absent += 1
-                if predicted_present:
-                    slot_fp += 1
-                    hallucinated += 1
+                    gold_absent += 1
+                    if predicted_present:
+                        slot_fp += 1
+                        hallucinated += 1
 
         if gold_action == "change_detail":
             applicable_change_fields += 1
@@ -203,6 +196,24 @@ def _macro_f1(
         recall = _safe_ratio(tp, gold[label])
         class_scores.append(_f1(precision, recall))
     return sum(class_scores) / len(class_scores)
+
+
+def _contract_valid_output(
+    contract: EvaluationContract,
+    output: NormalizedPrediction | None,
+) -> NormalizedPrediction | None:
+    if output is None:
+        return None
+    try:
+        contract.validate_prediction(
+            intent=output.intent,
+            fields=output.fields,
+            user_action=output.user_action,
+            change_field=output.change_field,
+        )
+    except ValueError:
+        return None
+    return output
 
 
 def _f1(precision: float, recall: float) -> float:
