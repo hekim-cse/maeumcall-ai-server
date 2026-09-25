@@ -123,6 +123,24 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> dict:
                 "conversation_state": "collecting_reservation_info",
             }
 
+        if user_action == "change_info":
+            return {
+                "user_action": user_action,
+                "date": None,
+                "time": None,
+                "service_type": None,
+                "designer": None,
+                "user_name": None,
+                "selected_time": None,
+                "availability_status": None,
+                "availability_reason": None,
+                "available_time": None,
+                "alternative_times": [],
+                "availability_message_hint": None,
+                "reservation_confirmed": False,
+                "conversation_state": "collecting_reservation_info",
+            }
+
         return {
             "user_action": user_action,
             "conversation_state": "confirming_info",
@@ -192,7 +210,7 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> dict:
 
         if selected_time and selected_time not in alternative_times:
             return {
-                "user_action": "invalid_alternative_time",
+                "user_action": "select_alternative_time",
                 "selected_time": None,
                 "reservation_confirmed": False,
                 "conversation_state": "reservation_unavailable",

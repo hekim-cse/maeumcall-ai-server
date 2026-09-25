@@ -4,9 +4,12 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    allowed_string,
+    allowed_actions_json_for_state,
+    allowed_string_for_state,
+    build_state_action_contract,
     complete_validated_json,
     optional_string,
+    require_exact_keys,
 )
 
 DEFAULT_ABSENCE_STRUCTURED_RESULT: dict[str, Any] = {
@@ -17,17 +20,22 @@ DEFAULT_ABSENCE_STRUCTURED_RESULT: dict[str, Any] = {
     "user_name": None,
     "user_action": "unknown",
 }
-PROFESSOR_ABSENCE_USER_ACTIONS = frozenset(
+PROFESSOR_ABSENCE_ACTIONS_BY_STATE, PROFESSOR_ABSENCE_USER_ACTIONS = build_state_action_contract(
     {
-        "provide_absence_info",
-        "confirm_info",
-        "change_class_name",
-        "change_absence_date",
-        "change_absence_reason",
-        "change_user_name",
-        "go_closing",
-        "end_call",
-        "unknown",
+        "greeting": frozenset({"provide_absence_info", "unknown"}),
+        "collecting_absence_info": frozenset({"provide_absence_info", "unknown"}),
+        "confirming_absence_info": frozenset(
+            {
+                "confirm_info",
+                "change_class_name",
+                "change_absence_date",
+                "change_absence_reason",
+                "change_user_name",
+                "unknown",
+            }
+        ),
+        "absence_noted": frozenset({"go_closing", "unknown"}),
+        "closing": frozenset({"end_call", "unknown"}),
     }
 )
 
@@ -63,7 +71,10 @@ def analyze_professor_absence_user_message(
             {"role": "user", "content": prompt},
         ],
         completion=complete_hf_json,
-        validator=_normalize_absence_analysis_result,
+        validator=lambda parsed: _normalize_absence_analysis_result(
+            parsed,
+            conversation_state=conversation_state,
+        ),
         operation="professor_absence_extraction",
     )
 
@@ -72,12 +83,18 @@ def build_professor_absence_analysis_prompt(
     conversation_state: str,
     user_message: str,
 ) -> str:
+    allowed_actions = allowed_actions_json_for_state(
+        conversation_state,
+        PROFESSOR_ABSENCE_ACTIONS_BY_STATE,
+    )
     return f"""
 다음은 학생이 교수님께 결석 사유를 전달하는 전화 시뮬레이션입니다.
 사용자 발화를 분석해서 JSON 객체만 반환하세요.
 
 현재 conversation_state:
 {conversation_state}
+현재 상태에서 허용된 user_action:
+{allowed_actions}
 
 사용자 발화:
 {user_message}
@@ -123,7 +140,12 @@ def build_professor_absence_analysis_prompt(
 """
 
 
-def _normalize_absence_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
+def _normalize_absence_analysis_result(
+    parsed: dict[str, Any],
+    *,
+    conversation_state: str,
+) -> dict[str, Any]:
+    require_exact_keys(parsed, DEFAULT_ABSENCE_STRUCTURED_RESULT)
     result = DEFAULT_ABSENCE_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "absence_notice":
@@ -132,6 +154,11 @@ def _normalize_absence_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]
     for key in ["class_name", "absence_date", "absence_reason", "user_name"]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(parsed, "user_action", PROFESSOR_ABSENCE_USER_ACTIONS)
+    result["user_action"] = allowed_string_for_state(
+        parsed,
+        "user_action",
+        conversation_state=conversation_state,
+        allowed_by_state=PROFESSOR_ABSENCE_ACTIONS_BY_STATE,
+    )
 
     return result

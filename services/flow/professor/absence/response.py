@@ -6,6 +6,7 @@ from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 from services.flow.professor.absence.graph import professor_absence_graph
 from services.flow.professor.absence.llm_structured import (
+    PROFESSOR_ABSENCE_ACTIONS_BY_STATE,
     PROFESSOR_ABSENCE_USER_ACTIONS,
 )
 from services.flow.professor.absence.policy import compact_professor_absence_state
@@ -24,16 +25,7 @@ PROFESSOR_ABSENCE_CONTRACT = DetailedGraphContract(
     graph=professor_absence_graph,
     compact_state=compact_professor_absence_state,
     defaults={"professor_name": "교수님"},
-    allowed_conversation_states=frozenset(
-        {
-            "greeting",
-            "collecting_absence_info",
-            "confirming_absence_info",
-            "absence_noted",
-            "closing",
-            "END",
-        }
-    ),
+    client_resumable_states=frozenset(PROFESSOR_ABSENCE_ACTIONS_BY_STATE) | {"END"},
     validate_state=PROFESSOR_ABSENCE_STATE_CONTRACT.validate,
 )
 

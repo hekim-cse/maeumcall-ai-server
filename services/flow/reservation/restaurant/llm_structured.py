@@ -4,9 +4,12 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    allowed_string,
+    allowed_actions_json_for_state,
+    allowed_string_for_state,
+    build_state_action_contract,
     complete_validated_json,
     optional_string,
+    require_exact_keys,
 )
 
 DEFAULT_RESTAURANT_STRUCTURED_RESULT = {
@@ -18,21 +21,27 @@ DEFAULT_RESTAURANT_STRUCTURED_RESULT = {
     "user_action": "unknown",
     "selected_time": None,
 }
-RESTAURANT_USER_ACTIONS = frozenset(
+RESTAURANT_ACTIONS_BY_STATE, RESTAURANT_USER_ACTIONS = build_state_action_contract(
     {
-        "continue_collecting",
-        "confirm",
-        "change_date",
-        "change_time",
-        "change_party_size",
-        "change_user_name",
-        "change_info",
-        "confirm_reservation",
-        "ask_other_time",
-        "select_alternative_time",
-        "go_closing",
-        "end_call",
-        "unknown",
+        "greeting": frozenset({"continue_collecting", "unknown"}),
+        "collecting_reservation_info": frozenset({"continue_collecting", "unknown"}),
+        "confirming_info": frozenset(
+            {
+                "confirm",
+                "change_date",
+                "change_time",
+                "change_party_size",
+                "change_user_name",
+                "change_info",
+                "unknown",
+            }
+        ),
+        "reservation_available": frozenset({"confirm_reservation", "ask_other_time", "unknown"}),
+        "reservation_unavailable": frozenset(
+            {"select_alternative_time", "change_date", "ask_other_time", "unknown"}
+        ),
+        "reservation_confirmed": frozenset({"go_closing", "unknown"}),
+        "closing": frozenset({"end_call", "unknown"}),
     }
 )
 
@@ -44,11 +53,17 @@ def analyze_restaurant_reservation_user_message(
     """
     식당 예약 사용자 발화를 structured output으로 분석한다.
     """
+    allowed_actions = allowed_actions_json_for_state(
+        conversation_state,
+        RESTAURANT_ACTIONS_BY_STATE,
+    )
     prompt = f"""
 너는 식당 예약 전화 시뮬레이션 서버의 대화 분석기이다.
 
 현재 conversation_state:
 {conversation_state}
+현재 상태에서 허용된 user_action:
+{allowed_actions}
 
 사용자 발화:
 {user_message}
@@ -81,7 +96,7 @@ def analyze_restaurant_reservation_user_message(
 - change_time
 - change_party_size
 - change_user_name
-- change_info
+- change_info: 확인 중 기존 예약 정보를 모두 버리고 처음부터 다시 입력하겠다고 명시한 경우
 - confirm_reservation
 - ask_other_time
 - select_alternative_time
@@ -91,9 +106,12 @@ def analyze_restaurant_reservation_user_message(
 
 상태별 판단 기준:
 - collecting_reservation_info 또는 greeting: 예약 정보를 말하면 continue_collecting
-- confirming_info: 정보가 맞다고 하면 confirm, 날짜/시간/인원/이름 변경 요청이면 해당 change 액션
+- confirming_info: 정보가 맞다고 하면 confirm, 날짜/시간/인원/이름 변경 요청이면 해당 change 액션,
+  전체 정보를 처음부터 다시 입력하겠다고 명시하면 change_info, 변경 항목이나 전체 재입력 의도가
+  불명확하면 unknown
 - reservation_available: 예약 진행/확정이면 confirm_reservation, 다른 시간 요청이면 ask_other_time
-- reservation_unavailable: 제안 시간 선택이면 select_alternative_time, selected_time에 선택 시간을 넣는다
+- reservation_unavailable: 제안 시간 선택이면 select_alternative_time, 다른 날짜면 change_date,
+  다른 시간대를 요청하면 ask_other_time, selected_time에는 선택한 시간을 넣는다
 - reservation_confirmed: 감사/확인/마무리 응답이면 go_closing
 - closing: 더 할 말 없거나 감사 인사면 end_call
 """
@@ -110,12 +128,20 @@ def analyze_restaurant_reservation_user_message(
             },
         ],
         completion=complete_hf_json,
-        validator=_normalize_restaurant_analysis_result,
+        validator=lambda parsed: _normalize_restaurant_analysis_result(
+            parsed,
+            conversation_state=conversation_state,
+        ),
         operation="restaurant_extraction",
     )
 
 
-def _normalize_restaurant_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
+def _normalize_restaurant_analysis_result(
+    parsed: dict[str, Any],
+    *,
+    conversation_state: str,
+) -> dict[str, Any]:
+    require_exact_keys(parsed, DEFAULT_RESTAURANT_STRUCTURED_RESULT)
     result = DEFAULT_RESTAURANT_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "reservation":
@@ -124,6 +150,11 @@ def _normalize_restaurant_analysis_result(parsed: dict[str, Any]) -> dict[str, A
     for key in ["date", "time", "party_size", "user_name", "selected_time"]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(parsed, "user_action", RESTAURANT_USER_ACTIONS)
+    result["user_action"] = allowed_string_for_state(
+        parsed,
+        "user_action",
+        conversation_state=conversation_state,
+        allowed_by_state=RESTAURANT_ACTIONS_BY_STATE,
+    )
 
     return result

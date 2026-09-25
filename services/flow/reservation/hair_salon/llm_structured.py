@@ -4,9 +4,12 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    allowed_string,
+    allowed_actions_json_for_state,
+    allowed_string_for_state,
+    build_state_action_contract,
     complete_validated_json,
     optional_string,
+    require_exact_keys,
 )
 
 DEFAULT_HAIR_SALON_STRUCTURED_RESULT: dict[str, Any] = {
@@ -19,22 +22,30 @@ DEFAULT_HAIR_SALON_STRUCTURED_RESULT: dict[str, Any] = {
     "user_action": "unknown",
     "selected_time": None,
 }
-HAIR_SALON_USER_ACTIONS = frozenset(
+HAIR_SALON_ACTIONS_BY_STATE, HAIR_SALON_USER_ACTIONS = build_state_action_contract(
     {
-        "continue_collecting",
-        "confirm",
-        "change_date",
-        "change_time",
-        "change_service_type",
-        "change_designer",
-        "change_user_name",
-        "change_info",
-        "confirm_reservation",
-        "ask_other_time",
-        "select_alternative_time",
-        "go_closing",
-        "end_call",
-        "unknown",
+        "greeting": frozenset({"continue_collecting", "unknown"}),
+        "collecting_reservation_info": frozenset({"continue_collecting", "unknown"}),
+        "confirming_info": frozenset(
+            {
+                "confirm",
+                "change_date",
+                "change_time",
+                "change_service_type",
+                "change_designer",
+                "change_user_name",
+                "change_info",
+                "unknown",
+            }
+        ),
+        "reservation_available": frozenset(
+            {"confirm_reservation", "ask_other_time", "change_date", "unknown"}
+        ),
+        "reservation_unavailable": frozenset(
+            {"select_alternative_time", "change_date", "ask_other_time", "unknown"}
+        ),
+        "reservation_confirmed": frozenset({"go_closing", "unknown"}),
+        "closing": frozenset({"end_call", "unknown"}),
     }
 )
 
@@ -62,7 +73,10 @@ def analyze_hair_salon_reservation_user_message(
             {"role": "user", "content": prompt},
         ],
         completion=complete_hf_json,
-        validator=_normalize_hair_salon_analysis_result,
+        validator=lambda parsed: _normalize_hair_salon_analysis_result(
+            parsed,
+            conversation_state=conversation_state,
+        ),
         operation="hair_salon_extraction",
     )
 
@@ -71,8 +85,13 @@ def build_hair_salon_structured_prompt(
     conversation_state: str,
     user_message: str,
 ) -> str:
+    allowed_actions = allowed_actions_json_for_state(
+        conversation_state,
+        HAIR_SALON_ACTIONS_BY_STATE,
+    )
     return f"""
 현재 대화 상태: {conversation_state}
+현재 상태에서 허용된 user_action: {allowed_actions}
 사용자 발화: {user_message}
 
 사용자 발화에서 미용실 예약에 필요한 정보를 JSON으로 추출해라.
@@ -106,7 +125,7 @@ user_action 허용값:
 - change_service_type: 시술 종류를 바꾸려는 경우
 - change_designer: 디자이너를 바꾸려는 경우
 - change_user_name: 예약자 이름을 바꾸려는 경우
-- change_info: 어떤 정보를 바꾸려 하지만 항목이 불명확한 경우
+- change_info: 기존 예약 정보를 모두 버리고 처음부터 다시 입력하겠다고 명시한 경우
 - confirm_reservation: 예약 가능 안내 후 예약 확정을 요청하는 경우
 - ask_other_time: 다른 시간대를 요청하는 경우
 - select_alternative_time: 예약 불가 안내 후 제안된 대안 시간을 선택하는 경우
@@ -119,9 +138,12 @@ user_action 허용값:
 - confirming_info에서 "시간 바꿀게요"는 change_time
 - confirming_info에서 "시술 변경할게요"는 change_service_type
 - confirming_info에서 "디자이너 바꿀게요"는 change_designer
+- confirming_info에서 "예약 정보를 전부 처음부터 다시 말할게요"처럼 전체 재입력을 명시하면 change_info
+- confirming_info에서 변경 항목이나 전체 재입력 의도가 불명확하면 unknown
 - reservation_available에서 "네, 예약해주세요"는 confirm_reservation
 - reservation_available에서 "다른 시간 가능할까요"는 ask_other_time
 - reservation_unavailable에서 "오후 3시로 할게요"는 select_alternative_time, selected_time은 "오후 3시"
+- reservation_unavailable에서 다른 날짜를 원하면 change_date, 다른 시간대를 원하면 ask_other_time
 - reservation_confirmed에서 "네, 감사합니다"는 go_closing
 - closing에서 "네, 감사합니다"는 end_call
 
@@ -132,7 +154,12 @@ user_action 허용값:
 """
 
 
-def _normalize_hair_salon_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
+def _normalize_hair_salon_analysis_result(
+    parsed: dict[str, Any],
+    *,
+    conversation_state: str,
+) -> dict[str, Any]:
+    require_exact_keys(parsed, DEFAULT_HAIR_SALON_STRUCTURED_RESULT)
     result = DEFAULT_HAIR_SALON_STRUCTURED_RESULT.copy()
 
     if parsed.get("intent") != "reservation":
@@ -148,6 +175,11 @@ def _normalize_hair_salon_analysis_result(parsed: dict[str, Any]) -> dict[str, A
     ]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(parsed, "user_action", HAIR_SALON_USER_ACTIONS)
+    result["user_action"] = allowed_string_for_state(
+        parsed,
+        "user_action",
+        conversation_state=conversation_state,
+        allowed_by_state=HAIR_SALON_ACTIONS_BY_STATE,
+    )
 
     return result

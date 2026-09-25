@@ -24,6 +24,7 @@ def extract_info_node(state: HospitalReservationState) -> dict:
     analysis = analyze_hospital_reservation_user_message(
         current_state,
         user_message,
+        alternative_times=state.get("alternative_times") or [],
     )
 
     next_time = analysis.get("time") or state.get("time")
@@ -53,18 +54,13 @@ def extract_info_node(state: HospitalReservationState) -> dict:
 def parse_user_action_node(state: HospitalReservationState) -> dict:
     """
     structured 분석 단계에서 이미 user_action을 만들었으므로
-    이 노드는 상태 전이에 필요한 값을 그대로 전달한다.
+    이 노드는 검증을 마친 값을 상태 전이에 그대로 전달한다.
 
-    다만 대안 시간 선택 상태에서는 selected_time이 있으면
-    상태 전이를 위해 select_alternative_time으로 보정한다.
+    대안 시간을 고른 발화는 structured output 단계에서 반드시
+    select_alternative_time 계약을 통과해야 하며 여기서 행동을 추론하지 않는다.
     """
-    current_state = state.get("conversation_state") or "greeting"
     user_action = state.get("user_action") or "unknown"
     selected_time = state.get("selected_time")
-
-    if current_state in ["reservation_unavailable", "suggest_alternative"]:
-        if selected_time and user_action in ["unknown", "continue_collecting"]:
-            user_action = "select_alternative_time"
 
     return {
         "user_action": user_action,
@@ -80,6 +76,11 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
     user_action = state.get("user_action") or "unknown"
 
     if current_state == "closing":
+        if user_action != "end_call":
+            return {
+                "conversation_state": "closing",
+                "should_end_call": False,
+            }
         return {
             "conversation_state": "END",
             "should_end_call": True,
@@ -342,6 +343,11 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
         }
 
     if current_state == "reservation_confirmed":
+        if user_action != "go_closing":
+            return {
+                "conversation_state": "reservation_confirmed",
+                "should_end_call": False,
+            }
         return {
             "conversation_state": "closing",
             "should_end_call": False,

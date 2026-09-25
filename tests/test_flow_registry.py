@@ -77,7 +77,7 @@ def test_duplicate_scenario_registration_fails_during_registry_build(monkeypatch
 def test_chat_route_dispatches_detailed_registration(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hospital.nodes.analyze_hospital_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "intent": "reservation",
             "department": None,
             "date": None,

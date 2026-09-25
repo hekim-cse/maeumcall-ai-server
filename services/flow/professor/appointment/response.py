@@ -6,6 +6,7 @@ from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 from services.flow.professor.appointment.graph import professor_appointment_graph
 from services.flow.professor.appointment.llm_structured import (
+    PROFESSOR_APPOINTMENT_ACTIONS_BY_STATE,
     PROFESSOR_APPOINTMENT_USER_ACTIONS,
 )
 from services.flow.professor.appointment.policy import compact_professor_appointment_state
@@ -24,16 +25,7 @@ PROFESSOR_APPOINTMENT_CONTRACT = DetailedGraphContract(
     graph=professor_appointment_graph,
     compact_state=compact_professor_appointment_state,
     defaults={"professor_name": "교수님"},
-    allowed_conversation_states=frozenset(
-        {
-            "greeting",
-            "collecting_appointment_info",
-            "confirming_info",
-            "appointment_confirmed",
-            "closing",
-            "END",
-        }
-    ),
+    client_resumable_states=frozenset(PROFESSOR_APPOINTMENT_ACTIONS_BY_STATE) | {"END"},
     validate_state=PROFESSOR_APPOINTMENT_STATE_CONTRACT.validate,
 )
 

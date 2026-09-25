@@ -9,7 +9,10 @@ from services.flow.common.detailed_state_validation import ReservationStateContr
 from services.flow.common.scenario_keys import scenario_matches
 from services.flow.common.state_contract import DetailedGraphContract, complete_detailed_graph
 from services.flow.reservation.hospital.graph import hospital_reservation_graph
-from services.flow.reservation.hospital.llm_structured import HOSPITAL_USER_ACTIONS
+from services.flow.reservation.hospital.llm_structured import (
+    HOSPITAL_ACTIONS_BY_STATE,
+    HOSPITAL_USER_ACTIONS,
+)
 
 HOSPITAL_STATE_CONTRACT = ReservationStateContract(
     identity_field="service_name",
@@ -27,6 +30,7 @@ HOSPITAL_STATE_CONTRACT = ReservationStateContract(
         }
     ),
     allowed_intents=frozenset({"reservation", None}),
+    selected_time_empty_states=frozenset({"reservation_unavailable", "suggest_alternative"}),
 )
 
 
@@ -77,25 +81,8 @@ HOSPITAL_RESERVATION_CONTRACT = DetailedGraphContract(
     graph=hospital_reservation_graph,
     compact_state=compact_hospital_state,
     defaults={"service_name": "마음병원"},
-    allowed_conversation_states=frozenset(
-        {
-            "greeting",
-            "asking_purpose",
-            "asking_department",
-            "asking_date",
-            "asking_time",
-            "asking_user_name",
-            "confirming_info",
-            "checking_availability",
-            "reservation_lookup",
-            "reservation_available",
-            "reservation_unavailable",
-            "suggest_alternative",
-            "reservation_confirmed",
-            "closing",
-            "END",
-        }
-    ),
+    client_resumable_states=frozenset(HOSPITAL_ACTIONS_BY_STATE) | {"END"},
+    internal_transient_states=frozenset({"reservation_lookup"}),
     validate_state=HOSPITAL_STATE_CONTRACT.validate,
 )
 

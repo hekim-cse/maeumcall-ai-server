@@ -1,12 +1,16 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    allowed_string,
+    allowed_actions_json_for_state,
+    allowed_string_for_state,
+    build_state_action_contract,
     complete_validated_json,
     optional_string,
+    require_exact_keys,
 )
 
 DEFAULT_HOSPITAL_STRUCTURED_RESULT: dict[str, Any] = {
@@ -18,21 +22,34 @@ DEFAULT_HOSPITAL_STRUCTURED_RESULT: dict[str, Any] = {
     "user_action": "unknown",
     "selected_time": None,
 }
-HOSPITAL_USER_ACTIONS = frozenset(
+HOSPITAL_ACTIONS_BY_STATE, HOSPITAL_USER_ACTIONS = build_state_action_contract(
     {
-        "continue_collecting",
-        "confirm_reservation_info",
-        "change_department",
-        "change_date",
-        "change_time",
-        "change_user_name",
-        "lookup_availability",
-        "confirm_available_time",
-        "ask_other_time",
-        "select_alternative_time",
-        "go_closing",
-        "end_call",
-        "unknown",
+        "greeting": frozenset({"continue_collecting", "unknown"}),
+        "asking_purpose": frozenset({"continue_collecting", "unknown"}),
+        "asking_department": frozenset({"continue_collecting", "unknown"}),
+        "asking_date": frozenset({"continue_collecting", "unknown"}),
+        "asking_time": frozenset({"continue_collecting", "unknown"}),
+        "asking_user_name": frozenset({"continue_collecting", "unknown"}),
+        "confirming_info": frozenset(
+            {
+                "confirm_reservation_info",
+                "change_department",
+                "change_date",
+                "change_time",
+                "change_user_name",
+                "unknown",
+            }
+        ),
+        "checking_availability": frozenset({"lookup_availability", "unknown"}),
+        "reservation_available": frozenset({"confirm_available_time", "ask_other_time", "unknown"}),
+        "reservation_unavailable": frozenset(
+            {"change_date", "ask_other_time", "select_alternative_time", "unknown"}
+        ),
+        "suggest_alternative": frozenset(
+            {"change_date", "ask_other_time", "select_alternative_time", "unknown"}
+        ),
+        "reservation_confirmed": frozenset({"go_closing", "unknown"}),
+        "closing": frozenset({"end_call", "unknown"}),
     }
 )
 
@@ -40,6 +57,7 @@ HOSPITAL_USER_ACTIONS = frozenset(
 def analyze_hospital_reservation_user_message(
     conversation_state: str,
     user_message: str,
+    alternative_times: list[str] | None = None,
 ) -> dict[str, Any]:
     """
     병원 예약 사용자 발화를 structured output(JSON)으로 분석한다.
@@ -60,14 +78,22 @@ def analyze_hospital_reservation_user_message(
         },
         {
             "role": "user",
-            "content": _build_user_prompt(conversation_state, user_message),
+            "content": _build_user_prompt(
+                conversation_state,
+                user_message,
+                alternative_times,
+            ),
         },
     ]
 
     return complete_validated_json(
         messages,
         completion=complete_hf_json,
-        validator=_normalize_hospital_analysis_result,
+        validator=lambda parsed: _normalize_hospital_analysis_result(
+            parsed,
+            conversation_state=conversation_state,
+            alternative_times=alternative_times,
+        ),
         operation="hospital_extraction",
     )
 
@@ -96,7 +122,8 @@ markdown, 설명, 코드블록, 따옴표 밖 문장은 출력하지 않는다.
 - date는 오늘, 내일, 모레, 다음 주 월요일, 6월 10일 같은 예약 날짜이다.
 - time은 오전, 오후, 오전 10시, 오후 3시 같은 시간 표현이다.
 - user_name은 예약자 이름이며 발화에 없으면 null이다.
-- selected_time은 사용자가 대안 시간 중 하나를 고른 경우에만 채운다.
+- selected_time은 사용자가 available_alternative_times 중 하나를 고른 경우에만
+  해당 목록의 시간 문자열을 그대로 채운다.
 - 알 수 없는 값은 null로 둔다.
 
 conversation_state별 user_action 규칙:
@@ -111,6 +138,7 @@ conversation_state별 user_action 규칙:
 
 2) checking_availability
 - 예약 가능 여부 확인을 기다리거나 진행하면 "lookup_availability"
+- 알 수 없으면 "unknown"
 
 3) reservation_available
 - 안내된 가능 시간으로 예약하겠다고 하면 "confirm_available_time"
@@ -131,25 +159,44 @@ conversation_state별 user_action 규칙:
 
 6) reservation_confirmed
 - 감사 인사나 마무리 응답이면 "go_closing"
+- 알 수 없으면 "unknown"
 
 7) closing
 - 감사 인사나 더 이상 문의가 없다는 응답이면 "end_call"
+- 알 수 없으면 "unknown"
 
 그 외 상태:
 - 예약 정보를 말하는 중이면 "unknown" 또는 "continue_collecting"
 """.strip()
 
 
-def _build_user_prompt(conversation_state: str, user_message: str) -> str:
+def _build_user_prompt(
+    conversation_state: str,
+    user_message: str,
+    alternative_times: list[str] | None,
+) -> str:
+    allowed_actions = allowed_actions_json_for_state(
+        conversation_state,
+        HOSPITAL_ACTIONS_BY_STATE,
+    )
+    available_alternatives = json.dumps(alternative_times or [], ensure_ascii=False)
     return f"""
 conversation_state: {conversation_state}
+allowed_user_actions: {allowed_actions}
+available_alternative_times: {available_alternatives}
 user_message: {user_message}
 
 위 발화를 JSON으로 분석해라.
 """.strip()
 
 
-def _normalize_hospital_analysis_result(parsed: dict[str, Any]) -> dict[str, Any]:
+def _normalize_hospital_analysis_result(
+    parsed: dict[str, Any],
+    *,
+    conversation_state: str,
+    alternative_times: list[str] | None,
+) -> dict[str, Any]:
+    require_exact_keys(parsed, DEFAULT_HOSPITAL_STRUCTURED_RESULT)
     if "intent" not in parsed:
         raise ValueError("intent is required")
     intent = parsed.get("intent")
@@ -162,6 +209,25 @@ def _normalize_hospital_analysis_result(parsed: dict[str, Any]) -> dict[str, Any
     for key in ["department", "date", "time", "user_name", "selected_time"]:
         result[key] = optional_string(parsed, key)
 
-    result["user_action"] = allowed_string(parsed, "user_action", HOSPITAL_USER_ACTIONS)
+    result["user_action"] = allowed_string_for_state(
+        parsed,
+        "user_action",
+        conversation_state=conversation_state,
+        allowed_by_state=HOSPITAL_ACTIONS_BY_STATE,
+    )
+
+    selected_time = result["selected_time"]
+    selects_alternative = result["user_action"] == "select_alternative_time"
+    is_alternative_state = conversation_state in {
+        "reservation_unavailable",
+        "suggest_alternative",
+    }
+
+    if not is_alternative_state and selected_time is not None:
+        raise ValueError("selected_time is allowed only while selecting an alternative")
+    if is_alternative_state and selects_alternative != (selected_time is not None):
+        raise ValueError("select_alternative_time and selected_time must be provided together")
+    if selected_time is not None and selected_time not in (alternative_times or []):
+        raise ValueError("selected_time must match one of the offered alternatives")
 
     return result

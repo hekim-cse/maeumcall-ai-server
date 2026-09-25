@@ -1,8 +1,45 @@
 import pytest
 
 from services.flow.reservation.hair_salon.graph import hair_salon_reservation_graph
+from services.flow.reservation.hair_salon.nodes import decide_hair_salon_state_node
 
 pytestmark = pytest.mark.graph_flow
+
+
+def test_hair_salon_change_info_reopens_all_reservation_fields():
+    result = decide_hair_salon_state_node(
+        {
+            "conversation_state": "confirming_info",
+            "user_action": "change_info",
+            "date": "내일",
+            "time": "오후 3시",
+            "service_type": "커트",
+            "designer": "수진",
+            "user_name": "김개굴",
+            "selected_time": "오후 3시",
+        }
+    )
+
+    assert result["conversation_state"] == "collecting_reservation_info"
+    assert all(
+        result[field] is None for field in ("date", "time", "service_type", "designer", "user_name")
+    )
+    assert result["selected_time"] is None
+
+
+def test_hair_salon_invalid_alternative_keeps_public_action_contract():
+    result = decide_hair_salon_state_node(
+        {
+            "conversation_state": "reservation_unavailable",
+            "user_action": "select_alternative_time",
+            "selected_time": "오후 5시",
+            "alternative_times": ["오후 3시", "오후 4시"],
+        }
+    )
+
+    assert result["user_action"] == "select_alternative_time"
+    assert result["conversation_state"] == "reservation_unavailable"
+    assert result["selected_time"] is None
 
 
 def _patch_hair_salon_analysis(monkeypatch):

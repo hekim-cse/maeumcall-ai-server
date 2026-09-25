@@ -122,6 +122,32 @@ def test_reservation_contract_rejects_an_incoherent_availability_result():
         RESTAURANT_STATE_CONTRACT.validate(state)
 
 
+@pytest.mark.parametrize(
+    "conversation_state",
+    ["reservation_unavailable", "suggest_alternative"],
+)
+def test_hospital_contract_rejects_stale_selection_while_waiting_for_alternative(
+    conversation_state,
+):
+    state = _reservation_state(HOSPITAL_STATE_CONTRACT)
+    state.update(
+        {
+            "department": "내과",
+            "date": "내일",
+            "time": "오후",
+            "user_name": "김개굴",
+            "conversation_state": conversation_state,
+            "availability_status": "unavailable",
+            "availability_reason": "requested_time_full",
+            "alternative_times": ["오후 4시", "오후 5시"],
+            "selected_time": "오후 4시",
+        }
+    )
+
+    with pytest.raises(ScenarioStateContractError):
+        HOSPITAL_STATE_CONTRACT.validate(state)
+
+
 def test_reservation_contract_returns_a_typed_error_for_non_string_alternatives():
     state = _reservation_state(STUDY_ROOM_STATE_CONTRACT)
     state["alternative_times"] = [{"time": "오후 3시"}]
