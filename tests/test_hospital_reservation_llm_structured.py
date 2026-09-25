@@ -67,10 +67,11 @@ def test_hospital_structured_analysis_handles_markdown_json(monkeypatch):
 
 
 def test_hospital_structured_analysis_extracts_selected_time(monkeypatch):
-    monkeypatch.setattr(
-        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
-        lambda messages: (
-            """
+    captured_messages = []
+
+    def complete(messages):
+        captured_messages.extend(messages)
+        return """
         {
           "intent": null,
           "department": null,
@@ -81,16 +82,186 @@ def test_hospital_structured_analysis_extracts_selected_time(monkeypatch):
           "selected_time": "오후 4시"
         }
         """
-        ),
+
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
+        complete,
     )
 
     result = analyze_hospital_reservation_user_message(
         "suggest_alternative",
         "오후 4시로 하겠습니다.",
+        alternative_times=["오후 4시", "오후 5시"],
     )
 
     assert result["user_action"] == "select_alternative_time"
     assert result["selected_time"] == "오후 4시"
+    assert (
+        'available_alternative_times: ["오후 4시", "오후 5시"]' in captured_messages[-1]["content"]
+    )
+
+
+@pytest.mark.parametrize(
+    "conversation_state",
+    ["reservation_unavailable", "suggest_alternative"],
+)
+def test_hospital_structured_analysis_retries_noncanonical_alternative_action(
+    monkeypatch,
+    conversation_state,
+):
+    responses = iter(
+        [
+            '{"intent":null,"department":null,"date":null,"time":null,'
+            '"user_name":null,"user_action":"continue_collecting",'
+            '"selected_time":"오후 4시"}',
+            '{"intent":null,"department":null,"date":null,"time":null,'
+            '"user_name":null,"user_action":"select_alternative_time",'
+            '"selected_time":"오후 4시"}',
+        ]
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
+        lambda messages: next(responses),
+    )
+
+    result = analyze_hospital_reservation_user_message(
+        conversation_state,
+        "오후 4시로 하겠습니다.",
+        alternative_times=["오후 4시", "오후 5시"],
+    )
+
+    assert result["user_action"] == "select_alternative_time"
+    assert result["selected_time"] == "오후 4시"
+
+
+@pytest.mark.parametrize(
+    "conversation_state",
+    ["reservation_unavailable", "suggest_alternative"],
+)
+def test_hospital_structured_analysis_rejects_repeated_noncanonical_alternative_action(
+    monkeypatch,
+    conversation_state,
+):
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
+        lambda messages: (
+            '{"intent":null,"department":null,"date":null,"time":null,'
+            '"user_name":null,"user_action":"continue_collecting",'
+            '"selected_time":"오후 4시"}'
+        ),
+    )
+
+    with pytest.raises(AIResponseValidationError):
+        analyze_hospital_reservation_user_message(
+            conversation_state,
+            "오후 4시로 하겠습니다.",
+            alternative_times=["오후 4시", "오후 5시"],
+        )
+
+
+@pytest.mark.parametrize(
+    ("invalid_action", "invalid_selected_time"),
+    [
+        ("unknown", "오후 4시"),
+        ("select_alternative_time", None),
+        ("select_alternative_time", "오후 9시"),
+        ("select_alternative_time", "오 후 4 시"),
+    ],
+)
+@pytest.mark.parametrize(
+    "conversation_state",
+    ["reservation_unavailable", "suggest_alternative"],
+)
+def test_hospital_structured_analysis_retries_inconsistent_alternative_selection(
+    monkeypatch,
+    conversation_state,
+    invalid_action,
+    invalid_selected_time,
+):
+    invalid_selected_time_json = (
+        "null" if invalid_selected_time is None else f'"{invalid_selected_time}"'
+    )
+    responses = iter(
+        [
+            '{"intent":null,"department":null,"date":null,"time":null,'
+            f'"user_name":null,"user_action":"{invalid_action}",'
+            f'"selected_time":{invalid_selected_time_json}}}',
+            '{"intent":null,"department":null,"date":null,"time":null,'
+            '"user_name":null,"user_action":"select_alternative_time",'
+            '"selected_time":"오후 4시"}',
+        ]
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
+        lambda messages: next(responses),
+    )
+
+    result = analyze_hospital_reservation_user_message(
+        conversation_state,
+        "오후 4시로 하겠습니다.",
+        alternative_times=["오후 4시", "오후 5시"],
+    )
+
+    assert result["user_action"] == "select_alternative_time"
+    assert result["selected_time"] == "오후 4시"
+
+
+@pytest.mark.parametrize(
+    ("invalid_action", "invalid_selected_time"),
+    [
+        ("unknown", "오후 4시"),
+        ("select_alternative_time", None),
+        ("select_alternative_time", "오후 9시"),
+        ("select_alternative_time", "오 후 4 시"),
+    ],
+)
+@pytest.mark.parametrize(
+    "conversation_state",
+    ["reservation_unavailable", "suggest_alternative"],
+)
+def test_hospital_structured_analysis_rejects_repeated_inconsistent_selection(
+    monkeypatch,
+    conversation_state,
+    invalid_action,
+    invalid_selected_time,
+):
+    invalid_selected_time_json = (
+        "null" if invalid_selected_time is None else f'"{invalid_selected_time}"'
+    )
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
+        lambda messages: (
+            '{"intent":null,"department":null,"date":null,"time":null,'
+            f'"user_name":null,"user_action":"{invalid_action}",'
+            f'"selected_time":{invalid_selected_time_json}}}'
+        ),
+    )
+
+    with pytest.raises(AIResponseValidationError):
+        analyze_hospital_reservation_user_message(
+            conversation_state,
+            "오후 4시로 하겠습니다.",
+            alternative_times=["오후 4시", "오후 5시"],
+        )
+
+
+def test_hospital_structured_analysis_rejects_selected_time_outside_alternative_state(
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.llm_structured.complete_hf_json",
+        lambda messages: (
+            '{"intent":"reservation","department":null,"date":null,"time":null,'
+            '"user_name":null,"user_action":"continue_collecting",'
+            '"selected_time":"오후 4시"}'
+        ),
+    )
+
+    with pytest.raises(AIResponseValidationError):
+        analyze_hospital_reservation_user_message(
+            "greeting",
+            "병원 예약을 하고 싶어요.",
+        )
 
 
 def test_hospital_structured_analysis_rejects_invalid_json_after_retry(monkeypatch):

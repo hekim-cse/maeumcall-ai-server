@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
@@ -56,6 +57,7 @@ HOSPITAL_ACTIONS_BY_STATE, HOSPITAL_USER_ACTIONS = build_state_action_contract(
 def analyze_hospital_reservation_user_message(
     conversation_state: str,
     user_message: str,
+    alternative_times: list[str] | None = None,
 ) -> dict[str, Any]:
     """
     병원 예약 사용자 발화를 structured output(JSON)으로 분석한다.
@@ -76,7 +78,11 @@ def analyze_hospital_reservation_user_message(
         },
         {
             "role": "user",
-            "content": _build_user_prompt(conversation_state, user_message),
+            "content": _build_user_prompt(
+                conversation_state,
+                user_message,
+                alternative_times,
+            ),
         },
     ]
 
@@ -86,6 +92,7 @@ def analyze_hospital_reservation_user_message(
         validator=lambda parsed: _normalize_hospital_analysis_result(
             parsed,
             conversation_state=conversation_state,
+            alternative_times=alternative_times,
         ),
         operation="hospital_extraction",
     )
@@ -115,7 +122,8 @@ markdown, 설명, 코드블록, 따옴표 밖 문장은 출력하지 않는다.
 - date는 오늘, 내일, 모레, 다음 주 월요일, 6월 10일 같은 예약 날짜이다.
 - time은 오전, 오후, 오전 10시, 오후 3시 같은 시간 표현이다.
 - user_name은 예약자 이름이며 발화에 없으면 null이다.
-- selected_time은 사용자가 대안 시간 중 하나를 고른 경우에만 채운다.
+- selected_time은 사용자가 available_alternative_times 중 하나를 고른 경우에만
+  해당 목록의 시간 문자열을 그대로 채운다.
 - 알 수 없는 값은 null로 둔다.
 
 conversation_state별 user_action 규칙:
@@ -162,14 +170,20 @@ conversation_state별 user_action 규칙:
 """.strip()
 
 
-def _build_user_prompt(conversation_state: str, user_message: str) -> str:
+def _build_user_prompt(
+    conversation_state: str,
+    user_message: str,
+    alternative_times: list[str] | None,
+) -> str:
     allowed_actions = allowed_actions_json_for_state(
         conversation_state,
         HOSPITAL_ACTIONS_BY_STATE,
     )
+    available_alternatives = json.dumps(alternative_times or [], ensure_ascii=False)
     return f"""
 conversation_state: {conversation_state}
 allowed_user_actions: {allowed_actions}
+available_alternative_times: {available_alternatives}
 user_message: {user_message}
 
 위 발화를 JSON으로 분석해라.
@@ -180,6 +194,7 @@ def _normalize_hospital_analysis_result(
     parsed: dict[str, Any],
     *,
     conversation_state: str,
+    alternative_times: list[str] | None,
 ) -> dict[str, Any]:
     require_exact_keys(parsed, DEFAULT_HOSPITAL_STRUCTURED_RESULT)
     if "intent" not in parsed:
@@ -200,5 +215,19 @@ def _normalize_hospital_analysis_result(
         conversation_state=conversation_state,
         allowed_by_state=HOSPITAL_ACTIONS_BY_STATE,
     )
+
+    selected_time = result["selected_time"]
+    selects_alternative = result["user_action"] == "select_alternative_time"
+    is_alternative_state = conversation_state in {
+        "reservation_unavailable",
+        "suggest_alternative",
+    }
+
+    if not is_alternative_state and selected_time is not None:
+        raise ValueError("selected_time is allowed only while selecting an alternative")
+    if is_alternative_state and selects_alternative != (selected_time is not None):
+        raise ValueError("select_alternative_time and selected_time must be provided together")
+    if selected_time is not None and selected_time not in (alternative_times or []):
+        raise ValueError("selected_time must match one of the offered alternatives")
 
     return result

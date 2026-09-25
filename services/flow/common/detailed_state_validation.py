@@ -17,6 +17,7 @@ class ReservationStateContract:
     allowed_actions: frozenset[str]
     information_complete_states: frozenset[str]
     allowed_intents: frozenset[str | None] = frozenset({"reservation"})
+    selected_time_empty_states: frozenset[str] = frozenset()
 
     @property
     def expected_fields(self) -> frozenset[str]:
@@ -95,6 +96,11 @@ class ReservationStateContract:
             _invalid_state()
 
         conversation_state = state["conversation_state"]
+        if (
+            conversation_state in self.selected_time_empty_states
+            and state.get("selected_time") is not None
+        ):
+            _invalid_state()
         if conversation_state in self.information_complete_states and any(
             state.get(field) is None for field in self.required_fields
         ):

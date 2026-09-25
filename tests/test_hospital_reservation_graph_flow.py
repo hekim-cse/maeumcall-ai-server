@@ -1,7 +1,7 @@
 import pytest
 
 from services.flow.reservation.hospital import graph as graph_module
-from services.flow.reservation.hospital.nodes import decide_next_state_node
+from services.flow.reservation.hospital.nodes import decide_next_state_node, extract_info_node
 
 pytestmark = pytest.mark.graph_flow
 
@@ -20,7 +20,7 @@ def test_hospital_terminal_state_waits_when_end_intent_is_unknown(conversation_s
 
 
 def _patch_hospital_analysis(monkeypatch):
-    def fake_analyze(conversation_state, user_message):
+    def fake_analyze(conversation_state, user_message, alternative_times=None):
         if conversation_state in ["greeting", "collecting_reservation_info"]:
             if "내일" in user_message and "오후" in user_message:
                 return {
@@ -214,7 +214,7 @@ def _patch_hospital_analysis(monkeypatch):
 
     monkeypatch.setattr(
         "services.flow.reservation.hospital.nodes.analyze_hospital_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "user_name": "김개굴",
             **fake_analyze(conversation_state, user_message),
         },
@@ -230,6 +230,38 @@ def _invoke(state: dict, monkeypatch):
     _patch_hospital_analysis(monkeypatch)
 
     return graph_module.hospital_reservation_graph.invoke(state)
+
+
+def test_extract_info_passes_server_alternatives_to_structured_analysis(monkeypatch):
+    captured_alternatives = None
+
+    def analyze(conversation_state, user_message, alternative_times=None):
+        nonlocal captured_alternatives
+        captured_alternatives = alternative_times
+        return {
+            "intent": None,
+            "department": None,
+            "date": None,
+            "time": None,
+            "user_name": None,
+            "user_action": "unknown",
+            "selected_time": None,
+        }
+
+    monkeypatch.setattr(
+        "services.flow.reservation.hospital.nodes.analyze_hospital_reservation_user_message",
+        analyze,
+    )
+
+    extract_info_node(
+        {
+            "conversation_state": "suggest_alternative",
+            "user_message": "첫 번째 시간으로 할게요.",
+            "alternative_times": ["오후 4시", "오후 5시"],
+        }
+    )
+
+    assert captured_alternatives == ["오후 4시", "오후 5시"]
 
 
 def test_available_reservation_full_flow(monkeypatch):
@@ -582,7 +614,7 @@ def test_reservation_unavailable_change_date_flow(monkeypatch):
 def test_confirming_info_unknown_keeps_state(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hospital.nodes.analyze_hospital_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "intent": None,
             "department": None,
             "date": None,
