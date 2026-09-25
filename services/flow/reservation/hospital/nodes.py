@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from services.flow.reservation.common.time_utils import (
-    is_time_in_options,
-)
+from llm.structured_output import apply_action_field_delta
 from services.flow.reservation.hospital.availability import resolve_hospital_availability
 from services.flow.reservation.hospital.llm_structured import (
+    HOSPITAL_CHANGE_TARGETS,
     analyze_hospital_reservation_user_message,
 )
 from services.flow.reservation.hospital.policy import clear_reservation_lookup_fields
@@ -27,20 +26,25 @@ def extract_info_node(state: HospitalReservationState) -> dict:
         alternative_times=state.get("alternative_times") or [],
     )
 
-    next_time = analysis.get("time") or state.get("time")
-
-    if current_state == "suggest_alternative":
-        next_time = state.get("time")
+    current_fields = {
+        "department": state.get("department"),
+        "date": state.get("date"),
+        "time": state.get("time"),
+        "user_name": state.get("user_name"),
+        "selected_time": state.get("selected_time"),
+    }
+    next_fields = apply_action_field_delta(
+        current_fields,
+        {key: analysis.get(key) for key in current_fields},
+        user_action=analysis["user_action"],
+        change_targets=HOSPITAL_CHANGE_TARGETS,
+    )
 
     return {
         "intent": analysis.get("intent") or state.get("intent"),
-        "department": analysis.get("department") or state.get("department"),
-        "date": analysis.get("date") or state.get("date"),
-        "time": next_time,
-        "user_name": analysis.get("user_name") or state.get("user_name"),
+        **next_fields,
         "last_ai_message": state.get("last_ai_message"),
         "user_action": analysis.get("user_action") or "unknown",
-        "selected_time": analysis.get("selected_time") or state.get("selected_time"),
         "history": state.get("history") or [],
         "availability_status": state.get("availability_status"),
         "availability_reason": state.get("availability_reason"),
@@ -95,28 +99,30 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
 
         if user_action == "change_department":
             return {
-                "conversation_state": "asking_department",
+                "conversation_state": _hospital_collection_state(state),
                 "should_end_call": False,
+                **clear_reservation_lookup_fields(),
             }
 
         if user_action == "change_date":
             return {
-                "conversation_state": "asking_date",
-                "time": None,
+                "conversation_state": _hospital_collection_state(state),
+                "time": state.get("time") if state.get("date") else None,
                 "should_end_call": False,
                 **clear_reservation_lookup_fields(),
             }
 
         if user_action == "change_time":
             return {
-                "conversation_state": "asking_time",
+                "conversation_state": _hospital_collection_state(state),
                 "should_end_call": False,
+                **clear_reservation_lookup_fields(),
             }
 
         if user_action == "change_user_name":
             return {
-                "conversation_state": "asking_user_name",
-                "user_name": None,
+                "conversation_state": _hospital_collection_state(state),
+                "user_name": state.get("user_name"),
                 "should_end_call": False,
             }
 
@@ -269,8 +275,8 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
     if current_state == "reservation_unavailable":
         if user_action == "change_date":
             return {
-                "conversation_state": "asking_date",
-                "time": None,
+                "conversation_state": _hospital_collection_state(state),
+                "time": state.get("time") if state.get("date") else None,
                 "should_end_call": False,
                 **clear_reservation_lookup_fields(),
             }
@@ -279,7 +285,7 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
             selected_time = state.get("selected_time")
             alternative_times = state.get("alternative_times") or []
 
-            if is_time_in_options(selected_time, alternative_times):
+            if selected_time in alternative_times:
                 return {
                     "conversation_state": "reservation_confirmed",
                     "reservation_confirmed": True,
@@ -287,11 +293,7 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
                     "should_end_call": False,
                 }
 
-            return {
-                "conversation_state": "suggest_alternative",
-                "selected_time": None,
-                "should_end_call": False,
-            }
+            raise RuntimeError("validated alternative selection is missing from server options")
 
         if user_action == "ask_other_time":
             return {
@@ -309,7 +311,7 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
             selected_time = state.get("selected_time")
             alternative_times = state.get("alternative_times") or []
 
-            if is_time_in_options(selected_time, alternative_times):
+            if selected_time in alternative_times:
                 return {
                     "conversation_state": "reservation_confirmed",
                     "reservation_confirmed": True,
@@ -317,16 +319,12 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
                     "should_end_call": False,
                 }
 
-            return {
-                "conversation_state": "suggest_alternative",
-                "selected_time": None,
-                "should_end_call": False,
-            }
+            raise RuntimeError("validated alternative selection is missing from server options")
 
         if user_action == "change_date":
             return {
-                "conversation_state": "asking_date",
-                "time": None,
+                "conversation_state": _hospital_collection_state(state),
+                "time": state.get("time") if state.get("date") else None,
                 "should_end_call": False,
                 **clear_reservation_lookup_fields(),
             }
@@ -359,6 +357,18 @@ def decide_next_state_node(state: HospitalReservationState) -> dict:
     }
 
 
+def _hospital_collection_state(state: HospitalReservationState) -> str:
+    if not state.get("department"):
+        return "asking_department"
+    if not state.get("date"):
+        return "asking_date"
+    if not state.get("time"):
+        return "asking_time"
+    if not state.get("user_name"):
+        return "asking_user_name"
+    return "confirming_info"
+
+
 def attach_recommended_replies_node(state: HospitalReservationState) -> dict:
     conversation_state = state.get("conversation_state") or "asking_purpose"
     replies = get_recommended_replies(conversation_state)
@@ -381,6 +391,7 @@ def check_availability_node(state: HospitalReservationState) -> dict:
 
     return {
         **result,
+        "selected_time": None,
         "conversation_state": next_state,
         "should_end_call": False,
     }

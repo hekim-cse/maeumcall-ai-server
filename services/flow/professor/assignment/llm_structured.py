@@ -4,12 +4,16 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    ActionFieldRule,
+    action_field_rules_json_for_state,
     allowed_actions_json_for_state,
     allowed_string_for_state,
+    build_action_field_contract,
     build_state_action_contract,
     complete_validated_json,
     optional_string,
     require_exact_keys,
+    validate_action_field_delta,
 )
 
 DEFAULT_ASSIGNMENT_STRUCTURED_RESULT: dict[str, Any] = {
@@ -29,6 +33,24 @@ PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE, PROFESSOR_ASSIGNMENT_USER_ACTIONS = (
             "closing": frozenset({"end_call", "unknown"}),
         }
     )
+)
+PROFESSOR_ASSIGNMENT_FIELD_NAMES = frozenset(
+    {"course_name", "assignment_topic", "question", "user_name"}
+)
+PROFESSOR_ASSIGNMENT_ACTION_FIELD_CONTRACT = build_action_field_contract(
+    field_names=PROFESSOR_ASSIGNMENT_FIELD_NAMES,
+    user_actions=PROFESSOR_ASSIGNMENT_USER_ACTIONS,
+    rules={action: ActionFieldRule() for action in PROFESSOR_ASSIGNMENT_USER_ACTIONS}
+    | {
+        "provide_assignment_info": ActionFieldRule(
+            allowed_fields=PROFESSOR_ASSIGNMENT_FIELD_NAMES,
+            require_any=True,
+        ),
+        "ask_follow_up": ActionFieldRule(
+            allowed_fields=frozenset({"assignment_topic", "question"}),
+            require_any=True,
+        ),
+    },
 )
 
 
@@ -79,6 +101,11 @@ def build_professor_assignment_analysis_prompt(
         conversation_state,
         PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE,
     )
+    action_field_rules = action_field_rules_json_for_state(
+        conversation_state,
+        allowed_by_state=PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE,
+        contract=PROFESSOR_ASSIGNMENT_ACTION_FIELD_CONTRACT,
+    )
     return f"""
 다음은 교수님께 과제 관련 문의를 하는 전화 시뮬레이션입니다.
 사용자 발화를 분석해서 JSON 객체만 반환하세요.
@@ -87,6 +114,8 @@ def build_professor_assignment_analysis_prompt(
 {conversation_state}
 현재 상태에서 허용된 user_action:
 {allowed_actions}
+현재 상태의 행동별 이번 턴 필드 계약:
+{action_field_rules}
 
 사용자 발화:
 {user_message}
@@ -145,6 +174,12 @@ def _normalize_assignment_analysis_result(
         "user_action",
         conversation_state=conversation_state,
         allowed_by_state=PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE,
+    )
+
+    validate_action_field_delta(
+        {key: result[key] for key in PROFESSOR_ASSIGNMENT_FIELD_NAMES},
+        user_action=result["user_action"],
+        contract=PROFESSOR_ASSIGNMENT_ACTION_FIELD_CONTRACT,
     )
 
     return result

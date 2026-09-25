@@ -46,7 +46,7 @@ def test_hospital_structured_analysis_handles_markdown_json(monkeypatch):
             """```json
         {"intent":"reservation"}
         ```""",
-            '{"intent":"reservation","department":"피부과","date":"모레","time":"오전 10시","user_name":"김개굴","user_action":"confirm_reservation_info","selected_time":null}',
+            '{"intent":"reservation","department":null,"date":null,"time":null,"user_name":null,"user_action":"confirm_reservation_info","selected_time":null}',
         ]
     )
     monkeypatch.setattr(
@@ -60,9 +60,9 @@ def test_hospital_structured_analysis_handles_markdown_json(monkeypatch):
     )
 
     assert result["intent"] == "reservation"
-    assert result["department"] == "피부과"
-    assert result["date"] == "모레"
-    assert result["time"] == "오전 10시"
+    assert result["department"] is None
+    assert result["date"] is None
+    assert result["time"] is None
     assert result["user_action"] == "confirm_reservation_info"
 
 

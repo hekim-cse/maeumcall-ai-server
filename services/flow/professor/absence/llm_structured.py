@@ -4,12 +4,16 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    ActionFieldRule,
+    action_field_rules_json_for_state,
     allowed_actions_json_for_state,
     allowed_string_for_state,
+    build_action_field_contract,
     build_state_action_contract,
     complete_validated_json,
     optional_string,
     require_exact_keys,
+    validate_action_field_delta,
 )
 
 DEFAULT_ABSENCE_STRUCTURED_RESULT: dict[str, Any] = {
@@ -37,6 +41,30 @@ PROFESSOR_ABSENCE_ACTIONS_BY_STATE, PROFESSOR_ABSENCE_USER_ACTIONS = build_state
         "absence_noted": frozenset({"go_closing", "unknown"}),
         "closing": frozenset({"end_call", "unknown"}),
     }
+)
+PROFESSOR_ABSENCE_FIELD_NAMES = frozenset(
+    {"class_name", "absence_date", "absence_reason", "user_name"}
+)
+PROFESSOR_ABSENCE_CHANGE_TARGETS = {
+    "change_class_name": "class_name",
+    "change_absence_date": "absence_date",
+    "change_absence_reason": "absence_reason",
+    "change_user_name": "user_name",
+}
+PROFESSOR_ABSENCE_ACTION_FIELD_CONTRACT = build_action_field_contract(
+    field_names=PROFESSOR_ABSENCE_FIELD_NAMES,
+    user_actions=PROFESSOR_ABSENCE_USER_ACTIONS,
+    rules={action: ActionFieldRule() for action in PROFESSOR_ABSENCE_USER_ACTIONS}
+    | {
+        "provide_absence_info": ActionFieldRule(
+            allowed_fields=PROFESSOR_ABSENCE_FIELD_NAMES,
+            require_any=True,
+        ),
+        **{
+            action: ActionFieldRule(allowed_fields=frozenset({field_name}))
+            for action, field_name in PROFESSOR_ABSENCE_CHANGE_TARGETS.items()
+        },
+    },
 )
 
 
@@ -87,6 +115,11 @@ def build_professor_absence_analysis_prompt(
         conversation_state,
         PROFESSOR_ABSENCE_ACTIONS_BY_STATE,
     )
+    action_field_rules = action_field_rules_json_for_state(
+        conversation_state,
+        allowed_by_state=PROFESSOR_ABSENCE_ACTIONS_BY_STATE,
+        contract=PROFESSOR_ABSENCE_ACTION_FIELD_CONTRACT,
+    )
     return f"""
 다음은 학생이 교수님께 결석 사유를 전달하는 전화 시뮬레이션입니다.
 사용자 발화를 분석해서 JSON 객체만 반환하세요.
@@ -95,6 +128,8 @@ def build_professor_absence_analysis_prompt(
 {conversation_state}
 현재 상태에서 허용된 user_action:
 {allowed_actions}
+현재 상태의 행동별 이번 턴 필드 계약:
+{action_field_rules}
 
 사용자 발화:
 {user_message}
@@ -159,6 +194,12 @@ def _normalize_absence_analysis_result(
         "user_action",
         conversation_state=conversation_state,
         allowed_by_state=PROFESSOR_ABSENCE_ACTIONS_BY_STATE,
+    )
+
+    validate_action_field_delta(
+        {key: result[key] for key in PROFESSOR_ABSENCE_FIELD_NAMES},
+        user_action=result["user_action"],
+        contract=PROFESSOR_ABSENCE_ACTION_FIELD_CONTRACT,
     )
 
     return result

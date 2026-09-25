@@ -24,6 +24,9 @@ STUDY_ROOM_STATE_CONTRACT = ReservationStateContract(
             "reservation_confirmed",
         }
     ),
+    selected_time_empty_states=frozenset(
+        {"greeting", "collecting_reservation_info", "confirming_info", "reservation_unavailable"}
+    ),
 )
 
 

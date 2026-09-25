@@ -15,6 +15,10 @@ from services.flow.service_workflow.contracts import (
     FieldContract,
     ServiceWorkflowSpec,
 )
+from services.flow.service_workflow.structured_contract import (
+    build_service_workflow_turn_contract,
+    validate_service_workflow_turn_delta,
+)
 
 
 def analyze_service_workflow_message(
@@ -35,12 +39,14 @@ def analyze_service_workflow_message(
         conversation_state,
         spec.actions_by_state,
     )
+    turn_contract_json = build_service_workflow_turn_contract(spec).canonical_payload
     prompt = f"""
 다음은 '{spec.category} / {spec.title}' 전화 시뮬레이션의 업무 상태 분석입니다.
 현재 발화에 명시된 정보와 행동만 구조화하세요. 추측하거나 값을 만들어내지 마세요.
 
 현재 conversation_state: {conversation_state}
 현재 상태에서 허용된 user_action: {allowed_actions_json}
+행동별 이번 턴 필드 계약: {turn_contract_json}
 현재까지 검증된 필드: {current_fields_json}
 사용자 발화: {user_message}
 
@@ -71,6 +77,9 @@ def analyze_service_workflow_message(
 계약:
 - fields에는 위 필드 키를 빠짐없이 정확히 한 번씩 넣습니다.
 - 현재 발화에서 새로 확인되지 않은 값은 null입니다. 현재까지의 값을 복사하지 않습니다.
+- provide_details는 이번 발화에서 확인된 필드를 하나 이상 포함합니다.
+- change_detail은 change_field로 지정한 필드만 포함할 수 있으며, 새 값을 말하지 않고 변경 의사만 밝힌 경우 해당 필드는 null입니다.
+- 확인·완료·취소·마무리·unknown 행동은 모든 fields를 null로 반환합니다.
 - change_detail이 아니면 change_field는 null입니다.
 - JSON 객체 외의 문장, markdown, 코드블록을 출력하지 않습니다.
 """
@@ -128,11 +137,12 @@ def _validate_analysis(
         allowed_by_state=spec.actions_by_state,
     )
     change_field = optional_string(parsed, "change_field")
-    if user_action == "change_detail":
-        if change_field not in spec.field_keys:
-            raise ValueError("change_field must name a workflow field")
-    elif change_field is not None:
-        raise ValueError("change_field must be null unless user_action is change_detail")
+    validate_service_workflow_turn_delta(
+        spec,
+        fields=fields,
+        user_action=user_action,
+        change_field=change_field,
+    )
 
     return {
         "intent": spec.intent,

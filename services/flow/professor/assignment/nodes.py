@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from llm.structured_output import apply_action_field_delta
 from services.flow.professor.assignment.generation import (
     generate_professor_assignment_ai_message,
 )
@@ -26,14 +27,22 @@ def extract_professor_assignment_info_node(state: ProfessorAssignmentState) -> d
         conversation_state=conversation_state,
         user_message=user_message,
     )
+    current_fields = {
+        "course_name": state.get("course_name"),
+        "assignment_topic": state.get("assignment_topic"),
+        "question": state.get("question"),
+        "user_name": state.get("user_name"),
+    }
+    next_fields = apply_action_field_delta(
+        current_fields,
+        {key: analyzed.get(key) for key in current_fields},
+        user_action=analyzed["user_action"],
+    )
 
     return {
         "intent": analyzed.get("intent") or state.get("intent") or "assignment_inquiry",
         "professor_name": state.get("professor_name") or "교수님",
-        "course_name": analyzed.get("course_name") or state.get("course_name"),
-        "assignment_topic": analyzed.get("assignment_topic") or state.get("assignment_topic"),
-        "question": analyzed.get("question") or state.get("question"),
-        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        **next_fields,
         "user_action": analyzed.get("user_action") or "unknown",
         "last_ai_message": state.get("last_ai_message"),
         "history": state.get("history") or [],
@@ -51,12 +60,15 @@ def decide_professor_assignment_state_node(state: ProfessorAssignmentState) -> d
 
     if current_state == "answering_assignment_question":
         if user_action == "ask_follow_up":
+            missing_fields = get_missing_professor_assignment_fields(state)
             return {
                 "user_action": user_action,
-                "assignment_topic": None,
-                "question": None,
-                "conversation_state": "collecting_assignment_info",
-                "missing_fields": [],
+                "conversation_state": (
+                    "collecting_assignment_info"
+                    if missing_fields
+                    else "answering_assignment_question"
+                ),
+                "missing_fields": missing_fields,
                 "should_end_call": False,
             }
 

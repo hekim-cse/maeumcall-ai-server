@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from llm.structured_output import apply_action_field_delta
 from services.flow.reservation.study_room.availability import (
     resolve_study_room_availability,
 )
@@ -7,6 +8,7 @@ from services.flow.reservation.study_room.generation import (
     generate_study_room_ai_message,
 )
 from services.flow.reservation.study_room.llm_structured import (
+    STUDY_ROOM_CHANGE_TARGETS,
     analyze_study_room_reservation_user_message,
 )
 from services.flow.reservation.study_room.policy import (
@@ -25,18 +27,29 @@ def extract_study_room_info_node(state: StudyRoomReservationState) -> dict:
     analyzed = analyze_study_room_reservation_user_message(
         conversation_state=conversation_state,
         user_message=user_message,
+        alternative_times=state.get("alternative_times") or [],
+    )
+    current_fields = {
+        "date": state.get("date"),
+        "start_time": state.get("start_time"),
+        "duration": state.get("duration"),
+        "party_size": state.get("party_size"),
+        "user_name": state.get("user_name"),
+        "selected_time": state.get("selected_time"),
+    }
+    next_fields = apply_action_field_delta(
+        current_fields,
+        {key: analyzed.get(key) for key in current_fields},
+        user_action=analyzed["user_action"],
+        change_targets=STUDY_ROOM_CHANGE_TARGETS,
+        reset_actions={"change_info"},
     )
 
     return {
         "intent": analyzed.get("intent") or state.get("intent") or "reservation",
         "service_name": state.get("service_name") or "마음스터디룸",
-        "date": analyzed.get("date") or state.get("date"),
-        "start_time": analyzed.get("start_time") or state.get("start_time"),
-        "duration": analyzed.get("duration") or state.get("duration"),
-        "party_size": analyzed.get("party_size") or state.get("party_size"),
-        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        **next_fields,
         "user_action": analyzed.get("user_action") or "unknown",
-        "selected_time": analyzed.get("selected_time") or state.get("selected_time"),
         "availability_status": state.get("availability_status"),
         "availability_reason": state.get("availability_reason"),
         "available_time": state.get("available_time"),
@@ -68,8 +81,8 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
             return _reset_lookup_state(
                 {
                     "user_action": user_action,
-                    "date": None,
-                    "conversation_state": "collecting_reservation_info",
+                    "date": state.get("date"),
+                    "conversation_state": _study_room_collection_state(state),
                 }
             )
 
@@ -77,8 +90,8 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
             return _reset_lookup_state(
                 {
                     "user_action": user_action,
-                    "start_time": None,
-                    "conversation_state": "collecting_reservation_info",
+                    "start_time": state.get("start_time"),
+                    "conversation_state": _study_room_collection_state(state),
                 }
             )
 
@@ -86,8 +99,8 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
             return _reset_lookup_state(
                 {
                     "user_action": user_action,
-                    "duration": None,
-                    "conversation_state": "collecting_reservation_info",
+                    "duration": state.get("duration"),
+                    "conversation_state": _study_room_collection_state(state),
                 }
             )
 
@@ -95,17 +108,17 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
             return _reset_lookup_state(
                 {
                     "user_action": user_action,
-                    "party_size": None,
-                    "conversation_state": "collecting_reservation_info",
+                    "party_size": state.get("party_size"),
+                    "conversation_state": _study_room_collection_state(state),
                 }
             )
 
         if user_action == "change_user_name":
             return {
                 "user_action": user_action,
-                "user_name": None,
+                "user_name": state.get("user_name"),
                 "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
+                "conversation_state": _study_room_collection_state(state),
             }
 
         if user_action == "change_info":
@@ -153,7 +166,7 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
             return _reset_lookup_state(
                 {
                     "user_action": user_action,
-                    "date": None,
+                    "date": state.get("date"),
                     "start_time": None,
                     "conversation_state": "collecting_reservation_info",
                 }
@@ -185,18 +198,13 @@ def decide_study_room_state_node(state: StudyRoomReservationState) -> dict:
                     "conversation_state": "reservation_available",
                 }
 
-            return {
-                "user_action": user_action,
-                "selected_time": None,
-                "reservation_confirmed": False,
-                "conversation_state": "reservation_unavailable",
-            }
+            raise RuntimeError("validated alternative selection is missing from server options")
 
         if user_action == "change_date":
             return _reset_lookup_state(
                 {
                     "user_action": user_action,
-                    "date": None,
+                    "date": state.get("date"),
                     "start_time": None,
                     "conversation_state": "collecting_reservation_info",
                 }
@@ -274,6 +282,7 @@ def check_study_room_availability_node(state: StudyRoomReservationState) -> dict
         "alternative_times": result["alternative_times"],
         "availability_message_hint": result["availability_message_hint"],
         "reservation_confirmed": result["reservation_confirmed"],
+        "selected_time": None,
         "conversation_state": next_state,
     }
 
@@ -349,3 +358,9 @@ def _reset_lookup_state(extra: dict) -> dict:
         "availability_message_hint": None,
         "reservation_confirmed": False,
     }
+
+
+def _study_room_collection_state(state: StudyRoomReservationState) -> str:
+    return (
+        "collecting_reservation_info" if get_missing_study_room_fields(state) else "confirming_info"
+    )

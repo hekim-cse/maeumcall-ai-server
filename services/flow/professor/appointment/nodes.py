@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from llm.structured_output import apply_action_field_delta
 from services.flow.professor.appointment.generation import (
     generate_professor_appointment_ai_message,
 )
 from services.flow.professor.appointment.llm_structured import (
+    PROFESSOR_APPOINTMENT_CHANGE_TARGETS,
     analyze_professor_appointment_user_message,
 )
 from services.flow.professor.appointment.policy import (
@@ -27,27 +29,23 @@ def extract_professor_appointment_info_node(state: ProfessorAppointmentState) ->
         user_message=user_message,
     )
 
-    normalized_date = (
-        analyzed.get("appointment_date")
-        or analyzed.get("date")
-        or state.get("appointment_date")
-        or state.get("date")
-    )
-    normalized_time = (
-        analyzed.get("appointment_time")
-        or analyzed.get("time")
-        or state.get("appointment_time")
-        or state.get("time")
+    current_fields = {
+        "appointment_purpose": state.get("appointment_purpose"),
+        "date": state.get("date") or state.get("appointment_date"),
+        "time": state.get("time") or state.get("appointment_time"),
+        "user_name": state.get("user_name"),
+    }
+    next_fields = apply_action_field_delta(
+        current_fields,
+        {key: analyzed.get(key) for key in current_fields},
+        user_action=analyzed["user_action"],
+        change_targets=PROFESSOR_APPOINTMENT_CHANGE_TARGETS,
     )
 
     return {
         "intent": analyzed.get("intent") or state.get("intent") or "appointment_booking",
         "professor_name": state.get("professor_name") or "교수님",
-        "appointment_purpose": analyzed.get("appointment_purpose")
-        or state.get("appointment_purpose"),
-        "date": normalized_date,
-        "time": normalized_time,
-        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        **next_fields,
         "user_action": analyzed.get("user_action") or "unknown",
         "last_ai_message": state.get("last_ai_message"),
         "history": state.get("history") or [],
@@ -72,37 +70,38 @@ def decide_professor_appointment_state_node(state: ProfessorAppointmentState) ->
             }
 
         if user_action == "change_purpose":
-            return _reset_fields(
+            return _transition_after_appointment_change(
+                state,
                 {
                     "user_action": user_action,
-                    "appointment_purpose": None,
-                    "conversation_state": "collecting_appointment_info",
+                    "appointment_purpose": state.get("appointment_purpose"),
                     "should_end_call": False,
-                }
+                },
             )
 
         if user_action == "change_date":
-            return _reset_fields(
+            return _transition_after_appointment_change(
+                state,
                 {
                     "user_action": user_action,
-                    "date": None,
-                    "conversation_state": "collecting_appointment_info",
+                    "date": state.get("date"),
                     "should_end_call": False,
-                }
+                },
             )
 
         if user_action == "change_time":
-            return _reset_fields(
+            return _transition_after_appointment_change(
+                state,
                 {
                     "user_action": user_action,
-                    "time": None,
-                    "conversation_state": "collecting_appointment_info",
+                    "time": state.get("time"),
                     "should_end_call": False,
-                }
+                },
             )
 
         if user_action == "change_user_name":
-            return _reset_fields(
+            return _transition_after_appointment_change(
+                state,
                 {
                     "user_action": user_action,
                     "appointment_purpose": state.get("appointment_purpose"),
@@ -110,10 +109,9 @@ def decide_professor_appointment_state_node(state: ProfessorAppointmentState) ->
                     "time": state.get("time") or state.get("appointment_time"),
                     "appointment_date": state.get("appointment_date") or state.get("date"),
                     "appointment_time": state.get("appointment_time") or state.get("time"),
-                    "user_name": None,
-                    "conversation_state": "collecting_appointment_info",
+                    "user_name": state.get("user_name"),
                     "should_end_call": False,
-                }
+                },
             )
 
         return {
@@ -190,11 +188,15 @@ def attach_professor_appointment_recommended_replies_node(
     }
 
 
-def _reset_fields(extra: dict) -> dict:
-    """
-    사용자가 일부 면담 정보를 변경하면 해당 필드를 비우고 다시 수집한다.
-    """
+def _transition_after_appointment_change(
+    state: ProfessorAppointmentState,
+    extra: dict,
+) -> dict:
+    missing_fields = get_missing_professor_appointment_fields(state)
     return {
         **extra,
-        "missing_fields": [],
+        "missing_fields": missing_fields,
+        "conversation_state": (
+            "collecting_appointment_info" if missing_fields else "confirming_info"
+        ),
     }

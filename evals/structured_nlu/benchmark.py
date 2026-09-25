@@ -29,6 +29,8 @@ class CoverageDimension(StrEnum):
     FIELD_OPTION = "field_option"
     CHANGE_FIELD = "change_field"
     DIFFICULTY_TAG = "difficulty_tag"
+    ACTION_FIELD_PRESENT = "action_field_present"
+    ACTION_FIELD_ABSENT = "action_field_absent"
 
 
 @dataclass(frozen=True)
@@ -40,6 +42,9 @@ class ScenarioCoverageRequirement:
     allowed_intents: frozenset[str | None]
     actions_by_state: tuple[tuple[str, frozenset[str]], ...]
     field_options: tuple[tuple[str, frozenset[str]], ...]
+    scoring_contract_payload: str
+    action_field_present: frozenset[str]
+    action_field_absent: frozenset[str]
 
 
 @dataclass(frozen=True)
@@ -59,6 +64,28 @@ class BenchmarkProfile:
             raise ValueError(f"benchmark profile contains unknown scenarios: {unknown_scenarios}")
         for scenario_key, requirement in self.scenarios:
             contract = EVALUATION_CONTRACTS[scenario_key]
+            if requirement.scoring_contract_payload != contract.scoring_contract_payload:
+                raise ValueError(
+                    f"profile scoring contract differs from live contract: {scenario_key}"
+                )
+            live_present, live_absent = contract.action_field_coverage
+            expected_present = _filter_action_field_coverage(
+                live_present,
+                actions=requirement.user_actions,
+                fields=requirement.fields,
+            )
+            expected_absent = _filter_action_field_coverage(
+                live_absent,
+                actions=requirement.user_actions,
+                fields=requirement.fields,
+            )
+            if (
+                requirement.action_field_present,
+                requirement.action_field_absent,
+            ) != (expected_present, expected_absent):
+                raise ValueError(
+                    f"profile action-field coverage differs from live contract: {scenario_key}"
+                )
             if not requirement.conversation_states:
                 raise ValueError(f"profile requires no conversation states: {scenario_key}")
             if not requirement.conversation_states <= contract.conversation_states:
@@ -136,6 +163,9 @@ class BenchmarkProfile:
                         field_name: sorted(values)
                         for field_name, values in sorted(requirement.field_options)
                     },
+                    "scoring_contract": json.loads(requirement.scoring_contract_payload),
+                    "action_field_present": sorted(requirement.action_field_present),
+                    "action_field_absent": sorted(requirement.action_field_absent),
                 }
                 for scenario_key, requirement in sorted(self.scenarios)
             },
@@ -188,6 +218,19 @@ class QualifiedTestSlice(BenchmarkSlice):
     corpus_cases: tuple[EvaluationCase, ...]
 
 
+def _filter_action_field_coverage(
+    values: frozenset[str],
+    *,
+    actions: frozenset[str],
+    fields: frozenset[str],
+) -> frozenset[str]:
+    return frozenset(
+        value
+        for value in values
+        if value.split("->", 1)[0] in actions and value.split("->", 1)[1] in fields
+    )
+
+
 def _build_official_profile() -> BenchmarkProfile:
     scenarios = []
     for scenario_key, contract in EVALUATION_CONTRACTS.items():
@@ -206,11 +249,14 @@ def _build_official_profile() -> BenchmarkProfile:
                     allowed_intents=contract.allowed_intents,
                     actions_by_state=contract.actions_by_state,
                     field_options=contract.field_options,
+                    scoring_contract_payload=contract.scoring_contract_payload,
+                    action_field_present=contract.action_field_coverage[0],
+                    action_field_absent=contract.action_field_coverage[1],
                 ),
             )
         )
     return BenchmarkProfile(
-        profile_id="maeumcall-structured-nlu-v1",
+        profile_id="maeumcall-structured-nlu-v2",
         scenarios=tuple(scenarios),
         required_tags=frozenset(DifficultyTag),
     )
@@ -218,7 +264,7 @@ def _build_official_profile() -> BenchmarkProfile:
 
 OFFICIAL_BENCHMARK_PROFILE = _build_official_profile()
 OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT = (
-    "bc7a053b09ee97a18ecf9eb11964d48008b5db208cb8012c1ae7d5c4bb932b93"
+    "1795efc46ed9988925929d5f6706db8c997b0450abc657d41909bb2402f3bd1e"
 )
 if OFFICIAL_BENCHMARK_PROFILE.fingerprint != OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT:
     raise RuntimeError("official benchmark profile changed; create a new version and fingerprint")
@@ -322,6 +368,41 @@ def inspect_benchmark_coverage(
             dimension=CoverageDimension.FIELD_ABSENT,
             required=requirement.fields,
             covered=absent_fields,
+            scenario_key=scenario_key,
+        )
+        covered_action_field_present = {
+            f"{case.labels.user_action}->{field_name}"
+            for case in scenario_cases
+            for field_name, expected in case.labels.fields.items()
+            if expected is not None
+        }
+        contract = EVALUATION_CONTRACTS[scenario_key]
+        if contract.uses_current_fields:
+            covered_action_field_absent = {
+                f"{case.labels.user_action}->{case.labels.change_field}"
+                for case in scenario_cases
+                if case.labels.change_field is not None
+                and case.labels.fields[case.labels.change_field] is None
+            }
+        else:
+            covered_action_field_absent = {
+                f"{case.labels.user_action}->{field_name}"
+                for case in scenario_cases
+                for field_name, expected in case.labels.fields.items()
+                if expected is None
+            }
+        _append_missing_issue(
+            issues,
+            dimension=CoverageDimension.ACTION_FIELD_PRESENT,
+            required=requirement.action_field_present,
+            covered=covered_action_field_present,
+            scenario_key=scenario_key,
+        )
+        _append_missing_issue(
+            issues,
+            dimension=CoverageDimension.ACTION_FIELD_ABSENT,
+            required=requirement.action_field_absent,
+            covered=covered_action_field_absent,
             scenario_key=scenario_key,
         )
         required_options = frozenset(

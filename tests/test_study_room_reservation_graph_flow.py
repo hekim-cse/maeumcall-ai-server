@@ -28,7 +28,7 @@ def test_study_room_change_info_reopens_all_reservation_fields():
     assert result["selected_time"] is None
 
 
-def test_study_room_available_date_change_reopens_date_and_time():
+def test_study_room_available_date_change_preserves_validated_date_delta():
     result = decide_study_room_state_node(
         {
             "conversation_state": "reservation_available",
@@ -39,12 +39,16 @@ def test_study_room_available_date_change_reopens_date_and_time():
     )
 
     assert result["conversation_state"] == "collecting_reservation_info"
-    assert result["date"] is None
+    assert result["date"] == "내일"
     assert result["start_time"] is None
 
 
 def _patch_study_room_analysis(monkeypatch):
-    def fake_analyze(conversation_state: str, user_message: str):
+    def fake_analyze(
+        conversation_state: str,
+        user_message: str,
+        alternative_times: list[str] | None = None,
+    ):
         if conversation_state == "closing":
             return {
                 "intent": "reservation",
@@ -387,28 +391,26 @@ def test_study_room_reservation_unavailable_selects_alternative_time(monkeypatch
 def test_study_room_reservation_unavailable_rejects_out_of_option_time(monkeypatch):
     _patch_study_room_analysis(monkeypatch)
 
-    result = study_room_reservation_graph.invoke(
-        {
-            "user_message": "오후 5시로 할게요.",
-            "conversation_state": "reservation_unavailable",
-            "service_name": "마음스터디룸",
-            "date": "내일",
-            "start_time": "오후 2시",
-            "duration": "2시간",
-            "party_size": "4명",
-            "user_name": "김개굴",
-            "availability_status": "unavailable",
-            "availability_reason": "requested_time_full",
-            "available_time": None,
-            "alternative_times": ["오후 1시", "오후 3시"],
-            "history": [],
-            "recommended_replies": [],
-            "should_end_call": False,
-        }
-    )
-
-    assert result["conversation_state"] == "reservation_unavailable"
-    assert result["selected_time"] is None
+    with pytest.raises(RuntimeError, match="validated alternative selection"):
+        study_room_reservation_graph.invoke(
+            {
+                "user_message": "오후 5시로 할게요.",
+                "conversation_state": "reservation_unavailable",
+                "service_name": "마음스터디룸",
+                "date": "내일",
+                "start_time": "오후 2시",
+                "duration": "2시간",
+                "party_size": "4명",
+                "user_name": "김개굴",
+                "availability_status": "unavailable",
+                "availability_reason": "requested_time_full",
+                "available_time": None,
+                "alternative_times": ["오후 1시", "오후 3시"],
+                "history": [],
+                "recommended_replies": [],
+                "should_end_call": False,
+            }
+        )
 
 
 def test_study_room_reservation_confirmed_moves_to_closing(monkeypatch):
@@ -456,7 +458,7 @@ def test_study_room_reservation_closing_moves_to_end(monkeypatch):
 def test_study_room_reservation_change_party_size_clears_lookup_fields(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.study_room.nodes.analyze_study_room_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "intent": None,
             "date": None,
             "start_time": None,
@@ -510,7 +512,7 @@ def test_study_room_reservation_change_party_size_clears_lookup_fields(monkeypat
 def test_study_room_reservation_change_user_name_resets_user_name_only(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.study_room.nodes.analyze_study_room_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "intent": None,
             "date": None,
             "start_time": None,
@@ -556,7 +558,7 @@ def test_study_room_reservation_change_user_name_resets_user_name_only(monkeypat
 def test_study_room_reservation_unavailable_unknown_keeps_state(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.study_room.nodes.analyze_study_room_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "intent": None,
             "date": None,
             "start_time": None,

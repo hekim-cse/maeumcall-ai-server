@@ -20,8 +20,8 @@ def _patch_assignment_analysis(monkeypatch):
             if "추가" in user_message or "하나 더" in user_message:
                 return {
                     "intent": "assignment_inquiry",
-                    "assignment_topic": None,
-                    "question": None,
+                    "assignment_topic": "제출 기한",
+                    "question": "제출 기한도 알려주세요.",
                     "user_name": None,
                     "user_action": "ask_follow_up",
                 }
@@ -216,7 +216,7 @@ def test_professor_assignment_answering_moves_to_closing(monkeypatch):
     assert result["should_end_call"] is False
 
 
-def test_professor_assignment_answering_follow_up_resets_question(monkeypatch):
+def test_professor_assignment_answering_follow_up_preserves_new_question(monkeypatch):
     _patch_assignment_analysis(monkeypatch)
 
     result = professor_assignment_graph.invoke(
@@ -233,9 +233,9 @@ def test_professor_assignment_answering_follow_up_resets_question(monkeypatch):
         }
     )
 
-    assert result["conversation_state"] == "collecting_assignment_info"
-    assert result["assignment_topic"] is None
-    assert result["question"] is None
+    assert result["conversation_state"] == "answering_assignment_question"
+    assert result["assignment_topic"] == "제출 기한"
+    assert result["question"] == "제출 기한도 알려주세요."
     assert result["user_name"] == "김개굴"
 
 

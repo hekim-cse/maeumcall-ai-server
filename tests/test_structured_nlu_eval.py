@@ -30,6 +30,7 @@ from evals.structured_nlu.schema import (
     NormalizedPrediction,
 )
 from services.flow.common.state_contract import SCENARIO_STATE_VERSION
+from services.flow.delivery.contracts import ORDER_CHANGE_SPEC
 
 
 def _case(
@@ -51,6 +52,7 @@ def _case(
         scenario_key="교수님:면담 예약",
         conversation_state=conversation_state,
         current_fields={},
+        offered_alternative_times=(),
         user_message=message,
         labels=GoldLabels(
             intent="appointment_booking",
@@ -129,6 +131,7 @@ def _order_change_case(
         scenario_key="배달:주문 변경",
         conversation_state=conversation_state,
         current_fields=current_fields,
+        offered_alternative_times=(),
         user_message="주문 변경을 도와주세요.",
         labels=GoldLabels(
             intent="delivery_order_change",
@@ -229,6 +232,7 @@ def test_case_rejects_workflow_gold_value_outside_live_options():
                 "requested_change": None,
                 "unavailable_preference": None,
             },
+            offered_alternative_times=(),
             user_message="배송지를 바꾸고 싶어요.",
             labels=GoldLabels(
                 intent="delivery_order_change",
@@ -374,7 +378,7 @@ def test_metrics_count_contract_retry_hallucination_omission_and_exact_values():
                 "time": "오후 3시",
                 "user_name": None,
             },
-            action="unknown",
+            action="provide_appointment_info",
             retry=True,
         ),
     )
@@ -386,8 +390,8 @@ def test_metrics_count_contract_retry_hallucination_omission_and_exact_values():
     assert scores.retry_rate == 0.5
     assert scores.complete_failure_rate == 0.0
     assert scores.intent_accuracy == 1.0
-    assert scores.user_action_accuracy == 0.5
-    assert scores.user_action_macro_f1 == pytest.approx(2 / 3)
+    assert scores.user_action_accuracy == 1.0
+    assert scores.user_action_macro_f1 == 1.0
     assert scores.slot_presence_precision == pytest.approx(4 / 5)
     assert scores.slot_presence_recall == pytest.approx(4 / 5)
     assert scores.slot_presence_f1 == pytest.approx(4 / 5)
@@ -508,6 +512,13 @@ def _appointment_test_profile() -> BenchmarkProfile:
                         ),
                     ),
                     field_options=contract.field_options,
+                    scoring_contract_payload=contract.scoring_contract_payload,
+                    action_field_present=frozenset(
+                        item
+                        for item in contract.action_field_coverage[0]
+                        if item.split("->", 1)[0] in {"provide_appointment_info", "unknown"}
+                    ),
+                    action_field_absent=frozenset(),
                 ),
             ),
         ),
@@ -517,7 +528,7 @@ def _appointment_test_profile() -> BenchmarkProfile:
 
 def _gold_dataset(*cases: EvaluationCase) -> GoldDataset:
     return GoldDataset(
-        dataset_version=1,
+        dataset_version=2,
         state_contract_version=SCENARIO_STATE_VERSION,
         cases=cases,
     )
@@ -564,6 +575,11 @@ def test_official_profile_tracks_all_live_structured_nlu_contracts():
         assert dict(requirement.actions_by_state) == dict(contract.actions_by_state)
         assert requirement.allowed_intents == contract.allowed_intents
         assert requirement.field_options == contract.field_options
+        assert requirement.scoring_contract_payload == contract.scoring_contract_payload
+        assert (
+            requirement.action_field_present,
+            requirement.action_field_absent,
+        ) == contract.action_field_coverage
 
 
 def test_profile_rejects_duplicate_states_and_action_union_drift():
@@ -580,6 +596,9 @@ def test_profile_rejects_duplicate_states_and_action_union_drift():
             requirement.actions_by_state[0],
         ),
         field_options=requirement.field_options,
+        scoring_contract_payload=requirement.scoring_contract_payload,
+        action_field_present=requirement.action_field_present,
+        action_field_absent=requirement.action_field_absent,
     )
     with pytest.raises(ValueError, match="states must be unique"):
         BenchmarkProfile(
@@ -596,6 +615,9 @@ def test_profile_rejects_duplicate_states_and_action_union_drift():
         allowed_intents=requirement.allowed_intents,
         actions_by_state=requirement.actions_by_state,
         field_options=requirement.field_options,
+        scoring_contract_payload=requirement.scoring_contract_payload,
+        action_field_present=requirement.action_field_present,
+        action_field_absent=requirement.action_field_absent,
     )
     with pytest.raises(ValueError, match="differ from user actions"):
         BenchmarkProfile(
@@ -633,6 +655,122 @@ def test_benchmark_coverage_reports_each_missing_contract_dimension():
         CoverageDimension.FIELD_ABSENT,
         CoverageDimension.DIFFICULTY_TAG,
     }
+
+
+def test_benchmark_requires_same_turn_change_action_and_target_value_pair():
+    contract = EVALUATION_CONTRACTS["교수님:면담 예약"]
+    profile = BenchmarkProfile(
+        profile_id="appointment-inline-change-test-v1",
+        scenarios=(
+            (
+                contract.scenario_key,
+                ScenarioCoverageRequirement(
+                    conversation_states=frozenset({"confirming_info"}),
+                    user_actions=frozenset({"change_date"}),
+                    fields=frozenset({"date"}),
+                    change_fields=frozenset(),
+                    allowed_intents=contract.allowed_intents,
+                    actions_by_state=(("confirming_info", frozenset({"change_date"})),),
+                    field_options=(),
+                    scoring_contract_payload=contract.scoring_contract_payload,
+                    action_field_present=frozenset({"change_date->date"}),
+                    action_field_absent=frozenset({"change_date->date"}),
+                ),
+            ),
+        ),
+        required_tags=frozenset({DifficultyTag.CORRECTION}),
+    )
+    omitted_replacement = _case(
+        case_id="appointment.change-date-without-value",
+        message="날짜를 바꾸고 싶습니다.",
+        fields=_appointment_fields(),
+        action="change_date",
+        conversation_state="confirming_info",
+        split="test",
+        tags=("correction",),
+    )
+
+    report = inspect_benchmark_coverage(
+        _gold_dataset(omitted_replacement),
+        split=DatasetSplit.TEST,
+        profile=profile,
+    )
+
+    assert CoverageDimension.ACTION_FIELD_PRESENT in {issue.dimension for issue in report.issues}
+    assert CoverageDimension.ACTION_FIELD_ABSENT not in {issue.dimension for issue in report.issues}
+
+
+def test_workflow_absent_coverage_counts_only_the_declared_change_target():
+    contract = EVALUATION_CONTRACTS["배달:주문 변경"]
+    action_field_present, action_field_absent = contract.action_field_coverage
+    profile = BenchmarkProfile(
+        profile_id="order-change-clear-target-test-v1",
+        scenarios=(
+            (
+                contract.scenario_key,
+                ScenarioCoverageRequirement(
+                    conversation_states=frozenset({ORDER_CHANGE_SPEC.confirming_state}),
+                    user_actions=frozenset({"change_detail"}),
+                    fields=frozenset(ORDER_CHANGE_SPEC.field_keys),
+                    change_fields=frozenset(ORDER_CHANGE_SPEC.field_keys),
+                    allowed_intents=contract.allowed_intents,
+                    actions_by_state=(
+                        (ORDER_CHANGE_SPEC.confirming_state, frozenset({"change_detail"})),
+                    ),
+                    field_options=contract.field_options,
+                    scoring_contract_payload=contract.scoring_contract_payload,
+                    action_field_present=frozenset(
+                        value
+                        for value in action_field_present
+                        if value.startswith("change_detail->")
+                    ),
+                    action_field_absent=frozenset(
+                        value
+                        for value in action_field_absent
+                        if value.startswith("change_detail->")
+                    ),
+                ),
+            ),
+        ),
+        required_tags=frozenset({DifficultyTag.CORRECTION}),
+    )
+    target = "order_number"
+    case = EvaluationCase(
+        id="order-change.clear-order-number",
+        conversation_group_id="order-change.clear-order-number",
+        split="test",
+        scenario_key=contract.scenario_key,
+        conversation_state=ORDER_CHANGE_SPEC.confirming_state,
+        current_fields={
+            "order_number": "A-100",
+            "change_type": "delivery_address",
+            "requested_change": "서울시 새 주소",
+            "unavailable_preference": "keep_order",
+        },
+        offered_alternative_times=(),
+        user_message="주문번호를 다시 말할게요.",
+        labels=GoldLabels(
+            intent=ORDER_CHANGE_SPEC.intent,
+            fields={field_name: None for field_name in ORDER_CHANGE_SPEC.field_keys},
+            user_action="change_detail",
+            change_field=target,
+        ),
+        tags=("correction",),
+        provenance="human_authored",
+        review_status="adjudicated",
+    )
+
+    report = inspect_benchmark_coverage(
+        _gold_dataset(case),
+        split=DatasetSplit.TEST,
+        profile=profile,
+    )
+    absence_issue = next(
+        issue for issue in report.issues if issue.dimension is CoverageDimension.ACTION_FIELD_ABSENT
+    )
+
+    assert "change_detail->order_number" not in absence_issue.missing_values
+    assert "change_detail->requested_change" in absence_issue.missing_values
 
 
 def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
@@ -866,6 +1004,7 @@ def test_metrics_count_workflow_option_outside_live_contract_as_contract_failure
             "requested_change": None,
             "unavailable_preference": None,
         },
+        offered_alternative_times=(),
         user_message="배송지를 바꾸고 싶어요.",
         labels=GoldLabels(
             intent="delivery_order_change",
