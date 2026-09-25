@@ -1006,12 +1006,16 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
             dataset,
             authoring_source_fingerprint="a" * 64,
             split_assignment_fingerprint="b" * 64,
+            annotation_guideline_fingerprint="c" * 64,
+            review_ledger_fingerprint="d" * 64,
         )
 
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint="b" * 64,
+        annotation_guideline_fingerprint="c" * 64,
+        review_ledger_fingerprint="d" * 64,
         corpus_fingerprint="not-used-before-profile-validation",
         corpus_cases=dataset.cases,
     )
@@ -1032,6 +1036,8 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
         coverage=benchmark.coverage,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint="b" * 64,
+        annotation_guideline_fingerprint="c" * 64,
+        review_ledger_fingerprint="d" * 64,
         corpus_fingerprint="not-used-before-split-validation",
         corpus_cases=dataset.cases,
     )
@@ -1058,6 +1064,8 @@ def test_qualified_split_assignment_fingerprint_must_be_lowercase_sha256(
             dataset,
             authoring_source_fingerprint="a" * 64,
             split_assignment_fingerprint=invalid_fingerprint,
+            annotation_guideline_fingerprint="c" * 64,
+            review_ledger_fingerprint="d" * 64,
         )
 
     coverage = inspect_benchmark_coverage(
@@ -1076,6 +1084,8 @@ def test_qualified_split_assignment_fingerprint_must_be_lowercase_sha256(
         coverage=coverage,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint=invalid_fingerprint,
+        annotation_guideline_fingerprint="c" * 64,
+        review_ledger_fingerprint="d" * 64,
         corpus_fingerprint="not-reached-before-fingerprint-validation",
         corpus_cases=dataset.cases,
     )
@@ -1150,6 +1160,8 @@ def test_qualified_scoring_rejects_a_tampered_complete_corpus():
         coverage=custom_report,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint="b" * 64,
+        annotation_guideline_fingerprint="c" * 64,
+        review_ledger_fingerprint="d" * 64,
         corpus_fingerprint="forged-corpus-fingerprint",
         corpus_cases=corpus.cases,
     )
@@ -1201,6 +1213,8 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
         **benchmark.__dict__,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint="b" * 64,
+        annotation_guideline_fingerprint="c" * 64,
+        review_ledger_fingerprint="d" * 64,
         corpus_fingerprint="not-used-before-split-validation",
         corpus_cases=dataset.cases,
     )
@@ -1211,6 +1225,8 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
             dataset,
             authoring_source_fingerprint="a" * 64,
             split_assignment_fingerprint="b" * 64,
+            annotation_guideline_fingerprint="c" * 64,
+            review_ledger_fingerprint="d" * 64,
         )
 
 

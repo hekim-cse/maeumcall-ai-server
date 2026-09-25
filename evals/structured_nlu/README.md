@@ -79,9 +79,11 @@
 
 `draft`와 `reviewed` 케이스는 점수 계산에 포함하지 않는다. 정답 합의를 마친
 `adjudicated` 케이스만 마음콜 프로젝트 내부 공식 벤치마크 결과에 사용할 수 있다.
-여기서 `adjudicated`는 작성자와 검토자 사이의 오류나 의견 차이를 해결해 정답을
-최종 확정한 상태라는 뜻이다. 현재 스키마는 검토 횟수나 검토자 수를 저장하지
-않으므로, 검토 과정은 Git 커밋과 PR 리뷰 이력으로 남긴다.
+여기서 `adjudicated`는 오류나 의견 차이를 해결해 정답을 최종 확정한 상태라는
+뜻이다. 케이스 안의 상태 문자열과 별도로 검증할 수 있도록 검수 원장이 최종 case
+내용의 지문·adjudicator 역할 ID·확정 시각·판단 근거를 함께 보존한다. 검수 원장은
+여러 사람이 검토했다거나 특정 인물이 승인했다는 사실을 암호학적으로 증명하지
+않으며, 실제 변경 과정은 Git 커밋과 PR 이력으로 함께 추적한다.
 
 현재 구현된 범위는 다음과 같다.
 
@@ -95,6 +97,8 @@
 - 같은 원본 대화 그룹이 서로 다른 분할에 섞이지 않도록 막는 검사
 - development·validation·test를 한 파일에 보존하고 전체 corpus 지문을 고정하는 검사
 - `test` 분할과 `adjudicated` 상태를 강제하는 공식 결과 후보용 데이터 관문
+- validation·test 케이스와 일대일로 연결되는 버전 지정 작성 지침·검수 원장 계약
+- 공식 test 준비와 채점 직전에 작성 지침·검수 원장 지문을 다시 대조하는 검사
 - 의미 원본 그룹별 작성 파일을 결정론적 순서의 V2 corpus로 합치는 compiler
 - 그룹 파일과 분리된 원장에서 `conversation_group_id`별 split을 한 번만 소유하고, 원장과 작성 그룹의 정확한 일치를 강제하는 검사
 - 공식 결과 후보에 split 원장의 의미 기반 SHA-256 식별값을 함께 보존하고 채점 직전에 다시 대조하는 검사
@@ -111,14 +115,21 @@
 덮어쓰는 대신 새 프로필 버전을 만들어야 한다.
 
 작은 사용자 정의 프로필은 개발 중 검사에만 사용할 수 있다. 공식 결과 후보용
-test slice는 그룹별 작성 원본과 컴파일된 corpus의 byte 일치를 먼저 확인한
-경로에서만 준비한다. 최종 점수 계산 직전에도 같은 검증을 다시 수행한다. 이후
-16개 시나리오를 포함한 공식 고정 프로필을 사용하고, 프로필 지문·데이터 지문·
-`test` 분할·coverage를 다시 계산한다.
+test slice는 그룹별 작성 원본과 컴파일된 corpus의 byte 일치, validation·test의
+검수 원장을 먼저 확인한 경로에서만 준비한다. 최종 점수 계산 직전에도 작성 원본,
+split 원장, 작성 지침과 검수 원장을 다시 검증한다. 이후 16개 시나리오를 포함한
+공식 고정 프로필을 사용하고, 프로필 지문·데이터 지문·`test` 분할·coverage를
+다시 계산한다.
 이 과정에서 수동 조립된 프로필·데이터의 불일치, 컴파일 산출물의 직접 수정과
 test-only 축소를 거부하지만,
 지문 자체는 인증이나 전자서명이 아니라 내용이 같은지 확인하는 식별값이다.
 승인된 corpus의 강한 변조 방지는 후속 manifest에서 기대 지문을 별도로 고정해야 한다.
+
+`benchmark.py`의 밑줄(`_`)로 시작하는 준비·채점 함수는 단위 테스트와 내부 조합을
+위한 저수준 함수이며 공식 결과 발행 경계가 아니다. 실제 공식 실행기는 작성 원본,
+split 원장, 작성 지침과 검수 원장을 요구하는 공개 authoring 경로만 사용하고,
+후속 결과 manifest도 검증된 freeze record가 없는 저수준 점수를 공식 결과로
+직렬화하지 않도록 분리한다.
 
 여기서 `corpus`는 development·validation·test를 모두 포함한 평가 원본 전체
 묶음이고, `test slice`는 그 corpus 중 `test` 분할에 속하면서 고정 프로필의
@@ -128,9 +139,41 @@ test-only 축소를 거부하지만,
 workflow 기반 상세 그래프는 현재 필드 문맥도 검사하므로, 확인 상태라면 필수 필드가 모두
 채워져야 하고 선택형 필드는 계약에 선언된 값만 사용해야 한다.
 
-아직 구현하지 않은 범위는 실제 골든 데이터, 실모델 실행기, 시나리오·태그별
-집계, p50·p95·토큰·메모리 측정, 실행 manifest와 결과 파일이다. 따라서 현재
-단위 테스트 수치는 후보 모델의 성능 점수가 아니다.
+아직 구현하지 않은 범위는 실제 골든 데이터와 그 데이터에 대응하는 실제 검수
+원장, 실모델 실행기,
+시나리오·태그별 집계, p50·p95·토큰·메모리 측정, 실행 manifest와 결과 파일이다.
+따라서 현재 단위 테스트 수치는 후보 모델의 성능 점수가 아니다.
+
+## 정답 작성 지침과 검수 원장
+
+`guidelines/annotation-guideline.v1.md`는 필드의 `null` 판정, 행동과 이번 발화
+필드의 관계, 예약 대안 시간, 난이도 태그, 개인정보 금지, split 배정과
+`draft → reviewed → adjudicated` 승격 기준을 고정한다. 파일의 UTF-8 바이트에서
+계산한 SHA-256을 코드에 고정했기 때문에 내용을 조용히 바꾸면 자동 검사가
+중단된다. 기준을 바꿀 때는 기존 V1을 덮어쓰지 않고 새 지침 버전을 만든다.
+
+`review_ledger.schema.json`은 validation과 test의 최종 정답마다 다음을 요구한다.
+
+- case ID와 최종 case 전체 내용의 SHA-256
+- 적용한 작성 지침 ID와 지침 파일 SHA-256
+- 운영 규칙상 개인정보 대신 사용하는 adjudicator 역할 ID
+- 시간대가 포함된 확정 시각과 판단 근거
+- `approved` 결정
+
+검증기는 validation·test case와 원장 항목의 ID 집합이 정확히 같은지 확인하고,
+모든 case가 `adjudicated`인지 검사한다. 정답·상태·split·태그 중 하나라도 바뀌면
+case 지문이 달라져 과거 승인을 재사용할 수 없다. development는 작성과 디버깅을
+위한 영역이므로 이 최종 승인 원장의 필수 대상이 아니다.
+
+검증기는 adjudicator ID의 소문자 영숫자 형식만 확인한다. 해당 값이 실제로
+가명인지, 독립된 다른 사람이 검토했는지, 특정 계정 소유자가 승인했는지는
+증명하지 않는다. 원장 전체의 의미 기반 지문은 공식 test 준비 결과에 보존되고
+채점 직전에 다시 대조한다. 다만 어떤 지문 조합이 모델 결과를 보기 전에
+승인됐는지 고정하는 일은 후속 versioned freeze record 계층의 책임이다.
+
+이 구현은 **검수 원장의 형식·검증기와 공식 test 경계 연결**을 만든 단계다. 실제 corpus가 없으므로
+가짜 항목이나 임시 adjudicator를 넣은 원장 파일은 만들지 않았다. 실제 원장은
+사람이 작성한 validation·test case가 생긴 뒤에만 생성·검수한다.
 
 ## 작성 원본과 compiler
 
@@ -179,6 +222,12 @@ python -m scripts.compile_structured_nlu_corpus split-schema \
 python -m scripts.compile_structured_nlu_corpus check-split-schema \
   evals/structured_nlu/split_assignment.schema.json
 
+# 검수 원장 JSON Schema를 생성하고 커밋된 파일과 대조한다.
+python -m scripts.compile_structured_nlu_corpus review-schema \
+  evals/structured_nlu/review_ledger.schema.json
+python -m scripts.compile_structured_nlu_corpus check-review-schema \
+  evals/structured_nlu/review_ledger.schema.json
+
 # 그룹별 작성 원본을 단일 V2 corpus로 컴파일한다.
 python -m scripts.compile_structured_nlu_corpus compile \
   evals/structured_nlu/data/source \
@@ -190,6 +239,14 @@ python -m scripts.compile_structured_nlu_corpus check \
   evals/structured_nlu/data/source \
   evals/structured_nlu/manifests/split-assignments.v1.json \
   evals/structured_nlu/data/compiled/gold-dataset.v2.json
+
+# 실제 corpus가 생긴 뒤 별도 명령으로 validation·test의 최종 검수 원장을 대조한다.
+python -m scripts.compile_structured_nlu_corpus check-review \
+  evals/structured_nlu/data/source \
+  evals/structured_nlu/manifests/split-assignments.v1.json \
+  evals/structured_nlu/data/compiled/gold-dataset.v2.json \
+  evals/structured_nlu/guidelines/annotation-guideline.v1.md \
+  evals/structured_nlu/manifests/review-ledger.v1.json
 ```
 
 현재 커밋된 `coverage-obligations.v2.json`에는 상태-행동 352개를 포함해 총

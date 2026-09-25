@@ -15,6 +15,10 @@ from evals.structured_nlu.authoring import (
     verify_compiled_authoring_corpus,
 )
 from evals.structured_nlu.obligations import serialize_official_authoring_obligations
+from evals.structured_nlu.review import (
+    serialize_review_ledger_schema,
+    verify_review_ledger,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -71,6 +75,28 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify that the committed split assignment schema matches the code contract.",
     )
     check_split_schema_parser.add_argument("schema", type=Path)
+
+    review_schema_parser = subparsers.add_parser(
+        "review-schema",
+        help="Write the editor-facing adjudication review ledger JSON Schema.",
+    )
+    review_schema_parser.add_argument("output", type=Path)
+
+    check_review_schema_parser = subparsers.add_parser(
+        "check-review-schema",
+        help="Verify that the committed review ledger schema matches the code contract.",
+    )
+    check_review_schema_parser.add_argument("schema", type=Path)
+
+    check_review_parser = subparsers.add_parser(
+        "check-review",
+        help="Verify exact adjudication records for compiled validation and test cases.",
+    )
+    check_review_parser.add_argument("source_dir", type=Path)
+    check_review_parser.add_argument("split_assignments", type=Path)
+    check_review_parser.add_argument("compiled", type=Path)
+    check_review_parser.add_argument("guideline", type=Path)
+    check_review_parser.add_argument("ledger", type=Path)
     return parser
 
 
@@ -104,6 +130,27 @@ def main() -> int:
             raise SystemExit(f"split assignment schema does not exist: {args.schema}")
         if args.schema.read_text(encoding="utf-8") != serialize_split_assignment_schema():
             raise SystemExit("split assignment schema differs from the code contract")
+        return 0
+    if args.command == "review-schema":
+        _write_text(args.output, serialize_review_ledger_schema())
+        return 0
+    if args.command == "check-review-schema":
+        if not args.schema.is_file():
+            raise SystemExit(f"review ledger schema does not exist: {args.schema}")
+        if args.schema.read_text(encoding="utf-8") != serialize_review_ledger_schema():
+            raise SystemExit("review ledger schema differs from the code contract")
+        return 0
+    if args.command == "check-review":
+        dataset, _, _ = verify_compiled_authoring_corpus(
+            args.source_dir,
+            args.split_assignments,
+            args.compiled,
+        )
+        verify_review_ledger(
+            dataset,
+            args.guideline,
+            args.ledger,
+        )
         return 0
 
     if args.command == "compile":

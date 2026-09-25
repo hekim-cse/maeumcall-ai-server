@@ -216,6 +216,8 @@ class BenchmarkSlice:
 class QualifiedTestSlice(BenchmarkSlice):
     authoring_source_fingerprint: str
     split_assignment_fingerprint: str
+    annotation_guideline_fingerprint: str
+    review_ledger_fingerprint: str
     corpus_fingerprint: str
     corpus_cases: tuple[EvaluationCase, ...]
 
@@ -479,6 +481,8 @@ def _prepare_qualified_test_slice(
     *,
     authoring_source_fingerprint: str,
     split_assignment_fingerprint: str,
+    annotation_guideline_fingerprint: str,
+    review_ledger_fingerprint: str,
 ) -> QualifiedTestSlice:
     if len(authoring_source_fingerprint) != 64 or any(
         character not in "0123456789abcdef" for character in authoring_source_fingerprint
@@ -488,6 +492,14 @@ def _prepare_qualified_test_slice(
         character not in "0123456789abcdef" for character in split_assignment_fingerprint
     ):
         raise ValueError("split assignment fingerprint must be a lowercase SHA-256 value")
+    for label, fingerprint in (
+        ("annotation guideline", annotation_guideline_fingerprint),
+        ("review ledger", review_ledger_fingerprint),
+    ):
+        if len(fingerprint) != 64 or any(
+            character not in "0123456789abcdef" for character in fingerprint
+        ):
+            raise ValueError(f"{label} fingerprint must be a lowercase SHA-256 value")
     _require_complete_corpus(dataset)
     benchmark = prepare_benchmark_slice(
         dataset,
@@ -498,6 +510,8 @@ def _prepare_qualified_test_slice(
         **benchmark.__dict__,
         authoring_source_fingerprint=authoring_source_fingerprint,
         split_assignment_fingerprint=split_assignment_fingerprint,
+        annotation_guideline_fingerprint=annotation_guideline_fingerprint,
+        review_ledger_fingerprint=review_ledger_fingerprint,
         corpus_fingerprint=_corpus_fingerprint(dataset),
         corpus_cases=dataset.cases,
     )
@@ -523,6 +537,14 @@ def _score_qualified_test_slice(
         character not in "0123456789abcdef" for character in benchmark.split_assignment_fingerprint
     ):
         raise ValueError("qualified split assignment fingerprint is invalid")
+    for label, fingerprint in (
+        ("annotation guideline", benchmark.annotation_guideline_fingerprint),
+        ("review ledger", benchmark.review_ledger_fingerprint),
+    ):
+        if len(fingerprint) != 64 or any(
+            character not in "0123456789abcdef" for character in fingerprint
+        ):
+            raise ValueError(f"qualified {label} fingerprint is invalid")
     corpus = GoldDataset(
         dataset_version=benchmark.dataset_version,
         state_contract_version=benchmark.state_contract_version,

@@ -9,6 +9,7 @@
 - 16개 상세 그래프용 구조화 NLU 골든 데이터 계약과 계약 성공률·행동 분류·필드 F1·사실 생성률 평가기
 - 의미 원본 그룹용 JSON Schema, 결정론적 V2 corpus compiler, 라이브 계약 기반 865개 작성 의무 목록과 source-compiled 일치 검증
 - 그룹 파일과 분리된 split 배정 원장, 작성 그룹 일대일 대조, 공식 채점 직전 split 원장 지문 재검증
+- 버전 지정 구조화 NLU 정답 작성 지침과 validation·test case·지침 지문을 공식 준비·채점 직전에 대조하는 검수 원장 계약
 - digest로 고정한 Python 3.11 다단계 이미지와 비루트·읽기 전용 핵심 컨테이너 실행 경계
 - PostgreSQL 준비 후 Alembic 일회성 적용과 API 시작을 보장하는 Compose 서비스 의존성
 - 이미지 빌드·마이그레이션·권한·HTTP 상태 계약을 실제 컨테이너에서 검증하는 `test-container` CI

@@ -376,19 +376,30 @@ def prepare_qualified_test_slice_from_authoring(
     source_dir: Path,
     split_assignments_path: Path,
     compiled_path: Path,
+    annotation_guideline_path: Path,
+    review_ledger_path: Path,
 ):
-    """Prepare an official test slice only from verified authoring sources."""
+    """Prepare a qualified test slice from verified sources and human approvals."""
     dataset, source_fingerprint, split_assignment_fingerprint = verify_compiled_authoring_corpus(
         source_dir,
         split_assignments_path,
         compiled_path,
     )
     from evals.structured_nlu.benchmark import _prepare_qualified_test_slice
+    from evals.structured_nlu.review import verify_review_ledger
+
+    verified_review = verify_review_ledger(
+        dataset,
+        annotation_guideline_path,
+        review_ledger_path,
+    )
 
     return _prepare_qualified_test_slice(
         dataset,
         authoring_source_fingerprint=source_fingerprint,
         split_assignment_fingerprint=split_assignment_fingerprint,
+        annotation_guideline_fingerprint=verified_review.guideline_fingerprint,
+        review_ledger_fingerprint=verified_review.ledger_fingerprint,
     )
 
 
@@ -396,6 +407,8 @@ def score_qualified_test_slice_from_authoring(
     source_dir: Path,
     split_assignments_path: Path,
     compiled_path: Path,
+    annotation_guideline_path: Path,
+    review_ledger_path: Path,
     benchmark: QualifiedTestSlice,
     predictions: tuple[CasePrediction, ...],
 ) -> EvaluationScores:
@@ -409,6 +422,17 @@ def score_qualified_test_slice_from_authoring(
         raise ValueError("qualified authoring source fingerprint does not match")
     if benchmark.split_assignment_fingerprint != split_assignment_fingerprint:
         raise ValueError("qualified split assignment fingerprint does not match")
+    from evals.structured_nlu.review import verify_review_ledger
+
+    verified_review = verify_review_ledger(
+        dataset,
+        annotation_guideline_path,
+        review_ledger_path,
+    )
+    if benchmark.annotation_guideline_fingerprint != verified_review.guideline_fingerprint:
+        raise ValueError("qualified annotation guideline fingerprint does not match")
+    if benchmark.review_ledger_fingerprint != verified_review.ledger_fingerprint:
+        raise ValueError("qualified review ledger fingerprint does not match")
     if benchmark.corpus_cases != dataset.cases:
         raise ValueError("qualified benchmark does not match the verified authoring corpus")
     from evals.structured_nlu.benchmark import _score_qualified_test_slice

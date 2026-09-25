@@ -1,0 +1,5 @@
+evals/structured_nlu/guidelines/*.md text eol=lf
+evals/structured_nlu/*.schema.json text eol=lf
+evals/structured_nlu/manifests/*.json text eol=lf
+evals/structured_nlu/data/source/**/*.json text eol=lf
+evals/structured_nlu/data/compiled/*.json text eol=lf
