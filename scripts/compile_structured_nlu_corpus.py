@@ -14,6 +14,10 @@ from evals.structured_nlu.authoring import (
     serialize_split_assignment_schema,
     verify_compiled_authoring_corpus,
 )
+from evals.structured_nlu.contrast import (
+    serialize_contrast_manifest_schema,
+    verify_contrast_manifest,
+)
 from evals.structured_nlu.obligations import serialize_official_authoring_obligations
 from evals.structured_nlu.review import (
     serialize_review_ledger_schema,
@@ -97,6 +101,27 @@ def build_parser() -> argparse.ArgumentParser:
     check_review_parser.add_argument("compiled", type=Path)
     check_review_parser.add_argument("guideline", type=Path)
     check_review_parser.add_argument("ledger", type=Path)
+
+    contrast_schema_parser = subparsers.add_parser(
+        "contrast-schema",
+        help="Write the editor-facing contrast manifest JSON Schema.",
+    )
+    contrast_schema_parser.add_argument("output", type=Path)
+
+    check_contrast_schema_parser = subparsers.add_parser(
+        "check-contrast-schema",
+        help="Verify that the committed contrast manifest schema matches the code contract.",
+    )
+    check_contrast_schema_parser.add_argument("schema", type=Path)
+
+    check_contrast_parser = subparsers.add_parser(
+        "check-contrast",
+        help="Verify contrast roles against the source-owned compiled corpus.",
+    )
+    check_contrast_parser.add_argument("source_dir", type=Path)
+    check_contrast_parser.add_argument("split_assignments", type=Path)
+    check_contrast_parser.add_argument("compiled", type=Path)
+    check_contrast_parser.add_argument("manifest", type=Path)
     return parser
 
 
@@ -151,6 +176,23 @@ def main() -> int:
             args.guideline,
             args.ledger,
         )
+        return 0
+    if args.command == "contrast-schema":
+        _write_text(args.output, serialize_contrast_manifest_schema())
+        return 0
+    if args.command == "check-contrast-schema":
+        if not args.schema.is_file():
+            raise SystemExit(f"contrast manifest schema does not exist: {args.schema}")
+        if args.schema.read_text(encoding="utf-8") != serialize_contrast_manifest_schema():
+            raise SystemExit("contrast manifest schema differs from the code contract")
+        return 0
+    if args.command == "check-contrast":
+        dataset, _, _ = verify_compiled_authoring_corpus(
+            args.source_dir,
+            args.split_assignments,
+            args.compiled,
+        )
+        verify_contrast_manifest(dataset, args.manifest)
         return 0
 
     if args.command == "compile":

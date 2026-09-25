@@ -174,9 +174,10 @@ class ServiceWorkflowSpec:
         collecting_actions = frozenset(
             {"provide_details", "change_detail", "cancel_workflow", "unknown"}
         )
+        greeting_actions = collecting_actions - {"change_detail"}
         terminal_actions = frozenset({"go_closing", "unknown"})
         return {
-            "greeting": collecting_actions,
+            "greeting": greeting_actions,
             self.collecting_state: collecting_actions,
             self.confirming_state: frozenset(
                 {

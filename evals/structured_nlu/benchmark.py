@@ -6,6 +6,13 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
+from evals.structured_nlu.contrast import contrast_policy_payload
+from evals.structured_nlu.coverage_v3 import (
+    OFFICIAL_COVERAGE_CONTRACT_V3,
+    classify_alternative_time_relation,
+    classify_current_fields_context,
+    observed_current_delta_relations,
+)
 from evals.structured_nlu.metrics import EvaluationScores, score_predictions
 from evals.structured_nlu.schema import (
     CasePrediction,
@@ -31,6 +38,14 @@ class CoverageDimension(StrEnum):
     DIFFICULTY_TAG = "difficulty_tag"
     ACTION_FIELD_PRESENT = "action_field_present"
     ACTION_FIELD_ABSENT = "action_field_absent"
+    SCENARIO_DIFFICULTY_TAG = "scenario_difficulty_tag"
+    CURRENT_FIELDS_CONTEXT = "current_fields_context"
+    CURRENT_FIELD_PRESENT = "current_field_present"
+    CURRENT_FIELD_ABSENT = "current_field_absent"
+    CURRENT_FIELD_OPTION = "current_field_option"
+    CURRENT_DELTA_RELATION = "current_delta_relation"
+    ALTERNATIVE_TIME_RELATION = "alternative_time_relation"
+    CONTRAST_ROLE = "contrast_role"
 
 
 @dataclass(frozen=True)
@@ -52,6 +67,8 @@ class BenchmarkProfile:
     profile_id: str
     scenarios: tuple[tuple[str, ScenarioCoverageRequirement], ...]
     required_tags: frozenset[DifficultyTag]
+    coverage_contract_payload: str | None = None
+    contrast_policy_payload: str | None = None
 
     def __post_init__(self) -> None:
         if not self.profile_id.strip():
@@ -135,6 +152,12 @@ class BenchmarkProfile:
                     raise ValueError(
                         f"profile field options differ from the live contract: {scenario_key}"
                     )
+        if self.coverage_contract_payload is not None:
+            if self.coverage_contract_payload != OFFICIAL_COVERAGE_CONTRACT_V3.canonical_payload:
+                raise ValueError("benchmark coverage contract differs from Coverage V3")
+        if self.contrast_policy_payload is not None:
+            if self.contrast_policy_payload != contrast_policy_payload():
+                raise ValueError("benchmark contrast policy differs from Coverage V3")
 
     @property
     def scenario_requirements(self) -> dict[str, ScenarioCoverageRequirement]:
@@ -145,6 +168,16 @@ class BenchmarkProfile:
         payload = {
             "profile_id": self.profile_id,
             "required_tags": sorted(tag.value for tag in self.required_tags),
+            "coverage_contract": (
+                json.loads(self.coverage_contract_payload)
+                if self.coverage_contract_payload is not None
+                else None
+            ),
+            "contrast_policy": (
+                json.loads(self.contrast_policy_payload)
+                if self.contrast_policy_payload is not None
+                else None
+            ),
             "scenarios": {
                 scenario_key: {
                     "conversation_states": sorted(requirement.conversation_states),
@@ -214,6 +247,9 @@ class BenchmarkSlice:
 
 @dataclass(frozen=True)
 class QualifiedTestSlice(BenchmarkSlice):
+    validation_coverage: BenchmarkCoverageReport
+    coverage_contract_fingerprint: str
+    contrast_manifest_fingerprint: str
     authoring_source_fingerprint: str
     split_assignment_fingerprint: str
     annotation_guideline_fingerprint: str
@@ -260,15 +296,17 @@ def _build_official_profile() -> BenchmarkProfile:
             )
         )
     return BenchmarkProfile(
-        profile_id="maeumcall-structured-nlu-v2",
+        profile_id="maeumcall-structured-nlu-v3",
         scenarios=tuple(scenarios),
-        required_tags=frozenset(DifficultyTag),
+        required_tags=frozenset(),
+        coverage_contract_payload=OFFICIAL_COVERAGE_CONTRACT_V3.canonical_payload,
+        contrast_policy_payload=contrast_policy_payload(),
     )
 
 
 OFFICIAL_BENCHMARK_PROFILE = _build_official_profile()
 OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT = (
-    "1795efc46ed9988925929d5f6706db8c997b0450abc657d41909bb2402f3bd1e"
+    "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580"
 )
 if OFFICIAL_BENCHMARK_PROFILE.fingerprint != OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT:
     raise RuntimeError("official benchmark profile changed; create a new version and fingerprint")
@@ -440,6 +478,13 @@ def inspect_benchmark_coverage(
             scenario_key=scenario_key,
         )
 
+        if profile.coverage_contract_payload is not None:
+            _append_v3_scenario_coverage_issues(
+                issues,
+                scenario_key=scenario_key,
+                scenario_cases=scenario_cases,
+            )
+
     _append_missing_issue(
         issues,
         dimension=CoverageDimension.DIFFICULTY_TAG,
@@ -453,6 +498,126 @@ def inspect_benchmark_coverage(
         case_count=len(cases),
         issues=tuple(issues),
     )
+
+
+def _append_v3_scenario_coverage_issues(
+    issues: list[CoverageIssue],
+    *,
+    scenario_key: str,
+    scenario_cases: tuple[EvaluationCase, ...],
+) -> None:
+    contract = EVALUATION_CONTRACTS[scenario_key]
+    policy = OFFICIAL_COVERAGE_CONTRACT_V3.scenario_policies[scenario_key]
+    _append_missing_issue(
+        issues,
+        dimension=CoverageDimension.SCENARIO_DIFFICULTY_TAG,
+        required=frozenset(tag.value for tag in policy.applicable_tags),
+        covered={tag.value for case in scenario_cases for tag in case.tags},
+        scenario_key=scenario_key,
+    )
+
+    if contract.workflow_spec is not None:
+        required_contexts = frozenset(
+            f"{state}->{context.value}"
+            for state, contexts in policy.current_contexts_by_state
+            for context in contexts
+        )
+        covered_contexts = {
+            f"{case.conversation_state}->{classify_current_fields_context(contract, conversation_state=case.conversation_state, current_fields=case.current_fields).value}"
+            for case in scenario_cases
+        }
+        _append_missing_issue(
+            issues,
+            dimension=CoverageDimension.CURRENT_FIELDS_CONTEXT,
+            required=required_contexts,
+            covered=covered_contexts,
+            scenario_key=scenario_key,
+        )
+        _append_missing_issue(
+            issues,
+            dimension=CoverageDimension.CURRENT_FIELD_PRESENT,
+            required=policy.current_field_names,
+            covered={
+                field_name
+                for case in scenario_cases
+                for field_name, value in case.current_fields.items()
+                if value is not None
+            },
+            scenario_key=scenario_key,
+        )
+        _append_missing_issue(
+            issues,
+            dimension=CoverageDimension.CURRENT_FIELD_ABSENT,
+            required=policy.current_field_names,
+            covered={
+                field_name
+                for case in scenario_cases
+                for field_name, value in case.current_fields.items()
+                if value is None
+            },
+            scenario_key=scenario_key,
+        )
+        _append_missing_issue(
+            issues,
+            dimension=CoverageDimension.CURRENT_FIELD_OPTION,
+            required=frozenset(
+                f"{field_name}={value}"
+                for field_name, values in policy.current_field_options
+                for value in values
+            ),
+            covered={
+                f"{field_name}={value}"
+                for case in scenario_cases
+                for field_name, value in case.current_fields.items()
+                if value is not None
+            },
+            scenario_key=scenario_key,
+        )
+        _append_missing_issue(
+            issues,
+            dimension=CoverageDimension.CURRENT_DELTA_RELATION,
+            required=frozenset(
+                f"{field_name}->{relation.value}"
+                for field_name, relations in policy.current_delta_relations
+                for relation in relations
+            ),
+            covered={
+                relation
+                for case in scenario_cases
+                for relation in observed_current_delta_relations(
+                    current_fields=case.current_fields,
+                    output_fields=_canonical_gold_fields(case),
+                    user_action=case.labels.user_action,
+                    change_field=case.labels.change_field,
+                )
+            },
+            scenario_key=scenario_key,
+        )
+
+    required_alternative_relations = frozenset(
+        f"{state}->{action}->{relation.value}"
+        for state, action, relations in policy.alternative_relations_by_state_action
+        for relation in relations
+    )
+    if required_alternative_relations:
+        _append_missing_issue(
+            issues,
+            dimension=CoverageDimension.ALTERNATIVE_TIME_RELATION,
+            required=required_alternative_relations,
+            covered={
+                f"{case.conversation_state}->{case.labels.user_action}->{classify_alternative_time_relation(offered_alternative_times=case.offered_alternative_times, selected_time=_canonical_gold_fields(case).get('selected_time')).value}"
+                for case in scenario_cases
+                if case.conversation_state in contract.alternative_states
+            },
+            scenario_key=scenario_key,
+        )
+
+
+def _canonical_gold_fields(case: EvaluationCase) -> dict[str, str | None]:
+    return {
+        field_name: expected.accepted_values[0] if expected is not None else None
+        for field_name, expected in case.labels.fields.items()
+    }
 
 
 def prepare_benchmark_slice(
@@ -483,6 +648,7 @@ def _prepare_qualified_test_slice(
     split_assignment_fingerprint: str,
     annotation_guideline_fingerprint: str,
     review_ledger_fingerprint: str,
+    contrast_manifest_fingerprint: str,
 ) -> QualifiedTestSlice:
     if len(authoring_source_fingerprint) != 64 or any(
         character not in "0123456789abcdef" for character in authoring_source_fingerprint
@@ -495,12 +661,19 @@ def _prepare_qualified_test_slice(
     for label, fingerprint in (
         ("annotation guideline", annotation_guideline_fingerprint),
         ("review ledger", review_ledger_fingerprint),
+        ("contrast manifest", contrast_manifest_fingerprint),
     ):
         if len(fingerprint) != 64 or any(
             character not in "0123456789abcdef" for character in fingerprint
         ):
             raise ValueError(f"{label} fingerprint must be a lowercase SHA-256 value")
     _require_complete_corpus(dataset)
+    validation_coverage = inspect_benchmark_coverage(
+        dataset,
+        split=DatasetSplit.VALIDATION,
+        profile=OFFICIAL_BENCHMARK_PROFILE,
+    )
+    validation_coverage.require_complete()
     benchmark = prepare_benchmark_slice(
         dataset,
         split=DatasetSplit.TEST,
@@ -508,6 +681,9 @@ def _prepare_qualified_test_slice(
     )
     return QualifiedTestSlice(
         **benchmark.__dict__,
+        validation_coverage=validation_coverage,
+        coverage_contract_fingerprint=OFFICIAL_COVERAGE_CONTRACT_V3.fingerprint,
+        contrast_manifest_fingerprint=contrast_manifest_fingerprint,
         authoring_source_fingerprint=authoring_source_fingerprint,
         split_assignment_fingerprint=split_assignment_fingerprint,
         annotation_guideline_fingerprint=annotation_guideline_fingerprint,
@@ -529,6 +705,8 @@ def _score_qualified_test_slice(
         raise ValueError("qualified test profile id does not match")
     if benchmark.profile_fingerprint != OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT:
         raise ValueError("qualified test profile fingerprint does not match")
+    if benchmark.coverage_contract_fingerprint != OFFICIAL_COVERAGE_CONTRACT_V3.fingerprint:
+        raise ValueError("qualified coverage contract fingerprint does not match")
     if len(benchmark.authoring_source_fingerprint) != 64 or any(
         character not in "0123456789abcdef" for character in benchmark.authoring_source_fingerprint
     ):
@@ -540,6 +718,7 @@ def _score_qualified_test_slice(
     for label, fingerprint in (
         ("annotation guideline", benchmark.annotation_guideline_fingerprint),
         ("review ledger", benchmark.review_ledger_fingerprint),
+        ("contrast manifest", benchmark.contrast_manifest_fingerprint),
     ):
         if len(fingerprint) != 64 or any(
             character not in "0123456789abcdef" for character in fingerprint
@@ -569,6 +748,14 @@ def _score_qualified_test_slice(
     if benchmark.coverage != coverage:
         raise ValueError("qualified test coverage report does not match")
     coverage.require_complete()
+    validation_coverage = inspect_benchmark_coverage(
+        corpus,
+        split=DatasetSplit.VALIDATION,
+        profile=OFFICIAL_BENCHMARK_PROFILE,
+    )
+    if benchmark.validation_coverage != validation_coverage:
+        raise ValueError("qualified validation coverage report does not match")
+    validation_coverage.require_complete()
     return score_predictions(benchmark.cases, predictions)
 
 

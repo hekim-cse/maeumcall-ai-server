@@ -76,7 +76,7 @@ class ReviewLedgerV1(BaseModel):
             "algorithm": REVIEW_LEDGER_FINGERPRINT_ALGORITHM_V1,
             "ledger": self.model_dump(mode="json"),
         }
-        return _sha256_text(_canonical_json(payload))
+        return _sha256_text(canonical_json_text(payload))
 
 
 @dataclass(frozen=True)
@@ -92,7 +92,7 @@ def evaluation_case_fingerprint(case: EvaluationCase) -> str:
         "algorithm": EVALUATION_CASE_FINGERPRINT_ALGORITHM_V1,
         "case": case.model_dump(mode="json"),
     }
-    return _sha256_text(_canonical_json(payload))
+    return _sha256_text(canonical_json_text(payload))
 
 
 def verify_review_ledger(
@@ -101,7 +101,7 @@ def verify_review_ledger(
     review_ledger_path: Path,
 ) -> VerifiedReviewLedger:
     """Require exact, current human approval for every validation and test case."""
-    guideline_bytes = _read_regular_file(
+    guideline_bytes = read_regular_artifact(
         annotation_guideline_path,
         label="annotation guideline",
     )
@@ -109,9 +109,9 @@ def verify_review_ledger(
     if guideline_fingerprint != ANNOTATION_GUIDELINE_V1_FINGERPRINT:
         raise ValueError("annotation guideline differs from the versioned guideline fingerprint")
 
-    ledger_bytes = _read_regular_file(review_ledger_path, label="review ledger")
+    ledger_bytes = read_regular_artifact(review_ledger_path, label="review ledger")
     try:
-        decoded = _normalize_text_tree(
+        decoded = normalize_text_tree(
             json.loads(ledger_bytes, object_pairs_hook=_object_from_unique_pairs)
         )
         if not isinstance(decoded, dict):
@@ -177,7 +177,7 @@ def serialize_review_ledger_schema() -> str:
     return json.dumps(schema, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
 
-def _read_regular_file(path: Path, *, label: str) -> bytes:
+def read_regular_artifact(path: Path, *, label: str) -> bytes:
     _require_path_without_symlink_components(path, label=label)
     if path.is_symlink():
         raise ValueError(f"{label} must not be a symbolic link: {path}")
@@ -197,19 +197,20 @@ def _require_path_without_symlink_components(path: Path, *, label: str) -> None:
             raise ValueError(f"{label} path must not contain symbolic links: {path}")
 
 
-def _normalize_text_tree(value):
+def normalize_text_tree(value):
+    """Normalize every string and reject mapping keys that collide after NFC."""
     if isinstance(value, str):
         return unicodedata.normalize("NFC", value)
     if isinstance(value, dict):
         normalized = {}
         for key, item in value.items():
-            normalized_key = _normalize_text_tree(key)
+            normalized_key = normalize_text_tree(key)
             if normalized_key in normalized:
                 raise ValueError(f"text normalization produced a duplicate key: {normalized_key}")
-            normalized[normalized_key] = _normalize_text_tree(item)
+            normalized[normalized_key] = normalize_text_tree(item)
         return normalized
     if isinstance(value, list):
-        return [_normalize_text_tree(item) for item in value]
+        return [normalize_text_tree(item) for item in value]
     return value
 
 
@@ -222,9 +223,10 @@ def _object_from_unique_pairs(pairs):
     return value
 
 
-def _canonical_json(value) -> str:
+def canonical_json_text(value) -> str:
+    """Serialize semantic JSON with NFC text, stable keys, and no layout noise."""
     return json.dumps(
-        _normalize_text_tree(value),
+        normalize_text_tree(value),
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),

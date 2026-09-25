@@ -106,6 +106,7 @@ def score_predictions(
             contract,
             prediction.attempts[0].output,
             conversation_state=case.conversation_state,
+            current_fields=case.current_fields,
             offered_alternative_times=case.offered_alternative_times,
         )
         if first_output is not None:
@@ -116,6 +117,7 @@ def score_predictions(
             contract,
             prediction.final_output,
             conversation_state=case.conversation_state,
+            current_fields=case.current_fields,
             offered_alternative_times=case.offered_alternative_times,
         )
         if output is not None:
@@ -221,6 +223,7 @@ def _contract_valid_output(
     output: NormalizedPrediction | None,
     *,
     conversation_state: str,
+    current_fields: dict[str, str | None],
     offered_alternative_times: tuple[str, ...],
 ) -> NormalizedPrediction | None:
     if output is None:
@@ -232,6 +235,7 @@ def _contract_valid_output(
             user_action=output.user_action,
             change_field=output.change_field,
             conversation_state=conversation_state,
+            current_fields=current_fields,
             offered_alternative_times=offered_alternative_times,
         )
     except ValueError:

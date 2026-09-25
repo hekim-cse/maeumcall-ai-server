@@ -23,11 +23,13 @@ class ServiceWorkflowTurnContract:
     @property
     def canonical_payload(self) -> str:
         payload = {
-            "kind": "service_workflow_turn_delta_v2",
+            "kind": "service_workflow_turn_delta_v3",
             "provide_action": self.provide_action,
             "change_action": self.change_action,
             "change_field_must_name_only_present_field": True,
             "empty_change_clears_target": True,
+            "provide_fields_must_be_missing_from_current_context": True,
+            "change_target_must_exist_in_current_context": True,
             "control_actions": sorted(self.control_actions),
             "action_field_rules": {
                 action: {
@@ -44,20 +46,39 @@ class ServiceWorkflowTurnContract:
         self,
         *,
         fields: dict[str, str | None],
+        current_fields: dict[str, str | None],
         user_action: str,
         change_field: str | None,
     ) -> None:
+        if set(current_fields) != self.field_names:
+            raise ValueError("current_fields must match the workflow field contract")
         validate_action_field_delta(
             fields,
             user_action=user_action,
             contract=self.action_field_contract,
         )
         present_fields = {key for key, value in fields.items() if value is not None}
+        if user_action == self.provide_action:
+            already_collected = {
+                field_name
+                for field_name in present_fields
+                if current_fields[field_name] is not None
+            }
+            if already_collected:
+                raise ValueError(
+                    "provide_details may include only fields missing from current_fields: "
+                    f"{sorted(already_collected)}"
+                )
         if user_action == self.change_action:
             if change_field not in self.field_names:
                 raise ValueError("change_field must name a workflow field")
+            if current_fields[change_field] is None:
+                raise ValueError("change_detail must target a previously collected field")
             if present_fields - {change_field}:
                 raise ValueError("change_detail may include only the field named by change_field")
+            replacement = fields[change_field]
+            if replacement is not None and replacement == current_fields[change_field]:
+                raise ValueError("change_detail must replace the current field with a new value")
         elif change_field is not None:
             raise ValueError("change_field must be null unless user_action is change_detail")
 
@@ -90,12 +111,14 @@ def validate_service_workflow_turn_delta(
     spec: ServiceWorkflowSpec,
     *,
     fields: dict[str, str | None],
+    current_fields: dict[str, str | None],
     user_action: str,
     change_field: str | None,
 ) -> None:
     """Validate one workflow action against values extracted from the same utterance."""
     build_service_workflow_turn_contract(spec).validate(
         fields=fields,
+        current_fields=current_fields,
         user_action=user_action,
         change_field=change_field,
     )

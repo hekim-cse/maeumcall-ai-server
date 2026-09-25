@@ -5,6 +5,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from types import MappingProxyType
 
+from evals.structured_nlu.semantics import ACTION_OBJECTIVE_TAGS_V1, DifficultyTag
 from llm.structured_output import ActionFieldRule, validate_action_field_delta
 from services.flow.cityhall.contracts import (
     BULKY_WASTE_SPEC,
@@ -88,6 +89,7 @@ class EvaluationContract:
     user_actions: frozenset[str]
     uses_current_fields: bool
     actions_by_state: tuple[tuple[str, frozenset[str]], ...]
+    objective_tags_by_action: tuple[tuple[str, frozenset[DifficultyTag]], ...]
     action_field_contract: Mapping[str, ActionFieldRule] | None = None
     alternative_states: frozenset[str] = frozenset()
     field_options: tuple[tuple[str, frozenset[str]], ...] = ()
@@ -97,7 +99,9 @@ class EvaluationContract:
     def scoring_contract_payload(self) -> str:
         """Return the canonical rules that can change prediction acceptance."""
         if self.workflow_spec is not None:
-            return build_service_workflow_turn_contract(self.workflow_spec).canonical_payload
+            payload = json.loads(
+                build_service_workflow_turn_contract(self.workflow_spec).canonical_payload
+            )
         else:
             payload = {
                 "kind": "detailed_action_field_v1",
@@ -111,6 +115,10 @@ class EvaluationContract:
                     for action, rule in sorted((self.action_field_contract or {}).items())
                 },
             }
+        payload["objective_tags_by_action"] = {
+            action: sorted(tag.value for tag in tags)
+            for action, tags in self.objective_tags_by_action
+        }
         return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
     @property
@@ -127,7 +135,7 @@ class EvaluationContract:
         absent = frozenset(
             f"{action}->{field_name}"
             for action, rule in rules.items()
-            if action == "change_detail" or action.startswith("change_")
+            if DifficultyTag.CORRECTION in dict(self.objective_tags_by_action)[action]
             for field_name in rule.allowed_fields
             if field_name not in rule.required_fields
         )
@@ -149,6 +157,7 @@ class EvaluationContract:
         user_action: str,
         change_field: str | None,
         conversation_state: str,
+        current_fields: dict[str, str | None] | None = None,
         offered_alternative_times: tuple[str, ...] = (),
     ) -> None:
         """Validate normalized model output against the live scenario contract."""
@@ -174,9 +183,12 @@ class EvaluationContract:
         if self.uses_current_fields:
             if self.workflow_spec is None:
                 raise RuntimeError("workflow evaluation contract is missing its live spec")
+            if current_fields is None:
+                raise ValueError("workflow prediction validation requires current_fields")
             validate_service_workflow_turn_delta(
                 self.workflow_spec,
                 fields=fields,
+                current_fields=current_fields,
                 user_action=user_action,
                 change_field=change_field,
             )
@@ -244,9 +256,21 @@ def _detailed_contract(
         user_actions=user_actions,
         uses_current_fields=False,
         actions_by_state=tuple(actions_by_state.items()),
+        objective_tags_by_action=_objective_tags_for_actions(user_actions),
         action_field_contract=action_field_contract,
         alternative_states=alternative_states,
     )
+
+
+def _objective_tags_for_actions(
+    actions: frozenset[str],
+) -> tuple[tuple[str, frozenset[DifficultyTag]], ...]:
+    missing = actions - set(ACTION_OBJECTIVE_TAGS_V1)
+    if missing:
+        raise RuntimeError(
+            f"actions are missing explicit objective tag semantics: {sorted(missing)}"
+        )
+    return tuple((action, ACTION_OBJECTIVE_TAGS_V1[action]) for action in sorted(actions))
 
 
 def _workflow_contract(spec: ServiceWorkflowSpec) -> EvaluationContract:
@@ -262,6 +286,7 @@ def _workflow_contract(spec: ServiceWorkflowSpec) -> EvaluationContract:
         user_actions=spec.user_actions,
         uses_current_fields=True,
         actions_by_state=tuple(actions_by_state.items()),
+        objective_tags_by_action=_objective_tags_for_actions(spec.user_actions),
         field_options=tuple(
             (field.key, frozenset(option.value for option in field.options))
             for field in spec.fields
@@ -351,6 +376,14 @@ _CONTRACTS = (
 
 if len({contract.scenario_key for contract in _CONTRACTS}) != len(_CONTRACTS):
     raise RuntimeError("structured NLU evaluation scenario keys must be unique")
+
+_live_actions = frozenset().union(*(contract.user_actions for contract in _CONTRACTS))
+if set(ACTION_OBJECTIVE_TAGS_V1) != _live_actions:
+    raise RuntimeError(
+        "objective action semantics must exactly match live structured-NLU actions: "
+        f"missing={sorted(_live_actions - set(ACTION_OBJECTIVE_TAGS_V1))}, "
+        f"stale={sorted(set(ACTION_OBJECTIVE_TAGS_V1) - _live_actions)}"
+    )
 
 EVALUATION_CONTRACTS = MappingProxyType(
     {contract.scenario_key: contract for contract in _CONTRACTS}

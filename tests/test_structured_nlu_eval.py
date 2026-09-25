@@ -1,4 +1,6 @@
+import copy
 import json
+import unicodedata
 from pathlib import Path
 
 import pytest
@@ -7,17 +9,31 @@ from pydantic import ValidationError
 from evals.structured_nlu.benchmark import (
     OFFICIAL_BENCHMARK_PROFILE,
     OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT,
+    BenchmarkCoverageReport,
     BenchmarkProfile,
     CoverageDimension,
+    CoverageIssue,
     QualifiedTestSlice,
     ScenarioCoverageRequirement,
+    _append_v3_scenario_coverage_issues,
     _prepare_qualified_test_slice,
     _score_qualified_test_slice,
     inspect_benchmark_coverage,
     prepare_benchmark_slice,
 )
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
+from evals.structured_nlu.contrast import (
+    DETAILED_POSITIVE_CONTRASTS_V1,
+    OFFICIAL_CONTRAST_FAMILIES_V1,
+    ContrastFamilyPolicy,
+    ContrastGroupDefinition,
+    ContrastRolePolicy,
+    contrast_group_fingerprint,
+    verify_contrast_manifest,
+)
+from evals.structured_nlu.coverage_v3 import OFFICIAL_COVERAGE_CONTRACT_V3
 from evals.structured_nlu.metrics import score_predictions
+from evals.structured_nlu.review import evaluation_case_fingerprint
 from evals.structured_nlu.schema import (
     CasePrediction,
     DatasetSplit,
@@ -29,6 +45,7 @@ from evals.structured_nlu.schema import (
     GoldLabels,
     NormalizedPrediction,
 )
+from evals.structured_nlu.semantics import ACTION_OBJECTIVE_TAGS_V1
 from services.flow.common.state_contract import SCENARIO_STATE_VERSION
 from services.flow.delivery.contracts import ORDER_CHANGE_SPEC
 
@@ -79,6 +96,26 @@ def _appointment_fields(
         "time": time,
         "user_name": name,
     }
+
+
+def _approved_contrast_group(definition: dict) -> dict:
+    parsed = ContrastGroupDefinition.model_validate(definition)
+    return {
+        "definition": definition,
+        "approval": {
+            "group_fingerprint_algorithm": "contrast-group-canonical-json-sha256-v1",
+            "group_fingerprint": contrast_group_fingerprint(parsed),
+            "reviewer_id": "reviewer.primary",
+            "reviewed_at": "2026-09-26T09:00:00+09:00",
+            "rationale": "공유 문맥에서 두 행동 역할이 실제 혼동 축을 이룬다고 검수했다.",
+            "decision": "approved",
+        },
+    }
+
+
+def _refresh_contrast_group_approval(group: dict) -> None:
+    definition = ContrastGroupDefinition.model_validate(group["definition"])
+    group["approval"]["group_fingerprint"] = contrast_group_fingerprint(definition)
 
 
 def _prediction(
@@ -360,7 +397,7 @@ def test_case_requires_objective_field_count_tag():
 
 
 def test_case_requires_objective_action_tag():
-    with pytest.raises(ValidationError, match="correction tag is required"):
+    with pytest.raises(ValidationError, match="objective tags must exactly match"):
         _case(
             case_id="appointment.missing-correction-tag",
             message="날짜를 내일로 바꿀게요.",
@@ -766,6 +803,245 @@ def test_official_profile_tracks_all_live_structured_nlu_contracts():
         ) == contract.action_field_coverage
 
 
+def test_v3_difficulty_tags_are_required_per_scenario():
+    case = _case(
+        case_id="appointment.v3-tag-scope",
+        message="내일 면담하고 싶습니다.",
+        fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+        action="provide_appointment_info",
+        tags=("single_field",),
+    )
+    issues = []
+
+    _append_v3_scenario_coverage_issues(
+        issues,
+        scenario_key="교수님:면담 예약",
+        scenario_cases=(case,),
+    )
+
+    tag_issue = next(
+        issue for issue in issues if issue.dimension is CoverageDimension.SCENARIO_DIFFICULTY_TAG
+    )
+    assert tag_issue.scenario_key == "교수님:면담 예약"
+    assert "hard_negative" in tag_issue.missing_values
+    assert "confirmation" in tag_issue.missing_values
+
+
+def test_v3_profile_has_context_and_contrast_fingerprints():
+    assert OFFICIAL_BENCHMARK_PROFILE.profile_id == "maeumcall-structured-nlu-v3"
+    assert OFFICIAL_BENCHMARK_PROFILE.coverage_contract_payload == (
+        OFFICIAL_COVERAGE_CONTRACT_V3.canonical_payload
+    )
+    assert len(OFFICIAL_COVERAGE_CONTRACT_V3.fingerprint) == 64
+
+
+def test_positive_contrast_states_are_explicit_live_contract_pairs():
+    detailed_keys = {
+        scenario_key
+        for scenario_key, contract in EVALUATION_CONTRACTS.items()
+        if contract.workflow_spec is None
+    }
+    assert set(DETAILED_POSITIVE_CONTRASTS_V1) == detailed_keys
+    positive_families = {
+        family.family_id: family
+        for family in OFFICIAL_CONTRAST_FAMILIES_V1
+        if family.family_id.startswith("positive-vs-unknown-")
+    }
+    assert len(positive_families) == 16
+    for family in positive_families.values():
+        positive = next(role for role in family.roles if role.role_id == "positive")
+        contract = EVALUATION_CONTRACTS[positive.scenario_key]
+        actions_by_state = dict(contract.actions_by_state)
+        assert len(positive.allowed_states) == 1
+        assert len(positive.allowed_actions) == 1
+        state = next(iter(positive.allowed_states))
+        assert positive.allowed_actions <= actions_by_state[state]
+
+
+def test_action_objective_tag_semantics_exactly_cover_live_actions():
+    live_actions = set().union(
+        *(contract.user_actions for contract in EVALUATION_CONTRACTS.values())
+    )
+    assert set(ACTION_OBJECTIVE_TAGS_V1) == live_actions
+    for contract in EVALUATION_CONTRACTS.values():
+        assert dict(contract.objective_tags_by_action) == {
+            action: ACTION_OBJECTIVE_TAGS_V1[action] for action in sorted(contract.user_actions)
+        }
+
+
+def test_contrast_manifest_is_order_independent_and_requires_shared_context(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    family = ContrastFamilyPolicy(
+        family_id="appointment-positive-vs-unknown",
+        roles=(
+            ContrastRolePolicy(
+                "positive",
+                "교수님:면담 예약",
+                frozenset({"provide_appointment_info"}),
+                frozenset({"collecting_appointment_info"}),
+            ),
+            ContrastRolePolicy(
+                "unknown",
+                "교수님:면담 예약",
+                frozenset({"unknown"}),
+                frozenset({"collecting_appointment_info", "greeting"}),
+            ),
+        ),
+        shared_context_fields=frozenset(
+            {"conversation_state", "current_fields", "offered_alternative_times"}
+        ),
+    )
+    monkeypatch.setattr(
+        "evals.structured_nlu.contrast.OFFICIAL_CONTRAST_FAMILIES_V1",
+        (family,),
+    )
+    cases = []
+    for split in ("validation", "test"):
+        cases.extend(
+            (
+                _case(
+                    case_id=f"appointment.contrast-{split}-positive",
+                    message=f"{split} 내일 면담하고 싶습니다.",
+                    fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+                    action="provide_appointment_info",
+                    tags=("single_field",),
+                    split=split,
+                ),
+                _case(
+                    case_id=f"appointment.contrast-{split}-unknown",
+                    message=f"{split} 무슨 말인지 모르겠습니다.",
+                    fields=_appointment_fields(),
+                    action="unknown",
+                    tags=("hard_negative",),
+                    split=split,
+                ),
+            )
+        )
+    dataset = _gold_dataset(*cases)
+    groups = []
+    for split in ("validation", "test"):
+        split_cases = [case for case in cases if case.split.value == split]
+        groups.append(
+            _approved_contrast_group(
+                {
+                    "contrast_group_id": f"appointment.{split}",
+                    "family_id": family.family_id,
+                    "comparison_axis_id": family.family_id,
+                    "confusion_axis": "같은 상태에서 정보 제공과 무관 발화를 구분한다.",
+                    "members": [
+                        {
+                            "role_id": "positive"
+                            if case.labels.user_action != "unknown"
+                            else "unknown",
+                            "case_id": case.id,
+                            "case_fingerprint": evaluation_case_fingerprint(case),
+                        }
+                        for case in split_cases
+                    ],
+                }
+            )
+        )
+    path = tmp_path / "contrast.json"
+    payload = {
+        "contrast_manifest_schema_version": 1,
+        "coverage_contract_id": "maeumcall-structured-nlu-coverage-v3",
+        "case_fingerprint_algorithm": "evaluation-case-canonical-json-sha256-v1",
+        "groups": copy.deepcopy(groups),
+    }
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    first = verify_contrast_manifest(dataset, path)
+
+    payload["groups"][0]["definition"]["confusion_axis"] += " 변경"
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(ValueError, match="approval does not match current content"):
+        verify_contrast_manifest(dataset, path)
+    payload["groups"][0] = copy.deepcopy(groups[0])
+
+    payload["groups"] = list(reversed(copy.deepcopy(groups)))
+    for group in payload["groups"]:
+        group["definition"]["members"] = list(reversed(group["definition"]["members"]))
+        group["definition"]["confusion_axis"] = unicodedata.normalize(
+            "NFD", group["definition"]["confusion_axis"]
+        )
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    second = verify_contrast_manifest(dataset, path)
+    assert first.fingerprint == second.fingerprint
+
+    stale_group = payload["groups"][0]
+    stale_group["definition"]["members"][0]["case_fingerprint"] = "f" * 64
+    _refresh_contrast_group_approval(stale_group)
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(ValueError, match="case fingerprint does not match"):
+        verify_contrast_manifest(dataset, path)
+    payload["groups"] = list(reversed(copy.deepcopy(groups)))
+
+    tampered_cases = list(dataset.cases)
+    target = next(case for case in tampered_cases if case.id.endswith("validation-unknown"))
+    target_index = tampered_cases.index(target)
+    tampered_cases[target_index] = target.model_copy(update={"conversation_state": "greeting"})
+    tampered = tampered_cases[target_index]
+    for group in payload["groups"]:
+        for member in group["definition"]["members"]:
+            if member["case_id"] == tampered.id:
+                member["case_fingerprint"] = evaluation_case_fingerprint(tampered)
+        _refresh_contrast_group_approval(group)
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(ValueError, match="share required context"):
+        verify_contrast_manifest(
+            GoldDataset(
+                dataset_version=dataset.dataset_version,
+                state_contract_version=dataset.state_contract_version,
+                cases=tuple(tampered_cases),
+            ),
+            path,
+        )
+
+
+def test_qualified_v3_rejects_incomplete_validation_before_test(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    cases = tuple(
+        _case(
+            case_id=f"appointment.v3-{split}",
+            message=f"{split} 면담을 신청합니다.",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=(split,))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+            split=split,
+        )
+        for split in ("development", "validation", "test")
+    )
+    dataset = _gold_dataset(*cases)
+    incomplete = BenchmarkCoverageReport(
+        profile_id=OFFICIAL_BENCHMARK_PROFILE.profile_id,
+        profile_fingerprint=OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT,
+        split=DatasetSplit.VALIDATION,
+        case_count=1,
+        issues=(
+            CoverageIssue(
+                dimension=CoverageDimension.SCENARIO,
+                missing_values=("예약:병원 예약",),
+            ),
+        ),
+    )
+    monkeypatch.setattr(
+        "evals.structured_nlu.benchmark.inspect_benchmark_coverage",
+        lambda *_args, **_kwargs: incomplete,
+    )
+
+    with pytest.raises(ValueError, match="benchmark coverage is incomplete"):
+        _prepare_qualified_test_slice(
+            dataset,
+            authoring_source_fingerprint="a" * 64,
+            split_assignment_fingerprint="b" * 64,
+            annotation_guideline_fingerprint="c" * 64,
+            review_ledger_fingerprint="d" * 64,
+            contrast_manifest_fingerprint="e" * 64,
+        )
+
+
 def test_profile_rejects_duplicate_states_and_action_union_drift():
     profile = _appointment_test_profile()
     scenario_key, requirement = profile.scenarios[0]
@@ -1008,10 +1284,14 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
             split_assignment_fingerprint="b" * 64,
             annotation_guideline_fingerprint="c" * 64,
             review_ledger_fingerprint="d" * 64,
+            contrast_manifest_fingerprint="e" * 64,
         )
 
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
+        validation_coverage=benchmark.coverage,
+        coverage_contract_fingerprint=OFFICIAL_COVERAGE_CONTRACT_V3.fingerprint,
+        contrast_manifest_fingerprint="e" * 64,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint="b" * 64,
         annotation_guideline_fingerprint="c" * 64,
@@ -1034,6 +1314,9 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
             absent_case,
         ),
         coverage=benchmark.coverage,
+        validation_coverage=benchmark.coverage,
+        coverage_contract_fingerprint=OFFICIAL_COVERAGE_CONTRACT_V3.fingerprint,
+        contrast_manifest_fingerprint="e" * 64,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint="b" * 64,
         annotation_guideline_fingerprint="c" * 64,
@@ -1066,6 +1349,7 @@ def test_qualified_split_assignment_fingerprint_must_be_lowercase_sha256(
             split_assignment_fingerprint=invalid_fingerprint,
             annotation_guideline_fingerprint="c" * 64,
             review_ledger_fingerprint="d" * 64,
+            contrast_manifest_fingerprint="e" * 64,
         )
 
     coverage = inspect_benchmark_coverage(
@@ -1082,6 +1366,9 @@ def test_qualified_split_assignment_fingerprint_must_be_lowercase_sha256(
         split=DatasetSplit.TEST,
         cases=dataset.cases,
         coverage=coverage,
+        validation_coverage=coverage,
+        coverage_contract_fingerprint=OFFICIAL_COVERAGE_CONTRACT_V3.fingerprint,
+        contrast_manifest_fingerprint="e" * 64,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint=invalid_fingerprint,
         annotation_guideline_fingerprint="c" * 64,
@@ -1158,6 +1445,9 @@ def test_qualified_scoring_rejects_a_tampered_complete_corpus():
         split=DatasetSplit.TEST,
         cases=(test_case,),
         coverage=custom_report,
+        validation_coverage=custom_report,
+        coverage_contract_fingerprint=OFFICIAL_COVERAGE_CONTRACT_V3.fingerprint,
+        contrast_manifest_fingerprint="e" * 64,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint="b" * 64,
         annotation_guideline_fingerprint="c" * 64,
@@ -1211,6 +1501,9 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
     assert benchmark.split is DatasetSplit.DEVELOPMENT
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
+        validation_coverage=benchmark.coverage,
+        coverage_contract_fingerprint=OFFICIAL_COVERAGE_CONTRACT_V3.fingerprint,
+        contrast_manifest_fingerprint="e" * 64,
         authoring_source_fingerprint="a" * 64,
         split_assignment_fingerprint="b" * 64,
         annotation_guideline_fingerprint="c" * 64,
@@ -1227,6 +1520,7 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
             split_assignment_fingerprint="b" * 64,
             annotation_guideline_fingerprint="c" * 64,
             review_ledger_fingerprint="d" * 64,
+            contrast_manifest_fingerprint="e" * 64,
         )
 
 

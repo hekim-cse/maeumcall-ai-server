@@ -378,6 +378,7 @@ def prepare_qualified_test_slice_from_authoring(
     compiled_path: Path,
     annotation_guideline_path: Path,
     review_ledger_path: Path,
+    contrast_manifest_path: Path,
 ):
     """Prepare a qualified test slice from verified sources and human approvals."""
     dataset, source_fingerprint, split_assignment_fingerprint = verify_compiled_authoring_corpus(
@@ -386,6 +387,7 @@ def prepare_qualified_test_slice_from_authoring(
         compiled_path,
     )
     from evals.structured_nlu.benchmark import _prepare_qualified_test_slice
+    from evals.structured_nlu.contrast import verify_contrast_manifest
     from evals.structured_nlu.review import verify_review_ledger
 
     verified_review = verify_review_ledger(
@@ -393,6 +395,7 @@ def prepare_qualified_test_slice_from_authoring(
         annotation_guideline_path,
         review_ledger_path,
     )
+    verified_contrast = verify_contrast_manifest(dataset, contrast_manifest_path)
 
     return _prepare_qualified_test_slice(
         dataset,
@@ -400,6 +403,7 @@ def prepare_qualified_test_slice_from_authoring(
         split_assignment_fingerprint=split_assignment_fingerprint,
         annotation_guideline_fingerprint=verified_review.guideline_fingerprint,
         review_ledger_fingerprint=verified_review.ledger_fingerprint,
+        contrast_manifest_fingerprint=verified_contrast.fingerprint,
     )
 
 
@@ -409,6 +413,7 @@ def score_qualified_test_slice_from_authoring(
     compiled_path: Path,
     annotation_guideline_path: Path,
     review_ledger_path: Path,
+    contrast_manifest_path: Path,
     benchmark: QualifiedTestSlice,
     predictions: tuple[CasePrediction, ...],
 ) -> EvaluationScores:
@@ -433,6 +438,11 @@ def score_qualified_test_slice_from_authoring(
         raise ValueError("qualified annotation guideline fingerprint does not match")
     if benchmark.review_ledger_fingerprint != verified_review.ledger_fingerprint:
         raise ValueError("qualified review ledger fingerprint does not match")
+    from evals.structured_nlu.contrast import verify_contrast_manifest
+
+    verified_contrast = verify_contrast_manifest(dataset, contrast_manifest_path)
+    if benchmark.contrast_manifest_fingerprint != verified_contrast.fingerprint:
+        raise ValueError("qualified contrast manifest fingerprint does not match")
     if benchmark.corpus_cases != dataset.cases:
         raise ValueError("qualified benchmark does not match the verified authoring corpus")
     from evals.structured_nlu.benchmark import _score_qualified_test_slice

@@ -1,0 +1,186 @@
+{
+  "$defs": {
+    "ContrastGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "approval": {
+          "$ref": "#/$defs/ContrastGroupApproval"
+        },
+        "definition": {
+          "$ref": "#/$defs/ContrastGroupDefinition"
+        }
+      },
+      "required": [
+        "definition",
+        "approval"
+      ],
+      "title": "ContrastGroup",
+      "type": "object"
+    },
+    "ContrastGroupApproval": {
+      "additionalProperties": false,
+      "description": "Record the human decision that these exact cases form the declared contrast.",
+      "properties": {
+        "decision": {
+          "const": "approved",
+          "title": "Decision",
+          "type": "string"
+        },
+        "group_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Group Fingerprint",
+          "type": "string"
+        },
+        "group_fingerprint_algorithm": {
+          "const": "contrast-group-canonical-json-sha256-v1",
+          "title": "Group Fingerprint Algorithm",
+          "type": "string"
+        },
+        "rationale": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "reviewed_at": {
+          "format": "date-time",
+          "title": "Reviewed At",
+          "type": "string"
+        },
+        "reviewer_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,79}$",
+          "title": "Reviewer Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_fingerprint_algorithm",
+        "group_fingerprint",
+        "reviewer_id",
+        "reviewed_at",
+        "rationale",
+        "decision"
+      ],
+      "title": "ContrastGroupApproval",
+      "type": "object"
+    },
+    "ContrastGroupDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison_axis_id": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Comparison Axis Id",
+          "type": "string"
+        },
+        "confusion_axis": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Confusion Axis",
+          "type": "string"
+        },
+        "contrast_group_id": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Contrast Group Id",
+          "type": "string"
+        },
+        "family_id": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Family Id",
+          "type": "string"
+        },
+        "members": {
+          "items": {
+            "$ref": "#/$defs/ContrastMember"
+          },
+          "minItems": 2,
+          "title": "Members",
+          "type": "array"
+        }
+      },
+      "required": [
+        "contrast_group_id",
+        "family_id",
+        "comparison_axis_id",
+        "confusion_axis",
+        "members"
+      ],
+      "title": "ContrastGroupDefinition",
+      "type": "object"
+    },
+    "ContrastMember": {
+      "additionalProperties": false,
+      "properties": {
+        "case_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Case Fingerprint",
+          "type": "string"
+        },
+        "case_id": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "role_id": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Role Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "role_id",
+        "case_id",
+        "case_fingerprint"
+      ],
+      "title": "ContrastMember",
+      "type": "object"
+    }
+  },
+  "$id": "urn:maeumcall:structured-nlu:contrast-manifest:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "case_fingerprint_algorithm": {
+      "const": "evaluation-case-canonical-json-sha256-v1",
+      "title": "Case Fingerprint Algorithm",
+      "type": "string"
+    },
+    "contrast_manifest_schema_version": {
+      "const": 1,
+      "title": "Contrast Manifest Schema Version",
+      "type": "integer"
+    },
+    "coverage_contract_id": {
+      "const": "maeumcall-structured-nlu-coverage-v3",
+      "title": "Coverage Contract Id",
+      "type": "string"
+    },
+    "groups": {
+      "items": {
+        "$ref": "#/$defs/ContrastGroup"
+      },
+      "minItems": 1,
+      "title": "Groups",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contrast_manifest_schema_version",
+    "coverage_contract_id",
+    "case_fingerprint_algorithm",
+    "groups"
+  ],
+  "title": "ContrastManifestV1",
+  "type": "object"
+}
