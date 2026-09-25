@@ -1,0 +1,4332 @@
+{
+  "obligation_count": 865,
+  "obligations": [
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "ambiguous"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "cancellation"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "closing"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "colloquial"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "confirmation"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "correction"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "ellipsis"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "hard_negative"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "multi_field"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "negation"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "safety"
+    },
+    {
+      "dimension": "difficulty_tag",
+      "scenario_key": null,
+      "value": "single_field"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->model_name"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->occurred_at"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->preferred_schedule"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->product_type"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->safety_status"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->service_channel"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->symptom"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->model_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->occurred_at"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->preferred_schedule"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->product_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->safety_status"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->service_channel"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "change_detail->symptom"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "provide_details->model_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "provide_details->occurred_at"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "provide_details->preferred_schedule"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "provide_details->product_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "provide_details->safety_status"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "provide_details->service_channel"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "provide_details->symptom"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "model_name"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "occurred_at"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "preferred_schedule"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "product_type"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "safety_status"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_channel"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "symptom"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "model_name"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "occurred_at"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "preferred_schedule"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "product_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "safety_status"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_channel"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "symptom"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "safety_status=no_safety_issue"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "safety_status=safety_issue"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_channel=agent_review"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_channel=onsite"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_channel=parcel"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_channel=visit"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "model_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "occurred_at"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "preferred_schedule"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "product_type"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "safety_status"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_channel"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "symptom"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_request"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "collecting_service_request->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "collecting_service_request->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "collecting_service_request->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "collecting_service_request->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "confirming_service_request->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "confirming_service_request->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "confirming_service_request->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "confirming_service_request->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "confirming_service_request->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "safety_action_required->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "safety_action_required->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "safety_action_required->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_request_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_request_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_request_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_request_ready->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_request_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:a/s 접수",
+      "value": "service_request_simulation_completed->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "change_detail->consent_scope"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "change_detail->consultation_goal"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "change_detail->current_service"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "change_detail->inquiry_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "change_detail->consent_scope"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "change_detail->consultation_goal"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "change_detail->current_service"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "change_detail->inquiry_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "provide_details->consent_scope"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "provide_details->consultation_goal"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "provide_details->current_service"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "provide_details->inquiry_type"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "consent_scope"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "consultation_goal"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "current_service"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "inquiry_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "consent_scope"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "consultation_goal"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "current_service"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "inquiry_type"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "consent_scope=authenticated_lookup"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "consent_scope=general_guidance"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "inquiry_type=billing"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "inquiry_type=contract_expiry"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "inquiry_type=discount"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "inquiry_type=plan_change"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "consent_scope"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "consultation_goal"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "current_service"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "inquiry_type"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "plan_contract_consultation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "collecting_plan_contract->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "collecting_plan_contract->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "collecting_plan_contract->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "collecting_plan_contract->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "confirming_plan_contract->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "confirming_plan_contract->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "confirming_plan_contract->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "confirming_plan_contract->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "confirming_plan_contract->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "plan_consultation_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "plan_consultation_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "plan_consultation_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "plan_consultation_ready->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "plan_contract_consultation_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "value": "plan_contract_consultation_simulation_completed->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->next_action"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->occurred_at"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->scope"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->service_type"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->symptom"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->troubleshooting_done"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->next_action"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->occurred_at"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->scope"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->service_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->symptom"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "change_detail->troubleshooting_done"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "provide_details->next_action"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "provide_details->occurred_at"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "provide_details->scope"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "provide_details->service_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "provide_details->symptom"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "provide_details->troubleshooting_done"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "next_action"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "occurred_at"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "scope"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "service_type"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "symptom"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "troubleshooting_done"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "next_action"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "occurred_at"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "scope"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "service_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "symptom"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "troubleshooting_done"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "next_action=agent_handoff"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "next_action=guided_diagnosis"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "next_action=remote_check"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "next_action=service_request"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "scope=all_locations"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "scope=multiple_devices"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "scope=single_device"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "scope=specific_location"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "service_type=mobile_data"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "service_type=voice_call"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "service_type=wifi"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "service_type=wired_internet"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "next_action"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "occurred_at"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "scope"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "service_type"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "symptom"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "troubleshooting_done"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "network_call_issue"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "collecting_network_issue->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "collecting_network_issue->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "collecting_network_issue->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "collecting_network_issue->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "confirming_network_issue->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "confirming_network_issue->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "confirming_network_issue->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "confirming_network_issue->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "confirming_network_issue->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "network_call_issue_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "network_call_issue_simulation_completed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "network_diagnosis_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "network_diagnosis_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "network_diagnosis_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "value": "network_diagnosis_ready->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "change_absence_date->absence_date"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "change_absence_reason->absence_reason"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "change_class_name->class_name"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "change_absence_date->absence_date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "change_absence_reason->absence_reason"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "change_class_name->class_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "provide_absence_info->absence_date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "provide_absence_info->absence_reason"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "provide_absence_info->class_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "provide_absence_info->user_name"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "absence_date"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "absence_reason"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "class_name"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "user_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "absence_date"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "absence_reason"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "class_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "user_name"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "absence_notice"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "absence_noted->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "absence_noted->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "collecting_absence_info->provide_absence_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "collecting_absence_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "confirming_absence_info->change_absence_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "confirming_absence_info->change_absence_reason"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "confirming_absence_info->change_class_name"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "confirming_absence_info->change_user_name"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "confirming_absence_info->confirm_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "confirming_absence_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "greeting->provide_absence_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:결석 사유 전달",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "ask_follow_up->assignment_topic"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "ask_follow_up->question"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "provide_assignment_info->assignment_topic"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "provide_assignment_info->course_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "provide_assignment_info->question"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "provide_assignment_info->user_name"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:과제 문의",
+      "value": "assignment_topic"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:과제 문의",
+      "value": "course_name"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:과제 문의",
+      "value": "question"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:과제 문의",
+      "value": "user_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "assignment_topic"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "course_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "question"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:과제 문의",
+      "value": "user_name"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "교수님:과제 문의",
+      "value": "assignment_inquiry"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "answering_assignment_question->ask_follow_up"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "answering_assignment_question->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "answering_assignment_question->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "collecting_assignment_info->provide_assignment_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "collecting_assignment_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "greeting->provide_assignment_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:과제 문의",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "change_purpose->appointment_purpose"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "change_time->time"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "change_purpose->appointment_purpose"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "change_time->time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "provide_appointment_info->appointment_purpose"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "provide_appointment_info->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "provide_appointment_info->time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "provide_appointment_info->user_name"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "appointment_purpose"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "appointment_purpose"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "교수님:면담 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "교수님:면담 예약",
+      "value": "appointment_booking"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "appointment_confirmed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "appointment_confirmed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "collecting_appointment_info->provide_appointment_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "collecting_appointment_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "confirming_info->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "confirming_info->change_purpose"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "confirming_info->change_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "confirming_info->change_user_name"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "confirming_info->confirm_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "confirming_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "greeting->provide_appointment_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "교수님:면담 예약",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "change_detail->delay_detail"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "change_detail->delay_resolution"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "change_detail->inquiry_goal"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "change_detail->order_number"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "change_detail->delay_detail"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "change_detail->delay_resolution"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "change_detail->inquiry_goal"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "change_detail->order_number"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "provide_details->delay_detail"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "provide_details->delay_resolution"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "provide_details->inquiry_goal"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "provide_details->order_number"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_detail"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_resolution"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "inquiry_goal"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "order_number"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_detail"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_resolution"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "inquiry_goal"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "order_number"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_resolution=agent_handoff"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_resolution=check_cancellation"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_resolution=wait"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "inquiry_goal=delay_reason"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "inquiry_goal=delivery_location"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "inquiry_goal=estimated_arrival"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_detail"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_resolution"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "inquiry_goal"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "order_number"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delivery_delay_inquiry"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "collecting_delay_inquiry->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "collecting_delay_inquiry->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "collecting_delay_inquiry->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "collecting_delay_inquiry->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "confirming_delay_inquiry->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "confirming_delay_inquiry->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "confirming_delay_inquiry->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "confirming_delay_inquiry->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "confirming_delay_inquiry->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_inquiry_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_inquiry_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_inquiry_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delay_inquiry_ready->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delivery_delay_inquiry_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "delivery_delay_inquiry_simulation_completed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:배달 지연 문의",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_detail->change_type"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_detail->order_number"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_detail->requested_change"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_detail->unavailable_preference"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_detail->change_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_detail->order_number"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_detail->requested_change"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_detail->unavailable_preference"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "provide_details->change_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "provide_details->order_number"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "provide_details->requested_change"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "provide_details->unavailable_preference"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_type"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:주문 변경",
+      "value": "order_number"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:주문 변경",
+      "value": "requested_change"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:주문 변경",
+      "value": "unavailable_preference"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:주문 변경",
+      "value": "order_number"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:주문 변경",
+      "value": "requested_change"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:주문 변경",
+      "value": "unavailable_preference"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_type=contact"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_type=delivery_address"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_type=menu_option"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_type=menu_or_quantity"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:주문 변경",
+      "value": "unavailable_preference=agent_handoff"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:주문 변경",
+      "value": "unavailable_preference=check_cancellation"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:주문 변경",
+      "value": "unavailable_preference=keep_order"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "change_type"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "order_number"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "requested_change"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:주문 변경",
+      "value": "unavailable_preference"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "배달:주문 변경",
+      "value": "delivery_order_change"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "collecting_order_change->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "collecting_order_change->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "collecting_order_change->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "collecting_order_change->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "confirming_order_change->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "confirming_order_change->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "confirming_order_change->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "confirming_order_change->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "confirming_order_change->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "delivery_order_change_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "delivery_order_change_simulation_completed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "order_change_request_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "order_change_request_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "order_change_request_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:주문 변경",
+      "value": "order_change_request_ready->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->evidence_status"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->issue_detail"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->issue_type"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->order_number"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->resolution_preference"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->evidence_status"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->issue_detail"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->issue_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->order_number"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "change_detail->resolution_preference"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "provide_details->evidence_status"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "provide_details->issue_detail"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "provide_details->issue_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "provide_details->order_number"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "provide_details->resolution_preference"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "evidence_status"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_detail"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_type"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "order_number"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "resolution_preference"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "evidence_status"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_detail"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "order_number"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "resolution_preference"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "evidence_status=available"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "evidence_status=unavailable"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_type=damaged_or_quality"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_type=missing_item"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_type=not_received"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_type=wrong_item"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "resolution_preference=agent_review"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "resolution_preference=redelivery"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "resolution_preference=refund"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "evidence_status"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_detail"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "issue_type"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "order_number"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "resolution_preference"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "delivery_refund_redelivery"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "collecting_refund_redelivery->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "collecting_refund_redelivery->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "collecting_refund_redelivery->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "collecting_refund_redelivery->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "confirming_refund_redelivery->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "confirming_refund_redelivery->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "confirming_refund_redelivery->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "confirming_refund_redelivery->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "confirming_refund_redelivery->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "delivery_refund_redelivery_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "delivery_refund_redelivery_simulation_completed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "refund_redelivery_request_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "refund_redelivery_request_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "refund_redelivery_request_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "배달:환불/재배달 문의",
+      "value": "refund_redelivery_request_ready->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "change_detail->item_name"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "change_detail->quantity"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "change_detail->region"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "change_detail->request_topic"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "change_detail->item_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "change_detail->quantity"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "change_detail->region"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "change_detail->request_topic"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "provide_details->item_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "provide_details->quantity"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "provide_details->region"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "provide_details->request_topic"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "item_name"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "quantity"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "region"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "request_topic"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "item_name"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "quantity"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "region"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "request_topic"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "request_topic=application"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "request_topic=collection_status"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "request_topic=fee"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "request_topic=place_and_schedule"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "item_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "quantity"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "region"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "request_topic"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "bulky_waste_guidance"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "bulky_waste_guidance_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "bulky_waste_guidance_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "bulky_waste_guidance_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "bulky_waste_guidance_ready->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "bulky_waste_guidance_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "bulky_waste_guidance_simulation_completed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "collecting_bulky_waste->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "collecting_bulky_waste->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "collecting_bulky_waste->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "collecting_bulky_waste->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "confirming_bulky_waste->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "confirming_bulky_waste->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "confirming_bulky_waste->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "confirming_bulky_waste->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "confirming_bulky_waste->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:대형폐기물 배출",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "change_detail->applicant_type"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "change_detail->application_channel"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "change_detail->application_type"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "change_detail->inquiry_topic"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "change_detail->applicant_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "change_detail->application_channel"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "change_detail->application_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "change_detail->inquiry_topic"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "provide_details->applicant_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "provide_details->application_channel"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "provide_details->application_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "provide_details->inquiry_topic"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "applicant_type"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_channel"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_type"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "inquiry_topic"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "applicant_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_channel"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "inquiry_topic"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "applicant_type=adult_self"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "applicant_type=legal_representative"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "applicant_type=minor"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_channel=government24"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_channel=in_person"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_channel=overseas_mission"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_type=emergency"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_type=first_issue"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_type=reissue"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "inquiry_topic=documents"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "inquiry_topic=fee"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "inquiry_topic=office"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "inquiry_topic=online_eligibility"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "inquiry_topic=processing_time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "applicant_type"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_channel"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "application_type"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "inquiry_topic"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "passport_guidance"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "collecting_passport_inquiry->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "collecting_passport_inquiry->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "collecting_passport_inquiry->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "collecting_passport_inquiry->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "confirming_passport_inquiry->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "confirming_passport_inquiry->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "confirming_passport_inquiry->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "confirming_passport_inquiry->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "confirming_passport_inquiry->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "passport_guidance_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "passport_guidance_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "passport_guidance_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "passport_guidance_ready->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "passport_guidance_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:여권 발급 문의",
+      "value": "passport_guidance_simulation_completed->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "change_detail->applicant_relation"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "change_detail->document_type"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "change_detail->inquiry_topic"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "change_detail->issuance_channel"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "change_detail->applicant_relation"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "change_detail->document_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "change_detail->inquiry_topic"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "change_detail->issuance_channel"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "provide_details->applicant_relation"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "provide_details->document_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "provide_details->inquiry_topic"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "provide_details->issuance_channel"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "applicant_relation"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "document_type"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "inquiry_topic"
+    },
+    {
+      "dimension": "change_field",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "issuance_channel"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "applicant_relation"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "document_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "inquiry_topic"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "issuance_channel"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "applicant_relation=representative"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "applicant_relation=same_household"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "applicant_relation=self"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "document_type=individual_extract"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "document_type=register_copy"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "inquiry_topic=delivery"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "inquiry_topic=documents"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "inquiry_topic=eligibility"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "inquiry_topic=fee"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "issuance_channel=government24"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "issuance_channel=in_person"
+    },
+    {
+      "dimension": "field_option",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "issuance_channel=kiosk"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "applicant_relation"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "document_type"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "inquiry_topic"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "issuance_channel"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "resident_certificate_guidance"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "cancelled->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "cancelled->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "certificate_guidance_ready->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "certificate_guidance_ready->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "certificate_guidance_ready->complete_simulation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "certificate_guidance_ready->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "collecting_certificate_inquiry->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "collecting_certificate_inquiry->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "collecting_certificate_inquiry->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "collecting_certificate_inquiry->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "confirming_certificate_inquiry->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "confirming_certificate_inquiry->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "confirming_certificate_inquiry->confirm_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "confirming_certificate_inquiry->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "confirming_certificate_inquiry->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "greeting->cancel_workflow"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "greeting->change_detail"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "greeting->provide_details"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "resident_certificate_guidance_simulation_completed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "value": "resident_certificate_guidance_simulation_completed->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_designer->designer"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_service_type->service_type"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_time->time"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_designer->designer"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_service_type->service_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_time->time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "continue_collecting->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "continue_collecting->designer"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "continue_collecting->service_type"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "continue_collecting->time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "continue_collecting->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "select_alternative_time->selected_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "designer"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "selected_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "service_type"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "designer"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "selected_time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "service_type"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:미용실 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "collecting_reservation_info->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "collecting_reservation_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "confirming_info->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "confirming_info->change_designer"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "confirming_info->change_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "confirming_info->change_service_type"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "confirming_info->change_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "confirming_info->change_user_name"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "confirming_info->confirm"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "confirming_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "greeting->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_available->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_available->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_available->confirm_reservation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_available->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_confirmed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_confirmed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_unavailable->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_unavailable->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_unavailable->select_alternative_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:미용실 예약",
+      "value": "reservation_unavailable->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "change_department->department"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "change_time->time"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "change_department->department"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "change_time->time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "continue_collecting->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "continue_collecting->department"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "continue_collecting->time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "continue_collecting->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "select_alternative_time->selected_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "department"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "selected_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:병원 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "department"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "selected_time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:병원 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "예약:병원 예약",
+      "value": "<null>"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_date->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_date->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_department->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_department->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_purpose->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_purpose->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_time->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_time->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_user_name->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "asking_user_name->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "checking_availability->lookup_availability"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "checking_availability->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "confirming_info->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "confirming_info->change_department"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "confirming_info->change_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "confirming_info->change_user_name"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "confirming_info->confirm_reservation_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "confirming_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "greeting->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_available->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_available->confirm_available_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_available->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_confirmed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_confirmed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_unavailable->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_unavailable->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_unavailable->select_alternative_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "reservation_unavailable->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "suggest_alternative->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "suggest_alternative->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "suggest_alternative->select_alternative_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:병원 예약",
+      "value": "suggest_alternative->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_duration->duration"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_party_size->party_size"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_start_time->start_time"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_duration->duration"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_party_size->party_size"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_start_time->start_time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "continue_collecting->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "continue_collecting->duration"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "continue_collecting->party_size"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "continue_collecting->start_time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "continue_collecting->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "select_alternative_time->selected_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "duration"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "party_size"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "selected_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "start_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "duration"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "party_size"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "selected_time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "start_time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "collecting_reservation_info->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "collecting_reservation_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "confirming_info->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "confirming_info->change_duration"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "confirming_info->change_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "confirming_info->change_party_size"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "confirming_info->change_start_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "confirming_info->change_user_name"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "confirming_info->confirm"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "confirming_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "greeting->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_available->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_available->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_available->confirm_reservation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_available->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_confirmed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_confirmed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_unavailable->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_unavailable->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_unavailable->select_alternative_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:스터디룸 예약",
+      "value": "reservation_unavailable->unknown"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "change_party_size->party_size"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "change_time->time"
+    },
+    {
+      "dimension": "action_field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "change_date->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "change_party_size->party_size"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "change_time->time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "change_user_name->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "continue_collecting->date"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "continue_collecting->party_size"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "continue_collecting->time"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "continue_collecting->user_name"
+    },
+    {
+      "dimension": "action_field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "select_alternative_time->selected_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "party_size"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "selected_time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "time"
+    },
+    {
+      "dimension": "field_absent",
+      "scenario_key": "예약:식당 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "date"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "party_size"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "selected_time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "time"
+    },
+    {
+      "dimension": "field_present",
+      "scenario_key": "예약:식당 예약",
+      "value": "user_name"
+    },
+    {
+      "dimension": "intent",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "closing->end_call"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "closing->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "collecting_reservation_info->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "collecting_reservation_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "confirming_info->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "confirming_info->change_info"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "confirming_info->change_party_size"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "confirming_info->change_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "confirming_info->change_user_name"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "confirming_info->confirm"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "confirming_info->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "greeting->continue_collecting"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "greeting->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_available->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_available->confirm_reservation"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_available->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_confirmed->go_closing"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_confirmed->unknown"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_unavailable->ask_other_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_unavailable->change_date"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_unavailable->select_alternative_time"
+    },
+    {
+      "dimension": "state_action",
+      "scenario_key": "예약:식당 예약",
+      "value": "reservation_unavailable->unknown"
+    }
+  ],
+  "profile_fingerprint": "1795efc46ed9988925929d5f6706db8c997b0450abc657d41909bb2402f3bd1e",
+  "profile_id": "maeumcall-structured-nlu-v2"
+}

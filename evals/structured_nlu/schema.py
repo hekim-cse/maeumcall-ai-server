@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import unicodedata
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Literal
@@ -40,11 +41,11 @@ class DifficultyTag(StrEnum):
 
 NonEmptyText = Annotated[
     str,
-    StringConstraints(strip_whitespace=True, min_length=1, max_length=1_000),
+    StringConstraints(strip_whitespace=True, min_length=1, max_length=1_000, pattern=r"\S"),
 ]
 NonEmptyUserMessage = Annotated[
     str,
-    StringConstraints(strip_whitespace=True, min_length=1, max_length=4_000),
+    StringConstraints(strip_whitespace=True, min_length=1, max_length=4_000, pattern=r"\S"),
 ]
 
 
@@ -107,6 +108,10 @@ class EvaluationCase(BaseModel):
             allowed_values = field_options.get(field_name)
             if expected is None or allowed_values is None:
                 continue
+            if len(expected.accepted_values) != 1:
+                raise ValueError(
+                    f"option fields require exactly one canonical accepted value: {field_name}"
+                )
             invalid_values = set(expected.accepted_values) - allowed_values
             if invalid_values:
                 raise ValueError(
@@ -123,6 +128,13 @@ class EvaluationCase(BaseModel):
 
         if len(set(self.offered_alternative_times)) != len(self.offered_alternative_times):
             raise ValueError("offered_alternative_times must be unique")
+        if (
+            self.offered_alternative_times
+            and self.conversation_state not in contract.alternative_states
+        ):
+            raise ValueError(
+                "offered_alternative_times are allowed only in an alternative-selection state"
+            )
         normalized_gold_fields = {
             name: expected.accepted_values[0] if expected is not None else None
             for name, expected in self.labels.fields.items()
@@ -191,6 +203,37 @@ class GoldDataset(BaseModel):
         )
         if leaked_groups:
             raise ValueError(f"conversation groups must not cross splits: {leaked_groups}")
+
+        cases_by_input: dict[str, list[EvaluationCase]] = {}
+        for case in self.cases:
+            cases_by_input.setdefault(_evaluation_input_fingerprint(case), []).append(case)
+        conflicting_inputs = []
+        duplicate_inputs = []
+        for matching_cases in cases_by_input.values():
+            if len(matching_cases) < 2:
+                continue
+            case_ids = tuple(sorted(item.id for item in matching_cases))
+            labels = {
+                json.dumps(
+                    _normalize_input_value(item.labels.model_dump(mode="json")),
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                for item in matching_cases
+            }
+            if len(labels) > 1:
+                conflicting_inputs.append(case_ids)
+            else:
+                duplicate_inputs.append(case_ids)
+        if conflicting_inputs:
+            raise ValueError(
+                f"identical evaluation inputs have conflicting labels: {sorted(conflicting_inputs)}"
+            )
+        if duplicate_inputs:
+            raise ValueError(
+                f"duplicate evaluation inputs are not allowed: {sorted(duplicate_inputs)}"
+            )
         return self
 
 
@@ -248,6 +291,30 @@ class CasePrediction(BaseModel):
 def load_gold_dataset(path: Path) -> GoldDataset:
     with path.open(encoding="utf-8") as file:
         return GoldDataset.model_validate(json.load(file))
+
+
+def _evaluation_input_fingerprint(case: EvaluationCase) -> str:
+    """Identify exact model inputs without trusting author-assigned group IDs."""
+    payload = {
+        "scenario_key": _normalize_input_value(case.scenario_key),
+        "conversation_state": _normalize_input_value(case.conversation_state),
+        "current_fields": _normalize_input_value(case.current_fields),
+        "offered_alternative_times": _normalize_input_value(case.offered_alternative_times),
+        "user_message": _normalize_input_value(case.user_message),
+    }
+    return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _normalize_input_value(value: object) -> object:
+    if isinstance(value, str):
+        return unicodedata.normalize("NFC", value)
+    if isinstance(value, dict):
+        return {key: _normalize_input_value(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return tuple(_normalize_input_value(item) for item in value)
+    if isinstance(value, list):
+        return [_normalize_input_value(item) for item in value]
+    return value
 
 
 _CORRECTION_ACTIONS = frozenset(

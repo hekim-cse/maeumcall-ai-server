@@ -95,6 +95,10 @@
 - 같은 원본 대화 그룹이 서로 다른 분할에 섞이지 않도록 막는 검사
 - development·validation·test를 한 파일에 보존하고 전체 corpus 지문을 고정하는 검사
 - `test` 분할과 `adjudicated` 상태를 강제하는 공식 결과 후보용 데이터 관문
+- 의미 원본 그룹별 작성 파일을 결정론적 순서의 V2 corpus로 합치는 compiler
+- 라이브 계약에서 865개 작성 의무를 자동 생성하는 V2 의무 목록
+- 선택형 필드 한 건이 여러 enum 선택지 coverage를 대신하지 못하게 하는 검사
+- 작성자가 다른 그룹 ID를 붙여도 완전히 동일한 모델 입력의 corpus 내 중복을 막는 검사
 
 프로필 내용은 정렬된 JSON으로 직렬화한 뒤 SHA-256 지문(프로필 내용 식별값)을
 계산한다. 이후 실행 manifest(실행 조건 기록 파일)는 프로필 이름뿐 아니라 이
@@ -105,9 +109,12 @@
 덮어쓰는 대신 새 프로필 버전을 만들어야 한다.
 
 작은 사용자 정의 프로필은 개발 중 검사에만 사용할 수 있다. 공식 결과 후보용
-test slice를 준비하는 함수는 16개 시나리오를 포함한 공식 고정 프로필만 사용하며, 점수 계산
-직전 프로필 지문·데이터 지문·`test` 분할·coverage를 다시 계산한다. 이 과정에서
-수동 조립된 프로필·데이터의 불일치를 검출하고 test-only 축소를 거부하지만,
+test slice는 그룹별 작성 원본과 컴파일된 corpus의 byte 일치를 먼저 확인한
+경로에서만 준비한다. 최종 점수 계산 직전에도 같은 검증을 다시 수행한다. 이후
+16개 시나리오를 포함한 공식 고정 프로필을 사용하고, 프로필 지문·데이터 지문·
+`test` 분할·coverage를 다시 계산한다.
+이 과정에서 수동 조립된 프로필·데이터의 불일치, 컴파일 산출물의 직접 수정과
+test-only 축소를 거부하지만,
 지문 자체는 인증이나 전자서명이 아니라 내용이 같은지 확인하는 식별값이다.
 승인된 corpus의 강한 변조 방지는 후속 manifest에서 기대 지문을 별도로 고정해야 한다.
 
@@ -123,6 +130,68 @@ workflow 기반 상세 그래프는 현재 필드 문맥도 검사하므로, 확
 집계, p50·p95·토큰·메모리 측정, 실행 manifest와 결과 파일이다. 따라서 현재
 단위 테스트 수치는 후보 모델의 성능 점수가 아니다.
 
+## 작성 원본과 compiler
+
+실제 corpus는 하나의 거대한 JSON을 직접 편집하지 않는다. 같은 의미 원본에서
+파생된 문장 묶음을 `AuthoringGroup` 파일 하나로 관리하고, 그룹이
+`conversation_group_id`, `split`, `scenario_key`를 한 번만 소유한다. 개별
+케이스가 이 값을 각각 적지 않으므로 같은 원본의 일부 문장만 다른 split에 넣는
+실수를 구조적으로 줄인다.
+
+compiler는 작성 파일을 `(scenario_key, conversation_group_id, case.id)` 순서로
+정렬해 현재 `GoldDataset` V2 형식으로 만든다. 파일 탐색 순서나 운영체제가 달라도
+같은 입력에서 같은 결과와 지문을 얻기 위한 규칙이다. 컴파일된 JSON은 모델
+평가 입력용 산출물이며 작성 원본이 아니다. `authoring_group.schema.json`은 편집기가
+필수 키·타입·허용값 오류를 작성 중에 알려 주는 파일이다. 이 파일도 수동으로
+고치지 않고 코드 계약에서 생성한다. 편집기 Schema는 1차 형식 검사이고,
+시나리오별 상태·행동·필드의 교차 관계는 compiler가 라이브 계약으로 최종 검사한다.
+
+`authoring_schema_version: 1`은 사람이 편집하는 그룹 원본 형식의 첫 버전이다.
+`dataset_version: 2`와 공식 프로필 V2는 컴파일된 평가 corpus와 채점 계약의
+버전이므로 서로 다른 대상을 관리한다. 세 숫자가 같을 필요는 없다.
+
+```bash
+# 현재 라이브 계약에서 작성해야 할 항목을 다시 생성한다.
+python -m scripts.compile_structured_nlu_corpus obligations \
+  evals/structured_nlu/manifests/coverage-obligations.v2.json
+
+# 커밋된 의무 목록이 현재 라이브 계약과 같은지 검사한다.
+python -m scripts.compile_structured_nlu_corpus check-obligations \
+  evals/structured_nlu/manifests/coverage-obligations.v2.json
+
+# 편집기용 작성 원본 JSON Schema를 코드 계약에서 다시 생성한다.
+python -m scripts.compile_structured_nlu_corpus schema \
+  evals/structured_nlu/authoring_group.schema.json
+
+# 커밋된 작성 원본 JSON Schema가 코드 계약과 같은지 검사한다.
+python -m scripts.compile_structured_nlu_corpus check-schema \
+  evals/structured_nlu/authoring_group.schema.json
+
+# 그룹별 작성 원본을 단일 V2 corpus로 컴파일한다.
+python -m scripts.compile_structured_nlu_corpus compile \
+  evals/structured_nlu/data/source \
+  evals/structured_nlu/data/compiled/gold-dataset.v2.json
+
+# 커밋된 corpus가 작성 원본에서 다시 생성한 결과와 같은지 검사한다.
+python -m scripts.compile_structured_nlu_corpus check \
+  evals/structured_nlu/data/source \
+  evals/structured_nlu/data/compiled/gold-dataset.v2.json
+```
+
+현재 커밋된 `coverage-obligations.v2.json`에는 상태-행동 352개를 포함해 총
+865개의 계약 의무가 들어 있다. 이 파일은 실제 corpus가 의무를 얼마나 채웠는지
+보여 주는 진척 보고서가 아니라, 무엇을 작성해야 하는지 나열한 inventory다.
+여러 차원을 한 케이스가 함께 충족할 수 있으므로 865개가 곧 필요한 문장 수라는
+뜻은 아니다. 공식 test는 352개 상태-행동 의무를 각각 한 번 이상 담아야 하므로
+최소 352개 case가 필요하다. 이는 사용자 문장 문자열이 모두 서로 달라야 한다는
+뜻이 아니라, 각 case가 하나의 시나리오·상태·행동 조합만 담당하기 때문에 생기는
+구조적 하한이다.
+
+`accepted_values`는 비선택형 문자열에서 모델 출력으로 허용할 정확한 정규화
+결과를 기록한다. enum처럼 선택지가 정해진 필드는 케이스당 하나의 canonical
+value만 허용한다. 한 문장에 서로 다른 선택지 여러 개를 넣어 여러 문제를 시험한
+것처럼 coverage를 부풀릴 수 없게 하기 위해서다.
+
 ## 데이터 분할
 
 - `development`: 프롬프트와 출력 계약을 개발할 때 사용한다.
@@ -134,6 +203,13 @@ workflow 기반 상세 그래프는 현재 필드 문맥도 검사하므로, 확
 모델이 사실상 본 문제를 다시 푸는 결과가 된다. 따라서 유사 문장과 같은 원본
 대화에서 파생된 케이스는 `conversation_group_id`로 묶는다. 데이터 로더는 같은
 그룹이 서로 다른 분할에 들어가면 실행 전에 거부한다.
+
+그룹 ID는 사람이 지정하므로 비슷한 문장끼리 같은 그룹에 배정하는 검수는 여전히
+필요하다. 이와 별개로 compiler는 시나리오, 상태, 현재 필드, 서버 제시 후보,
+사용자 발화가 유니코드 NFC 정규화 뒤 완전히 같은 모델 입력이면 split이나 그룹
+ID가 달라도 corpus 전체에서 결정론적으로 거부한다. 동일 입력의 반복 안정성은
+case 복제가 아니라 후속 runner의 반복 실행 축으로 측정한다. 유사도 임계값으로
+문장을 임의 판정하지는 않는다.
 
 공식 결과 후보 관문은 test만 떼어 낸 파일을 받지 않는다. 세 분할을 모두 담은
 하나의 corpus와 그 전체 지문을 요구하고, 채점 직전에 corpus에서 test slice를

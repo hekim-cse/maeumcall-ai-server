@@ -11,10 +11,10 @@ from evals.structured_nlu.benchmark import (
     CoverageDimension,
     QualifiedTestSlice,
     ScenarioCoverageRequirement,
+    _prepare_qualified_test_slice,
+    _score_qualified_test_slice,
     inspect_benchmark_coverage,
     prepare_benchmark_slice,
-    prepare_qualified_test_slice,
-    score_qualified_test_slice,
 )
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from evals.structured_nlu.metrics import score_predictions
@@ -246,6 +246,44 @@ def test_case_rejects_workflow_gold_value_outside_live_options():
                 change_field=None,
             ),
             tags=("single_field",),
+            provenance="human_authored",
+            review_status="adjudicated",
+        )
+
+
+def test_case_rejects_multiple_canonical_values_for_one_option_field():
+    with pytest.raises(
+        ValidationError,
+        match="option fields require exactly one canonical accepted value",
+    ):
+        EvaluationCase(
+            id="delivery.multiple-gold-options",
+            conversation_group_id="delivery.multiple-gold-options",
+            split="development",
+            scenario_key="배달:주문 변경",
+            conversation_state="collecting_order_change",
+            current_fields={
+                "order_number": None,
+                "change_type": None,
+                "requested_change": None,
+                "unavailable_preference": None,
+            },
+            offered_alternative_times=(),
+            user_message="배송지나 메뉴 수량을 바꾸고 싶어요.",
+            labels=GoldLabels(
+                intent="delivery_order_change",
+                fields={
+                    "order_number": None,
+                    "change_type": ExpectedField(
+                        accepted_values=("delivery_address", "menu_or_quantity")
+                    ),
+                    "requested_change": None,
+                    "unavailable_preference": None,
+                },
+                user_action="provide_details",
+                change_field=None,
+            ),
+            tags=("single_field", "ambiguous"),
             provenance="human_authored",
             review_status="adjudicated",
         )
@@ -561,6 +599,152 @@ def test_gold_dataset_rejects_one_conversation_group_across_splits():
         _gold_dataset(development_case, test_case)
 
 
+def test_gold_dataset_rejects_identical_inputs_across_splits_even_with_different_groups():
+    development_case = _case(
+        case_id="appointment.duplicate-development",
+        conversation_group_id="appointment.development-family",
+        message="내일 면담하고 싶습니다.",
+        fields=_appointment_fields(
+            date=ExpectedField(accepted_values=("내일",)),
+        ),
+        action="provide_appointment_info",
+        tags=("single_field",),
+    )
+    test_case = _case(
+        case_id="appointment.duplicate-test",
+        conversation_group_id="appointment.test-family",
+        message="내일 면담하고 싶습니다.",
+        fields=_appointment_fields(
+            date=ExpectedField(accepted_values=("내일",)),
+        ),
+        action="provide_appointment_info",
+        split="test",
+        tags=("single_field",),
+    )
+
+    with pytest.raises(ValidationError, match="duplicate evaluation inputs are not allowed"):
+        _gold_dataset(development_case, test_case)
+
+
+def test_gold_dataset_allows_same_message_in_different_model_contexts():
+    development_case = _case(
+        case_id="appointment.same-message-collecting",
+        conversation_group_id="appointment.collecting-family",
+        message="네, 그렇게 해 주세요.",
+        fields=_appointment_fields(),
+        action="unknown",
+        tags=("ambiguous", "hard_negative"),
+    )
+    test_case = _case(
+        case_id="appointment.same-message-confirming",
+        conversation_group_id="appointment.confirming-family",
+        message="네, 그렇게 해 주세요.",
+        fields=_appointment_fields(),
+        action="confirm_info",
+        conversation_state="confirming_info",
+        split="test",
+        tags=("confirmation",),
+    )
+
+    dataset = _gold_dataset(development_case, test_case)
+
+    assert len(dataset.cases) == 2
+
+
+def test_gold_dataset_rejects_unicode_equivalent_inputs_across_splits():
+    development_case = _case(
+        case_id="appointment.unicode-development",
+        conversation_group_id="appointment.unicode-development",
+        message="김하늘 학생입니다.",
+        fields=_appointment_fields(
+            name=ExpectedField(accepted_values=("김하늘",)),
+        ),
+        action="provide_appointment_info",
+        tags=("single_field",),
+    )
+    test_case = _case(
+        case_id="appointment.unicode-test",
+        conversation_group_id="appointment.unicode-test",
+        message="김하늘 학생입니다.",
+        fields=_appointment_fields(
+            name=ExpectedField(accepted_values=("김하늘",)),
+        ),
+        action="provide_appointment_info",
+        split="test",
+        tags=("single_field",),
+    )
+
+    with pytest.raises(ValidationError, match="duplicate evaluation inputs are not allowed"):
+        _gold_dataset(development_case, test_case)
+
+
+def test_gold_dataset_rejects_duplicate_inputs_inside_one_split():
+    first_case = _case(
+        case_id="appointment.duplicate-first",
+        conversation_group_id="appointment.duplicate-first",
+        message="내일 면담하고 싶습니다.",
+        fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+        action="provide_appointment_info",
+        tags=("single_field",),
+    )
+    second_case = first_case.model_copy(
+        update={
+            "id": "appointment.duplicate-second",
+            "conversation_group_id": "appointment.duplicate-second",
+        }
+    )
+
+    with pytest.raises(ValidationError, match="duplicate evaluation inputs are not allowed"):
+        _gold_dataset(first_case, second_case)
+
+
+def test_gold_dataset_rejects_conflicting_labels_for_one_input():
+    first_case = _case(
+        case_id="appointment.conflict-first",
+        conversation_group_id="appointment.conflict-first",
+        message="그날 면담하고 싶습니다.",
+        fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+        action="provide_appointment_info",
+        tags=("single_field", "ambiguous"),
+    )
+    second_case = _case(
+        case_id="appointment.conflict-second",
+        conversation_group_id="appointment.conflict-second",
+        message="그날 면담하고 싶습니다.",
+        fields=_appointment_fields(date=ExpectedField(accepted_values=("모레",))),
+        action="provide_appointment_info",
+        tags=("single_field", "ambiguous"),
+    )
+
+    with pytest.raises(ValidationError, match="identical evaluation inputs have conflicting"):
+        _gold_dataset(first_case, second_case)
+
+
+def test_case_rejects_alternative_times_unused_by_the_model_input():
+    with pytest.raises(ValidationError, match="allowed only in an alternative-selection state"):
+        EvaluationCase(
+            id="appointment.irrelevant-alternatives",
+            conversation_group_id="appointment.irrelevant-alternatives",
+            split="development",
+            scenario_key="교수님:면담 예약",
+            conversation_state="collecting_appointment_info",
+            current_fields={},
+            offered_alternative_times=("오후 4시",),
+            user_message="내일 면담하고 싶습니다.",
+            labels=GoldLabels(
+                intent="appointment_booking",
+                fields=_appointment_fields(
+                    date=ExpectedField(accepted_values=("내일",)),
+                ),
+                user_action="provide_appointment_info",
+                change_field=None,
+            ),
+            tags=("single_field",),
+            provenance="human_authored",
+            review_status="adjudicated",
+        )
+
+
 def test_official_profile_tracks_all_live_structured_nlu_contracts():
     requirements = OFFICIAL_BENCHMARK_PROFILE.scenario_requirements
 
@@ -818,15 +1002,19 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
     assert benchmark.cases == (present_case, absent_case, single_field_case)
 
     with pytest.raises(ValueError, match="requires a complete corpus"):
-        prepare_qualified_test_slice(dataset)
+        _prepare_qualified_test_slice(
+            dataset,
+            authoring_source_fingerprint="a" * 64,
+        )
 
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
+        authoring_source_fingerprint="a" * 64,
         corpus_fingerprint="not-used-before-profile-validation",
         corpus_cases=dataset.cases,
     )
     with pytest.raises(ValueError, match="qualified test profile id does not match"):
-        score_qualified_test_slice(forged_qualified_slice, ())
+        _score_qualified_test_slice(forged_qualified_slice, ())
 
     mixed_split = QualifiedTestSlice(
         profile_id=OFFICIAL_BENCHMARK_PROFILE.profile_id,
@@ -840,11 +1028,12 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
             absent_case,
         ),
         coverage=benchmark.coverage,
+        authoring_source_fingerprint="a" * 64,
         corpus_fingerprint="not-used-before-split-validation",
         corpus_cases=dataset.cases,
     )
     with pytest.raises(ValueError, match="contains a non-test case"):
-        score_qualified_test_slice(mixed_split, ())
+        _score_qualified_test_slice(mixed_split, ())
 
 
 def test_benchmark_coverage_rejects_unadjudicated_test_case():
@@ -878,19 +1067,24 @@ def test_qualified_scoring_rejects_a_tampered_complete_corpus():
         split="test",
         tags=("single_field",),
     )
-    development_case = test_case.model_copy(
-        update={
-            "id": "appointment.corpus-development",
-            "conversation_group_id": "appointment.corpus-development",
-            "split": DatasetSplit.DEVELOPMENT,
-        }
+    development_case = _case(
+        case_id="appointment.corpus-development",
+        message="모레 면담하고 싶습니다.",
+        fields=_appointment_fields(
+            date=ExpectedField(accepted_values=("모레",)),
+        ),
+        action="provide_appointment_info",
+        tags=("single_field",),
     )
-    validation_case = test_case.model_copy(
-        update={
-            "id": "appointment.corpus-validation",
-            "conversation_group_id": "appointment.corpus-validation",
-            "split": DatasetSplit.VALIDATION,
-        }
+    validation_case = _case(
+        case_id="appointment.corpus-validation",
+        message="다음 주에 면담하고 싶습니다.",
+        fields=_appointment_fields(
+            date=ExpectedField(accepted_values=("다음 주",)),
+        ),
+        action="provide_appointment_info",
+        split="validation",
+        tags=("single_field",),
     )
     corpus = _gold_dataset(development_case, validation_case, test_case)
     custom_report = inspect_benchmark_coverage(
@@ -907,12 +1101,13 @@ def test_qualified_scoring_rejects_a_tampered_complete_corpus():
         split=DatasetSplit.TEST,
         cases=(test_case,),
         coverage=custom_report,
+        authoring_source_fingerprint="a" * 64,
         corpus_fingerprint="forged-corpus-fingerprint",
         corpus_cases=corpus.cases,
     )
 
     with pytest.raises(ValueError, match="corpus fingerprint does not match"):
-        score_qualified_test_slice(forged_slice, ())
+        _score_qualified_test_slice(forged_slice, ())
 
 
 def test_development_split_supports_custom_checks_but_not_qualified_scoring():
@@ -956,13 +1151,17 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
     assert benchmark.split is DatasetSplit.DEVELOPMENT
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
+        authoring_source_fingerprint="a" * 64,
         corpus_fingerprint="not-used-before-split-validation",
         corpus_cases=dataset.cases,
     )
     with pytest.raises(ValueError, match="qualified scoring requires the test split"):
-        score_qualified_test_slice(forged_qualified_slice, ())
+        _score_qualified_test_slice(forged_qualified_slice, ())
     with pytest.raises(ValueError, match="requires a complete corpus"):
-        prepare_qualified_test_slice(dataset)
+        _prepare_qualified_test_slice(
+            dataset,
+            authoring_source_fingerprint="a" * 64,
+        )
 
 
 def test_metrics_count_change_field_on_detailed_extractor_as_contract_failure():
