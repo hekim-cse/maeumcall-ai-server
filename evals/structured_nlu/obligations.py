@@ -8,6 +8,8 @@ from evals.structured_nlu.benchmark import (
     OFFICIAL_BENCHMARK_PROFILE,
     CoverageDimension,
 )
+from evals.structured_nlu.contrast import contrast_role_obligations
+from evals.structured_nlu.coverage_v3 import OFFICIAL_COVERAGE_CONTRACT_V3
 
 
 @dataclass(frozen=True)
@@ -111,12 +113,69 @@ def build_official_authoring_obligations() -> tuple[AuthoringObligation, ...]:
             )
             for value in sorted(requirement.action_field_absent)
         )
+    for scenario_key, policy in OFFICIAL_COVERAGE_CONTRACT_V3.scenarios:
+        obligations.extend(
+            AuthoringObligation(
+                dimension=CoverageDimension.SCENARIO_DIFFICULTY_TAG,
+                scenario_key=scenario_key,
+                value=tag.value,
+            )
+            for tag in sorted(policy.applicable_tags, key=lambda tag: tag.value)
+        )
+        obligations.extend(
+            AuthoringObligation(
+                dimension=CoverageDimension.CURRENT_FIELDS_CONTEXT,
+                scenario_key=scenario_key,
+                value=f"{state}->{context.value}",
+            )
+            for state, contexts in policy.current_contexts_by_state
+            for context in sorted(contexts, key=lambda item: item.value)
+        )
+        for dimension in (
+            CoverageDimension.CURRENT_FIELD_PRESENT,
+            CoverageDimension.CURRENT_FIELD_ABSENT,
+        ):
+            obligations.extend(
+                AuthoringObligation(
+                    dimension=dimension,
+                    scenario_key=scenario_key,
+                    value=field_name,
+                )
+                for field_name in sorted(policy.current_field_names)
+            )
+        obligations.extend(
+            AuthoringObligation(
+                dimension=CoverageDimension.CURRENT_FIELD_OPTION,
+                scenario_key=scenario_key,
+                value=f"{field_name}={value}",
+            )
+            for field_name, values in policy.current_field_options
+            for value in sorted(values)
+        )
+        obligations.extend(
+            AuthoringObligation(
+                dimension=CoverageDimension.CURRENT_DELTA_RELATION,
+                scenario_key=scenario_key,
+                value=f"{field_name}->{relation.value}",
+            )
+            for field_name, relations in policy.current_delta_relations
+            for relation in sorted(relations, key=lambda item: item.value)
+        )
+        obligations.extend(
+            AuthoringObligation(
+                dimension=CoverageDimension.ALTERNATIVE_TIME_RELATION,
+                scenario_key=scenario_key,
+                value=f"{state}->{action}->{relation.value}",
+            )
+            for state, action, relations in policy.alternative_relations_by_state_action
+            for relation in sorted(relations, key=lambda item: item.value)
+        )
     obligations.extend(
         AuthoringObligation(
-            dimension=CoverageDimension.DIFFICULTY_TAG,
-            value=tag.value,
+            dimension=CoverageDimension.CONTRAST_ROLE,
+            value=value,
         )
-        for tag in sorted(OFFICIAL_BENCHMARK_PROFILE.required_tags, key=lambda tag: tag.value)
+        for value in sorted(contrast_role_obligations())
     )
     return tuple(
         sorted(

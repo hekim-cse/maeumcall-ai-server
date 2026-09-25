@@ -77,8 +77,9 @@ def analyze_service_workflow_message(
 계약:
 - fields에는 위 필드 키를 빠짐없이 정확히 한 번씩 넣습니다.
 - 현재 발화에서 새로 확인되지 않은 값은 null입니다. 현재까지의 값을 복사하지 않습니다.
-- provide_details는 이번 발화에서 확인된 필드를 하나 이상 포함합니다.
-- change_detail은 change_field로 지정한 필드만 포함할 수 있으며, 새 값을 말하지 않고 변경 의사만 밝힌 경우 해당 필드는 null입니다.
+- provide_details는 현재 비어 있는 필드 중 이번 발화에서 확인된 값을 하나 이상 포함합니다.
+- change_detail은 이전에 수집된 change_field 하나만 대상으로 합니다. 새 값을 포함한다면 현재 값과 달라야 하며,
+  새 값을 말하지 않고 변경 의사만 밝힌 경우 해당 필드는 null입니다.
 - 확인·완료·취소·마무리·unknown 행동은 모든 fields를 null로 반환합니다.
 - change_detail이 아니면 change_field는 null입니다.
 - JSON 객체 외의 문장, markdown, 코드블록을 출력하지 않습니다.
@@ -99,6 +100,7 @@ def analyze_service_workflow_message(
             spec,
             parsed,
             conversation_state=conversation_state,
+            current_fields=current_fields,
         ),
         operation=f"{spec.graph_name}_extraction",
     )
@@ -109,6 +111,7 @@ def _validate_analysis(
     parsed: dict[str, Any],
     *,
     conversation_state: str,
+    current_fields: dict[str, str | None],
 ) -> dict[str, Any]:
     expected_keys = {"intent", "fields", "user_action", "change_field"}
     if set(parsed) != expected_keys:
@@ -140,6 +143,7 @@ def _validate_analysis(
     validate_service_workflow_turn_delta(
         spec,
         fields=fields,
+        current_fields=current_fields,
         user_action=user_action,
         change_field=change_field,
     )

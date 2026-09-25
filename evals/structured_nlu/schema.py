@@ -9,6 +9,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
+from evals.structured_nlu.semantics import OBJECTIVE_DIFFICULTY_TAGS_V1, DifficultyTag
 from services.flow.common.state_contract import SCENARIO_STATE_VERSION
 
 
@@ -22,21 +23,6 @@ class ReviewStatus(StrEnum):
     DRAFT = "draft"
     REVIEWED = "reviewed"
     ADJUDICATED = "adjudicated"
-
-
-class DifficultyTag(StrEnum):
-    SINGLE_FIELD = "single_field"
-    MULTI_FIELD = "multi_field"
-    CORRECTION = "correction"
-    NEGATION = "negation"
-    ELLIPSIS = "ellipsis"
-    COLLOQUIAL = "colloquial"
-    AMBIGUOUS = "ambiguous"
-    HARD_NEGATIVE = "hard_negative"
-    CONFIRMATION = "confirmation"
-    CANCELLATION = "cancellation"
-    CLOSING = "closing"
-    SAFETY = "safety"
 
 
 NonEmptyText = Annotated[
@@ -146,6 +132,7 @@ class EvaluationCase(BaseModel):
             user_action=self.labels.user_action,
             change_field=self.labels.change_field,
             conversation_state=self.conversation_state,
+            current_fields=self.current_fields,
             offered_alternative_times=self.offered_alternative_times,
         )
         selected_time = self.labels.fields.get("selected_time")
@@ -318,38 +305,6 @@ def _normalize_input_value(value: object) -> object:
     return value
 
 
-_CORRECTION_ACTIONS = frozenset(
-    {
-        "change_detail",
-        "change_info",
-        "change_department",
-        "change_date",
-        "change_time",
-        "change_start_time",
-        "change_duration",
-        "change_party_size",
-        "change_user_name",
-        "change_service_type",
-        "change_designer",
-        "change_purpose",
-        "change_class_name",
-        "change_absence_date",
-        "change_absence_reason",
-    }
-)
-_CONFIRMATION_ACTIONS = frozenset(
-    {
-        "confirm",
-        "confirm_info",
-        "confirm_reservation_info",
-        "confirm_reservation",
-        "confirm_available_time",
-        "confirm_details",
-    }
-)
-_CLOSING_ACTIONS = frozenset({"go_closing", "end_call"})
-
-
 def _validate_tag_semantics(case: EvaluationCase) -> None:
     tags = set(case.tags)
     present_fields = sum(expected is not None for expected in case.labels.fields.values())
@@ -361,22 +316,15 @@ def _validate_tag_semantics(case: EvaluationCase) -> None:
         raise ValueError("single_field tag is required for exactly one present label field")
     if present_fields >= 2 and DifficultyTag.MULTI_FIELD not in tags:
         raise ValueError("multi_field tag is required for two or more present label fields")
-    if DifficultyTag.CORRECTION in tags and case.labels.user_action not in _CORRECTION_ACTIONS:
-        raise ValueError("correction tag requires a correction action")
-    if case.labels.user_action in _CORRECTION_ACTIONS and DifficultyTag.CORRECTION not in tags:
-        raise ValueError("correction tag is required for a correction action")
-    if DifficultyTag.CONFIRMATION in tags and case.labels.user_action not in _CONFIRMATION_ACTIONS:
-        raise ValueError("confirmation tag requires a confirmation action")
-    if case.labels.user_action in _CONFIRMATION_ACTIONS and DifficultyTag.CONFIRMATION not in tags:
-        raise ValueError("confirmation tag is required for a confirmation action")
-    if DifficultyTag.CANCELLATION in tags and case.labels.user_action != "cancel_workflow":
-        raise ValueError("cancellation tag requires cancel_workflow")
-    if case.labels.user_action == "cancel_workflow" and DifficultyTag.CANCELLATION not in tags:
-        raise ValueError("cancellation tag is required for cancel_workflow")
-    if DifficultyTag.CLOSING in tags and case.labels.user_action not in _CLOSING_ACTIONS:
-        raise ValueError("closing tag requires a closing action")
-    if case.labels.user_action in _CLOSING_ACTIONS and DifficultyTag.CLOSING not in tags:
-        raise ValueError("closing tag is required for a closing action")
+    contract = EVALUATION_CONTRACTS[case.scenario_key]
+    required_objective_tags = dict(contract.objective_tags_by_action)[case.labels.user_action]
+    present_objective_tags = tags & OBJECTIVE_DIFFICULTY_TAGS_V1
+    if present_objective_tags != required_objective_tags:
+        raise ValueError(
+            "objective tags must exactly match the declared action semantics: "
+            f"required={sorted(tag.value for tag in required_objective_tags)}, "
+            f"present={sorted(tag.value for tag in present_objective_tags)}"
+        )
     if DifficultyTag.HARD_NEGATIVE in tags and (
         case.labels.user_action != "unknown" or present_fields
     ):

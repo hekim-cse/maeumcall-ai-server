@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import unicodedata
@@ -25,6 +26,12 @@ from evals.structured_nlu.authoring import (
 )
 from evals.structured_nlu.benchmark import CoverageDimension
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
+from evals.structured_nlu.contrast import (
+    ContrastGroupDefinition,
+    contrast_group_fingerprint,
+    serialize_contrast_manifest_schema,
+    verify_contrast_manifest,
+)
 from evals.structured_nlu.obligations import (
     build_official_authoring_obligations,
     serialize_official_authoring_obligations,
@@ -685,6 +692,7 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
         split_assignment_fingerprint=split_assignment_fingerprint,
         annotation_guideline_fingerprint="c" * 64,
         review_ledger_fingerprint="d" * 64,
+        contrast_manifest_fingerprint="e" * 64,
         corpus_cases=dataset.cases,
     )
     monkeypatch.setattr(
@@ -698,6 +706,10 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
         "evals.structured_nlu.benchmark._score_qualified_test_slice",
         lambda _benchmark, _predictions: "scored",
     )
+    monkeypatch.setattr(
+        "evals.structured_nlu.contrast.verify_contrast_manifest",
+        lambda *_args: SimpleNamespace(fingerprint="e" * 64),
+    )
 
     assert (
         score_qualified_test_slice_from_authoring(
@@ -706,6 +718,7 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
             compiled_path,
             tmp_path / "guideline.md",
             tmp_path / "review-ledger.json",
+            tmp_path / "contrast-manifest.json",
             benchmark,
             (),
         )
@@ -724,6 +737,7 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
             compiled_path,
             tmp_path / "guideline.md",
             tmp_path / "review-ledger.json",
+            tmp_path / "contrast-manifest.json",
             benchmark,
             (),
         )
@@ -769,12 +783,16 @@ def test_qualified_scoring_rejects_a_changed_split_assignment(tmp_path: Path):
             compiled_path,
             tmp_path / "guideline.md",
             tmp_path / "review-ledger.json",
+            tmp_path / "contrast-manifest.json",
             benchmark,
             (),
         )
 
 
-def test_official_qualification_requires_verified_authoring_sources(tmp_path: Path):
+def test_official_qualification_requires_verified_authoring_sources(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
     source_dir = tmp_path / "source"
     compiled_path = tmp_path / "compiled" / "gold-dataset.v2.json"
     dataset = _build_review_dataset(tmp_path)
@@ -786,6 +804,10 @@ def test_official_qualification_requires_verified_authoring_sources(tmp_path: Pa
         serialize_gold_dataset(dataset),
         encoding="utf-8",
     )
+    monkeypatch.setattr(
+        "evals.structured_nlu.contrast.verify_contrast_manifest",
+        lambda *_args: SimpleNamespace(fingerprint="e" * 64),
+    )
 
     with pytest.raises(ValueError, match="benchmark coverage is incomplete"):
         prepare_qualified_test_slice_from_authoring(
@@ -794,6 +816,7 @@ def test_official_qualification_requires_verified_authoring_sources(tmp_path: Pa
             compiled_path,
             guideline_path,
             ledger_path,
+            tmp_path / "contrast-manifest.json",
         )
 
 
@@ -807,12 +830,12 @@ def test_output_boundary_resolves_symbolic_aliases(tmp_path: Path):
         ensure_output_outside_source(source_dir, alias / "compiled.json")
 
 
-def test_official_obligations_are_derived_from_the_v2_contract():
+def test_official_obligations_are_derived_from_the_v3_contract():
     obligations = build_official_authoring_obligations()
     counts = Counter(obligation.dimension for obligation in obligations)
 
     assert counts == {
-        CoverageDimension.STATE_ACTION: 352,
+        CoverageDimension.STATE_ACTION: 343,
         CoverageDimension.INTENT: 17,
         CoverageDimension.FIELD_PRESENT: 76,
         CoverageDimension.FIELD_ABSENT: 76,
@@ -820,49 +843,43 @@ def test_official_obligations_are_derived_from_the_v2_contract():
         CoverageDimension.CHANGE_FIELD: 42,
         CoverageDimension.ACTION_FIELD_PRESENT: 146,
         CoverageDimension.ACTION_FIELD_ABSENT: 68,
-        CoverageDimension.DIFFICULTY_TAG: 12,
+        CoverageDimension.SCENARIO_DIFFICULTY_TAG: 168,
+        CoverageDimension.CURRENT_FIELDS_CONTEXT: 112,
+        CoverageDimension.CURRENT_FIELD_PRESENT: 42,
+        CoverageDimension.CURRENT_FIELD_ABSENT: 42,
+        CoverageDimension.CURRENT_FIELD_OPTION: 76,
+        CoverageDimension.CURRENT_DELTA_RELATION: 168,
+        CoverageDimension.ALTERNATIVE_TIME_RELATION: 35,
+        CoverageDimension.CONTRAST_ROLE: 75,
     }
 
 
 def test_official_obligation_manifest_records_all_scenario_counts():
     manifest = json.loads(serialize_official_authoring_obligations())
 
-    assert manifest["dimension_counts"] == {
-        "action_field_absent": 68,
-        "action_field_present": 146,
-        "change_field": 42,
-        "difficulty_tag": 12,
-        "field_absent": 76,
-        "field_option": 76,
-        "field_present": 76,
-        "intent": 17,
-        "state_action": 352,
-    }
-    assert manifest["scenario_counts"] == {
-        "고객센터:a/s 접수": 75,
-        "고객센터:요금/약정 상담": 54,
-        "고객센터:인터넷/통화 문제 문의": 72,
-        "교수님:결석 사유 전달": 35,
-        "교수님:과제 문의": 24,
-        "교수님:면담 예약": 35,
-        "배달:배달 지연 문의": 54,
-        "배달:주문 변경": 55,
-        "배달:환불/재배달 문의": 63,
-        "시청:대형폐기물 배출": 52,
-        "시청:여권 발급 문의": 62,
-        "시청:주민등록 등본 문의": 60,
-        "예약:미용실 예약": 53,
-        "예약:병원 예약": 60,
-        "예약:스터디룸 예약": 53,
-        "예약:식당 예약": 46,
-    }
-    assert sum(manifest["scenario_counts"].values()) + 12 == manifest["obligation_count"]
+    assert manifest["obligation_count"] == 1562
+    assert manifest["dimension_counts"]["state_action"] == 343
+    assert manifest["dimension_counts"]["scenario_difficulty_tag"] == 168
+    assert manifest["dimension_counts"]["contrast_role"] == 75
+    assert len(manifest["scenario_counts"]) == 16
 
 
 def test_committed_official_obligation_manifest_matches_live_contracts():
-    manifest_path = Path("evals/structured_nlu/manifests/coverage-obligations.v2.json")
+    manifest_path = Path("evals/structured_nlu/manifests/coverage-obligations.v3.json")
 
     assert manifest_path.read_text(encoding="utf-8") == (serialize_official_authoring_obligations())
+
+
+def test_v2_obligation_manifest_is_preserved_as_history():
+    path = Path("evals/structured_nlu/manifests/coverage-obligations.v2.json")
+    raw = path.read_bytes()
+    manifest = json.loads(raw)
+
+    assert manifest["profile_id"] == "maeumcall-structured-nlu-v2"
+    assert manifest["obligation_count"] == 865
+    assert hashlib.sha256(raw).hexdigest() == (
+        "be8db0000bc3b4e61f6c806c6b3833c2d563f4971c34e4993f3470126c5dda89"
+    )
 
 
 def test_committed_authoring_schema_matches_the_code_contract():
@@ -875,6 +892,101 @@ def test_committed_split_assignment_schema_matches_the_code_contract():
     schema_path = Path("evals/structured_nlu/split_assignment.schema.json")
 
     assert schema_path.read_text(encoding="utf-8") == serialize_split_assignment_schema()
+
+
+def test_committed_contrast_manifest_schema_matches_the_code_contract():
+    schema_path = Path("evals/structured_nlu/contrast_groups.schema.json")
+
+    serialized = serialize_contrast_manifest_schema()
+    assert schema_path.read_text(encoding="utf-8") == serialized
+    schema = json.loads(serialized)
+    assert schema["properties"]["case_fingerprint_algorithm"]["const"] == (
+        "evaluation-case-canonical-json-sha256-v1"
+    )
+
+
+def test_contrast_manifest_rejects_unknown_policy_family(tmp_path: Path):
+    dataset = _build_review_dataset(tmp_path)
+    case_ids = [case.id for case in dataset.cases if case.split.value == "validation"]
+    manifest_path = tmp_path / "contrast.json"
+    definition = {
+        "contrast_group_id": "unknown.validation",
+        "family_id": "not-a-real-family",
+        "comparison_axis_id": "not-a-real-family",
+        "confusion_axis": "존재하지 않는 대조 정책",
+        "members": [
+            {
+                "role_id": "a",
+                "case_id": case_ids[0],
+                "case_fingerprint": "a" * 64,
+            },
+            {
+                "role_id": "b",
+                "case_id": case_ids[0] + ".missing",
+                "case_fingerprint": "b" * 64,
+            },
+        ],
+    }
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "contrast_manifest_schema_version": 1,
+                "coverage_contract_id": "maeumcall-structured-nlu-coverage-v3",
+                "case_fingerprint_algorithm": "evaluation-case-canonical-json-sha256-v1",
+                "groups": [
+                    {
+                        "definition": definition,
+                        "approval": {
+                            "group_fingerprint_algorithm": (
+                                "contrast-group-canonical-json-sha256-v1"
+                            ),
+                            "group_fingerprint": contrast_group_fingerprint(
+                                ContrastGroupDefinition.model_validate(definition)
+                            ),
+                            "reviewer_id": "reviewer.primary",
+                            "reviewed_at": "2026-09-26T09:00:00+09:00",
+                            "rationale": "알 수 없는 정책이 거부되는지 검사한다.",
+                            "decision": "approved",
+                        },
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="unknown contrast family"):
+        verify_contrast_manifest(dataset, manifest_path)
+
+
+def test_contrast_manifest_rejects_duplicate_keys_and_symbolic_links(tmp_path: Path):
+    dataset = _build_review_dataset(tmp_path)
+    duplicate_path = tmp_path / "duplicate-contrast.json"
+    duplicate_path.write_text(
+        '{"contrast_manifest_schema_version":999,'
+        '"contrast_manifest_schema_version":1,'
+        '"coverage_contract_id":"maeumcall-structured-nlu-coverage-v3",'
+        '"case_fingerprint_algorithm":"evaluation-case-canonical-json-sha256-v1",'
+        '"groups":[]}',
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="invalid contrast manifest"):
+        verify_contrast_manifest(dataset, duplicate_path)
+
+    alias_path = tmp_path / "contrast-alias.json"
+    alias_path.symlink_to(duplicate_path)
+    with pytest.raises(ValueError, match="symbolic link"):
+        verify_contrast_manifest(dataset, alias_path)
+
+    real_dir = tmp_path / "real"
+    real_dir.mkdir()
+    nested_path = real_dir / "contrast.json"
+    nested_path.write_text(duplicate_path.read_text(encoding="utf-8"), encoding="utf-8")
+    alias_dir = tmp_path / "directory-alias"
+    alias_dir.symlink_to(real_dir, target_is_directory=True)
+    with pytest.raises(ValueError, match="symbolic link"):
+        verify_contrast_manifest(dataset, alias_dir / "contrast.json")
 
 
 def test_split_assignment_schema_exposes_the_frozen_manifest_contract():
@@ -1143,11 +1255,16 @@ def test_official_scoring_revalidates_the_review_ledger(
         split_assignment_fingerprint=split_fingerprint,
         annotation_guideline_fingerprint=verified_review.guideline_fingerprint,
         review_ledger_fingerprint=verified_review.ledger_fingerprint,
+        contrast_manifest_fingerprint="e" * 64,
         corpus_cases=dataset.cases,
     )
     monkeypatch.setattr(
         "evals.structured_nlu.benchmark._score_qualified_test_slice",
         lambda _benchmark, _predictions: "scored",
+    )
+    monkeypatch.setattr(
+        "evals.structured_nlu.contrast.verify_contrast_manifest",
+        lambda *_args: SimpleNamespace(fingerprint="e" * 64),
     )
 
     assert (
@@ -1157,6 +1274,7 @@ def test_official_scoring_revalidates_the_review_ledger(
             compiled_path,
             guideline_path,
             ledger_path,
+            tmp_path / "contrast-manifest.json",
             benchmark,
             (),
         )
@@ -1173,6 +1291,7 @@ def test_official_scoring_revalidates_the_review_ledger(
             compiled_path,
             guideline_path,
             ledger_path,
+            tmp_path / "contrast-manifest.json",
             benchmark,
             (),
         )

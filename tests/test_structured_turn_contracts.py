@@ -133,6 +133,7 @@ def test_detailed_contracts_reject_every_action_field_contradiction(
 @pytest.mark.parametrize("spec", WORKFLOW_SPECS, ids=lambda spec: spec.graph_name)
 def test_workflow_contracts_reject_control_actions_with_field_deltas(spec):
     empty_fields = {key: None for key in spec.field_keys}
+    current_fields = {key: None for key in spec.field_keys}
     first_field = spec.field_keys[0]
     conflicting_fields = dict(empty_fields)
     conflicting_fields[first_field] = _valid_workflow_value(spec, first_field)
@@ -143,6 +144,7 @@ def test_workflow_contracts_reject_control_actions_with_field_deltas(spec):
             validate_service_workflow_turn_delta(
                 spec,
                 fields=conflicting_fields,
+                current_fields=current_fields,
                 user_action=action,
                 change_field=None,
             )
@@ -151,6 +153,7 @@ def test_workflow_contracts_reject_control_actions_with_field_deltas(spec):
         validate_service_workflow_turn_delta(
             spec,
             fields=empty_fields,
+            current_fields=current_fields,
             user_action="provide_details",
             change_field=None,
         )
@@ -159,11 +162,14 @@ def test_workflow_contracts_reject_control_actions_with_field_deltas(spec):
 @pytest.mark.parametrize("spec", WORKFLOW_SPECS, ids=lambda spec: spec.graph_name)
 def test_workflow_change_detail_can_change_only_its_declared_field(spec):
     target, unrelated = spec.field_keys[:2]
+    current_fields = {key: None for key in spec.field_keys}
+    current_fields[target] = _valid_workflow_value(spec, target)
     fields = {key: None for key in spec.field_keys}
-    fields[target] = _valid_workflow_value(spec, target)
+    fields[target] = _different_workflow_value(spec, target, current_fields[target])
     validate_service_workflow_turn_delta(
         spec,
         fields=fields,
+        current_fields=current_fields,
         user_action="change_detail",
         change_field=target,
     )
@@ -173,6 +179,66 @@ def test_workflow_change_detail_can_change_only_its_declared_field(spec):
         validate_service_workflow_turn_delta(
             spec,
             fields=fields,
+            current_fields=current_fields,
+            user_action="change_detail",
+            change_field=target,
+        )
+
+
+@pytest.mark.parametrize("spec", WORKFLOW_SPECS, ids=lambda spec: spec.graph_name)
+def test_workflow_greeting_does_not_offer_change_detail(spec):
+    assert "change_detail" not in spec.actions_by_state["greeting"]
+
+
+@pytest.mark.parametrize("spec", WORKFLOW_SPECS, ids=lambda spec: spec.graph_name)
+def test_workflow_provide_accepts_only_previously_missing_fields(spec):
+    target = spec.field_keys[0]
+    current_fields = {key: None for key in spec.field_keys}
+    value = _valid_workflow_value(spec, target)
+    fields = {key: None for key in spec.field_keys}
+    fields[target] = value
+
+    validate_service_workflow_turn_delta(
+        spec,
+        fields=fields,
+        current_fields=current_fields,
+        user_action="provide_details",
+        change_field=None,
+    )
+    current_fields[target] = value
+    with pytest.raises(ValueError, match="only fields missing"):
+        validate_service_workflow_turn_delta(
+            spec,
+            fields=fields,
+            current_fields=current_fields,
+            user_action="provide_details",
+            change_field=None,
+        )
+
+
+@pytest.mark.parametrize("spec", WORKFLOW_SPECS, ids=lambda spec: spec.graph_name)
+def test_workflow_change_requires_an_existing_value_and_a_real_replacement(spec):
+    target = spec.field_keys[0]
+    empty_current = {key: None for key in spec.field_keys}
+    fields = {key: None for key in spec.field_keys}
+    fields[target] = _valid_workflow_value(spec, target)
+
+    with pytest.raises(ValueError, match="previously collected"):
+        validate_service_workflow_turn_delta(
+            spec,
+            fields=fields,
+            current_fields=empty_current,
+            user_action="change_detail",
+            change_field=target,
+        )
+
+    current_fields = dict(empty_current)
+    current_fields[target] = fields[target]
+    with pytest.raises(ValueError, match="new value"):
+        validate_service_workflow_turn_delta(
+            spec,
+            fields=fields,
+            current_fields=current_fields,
             user_action="change_detail",
             change_field=target,
         )
@@ -254,3 +320,10 @@ def test_contract_builder_rejects_impossible_require_any_rule():
 def _valid_workflow_value(spec, field_name):
     field = next(field for field in spec.fields if field.key == field_name)
     return field.options[0].value if field.options else "검증된 값"
+
+
+def _different_workflow_value(spec, field_name, current_value):
+    field = next(field for field in spec.fields if field.key == field_name)
+    if field.options:
+        return next(option.value for option in field.options if option.value != current_value)
+    return f"{current_value} 변경"
