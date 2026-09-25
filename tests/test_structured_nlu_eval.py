@@ -1026,9 +1026,23 @@ def test_qualified_v3_rejects_incomplete_validation_before_test(
             ),
         ),
     )
+    requested_splits: list[DatasetSplit] = []
+
+    def fake_inspect(_dataset, *, split, profile):
+        requested_splits.append(split)
+        if split is DatasetSplit.VALIDATION:
+            return incomplete
+        return BenchmarkCoverageReport(
+            profile_id=profile.profile_id,
+            profile_fingerprint=profile.fingerprint,
+            split=split,
+            case_count=1,
+            issues=(),
+        )
+
     monkeypatch.setattr(
         "evals.structured_nlu.benchmark.inspect_benchmark_coverage",
-        lambda *_args, **_kwargs: incomplete,
+        fake_inspect,
     )
 
     with pytest.raises(ValueError, match="benchmark coverage is incomplete"):
@@ -1040,6 +1054,7 @@ def test_qualified_v3_rejects_incomplete_validation_before_test(
             review_ledger_fingerprint="d" * 64,
             contrast_manifest_fingerprint="e" * 64,
         )
+    assert requested_splits == [DatasetSplit.VALIDATION]
 
 
 def test_profile_rejects_duplicate_states_and_action_union_drift():
