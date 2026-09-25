@@ -1039,6 +1039,50 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
         _score_qualified_test_slice(mixed_split, ())
 
 
+@pytest.mark.parametrize("invalid_fingerprint", ("B" * 64, "b" * 63))
+def test_qualified_split_assignment_fingerprint_must_be_lowercase_sha256(
+    invalid_fingerprint: str,
+):
+    test_case = _case(
+        case_id="appointment.invalid-split-fingerprint",
+        message="내일 면담하고 싶습니다.",
+        fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+        action="provide_appointment_info",
+        split="test",
+        tags=("single_field",),
+    )
+    dataset = _gold_dataset(test_case)
+
+    with pytest.raises(ValueError, match="split assignment fingerprint"):
+        _prepare_qualified_test_slice(
+            dataset,
+            authoring_source_fingerprint="a" * 64,
+            split_assignment_fingerprint=invalid_fingerprint,
+        )
+
+    coverage = inspect_benchmark_coverage(
+        dataset,
+        split=DatasetSplit.TEST,
+        profile=_appointment_test_profile(),
+    )
+    forged = QualifiedTestSlice(
+        profile_id=OFFICIAL_BENCHMARK_PROFILE.profile_id,
+        profile_fingerprint=OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT,
+        dataset_version=dataset.dataset_version,
+        state_contract_version=dataset.state_contract_version,
+        dataset_fingerprint="not-reached-before-fingerprint-validation",
+        split=DatasetSplit.TEST,
+        cases=dataset.cases,
+        coverage=coverage,
+        authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint=invalid_fingerprint,
+        corpus_fingerprint="not-reached-before-fingerprint-validation",
+        corpus_cases=dataset.cases,
+    )
+    with pytest.raises(ValueError, match="split assignment fingerprint"):
+        _score_qualified_test_slice(forged, ())
+
+
 def test_benchmark_coverage_rejects_unadjudicated_test_case():
     draft_case = _case(
         case_id="appointment.unapproved-test-case",
