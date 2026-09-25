@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from dataclasses import asdict, dataclass
 
 from evals.structured_nlu.benchmark import (
@@ -20,10 +21,16 @@ class AuthoringObligation:
 
 def serialize_official_authoring_obligations() -> str:
     obligations = build_official_authoring_obligations()
+    dimension_counts = Counter(obligation.dimension.value for obligation in obligations)
+    scenario_counts = Counter(
+        obligation.scenario_key for obligation in obligations if obligation.scenario_key is not None
+    )
     payload = {
         "profile_id": OFFICIAL_BENCHMARK_PROFILE.profile_id,
         "profile_fingerprint": OFFICIAL_BENCHMARK_PROFILE.fingerprint,
         "obligation_count": len(obligations),
+        "dimension_counts": dict(sorted(dimension_counts.items())),
+        "scenario_counts": dict(sorted(scenario_counts.items())),
         "obligations": [
             {
                 **asdict(obligation),

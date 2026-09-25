@@ -1,0 +1,64 @@
+{
+  "$defs": {
+    "DatasetSplit": {
+      "enum": [
+        "development",
+        "validation",
+        "test"
+      ],
+      "title": "DatasetSplit",
+      "type": "string"
+    },
+    "SplitAssignment": {
+      "additionalProperties": false,
+      "description": "Freeze one semantic source group into exactly one dataset split.",
+      "properties": {
+        "conversation_group_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+          "title": "Conversation Group Id",
+          "type": "string"
+        },
+        "split": {
+          "$ref": "#/$defs/DatasetSplit"
+        }
+      },
+      "required": [
+        "conversation_group_id",
+        "split"
+      ],
+      "title": "SplitAssignment",
+      "type": "object"
+    }
+  },
+  "$id": "urn:maeumcall:structured-nlu:split-assignments:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Own every group-to-split decision outside the editable group files.",
+  "properties": {
+    "assignments": {
+      "items": {
+        "$ref": "#/$defs/SplitAssignment"
+      },
+      "minItems": 1,
+      "title": "Assignments",
+      "type": "array"
+    },
+    "dataset_version": {
+      "const": 2,
+      "title": "Dataset Version",
+      "type": "integer"
+    },
+    "split_assignment_schema_version": {
+      "const": 1,
+      "title": "Split Assignment Schema Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "split_assignment_schema_version",
+    "dataset_version",
+    "assignments"
+  ],
+  "title": "SplitAssignmentManifest",
+  "type": "object"
+}

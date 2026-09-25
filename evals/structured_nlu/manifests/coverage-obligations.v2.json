@@ -1,4 +1,15 @@
 {
+  "dimension_counts": {
+    "action_field_absent": 68,
+    "action_field_present": 146,
+    "change_field": 42,
+    "difficulty_tag": 12,
+    "field_absent": 76,
+    "field_option": 76,
+    "field_present": 76,
+    "intent": 17,
+    "state_action": 352
+  },
   "obligation_count": 865,
   "obligations": [
     {
@@ -4328,5 +4339,23 @@
     }
   ],
   "profile_fingerprint": "1795efc46ed9988925929d5f6706db8c997b0450abc657d41909bb2402f3bd1e",
-  "profile_id": "maeumcall-structured-nlu-v2"
+  "profile_id": "maeumcall-structured-nlu-v2",
+  "scenario_counts": {
+    "고객센터:a/s 접수": 75,
+    "고객센터:요금/약정 상담": 54,
+    "고객센터:인터넷/통화 문제 문의": 72,
+    "교수님:결석 사유 전달": 35,
+    "교수님:과제 문의": 24,
+    "교수님:면담 예약": 35,
+    "배달:배달 지연 문의": 54,
+    "배달:주문 변경": 55,
+    "배달:환불/재배달 문의": 63,
+    "시청:대형폐기물 배출": 52,
+    "시청:여권 발급 문의": 62,
+    "시청:주민등록 등본 문의": 60,
+    "예약:미용실 예약": 53,
+    "예약:병원 예약": 60,
+    "예약:스터디룸 예약": 53,
+    "예약:식당 예약": 46
+  }
 }

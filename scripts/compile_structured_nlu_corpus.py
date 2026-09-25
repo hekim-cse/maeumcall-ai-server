@@ -7,9 +7,11 @@ from pathlib import Path
 
 from evals.structured_nlu.authoring import (
     compile_authoring_directory,
+    ensure_output_does_not_replace_manifest,
     ensure_output_outside_source,
     serialize_authoring_group_schema,
     serialize_gold_dataset,
+    serialize_split_assignment_schema,
     verify_compiled_authoring_corpus,
 )
 from evals.structured_nlu.obligations import serialize_official_authoring_obligations
@@ -23,6 +25,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     compile_parser = subparsers.add_parser("compile", help="Write the compiled V2 corpus.")
     compile_parser.add_argument("source_dir", type=Path)
+    compile_parser.add_argument("split_assignments", type=Path)
     compile_parser.add_argument("output", type=Path)
 
     check_parser = subparsers.add_parser(
@@ -30,6 +33,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify that a committed compiled corpus matches its authoring sources.",
     )
     check_parser.add_argument("source_dir", type=Path)
+    check_parser.add_argument("split_assignments", type=Path)
     check_parser.add_argument("compiled", type=Path)
 
     obligations_parser = subparsers.add_parser(
@@ -55,6 +59,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify that the committed AuthoringGroup schema matches the code contract.",
     )
     check_schema_parser.add_argument("schema", type=Path)
+
+    split_schema_parser = subparsers.add_parser(
+        "split-schema",
+        help="Write the editor-facing split assignment JSON Schema.",
+    )
+    split_schema_parser.add_argument("output", type=Path)
+
+    check_split_schema_parser = subparsers.add_parser(
+        "check-split-schema",
+        help="Verify that the committed split assignment schema matches the code contract.",
+    )
+    check_split_schema_parser.add_argument("schema", type=Path)
     return parser
 
 
@@ -80,14 +96,30 @@ def main() -> int:
         if args.schema.read_text(encoding="utf-8") != serialize_authoring_group_schema():
             raise SystemExit("authoring schema differs from the code contract")
         return 0
+    if args.command == "split-schema":
+        _write_text(args.output, serialize_split_assignment_schema())
+        return 0
+    if args.command == "check-split-schema":
+        if not args.schema.is_file():
+            raise SystemExit(f"split assignment schema does not exist: {args.schema}")
+        if args.schema.read_text(encoding="utf-8") != serialize_split_assignment_schema():
+            raise SystemExit("split assignment schema differs from the code contract")
+        return 0
 
     if args.command == "compile":
         ensure_output_outside_source(args.source_dir, args.output)
-        compiled_text = serialize_gold_dataset(compile_authoring_directory(args.source_dir))
+        ensure_output_does_not_replace_manifest(args.split_assignments, args.output)
+        compiled_text = serialize_gold_dataset(
+            compile_authoring_directory(args.source_dir, args.split_assignments)
+        )
         _write_text(args.output, compiled_text)
         return 0
 
-    verify_compiled_authoring_corpus(args.source_dir, args.compiled)
+    verify_compiled_authoring_corpus(
+        args.source_dir,
+        args.split_assignments,
+        args.compiled,
+    )
     return 0
 
 

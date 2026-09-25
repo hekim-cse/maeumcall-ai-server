@@ -1005,11 +1005,13 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
         _prepare_qualified_test_slice(
             dataset,
             authoring_source_fingerprint="a" * 64,
+            split_assignment_fingerprint="b" * 64,
         )
 
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
         authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint="b" * 64,
         corpus_fingerprint="not-used-before-profile-validation",
         corpus_cases=dataset.cases,
     )
@@ -1029,6 +1031,7 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
         ),
         coverage=benchmark.coverage,
         authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint="b" * 64,
         corpus_fingerprint="not-used-before-split-validation",
         corpus_cases=dataset.cases,
     )
@@ -1102,6 +1105,7 @@ def test_qualified_scoring_rejects_a_tampered_complete_corpus():
         cases=(test_case,),
         coverage=custom_report,
         authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint="b" * 64,
         corpus_fingerprint="forged-corpus-fingerprint",
         corpus_cases=corpus.cases,
     )
@@ -1152,6 +1156,7 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
         authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint="b" * 64,
         corpus_fingerprint="not-used-before-split-validation",
         corpus_cases=dataset.cases,
     )
@@ -1161,6 +1166,7 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
         _prepare_qualified_test_slice(
             dataset,
             authoring_source_fingerprint="a" * 64,
+            split_assignment_fingerprint="b" * 64,
         )
 
 
