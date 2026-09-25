@@ -86,6 +86,7 @@ def test_restaurant_structured_analysis_extracts_selected_time(monkeypatch):
     result = analyze_restaurant_reservation_user_message(
         "reservation_unavailable",
         "저녁 8시로 할게요.",
+        alternative_times=["저녁 8시"],
     )
 
     assert result["user_action"] == "select_alternative_time"

@@ -165,6 +165,8 @@ def complete_detailed_graph(
 
     result = contract.graph.invoke(initial_state)
     compacted = contract.compact_state(result)
+    if contract.validate_state is not None:
+        contract.validate_state(compacted)
     return ChatResponse(
         response=result["ai_message"],
         etiquetteTip=None,

@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    ActionFieldRule,
+    action_field_rules_json_for_state,
     allowed_actions_json_for_state,
     allowed_string_for_state,
+    build_action_field_contract,
     build_state_action_contract,
     complete_validated_json,
     optional_string,
     require_exact_keys,
+    validate_action_field_delta,
+)
+from services.flow.reservation.common.structured_contract import (
+    STANDARD_ALTERNATIVE_SELECTION_STATES,
+    validate_alternative_time_selection,
 )
 
 DEFAULT_STUDY_ROOM_STRUCTURED_RESULT: dict[str, Any] = {
@@ -48,11 +57,40 @@ STUDY_ROOM_ACTIONS_BY_STATE, STUDY_ROOM_USER_ACTIONS = build_state_action_contra
         "closing": frozenset({"end_call", "unknown"}),
     }
 )
+STUDY_ROOM_FIELD_NAMES = frozenset(
+    {"date", "start_time", "duration", "party_size", "user_name", "selected_time"}
+)
+STUDY_ROOM_CHANGE_TARGETS = {
+    "change_date": "date",
+    "change_start_time": "start_time",
+    "change_duration": "duration",
+    "change_party_size": "party_size",
+    "change_user_name": "user_name",
+}
+STUDY_ROOM_ACTION_FIELD_CONTRACT = build_action_field_contract(
+    field_names=STUDY_ROOM_FIELD_NAMES,
+    user_actions=STUDY_ROOM_USER_ACTIONS,
+    rules={action: ActionFieldRule() for action in STUDY_ROOM_USER_ACTIONS}
+    | {
+        "continue_collecting": ActionFieldRule(
+            allowed_fields=STUDY_ROOM_FIELD_NAMES - {"selected_time"}
+        ),
+        **{
+            action: ActionFieldRule(allowed_fields=frozenset({field_name}))
+            for action, field_name in STUDY_ROOM_CHANGE_TARGETS.items()
+        },
+        "select_alternative_time": ActionFieldRule(
+            allowed_fields=frozenset({"selected_time"}),
+            required_fields=frozenset({"selected_time"}),
+        ),
+    },
+)
 
 
 def analyze_study_room_reservation_user_message(
     conversation_state: str,
     user_message: str,
+    alternative_times: list[str] | None = None,
 ) -> dict[str, Any]:
     """
     스터디룸 예약 사용자 발화를 LLM structured output으로 분석한다.
@@ -69,6 +107,7 @@ def analyze_study_room_reservation_user_message(
     prompt = build_study_room_reservation_analysis_prompt(
         conversation_state=conversation_state,
         user_message=user_message,
+        alternative_times=alternative_times,
     )
 
     return complete_validated_json(
@@ -86,6 +125,7 @@ def analyze_study_room_reservation_user_message(
         validator=lambda parsed: _normalize_study_room_analysis_result(
             parsed,
             conversation_state=conversation_state,
+            alternative_times=alternative_times,
         ),
         operation="study_room_extraction",
     )
@@ -94,11 +134,18 @@ def analyze_study_room_reservation_user_message(
 def build_study_room_reservation_analysis_prompt(
     conversation_state: str,
     user_message: str,
+    alternative_times: list[str] | None = None,
 ) -> str:
     allowed_actions = allowed_actions_json_for_state(
         conversation_state,
         STUDY_ROOM_ACTIONS_BY_STATE,
     )
+    action_field_rules = action_field_rules_json_for_state(
+        conversation_state,
+        allowed_by_state=STUDY_ROOM_ACTIONS_BY_STATE,
+        contract=STUDY_ROOM_ACTION_FIELD_CONTRACT,
+    )
+    available_alternatives = json.dumps(alternative_times or [], ensure_ascii=False)
     return f"""
 다음은 사용자가 스터디룸 예약 전화를 연습하는 시뮬레이션입니다.
 사용자 발화를 분석해서 JSON 객체만 반환하세요.
@@ -107,6 +154,10 @@ def build_study_room_reservation_analysis_prompt(
 {conversation_state}
 현재 상태에서 허용된 user_action:
 {allowed_actions}
+현재 상태의 행동별 이번 턴 필드 계약:
+{action_field_rules}
+서버가 제시한 대체 시간:
+{available_alternatives}
 
 사용자 발화:
 {user_message}
@@ -172,6 +223,7 @@ def _normalize_study_room_analysis_result(
     parsed: dict[str, Any],
     *,
     conversation_state: str,
+    alternative_times: list[str] | None = None,
 ) -> dict[str, Any]:
     require_exact_keys(parsed, DEFAULT_STUDY_ROOM_STRUCTURED_RESULT)
     result = DEFAULT_STUDY_ROOM_STRUCTURED_RESULT.copy()
@@ -194,6 +246,19 @@ def _normalize_study_room_analysis_result(
         "user_action",
         conversation_state=conversation_state,
         allowed_by_state=STUDY_ROOM_ACTIONS_BY_STATE,
+    )
+
+    validate_action_field_delta(
+        {key: result[key] for key in STUDY_ROOM_FIELD_NAMES},
+        user_action=result["user_action"],
+        contract=STUDY_ROOM_ACTION_FIELD_CONTRACT,
+    )
+    validate_alternative_time_selection(
+        conversation_state=conversation_state,
+        alternative_states=STANDARD_ALTERNATIVE_SELECTION_STATES,
+        user_action=result["user_action"],
+        selected_time=result["selected_time"],
+        alternative_times=alternative_times,
     )
 
     return result

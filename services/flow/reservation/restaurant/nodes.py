@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from llm.structured_output import apply_action_field_delta
 from services.flow.reservation.restaurant.availability import resolve_restaurant_availability
 from services.flow.reservation.restaurant.generation import generate_restaurant_ai_message
 from services.flow.reservation.restaurant.llm_structured import (
+    RESTAURANT_CHANGE_TARGETS,
     analyze_restaurant_reservation_user_message,
 )
 from services.flow.reservation.restaurant.policy import (
@@ -25,17 +27,28 @@ def extract_restaurant_info_node(state: RestaurantReservationState) -> dict:
     analyzed = analyze_restaurant_reservation_user_message(
         conversation_state,
         user_message,
+        alternative_times=state.get("alternative_times") or [],
+    )
+    current_fields = {
+        "date": state.get("date"),
+        "time": state.get("time"),
+        "party_size": state.get("party_size"),
+        "user_name": state.get("user_name"),
+        "selected_time": state.get("selected_time"),
+    }
+    next_fields = apply_action_field_delta(
+        current_fields,
+        {key: analyzed.get(key) for key in current_fields},
+        user_action=analyzed["user_action"],
+        change_targets=RESTAURANT_CHANGE_TARGETS,
+        reset_actions={"change_info"},
     )
 
     return {
         "intent": analyzed.get("intent") or state.get("intent") or "reservation",
         "service_name": state.get("service_name") or "마음식당",
-        "date": analyzed.get("date") or state.get("date"),
-        "time": analyzed.get("time") or state.get("time"),
-        "party_size": analyzed.get("party_size") or state.get("party_size"),
-        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        **next_fields,
         "user_action": analyzed.get("user_action") or "unknown",
-        "selected_time": analyzed.get("selected_time") or state.get("selected_time"),
         "availability_status": state.get("availability_status"),
         "availability_reason": state.get("availability_reason"),
         "available_time": state.get("available_time"),
@@ -73,50 +86,38 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> dict:
             }
 
         if user_action == "change_date":
-            return {
-                "user_action": user_action,
-                "date": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_restaurant_lookup(
+                {
+                    "user_action": user_action,
+                    "date": state.get("date"),
+                    "conversation_state": _restaurant_collection_state(state),
+                }
+            )
 
         if user_action == "change_time":
-            return {
-                "user_action": user_action,
-                "time": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_restaurant_lookup(
+                {
+                    "user_action": user_action,
+                    "time": state.get("time"),
+                    "conversation_state": _restaurant_collection_state(state),
+                }
+            )
 
         if user_action == "change_party_size":
-            return {
-                "user_action": user_action,
-                "party_size": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_restaurant_lookup(
+                {
+                    "user_action": user_action,
+                    "party_size": state.get("party_size"),
+                    "conversation_state": _restaurant_collection_state(state),
+                }
+            )
 
         if user_action == "change_user_name":
             return {
                 "user_action": user_action,
-                "user_name": None,
+                "user_name": state.get("user_name"),
                 "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
+                "conversation_state": _restaurant_collection_state(state),
             }
 
         if user_action == "change_info":
@@ -159,6 +160,7 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> dict:
             return {
                 "user_action": user_action,
                 "time": None,
+                "selected_time": None,
                 "availability_status": None,
                 "availability_reason": None,
                 "available_time": None,
@@ -189,31 +191,22 @@ def decide_restaurant_state_node(state: RestaurantReservationState) -> dict:
                     "conversation_state": "reservation_available",
                 }
 
-            return {
-                "user_action": "ask_other_time",
-                "selected_time": None,
-                "reservation_confirmed": False,
-                "conversation_state": "reservation_unavailable",
-            }
+            raise RuntimeError("validated alternative selection is missing from server options")
 
         if user_action == "change_date":
-            return {
-                "user_action": user_action,
-                "date": None,
-                "time": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_restaurant_lookup(
+                {
+                    "user_action": user_action,
+                    "date": state.get("date"),
+                    "conversation_state": _restaurant_collection_state(state),
+                }
+            )
 
         if user_action == "ask_other_time":
             return {
                 "user_action": user_action,
                 "time": None,
+                "selected_time": None,
                 "availability_status": None,
                 "availability_reason": None,
                 "available_time": None,
@@ -377,5 +370,25 @@ def check_restaurant_availability_node(state: RestaurantReservationState) -> dic
 
     return {
         **result,
+        "selected_time": None,
         "conversation_state": next_state,
+    }
+
+
+def _restaurant_collection_state(state: RestaurantReservationState) -> str:
+    return (
+        "collecting_reservation_info" if get_missing_restaurant_fields(state) else "confirming_info"
+    )
+
+
+def _reset_restaurant_lookup(extra: dict) -> dict:
+    return {
+        **extra,
+        "selected_time": None,
+        "availability_status": None,
+        "availability_reason": None,
+        "available_time": None,
+        "alternative_times": [],
+        "availability_message_hint": None,
+        "reservation_confirmed": False,
     }

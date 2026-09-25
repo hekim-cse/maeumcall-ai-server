@@ -5,12 +5,20 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    ActionFieldRule,
+    action_field_rules_json_for_state,
     allowed_actions_json_for_state,
     allowed_string_for_state,
+    build_action_field_contract,
     build_state_action_contract,
     complete_validated_json,
     optional_string,
     require_exact_keys,
+    validate_action_field_delta,
+)
+from services.flow.reservation.common.structured_contract import (
+    HOSPITAL_ALTERNATIVE_SELECTION_STATES,
+    validate_alternative_time_selection,
 )
 
 DEFAULT_HOSPITAL_STRUCTURED_RESULT: dict[str, Any] = {
@@ -51,6 +59,31 @@ HOSPITAL_ACTIONS_BY_STATE, HOSPITAL_USER_ACTIONS = build_state_action_contract(
         "reservation_confirmed": frozenset({"go_closing", "unknown"}),
         "closing": frozenset({"end_call", "unknown"}),
     }
+)
+HOSPITAL_FIELD_NAMES = frozenset({"department", "date", "time", "user_name", "selected_time"})
+HOSPITAL_CHANGE_TARGETS = {
+    "change_department": "department",
+    "change_date": "date",
+    "change_time": "time",
+    "change_user_name": "user_name",
+}
+HOSPITAL_ACTION_FIELD_CONTRACT = build_action_field_contract(
+    field_names=HOSPITAL_FIELD_NAMES,
+    user_actions=HOSPITAL_USER_ACTIONS,
+    rules={action: ActionFieldRule() for action in HOSPITAL_USER_ACTIONS}
+    | {
+        "continue_collecting": ActionFieldRule(
+            allowed_fields=HOSPITAL_FIELD_NAMES - {"selected_time"}
+        ),
+        **{
+            action: ActionFieldRule(allowed_fields=frozenset({field_name}))
+            for action, field_name in HOSPITAL_CHANGE_TARGETS.items()
+        },
+        "select_alternative_time": ActionFieldRule(
+            allowed_fields=frozenset({"selected_time"}),
+            required_fields=frozenset({"selected_time"}),
+        ),
+    },
 )
 
 
@@ -179,10 +212,16 @@ def _build_user_prompt(
         conversation_state,
         HOSPITAL_ACTIONS_BY_STATE,
     )
+    action_field_rules = action_field_rules_json_for_state(
+        conversation_state,
+        allowed_by_state=HOSPITAL_ACTIONS_BY_STATE,
+        contract=HOSPITAL_ACTION_FIELD_CONTRACT,
+    )
     available_alternatives = json.dumps(alternative_times or [], ensure_ascii=False)
     return f"""
 conversation_state: {conversation_state}
 allowed_user_actions: {allowed_actions}
+action_field_rules: {action_field_rules}
 available_alternative_times: {available_alternatives}
 user_message: {user_message}
 
@@ -216,18 +255,19 @@ def _normalize_hospital_analysis_result(
         allowed_by_state=HOSPITAL_ACTIONS_BY_STATE,
     )
 
-    selected_time = result["selected_time"]
-    selects_alternative = result["user_action"] == "select_alternative_time"
-    is_alternative_state = conversation_state in {
-        "reservation_unavailable",
-        "suggest_alternative",
-    }
+    validate_action_field_delta(
+        {key: result[key] for key in HOSPITAL_FIELD_NAMES},
+        user_action=result["user_action"],
+        contract=HOSPITAL_ACTION_FIELD_CONTRACT,
+    )
 
-    if not is_alternative_state and selected_time is not None:
-        raise ValueError("selected_time is allowed only while selecting an alternative")
-    if is_alternative_state and selects_alternative != (selected_time is not None):
-        raise ValueError("select_alternative_time and selected_time must be provided together")
-    if selected_time is not None and selected_time not in (alternative_times or []):
-        raise ValueError("selected_time must match one of the offered alternatives")
+    selected_time = result["selected_time"]
+    validate_alternative_time_selection(
+        conversation_state=conversation_state,
+        alternative_states=HOSPITAL_ALTERNATIVE_SELECTION_STATES,
+        user_action=result["user_action"],
+        selected_time=selected_time,
+        alternative_times=alternative_times,
+    )
 
     return result

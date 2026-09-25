@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    ActionFieldRule,
+    action_field_rules_json_for_state,
     allowed_actions_json_for_state,
     allowed_string_for_state,
+    build_action_field_contract,
     build_state_action_contract,
     complete_validated_json,
     optional_string,
     require_exact_keys,
+    validate_action_field_delta,
+)
+from services.flow.reservation.common.structured_contract import (
+    STANDARD_ALTERNATIVE_SELECTION_STATES,
+    validate_alternative_time_selection,
 )
 
 DEFAULT_RESTAURANT_STRUCTURED_RESULT = {
@@ -44,11 +53,37 @@ RESTAURANT_ACTIONS_BY_STATE, RESTAURANT_USER_ACTIONS = build_state_action_contra
         "closing": frozenset({"end_call", "unknown"}),
     }
 )
+RESTAURANT_FIELD_NAMES = frozenset({"date", "time", "party_size", "user_name", "selected_time"})
+RESTAURANT_CHANGE_TARGETS = {
+    "change_date": "date",
+    "change_time": "time",
+    "change_party_size": "party_size",
+    "change_user_name": "user_name",
+}
+RESTAURANT_ACTION_FIELD_CONTRACT = build_action_field_contract(
+    field_names=RESTAURANT_FIELD_NAMES,
+    user_actions=RESTAURANT_USER_ACTIONS,
+    rules={action: ActionFieldRule() for action in RESTAURANT_USER_ACTIONS}
+    | {
+        "continue_collecting": ActionFieldRule(
+            allowed_fields=RESTAURANT_FIELD_NAMES - {"selected_time"}
+        ),
+        **{
+            action: ActionFieldRule(allowed_fields=frozenset({field_name}))
+            for action, field_name in RESTAURANT_CHANGE_TARGETS.items()
+        },
+        "select_alternative_time": ActionFieldRule(
+            allowed_fields=frozenset({"selected_time"}),
+            required_fields=frozenset({"selected_time"}),
+        ),
+    },
+)
 
 
 def analyze_restaurant_reservation_user_message(
     conversation_state: str,
     user_message: str,
+    alternative_times: list[str] | None = None,
 ) -> dict[str, Any]:
     """
     식당 예약 사용자 발화를 structured output으로 분석한다.
@@ -57,6 +92,12 @@ def analyze_restaurant_reservation_user_message(
         conversation_state,
         RESTAURANT_ACTIONS_BY_STATE,
     )
+    action_field_rules = action_field_rules_json_for_state(
+        conversation_state,
+        allowed_by_state=RESTAURANT_ACTIONS_BY_STATE,
+        contract=RESTAURANT_ACTION_FIELD_CONTRACT,
+    )
+    available_alternatives = json.dumps(alternative_times or [], ensure_ascii=False)
     prompt = f"""
 너는 식당 예약 전화 시뮬레이션 서버의 대화 분석기이다.
 
@@ -64,6 +105,10 @@ def analyze_restaurant_reservation_user_message(
 {conversation_state}
 현재 상태에서 허용된 user_action:
 {allowed_actions}
+현재 상태의 행동별 이번 턴 필드 계약:
+{action_field_rules}
+서버가 제시한 대체 시간:
+{available_alternatives}
 
 사용자 발화:
 {user_message}
@@ -131,6 +176,7 @@ def analyze_restaurant_reservation_user_message(
         validator=lambda parsed: _normalize_restaurant_analysis_result(
             parsed,
             conversation_state=conversation_state,
+            alternative_times=alternative_times,
         ),
         operation="restaurant_extraction",
     )
@@ -140,6 +186,7 @@ def _normalize_restaurant_analysis_result(
     parsed: dict[str, Any],
     *,
     conversation_state: str,
+    alternative_times: list[str] | None = None,
 ) -> dict[str, Any]:
     require_exact_keys(parsed, DEFAULT_RESTAURANT_STRUCTURED_RESULT)
     result = DEFAULT_RESTAURANT_STRUCTURED_RESULT.copy()
@@ -155,6 +202,19 @@ def _normalize_restaurant_analysis_result(
         "user_action",
         conversation_state=conversation_state,
         allowed_by_state=RESTAURANT_ACTIONS_BY_STATE,
+    )
+
+    validate_action_field_delta(
+        {key: result[key] for key in RESTAURANT_FIELD_NAMES},
+        user_action=result["user_action"],
+        contract=RESTAURANT_ACTION_FIELD_CONTRACT,
+    )
+    validate_alternative_time_selection(
+        conversation_state=conversation_state,
+        alternative_states=STANDARD_ALTERNATIVE_SELECTION_STATES,
+        user_action=result["user_action"],
+        selected_time=result["selected_time"],
+        alternative_times=alternative_times,
     )
 
     return result

@@ -2,7 +2,12 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
-from services.flow.common.state_contract import SCENARIO_STATE_VERSION
+from schemas.chat_models import ChatRequest
+from services.flow.common.state_contract import (
+    SCENARIO_STATE_VERSION,
+    DetailedGraphContract,
+    complete_detailed_graph,
+)
 from services.flow.scenario import graph as scenario_graph
 
 pytestmark = pytest.mark.unit
@@ -112,3 +117,38 @@ def test_ambiguous_history_fields_are_rejected(monkeypatch):
     response = _client(monkeypatch).post("/chat", json=payload)
 
     assert response.status_code == 422
+
+
+def test_detailed_graph_rejects_invalid_compacted_output_before_response():
+    class InvalidGraph:
+        def invoke(self, input_state):
+            return {
+                **input_state,
+                "conversation_state": "invalid-output-state",
+                "ai_message": "반환되면 안 되는 응답",
+                "recommended_replies": [],
+                "should_end_call": False,
+            }
+
+    def validate_output(state):
+        if state.get("conversation_state") not in {None, "greeting", "END"}:
+            raise ValueError("invalid compacted output")
+
+    contract = DetailedGraphContract(
+        category="예약",
+        title="테스트 예약",
+        graph=InvalidGraph(),
+        compact_state=lambda result: {"conversation_state": result.get("conversation_state")},
+        defaults={},
+        client_resumable_states=frozenset({"greeting", "END"}),
+        validate_state=validate_output,
+    )
+    request = ChatRequest(
+        category="예약",
+        title="테스트 예약",
+        description="출력 상태 검증",
+        userMessage="예약하고 싶어요.",
+    )
+
+    with pytest.raises(ValueError, match="invalid compacted output"):
+        complete_detailed_graph(request, contract)

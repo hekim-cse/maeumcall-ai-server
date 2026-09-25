@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from llm.structured_output import apply_action_field_delta
 from services.flow.professor.absence.generation import (
     generate_professor_absence_ai_message,
 )
 from services.flow.professor.absence.llm_structured import (
+    PROFESSOR_ABSENCE_CHANGE_TARGETS,
     analyze_professor_absence_user_message,
 )
 from services.flow.professor.absence.policy import (
@@ -26,14 +28,23 @@ def extract_professor_absence_info_node(state: ProfessorAbsenceState) -> dict:
         conversation_state=conversation_state,
         user_message=user_message,
     )
+    current_fields = {
+        "class_name": state.get("class_name"),
+        "absence_date": state.get("absence_date"),
+        "absence_reason": state.get("absence_reason"),
+        "user_name": state.get("user_name"),
+    }
+    next_fields = apply_action_field_delta(
+        current_fields,
+        {key: analyzed.get(key) for key in current_fields},
+        user_action=analyzed["user_action"],
+        change_targets=PROFESSOR_ABSENCE_CHANGE_TARGETS,
+    )
 
     return {
         "intent": analyzed.get("intent") or state.get("intent") or "absence_notice",
         "professor_name": state.get("professor_name") or "교수님",
-        "class_name": analyzed.get("class_name") or state.get("class_name"),
-        "absence_date": analyzed.get("absence_date") or state.get("absence_date"),
-        "absence_reason": analyzed.get("absence_reason") or state.get("absence_reason"),
-        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        **next_fields,
         "user_action": analyzed.get("user_action") or "unknown",
         "last_ai_message": state.get("last_ai_message"),
         "history": state.get("history") or [],
@@ -58,43 +69,43 @@ def decide_professor_absence_state_node(state: ProfessorAbsenceState) -> dict:
             }
 
         if user_action == "change_absence_date":
-            return _reset_fields(
+            return _transition_after_absence_change(
+                state,
                 {
                     "user_action": user_action,
-                    "absence_date": None,
-                    "conversation_state": "collecting_absence_info",
+                    "absence_date": state.get("absence_date"),
                     "should_end_call": False,
-                }
+                },
             )
 
         if user_action == "change_class_name":
-            return _reset_fields(
+            return _transition_after_absence_change(
+                state,
                 {
                     "user_action": user_action,
-                    "class_name": None,
-                    "conversation_state": "collecting_absence_info",
+                    "class_name": state.get("class_name"),
                     "should_end_call": False,
-                }
+                },
             )
 
         if user_action == "change_absence_reason":
-            return _reset_fields(
+            return _transition_after_absence_change(
+                state,
                 {
                     "user_action": user_action,
-                    "absence_reason": None,
-                    "conversation_state": "collecting_absence_info",
+                    "absence_reason": state.get("absence_reason"),
                     "should_end_call": False,
-                }
+                },
             )
 
         if user_action == "change_user_name":
-            return _reset_fields(
+            return _transition_after_absence_change(
+                state,
                 {
                     "user_action": user_action,
-                    "user_name": None,
-                    "conversation_state": "collecting_absence_info",
+                    "user_name": state.get("user_name"),
                     "should_end_call": False,
-                }
+                },
             )
 
         return {
@@ -171,11 +182,15 @@ def attach_professor_absence_recommended_replies_node(
     }
 
 
-def _reset_fields(extra: dict) -> dict:
-    """
-    사용자가 일부 결석 정보를 변경하면 해당 필드를 비우고 다시 수집한다.
-    """
+def _transition_after_absence_change(
+    state: ProfessorAbsenceState,
+    extra: dict,
+) -> dict:
+    missing_fields = get_missing_professor_absence_fields(state)
     return {
         **extra,
-        "missing_fields": [],
+        "missing_fields": missing_fields,
+        "conversation_state": (
+            "collecting_absence_info" if missing_fields else "confirming_absence_info"
+        ),
     }

@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    ActionFieldRule,
+    action_field_rules_json_for_state,
     allowed_actions_json_for_state,
     allowed_string_for_state,
+    build_action_field_contract,
     build_state_action_contract,
     complete_validated_json,
     optional_string,
     require_exact_keys,
+    validate_action_field_delta,
+)
+from services.flow.reservation.common.structured_contract import (
+    STANDARD_ALTERNATIVE_SELECTION_STATES,
+    validate_alternative_time_selection,
 )
 
 DEFAULT_HAIR_SALON_STRUCTURED_RESULT: dict[str, Any] = {
@@ -48,18 +57,51 @@ HAIR_SALON_ACTIONS_BY_STATE, HAIR_SALON_USER_ACTIONS = build_state_action_contra
         "closing": frozenset({"end_call", "unknown"}),
     }
 )
+HAIR_SALON_FIELD_NAMES = frozenset(
+    {"date", "time", "service_type", "designer", "user_name", "selected_time"}
+)
+HAIR_SALON_CHANGE_TARGETS = {
+    "change_date": "date",
+    "change_time": "time",
+    "change_service_type": "service_type",
+    "change_designer": "designer",
+    "change_user_name": "user_name",
+}
+HAIR_SALON_ACTION_FIELD_CONTRACT = build_action_field_contract(
+    field_names=HAIR_SALON_FIELD_NAMES,
+    user_actions=HAIR_SALON_USER_ACTIONS,
+    rules={action: ActionFieldRule() for action in HAIR_SALON_USER_ACTIONS}
+    | {
+        "continue_collecting": ActionFieldRule(
+            allowed_fields=HAIR_SALON_FIELD_NAMES - {"selected_time"}
+        ),
+        **{
+            action: ActionFieldRule(allowed_fields=frozenset({field_name}))
+            for action, field_name in HAIR_SALON_CHANGE_TARGETS.items()
+        },
+        "select_alternative_time": ActionFieldRule(
+            allowed_fields=frozenset({"selected_time"}),
+            required_fields=frozenset({"selected_time"}),
+        ),
+    },
+)
 
 
 def analyze_hair_salon_reservation_user_message(
     conversation_state: str,
     user_message: str,
+    alternative_times: list[str] | None = None,
 ) -> dict[str, Any]:
     """
     미용실 예약 사용자 발화를 structured output으로 분석한다.
 
     검증된 JSON 계약만 상태 전이에 사용한다.
     """
-    prompt = build_hair_salon_structured_prompt(conversation_state, user_message)
+    prompt = build_hair_salon_structured_prompt(
+        conversation_state,
+        user_message,
+        alternative_times=alternative_times,
+    )
 
     return complete_validated_json(
         [
@@ -76,6 +118,7 @@ def analyze_hair_salon_reservation_user_message(
         validator=lambda parsed: _normalize_hair_salon_analysis_result(
             parsed,
             conversation_state=conversation_state,
+            alternative_times=alternative_times,
         ),
         operation="hair_salon_extraction",
     )
@@ -84,14 +127,24 @@ def analyze_hair_salon_reservation_user_message(
 def build_hair_salon_structured_prompt(
     conversation_state: str,
     user_message: str,
+    *,
+    alternative_times: list[str] | None = None,
 ) -> str:
     allowed_actions = allowed_actions_json_for_state(
         conversation_state,
         HAIR_SALON_ACTIONS_BY_STATE,
     )
+    action_field_rules = action_field_rules_json_for_state(
+        conversation_state,
+        allowed_by_state=HAIR_SALON_ACTIONS_BY_STATE,
+        contract=HAIR_SALON_ACTION_FIELD_CONTRACT,
+    )
+    available_alternatives = json.dumps(alternative_times or [], ensure_ascii=False)
     return f"""
 현재 대화 상태: {conversation_state}
 현재 상태에서 허용된 user_action: {allowed_actions}
+현재 상태의 행동별 이번 턴 필드 계약: {action_field_rules}
+서버가 제시한 대체 시간: {available_alternatives}
 사용자 발화: {user_message}
 
 사용자 발화에서 미용실 예약에 필요한 정보를 JSON으로 추출해라.
@@ -158,6 +211,7 @@ def _normalize_hair_salon_analysis_result(
     parsed: dict[str, Any],
     *,
     conversation_state: str,
+    alternative_times: list[str] | None = None,
 ) -> dict[str, Any]:
     require_exact_keys(parsed, DEFAULT_HAIR_SALON_STRUCTURED_RESULT)
     result = DEFAULT_HAIR_SALON_STRUCTURED_RESULT.copy()
@@ -180,6 +234,19 @@ def _normalize_hair_salon_analysis_result(
         "user_action",
         conversation_state=conversation_state,
         allowed_by_state=HAIR_SALON_ACTIONS_BY_STATE,
+    )
+
+    validate_action_field_delta(
+        {key: result[key] for key in HAIR_SALON_FIELD_NAMES},
+        user_action=result["user_action"],
+        contract=HAIR_SALON_ACTION_FIELD_CONTRACT,
+    )
+    validate_alternative_time_selection(
+        conversation_state=conversation_state,
+        alternative_states=STANDARD_ALTERNATIVE_SELECTION_STATES,
+        user_action=result["user_action"],
+        selected_time=result["selected_time"],
+        alternative_times=alternative_times,
     )
 
     return result

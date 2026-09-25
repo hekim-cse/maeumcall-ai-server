@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from llm.structured_output import apply_action_field_delta
 from services.flow.reservation.hair_salon.availability import resolve_hair_salon_availability
 from services.flow.reservation.hair_salon.generation import generate_hair_salon_ai_message
 from services.flow.reservation.hair_salon.llm_structured import (
+    HAIR_SALON_CHANGE_TARGETS,
     analyze_hair_salon_reservation_user_message,
 )
 from services.flow.reservation.hair_salon.policy import get_missing_hair_salon_fields
@@ -23,18 +25,29 @@ def extract_hair_salon_info_node(state: HairSalonReservationState) -> dict:
     analyzed = analyze_hair_salon_reservation_user_message(
         conversation_state,
         user_message,
+        alternative_times=state.get("alternative_times") or [],
+    )
+    current_fields = {
+        "date": state.get("date"),
+        "time": state.get("time"),
+        "service_type": state.get("service_type"),
+        "designer": state.get("designer"),
+        "user_name": state.get("user_name"),
+        "selected_time": state.get("selected_time"),
+    }
+    next_fields = apply_action_field_delta(
+        current_fields,
+        {key: analyzed.get(key) for key in current_fields},
+        user_action=analyzed["user_action"],
+        change_targets=HAIR_SALON_CHANGE_TARGETS,
+        reset_actions={"change_info"},
     )
 
     return {
         "intent": analyzed.get("intent") or state.get("intent") or "reservation",
         "service_name": state.get("service_name") or "마음헤어",
-        "date": analyzed.get("date") or state.get("date"),
-        "time": analyzed.get("time") or state.get("time"),
-        "service_type": analyzed.get("service_type") or state.get("service_type"),
-        "designer": analyzed.get("designer") or state.get("designer"),
-        "user_name": analyzed.get("user_name") or state.get("user_name"),
+        **next_fields,
         "user_action": analyzed.get("user_action") or "unknown",
-        "selected_time": analyzed.get("selected_time") or state.get("selected_time"),
         "last_ai_message": state.get("last_ai_message"),
         "history": state.get("history") or [],
         "recommended_replies": state.get("recommended_replies") or [],
@@ -63,64 +76,47 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> dict:
             }
 
         if user_action == "change_date":
-            return {
-                "user_action": user_action,
-                "date": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_hair_salon_lookup(
+                {
+                    "user_action": user_action,
+                    "date": state.get("date"),
+                    "conversation_state": _hair_salon_collection_state(state),
+                }
+            )
 
         if user_action == "change_time":
-            return {
-                "user_action": user_action,
-                "time": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_hair_salon_lookup(
+                {
+                    "user_action": user_action,
+                    "time": state.get("time"),
+                    "conversation_state": _hair_salon_collection_state(state),
+                }
+            )
 
         if user_action == "change_service_type":
-            return {
-                "user_action": user_action,
-                "service_type": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_hair_salon_lookup(
+                {
+                    "user_action": user_action,
+                    "service_type": state.get("service_type"),
+                    "conversation_state": _hair_salon_collection_state(state),
+                }
+            )
 
         if user_action == "change_designer":
-            return {
-                "user_action": user_action,
-                "designer": None,
-                "selected_time": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_hair_salon_lookup(
+                {
+                    "user_action": user_action,
+                    "designer": state.get("designer"),
+                    "conversation_state": _hair_salon_collection_state(state),
+                }
+            )
 
         if user_action == "change_user_name":
             return {
                 "user_action": user_action,
-                "user_name": None,
+                "user_name": state.get("user_name"),
                 "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
+                "conversation_state": _hair_salon_collection_state(state),
             }
 
         if user_action == "change_info":
@@ -163,6 +159,7 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> dict:
             return {
                 "user_action": user_action,
                 "time": None,
+                "selected_time": None,
                 "availability_status": None,
                 "availability_reason": None,
                 "available_time": None,
@@ -173,18 +170,13 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> dict:
             }
 
         if user_action == "change_date":
-            return {
-                "user_action": user_action,
-                "date": None,
-                "time": None,
-                "availability_status": None,
-                "availability_reason": None,
-                "available_time": None,
-                "alternative_times": [],
-                "availability_message_hint": None,
-                "reservation_confirmed": False,
-                "conversation_state": "collecting_reservation_info",
-            }
+            return _reset_hair_salon_lookup(
+                {
+                    "user_action": user_action,
+                    "date": state.get("date"),
+                    "conversation_state": _hair_salon_collection_state(state),
+                }
+            )
 
         return {
             "user_action": user_action,
@@ -195,9 +187,9 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> dict:
         selected_time = state.get("selected_time")
         alternative_times = state.get("alternative_times") or []
 
-        if selected_time and selected_time in alternative_times:
+        if user_action == "select_alternative_time" and selected_time in alternative_times:
             return {
-                "user_action": "select_alternative_time",
+                "user_action": user_action,
                 "time": selected_time,
                 "selected_time": selected_time,
                 "available_time": selected_time,
@@ -208,19 +200,15 @@ def decide_hair_salon_state_node(state: HairSalonReservationState) -> dict:
                 "conversation_state": "reservation_available",
             }
 
-        if selected_time and selected_time not in alternative_times:
-            return {
-                "user_action": "select_alternative_time",
-                "selected_time": None,
-                "reservation_confirmed": False,
-                "conversation_state": "reservation_unavailable",
-            }
+        if user_action == "select_alternative_time":
+            raise RuntimeError("validated alternative selection is missing from server options")
 
         if user_action == "change_date":
             return {
                 "user_action": user_action,
-                "date": None,
+                "date": state.get("date"),
                 "time": None,
+                "selected_time": None,
                 "availability_status": None,
                 "availability_reason": None,
                 "available_time": None,
@@ -331,5 +319,25 @@ def check_hair_salon_availability_node(state: HairSalonReservationState) -> dict
         "alternative_times": result["alternative_times"],
         "availability_message_hint": result["availability_message_hint"],
         "reservation_confirmed": result["reservation_confirmed"],
+        "selected_time": None,
         "conversation_state": next_state,
+    }
+
+
+def _hair_salon_collection_state(state: HairSalonReservationState) -> str:
+    return (
+        "collecting_reservation_info" if get_missing_hair_salon_fields(state) else "confirming_info"
+    )
+
+
+def _reset_hair_salon_lookup(extra: dict) -> dict:
+    return {
+        **extra,
+        "selected_time": None,
+        "availability_status": None,
+        "availability_reason": None,
+        "available_time": None,
+        "alternative_times": [],
+        "availability_message_hint": None,
+        "reservation_confirmed": False,
     }

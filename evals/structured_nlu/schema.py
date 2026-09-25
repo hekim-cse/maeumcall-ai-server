@@ -81,6 +81,7 @@ class EvaluationCase(BaseModel):
     scenario_key: NonEmptyText
     conversation_state: NonEmptyText
     current_fields: dict[str, NonEmptyText | None]
+    offered_alternative_times: tuple[NonEmptyText, ...]
     user_message: NonEmptyUserMessage
     labels: GoldLabels
     tags: tuple[DifficultyTag, ...] = Field(min_length=1)
@@ -120,6 +121,30 @@ class EvaluationCase(BaseModel):
                 f"in {self.conversation_state}: {self.labels.user_action}"
             )
 
+        if len(set(self.offered_alternative_times)) != len(self.offered_alternative_times):
+            raise ValueError("offered_alternative_times must be unique")
+        normalized_gold_fields = {
+            name: expected.accepted_values[0] if expected is not None else None
+            for name, expected in self.labels.fields.items()
+        }
+        contract.validate_prediction(
+            intent=self.labels.intent,
+            fields=normalized_gold_fields,
+            user_action=self.labels.user_action,
+            change_field=self.labels.change_field,
+            conversation_state=self.conversation_state,
+            offered_alternative_times=self.offered_alternative_times,
+        )
+        selected_time = self.labels.fields.get("selected_time")
+        if selected_time is not None:
+            unoffered_values = set(selected_time.accepted_values) - set(
+                self.offered_alternative_times
+            )
+            if unoffered_values:
+                raise ValueError(
+                    "selected_time accepted_values must all be server-offered alternatives"
+                )
+
         if contract.uses_current_fields:
             if set(self.current_fields) != set(contract.field_names):
                 raise ValueError(f"current_fields must be exactly {sorted(contract.field_names)}")
@@ -149,7 +174,7 @@ class EvaluationCase(BaseModel):
 class GoldDataset(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
-    dataset_version: Literal[1]
+    dataset_version: Literal[2]
     state_contract_version: Literal[SCENARIO_STATE_VERSION]
     cases: tuple[EvaluationCase, ...] = Field(min_length=1)
 

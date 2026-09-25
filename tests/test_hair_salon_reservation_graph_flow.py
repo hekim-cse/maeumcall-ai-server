@@ -27,23 +27,20 @@ def test_hair_salon_change_info_reopens_all_reservation_fields():
     assert result["selected_time"] is None
 
 
-def test_hair_salon_invalid_alternative_keeps_public_action_contract():
-    result = decide_hair_salon_state_node(
-        {
-            "conversation_state": "reservation_unavailable",
-            "user_action": "select_alternative_time",
-            "selected_time": "오후 5시",
-            "alternative_times": ["오후 3시", "오후 4시"],
-        }
-    )
-
-    assert result["user_action"] == "select_alternative_time"
-    assert result["conversation_state"] == "reservation_unavailable"
-    assert result["selected_time"] is None
+def test_hair_salon_decide_node_fails_closed_for_unvalidated_alternative():
+    with pytest.raises(RuntimeError, match="validated alternative selection"):
+        decide_hair_salon_state_node(
+            {
+                "conversation_state": "reservation_unavailable",
+                "user_action": "select_alternative_time",
+                "selected_time": "오후 5시",
+                "alternative_times": ["오후 3시", "오후 4시"],
+            }
+        )
 
 
 def _patch_hair_salon_analysis(monkeypatch):
-    def fake_analyze(conversation_state, user_message):
+    def fake_analyze(conversation_state, user_message, alternative_times=None):
         base = {
             "intent": "reservation",
             "date": None,
@@ -318,29 +315,26 @@ def test_hair_salon_reservation_unavailable_selects_alternative_time(monkeypatch
 def test_hair_salon_reservation_unavailable_rejects_out_of_option_time(monkeypatch):
     _patch_hair_salon_analysis(monkeypatch)
 
-    result = hair_salon_reservation_graph.invoke(
-        {
-            "user_message": "오후 6시로 할게요.",
-            "conversation_state": "reservation_unavailable",
-            "service_name": "마음헤어",
-            "date": "내일",
-            "time": "오후 3시",
-            "service_type": "커트",
-            "designer": "수진",
-            "user_name": "김개굴",
-            "availability_status": "unavailable",
-            "availability_reason": "requested_time_full",
-            "available_time": None,
-            "alternative_times": ["오후 2시", "오후 4시"],
-            "history": [],
-            "recommended_replies": [],
-            "should_end_call": False,
-        }
-    )
-
-    assert result["conversation_state"] == "reservation_unavailable"
-    assert result.get("selected_time") is None
-    assert result["reservation_confirmed"] is not True
+    with pytest.raises(RuntimeError, match="validated alternative selection"):
+        hair_salon_reservation_graph.invoke(
+            {
+                "user_message": "오후 6시로 할게요.",
+                "conversation_state": "reservation_unavailable",
+                "service_name": "마음헤어",
+                "date": "내일",
+                "time": "오후 3시",
+                "service_type": "커트",
+                "designer": "수진",
+                "user_name": "김개굴",
+                "availability_status": "unavailable",
+                "availability_reason": "requested_time_full",
+                "available_time": None,
+                "alternative_times": ["오후 2시", "오후 4시"],
+                "history": [],
+                "recommended_replies": [],
+                "should_end_call": False,
+            }
+        )
 
 
 def test_hair_salon_reservation_confirmed_moves_to_closing(monkeypatch):
@@ -389,7 +383,7 @@ def test_hair_salon_reservation_closing_moves_to_end(monkeypatch):
 def test_hair_salon_reservation_change_designer_clears_lookup_fields(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hair_salon.nodes.analyze_hair_salon_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "intent": None,
             "date": None,
             "time": None,
@@ -442,7 +436,7 @@ def test_hair_salon_reservation_change_designer_clears_lookup_fields(monkeypatch
 def test_hair_salon_reservation_change_user_name_resets_user_name_only(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hair_salon.nodes.analyze_hair_salon_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "intent": None,
             "date": None,
             "time": None,
@@ -488,7 +482,7 @@ def test_hair_salon_reservation_change_user_name_resets_user_name_only(monkeypat
 def test_hair_salon_reservation_unavailable_unknown_keeps_state(monkeypatch):
     monkeypatch.setattr(
         "services.flow.reservation.hair_salon.nodes.analyze_hair_salon_reservation_user_message",
-        lambda conversation_state, user_message: {
+        lambda conversation_state, user_message, alternative_times=None: {
             "intent": None,
             "date": None,
             "time": None,

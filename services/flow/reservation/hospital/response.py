@@ -30,7 +30,22 @@ HOSPITAL_STATE_CONTRACT = ReservationStateContract(
         }
     ),
     allowed_intents=frozenset({"reservation", None}),
-    selected_time_empty_states=frozenset({"reservation_unavailable", "suggest_alternative"}),
+    selected_time_empty_states=frozenset(
+        {
+            "greeting",
+            "asking_purpose",
+            "asking_department",
+            "asking_date",
+            "asking_time",
+            "asking_user_name",
+            "confirming_info",
+            "checking_availability",
+            "reservation_lookup",
+            "reservation_available",
+            "reservation_unavailable",
+            "suggest_alternative",
+        }
+    ),
 )
 
 

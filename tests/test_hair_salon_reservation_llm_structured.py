@@ -90,6 +90,7 @@ def test_hair_salon_structured_analysis_extracts_selected_time(monkeypatch):
     result = analyze_hair_salon_reservation_user_message(
         "reservation_unavailable",
         "오후 3시로 할게요.",
+        alternative_times=["오후 3시"],
     )
 
     assert result["user_action"] == "select_alternative_time"

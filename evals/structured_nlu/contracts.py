@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 from types import MappingProxyType
 
+from llm.structured_output import ActionFieldRule, validate_action_field_delta
 from services.flow.cityhall.contracts import (
     BULKY_WASTE_SPEC,
     PASSPORT_SPEC,
@@ -17,42 +19,58 @@ from services.flow.delivery.contracts import (
 )
 from services.flow.professor.absence.llm_structured import (
     DEFAULT_ABSENCE_STRUCTURED_RESULT,
+    PROFESSOR_ABSENCE_ACTION_FIELD_CONTRACT,
     PROFESSOR_ABSENCE_ACTIONS_BY_STATE,
     PROFESSOR_ABSENCE_USER_ACTIONS,
 )
 from services.flow.professor.appointment.llm_structured import (
     DEFAULT_APPOINTMENT_STRUCTURED_RESULT,
+    PROFESSOR_APPOINTMENT_ACTION_FIELD_CONTRACT,
     PROFESSOR_APPOINTMENT_ACTIONS_BY_STATE,
     PROFESSOR_APPOINTMENT_USER_ACTIONS,
 )
 from services.flow.professor.assignment.llm_structured import (
     DEFAULT_ASSIGNMENT_STRUCTURED_RESULT,
+    PROFESSOR_ASSIGNMENT_ACTION_FIELD_CONTRACT,
     PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE,
     PROFESSOR_ASSIGNMENT_USER_ACTIONS,
 )
+from services.flow.reservation.common.structured_contract import (
+    HOSPITAL_ALTERNATIVE_SELECTION_STATES,
+    STANDARD_ALTERNATIVE_SELECTION_STATES,
+    validate_alternative_time_selection,
+)
 from services.flow.reservation.hair_salon.llm_structured import (
     DEFAULT_HAIR_SALON_STRUCTURED_RESULT,
+    HAIR_SALON_ACTION_FIELD_CONTRACT,
     HAIR_SALON_ACTIONS_BY_STATE,
     HAIR_SALON_USER_ACTIONS,
 )
 from services.flow.reservation.hospital.llm_structured import (
     DEFAULT_HOSPITAL_STRUCTURED_RESULT,
+    HOSPITAL_ACTION_FIELD_CONTRACT,
     HOSPITAL_ACTIONS_BY_STATE,
     HOSPITAL_USER_ACTIONS,
 )
 from services.flow.reservation.restaurant.llm_structured import (
     DEFAULT_RESTAURANT_STRUCTURED_RESULT,
+    RESTAURANT_ACTION_FIELD_CONTRACT,
     RESTAURANT_ACTIONS_BY_STATE,
     RESTAURANT_USER_ACTIONS,
 )
 from services.flow.reservation.study_room.llm_structured import (
     DEFAULT_STUDY_ROOM_STRUCTURED_RESULT,
+    STUDY_ROOM_ACTION_FIELD_CONTRACT,
     STUDY_ROOM_ACTIONS_BY_STATE,
     STUDY_ROOM_USER_ACTIONS,
 )
 from services.flow.service_workflow.contracts import (
     ServiceWorkflowSpec,
     validate_service_workflow_context,
+)
+from services.flow.service_workflow.structured_contract import (
+    build_service_workflow_turn_contract,
+    validate_service_workflow_turn_delta,
 )
 from services.flow.support.contracts import (
     NETWORK_CALL_SPEC,
@@ -70,8 +88,50 @@ class EvaluationContract:
     user_actions: frozenset[str]
     uses_current_fields: bool
     actions_by_state: tuple[tuple[str, frozenset[str]], ...]
+    action_field_contract: Mapping[str, ActionFieldRule] | None = None
+    alternative_states: frozenset[str] = frozenset()
     field_options: tuple[tuple[str, frozenset[str]], ...] = ()
     workflow_spec: ServiceWorkflowSpec | None = None
+
+    @property
+    def scoring_contract_payload(self) -> str:
+        """Return the canonical rules that can change prediction acceptance."""
+        if self.workflow_spec is not None:
+            return build_service_workflow_turn_contract(self.workflow_spec).canonical_payload
+        else:
+            payload = {
+                "kind": "detailed_action_field_v1",
+                "alternative_states": sorted(self.alternative_states),
+                "action_field_rules": {
+                    action: {
+                        "allowed_fields": sorted(rule.allowed_fields),
+                        "required_fields": sorted(rule.required_fields),
+                        "require_any": rule.require_any,
+                    }
+                    for action, rule in sorted((self.action_field_contract or {}).items())
+                },
+            }
+        return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+    @property
+    def action_field_coverage(self) -> tuple[frozenset[str], frozenset[str]]:
+        if self.workflow_spec is not None:
+            rules = build_service_workflow_turn_contract(self.workflow_spec).action_field_contract
+        else:
+            rules = self.action_field_contract or {}
+        present = frozenset(
+            f"{action}->{field_name}"
+            for action, rule in rules.items()
+            for field_name in rule.allowed_fields
+        )
+        absent = frozenset(
+            f"{action}->{field_name}"
+            for action, rule in rules.items()
+            if action == "change_detail" or action.startswith("change_")
+            for field_name in rule.allowed_fields
+            if field_name not in rule.required_fields
+        )
+        return present, absent
 
     def allowed_actions_for_state(self, conversation_state: str) -> frozenset[str]:
         actions = dict(self.actions_by_state).get(conversation_state)
@@ -89,6 +149,7 @@ class EvaluationContract:
         user_action: str,
         change_field: str | None,
         conversation_state: str,
+        offered_alternative_times: tuple[str, ...] = (),
     ) -> None:
         """Validate normalized model output against the live scenario contract."""
         if set(fields) != set(self.field_names):
@@ -111,13 +172,30 @@ class EvaluationContract:
                 )
 
         if self.uses_current_fields:
-            if user_action == "change_detail":
-                if change_field not in self.field_names:
-                    raise ValueError("change_field must name a workflow field")
-            elif change_field is not None:
-                raise ValueError("change_field must be null unless user_action is change_detail")
+            if self.workflow_spec is None:
+                raise RuntimeError("workflow evaluation contract is missing its live spec")
+            validate_service_workflow_turn_delta(
+                self.workflow_spec,
+                fields=fields,
+                user_action=user_action,
+                change_field=change_field,
+            )
         elif change_field is not None:
             raise ValueError("change_field is only used by service workflows")
+        elif self.action_field_contract is not None:
+            validate_action_field_delta(
+                fields,
+                user_action=user_action,
+                contract=self.action_field_contract,
+            )
+            if self.alternative_states:
+                validate_alternative_time_selection(
+                    conversation_state=conversation_state,
+                    alternative_states=self.alternative_states,
+                    user_action=user_action,
+                    selected_time=fields.get("selected_time"),
+                    alternative_times=offered_alternative_times,
+                )
 
     def validate_current_fields(
         self,
@@ -143,6 +221,8 @@ def _detailed_contract(
     default_result: dict[str, object],
     actions_by_state: Mapping[str, frozenset[str]],
     user_actions: frozenset[str],
+    action_field_contract: Mapping[str, ActionFieldRule],
+    alternative_states: frozenset[str] = frozenset(),
     allowed_intents: frozenset[str | None] | None = None,
 ) -> EvaluationContract:
     field_names = tuple(key for key in default_result if key not in {"intent", "user_action"})
@@ -164,6 +244,8 @@ def _detailed_contract(
         user_actions=user_actions,
         uses_current_fields=False,
         actions_by_state=tuple(actions_by_state.items()),
+        action_field_contract=action_field_contract,
+        alternative_states=alternative_states,
     )
 
 
@@ -196,7 +278,9 @@ _CONTRACTS = (
         default_result=DEFAULT_HOSPITAL_STRUCTURED_RESULT,
         actions_by_state=HOSPITAL_ACTIONS_BY_STATE,
         user_actions=HOSPITAL_USER_ACTIONS,
+        action_field_contract=HOSPITAL_ACTION_FIELD_CONTRACT,
         allowed_intents=frozenset({"reservation", None}),
+        alternative_states=HOSPITAL_ALTERNATIVE_SELECTION_STATES,
     ),
     _detailed_contract(
         category="예약",
@@ -204,6 +288,8 @@ _CONTRACTS = (
         default_result=DEFAULT_RESTAURANT_STRUCTURED_RESULT,
         actions_by_state=RESTAURANT_ACTIONS_BY_STATE,
         user_actions=RESTAURANT_USER_ACTIONS,
+        action_field_contract=RESTAURANT_ACTION_FIELD_CONTRACT,
+        alternative_states=STANDARD_ALTERNATIVE_SELECTION_STATES,
     ),
     _detailed_contract(
         category="예약",
@@ -211,6 +297,8 @@ _CONTRACTS = (
         default_result=DEFAULT_HAIR_SALON_STRUCTURED_RESULT,
         actions_by_state=HAIR_SALON_ACTIONS_BY_STATE,
         user_actions=HAIR_SALON_USER_ACTIONS,
+        action_field_contract=HAIR_SALON_ACTION_FIELD_CONTRACT,
+        alternative_states=STANDARD_ALTERNATIVE_SELECTION_STATES,
     ),
     _detailed_contract(
         category="예약",
@@ -218,6 +306,8 @@ _CONTRACTS = (
         default_result=DEFAULT_STUDY_ROOM_STRUCTURED_RESULT,
         actions_by_state=STUDY_ROOM_ACTIONS_BY_STATE,
         user_actions=STUDY_ROOM_USER_ACTIONS,
+        action_field_contract=STUDY_ROOM_ACTION_FIELD_CONTRACT,
+        alternative_states=STANDARD_ALTERNATIVE_SELECTION_STATES,
     ),
     _detailed_contract(
         category="교수님",
@@ -225,6 +315,7 @@ _CONTRACTS = (
         default_result=DEFAULT_APPOINTMENT_STRUCTURED_RESULT,
         actions_by_state=PROFESSOR_APPOINTMENT_ACTIONS_BY_STATE,
         user_actions=PROFESSOR_APPOINTMENT_USER_ACTIONS,
+        action_field_contract=PROFESSOR_APPOINTMENT_ACTION_FIELD_CONTRACT,
     ),
     _detailed_contract(
         category="교수님",
@@ -232,6 +323,7 @@ _CONTRACTS = (
         default_result=DEFAULT_ASSIGNMENT_STRUCTURED_RESULT,
         actions_by_state=PROFESSOR_ASSIGNMENT_ACTIONS_BY_STATE,
         user_actions=PROFESSOR_ASSIGNMENT_USER_ACTIONS,
+        action_field_contract=PROFESSOR_ASSIGNMENT_ACTION_FIELD_CONTRACT,
     ),
     _detailed_contract(
         category="교수님",
@@ -239,6 +331,7 @@ _CONTRACTS = (
         default_result=DEFAULT_ABSENCE_STRUCTURED_RESULT,
         actions_by_state=PROFESSOR_ABSENCE_ACTIONS_BY_STATE,
         user_actions=PROFESSOR_ABSENCE_USER_ACTIONS,
+        action_field_contract=PROFESSOR_ABSENCE_ACTION_FIELD_CONTRACT,
     ),
     *(
         _workflow_contract(spec)
