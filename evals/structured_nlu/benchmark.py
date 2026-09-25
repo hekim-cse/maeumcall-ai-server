@@ -214,6 +214,7 @@ class BenchmarkSlice:
 
 @dataclass(frozen=True)
 class QualifiedTestSlice(BenchmarkSlice):
+    authoring_source_fingerprint: str
     corpus_fingerprint: str
     corpus_cases: tuple[EvaluationCase, ...]
 
@@ -472,7 +473,15 @@ def prepare_benchmark_slice(
     )
 
 
-def prepare_qualified_test_slice(dataset: GoldDataset) -> QualifiedTestSlice:
+def _prepare_qualified_test_slice(
+    dataset: GoldDataset,
+    *,
+    authoring_source_fingerprint: str,
+) -> QualifiedTestSlice:
+    if len(authoring_source_fingerprint) != 64 or any(
+        character not in "0123456789abcdef" for character in authoring_source_fingerprint
+    ):
+        raise ValueError("authoring source fingerprint must be a lowercase SHA-256 value")
     _require_complete_corpus(dataset)
     benchmark = prepare_benchmark_slice(
         dataset,
@@ -481,12 +490,13 @@ def prepare_qualified_test_slice(dataset: GoldDataset) -> QualifiedTestSlice:
     )
     return QualifiedTestSlice(
         **benchmark.__dict__,
+        authoring_source_fingerprint=authoring_source_fingerprint,
         corpus_fingerprint=_corpus_fingerprint(dataset),
         corpus_cases=dataset.cases,
     )
 
 
-def score_qualified_test_slice(
+def _score_qualified_test_slice(
     benchmark: QualifiedTestSlice,
     predictions: tuple[CasePrediction, ...],
 ) -> EvaluationScores:
@@ -498,6 +508,10 @@ def score_qualified_test_slice(
         raise ValueError("qualified test profile id does not match")
     if benchmark.profile_fingerprint != OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT:
         raise ValueError("qualified test profile fingerprint does not match")
+    if len(benchmark.authoring_source_fingerprint) != 64 or any(
+        character not in "0123456789abcdef" for character in benchmark.authoring_source_fingerprint
+    ):
+        raise ValueError("qualified authoring source fingerprint is invalid")
     corpus = GoldDataset(
         dataset_version=benchmark.dataset_version,
         state_contract_version=benchmark.state_contract_version,

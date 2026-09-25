@@ -1,0 +1,268 @@
+{
+  "$defs": {
+    "AuthoringCase": {
+      "additionalProperties": false,
+      "description": "One manually labelled model input inside a single semantic source group.",
+      "properties": {
+        "conversation_state": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Conversation State",
+          "type": "string"
+        },
+        "current_fields": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Current Fields",
+          "type": "object"
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "labels": {
+          "$ref": "#/$defs/GoldLabels"
+        },
+        "offered_alternative_times": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "title": "Offered Alternative Times",
+          "type": "array"
+        },
+        "review_status": {
+          "$ref": "#/$defs/ReviewStatus"
+        },
+        "tags": {
+          "items": {
+            "$ref": "#/$defs/DifficultyTag"
+          },
+          "minItems": 1,
+          "title": "Tags",
+          "type": "array"
+        },
+        "user_message": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "User Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "conversation_state",
+        "current_fields",
+        "offered_alternative_times",
+        "user_message",
+        "labels",
+        "tags",
+        "review_status"
+      ],
+      "title": "AuthoringCase",
+      "type": "object"
+    },
+    "DatasetSplit": {
+      "enum": [
+        "development",
+        "validation",
+        "test"
+      ],
+      "title": "DatasetSplit",
+      "type": "string"
+    },
+    "DifficultyTag": {
+      "enum": [
+        "single_field",
+        "multi_field",
+        "correction",
+        "negation",
+        "ellipsis",
+        "colloquial",
+        "ambiguous",
+        "hard_negative",
+        "confirmation",
+        "cancellation",
+        "closing",
+        "safety"
+      ],
+      "title": "DifficultyTag",
+      "type": "string"
+    },
+    "ExpectedField": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_values": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Accepted Values",
+          "type": "array"
+        }
+      },
+      "required": [
+        "accepted_values"
+      ],
+      "title": "ExpectedField",
+      "type": "object"
+    },
+    "GoldLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "change_field": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Change Field"
+        },
+        "fields": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ExpectedField"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Fields",
+          "type": "object"
+        },
+        "intent": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Intent"
+        },
+        "user_action": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "User Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "intent",
+        "fields",
+        "user_action",
+        "change_field"
+      ],
+      "title": "GoldLabels",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "draft",
+        "reviewed",
+        "adjudicated"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "$id": "urn:maeumcall:structured-nlu:authoring-group:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Own one semantic seed so all derived utterances stay in the same split.",
+  "properties": {
+    "authoring_schema_version": {
+      "const": 1,
+      "title": "Authoring Schema Version",
+      "type": "integer"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/AuthoringCase"
+      },
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    },
+    "conversation_group_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+      "title": "Conversation Group Id",
+      "type": "string"
+    },
+    "provenance": {
+      "const": "human_authored",
+      "title": "Provenance",
+      "type": "string"
+    },
+    "scenario_key": {
+      "enum": [
+        "고객센터:a/s 접수",
+        "고객센터:요금/약정 상담",
+        "고객센터:인터넷/통화 문제 문의",
+        "교수님:결석 사유 전달",
+        "교수님:과제 문의",
+        "교수님:면담 예약",
+        "배달:배달 지연 문의",
+        "배달:주문 변경",
+        "배달:환불/재배달 문의",
+        "시청:대형폐기물 배출",
+        "시청:여권 발급 문의",
+        "시청:주민등록 등본 문의",
+        "예약:미용실 예약",
+        "예약:병원 예약",
+        "예약:스터디룸 예약",
+        "예약:식당 예약"
+      ],
+      "maxLength": 1000,
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Scenario Key",
+      "type": "string"
+    },
+    "split": {
+      "$ref": "#/$defs/DatasetSplit"
+    }
+  },
+  "required": [
+    "authoring_schema_version",
+    "conversation_group_id",
+    "split",
+    "scenario_key",
+    "provenance",
+    "cases"
+  ],
+  "title": "AuthoringGroup",
+  "type": "object"
+}
