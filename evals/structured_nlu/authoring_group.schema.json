@@ -78,15 +78,6 @@
       "title": "AuthoringCase",
       "type": "object"
     },
-    "DatasetSplit": {
-      "enum": [
-        "development",
-        "validation",
-        "test"
-      ],
-      "title": "DatasetSplit",
-      "type": "string"
-    },
     "DifficultyTag": {
       "enum": [
         "single_field",
@@ -198,13 +189,13 @@
       "type": "string"
     }
   },
-  "$id": "urn:maeumcall:structured-nlu:authoring-group:v1",
+  "$id": "urn:maeumcall:structured-nlu:authoring-group:v2",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "description": "Own one semantic seed so all derived utterances stay in the same split.",
   "properties": {
     "authoring_schema_version": {
-      "const": 1,
+      "const": 2,
       "title": "Authoring Schema Version",
       "type": "integer"
     },
@@ -250,15 +241,11 @@
       "pattern": "\\S",
       "title": "Scenario Key",
       "type": "string"
-    },
-    "split": {
-      "$ref": "#/$defs/DatasetSplit"
     }
   },
   "required": [
     "authoring_schema_version",
     "conversation_group_id",
-    "split",
     "scenario_key",
     "provenance",
     "cases"

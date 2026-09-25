@@ -96,6 +96,8 @@
 - development·validation·test를 한 파일에 보존하고 전체 corpus 지문을 고정하는 검사
 - `test` 분할과 `adjudicated` 상태를 강제하는 공식 결과 후보용 데이터 관문
 - 의미 원본 그룹별 작성 파일을 결정론적 순서의 V2 corpus로 합치는 compiler
+- 그룹 파일과 분리된 원장에서 `conversation_group_id`별 split을 한 번만 소유하고, 원장과 작성 그룹의 정확한 일치를 강제하는 검사
+- 공식 결과 후보에 split 원장의 의미 기반 SHA-256 식별값을 함께 보존하고 채점 직전에 다시 대조하는 검사
 - 라이브 계약에서 865개 작성 의무를 자동 생성하는 V2 의무 목록
 - 선택형 필드 한 건이 여러 enum 선택지 coverage를 대신하지 못하게 하는 검사
 - 작성자가 다른 그룹 ID를 붙여도 완전히 동일한 모델 입력의 corpus 내 중복을 막는 검사
@@ -134,21 +136,25 @@ workflow 기반 상세 그래프는 현재 필드 문맥도 검사하므로, 확
 
 실제 corpus는 하나의 거대한 JSON을 직접 편집하지 않는다. 같은 의미 원본에서
 파생된 문장 묶음을 `AuthoringGroup` 파일 하나로 관리하고, 그룹이
-`conversation_group_id`, `split`, `scenario_key`를 한 번만 소유한다. 개별
-케이스가 이 값을 각각 적지 않으므로 같은 원본의 일부 문장만 다른 split에 넣는
-실수를 구조적으로 줄인다.
+`conversation_group_id`와 `scenario_key`를 한 번만 소유한다. split은 그룹 파일에
+적지 않고 별도의 `split-assignments.v1.json` 원장만 소유한다. compiler는 원장에
+없는 그룹과 실제 그룹이 없는 원장 항목을 모두 거부한다. 같은 원본의 일부 문장만
+다른 split에 넣거나 그룹 파일에서 배정을 몰래 덮어쓰는 경로를 구조적으로 막기
+위해서다.
 
 compiler는 작성 파일을 `(scenario_key, conversation_group_id, case.id)` 순서로
 정렬해 현재 `GoldDataset` V2 형식으로 만든다. 파일 탐색 순서나 운영체제가 달라도
 같은 입력에서 같은 결과와 지문을 얻기 위한 규칙이다. 컴파일된 JSON은 모델
-평가 입력용 산출물이며 작성 원본이 아니다. `authoring_group.schema.json`은 편집기가
-필수 키·타입·허용값 오류를 작성 중에 알려 주는 파일이다. 이 파일도 수동으로
-고치지 않고 코드 계약에서 생성한다. 편집기 Schema는 1차 형식 검사이고,
+평가 입력용 산출물이며 작성 원본이 아니다. `authoring_group.schema.json`과
+`split_assignment.schema.json`은 편집기가 필수 키·타입·허용값 오류를 작성 중에
+알려 주는 파일이다. 두 파일 모두 수동으로 고치지 않고 코드 계약에서 생성한다.
+편집기 Schema는 1차 형식 검사이고,
 시나리오별 상태·행동·필드의 교차 관계는 compiler가 라이브 계약으로 최종 검사한다.
 
-`authoring_schema_version: 1`은 사람이 편집하는 그룹 원본 형식의 첫 버전이다.
+`authoring_schema_version: 2`는 split을 제거한 그룹 원본 형식이고,
+`split_assignment_schema_version: 1`은 별도 split 원장 형식의 첫 버전이다.
 `dataset_version: 2`와 공식 프로필 V2는 컴파일된 평가 corpus와 채점 계약의
-버전이므로 서로 다른 대상을 관리한다. 세 숫자가 같을 필요는 없다.
+버전이므로 서로 다른 대상을 관리한다. 이 숫자들은 같을 필요가 없다.
 
 ```bash
 # 현재 라이브 계약에서 작성해야 할 항목을 다시 생성한다.
@@ -167,20 +173,31 @@ python -m scripts.compile_structured_nlu_corpus schema \
 python -m scripts.compile_structured_nlu_corpus check-schema \
   evals/structured_nlu/authoring_group.schema.json
 
+# split 원장 JSON Schema를 생성하고 커밋된 파일과 대조한다.
+python -m scripts.compile_structured_nlu_corpus split-schema \
+  evals/structured_nlu/split_assignment.schema.json
+python -m scripts.compile_structured_nlu_corpus check-split-schema \
+  evals/structured_nlu/split_assignment.schema.json
+
 # 그룹별 작성 원본을 단일 V2 corpus로 컴파일한다.
 python -m scripts.compile_structured_nlu_corpus compile \
   evals/structured_nlu/data/source \
+  evals/structured_nlu/manifests/split-assignments.v1.json \
   evals/structured_nlu/data/compiled/gold-dataset.v2.json
 
 # 커밋된 corpus가 작성 원본에서 다시 생성한 결과와 같은지 검사한다.
 python -m scripts.compile_structured_nlu_corpus check \
   evals/structured_nlu/data/source \
+  evals/structured_nlu/manifests/split-assignments.v1.json \
   evals/structured_nlu/data/compiled/gold-dataset.v2.json
 ```
 
 현재 커밋된 `coverage-obligations.v2.json`에는 상태-행동 352개를 포함해 총
 865개의 계약 의무가 들어 있다. 이 파일은 실제 corpus가 의무를 얼마나 채웠는지
 보여 주는 진척 보고서가 아니라, 무엇을 작성해야 하는지 나열한 inventory다.
+전체 숫자만 남기지 않고 9개 차원별 개수와 16개 구조화 NLU 시나리오별 의무
+개수도 같은 파일에 기록한다. 라이브 계약이 바뀌어 숫자가 달라지면
+`check-obligations`와 회귀 테스트가 커밋된 목록의 불일치를 실패시킨다.
 여러 차원을 한 케이스가 함께 충족할 수 있으므로 865개가 곧 필요한 문장 수라는
 뜻은 아니다. 공식 test는 352개 상태-행동 의무를 각각 한 번 이상 담아야 하므로
 최소 352개 case가 필요하다. 이는 사용자 문장 문자열이 모두 서로 달라야 한다는
@@ -201,8 +218,16 @@ value만 허용한다. 한 문장에 서로 다른 선택지 여러 개를 넣�
 
 같은 문장을 조금만 바꾼 사례나 동일한 대화 템플릿이 서로 다른 분할에 들어가면
 모델이 사실상 본 문제를 다시 푸는 결과가 된다. 따라서 유사 문장과 같은 원본
-대화에서 파생된 케이스는 `conversation_group_id`로 묶는다. 데이터 로더는 같은
-그룹이 서로 다른 분할에 들어가면 실행 전에 거부한다.
+대화에서 파생된 케이스는 `conversation_group_id`로 묶는다. 그룹의 split은 모델
+결과를 보기 전에 별도 원장에 기록하고 Git 이력으로 고정한다. compiler는 그룹
+파일이 split을 직접 소유하는 것을 거부하고, 원장과 실제 작성 그룹의 ID 집합이
+정확히 같아야만 corpus를 만든다.
+
+split 원장에는 내용에서 계산한 별도 SHA-256 식별값이 있다. 공식 test slice를
+준비할 때 이 값을 기록하고 최종 채점 직전 다시 대조한다. 배정을 바꾸면 새 값과
+새 corpus가 만들어지므로 이전 실행과 같은 조건으로 기록할 수 없다. 다만 이 값은
+전자서명이 아니므로, 실제 후보 실행 전에는 원장을 먼저 커밋하고 이후 변경은
+데이터 버전 변경과 PR 검토를 통해 관리한다.
 
 그룹 ID는 사람이 지정하므로 비슷한 문장끼리 같은 그룹에 배정하는 검수는 여전히
 필요하다. 이와 별개로 compiler는 시나리오, 상태, 현재 필드, 서버 제시 후보,

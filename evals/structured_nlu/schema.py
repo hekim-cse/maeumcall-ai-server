@@ -47,6 +47,7 @@ NonEmptyUserMessage = Annotated[
     str,
     StringConstraints(strip_whitespace=True, min_length=1, max_length=4_000, pattern=r"\S"),
 ]
+STRUCTURED_NLU_DATASET_VERSION = 2
 
 
 class ExpectedField(BaseModel):
@@ -186,7 +187,7 @@ class EvaluationCase(BaseModel):
 class GoldDataset(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
-    dataset_version: Literal[2]
+    dataset_version: Literal[STRUCTURED_NLU_DATASET_VERSION]
     state_contract_version: Literal[SCENARIO_STATE_VERSION]
     cases: tuple[EvaluationCase, ...] = Field(min_length=1)
 

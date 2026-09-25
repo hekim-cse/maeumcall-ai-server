@@ -1005,11 +1005,13 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
         _prepare_qualified_test_slice(
             dataset,
             authoring_source_fingerprint="a" * 64,
+            split_assignment_fingerprint="b" * 64,
         )
 
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
         authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint="b" * 64,
         corpus_fingerprint="not-used-before-profile-validation",
         corpus_cases=dataset.cases,
     )
@@ -1029,11 +1031,56 @@ def test_prepare_benchmark_slice_requires_test_coverage_and_adjudication():
         ),
         coverage=benchmark.coverage,
         authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint="b" * 64,
         corpus_fingerprint="not-used-before-split-validation",
         corpus_cases=dataset.cases,
     )
     with pytest.raises(ValueError, match="contains a non-test case"):
         _score_qualified_test_slice(mixed_split, ())
+
+
+@pytest.mark.parametrize("invalid_fingerprint", ("B" * 64, "b" * 63))
+def test_qualified_split_assignment_fingerprint_must_be_lowercase_sha256(
+    invalid_fingerprint: str,
+):
+    test_case = _case(
+        case_id="appointment.invalid-split-fingerprint",
+        message="내일 면담하고 싶습니다.",
+        fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+        action="provide_appointment_info",
+        split="test",
+        tags=("single_field",),
+    )
+    dataset = _gold_dataset(test_case)
+
+    with pytest.raises(ValueError, match="split assignment fingerprint"):
+        _prepare_qualified_test_slice(
+            dataset,
+            authoring_source_fingerprint="a" * 64,
+            split_assignment_fingerprint=invalid_fingerprint,
+        )
+
+    coverage = inspect_benchmark_coverage(
+        dataset,
+        split=DatasetSplit.TEST,
+        profile=_appointment_test_profile(),
+    )
+    forged = QualifiedTestSlice(
+        profile_id=OFFICIAL_BENCHMARK_PROFILE.profile_id,
+        profile_fingerprint=OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT,
+        dataset_version=dataset.dataset_version,
+        state_contract_version=dataset.state_contract_version,
+        dataset_fingerprint="not-reached-before-fingerprint-validation",
+        split=DatasetSplit.TEST,
+        cases=dataset.cases,
+        coverage=coverage,
+        authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint=invalid_fingerprint,
+        corpus_fingerprint="not-reached-before-fingerprint-validation",
+        corpus_cases=dataset.cases,
+    )
+    with pytest.raises(ValueError, match="split assignment fingerprint"):
+        _score_qualified_test_slice(forged, ())
 
 
 def test_benchmark_coverage_rejects_unadjudicated_test_case():
@@ -1102,6 +1149,7 @@ def test_qualified_scoring_rejects_a_tampered_complete_corpus():
         cases=(test_case,),
         coverage=custom_report,
         authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint="b" * 64,
         corpus_fingerprint="forged-corpus-fingerprint",
         corpus_cases=corpus.cases,
     )
@@ -1152,6 +1200,7 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
     forged_qualified_slice = QualifiedTestSlice(
         **benchmark.__dict__,
         authoring_source_fingerprint="a" * 64,
+        split_assignment_fingerprint="b" * 64,
         corpus_fingerprint="not-used-before-split-validation",
         corpus_cases=dataset.cases,
     )
@@ -1161,6 +1210,7 @@ def test_development_split_supports_custom_checks_but_not_qualified_scoring():
         _prepare_qualified_test_slice(
             dataset,
             authoring_source_fingerprint="a" * 64,
+            split_assignment_fingerprint="b" * 64,
         )
 
 
