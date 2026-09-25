@@ -29,6 +29,16 @@ from evals.structured_nlu.obligations import (
     build_official_authoring_obligations,
     serialize_official_authoring_obligations,
 )
+from evals.structured_nlu.review import (
+    ANNOTATION_GUIDELINE_V1_FINGERPRINT,
+    ANNOTATION_GUIDELINE_V1_ID,
+    EVALUATION_CASE_FINGERPRINT_ALGORITHM_V1,
+    REVIEW_LEDGER_FINGERPRINT_ALGORITHM_V1,
+    ReviewLedgerV1,
+    evaluation_case_fingerprint,
+    serialize_review_ledger_schema,
+    verify_review_ledger,
+)
 from scripts.compile_structured_nlu_corpus import main as compile_corpus_main
 
 
@@ -40,6 +50,7 @@ def _write_group(
     split: str = "development",
     message: str = "내일 면담하고 싶습니다.",
     accepted_date: str = "내일",
+    review_status: str = "draft",
     register_split: bool = True,
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -69,7 +80,7 @@ def _write_group(
                             "change_field": None,
                         },
                         "tags": ["single_field"],
-                        "review_status": "draft",
+                        "review_status": review_status,
                     }
                 ],
             },
@@ -118,11 +129,83 @@ def _write_split_assignment_manifest(path: Path, assignments: list[dict[str, str
     )
 
 
+def _write_review_ledger(
+    path: Path,
+    dataset,
+    *,
+    case_ids: tuple[str, ...] | None = None,
+    guideline_fingerprint: str = ANNOTATION_GUIDELINE_V1_FINGERPRINT,
+) -> None:
+    cases_by_id = {case.id: case for case in dataset.cases}
+    selected_ids = case_ids or tuple(
+        sorted(case.id for case in dataset.cases if case.split.value in {"validation", "test"})
+    )
+    path.write_text(
+        json.dumps(
+            {
+                "review_ledger_schema_version": 1,
+                "dataset_version": 2,
+                "state_contract_version": 2,
+                "annotation_guideline_id": ANNOTATION_GUIDELINE_V1_ID,
+                "annotation_guideline_fingerprint": guideline_fingerprint,
+                "case_fingerprint_algorithm": EVALUATION_CASE_FINGERPRINT_ALGORITHM_V1,
+                "ledger_fingerprint_algorithm": REVIEW_LEDGER_FINGERPRINT_ALGORITHM_V1,
+                "governed_splits": ["validation", "test"],
+                "entries": [
+                    {
+                        "case_id": case_id,
+                        "case_fingerprint": evaluation_case_fingerprint(cases_by_id[case_id]),
+                        "adjudicator_id": "project-owner",
+                        "adjudicated_at": "2026-09-26T00:00:00+09:00",
+                        "rationale": "작성 지침과 라이브 계약을 대조해 최종 정답을 확정했다.",
+                        "decision": "approved",
+                    }
+                    for case_id in selected_ids
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
 def compile_authoring_directory(source_dir: Path):
     return compile_authoring_directory_with_manifest(
         source_dir,
         _split_assignments_path(source_dir),
     )
+
+
+def _build_review_dataset(tmp_path: Path):
+    source_dir = tmp_path / "source"
+    _write_group(
+        source_dir / "development.json",
+        group_id="appointment.review-development",
+        case_id="appointment.review-development.base",
+        split="development",
+    )
+    _write_group(
+        source_dir / "validation.json",
+        group_id="appointment.review-validation",
+        case_id="appointment.review-validation.base",
+        split="validation",
+        message="모레 면담하고 싶습니다.",
+        accepted_date="모레",
+        review_status="adjudicated",
+    )
+    _write_group(
+        source_dir / "test.json",
+        group_id="appointment.review-test",
+        case_id="appointment.review-test.base",
+        split="test",
+        message="다음 주에 면담하고 싶습니다.",
+        accepted_date="다음 주",
+        review_status="adjudicated",
+    )
+    return compile_authoring_directory(source_dir)
 
 
 def test_compiler_owns_split_and_scenario_at_the_semantic_group_level(tmp_path: Path):
@@ -600,7 +683,16 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
     benchmark = SimpleNamespace(
         authoring_source_fingerprint=source_fingerprint,
         split_assignment_fingerprint=split_assignment_fingerprint,
+        annotation_guideline_fingerprint="c" * 64,
+        review_ledger_fingerprint="d" * 64,
         corpus_cases=dataset.cases,
+    )
+    monkeypatch.setattr(
+        "evals.structured_nlu.review.verify_review_ledger",
+        lambda *_args: SimpleNamespace(
+            guideline_fingerprint="c" * 64,
+            ledger_fingerprint="d" * 64,
+        ),
     )
     monkeypatch.setattr(
         "evals.structured_nlu.benchmark._score_qualified_test_slice",
@@ -612,6 +704,8 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
             source_dir,
             _split_assignments_path(source_dir),
             compiled_path,
+            tmp_path / "guideline.md",
+            tmp_path / "review-ledger.json",
             benchmark,
             (),
         )
@@ -628,6 +722,8 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
             source_dir,
             _split_assignments_path(source_dir),
             compiled_path,
+            tmp_path / "guideline.md",
+            tmp_path / "review-ledger.json",
             benchmark,
             (),
         )
@@ -671,6 +767,8 @@ def test_qualified_scoring_rejects_a_changed_split_assignment(tmp_path: Path):
             source_dir,
             assignments_path,
             compiled_path,
+            tmp_path / "guideline.md",
+            tmp_path / "review-ledger.json",
             benchmark,
             (),
         )
@@ -679,22 +777,23 @@ def test_qualified_scoring_rejects_a_changed_split_assignment(tmp_path: Path):
 def test_official_qualification_requires_verified_authoring_sources(tmp_path: Path):
     source_dir = tmp_path / "source"
     compiled_path = tmp_path / "compiled" / "gold-dataset.v2.json"
-    _write_group(
-        source_dir / "group.json",
-        group_id="appointment.qualification-family",
-        case_id="appointment.qualification-family.base",
-    )
+    dataset = _build_review_dataset(tmp_path)
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    guideline_path = Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md")
+    _write_review_ledger(ledger_path, dataset)
     compiled_path.parent.mkdir()
     compiled_path.write_text(
-        serialize_gold_dataset(compile_authoring_directory(source_dir)),
+        serialize_gold_dataset(dataset),
         encoding="utf-8",
     )
 
-    with pytest.raises(ValueError, match="requires a complete corpus"):
+    with pytest.raises(ValueError, match="benchmark coverage is incomplete"):
         prepare_qualified_test_slice_from_authoring(
             source_dir,
             _split_assignments_path(source_dir),
             compiled_path,
+            guideline_path,
+            ledger_path,
         )
 
 
@@ -797,3 +896,349 @@ def test_authoring_schema_exposes_runtime_string_and_scenario_constraints():
     assert schema["$id"] == "urn:maeumcall:structured-nlu:authoring-group:v2"
     assert schema["properties"]["scenario_key"]["enum"] == sorted(EVALUATION_CONTRACTS)
     assert schema["$defs"]["AuthoringCase"]["properties"]["user_message"]["pattern"] == (r"\S")
+
+
+def test_committed_review_ledger_schema_matches_the_code_contract():
+    schema_path = Path("evals/structured_nlu/review_ledger.schema.json")
+
+    assert schema_path.read_text(encoding="utf-8") == serialize_review_ledger_schema()
+
+
+def test_review_ledger_schema_exposes_versioned_adjudication_contract():
+    schema = json.loads(serialize_review_ledger_schema())
+
+    assert schema["$id"] == "urn:maeumcall:structured-nlu:review-ledger:v1"
+    properties = schema["properties"]
+    assert properties["review_ledger_schema_version"]["const"] == 1
+    assert properties["dataset_version"]["const"] == 2
+    assert properties["state_contract_version"]["const"] == 2
+    assert properties["annotation_guideline_id"]["const"] == ANNOTATION_GUIDELINE_V1_ID
+    assert properties["annotation_guideline_fingerprint"]["const"] == (
+        ANNOTATION_GUIDELINE_V1_FINGERPRINT
+    )
+    assert properties["case_fingerprint_algorithm"]["const"] == (
+        EVALUATION_CASE_FINGERPRINT_ALGORITHM_V1
+    )
+    assert properties["ledger_fingerprint_algorithm"]["const"] == (
+        REVIEW_LEDGER_FINGERPRINT_ALGORITHM_V1
+    )
+    assert properties["governed_splits"]["prefixItems"] == [
+        {"const": "validation", "type": "string"},
+        {"const": "test", "type": "string"},
+    ]
+    assert properties["governed_splits"]["minItems"] == 2
+    assert properties["governed_splits"]["maxItems"] == 2
+
+
+def test_review_ledger_verifies_exact_validation_and_test_approvals(tmp_path: Path):
+    dataset = _build_review_dataset(tmp_path)
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    guideline_path = Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md")
+    _write_review_ledger(ledger_path, dataset)
+
+    verified = verify_review_ledger(dataset, guideline_path, ledger_path)
+
+    assert verified.guideline_fingerprint == ANNOTATION_GUIDELINE_V1_FINGERPRINT
+    assert verified.ledger_fingerprint == verified.ledger.fingerprint
+    assert [entry.case_id for entry in verified.ledger.entries] == [
+        "appointment.review-test.base",
+        "appointment.review-validation.base",
+    ]
+
+
+def test_review_ledger_rejects_missing_and_unused_case_approvals(tmp_path: Path):
+    dataset = _build_review_dataset(tmp_path)
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    guideline_path = Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md")
+    _write_review_ledger(
+        ledger_path,
+        dataset,
+        case_ids=("appointment.review-validation.base",),
+    )
+
+    with pytest.raises(ValueError, match="must match validation and test cases exactly"):
+        verify_review_ledger(dataset, guideline_path, ledger_path)
+
+    decoded = json.loads(ledger_path.read_text(encoding="utf-8"))
+    decoded["entries"].append(
+        {
+            "case_id": "appointment.review-unused.base",
+            "case_fingerprint": "a" * 64,
+            "adjudicator_id": "project-owner",
+            "adjudicated_at": "2026-09-26T00:00:00+09:00",
+            "rationale": "현재 corpus에 존재하지 않는 오래된 검수 항목이다.",
+            "decision": "approved",
+        }
+    )
+    decoded["entries"].sort(key=lambda item: item["case_id"])
+    ledger_path.write_text(json.dumps(decoded, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(ValueError, match="must match validation and test cases exactly"):
+        verify_review_ledger(dataset, guideline_path, ledger_path)
+
+
+def test_review_ledger_rejects_non_adjudicated_cases(tmp_path: Path):
+    source_dir = tmp_path / "source"
+    _write_group(
+        source_dir / "validation.json",
+        group_id="appointment.review-validation",
+        case_id="appointment.review-validation.base",
+        split="validation",
+        review_status="reviewed",
+    )
+    _write_group(
+        source_dir / "test.json",
+        group_id="appointment.review-test",
+        case_id="appointment.review-test.base",
+        split="test",
+        message="모레 면담하고 싶습니다.",
+        accepted_date="모레",
+        review_status="adjudicated",
+    )
+    dataset = compile_authoring_directory(source_dir)
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    _write_review_ledger(ledger_path, dataset)
+
+    with pytest.raises(ValueError, match="requires adjudicated"):
+        verify_review_ledger(
+            dataset,
+            Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md"),
+            ledger_path,
+        )
+
+
+def test_review_ledger_requires_both_governed_splits(tmp_path: Path):
+    source_dir = tmp_path / "source"
+    _write_group(
+        source_dir / "validation.json",
+        group_id="appointment.review-validation",
+        case_id="appointment.review-validation.base",
+        split="validation",
+        review_status="adjudicated",
+    )
+    dataset = compile_authoring_directory(source_dir)
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    _write_review_ledger(ledger_path, dataset)
+
+    with pytest.raises(ValueError, match=r"missing splits=\['test'\]"):
+        verify_review_ledger(
+            dataset,
+            Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md"),
+            ledger_path,
+        )
+
+
+def test_review_ledger_rejects_an_approval_for_changed_case_content(tmp_path: Path):
+    dataset = _build_review_dataset(tmp_path)
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    _write_review_ledger(ledger_path, dataset)
+    decoded = json.loads(ledger_path.read_text(encoding="utf-8"))
+    decoded["entries"][0]["case_fingerprint"] = "a" * 64
+    ledger_path.write_text(json.dumps(decoded, ensure_ascii=False), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="different case content"):
+        verify_review_ledger(
+            dataset,
+            Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md"),
+            ledger_path,
+        )
+
+
+def test_review_ledger_rejects_a_different_annotation_guideline(tmp_path: Path):
+    dataset = _build_review_dataset(tmp_path)
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    guideline_path = tmp_path / "annotation-guideline.v1.md"
+    guideline_path.write_text("변경된 지침\n", encoding="utf-8")
+    _write_review_ledger(ledger_path, dataset)
+
+    with pytest.raises(ValueError, match="versioned guideline fingerprint"):
+        verify_review_ledger(dataset, guideline_path, ledger_path)
+
+
+def test_review_ledger_rejects_unsupported_schema_version(tmp_path: Path):
+    dataset = _build_review_dataset(tmp_path)
+    ledger_path = tmp_path / "review-ledger.v2.json"
+    _write_review_ledger(ledger_path, dataset)
+    decoded = json.loads(ledger_path.read_text(encoding="utf-8"))
+    decoded["review_ledger_schema_version"] = 2
+    ledger_path.write_text(json.dumps(decoded, ensure_ascii=False), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="invalid review ledger"):
+        verify_review_ledger(
+            dataset,
+            Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md"),
+            ledger_path,
+        )
+
+
+@pytest.mark.parametrize(
+    "mutate_json",
+    (
+        lambda text: text.replace(
+            '"review_ledger_schema_version": 1,',
+            '"review_ledger_schema_version": 1, "review_ledger_schema_version": 1,',
+            1,
+        ),
+        lambda text: text.replace(
+            '"decision": "approved",',
+            '"decision": "rejected", "decision": "approved",',
+            1,
+        ),
+        lambda text: text.replace("{", '{"가": 1, "가": 2,', 1),
+    ),
+)
+def test_review_ledger_rejects_duplicate_json_keys(tmp_path: Path, mutate_json):
+    dataset = _build_review_dataset(tmp_path)
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    _write_review_ledger(ledger_path, dataset)
+    ledger_path.write_text(
+        mutate_json(ledger_path.read_text(encoding="utf-8")),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="invalid review ledger"):
+        verify_review_ledger(
+            dataset,
+            Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md"),
+            ledger_path,
+        )
+
+
+def test_review_ledger_rejects_a_symlinked_parent_directory(tmp_path: Path):
+    dataset = _build_review_dataset(tmp_path)
+    real_dir = tmp_path / "real"
+    real_dir.mkdir()
+    ledger_path = real_dir / "review-ledger.v1.json"
+    _write_review_ledger(ledger_path, dataset)
+    alias_dir = tmp_path / "alias"
+    alias_dir.symlink_to(real_dir, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="path must not contain symbolic links"):
+        verify_review_ledger(
+            dataset,
+            Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md"),
+            alias_dir / ledger_path.name,
+        )
+
+
+def test_official_scoring_revalidates_the_review_ledger(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    dataset = _build_review_dataset(tmp_path)
+    source_dir = tmp_path / "source"
+    compiled_path = tmp_path / "compiled" / "gold-dataset.v2.json"
+    compiled_path.parent.mkdir()
+    compiled_path.write_text(serialize_gold_dataset(dataset), encoding="utf-8")
+    guideline_path = Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md")
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    _write_review_ledger(ledger_path, dataset)
+    _, source_fingerprint, split_fingerprint = verify_compiled_authoring_corpus(
+        source_dir,
+        _split_assignments_path(source_dir),
+        compiled_path,
+    )
+    verified_review = verify_review_ledger(dataset, guideline_path, ledger_path)
+    benchmark = SimpleNamespace(
+        authoring_source_fingerprint=source_fingerprint,
+        split_assignment_fingerprint=split_fingerprint,
+        annotation_guideline_fingerprint=verified_review.guideline_fingerprint,
+        review_ledger_fingerprint=verified_review.ledger_fingerprint,
+        corpus_cases=dataset.cases,
+    )
+    monkeypatch.setattr(
+        "evals.structured_nlu.benchmark._score_qualified_test_slice",
+        lambda _benchmark, _predictions: "scored",
+    )
+
+    assert (
+        score_qualified_test_slice_from_authoring(
+            source_dir,
+            _split_assignments_path(source_dir),
+            compiled_path,
+            guideline_path,
+            ledger_path,
+            benchmark,
+            (),
+        )
+        == "scored"
+    )
+
+    decoded = json.loads(ledger_path.read_text(encoding="utf-8"))
+    decoded["entries"][0]["rationale"] = "같은 사례를 다른 근거로 다시 승인했다."
+    ledger_path.write_text(json.dumps(decoded, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(ValueError, match="review ledger fingerprint does not match"):
+        score_qualified_test_slice_from_authoring(
+            source_dir,
+            _split_assignments_path(source_dir),
+            compiled_path,
+            guideline_path,
+            ledger_path,
+            benchmark,
+            (),
+        )
+
+
+def test_review_ledger_rejects_duplicate_or_unsorted_entries():
+    base_entry = {
+        "case_id": "appointment.review-validation.base",
+        "case_fingerprint": "a" * 64,
+        "adjudicator_id": "project-owner",
+        "adjudicated_at": "2026-09-26T00:00:00+09:00",
+        "rationale": "작성 지침과 라이브 계약을 대조했다.",
+        "decision": "approved",
+    }
+    payload = {
+        "review_ledger_schema_version": 1,
+        "dataset_version": 2,
+        "state_contract_version": 2,
+        "annotation_guideline_id": ANNOTATION_GUIDELINE_V1_ID,
+        "annotation_guideline_fingerprint": ANNOTATION_GUIDELINE_V1_FINGERPRINT,
+        "case_fingerprint_algorithm": EVALUATION_CASE_FINGERPRINT_ALGORITHM_V1,
+        "ledger_fingerprint_algorithm": REVIEW_LEDGER_FINGERPRINT_ALGORITHM_V1,
+        "governed_splits": ["validation", "test"],
+        "entries": [base_entry, base_entry],
+    }
+    with pytest.raises(ValidationError, match="must be unique"):
+        ReviewLedgerV1.model_validate(payload)
+
+    payload["entries"] = [
+        {**base_entry, "case_id": "appointment.review-validation.second"},
+        base_entry,
+    ]
+    with pytest.raises(ValidationError, match="sorted by case_id"):
+        ReviewLedgerV1.model_validate(payload)
+
+
+def test_review_ledger_cli_checks_schema_and_case_approvals(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    dataset = _build_review_dataset(tmp_path)
+    compiled_path = tmp_path / "gold-dataset.v2.json"
+    ledger_path = tmp_path / "review-ledger.v1.json"
+    schema_path = Path("evals/structured_nlu/review_ledger.schema.json")
+    guideline_path = Path("evals/structured_nlu/guidelines/annotation-guideline.v1.md")
+    compiled_path.write_text(serialize_gold_dataset(dataset), encoding="utf-8")
+    _write_review_ledger(ledger_path, dataset)
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["compile-structured-nlu-corpus", "check-review-schema", str(schema_path)],
+    )
+    assert compile_corpus_main() == 0
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "compile-structured-nlu-corpus",
+            "check-review",
+            str(tmp_path / "source"),
+            str(_split_assignments_path(tmp_path / "source")),
+            str(compiled_path),
+            str(guideline_path),
+            str(ledger_path),
+        ],
+    )
+    assert compile_corpus_main() == 0

@@ -1,0 +1,131 @@
+{
+  "$defs": {
+    "ReviewLedgerEntry": {
+      "additionalProperties": false,
+      "description": "Bind one approved label decision to the exact case content that was reviewed.",
+      "properties": {
+        "adjudicated_at": {
+          "format": "date-time",
+          "title": "Adjudicated At",
+          "type": "string"
+        },
+        "adjudicator_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,79}$",
+          "title": "Adjudicator Id",
+          "type": "string"
+        },
+        "case_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Case Fingerprint",
+          "type": "string"
+        },
+        "case_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "decision": {
+          "const": "approved",
+          "title": "Decision",
+          "type": "string"
+        },
+        "rationale": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "case_fingerprint",
+        "adjudicator_id",
+        "adjudicated_at",
+        "rationale",
+        "decision"
+      ],
+      "title": "ReviewLedgerEntry",
+      "type": "object"
+    }
+  },
+  "$id": "urn:maeumcall:structured-nlu:review-ledger:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Immutable V1 contract for final validation and test label decisions.",
+  "properties": {
+    "annotation_guideline_fingerprint": {
+      "const": "0c9bc1760500fd353213b25da88b65fb40efa5f801800c4f6b3f55e20c119d0f",
+      "title": "Annotation Guideline Fingerprint",
+      "type": "string"
+    },
+    "annotation_guideline_id": {
+      "const": "maeumcall-structured-nlu-annotation-v1",
+      "title": "Annotation Guideline Id",
+      "type": "string"
+    },
+    "case_fingerprint_algorithm": {
+      "const": "evaluation-case-canonical-json-sha256-v1",
+      "title": "Case Fingerprint Algorithm",
+      "type": "string"
+    },
+    "dataset_version": {
+      "const": 2,
+      "title": "Dataset Version",
+      "type": "integer"
+    },
+    "entries": {
+      "description": "Entries must be unique and sorted by case_id; the authoritative runtime validator enforces these cross-entry invariants.",
+      "items": {
+        "$ref": "#/$defs/ReviewLedgerEntry"
+      },
+      "minItems": 1,
+      "title": "Entries",
+      "type": "array"
+    },
+    "governed_splits": {
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [
+        {
+          "const": "validation",
+          "type": "string"
+        },
+        {
+          "const": "test",
+          "type": "string"
+        }
+      ],
+      "title": "Governed Splits",
+      "type": "array"
+    },
+    "ledger_fingerprint_algorithm": {
+      "const": "review-ledger-canonical-json-sha256-v1",
+      "title": "Ledger Fingerprint Algorithm",
+      "type": "string"
+    },
+    "review_ledger_schema_version": {
+      "const": 1,
+      "title": "Review Ledger Schema Version",
+      "type": "integer"
+    },
+    "state_contract_version": {
+      "const": 2,
+      "title": "State Contract Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "review_ledger_schema_version",
+    "dataset_version",
+    "state_contract_version",
+    "annotation_guideline_id",
+    "annotation_guideline_fingerprint",
+    "case_fingerprint_algorithm",
+    "ledger_fingerprint_algorithm",
+    "governed_splits",
+    "entries"
+  ],
+  "title": "ReviewLedgerV1",
+  "type": "object"
+}
