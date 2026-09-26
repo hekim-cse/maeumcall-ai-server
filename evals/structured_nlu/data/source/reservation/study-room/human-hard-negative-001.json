@@ -1,0 +1,32 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-study-room-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "duration": null,
+          "party_size": null,
+          "selected_time": null,
+          "start_time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "쓰읍. 슬슬 머리 잘라야하는데."
+    }
+  ],
+  "conversation_group_id": "reservation-study-room-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:스터디룸 예약"
+}

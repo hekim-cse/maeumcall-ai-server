@@ -1,0 +1,22 @@
+{
+  "assignments": [
+    {
+      "conversation_group_id": "reservation-hair-salon-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "reservation-hospital-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "reservation-restaurant-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "reservation-study-room-human-hard-negative-001",
+      "split": "development"
+    }
+  ],
+  "dataset_version": 2,
+  "split_assignment_schema_version": 1
+}
