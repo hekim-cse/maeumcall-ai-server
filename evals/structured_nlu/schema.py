@@ -78,97 +78,114 @@ class EvaluationCase(BaseModel):
 
     @model_validator(mode="after")
     def follows_live_service_contract(self) -> EvaluationCase:
-        contract = EVALUATION_CONTRACTS.get(self.scenario_key)
-        if contract is None:
-            raise ValueError(f"unknown detailed scenario: {self.scenario_key}")
-        if self.conversation_state not in contract.conversation_states:
-            raise ValueError(
-                f"conversation_state is not allowed for {self.scenario_key}: "
-                f"{self.conversation_state}"
-            )
-        if self.labels.intent not in contract.allowed_intents:
-            raise ValueError(f"intent must be one of {sorted(map(str, contract.allowed_intents))}")
-        if set(self.labels.fields) != set(contract.field_names):
-            raise ValueError(f"label fields must be exactly {sorted(contract.field_names)}")
-        field_options = dict(contract.field_options)
-        for field_name, expected in self.labels.fields.items():
-            allowed_values = field_options.get(field_name)
-            if expected is None or allowed_values is None:
-                continue
-            if len(expected.accepted_values) != 1:
-                raise ValueError(
-                    f"option fields require exactly one canonical accepted value: {field_name}"
-                )
-            invalid_values = set(expected.accepted_values) - allowed_values
-            if invalid_values:
-                raise ValueError(
-                    f"accepted_values are not allowed for {self.scenario_key}: "
-                    f"{field_name}={sorted(invalid_values)}"
-                )
-        if self.labels.user_action not in contract.allowed_actions_for_state(
-            self.conversation_state
-        ):
-            raise ValueError(
-                f"user_action is not allowed for {self.scenario_key} "
-                f"in {self.conversation_state}: {self.labels.user_action}"
-            )
-
-        if len(set(self.offered_alternative_times)) != len(self.offered_alternative_times):
-            raise ValueError("offered_alternative_times must be unique")
-        if (
-            self.offered_alternative_times
-            and self.conversation_state not in contract.alternative_states
-        ):
-            raise ValueError(
-                "offered_alternative_times are allowed only in an alternative-selection state"
-            )
-        normalized_gold_fields = {
-            name: expected.accepted_values[0] if expected is not None else None
-            for name, expected in self.labels.fields.items()
-        }
-        contract.validate_prediction(
-            intent=self.labels.intent,
-            fields=normalized_gold_fields,
-            user_action=self.labels.user_action,
-            change_field=self.labels.change_field,
+        validate_evaluation_case_semantics(
+            scenario_key=self.scenario_key,
             conversation_state=self.conversation_state,
             current_fields=self.current_fields,
             offered_alternative_times=self.offered_alternative_times,
+            labels=self.labels,
+            tags=self.tags,
         )
-        selected_time = self.labels.fields.get("selected_time")
-        if selected_time is not None:
-            unoffered_values = set(selected_time.accepted_values) - set(
-                self.offered_alternative_times
-            )
-            if unoffered_values:
-                raise ValueError(
-                    "selected_time accepted_values must all be server-offered alternatives"
-                )
-
-        if contract.uses_current_fields:
-            if set(self.current_fields) != set(contract.field_names):
-                raise ValueError(f"current_fields must be exactly {sorted(contract.field_names)}")
-            contract.validate_current_fields(
-                conversation_state=self.conversation_state,
-                current_fields=self.current_fields,
-            )
-            if self.labels.user_action == "change_detail":
-                if self.labels.change_field not in contract.field_names:
-                    raise ValueError("change_field must name a workflow field")
-            elif self.labels.change_field is not None:
-                raise ValueError("change_field must be null unless user_action is change_detail")
-        else:
-            contract.validate_current_fields(
-                conversation_state=self.conversation_state,
-                current_fields=self.current_fields,
-            )
-            if self.labels.change_field is not None:
-                raise ValueError("change_field is only used by service workflows")
-
-        if len(set(self.tags)) != len(self.tags):
-            raise ValueError("tags must be unique")
-        _validate_tag_semantics(self)
         return self
+
+
+def validate_evaluation_case_semantics(
+    *,
+    scenario_key: str,
+    conversation_state: str,
+    current_fields: dict[str, str | None],
+    offered_alternative_times: tuple[str, ...],
+    labels: GoldLabels,
+    tags: tuple[DifficultyTag, ...],
+) -> None:
+    """Validate live NLU meaning without inventing provenance or review metadata."""
+    contract = EVALUATION_CONTRACTS.get(scenario_key)
+    if contract is None:
+        raise ValueError(f"unknown detailed scenario: {scenario_key}")
+    if conversation_state not in contract.conversation_states:
+        raise ValueError(
+            f"conversation_state is not allowed for {scenario_key}: {conversation_state}"
+        )
+    if labels.intent not in contract.allowed_intents:
+        raise ValueError(f"intent must be one of {sorted(map(str, contract.allowed_intents))}")
+    if set(labels.fields) != set(contract.field_names):
+        raise ValueError(f"label fields must be exactly {sorted(contract.field_names)}")
+    field_options = dict(contract.field_options)
+    for field_name, expected in labels.fields.items():
+        allowed_values = field_options.get(field_name)
+        if expected is None or allowed_values is None:
+            continue
+        if len(expected.accepted_values) != 1:
+            raise ValueError(
+                f"option fields require exactly one canonical accepted value: {field_name}"
+            )
+        invalid_values = set(expected.accepted_values) - allowed_values
+        if invalid_values:
+            raise ValueError(
+                f"accepted_values are not allowed for {scenario_key}: "
+                f"{field_name}={sorted(invalid_values)}"
+            )
+    if labels.user_action not in contract.allowed_actions_for_state(conversation_state):
+        raise ValueError(
+            f"user_action is not allowed for {scenario_key} "
+            f"in {conversation_state}: {labels.user_action}"
+        )
+
+    if len(set(offered_alternative_times)) != len(offered_alternative_times):
+        raise ValueError("offered_alternative_times must be unique")
+    if offered_alternative_times and conversation_state not in contract.alternative_states:
+        raise ValueError(
+            "offered_alternative_times are allowed only in an alternative-selection state"
+        )
+    normalized_gold_fields = {
+        name: expected.accepted_values[0] if expected is not None else None
+        for name, expected in labels.fields.items()
+    }
+    contract.validate_prediction(
+        intent=labels.intent,
+        fields=normalized_gold_fields,
+        user_action=labels.user_action,
+        change_field=labels.change_field,
+        conversation_state=conversation_state,
+        current_fields=current_fields,
+        offered_alternative_times=offered_alternative_times,
+    )
+    selected_time = labels.fields.get("selected_time")
+    if selected_time is not None:
+        unoffered_values = set(selected_time.accepted_values) - set(offered_alternative_times)
+        if unoffered_values:
+            raise ValueError(
+                "selected_time accepted_values must all be server-offered alternatives"
+            )
+
+    if contract.uses_current_fields:
+        if set(current_fields) != set(contract.field_names):
+            raise ValueError(f"current_fields must be exactly {sorted(contract.field_names)}")
+        contract.validate_current_fields(
+            conversation_state=conversation_state,
+            current_fields=current_fields,
+        )
+        if labels.user_action == "change_detail":
+            if labels.change_field not in contract.field_names:
+                raise ValueError("change_field must name a workflow field")
+        elif labels.change_field is not None:
+            raise ValueError("change_field must be null unless user_action is change_detail")
+    else:
+        contract.validate_current_fields(
+            conversation_state=conversation_state,
+            current_fields=current_fields,
+        )
+        if labels.change_field is not None:
+            raise ValueError("change_field is only used by service workflows")
+
+    if len(set(tags)) != len(tags):
+        raise ValueError("tags must be unique")
+    _validate_tag_semantics(
+        scenario_key=scenario_key,
+        current_fields=current_fields,
+        labels=labels,
+        tags=tags,
+    )
 
 
 class GoldDataset(BaseModel):
@@ -305,37 +322,42 @@ def _normalize_input_value(value: object) -> object:
     return value
 
 
-def _validate_tag_semantics(case: EvaluationCase) -> None:
-    tags = set(case.tags)
-    present_fields = sum(expected is not None for expected in case.labels.fields.values())
-    if DifficultyTag.SINGLE_FIELD in tags and present_fields != 1:
+def _validate_tag_semantics(
+    *,
+    scenario_key: str,
+    current_fields: dict[str, str | None],
+    labels: GoldLabels,
+    tags: tuple[DifficultyTag, ...],
+) -> None:
+    tag_set = set(tags)
+    present_fields = sum(expected is not None for expected in labels.fields.values())
+    if DifficultyTag.SINGLE_FIELD in tag_set and present_fields != 1:
         raise ValueError("single_field tag requires exactly one present label field")
-    if DifficultyTag.MULTI_FIELD in tags and present_fields < 2:
+    if DifficultyTag.MULTI_FIELD in tag_set and present_fields < 2:
         raise ValueError("multi_field tag requires at least two present label fields")
-    if present_fields == 1 and DifficultyTag.SINGLE_FIELD not in tags:
+    if present_fields == 1 and DifficultyTag.SINGLE_FIELD not in tag_set:
         raise ValueError("single_field tag is required for exactly one present label field")
-    if present_fields >= 2 and DifficultyTag.MULTI_FIELD not in tags:
+    if present_fields >= 2 and DifficultyTag.MULTI_FIELD not in tag_set:
         raise ValueError("multi_field tag is required for two or more present label fields")
-    contract = EVALUATION_CONTRACTS[case.scenario_key]
-    required_objective_tags = dict(contract.objective_tags_by_action)[case.labels.user_action]
-    present_objective_tags = tags & OBJECTIVE_DIFFICULTY_TAGS_V1
+    contract = EVALUATION_CONTRACTS[scenario_key]
+    required_objective_tags = dict(contract.objective_tags_by_action)[labels.user_action]
+    present_objective_tags = tag_set & OBJECTIVE_DIFFICULTY_TAGS_V1
     if present_objective_tags != required_objective_tags:
         raise ValueError(
             "objective tags must exactly match the declared action semantics: "
             f"required={sorted(tag.value for tag in required_objective_tags)}, "
             f"present={sorted(tag.value for tag in present_objective_tags)}"
         )
-    if DifficultyTag.HARD_NEGATIVE in tags and (
-        case.labels.user_action != "unknown" or present_fields
+    if DifficultyTag.HARD_NEGATIVE in tag_set and (
+        labels.user_action != "unknown" or present_fields
     ):
         raise ValueError("hard_negative tag requires unknown action and absent label fields")
-    safety_label = case.labels.fields.get("safety_status")
+    safety_label = labels.fields.get("safety_status")
     safety_values = set(safety_label.accepted_values) if safety_label is not None else set()
-    is_safety_branch = case.scenario_key == "고객센터:a/s 접수" and (
-        "safety_issue" in safety_values
-        or case.current_fields.get("safety_status") == "safety_issue"
+    is_safety_branch = scenario_key == "고객센터:a/s 접수" and (
+        "safety_issue" in safety_values or current_fields.get("safety_status") == "safety_issue"
     )
-    if DifficultyTag.SAFETY in tags and not is_safety_branch:
+    if DifficultyTag.SAFETY in tag_set and not is_safety_branch:
         raise ValueError("safety tag requires the A/S safety branch")
-    if is_safety_branch and DifficultyTag.SAFETY not in tags:
+    if is_safety_branch and DifficultyTag.SAFETY not in tag_set:
         raise ValueError("safety tag is required for the A/S safety branch")

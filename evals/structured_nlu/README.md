@@ -245,6 +245,25 @@ compiler가 거부한다. 사람은 제안을 참고 자료로만 사용하고, 
 직접 채우지 않고 작업용 사본을 만들어 작성한다. 자동 importer를 두지 않아 빈
 체크박스나 placeholder가 실수로 공식 source에 들어가는 경로도 만들지 않는다.
 
+`drafts/subagent-assisted-candidates.v1.json`은 서브 에이전트 보조로 작성하고
+라이브 계약으로 검증한 두 번째 AI 후보 묶음이다. 16개 시나리오마다 원래 seed와
+다른 발화 한 건과
+짧은 계약 판단 근거를 담지만 provenance는 계속 `ai_assisted_unreviewed`이고
+`automatic_promotion_allowed: false`다. 대응하는
+`drafts/subagent-human-review-packet.v1.md`도 사람이 새 표현·정답·근거를 쓰기
+위한 참고 양식일 뿐 compiler 입력이나 승인 증거가 아니다. 원본 seed와 서브
+에이전트 후보의 ID·발화는 모두 공식 source로 그대로 승격할 수 없다. 발화 차단은
+시나리오나 ID에 의존하지 않고 NFC로 정규화한 정확한 원문 지문을 전역 대조하므로,
+한글 조합형만 바꾸거나 다른 시나리오로 옮기는 우회도 거부한다. 유사도 임계값이나
+공백 보정 같은 휴리스틱은 사용하지 않는다. 코드가 실제 인간 저작이나 재검토
+사실을 증명하지는 않으므로 최종 책임은 사람이 새로 쓴 source와 검수 원장에 남긴다.
+32개 원문의 ID·종류·시나리오·NFC 지문은
+`manifests/ai-origin-policy.v1.json`에 결정론적으로 저장한다. V1 정책 지문은 코드에
+고정되어 있으므로 기존 파일을 바꾸면 검사가 중단된다. 후보를 더 추가할 때는 V1을
+덮어쓰지 않고 새 정책 버전과 이에 대응하는 작성·freeze 계약 버전을 만들어야 한다.
+현재 실제 사람 작성 source나 freeze record가 없으므로 이 단계에서는 정책 형식과
+차단 경계만 구현한 것이며, 데이터셋 동결을 완료한 것은 아니다.
+
 ```bash
 # 편집기용 AI 초안 제안 schema와 16개 시작 제안을 재생성한다.
 python -m scripts.compile_structured_nlu_corpus draft-schema \
@@ -263,6 +282,24 @@ python -m scripts.compile_structured_nlu_corpus draft-review-packet \
   evals/structured_nlu/drafts/human-review-packet.v1.md
 python -m scripts.compile_structured_nlu_corpus check-draft-review-packet \
   evals/structured_nlu/drafts/human-review-packet.v1.md
+
+# 서브 에이전트 후보·schema·사람 작성용 참고 작업지를 생성·검사한다.
+python -m scripts.compile_structured_nlu_corpus draft-subagent-schema \
+  evals/structured_nlu/ai_subagent_candidate.schema.json
+python -m scripts.compile_structured_nlu_corpus draft-subagent-candidates \
+  evals/structured_nlu/drafts/subagent-assisted-candidates.v1.json
+python -m scripts.compile_structured_nlu_corpus draft-subagent-review-packet \
+  evals/structured_nlu/drafts/subagent-human-review-packet.v1.md
+python -m scripts.compile_structured_nlu_corpus check-draft-subagent-schema \
+  evals/structured_nlu/ai_subagent_candidate.schema.json
+python -m scripts.compile_structured_nlu_corpus check-draft-subagent-candidates \
+  evals/structured_nlu/drafts/subagent-assisted-candidates.v1.json
+python -m scripts.compile_structured_nlu_corpus check-draft-subagent-review-packet \
+  evals/structured_nlu/drafts/subagent-human-review-packet.v1.md
+python -m scripts.compile_structured_nlu_corpus ai-origin-policy \
+  evals/structured_nlu/manifests/ai-origin-policy.v1.json
+python -m scripts.compile_structured_nlu_corpus check-ai-origin-policy \
+  evals/structured_nlu/manifests/ai-origin-policy.v1.json
 ```
 
 실제 corpus는 하나의 거대한 JSON을 직접 편집하지 않는다. 같은 의미 원본에서

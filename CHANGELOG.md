@@ -14,6 +14,7 @@
 - 구조화 NLU source·split·검수·contrast·Coverage V3 조합과 입력 Git blob snapshot을 고정하는 versioned freeze record V1 스키마·생성기·검증기
 - AI 제안을 사람 작성 골든 source와 분리하고 16개 구조화 NLU 시나리오의 미검수 hard-negative 시작 제안을 제공하는 draft sidecar 계약
 - 16개 AI 제안을 사람이 새 발화·정답·판단 근거로 다시 작성하기 위한 결정론적 검수 작업지와 계약 일치 검사
+- 16개 시나리오별 서브 에이전트 대안·판단 근거 sidecar와 불변 AI-origin V1 지문 원장 기반 NFC 전역 원문 승격 차단
 - digest로 고정한 Python 3.11 다단계 이미지와 비루트·읽기 전용 핵심 컨테이너 실행 경계
 - PostgreSQL 준비 후 Alembic 일회성 적용과 API 시작을 보장하는 Compose 서비스 의존성
 - 이미지 빌드·마이그레이션·권한·HTTP 상태 계약을 실제 컨테이너에서 검증하는 `test-container` CI

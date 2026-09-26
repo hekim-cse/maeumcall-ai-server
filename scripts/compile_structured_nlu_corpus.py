@@ -5,6 +5,7 @@ import os
 import tempfile
 from pathlib import Path
 
+from evals.structured_nlu.ai_origin_policy import serialize_ai_origin_policy_v1
 from evals.structured_nlu.authoring import (
     compile_authoring_directory,
     ensure_output_does_not_replace_manifest,
@@ -20,8 +21,11 @@ from evals.structured_nlu.contrast import (
 )
 from evals.structured_nlu.drafting import (
     render_ai_draft_human_review_packet_v1,
+    render_ai_subagent_human_review_packet_v1,
     serialize_ai_draft_seed_manifest_v1,
     serialize_ai_draft_seed_schema_v1,
+    serialize_ai_subagent_candidate_manifest_v1,
+    serialize_ai_subagent_candidate_schema_v1,
 )
 from evals.structured_nlu.obligations import serialize_official_authoring_obligations
 from evals.structured_nlu.review import (
@@ -163,6 +167,54 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify that the committed human worksheet matches all AI draft seeds.",
     )
     check_draft_review_packet_parser.add_argument("packet", type=Path)
+
+    subagent_candidate_parser = subparsers.add_parser(
+        "draft-subagent-candidates",
+        help="Write one unreviewed subagent alternative for every NLU scenario.",
+    )
+    subagent_candidate_parser.add_argument("output", type=Path)
+
+    check_subagent_candidate_parser = subparsers.add_parser(
+        "check-draft-subagent-candidates",
+        help="Verify committed subagent alternatives against the live contract.",
+    )
+    check_subagent_candidate_parser.add_argument("manifest", type=Path)
+
+    subagent_schema_parser = subparsers.add_parser(
+        "draft-subagent-schema",
+        help="Write the editor-facing subagent candidate JSON Schema.",
+    )
+    subagent_schema_parser.add_argument("output", type=Path)
+
+    check_subagent_schema_parser = subparsers.add_parser(
+        "check-draft-subagent-schema",
+        help="Verify the committed subagent candidate JSON Schema.",
+    )
+    check_subagent_schema_parser.add_argument("schema", type=Path)
+
+    subagent_review_packet_parser = subparsers.add_parser(
+        "draft-subagent-review-packet",
+        help="Write the human worksheet for all subagent candidate suggestions.",
+    )
+    subagent_review_packet_parser.add_argument("output", type=Path)
+
+    check_subagent_review_packet_parser = subparsers.add_parser(
+        "check-draft-subagent-review-packet",
+        help="Verify the committed subagent worksheet against the candidates.",
+    )
+    check_subagent_review_packet_parser.add_argument("packet", type=Path)
+
+    ai_origin_policy_parser = subparsers.add_parser(
+        "ai-origin-policy",
+        help="Write the immutable NFC fingerprint registry for all V1 AI-origin text.",
+    )
+    ai_origin_policy_parser.add_argument("output", type=Path)
+
+    check_ai_origin_policy_parser = subparsers.add_parser(
+        "check-ai-origin-policy",
+        help="Verify the committed V1 AI-origin policy registry.",
+    )
+    check_ai_origin_policy_parser.add_argument("manifest", type=Path)
     return parser
 
 
@@ -261,6 +313,44 @@ def main() -> int:
             raise SystemExit(f"AI draft human review packet does not exist: {args.packet}")
         if args.packet.read_text(encoding="utf-8") != render_ai_draft_human_review_packet_v1():
             raise SystemExit("AI draft human review packet differs from the draft seeds")
+        return 0
+    if args.command == "draft-subagent-candidates":
+        _write_text(args.output, serialize_ai_subagent_candidate_manifest_v1())
+        return 0
+    if args.command == "check-draft-subagent-candidates":
+        if not args.manifest.is_file():
+            raise SystemExit(f"AI subagent candidate manifest does not exist: {args.manifest}")
+        if args.manifest.read_text(encoding="utf-8") != (
+            serialize_ai_subagent_candidate_manifest_v1()
+        ):
+            raise SystemExit("AI subagent candidate manifest differs from the live contract")
+        return 0
+    if args.command == "draft-subagent-schema":
+        _write_text(args.output, serialize_ai_subagent_candidate_schema_v1())
+        return 0
+    if args.command == "check-draft-subagent-schema":
+        if not args.schema.is_file():
+            raise SystemExit(f"AI subagent candidate schema does not exist: {args.schema}")
+        if args.schema.read_text(encoding="utf-8") != (serialize_ai_subagent_candidate_schema_v1()):
+            raise SystemExit("AI subagent candidate schema differs from the code contract")
+        return 0
+    if args.command == "draft-subagent-review-packet":
+        _write_text(args.output, render_ai_subagent_human_review_packet_v1())
+        return 0
+    if args.command == "check-draft-subagent-review-packet":
+        if not args.packet.is_file():
+            raise SystemExit(f"AI subagent review packet does not exist: {args.packet}")
+        if args.packet.read_text(encoding="utf-8") != (render_ai_subagent_human_review_packet_v1()):
+            raise SystemExit("AI subagent review packet differs from the candidates")
+        return 0
+    if args.command == "ai-origin-policy":
+        _write_text(args.output, serialize_ai_origin_policy_v1())
+        return 0
+    if args.command == "check-ai-origin-policy":
+        if not args.manifest.is_file():
+            raise SystemExit(f"AI-origin policy manifest does not exist: {args.manifest}")
+        if args.manifest.read_text(encoding="utf-8") != serialize_ai_origin_policy_v1():
+            raise SystemExit("AI-origin policy manifest differs from immutable V1")
         return 0
 
     if args.command == "compile":

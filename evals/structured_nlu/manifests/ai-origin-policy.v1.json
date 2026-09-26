@@ -1,0 +1,204 @@
+{
+  "ai_origin_policy_schema_version": 1,
+  "entries": [
+    {
+      "origin_id": "ai-seed-city-bulky-waste",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "60624453726aedd60adebd4467d987d5cdadfd58bbc759c23767ad39dfc99b0d"
+    },
+    {
+      "origin_id": "ai-seed-city-certificate",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "2722314fd2d37e11c4c3db4e82daf8ed8ce22d3a39f8d57b17af56752e20254e"
+    },
+    {
+      "origin_id": "ai-seed-city-passport",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "e1002d4cbca89dd820ff9576758e84ab8ff40c651615a5126529cd0fcfc25f06"
+    },
+    {
+      "origin_id": "ai-seed-delivery-change",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "2ad418a1466ed90173397e7e459e03189ef35c7eec452f633368c8b1739c964b"
+    },
+    {
+      "origin_id": "ai-seed-delivery-delay",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "870bba587f2f5aac20f9aedeefe2a6aa2232446426489448c24bc30214058a80"
+    },
+    {
+      "origin_id": "ai-seed-delivery-refund",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "44c48850b43c8f67a2d5e283d687d90f033316382b455a50b935c70f476369c4"
+    },
+    {
+      "origin_id": "ai-seed-hair-salon",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "1e159ac48a8d349a9b7af1176922964e621bb2130eda4d9514ae0e9e416068d3"
+    },
+    {
+      "origin_id": "ai-seed-hospital",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "b7286631a1f92f1eb318ea5e2d6f9bfc983fd6f92ebd517c282c6d3e36f9afa8"
+    },
+    {
+      "origin_id": "ai-seed-professor-absence",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "교수님:결석 사유 전달",
+      "text_fingerprint": "196c8d1de3f59a5fb48974e70d1c44cee44096f494e93149c4377054713c6c3a"
+    },
+    {
+      "origin_id": "ai-seed-professor-appointment",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "교수님:면담 예약",
+      "text_fingerprint": "de6eebd1351d4e61185149a4a06b78f29084850f16e0a6d5e8d3537919e9a1d9"
+    },
+    {
+      "origin_id": "ai-seed-professor-assignment",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "교수님:과제 문의",
+      "text_fingerprint": "fd11425fd2983a783466314b57db1d21d8bde2914560a7a9e714098e64c6f6fe"
+    },
+    {
+      "origin_id": "ai-seed-restaurant",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "dfa5d059302dfc4d682ed1a9539b402561c0ac500460e6fad2e5abbe61c4ae38"
+    },
+    {
+      "origin_id": "ai-seed-study-room",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "9d5f6990251b780b66b8c23c6e6788ffa0b5ed747859bd2fd0905dc0617628b4"
+    },
+    {
+      "origin_id": "ai-seed-support-network",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "24512ad22cafa0b91db8fad4bf0d54a7a2aa37dfff33885fb92a25813b2dc250"
+    },
+    {
+      "origin_id": "ai-seed-support-plan",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "0713405ecf907d0abe2e428a11ec11e65bf4ae0c75c07a81e0e18cfcae2152cb"
+    },
+    {
+      "origin_id": "ai-seed-support-service",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "5222dfbd0be231bac2520d501d171d15d5d5718899c646f17b69edefa9e631d6"
+    },
+    {
+      "origin_id": "ai-subagent-city-bulky-waste",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "3ad2e23086d19224a1cadb2c7b3f946488bee2ff9e51fe26c422f3cb627d629c"
+    },
+    {
+      "origin_id": "ai-subagent-city-certificate",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "2382f5db27b3c9c6ea5ef8e9141baffe633643f411a503f2e22cd0e25ba23a2a"
+    },
+    {
+      "origin_id": "ai-subagent-city-passport",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "c435df4a9a489976936eb85cd46ee32cef2ae407b78a8b12f91775966ce2ac8e"
+    },
+    {
+      "origin_id": "ai-subagent-delivery-change",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "4fb05d88b87efa2b4bace68bf485aab274b570fcb344e10cd3634a4f54e63954"
+    },
+    {
+      "origin_id": "ai-subagent-delivery-delay",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "c1b62e0cb08d0971a11dd748969785453490d3e2bdd0fbd426ca0b9516076c4c"
+    },
+    {
+      "origin_id": "ai-subagent-delivery-refund",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "f5e271cf66d279a5b1b9b03f87382ac5819afc4d303f6588955eb6db110ff987"
+    },
+    {
+      "origin_id": "ai-subagent-hair-salon",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "7ca3046d2857a12e5b8b6fb90b804d8a91b12a587de792843a21650647d7d24c"
+    },
+    {
+      "origin_id": "ai-subagent-hospital",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "9f98a6c46b50474079abe76d43ed294e85a1a0d13bf13237cfd555d366a9fa8b"
+    },
+    {
+      "origin_id": "ai-subagent-professor-absence",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "교수님:결석 사유 전달",
+      "text_fingerprint": "ce21685a0ea40ed7daaa3020baefa448ce60b83025a1821cfc02fc7bed4dc21b"
+    },
+    {
+      "origin_id": "ai-subagent-professor-appointment",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "교수님:면담 예약",
+      "text_fingerprint": "b18a1bfb6af8d1b554d043f9090c9d2f347cad2f246f7a0f7027171c1783c8cd"
+    },
+    {
+      "origin_id": "ai-subagent-professor-assignment",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "교수님:과제 문의",
+      "text_fingerprint": "cc0933e65c3f4bd998e61f5a14816d30a6f513b17200664f3dc6e0f6bbc1f994"
+    },
+    {
+      "origin_id": "ai-subagent-restaurant",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "2e0c814422c840c227cf951b5cbcd1c253300b57ce850b2f60a6b29c064d0489"
+    },
+    {
+      "origin_id": "ai-subagent-study-room",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "e7d6543db86b5a7e76e0698086ec2f69888a3ba8a2f275a112c88f32e5d1ae49"
+    },
+    {
+      "origin_id": "ai-subagent-support-network",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "cba0da3cb084cac4e5f1646f2bcaebb4151deb0aba3a0b46a47888fd6cca59f5"
+    },
+    {
+      "origin_id": "ai-subagent-support-plan",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "a750f11da05693256ba09c7d8fcf02f264a261d38a1cc3b09ea419946a6178aa"
+    },
+    {
+      "origin_id": "ai-subagent-support-service",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "1b47ece4d400db592be11f85117584a93d9922630e323c7672b5d50575e05ab1"
+    }
+  ],
+  "policy_fingerprint": "75074881c33a8c6174f6827c58d2b593783c5e77190d6b6f6219f55fd1f87b78",
+  "policy_id": "maeumcall-structured-nlu-ai-origin-policy-v1",
+  "reserved_id_prefixes": [
+    "ai-seed-",
+    "ai-subagent-"
+  ],
+  "text_fingerprint_algorithm": "nfc-utf8-sha256-v1"
+}

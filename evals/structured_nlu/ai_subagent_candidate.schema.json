@@ -1,0 +1,395 @@
+{
+  "$defs": {
+    "AISubagentSuggestion": {
+      "additionalProperties": false,
+      "description": "Record a subagent alternative and its concise contract-based justification.",
+      "properties": {
+        "conversation_group_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+          "title": "Conversation Group Id",
+          "type": "string"
+        },
+        "drafting_rationale": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Drafting Rationale",
+          "type": "string"
+        },
+        "primary_obligation": {
+          "$ref": "#/$defs/DraftObligationReference"
+        },
+        "proposed_case": {
+          "$ref": "#/$defs/ProposedAuthoringCase"
+        },
+        "scenario_key": {
+          "enum": [
+            "고객센터:a/s 접수",
+            "고객센터:요금/약정 상담",
+            "고객센터:인터넷/통화 문제 문의",
+            "교수님:결석 사유 전달",
+            "교수님:과제 문의",
+            "교수님:면담 예약",
+            "배달:배달 지연 문의",
+            "배달:주문 변경",
+            "배달:환불/재배달 문의",
+            "시청:대형폐기물 배출",
+            "시청:여권 발급 문의",
+            "시청:주민등록 등본 문의",
+            "예약:미용실 예약",
+            "예약:병원 예약",
+            "예약:스터디룸 예약",
+            "예약:식당 예약"
+          ],
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Scenario Key",
+          "type": "string"
+        },
+        "source_suggestion_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+          "title": "Source Suggestion Id",
+          "type": "string"
+        },
+        "suggestion_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+          "title": "Suggestion Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "suggestion_id",
+        "conversation_group_id",
+        "scenario_key",
+        "primary_obligation",
+        "proposed_case",
+        "source_suggestion_id",
+        "drafting_rationale"
+      ],
+      "title": "AISubagentSuggestion",
+      "type": "object"
+    },
+    "CoverageDimension": {
+      "enum": [
+        "review_status",
+        "scenario",
+        "conversation_state",
+        "user_action",
+        "state_action",
+        "intent",
+        "field_present",
+        "field_absent",
+        "field_option",
+        "change_field",
+        "difficulty_tag",
+        "action_field_present",
+        "action_field_absent",
+        "scenario_difficulty_tag",
+        "current_fields_context",
+        "current_field_present",
+        "current_field_absent",
+        "current_field_option",
+        "current_delta_relation",
+        "alternative_time_relation",
+        "contrast_role"
+      ],
+      "title": "CoverageDimension",
+      "type": "string"
+    },
+    "DifficultyTag": {
+      "enum": [
+        "single_field",
+        "multi_field",
+        "correction",
+        "negation",
+        "ellipsis",
+        "colloquial",
+        "ambiguous",
+        "hard_negative",
+        "confirmation",
+        "cancellation",
+        "closing",
+        "safety"
+      ],
+      "title": "DifficultyTag",
+      "type": "string"
+    },
+    "DraftObligationReference": {
+      "additionalProperties": false,
+      "description": "Point at one live-contract obligation that a proposed case is meant to exercise.",
+      "properties": {
+        "dimension": {
+          "$ref": "#/$defs/CoverageDimension"
+        },
+        "scenario_key": {
+          "enum": [
+            "고객센터:a/s 접수",
+            "고객센터:요금/약정 상담",
+            "고객센터:인터넷/통화 문제 문의",
+            "교수님:결석 사유 전달",
+            "교수님:과제 문의",
+            "교수님:면담 예약",
+            "배달:배달 지연 문의",
+            "배달:주문 변경",
+            "배달:환불/재배달 문의",
+            "시청:대형폐기물 배출",
+            "시청:여권 발급 문의",
+            "시청:주민등록 등본 문의",
+            "예약:미용실 예약",
+            "예약:병원 예약",
+            "예약:스터디룸 예약",
+            "예약:식당 예약"
+          ],
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Scenario Key",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scenario_key",
+        "dimension",
+        "value"
+      ],
+      "title": "DraftObligationReference",
+      "type": "object"
+    },
+    "ExpectedField": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_values": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Accepted Values",
+          "type": "array"
+        }
+      },
+      "required": [
+        "accepted_values"
+      ],
+      "title": "ExpectedField",
+      "type": "object"
+    },
+    "GoldLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "change_field": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Change Field"
+        },
+        "fields": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ExpectedField"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Fields",
+          "type": "object"
+        },
+        "intent": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Intent"
+        },
+        "user_action": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "User Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "intent",
+        "fields",
+        "user_action",
+        "change_field"
+      ],
+      "title": "GoldLabels",
+      "type": "object"
+    },
+    "ProposedAuthoringCase": {
+      "additionalProperties": false,
+      "description": "Store an unreviewed case proposal without claiming human authorship.",
+      "properties": {
+        "conversation_state": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Conversation State",
+          "type": "string"
+        },
+        "current_fields": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Current Fields",
+          "type": "object"
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "labels": {
+          "$ref": "#/$defs/GoldLabels"
+        },
+        "offered_alternative_times": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "title": "Offered Alternative Times",
+          "type": "array"
+        },
+        "tags": {
+          "items": {
+            "$ref": "#/$defs/DifficultyTag"
+          },
+          "minItems": 1,
+          "title": "Tags",
+          "type": "array"
+        },
+        "user_message": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "User Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "conversation_state",
+        "current_fields",
+        "offered_alternative_times",
+        "user_message",
+        "labels",
+        "tags"
+      ],
+      "title": "ProposedAuthoringCase",
+      "type": "object"
+    }
+  },
+  "$id": "urn:maeumcall:structured-nlu:ai-subagent-candidates:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Keep subagent-written alternatives outside human-authored corpus source.",
+  "properties": {
+    "automatic_promotion_allowed": {
+      "const": false,
+      "title": "Automatic Promotion Allowed",
+      "type": "boolean"
+    },
+    "candidate_set_id": {
+      "const": "structured-nlu-subagent-candidates-v1",
+      "title": "Candidate Set Id",
+      "type": "string"
+    },
+    "generator_id": {
+      "const": "openai-codex-subagents",
+      "title": "Generator Id",
+      "type": "string"
+    },
+    "human_review_required": {
+      "const": true,
+      "title": "Human Review Required",
+      "type": "boolean"
+    },
+    "profile_fingerprint": {
+      "const": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Profile Fingerprint",
+      "type": "string"
+    },
+    "profile_id": {
+      "const": "maeumcall-structured-nlu-v3",
+      "maxLength": 1000,
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "provenance": {
+      "const": "ai_assisted_unreviewed",
+      "title": "Provenance",
+      "type": "string"
+    },
+    "subagent_candidate_schema_version": {
+      "const": 1,
+      "title": "Subagent Candidate Schema Version",
+      "type": "integer"
+    },
+    "suggestions": {
+      "items": {
+        "$ref": "#/$defs/AISubagentSuggestion"
+      },
+      "minItems": 1,
+      "title": "Suggestions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "subagent_candidate_schema_version",
+    "candidate_set_id",
+    "profile_id",
+    "profile_fingerprint",
+    "provenance",
+    "generator_id",
+    "human_review_required",
+    "automatic_promotion_allowed",
+    "suggestions"
+  ],
+  "title": "AISubagentCandidateManifestV1",
+  "type": "object"
+}
