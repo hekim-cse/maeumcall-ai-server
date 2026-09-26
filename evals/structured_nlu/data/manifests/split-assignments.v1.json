@@ -1,6 +1,18 @@
 {
   "assignments": [
     {
+      "conversation_group_id": "professor-absence-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "professor-appointment-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "professor-assignment-human-hard-negative-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "reservation-hair-salon-human-hard-negative-001",
       "split": "development"
     },
