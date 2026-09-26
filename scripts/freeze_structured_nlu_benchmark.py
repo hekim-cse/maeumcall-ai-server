@@ -6,7 +6,7 @@ import tempfile
 from pathlib import Path
 
 from evals.structured_nlu.freeze import (
-    FreezeArtifactPathsV1,
+    FreezeArtifactPathsV2,
     create_freeze_record_file,
     serialize_freeze_record_schema,
     verify_freeze_record,
@@ -61,6 +61,7 @@ def _add_common_artifact_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--review-ledger-path", required=True)
     parser.add_argument("--contrast-manifest-path", required=True)
     parser.add_argument("--obligation-manifest-path", required=True)
+    parser.add_argument("--ai-origin-policy-path", required=True)
 
 
 def main() -> int:
@@ -83,7 +84,7 @@ def main() -> int:
         print(verified.record.record_fingerprint)
         return 0
 
-    paths = FreezeArtifactPathsV1(
+    paths = FreezeArtifactPathsV2(
         group_source_root=args.group_source_root,
         split_assignment_path=args.split_assignment_path,
         compiled_corpus_path=args.compiled_corpus_path,
@@ -91,6 +92,7 @@ def main() -> int:
         review_ledger_path=args.review_ledger_path,
         contrast_manifest_path=args.contrast_manifest_path,
         obligation_manifest_path=args.obligation_manifest_path,
+        ai_origin_policy_path=args.ai_origin_policy_path,
     )
     record = create_freeze_record_file(
         repo_root=args.repo_root,
