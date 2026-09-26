@@ -12,6 +12,7 @@
 - 버전 지정 구조화 NLU 정답 작성 지침과 validation·test case·지침 지문을 공식 준비·채점 직전에 대조하는 검수 원장 계약
 - validation·test별 시나리오 태그, 이전 필드 문맥, 예약 대안시간 관계와 검수 지문이 연결된 명시적 대조 역할을 고정한 Coverage V3 프로필·1,562개 의무 목록
 - 구조화 NLU source·split·검수·contrast·Coverage V3 조합과 입력 Git blob snapshot을 고정하는 versioned freeze record V1 스키마·생성기·검증기
+- AI 제안을 사람 작성 골든 source와 분리하고 16개 구조화 NLU 시나리오의 미검수 hard-negative 시작 제안을 제공하는 draft sidecar 계약
 - digest로 고정한 Python 3.11 다단계 이미지와 비루트·읽기 전용 핵심 컨테이너 실행 경계
 - PostgreSQL 준비 후 Alembic 일회성 적용과 API 시작을 보장하는 Compose 서비스 의존성
 - 이미지 빌드·마이그레이션·권한·HTTP 상태 계약을 실제 컨테이너에서 검증하는 `test-container` CI

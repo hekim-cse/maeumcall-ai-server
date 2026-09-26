@@ -111,6 +111,8 @@
 - freeze record가 가리킨 Git blob snapshot으로 공식 test를 준비하고 채점 직전에 같은 레코드·artifact·프로필을 다시 검증하는 경계
 - 선택형 필드 한 건이 여러 enum 선택지 coverage를 대신하지 못하게 하는 검사
 - 작성자가 다른 그룹 ID를 붙여도 완전히 동일한 모델 입력의 corpus 내 중복을 막는 검사
+- AI가 만든 제안을 `human_authored` source와 분리하고 16개 시나리오 모두에
+  `ai_assisted_unreviewed` hard-negative 시작 제안을 제공하는 draft sidecar 계약
 
 프로필 내용은 정렬된 JSON으로 직렬화한 뒤 SHA-256 지문(프로필 내용 식별값)을
 계산한다. 이후 실행 manifest(실행 조건 기록 파일)는 프로필 이름뿐 아니라 이
@@ -224,6 +226,31 @@ case 지문이 달라져 과거 승인을 재사용할 수 없다. development�
 데이터셋 동결이 끝났다고 기록하지 않는다.
 
 ## 작성 원본과 compiler
+
+AI가 만든 문장을 곧바로 `human_authored` 골든 데이터로 저장하지 않는다.
+`drafts/ai-assisted-seeds.v1.json`은 16개 구조화 NLU 시나리오마다 한 건씩 총 16건의
+초기 hard-negative 제안을 담은 **공식 corpus 밖 sidecar**다. 모든 제안은
+`provenance: ai_assisted_unreviewed`와 `human_review_required: true`를 가지며,
+라이브 상태·행동·필드 계약과 Coverage V3의 `greeting→unknown` 의무에 맞는지만
+검사한다. 이 파일에는 split이나 `review_status`가 없고 compiler 입력으로 사용할 수
+없다. 제안 문장과 `ai-seed-*` ID를 그대로 복사해 `human_authored`라고 표시하는 것도
+compiler가 거부한다. 사람은 제안을 참고 자료로만 사용하고, 작성 지침에 따라
+문장과 정답을 직접 새로 작성해 별도 `AuthoringGroup` source로 만들어야 한다.
+이 작성 단계도 검수 완료나 `adjudicated` 승격을 뜻하지 않는다.
+
+```bash
+# 편집기용 AI 초안 제안 schema와 16개 시작 제안을 재생성한다.
+python -m scripts.compile_structured_nlu_corpus draft-schema \
+  evals/structured_nlu/ai_draft_seed.schema.json
+python -m scripts.compile_structured_nlu_corpus draft-seeds \
+  evals/structured_nlu/drafts/ai-assisted-seeds.v1.json
+
+# 커밋된 sidecar가 현재 16개 라이브 계약과 정확히 같은지 검사한다.
+python -m scripts.compile_structured_nlu_corpus check-draft-schema \
+  evals/structured_nlu/ai_draft_seed.schema.json
+python -m scripts.compile_structured_nlu_corpus check-draft-seeds \
+  evals/structured_nlu/drafts/ai-assisted-seeds.v1.json
+```
 
 실제 corpus는 하나의 거대한 JSON을 직접 편집하지 않는다. 같은 의미 원본에서
 파생된 문장 묶음을 `AuthoringGroup` 파일 하나로 관리하고, 그룹이
