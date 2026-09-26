@@ -13,9 +13,9 @@ from pydantic import ValidationError
 
 from evals.structured_nlu.authoring import (
     SplitAssignmentManifest,
+    _prepare_qualified_test_slice_from_authoring,
+    _score_qualified_test_slice_from_authoring,
     ensure_output_outside_source,
-    prepare_qualified_test_slice_from_authoring,
-    score_qualified_test_slice_from_authoring,
     serialize_authoring_group_schema,
     serialize_gold_dataset,
     serialize_split_assignment_schema,
@@ -712,7 +712,7 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
     )
 
     assert (
-        score_qualified_test_slice_from_authoring(
+        _score_qualified_test_slice_from_authoring(
             source_dir,
             _split_assignments_path(source_dir),
             compiled_path,
@@ -731,7 +731,7 @@ def test_qualified_scoring_revalidates_sources_immediately_before_scoring(
         encoding="utf-8",
     )
     with pytest.raises(ValueError, match="source fingerprint does not match"):
-        score_qualified_test_slice_from_authoring(
+        _score_qualified_test_slice_from_authoring(
             source_dir,
             _split_assignments_path(source_dir),
             compiled_path,
@@ -777,7 +777,7 @@ def test_qualified_scoring_rejects_a_changed_split_assignment(tmp_path: Path):
     compiled_path.write_text(serialize_gold_dataset(changed_dataset), encoding="utf-8")
 
     with pytest.raises(ValueError, match="split assignment fingerprint does not match"):
-        score_qualified_test_slice_from_authoring(
+        _score_qualified_test_slice_from_authoring(
             source_dir,
             assignments_path,
             compiled_path,
@@ -810,7 +810,7 @@ def test_official_qualification_requires_verified_authoring_sources(
     )
 
     with pytest.raises(ValueError, match="benchmark coverage is incomplete"):
-        prepare_qualified_test_slice_from_authoring(
+        _prepare_qualified_test_slice_from_authoring(
             source_dir,
             _split_assignments_path(source_dir),
             compiled_path,
@@ -1268,7 +1268,7 @@ def test_official_scoring_revalidates_the_review_ledger(
     )
 
     assert (
-        score_qualified_test_slice_from_authoring(
+        _score_qualified_test_slice_from_authoring(
             source_dir,
             _split_assignments_path(source_dir),
             compiled_path,
@@ -1285,7 +1285,7 @@ def test_official_scoring_revalidates_the_review_ledger(
     decoded["entries"][0]["rationale"] = "같은 사례를 다른 근거로 다시 승인했다."
     ledger_path.write_text(json.dumps(decoded, ensure_ascii=False), encoding="utf-8")
     with pytest.raises(ValueError, match="review ledger fingerprint does not match"):
-        score_qualified_test_slice_from_authoring(
+        _score_qualified_test_slice_from_authoring(
             source_dir,
             _split_assignments_path(source_dir),
             compiled_path,

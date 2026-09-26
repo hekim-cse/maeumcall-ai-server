@@ -27,7 +27,9 @@ from services.flow.common.state_contract import SCENARIO_STATE_VERSION
 
 if TYPE_CHECKING:
     from evals.structured_nlu.benchmark import QualifiedTestSlice
+    from evals.structured_nlu.contrast import VerifiedContrastManifest
     from evals.structured_nlu.metrics import EvaluationScores
+    from evals.structured_nlu.review import VerifiedReviewLedger
 
 CaseId = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9._-]{2,119}$")]
 
@@ -151,6 +153,17 @@ class AuthoringSourceSnapshot:
             digest.update(source_file.content)
             digest.update(b"\0")
         return digest.hexdigest()
+
+
+@dataclass(frozen=True)
+class VerifiedAuthoringBundle:
+    """One source-owned corpus plus the exact human-review artifacts checked with it."""
+
+    dataset: GoldDataset
+    group_source_fingerprint: str
+    split_assignment_fingerprint: str
+    review: VerifiedReviewLedger
+    contrast: VerifiedContrastManifest
 
 
 def capture_authoring_source(
@@ -362,31 +375,38 @@ def verify_compiled_authoring_corpus(
     ensure_output_outside_source(source_dir, compiled_path)
     ensure_output_does_not_replace_manifest(split_assignments_path, compiled_path)
     snapshot = capture_authoring_source(source_dir, split_assignments_path)
-    expected_dataset = compile_authoring_snapshot(snapshot)
-    expected_bytes = serialize_gold_dataset(expected_dataset).encode("utf-8")
     if not compiled_path.is_file():
         raise ValueError(f"compiled corpus does not exist: {compiled_path}")
-    if compiled_path.read_bytes() != expected_bytes:
+    return verify_compiled_authoring_snapshot(snapshot, compiled_path.read_bytes())
+
+
+def verify_compiled_authoring_snapshot(
+    snapshot: AuthoringSourceSnapshot,
+    compiled_bytes: bytes,
+) -> tuple[GoldDataset, str, str]:
+    """Verify one immutable in-memory source snapshot and its compiled bytes."""
+    expected_dataset = compile_authoring_snapshot(snapshot)
+    expected_bytes = serialize_gold_dataset(expected_dataset).encode("utf-8")
+    if compiled_bytes != expected_bytes:
         raise ValueError("compiled corpus differs from the authoring sources")
     split_assignment_fingerprint = _load_split_assignment_manifest(snapshot).fingerprint
     return expected_dataset, snapshot.group_source_fingerprint, split_assignment_fingerprint
 
 
-def prepare_qualified_test_slice_from_authoring(
+def verify_authoring_bundle(
     source_dir: Path,
     split_assignments_path: Path,
     compiled_path: Path,
     annotation_guideline_path: Path,
     review_ledger_path: Path,
     contrast_manifest_path: Path,
-):
-    """Prepare a qualified test slice from verified sources and human approvals."""
+) -> VerifiedAuthoringBundle:
+    """Verify every source-owned data and human-review artifact as one bundle."""
     dataset, source_fingerprint, split_assignment_fingerprint = verify_compiled_authoring_corpus(
         source_dir,
         split_assignments_path,
         compiled_path,
     )
-    from evals.structured_nlu.benchmark import _prepare_qualified_test_slice
     from evals.structured_nlu.contrast import verify_contrast_manifest
     from evals.structured_nlu.review import verify_review_ledger
 
@@ -397,17 +417,45 @@ def prepare_qualified_test_slice_from_authoring(
     )
     verified_contrast = verify_contrast_manifest(dataset, contrast_manifest_path)
 
-    return _prepare_qualified_test_slice(
-        dataset,
-        authoring_source_fingerprint=source_fingerprint,
+    return VerifiedAuthoringBundle(
+        dataset=dataset,
+        group_source_fingerprint=source_fingerprint,
         split_assignment_fingerprint=split_assignment_fingerprint,
-        annotation_guideline_fingerprint=verified_review.guideline_fingerprint,
-        review_ledger_fingerprint=verified_review.ledger_fingerprint,
-        contrast_manifest_fingerprint=verified_contrast.fingerprint,
+        review=verified_review,
+        contrast=verified_contrast,
     )
 
 
-def score_qualified_test_slice_from_authoring(
+def _prepare_qualified_test_slice_from_authoring(
+    source_dir: Path,
+    split_assignments_path: Path,
+    compiled_path: Path,
+    annotation_guideline_path: Path,
+    review_ledger_path: Path,
+    contrast_manifest_path: Path,
+):
+    """Internal source-bound builder; public official preparation requires a freeze record."""
+    verified = verify_authoring_bundle(
+        source_dir,
+        split_assignments_path,
+        compiled_path,
+        annotation_guideline_path,
+        review_ledger_path,
+        contrast_manifest_path,
+    )
+    from evals.structured_nlu.benchmark import _prepare_qualified_test_slice
+
+    return _prepare_qualified_test_slice(
+        verified.dataset,
+        authoring_source_fingerprint=verified.group_source_fingerprint,
+        split_assignment_fingerprint=verified.split_assignment_fingerprint,
+        annotation_guideline_fingerprint=verified.review.guideline_fingerprint,
+        review_ledger_fingerprint=verified.review.ledger_fingerprint,
+        contrast_manifest_fingerprint=verified.contrast.fingerprint,
+    )
+
+
+def _score_qualified_test_slice_from_authoring(
     source_dir: Path,
     split_assignments_path: Path,
     compiled_path: Path,
@@ -417,7 +465,7 @@ def score_qualified_test_slice_from_authoring(
     benchmark: QualifiedTestSlice,
     predictions: tuple[CasePrediction, ...],
 ) -> EvaluationScores:
-    """Revalidate authoring provenance immediately before qualified scoring."""
+    """Internal raw scorer; public official scoring requires a freeze record."""
     dataset, source_fingerprint, split_assignment_fingerprint = verify_compiled_authoring_corpus(
         source_dir,
         split_assignments_path,

@@ -326,6 +326,14 @@ def verify_contrast_manifest(
     manifest_path: Path,
 ) -> VerifiedContrastManifest:
     raw = read_regular_artifact(manifest_path, label="contrast manifest")
+    return verify_contrast_manifest_snapshot(dataset, raw)
+
+
+def verify_contrast_manifest_snapshot(
+    dataset: GoldDataset,
+    raw: bytes,
+) -> VerifiedContrastManifest:
+    """Verify a contrast manifest captured in the caller's immutable snapshot."""
     try:
         decoded = normalize_text_tree(json.loads(raw, object_pairs_hook=_object_from_unique_pairs))
         manifest = ContrastManifestV1.model_validate(decoded)
