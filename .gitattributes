@@ -3,5 +3,6 @@ evals/structured_nlu/*.schema.json text eol=lf
 evals/structured_nlu/manifests/*.json text eol=lf
 evals/structured_nlu/freezes/*.json text eol=lf
 evals/structured_nlu/drafts/*.json text eol=lf
+evals/structured_nlu/drafts/*.md text eol=lf
 evals/structured_nlu/data/source/**/*.json text eol=lf
 evals/structured_nlu/data/compiled/*.json text eol=lf

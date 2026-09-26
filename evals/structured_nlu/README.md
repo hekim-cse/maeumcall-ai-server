@@ -238,6 +238,13 @@ compiler가 거부한다. 사람은 제안을 참고 자료로만 사용하고, 
 문장과 정답을 직접 새로 작성해 별도 `AuthoringGroup` source로 만들어야 한다.
 이 작성 단계도 검수 완료나 `adjudicated` 승격을 뜻하지 않는다.
 
+`drafts/human-review-packet.v1.md`는 16개 제안의 시나리오·상태·기준 의무·제안
+정답을 한곳에서 보고, 사람이 새 그룹 ID·case ID·발화·최종 정답·판단 근거를
+작성하도록 만든 결정론적 작업지 원본이다. 이 파일 자체도 승인 원장이나 골든
+데이터가 아니다. 커밋된 원본은 AI 제안과 계약이 바뀌었는지 검사하는 템플릿이므로
+직접 채우지 않고 작업용 사본을 만들어 작성한다. 자동 importer를 두지 않아 빈
+체크박스나 placeholder가 실수로 공식 source에 들어가는 경로도 만들지 않는다.
+
 ```bash
 # 편집기용 AI 초안 제안 schema와 16개 시작 제안을 재생성한다.
 python -m scripts.compile_structured_nlu_corpus draft-schema \
@@ -250,6 +257,12 @@ python -m scripts.compile_structured_nlu_corpus check-draft-schema \
   evals/structured_nlu/ai_draft_seed.schema.json
 python -m scripts.compile_structured_nlu_corpus check-draft-seeds \
   evals/structured_nlu/drafts/ai-assisted-seeds.v1.json
+
+# 16개 제안을 사람이 다시 작성할 작업지 원본을 생성·검사한다.
+python -m scripts.compile_structured_nlu_corpus draft-review-packet \
+  evals/structured_nlu/drafts/human-review-packet.v1.md
+python -m scripts.compile_structured_nlu_corpus check-draft-review-packet \
+  evals/structured_nlu/drafts/human-review-packet.v1.md
 ```
 
 실제 corpus는 하나의 거대한 JSON을 직접 편집하지 않는다. 같은 의미 원본에서
