@@ -1,0 +1,47 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "next_action": null,
+        "occurred_at": null,
+        "scope": null,
+        "service_type": null,
+        "symptom": null,
+        "troubleshooting_done": null
+      },
+      "id": "support-network-call-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "next_action": {
+            "accepted_values": [
+              "guided_diagnosis"
+            ]
+          },
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": {
+            "accepted_values": [
+              "끊김"
+            ]
+          },
+          "troubleshooting_done": null
+        },
+        "intent": "network_call_issue",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 인터넷이 자꾸 끊겨서 원인 파악 가능하나요?"
+    }
+  ],
+  "conversation_group_id": "support-network-call-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "고객센터:인터넷/통화 문제 문의"
+}

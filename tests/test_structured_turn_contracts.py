@@ -90,6 +90,20 @@ WORKFLOW_SPECS = (
 )
 
 
+@pytest.mark.parametrize(
+    "spec",
+    (ORDER_CHANGE_SPEC, DELIVERY_DELAY_SPEC, REFUND_REDELIVERY_SPEC),
+    ids=lambda spec: spec.graph_name,
+)
+def test_delivery_order_identifier_contract_accepts_order_number_or_address(spec):
+    order_identifier = next(field for field in spec.fields if field.key == "order_number")
+
+    assert order_identifier.label == "주문 식별 정보"
+    assert "주문번호" in order_identifier.description
+    assert "배송지" in order_identifier.description
+    assert "동·호수" in order_identifier.question
+
+
 @pytest.mark.parametrize(("name", "field_names", "contract"), DETAILED_TURN_CONTRACTS)
 def test_detailed_contracts_reject_every_action_field_contradiction(
     name,

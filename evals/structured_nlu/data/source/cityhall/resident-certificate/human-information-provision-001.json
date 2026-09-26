@@ -1,0 +1,47 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_relation": null,
+        "document_type": null,
+        "inquiry_topic": null,
+        "issuance_channel": null
+      },
+      "id": "cityhall-resident-certificate-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_relation": {
+            "accepted_values": [
+              "self"
+            ]
+          },
+          "document_type": {
+            "accepted_values": [
+              "register_copy"
+            ]
+          },
+          "inquiry_topic": {
+            "accepted_values": [
+              "delivery"
+            ]
+          },
+          "issuance_channel": null
+        },
+        "intent": "resident_certificate_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 제 주민등록 등본 발급하려고 하는데요 꼭 방문해야 발급이 가능하나요?"
+    }
+  ],
+  "conversation_group_id": "cityhall-resident-certificate-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "시청:주민등록 등본 문의"
+}

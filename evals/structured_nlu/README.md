@@ -40,7 +40,7 @@
 평가한다.
 
 - `intent`: 어떤 업무인지 나타내는 고정 코드
-- 업무 필드: 날짜, 시간, 주문번호, 문의 유형처럼 발화에서 명시된 값
+- 업무 필드: 날짜, 시간, 주문 식별 정보(주문번호 또는 배송지), 문의 유형처럼 발화에서 명시된 값
 - `user_action`: 정보 제공, 확인, 수정, 취소, 마무리 같은 현재 행동
 - `change_field`: 공통 업무 그래프에서 사용자가 바꾸려는 필드
 
@@ -151,10 +151,10 @@ workflow 기반 상세 그래프는 현재 필드 문맥도 검사하므로, 확
 채워져야 하고 선택형 필드는 계약에 선언된 값만 사용해야 한다.
 
 현재 사람 작성 development 초안은 16개 구조화 NLU 시나리오의 hard-negative
-1건씩과 예약 4종·교수님 3종의 정상 정보 제공 1건씩을 합쳐 총 23건이 존재한다.
+1건씩과 16개 시나리오의 정상 정보 제공 1건씩을 합쳐 총 32건이 존재한다.
 정보 제공 사례는 사용자가 실제로 말한 필드만 정답으로 채우고 나머지는 `null`로
 두며, 예약은 `greeting → continue_collecting`, 교수님 시나리오는 각 업무별
-`provide_*_info` 계약을 검증한다. 아직 구현하지
+`provide_*_info`, 배달·시청·고객센터 workflow는 `provide_details` 계약을 검증한다. 아직 구현하지
 않은 범위는 공식 validation·test 골든 데이터와 그 데이터에 대응하는 검수 원장·
 contrast manifest·실제 freeze record, 실모델 실행기,
 시나리오·태그별 집계, p50·p95·토큰·메모리 측정, 실행 manifest와 결과 파일이다.
@@ -231,7 +231,7 @@ validation·test corpus가 없으므로
 현재 생성 형식은 **freeze record V2**다. V2는 V1의 source·split·검수·contrast·coverage
 조합에 AI-origin policy V1의 경로, 정확한 artifact SHA-256, semantic policy fingerprint와
 schema version을 추가한다. V1 모델과 해시 알고리즘은 과거 레코드 해석을 위해 코드에
-남기지만, 새 레코드는 V2로만 생성한다. 현재는 development 사람 작성 초안 23건과 그
+남기지만, 새 레코드는 V2로만 생성한다. 현재는 development 사람 작성 초안 32건과 그
 split 원장·compiled corpus만 있으므로 실제 freeze record 파일을 만들거나 데이터셋
 동결이 끝났다고 기록하지 않는다.
 
@@ -271,11 +271,11 @@ compiler가 거부한다. 사람은 제안을 참고 자료로만 사용하고, 
 `manifests/ai-origin-policy.v1.json`에 결정론적으로 저장한다. V1 정책 지문은 코드에
 고정되어 있으므로 기존 파일을 바꾸면 검사가 중단된다. 후보를 더 추가할 때는 V1을
 덮어쓰지 않고 새 정책 버전과 이에 대응하는 작성·freeze 계약 버전을 만들어야 한다.
-현재 16개 구조화 NLU 전체의 사람 작성 hard-negative를 development 초안으로 한
-건씩 저장했고, 예약 4종과 교수님 3종에는 사람이 작성한 정상 정보 제공 초안도 한
-건씩 추가했다. hard-negative는 `greeting → unknown`, 예약 정보 제공은
-`greeting → continue_collecting`, 교수님 정보 제공은 각 업무별 `provide_*_info`이며
-모두 `review_status: draft`다. 이 23건만으로는 공식 validation·test coverage나
+현재 16개 구조화 NLU 전체의 사람 작성 hard-negative와 정상 정보 제공 사례를
+development 초안으로 한 건씩 저장했다. hard-negative는 `greeting → unknown`, 예약
+정보 제공은 `greeting → continue_collecting`, 교수님 정보 제공은 각 업무별
+`provide_*_info`, 배달·시청·고객센터 workflow 정보 제공은 `provide_details`이며 모두
+`review_status: draft`다. 이 32건만으로는 공식 validation·test coverage나
 adjudication을 충족하지 않는다. 실제 freeze record도 없으므로 데이터셋 동결을
 완료한 것은 아니다.
 

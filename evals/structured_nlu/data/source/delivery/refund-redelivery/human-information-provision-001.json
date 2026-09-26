@@ -1,0 +1,45 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "evidence_status": null,
+        "issue_detail": null,
+        "issue_type": null,
+        "order_number": null,
+        "resolution_preference": null
+      },
+      "id": "delivery-refund-redelivery-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "evidence_status": null,
+          "issue_detail": {
+            "accepted_values": [
+              "짬뽕이 터져서 배달됨"
+            ]
+          },
+          "issue_type": {
+            "accepted_values": [
+              "damaged_or_quality"
+            ]
+          },
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "intent": "delivery_refund_redelivery",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 배달기사님이 넘어지셨는지 짬뽕이 다 터져서 왔어요. 혹시 환불 가능하나요?"
+    }
+  ],
+  "conversation_group_id": "delivery-refund-redelivery-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "배달:환불/재배달 문의"
+}

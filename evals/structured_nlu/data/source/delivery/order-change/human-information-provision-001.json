@@ -1,0 +1,47 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "change_type": null,
+        "order_number": null,
+        "requested_change": null,
+        "unavailable_preference": null
+      },
+      "id": "delivery-order-change-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "change_type": {
+            "accepted_values": [
+              "menu_or_quantity"
+            ]
+          },
+          "order_number": {
+            "accepted_values": [
+              "301호"
+            ]
+          },
+          "requested_change": {
+            "accepted_values": [
+              "짜장면에서 짬뽕으로 변경"
+            ]
+          },
+          "unavailable_preference": null
+        },
+        "intent": "delivery_order_change",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 방금 전에 배송했던 301호인데요~ 짜장면 시켰는데 혹시 짬뽕으로 변경 가능하나요?"
+    }
+  ],
+  "conversation_group_id": "delivery-order-change-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "배달:주문 변경"
+}

@@ -1,0 +1,39 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_type": null,
+        "application_channel": null,
+        "application_type": null,
+        "inquiry_topic": null
+      },
+      "id": "cityhall-passport-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": {
+            "accepted_values": [
+              "processing_time"
+            ]
+          }
+        },
+        "intent": "passport_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "single_field"
+      ],
+      "user_message": "안녕하세요. 여권 발급 완료 소요 시간이 궁금합니다."
+    }
+  ],
+  "conversation_group_id": "cityhall-passport-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "시청:여권 발급 문의"
+}

@@ -1,0 +1,47 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "item_name": null,
+        "quantity": null,
+        "region": null,
+        "request_topic": null
+      },
+      "id": "cityhall-bulky-waste-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "item_name": {
+            "accepted_values": [
+              "소파"
+            ]
+          },
+          "quantity": null,
+          "region": {
+            "accepted_values": [
+              "인천 독산동"
+            ]
+          },
+          "request_topic": {
+            "accepted_values": [
+              "application"
+            ]
+          }
+        },
+        "intent": "bulky_waste_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 인천 독산동에서 소파 버릴려고 하는데요. 혹시 신고하고 버려야하나요?"
+    }
+  ],
+  "conversation_group_id": "cityhall-bulky-waste-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "시청:대형폐기물 배출"
+}

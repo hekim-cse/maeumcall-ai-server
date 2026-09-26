@@ -38,6 +38,55 @@
       "user_message": "아니 나 요금제 너무 비싸. 다른 걸로 바꿔줘."
     },
     {
+      "conversation_group_id": "support-service-request-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "support-service-request-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": {
+            "accepted_values": [
+              "오늘 4시"
+            ]
+          },
+          "product_type": {
+            "accepted_values": [
+              "휴대폰"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "액정 깨짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 휴대폰 액정이 깨져서 혹시 오늘 4시에 바로 as 맡길 수 있나요?"
+    },
+    {
       "conversation_group_id": "support-plan-contract-human-hard-negative-001",
       "conversation_state": "greeting",
       "current_fields": {
@@ -67,6 +116,49 @@
         "hard_negative"
       ],
       "user_message": "아니 나 멤버십 vip 혜택 받고 싶은데 어떻게 사용해."
+    },
+    {
+      "conversation_group_id": "support-plan-contract-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "consent_scope": null,
+        "consultation_goal": null,
+        "current_service": null,
+        "inquiry_type": null
+      },
+      "id": "support-plan-contract-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "consent_scope": null,
+          "consultation_goal": {
+            "accepted_values": [
+              "더 싼 요금제로 변경"
+            ]
+          },
+          "current_service": {
+            "accepted_values": [
+              "kt 0청년 요금제"
+            ]
+          },
+          "inquiry_type": {
+            "accepted_values": [
+              "plan_change"
+            ]
+          }
+        },
+        "intent": "plan_contract_consultation",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 현재 kt 0청년 요금제 사용 중인데, 더 싼 요금제로 변경 가능하나요?"
     },
     {
       "conversation_group_id": "support-network-call-human-hard-negative-001",
@@ -102,6 +194,49 @@
         "hard_negative"
       ],
       "user_message": "나 핸드폰이 안켜져."
+    },
+    {
+      "conversation_group_id": "support-network-call-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "next_action": null,
+        "occurred_at": null,
+        "scope": null,
+        "service_type": null,
+        "symptom": null,
+        "troubleshooting_done": null
+      },
+      "id": "support-network-call-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "next_action": {
+            "accepted_values": [
+              "guided_diagnosis"
+            ]
+          },
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": {
+            "accepted_values": [
+              "끊김"
+            ]
+          },
+          "troubleshooting_done": null
+        },
+        "intent": "network_call_issue",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 인터넷이 자꾸 끊겨서 원인 파악 가능하나요?"
     },
     {
       "conversation_group_id": "professor-absence-human-hard-negative-001",
@@ -339,6 +474,45 @@
       "user_message": "나무젓가락이 아직 안왔어요"
     },
     {
+      "conversation_group_id": "delivery-delay-inquiry-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "delay_detail": null,
+        "delay_resolution": null,
+        "inquiry_goal": null,
+        "order_number": null
+      },
+      "id": "delivery-delay-inquiry-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": {
+            "accepted_values": [
+              "estimated_arrival"
+            ]
+          },
+          "order_number": {
+            "accepted_values": [
+              "별빛 아파트 302호"
+            ]
+          }
+        },
+        "intent": "delivery_delay_inquiry",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:배달 지연 문의",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 별빛 아파트 302호 배달 언제 완료되나요?"
+    },
+    {
       "conversation_group_id": "delivery-order-change-human-hard-negative-001",
       "conversation_state": "greeting",
       "current_fields": {
@@ -368,6 +542,49 @@
         "hard_negative"
       ],
       "user_message": "배달이 아직 안 왔어요"
+    },
+    {
+      "conversation_group_id": "delivery-order-change-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "change_type": null,
+        "order_number": null,
+        "requested_change": null,
+        "unavailable_preference": null
+      },
+      "id": "delivery-order-change-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "change_type": {
+            "accepted_values": [
+              "menu_or_quantity"
+            ]
+          },
+          "order_number": {
+            "accepted_values": [
+              "301호"
+            ]
+          },
+          "requested_change": {
+            "accepted_values": [
+              "짜장면에서 짬뽕으로 변경"
+            ]
+          },
+          "unavailable_preference": null
+        },
+        "intent": "delivery_order_change",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:주문 변경",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 방금 전에 배송했던 301호인데요~ 짜장면 시켰는데 혹시 짬뽕으로 변경 가능하나요?"
     },
     {
       "conversation_group_id": "delivery-refund-redelivery-human-hard-negative-001",
@@ -403,6 +620,47 @@
       "user_message": "혹시 짜장면을 짬뽕으로 변경 가능한가요?"
     },
     {
+      "conversation_group_id": "delivery-refund-redelivery-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "evidence_status": null,
+        "issue_detail": null,
+        "issue_type": null,
+        "order_number": null,
+        "resolution_preference": null
+      },
+      "id": "delivery-refund-redelivery-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "evidence_status": null,
+          "issue_detail": {
+            "accepted_values": [
+              "짬뽕이 터져서 배달됨"
+            ]
+          },
+          "issue_type": {
+            "accepted_values": [
+              "damaged_or_quality"
+            ]
+          },
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "intent": "delivery_refund_redelivery",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:환불/재배달 문의",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 배달기사님이 넘어지셨는지 짬뽕이 다 터져서 왔어요. 혹시 환불 가능하나요?"
+    },
+    {
       "conversation_group_id": "cityhall-bulky-waste-human-hard-negative-001",
       "conversation_state": "greeting",
       "current_fields": {
@@ -432,6 +690,49 @@
         "hard_negative"
       ],
       "user_message": "계란 껍질은 일반쓰레기로 버리나요?"
+    },
+    {
+      "conversation_group_id": "cityhall-bulky-waste-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "item_name": null,
+        "quantity": null,
+        "region": null,
+        "request_topic": null
+      },
+      "id": "cityhall-bulky-waste-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "item_name": {
+            "accepted_values": [
+              "소파"
+            ]
+          },
+          "quantity": null,
+          "region": {
+            "accepted_values": [
+              "인천 독산동"
+            ]
+          },
+          "request_topic": {
+            "accepted_values": [
+              "application"
+            ]
+          }
+        },
+        "intent": "bulky_waste_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:대형폐기물 배출",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 인천 독산동에서 소파 버릴려고 하는데요. 혹시 신고하고 버려야하나요?"
     },
     {
       "conversation_group_id": "cityhall-passport-human-hard-negative-001",
@@ -465,6 +766,41 @@
       "user_message": "가족 증명서 발급하고 싶어."
     },
     {
+      "conversation_group_id": "cityhall-passport-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_type": null,
+        "application_channel": null,
+        "application_type": null,
+        "inquiry_topic": null
+      },
+      "id": "cityhall-passport-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": {
+            "accepted_values": [
+              "processing_time"
+            ]
+          }
+        },
+        "intent": "passport_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:여권 발급 문의",
+      "split": "development",
+      "tags": [
+        "single_field"
+      ],
+      "user_message": "안녕하세요. 여권 발급 완료 소요 시간이 궁금합니다."
+    },
+    {
       "conversation_group_id": "cityhall-resident-certificate-human-hard-negative-001",
       "conversation_state": "greeting",
       "current_fields": {
@@ -494,6 +830,49 @@
         "hard_negative"
       ],
       "user_message": "여기 가로등 불 꺼졌어요"
+    },
+    {
+      "conversation_group_id": "cityhall-resident-certificate-human-information-provision-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_relation": null,
+        "document_type": null,
+        "inquiry_topic": null,
+        "issuance_channel": null
+      },
+      "id": "cityhall-resident-certificate-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_relation": {
+            "accepted_values": [
+              "self"
+            ]
+          },
+          "document_type": {
+            "accepted_values": [
+              "register_copy"
+            ]
+          },
+          "inquiry_topic": {
+            "accepted_values": [
+              "delivery"
+            ]
+          },
+          "issuance_channel": null
+        },
+        "intent": "resident_certificate_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 제 주민등록 등본 발급하려고 하는데요 꼭 방문해야 발급이 가능하나요?"
     },
     {
       "conversation_group_id": "reservation-hair-salon-human-hard-negative-001",

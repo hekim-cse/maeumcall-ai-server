@@ -5,7 +5,15 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "cityhall-bulky-waste-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "cityhall-passport-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "cityhall-passport-human-information-provision-001",
       "split": "development"
     },
     {
@@ -13,7 +21,15 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "cityhall-resident-certificate-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "delivery-delay-inquiry-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "delivery-delay-inquiry-human-information-provision-001",
       "split": "development"
     },
     {
@@ -21,7 +37,15 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "delivery-order-change-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "delivery-refund-redelivery-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "delivery-refund-redelivery-human-information-provision-001",
       "split": "development"
     },
     {
@@ -85,11 +109,23 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "support-network-call-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "support-plan-contract-human-hard-negative-001",
       "split": "development"
     },
     {
+      "conversation_group_id": "support-plan-contract-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "support-service-request-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "support-service-request-human-information-provision-001",
       "split": "development"
     }
   ],
