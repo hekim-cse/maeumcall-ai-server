@@ -1,6 +1,18 @@
 {
   "assignments": [
     {
+      "conversation_group_id": "cityhall-bulky-waste-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "cityhall-passport-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "cityhall-resident-certificate-human-hard-negative-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "delivery-delay-inquiry-human-hard-negative-001",
       "split": "development"
     },

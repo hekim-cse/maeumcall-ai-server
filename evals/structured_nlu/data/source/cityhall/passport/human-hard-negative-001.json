@@ -1,0 +1,35 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_type": null,
+        "application_channel": null,
+        "application_type": null,
+        "inquiry_topic": null
+      },
+      "id": "cityhall-passport-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": null
+        },
+        "intent": "passport_guidance",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "가족 증명서 발급하고 싶어."
+    }
+  ],
+  "conversation_group_id": "cityhall-passport-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "시청:여권 발급 문의"
+}
