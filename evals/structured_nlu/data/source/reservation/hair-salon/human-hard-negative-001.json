@@ -1,0 +1,32 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-hair-salon-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "designer": null,
+          "selected_time": null,
+          "service_type": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "아우 배고파."
+    }
+  ],
+  "conversation_group_id": "reservation-hair-salon-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:미용실 예약"
+}

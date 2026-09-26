@@ -1,0 +1,31 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-hospital-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "department": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": null,
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "여기 근처 맛집 알려줘."
+    }
+  ],
+  "conversation_group_id": "reservation-hospital-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:병원 예약"
+}

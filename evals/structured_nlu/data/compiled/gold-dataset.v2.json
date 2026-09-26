@@ -1,0 +1,116 @@
+{
+  "cases": [
+    {
+      "conversation_group_id": "reservation-hair-salon-human-hard-negative-001",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-hair-salon-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "designer": null,
+          "selected_time": null,
+          "service_type": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:미용실 예약",
+      "split": "development",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "아우 배고파."
+    },
+    {
+      "conversation_group_id": "reservation-hospital-human-hard-negative-001",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-hospital-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "department": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": null,
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:병원 예약",
+      "split": "development",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "여기 근처 맛집 알려줘."
+    },
+    {
+      "conversation_group_id": "reservation-study-room-human-hard-negative-001",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-study-room-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "duration": null,
+          "party_size": null,
+          "selected_time": null,
+          "start_time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:스터디룸 예약",
+      "split": "development",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "쓰읍. 슬슬 머리 잘라야하는데."
+    },
+    {
+      "conversation_group_id": "reservation-restaurant-human-hard-negative-001",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-restaurant-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "party_size": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:식당 예약",
+      "split": "development",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "나 다리 아퍼."
+    }
+  ],
+  "dataset_version": 2,
+  "state_contract_version": 2
+}
