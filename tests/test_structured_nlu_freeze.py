@@ -300,7 +300,7 @@ def test_freeze_parser_preserves_historical_v1_records(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ):
-    _, _, current, _ = _build_record(tmp_path, monkeypatch)
+    repo, _, current, verified_inputs = _build_record(tmp_path, monkeypatch)
     historical = _as_historical_v1(current)
 
     parsed = freeze_module._parse_freeze_record(
@@ -310,6 +310,28 @@ def test_freeze_parser_preserves_historical_v1_records(
 
     assert parsed == historical
     assert isinstance(parsed, freeze_module.CorpusFreezeRecordV1)
+
+    record_path = repo / "freezes" / "historical-v1.json"
+    write_new_freeze_record(record_path, historical)
+    _git(repo, "add", "freezes/historical-v1.json")
+    _git(repo, "commit", "-m", "test: add historical V1 freeze record")
+    monkeypatch.setattr(
+        freeze_module,
+        "_verify_freeze_input_snapshot",
+        lambda _snapshot: verified_inputs,
+    )
+
+    verified = verify_freeze_record(repo_root=repo, record_path=record_path)
+
+    assert verified.record == historical
+    assert verified.benchmark == verified_inputs[1]
+    assert (
+        prepare_qualified_test_slice_from_freeze(
+            repo_root=repo,
+            record_path=record_path,
+        )
+        == verified_inputs[1]
+    )
 
 
 def test_freeze_record_rejects_self_hash_and_lineage_tampering(
