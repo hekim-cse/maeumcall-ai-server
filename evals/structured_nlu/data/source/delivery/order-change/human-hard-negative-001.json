@@ -1,0 +1,35 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "change_type": null,
+        "order_number": null,
+        "requested_change": null,
+        "unavailable_preference": null
+      },
+      "id": "delivery-order-change-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "change_type": null,
+          "order_number": null,
+          "requested_change": null,
+          "unavailable_preference": null
+        },
+        "intent": "delivery_order_change",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "배달이 아직 안 왔어요"
+    }
+  ],
+  "conversation_group_id": "delivery-order-change-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "배달:주문 변경"
+}

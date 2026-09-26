@@ -11,6 +11,9 @@ SPLIT_ASSIGNMENTS_PATH = REPO_ROOT / "evals/structured_nlu/data/manifests/split-
 COMPILED_PATH = REPO_ROOT / "evals/structured_nlu/data/compiled/gold-dataset.v2.json"
 
 EXPECTED_HUMAN_DRAFTS = {
+    "배달:배달 지연 문의": "나무젓가락이 아직 안왔어요",
+    "배달:주문 변경": "배달이 아직 안 왔어요",
+    "배달:환불/재배달 문의": "혹시 짜장면을 짬뽕으로 변경 가능한가요?",
     "교수님:결석 사유 전달": "교수님 안녕하세요. 혹시 오늘 면담 요청해도 되나요?",
     "교수님:과제 문의": "교수님 안녕하세요. 혹시 오늘 오늘 공결 처리는 어떻게 하나요?",
     "교수님:면담 예약": "교수님 혹시 시험 범위 한 번 더 알려주실 수 있으신가요?",
@@ -30,7 +33,7 @@ def test_committed_human_draft_corpus_matches_its_authoring_sources() -> None:
     )
 
     assert verified == dataset
-    assert len(dataset.cases) == 7
+    assert len(dataset.cases) == 10
     assert {case.scenario_key: case.user_message for case in dataset.cases} == (
         EXPECTED_HUMAN_DRAFTS
     )

@@ -287,7 +287,7 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 | 🧹 Static Quality | Ruff로 미정의 이름·미사용 import·Python 3.11 타입 표기·포맷 검증 |
 | 🧊 Split Freeze | 의미 그룹의 development·validation·test 배정이 별도 원장과 정확히 일치하고 공식 채점 직전까지 같은지 검증 |
 | 🧾 Adjudication Ledger | validation·test의 최종 정답과 버전 지정 작성 지침·case별 검수 기록을 공식 준비와 채점 직전에 검증 |
-| 🔒 Benchmark Freeze Record | source·split·검수·contrast·Coverage V3·AI-origin policy 조합을 고정하는 V2 형식·검증기 구현(development 사람 작성 초안 7건, 공식 validation·test corpus와 freeze record는 아직 없음) |
+| 🔒 Benchmark Freeze Record | source·split·검수·contrast·Coverage V3·AI-origin policy 조합을 고정하는 V2 형식·검증기 구현(development 사람 작성 초안 10건, 공식 validation·test corpus와 freeze record는 아직 없음) |
 | 🤖 AI Draft Boundary | 16개 구조화 NLU의 원본·서브 에이전트 제안을 공식 `human_authored` source와 분리하고, 사람이 새 문장·정답·근거를 작성할 검수 작업지를 제공하며 NFC 변형·시나리오 이동을 포함한 원문 승격은 차단 |
 
 | 구분 | 결과 |
