@@ -270,6 +270,23 @@ def test_subagent_manifest_rejects_missing_scenario_and_profile_drift() -> None:
         AISubagentCandidateManifestV1.model_validate(payload)
 
 
+def test_subagent_manifest_rejects_invalid_shape_values() -> None:
+    payload = json.loads(serialize_ai_subagent_candidate_manifest_v1())
+    payload["provenance"] = "human_authored"
+    with pytest.raises(ValidationError, match="ai_assisted_unreviewed"):
+        AISubagentCandidateManifestV1.model_validate(payload)
+
+    payload = json.loads(serialize_ai_subagent_candidate_manifest_v1())
+    payload["unknown_field"] = True
+    with pytest.raises(ValidationError, match="Extra inputs are not permitted"):
+        AISubagentCandidateManifestV1.model_validate(payload)
+
+    payload = json.loads(serialize_ai_subagent_candidate_manifest_v1())
+    payload["suggestions"][0]["drafting_rationale"] = "   "
+    with pytest.raises(ValidationError, match="at least 1 character"):
+        AISubagentCandidateManifestV1.model_validate(payload)
+
+
 def test_subagent_manifest_rejects_nfc_duplicates_and_fixed_content_drift() -> None:
     seed = build_ai_draft_seed_manifest_v1().suggestions[0]
     payload = json.loads(serialize_ai_subagent_candidate_manifest_v1())
