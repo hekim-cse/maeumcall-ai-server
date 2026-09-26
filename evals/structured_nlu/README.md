@@ -150,7 +150,8 @@ freeze record를 필수로 요구한다. 향후 실모델 실행기와 결과 ma
 workflow 기반 상세 그래프는 현재 필드 문맥도 검사하므로, 확인 상태라면 필수 필드가 모두
 채워져야 하고 선택형 필드는 계약에 선언된 값만 사용해야 한다.
 
-현재 사람 작성 development 초안은 예약 4개 시나리오에 1건씩 존재한다. 아직 구현하지
+현재 사람 작성 development 초안은 예약 4개와 교수님 3개 시나리오에 1건씩 총 7건이
+존재한다. 아직 구현하지
 않은 범위는 공식 validation·test 골든 데이터와 그 데이터에 대응하는 검수 원장·
 contrast manifest·실제 freeze record, 실모델 실행기,
 시나리오·태그별 집계, p50·p95·토큰·메모리 측정, 실행 manifest와 결과 파일이다.
@@ -227,7 +228,7 @@ validation·test corpus가 없으므로
 현재 생성 형식은 **freeze record V2**다. V2는 V1의 source·split·검수·contrast·coverage
 조합에 AI-origin policy V1의 경로, 정확한 artifact SHA-256, semantic policy fingerprint와
 schema version을 추가한다. V1 모델과 해시 알고리즘은 과거 레코드 해석을 위해 코드에
-남기지만, 새 레코드는 V2로만 생성한다. 현재는 development 사람 작성 초안 4건과 그
+남기지만, 새 레코드는 V2로만 생성한다. 현재는 development 사람 작성 초안 7건과 그
 split 원장·compiled corpus만 있으므로 실제 freeze record 파일을 만들거나 데이터셋
 동결이 끝났다고 기록하지 않는다.
 
@@ -267,10 +268,10 @@ compiler가 거부한다. 사람은 제안을 참고 자료로만 사용하고, 
 `manifests/ai-origin-policy.v1.json`에 결정론적으로 저장한다. V1 정책 지문은 코드에
 고정되어 있으므로 기존 파일을 바꾸면 검사가 중단된다. 후보를 더 추가할 때는 V1을
 덮어쓰지 않고 새 정책 버전과 이에 대응하는 작성·freeze 계약 버전을 만들어야 한다.
-현재 예약 4개 시나리오의 사람 작성 hard-negative를 development 초안으로 한 건씩
-저장했다. 모두 `greeting → unknown`, `review_status: draft`이며 공식 validation·test
-coverage나 adjudication을 충족하지 않는다. 실제 freeze record도 없으므로 데이터셋
-동결을 완료한 것은 아니다.
+현재 예약 4개와 교수님 3개 시나리오의 사람 작성 hard-negative를 development
+초안으로 한 건씩 저장했다. 모두 `greeting → unknown`, `review_status: draft`이며
+공식 validation·test coverage나 adjudication을 충족하지 않는다. 실제 freeze
+record도 없으므로 데이터셋 동결을 완료한 것은 아니다.
 
 ```bash
 # 편집기용 AI 초안 제안 schema와 16개 시작 제안을 재생성한다.

@@ -1,0 +1,30 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "professor-assignment-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "assignment_topic": null,
+          "course_name": null,
+          "question": null,
+          "user_name": null
+        },
+        "intent": "assignment_inquiry",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "교수님 안녕하세요. 혹시 오늘 오늘 공결 처리는 어떻게 하나요?"
+    }
+  ],
+  "conversation_group_id": "professor-assignment-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "교수님:과제 문의"
+}

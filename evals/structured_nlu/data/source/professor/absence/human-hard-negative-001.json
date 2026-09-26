@@ -1,0 +1,30 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "professor-absence-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "absence_date": null,
+          "absence_reason": null,
+          "class_name": null,
+          "user_name": null
+        },
+        "intent": "absence_notice",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "교수님 안녕하세요. 혹시 오늘 면담 요청해도 되나요?"
+    }
+  ],
+  "conversation_group_id": "professor-absence-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "교수님:결석 사유 전달"
+}

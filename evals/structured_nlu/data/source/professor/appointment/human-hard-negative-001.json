@@ -1,0 +1,30 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "professor-appointment-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "appointment_purpose": null,
+          "date": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "appointment_booking",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "교수님 혹시 시험 범위 한 번 더 알려주실 수 있으신가요?"
+    }
+  ],
+  "conversation_group_id": "professor-appointment-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "교수님:면담 예약"
+}
