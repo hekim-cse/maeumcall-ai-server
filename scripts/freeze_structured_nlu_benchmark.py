@@ -48,6 +48,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     verify_parser.add_argument("--repo-root", type=Path, required=True)
     verify_parser.add_argument("--record", type=Path, required=True)
+    verify_parser.add_argument("--previous-record", type=Path)
     return parser
 
 
@@ -74,7 +75,11 @@ def main() -> int:
             raise SystemExit("freeze record schema differs from the code contract")
         return 0
     if args.command == "verify":
-        verified = verify_freeze_record(repo_root=args.repo_root, record_path=args.record)
+        verified = verify_freeze_record(
+            repo_root=args.repo_root,
+            record_path=args.record,
+            previous_record_path=args.previous_record,
+        )
         print(verified.record.record_fingerprint)
         return 0
 

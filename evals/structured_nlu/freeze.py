@@ -351,8 +351,7 @@ def _verified_previous_record_fingerprint(
     if previous_record_path is None:
         raise ValueError("later freeze revisions require an explicit previous record")
     resolved_previous_path = _resolve_external_record_path(repo_root, previous_record_path)
-    _require_record_matches_head(repo_root, resolved_previous_path)
-    previous = load_freeze_record(resolved_previous_path)
+    previous = _load_committed_freeze_record(repo_root, resolved_previous_path)
     if previous.freeze_id != freeze_id:
         raise ValueError("previous freeze record belongs to a different freeze lineage")
     if previous.freeze_revision != freeze_revision - 1:
@@ -364,12 +363,20 @@ def verify_freeze_record(
     *,
     repo_root: Path,
     record_path: Path,
+    previous_record_path: Path | None = None,
 ) -> VerifiedFrozenCorpus:
     """Recompute every governed value from an explicit record immediately before use."""
     resolved_repo_root = _verified_repo_root(repo_root)
     resolved_record_path = _resolve_external_record_path(resolved_repo_root, record_path)
-    record = load_freeze_record(resolved_record_path)
-    _require_record_matches_head(resolved_repo_root, resolved_record_path)
+    record = _load_committed_freeze_record(resolved_repo_root, resolved_record_path)
+    previous_fingerprint = _verified_previous_record_fingerprint(
+        resolved_repo_root,
+        freeze_id=record.freeze_id,
+        freeze_revision=record.freeze_revision,
+        previous_record_path=previous_record_path,
+    )
+    if record.previous_freeze_record_fingerprint != previous_fingerprint:
+        raise ValueError("freeze record predecessor fingerprint does not match")
     resolved_paths = _resolve_artifact_paths(resolved_repo_root, record.paths)
     resolved_commit, object_format = _resolve_git_revision(
         resolved_repo_root,
@@ -410,20 +417,30 @@ def prepare_qualified_test_slice_from_freeze(
     *,
     repo_root: Path,
     record_path: Path,
+    previous_record_path: Path | None = None,
 ) -> QualifiedTestSlice:
     """Public official preparation boundary; an explicit freeze record is mandatory."""
-    return verify_freeze_record(repo_root=repo_root, record_path=record_path).benchmark
+    return verify_freeze_record(
+        repo_root=repo_root,
+        record_path=record_path,
+        previous_record_path=previous_record_path,
+    ).benchmark
 
 
 def score_qualified_test_slice_from_freeze(
     *,
     repo_root: Path,
     record_path: Path,
+    previous_record_path: Path | None = None,
     benchmark: QualifiedTestSlice,
     predictions: tuple[CasePrediction, ...],
 ) -> EvaluationScores:
     """Revalidate the exact freeze record and benchmark before official scoring."""
-    verified = verify_freeze_record(repo_root=repo_root, record_path=record_path)
+    verified = verify_freeze_record(
+        repo_root=repo_root,
+        record_path=record_path,
+        previous_record_path=previous_record_path,
+    )
     if benchmark != verified.benchmark:
         raise ValueError("qualified benchmark does not match the explicit freeze record")
     return _score_qualified_test_slice(benchmark, predictions)
@@ -431,6 +448,11 @@ def score_qualified_test_slice_from_freeze(
 
 def load_freeze_record(path: Path) -> CorpusFreezeRecordV1:
     raw = read_regular_artifact(path, label="freeze record")
+    return _parse_freeze_record(raw, label=str(path))
+
+
+def _parse_freeze_record(raw: bytes, *, label: str) -> CorpusFreezeRecordV1:
+    """Parse one already captured record snapshot without rereading its path."""
     try:
         decoded = normalize_text_tree(json.loads(raw, object_pairs_hook=_object_from_unique_pairs))
         if not isinstance(decoded, dict):
@@ -439,7 +461,7 @@ def load_freeze_record(path: Path) -> CorpusFreezeRecordV1:
             raise ValueError("unsupported freeze record schema version")
         return CorpusFreezeRecordV1.model_validate(decoded)
     except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
-        raise ValueError(f"invalid freeze record: {path}") from exc
+        raise ValueError(f"invalid freeze record: {label}") from exc
 
 
 def serialize_freeze_record(record: CorpusFreezeRecordV1) -> str:
@@ -855,11 +877,17 @@ def _git_file_bytes(repo_root: Path, commit: str, relative: str) -> bytes:
     return _run_git(repo_root, "show", f"{commit}:{relative}")
 
 
-def _require_record_matches_head(repo_root: Path, record_path: Path) -> None:
+def _load_committed_freeze_record(
+    repo_root: Path,
+    record_path: Path,
+) -> CorpusFreezeRecordV1:
+    """Parse the immutable HEAD blob and compare the worktree file to those same bytes."""
     relative = record_path.relative_to(repo_root).as_posix()
     committed = _git_file_bytes(repo_root, "HEAD", relative)
-    if committed != record_path.read_bytes():
+    worktree = read_regular_artifact(record_path, label="freeze record")
+    if committed != worktree:
         raise ValueError("freeze record differs from the exact Git HEAD blob")
+    return _parse_freeze_record(committed, label=f"HEAD:{relative}")
 
 
 def _run_git(repo_root: Path, *args: str) -> bytes:

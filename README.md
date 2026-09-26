@@ -287,11 +287,11 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 | 🧹 Static Quality | Ruff로 미정의 이름·미사용 import·Python 3.11 타입 표기·포맷 검증 |
 | 🧊 Split Freeze | 의미 그룹의 development·validation·test 배정이 별도 원장과 정확히 일치하고 공식 채점 직전까지 같은지 검증 |
 | 🧾 Adjudication Ledger | validation·test의 최종 정답과 버전 지정 작성 지침·case별 검수 기록을 공식 준비와 채점 직전에 검증 |
-| 🔒 Benchmark Freeze Record | source·split·검수·contrast·Coverage V3 조합과 입력 Git commit을 버전 지정 레코드로 고정하고 공식 준비·채점 직전에 재검증 |
+| 🔒 Benchmark Freeze Record | source·split·검수·contrast·Coverage V3 조합을 고정하는 형식·검증기 구현(실제 corpus·freeze record는 아직 없음) |
 
 | 구분 | 결과 |
 |---|---|
-| 오프라인 단위·그래프·라우트 테스트 | ✅ 709개 통과·1개 건너뜀 |
+| 오프라인 단위·그래프·라우트 테스트 | ✅ 710개 통과·1개 건너뜀 |
 | 기본 실행에서 제외한 통합 테스트 | 19개(실모델 16개·PostgreSQL 3개), 수동 실행으로 분리 |
 | 실패 테스트 | 없음 |
 | 기본 실행 네트워크 의존성 | 없음 |
@@ -546,7 +546,7 @@ Docker Compose 실행 주소는 `http://127.0.0.1:8001`, API 문서는 `http://1
 | 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패와 TTS 모델 상태·단계별 지연 Prometheus 지표 제공 |
 | 한국어 단어 분석 | Kiwi 형태소 원형과 품사 계약으로 내용어·감탄사를 분리하며 분석기 장애는 503 오류와 readiness로 공개 |
 | 한국어 음성 합성 | 32개 시나리오의 배역 버전 2를 Qwen3-TTS·Bark Small·엄마 Voice Clone 공급자와 인증된 WAV 계약으로 제공 |
-| 테스트 검증 | 오프라인 회귀 테스트 709개 통과·1개 건너뜀, 통합 테스트 19개는 기본 실행에서 제외 |
+| 테스트 검증 | 오프라인 회귀 테스트 710개 통과·1개 건너뜀, 통합 테스트 19개는 기본 실행에서 제외 |
 
 <table>
   <tr>

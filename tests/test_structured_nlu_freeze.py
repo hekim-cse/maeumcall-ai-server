@@ -267,6 +267,38 @@ def test_later_freeze_revision_requires_the_exact_previous_record(
     )
     assert second.previous_freeze_record_fingerprint == first.record_fingerprint
 
+    second_path = repo / "freezes" / "revision-2.json"
+    write_new_freeze_record(second_path, second)
+    _git(repo, "add", "freezes/revision-2.json")
+    _git(repo, "commit", "-m", "test: commit second freeze revision")
+    with pytest.raises(ValueError, match="explicit previous record"):
+        verify_freeze_record(repo_root=repo, record_path=second_path)
+    assert (
+        verify_freeze_record(
+            repo_root=repo,
+            record_path=second_path,
+            previous_record_path=first_path,
+        ).record
+        == second
+    )
+
+    forged = second.model_copy(
+        update={"previous_freeze_record_fingerprint": "9" * 64},
+    )
+    forged = forged.model_copy(
+        update={"record_fingerprint": freeze_module._record_fingerprint(forged)},
+    )
+    forged_path = repo / "freezes" / "revision-2-forged.json"
+    write_new_freeze_record(forged_path, forged)
+    _git(repo, "add", "freezes/revision-2-forged.json")
+    _git(repo, "commit", "-m", "test: commit forged second freeze revision")
+    with pytest.raises(ValueError, match="predecessor fingerprint does not match"):
+        verify_freeze_record(
+            repo_root=repo,
+            record_path=forged_path,
+            previous_record_path=first_path,
+        )
+
     with pytest.raises(ValueError, match="explicit previous record"):
         build_freeze_record(
             repo_root=repo,
@@ -306,6 +338,39 @@ def test_freeze_record_parser_rejects_duplicate_json_keys(
 
     with pytest.raises(ValueError, match="invalid freeze record"):
         load_freeze_record(record_path)
+
+
+def test_real_freeze_snapshot_check_rejects_a_stale_obligation_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    dataset = _dataset()
+    repo, paths, commit = _init_repo(tmp_path, dataset)
+    resolved = freeze_module._resolve_artifact_paths(repo, paths)
+    snapshot = freeze_module._capture_git_input_snapshot(repo, commit, paths, resolved)
+    bundle, _, _ = _fake_verified_inputs(dataset)
+    monkeypatch.setattr(
+        freeze_module,
+        "verify_compiled_authoring_snapshot",
+        lambda _authoring, _compiled: (
+            dataset,
+            bundle.group_source_fingerprint,
+            bundle.split_assignment_fingerprint,
+        ),
+    )
+    monkeypatch.setattr(
+        freeze_module,
+        "verify_review_ledger_snapshot",
+        lambda _dataset, _guideline, _ledger: bundle.review,
+    )
+    monkeypatch.setattr(
+        freeze_module,
+        "verify_contrast_manifest_snapshot",
+        lambda _dataset, _manifest: bundle.contrast,
+    )
+
+    with pytest.raises(ValueError, match="coverage obligation manifest differs"):
+        freeze_module._verify_freeze_input_snapshot(snapshot)
 
 
 def test_freeze_record_creation_is_create_only_and_preserves_existing_bytes(
