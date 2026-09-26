@@ -1,0 +1,41 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "support-service-request-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "intent": "service_request",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "아니 나 요금제 너무 비싸. 다른 걸로 바꿔줘."
+    }
+  ],
+  "conversation_group_id": "support-service-request-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "고객센터:a/s 접수"
+}
