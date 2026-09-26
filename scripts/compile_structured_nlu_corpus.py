@@ -19,6 +19,7 @@ from evals.structured_nlu.contrast import (
     verify_contrast_manifest,
 )
 from evals.structured_nlu.drafting import (
+    render_ai_draft_human_review_packet_v1,
     serialize_ai_draft_seed_manifest_v1,
     serialize_ai_draft_seed_schema_v1,
 )
@@ -150,6 +151,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify that the committed AI draft seed schema matches the code contract.",
     )
     check_draft_schema_parser.add_argument("schema", type=Path)
+
+    draft_review_packet_parser = subparsers.add_parser(
+        "draft-review-packet",
+        help="Write the human authoring worksheet for all AI draft seed suggestions.",
+    )
+    draft_review_packet_parser.add_argument("output", type=Path)
+
+    check_draft_review_packet_parser = subparsers.add_parser(
+        "check-draft-review-packet",
+        help="Verify that the committed human worksheet matches all AI draft seeds.",
+    )
+    check_draft_review_packet_parser.add_argument("packet", type=Path)
     return parser
 
 
@@ -239,6 +252,15 @@ def main() -> int:
             raise SystemExit(f"AI draft seed schema does not exist: {args.schema}")
         if args.schema.read_text(encoding="utf-8") != serialize_ai_draft_seed_schema_v1():
             raise SystemExit("AI draft seed schema differs from the code contract")
+        return 0
+    if args.command == "draft-review-packet":
+        _write_text(args.output, render_ai_draft_human_review_packet_v1())
+        return 0
+    if args.command == "check-draft-review-packet":
+        if not args.packet.is_file():
+            raise SystemExit(f"AI draft human review packet does not exist: {args.packet}")
+        if args.packet.read_text(encoding="utf-8") != render_ai_draft_human_review_packet_v1():
+            raise SystemExit("AI draft human review packet differs from the draft seeds")
         return 0
 
     if args.command == "compile":

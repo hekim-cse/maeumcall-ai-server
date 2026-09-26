@@ -15,6 +15,7 @@ from evals.structured_nlu.drafting import (
     AI_DRAFT_PROVENANCE,
     AIDraftSeedManifestV1,
     build_ai_draft_seed_manifest_v1,
+    render_ai_draft_human_review_packet_v1,
     serialize_ai_draft_seed_manifest_v1,
     serialize_ai_draft_seed_schema_v1,
 )
@@ -24,6 +25,7 @@ from scripts.compile_structured_nlu_corpus import main as compile_corpus_main
 REPO_ROOT = Path(__file__).parents[1]
 DRAFT_SCHEMA_PATH = REPO_ROOT / "evals/structured_nlu/ai_draft_seed.schema.json"
 DRAFT_SEED_PATH = REPO_ROOT / "evals/structured_nlu/drafts/ai-assisted-seeds.v1.json"
+DRAFT_REVIEW_PACKET_PATH = REPO_ROOT / "evals/structured_nlu/drafts/human-review-packet.v1.md"
 
 
 def test_ai_draft_seeds_cover_all_structured_nlu_scenarios() -> None:
@@ -133,11 +135,32 @@ def test_committed_ai_draft_seed_artifacts_match_code_contract() -> None:
     assert DRAFT_SEED_PATH.read_text(encoding="utf-8") == serialize_ai_draft_seed_manifest_v1()
 
 
+def test_human_review_packet_covers_all_suggestions_without_claiming_approval() -> None:
+    packet = render_ai_draft_human_review_packet_v1()
+    manifest = build_ai_draft_seed_manifest_v1()
+
+    assert packet.count("### 사람 작성란") == 16
+    assert packet.count("[ ] 최종 발화와 정답을 직접 작성했으며") == 16
+    assert "공식 골든 corpus, 검수 원장 또는 사람 승인 증거가 아닙니다" in packet
+    for index, suggestion in enumerate(manifest.suggestions, start=1):
+        assert f"## {index:02d}. {suggestion.scenario_key}" in packet
+        assert suggestion.suggestion_id in packet
+        assert suggestion.proposed_case.user_message in packet
+
+
+def test_committed_human_review_packet_matches_all_ai_seeds() -> None:
+    assert (
+        DRAFT_REVIEW_PACKET_PATH.read_text(encoding="utf-8")
+        == render_ai_draft_human_review_packet_v1()
+    )
+
+
 @pytest.mark.parametrize(
     ("command", "expected"),
     [
         ("draft-schema", serialize_ai_draft_seed_schema_v1),
         ("draft-seeds", serialize_ai_draft_seed_manifest_v1),
+        ("draft-review-packet", render_ai_draft_human_review_packet_v1),
     ],
 )
 def test_ai_draft_cli_writes_deterministic_artifact(
@@ -158,6 +181,7 @@ def test_ai_draft_cli_writes_deterministic_artifact(
     [
         ("check-draft-schema", DRAFT_SCHEMA_PATH),
         ("check-draft-seeds", DRAFT_SEED_PATH),
+        ("check-draft-review-packet", DRAFT_REVIEW_PACKET_PATH),
     ],
 )
 def test_ai_draft_cli_checks_committed_artifact(

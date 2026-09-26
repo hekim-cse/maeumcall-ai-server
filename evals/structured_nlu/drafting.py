@@ -26,6 +26,7 @@ from evals.structured_nlu.semantics import DifficultyTag
 AI_DRAFT_SEED_SCHEMA_VERSION = 1
 AI_DRAFT_PROVENANCE = "ai_assisted_unreviewed"
 AI_DRAFT_GENERATOR_ID = "openai-codex"
+AI_DRAFT_REVIEW_PACKET_VERSION = 1
 
 
 class DraftObligationReference(BaseModel):
@@ -200,3 +201,73 @@ def serialize_ai_draft_seed_schema_v1() -> str:
         EVALUATION_CONTRACTS
     )
     return json.dumps(schema, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+
+def render_ai_draft_human_review_packet_v1() -> str:
+    """Render a deterministic worksheet; it never promotes a suggestion into corpus source."""
+    manifest = build_ai_draft_seed_manifest_v1()
+    lines = [
+        "# 구조화 NLU AI 초안 사람 작성 작업지 V1",
+        "",
+        "> 이 문서는 16개 AI 제안을 검토하기 위한 읽기·작성 양식입니다.",
+        "> 공식 골든 corpus, 검수 원장 또는 사람 승인 증거가 아닙니다.",
+        "",
+        f"- 작업지 버전: `{AI_DRAFT_REVIEW_PACKET_VERSION}`",
+        f"- 평가 프로필: `{manifest.profile_id}`",
+        f"- 프로필 지문: `{manifest.profile_fingerprint}`",
+        f"- AI 제안 수: `{len(manifest.suggestions)}`",
+        "",
+        "## 작성 규칙",
+        "",
+        "1. AI 문장을 그대로 복사하지 말고 참고만 한 뒤 사람이 새 문장을 작성합니다.",
+        "2. 현재 상태·intent·user_action·필드·태그를 작성 지침과 라이브 계약에 맞춰 다시 확인합니다.",
+        "3. 채택하지 않을 제안은 `거부`로 표시하고 이유를 남깁니다.",
+        "4. 작성이 끝난 항목도 곧바로 `adjudicated`가 되지 않습니다. 별도 검수 원장을 거쳐야 합니다.",
+        "5. 이 커밋된 원본 양식은 직접 편집하지 말고 작업용 사본에 답을 작성합니다.",
+        "",
+    ]
+    for index, suggestion in enumerate(manifest.suggestions, start=1):
+        proposed = suggestion.proposed_case
+        proposed_label = json.dumps(
+            {
+                "intent": proposed.labels.intent,
+                "fields": proposed.labels.model_dump(mode="json")["fields"],
+                "user_action": proposed.labels.user_action,
+                "change_field": proposed.labels.change_field,
+                "tags": [tag.value for tag in proposed.tags],
+            },
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        )
+        lines.extend(
+            [
+                f"## {index:02d}. {suggestion.scenario_key}",
+                "",
+                f"- 제안 ID: `{suggestion.suggestion_id}`",
+                f"- 기준 의무: `{suggestion.primary_obligation.dimension.value}` "
+                f"/ `{suggestion.primary_obligation.value}`",
+                f"- 현재 상태: `{proposed.conversation_state}`",
+                f"- AI 제안 발화: “{proposed.user_message}”",
+                "- AI 제안 정답:",
+                "",
+                "```json",
+                proposed_label,
+                "```",
+                "",
+                "### 사람 작성란",
+                "",
+                "- 판단: [ ] 참고 후 새로 작성  [ ] 거부",
+                "- 새 `conversation_group_id`: `{{직접 작성}}`",
+                "- 새 case ID: `{{직접 작성}}`",
+                "- 사람이 새로 작성한 발화:",
+                "  > {{AI 문장과 다른 표현을 직접 작성}}",
+                "- 최종 정답 또는 수정 사항:",
+                "  > {{intent·action·fields·tags를 확인해 작성}}",
+                "- 판단 근거:",
+                "  > {{현재 상태와 작성 지침을 근거로 작성}}",
+                "- [ ] 최종 발화와 정답을 직접 작성했으며 AI 제안을 그대로 복사하지 않았습니다.",
+                "",
+            ]
+        )
+    return "\n".join(lines).rstrip() + "\n"
