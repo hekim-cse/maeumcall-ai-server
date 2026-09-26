@@ -1,0 +1,44 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-hair-salon-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "내일"
+            ]
+          },
+          "designer": null,
+          "selected_time": null,
+          "service_type": {
+            "accepted_values": [
+              "컷"
+            ]
+          },
+          "time": {
+            "accepted_values": [
+              "2시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 내일 2시에 컷으로 예약 가능하나요?"
+    }
+  ],
+  "conversation_group_id": "reservation-hair-salon-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:미용실 예약"
+}
