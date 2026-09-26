@@ -10,8 +10,11 @@ from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from evals.structured_nlu.ai_origin_policy import (
+    is_reserved_ai_origin_id_v1,
+    is_verbatim_ai_origin_text_v1,
+)
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
-from evals.structured_nlu.draft_seed_policy import is_verbatim_ai_draft_seed
 from evals.structured_nlu.schema import (
     STRUCTURED_NLU_DATASET_VERSION,
     CasePrediction,
@@ -68,19 +71,13 @@ class AuthoringGroup(BaseModel):
         case_ids = [case.id for case in self.cases]
         if len(set(case_ids)) != len(case_ids):
             raise ValueError("authoring case ids must be unique within a group")
-        if self.conversation_group_id.startswith("ai-seed-") or any(
-            case.id.startswith("ai-seed-") for case in self.cases
+        if is_reserved_ai_origin_id_v1(self.conversation_group_id) or any(
+            is_reserved_ai_origin_id_v1(case.id) for case in self.cases
         ):
-            raise ValueError("AI draft seed ids cannot be promoted into human-authored source")
-        if any(
-            is_verbatim_ai_draft_seed(
-                scenario_key=self.scenario_key,
-                user_message=case.user_message,
-            )
-            for case in self.cases
-        ):
+            raise ValueError("AI-origin ids cannot be promoted into human-authored source")
+        if any(is_verbatim_ai_origin_text_v1(case.user_message) for case in self.cases):
             raise ValueError(
-                "verbatim AI draft seed text cannot be promoted into human-authored source"
+                "verbatim AI-origin text cannot be promoted into human-authored source"
             )
         return self
 

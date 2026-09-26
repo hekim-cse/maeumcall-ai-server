@@ -68,8 +68,3 @@ AI_DRAFT_SEED_SPECS_V1 = MappingProxyType(
 
 if set(AI_DRAFT_SEED_SPECS_V1) != set(EVALUATION_CONTRACTS):
     raise RuntimeError("AI draft seed specs must exactly match the live scenarios")
-
-
-def is_verbatim_ai_draft_seed(*, scenario_key: str, user_message: str) -> bool:
-    spec = AI_DRAFT_SEED_SPECS_V1.get(scenario_key)
-    return spec is not None and user_message == spec.user_message

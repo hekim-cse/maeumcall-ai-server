@@ -1,0 +1,603 @@
+{
+  "automatic_promotion_allowed": false,
+  "candidate_set_id": "structured-nlu-subagent-candidates-v1",
+  "generator_id": "openai-codex-subagents",
+  "human_review_required": true,
+  "profile_fingerprint": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+  "profile_id": "maeumcall-structured-nlu-v3",
+  "provenance": "ai_assisted_unreviewed",
+  "subagent_candidate_schema_version": 1,
+  "suggestions": [
+    {
+      "conversation_group_id": "ai-subagent-support-service",
+      "drafting_rationale": "제품 고장·접수·안전 정보가 전혀 없으므로 greeting에서 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "고객센터:a/s 접수",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "id": "ai-subagent-support-service.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "model_name": null,
+            "occurred_at": null,
+            "preferred_schedule": null,
+            "product_type": null,
+            "safety_status": null,
+            "service_channel": null,
+            "symptom": null
+          },
+          "intent": "service_request",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "근처에서 자전거를 빌릴 수 있는 곳을 알려 주세요."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "source_suggestion_id": "ai-seed-support-service",
+      "suggestion_id": "ai-subagent-support-service"
+    },
+    {
+      "conversation_group_id": "ai-subagent-support-plan",
+      "drafting_rationale": "요금·약정·서비스 상담과 무관해 상담 필드를 추출하면 안 된다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "고객센터:요금/약정 상담",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "consent_scope": null,
+          "consultation_goal": null,
+          "current_service": null,
+          "inquiry_type": null
+        },
+        "id": "ai-subagent-support-plan.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "consent_scope": null,
+            "consultation_goal": null,
+            "current_service": null,
+            "inquiry_type": null
+          },
+          "intent": "plan_contract_consultation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "이번 달 보름달은 언제 뜨나요?"
+      },
+      "scenario_key": "고객센터:요금/약정 상담",
+      "source_suggestion_id": "ai-seed-support-plan",
+      "suggestion_id": "ai-subagent-support-plan"
+    },
+    {
+      "conversation_group_id": "ai-subagent-support-network",
+      "drafting_rationale": "인터넷·통화 장애나 조치 이력이 없는 원예 질문이므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "고객센터:인터넷/통화 문제 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "id": "ai-subagent-support-network.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "next_action": null,
+            "occurred_at": null,
+            "scope": null,
+            "service_type": null,
+            "symptom": null,
+            "troubleshooting_done": null
+          },
+          "intent": "network_call_issue",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "화분에는 물을 며칠마다 줘야 하나요?"
+      },
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "source_suggestion_id": "ai-seed-support-network",
+      "suggestion_id": "ai-subagent-support-network"
+    },
+    {
+      "conversation_group_id": "ai-subagent-professor-absence",
+      "drafting_rationale": "학교 맥락이지만 결석 전달과 무관하고 결석 필드가 없으므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "교수님:결석 사유 전달",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-subagent-professor-absence.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "absence_date": null,
+            "absence_reason": null,
+            "class_name": null,
+            "user_name": null
+          },
+          "intent": "absence_notice",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "학생식당에 채식 메뉴도 있나요?"
+      },
+      "scenario_key": "교수님:결석 사유 전달",
+      "source_suggestion_id": "ai-seed-professor-absence",
+      "suggestion_id": "ai-subagent-professor-absence"
+    },
+    {
+      "conversation_group_id": "ai-subagent-professor-assignment",
+      "drafting_rationale": "질문 형태여도 과제에 관한 질문이 아니므로 업무 필드를 채우지 않는다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "교수님:과제 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-subagent-professor-assignment.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "assignment_topic": null,
+            "course_name": null,
+            "question": null,
+            "user_name": null
+          },
+          "intent": "assignment_inquiry",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "강의실 에어컨은 어디서 켜나요?"
+      },
+      "scenario_key": "교수님:과제 문의",
+      "source_suggestion_id": "ai-seed-professor-assignment",
+      "suggestion_id": "ai-subagent-professor-assignment"
+    },
+    {
+      "conversation_group_id": "ai-subagent-professor-appointment",
+      "drafting_rationale": "시간 질문이지만 교수 면담 시간이 아니므로 예약 필드를 추출하지 않는다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "교수님:면담 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-subagent-professor-appointment.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "appointment_purpose": null,
+            "date": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "appointment_booking",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "교내 체육관은 몇 시에 닫나요?"
+      },
+      "scenario_key": "교수님:면담 예약",
+      "source_suggestion_id": "ai-seed-professor-appointment",
+      "suggestion_id": "ai-subagent-professor-appointment"
+    },
+    {
+      "conversation_group_id": "ai-subagent-delivery-delay",
+      "drafting_rationale": "주문·지연·해결 요청이 없는 조리법 질문이므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "배달:배달 지연 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": null
+        },
+        "id": "ai-subagent-delivery-delay.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "delay_detail": null,
+            "delay_resolution": null,
+            "inquiry_goal": null,
+            "order_number": null
+          },
+          "intent": "delivery_delay_inquiry",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "김치찌개를 맛있게 끓이는 법을 알려 주세요."
+      },
+      "scenario_key": "배달:배달 지연 문의",
+      "source_suggestion_id": "ai-seed-delivery-delay",
+      "suggestion_id": "ai-subagent-delivery-delay"
+    },
+    {
+      "conversation_group_id": "ai-subagent-delivery-change",
+      "drafting_rationale": "배달이라는 단어가 있지만 주문 변경이 아닌 구직 질문이므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "배달:주문 변경",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "change_type": null,
+          "order_number": null,
+          "requested_change": null,
+          "unavailable_preference": null
+        },
+        "id": "ai-subagent-delivery-change.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "change_type": null,
+            "order_number": null,
+            "requested_change": null,
+            "unavailable_preference": null
+          },
+          "intent": "delivery_order_change",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "배달 기사 모집 공고는 어디서 보나요?"
+      },
+      "scenario_key": "배달:주문 변경",
+      "source_suggestion_id": "ai-seed-delivery-change",
+      "suggestion_id": "ai-subagent-delivery-change"
+    },
+    {
+      "conversation_group_id": "ai-subagent-delivery-refund",
+      "drafting_rationale": "주문 문제·증빙·환불 또는 재배달 요청이 없으므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "배달:환불/재배달 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "id": "ai-subagent-delivery-refund.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "evidence_status": null,
+            "issue_detail": null,
+            "issue_type": null,
+            "order_number": null,
+            "resolution_preference": null
+          },
+          "intent": "delivery_refund_redelivery",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "종이비행기를 멀리 날리려면 어떻게 접어야 하나요?"
+      },
+      "scenario_key": "배달:환불/재배달 문의",
+      "source_suggestion_id": "ai-seed-delivery-refund",
+      "suggestion_id": "ai-subagent-delivery-refund"
+    },
+    {
+      "conversation_group_id": "ai-subagent-city-bulky-waste",
+      "drafting_rationale": "공공서비스 질문이지만 대형폐기물 배출 업무와 무관하므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "시청:대형폐기물 배출",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "item_name": null,
+          "quantity": null,
+          "region": null,
+          "request_topic": null
+        },
+        "id": "ai-subagent-city-bulky-waste.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "item_name": null,
+            "quantity": null,
+            "region": null,
+            "request_topic": null
+          },
+          "intent": "bulky_waste_guidance",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "도서관 회원증은 어디서 만들 수 있나요?"
+      },
+      "scenario_key": "시청:대형폐기물 배출",
+      "source_suggestion_id": "ai-seed-city-bulky-waste",
+      "suggestion_id": "ai-subagent-city-bulky-waste"
+    },
+    {
+      "conversation_group_id": "ai-subagent-city-passport",
+      "drafting_rationale": "시청 관련 시설 질문이지만 여권 신청·발급 정보가 없으므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "시청:여권 발급 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": null
+        },
+        "id": "ai-subagent-city-passport.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "applicant_type": null,
+            "application_channel": null,
+            "application_type": null,
+            "inquiry_topic": null
+          },
+          "intent": "passport_guidance",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "시립 수영장은 무슨 요일에 쉬나요?"
+      },
+      "scenario_key": "시청:여권 발급 문의",
+      "source_suggestion_id": "ai-seed-city-passport",
+      "suggestion_id": "ai-subagent-city-passport"
+    },
+    {
+      "conversation_group_id": "ai-subagent-city-certificate",
+      "drafting_rationale": "공공 문의처럼 보여도 등본 종류·발급 채널·신청 관계가 없으므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "시청:주민등록 등본 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "applicant_relation": null,
+          "document_type": null,
+          "inquiry_topic": null,
+          "issuance_channel": null
+        },
+        "id": "ai-subagent-city-certificate.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "applicant_relation": null,
+            "document_type": null,
+            "inquiry_topic": null,
+            "issuance_channel": null
+          },
+          "intent": "resident_certificate_guidance",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "버스에서 잃어버린 물건은 어디에 문의하나요?"
+      },
+      "scenario_key": "시청:주민등록 등본 문의",
+      "source_suggestion_id": "ai-seed-city-certificate",
+      "suggestion_id": "ai-subagent-city-certificate"
+    },
+    {
+      "conversation_group_id": "ai-subagent-hair-salon",
+      "drafting_rationale": "미용 서비스·예약 일시·디자이너와 무관하므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "예약:미용실 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-subagent-hair-salon.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "사진을 인화하려면 어디로 가야 하나요?"
+      },
+      "scenario_key": "예약:미용실 예약",
+      "source_suggestion_id": "ai-seed-hair-salon",
+      "suggestion_id": "ai-subagent-hair-salon"
+    },
+    {
+      "conversation_group_id": "ai-subagent-hospital",
+      "drafting_rationale": "진료과·예약 일시·예약자 정보가 없는 생활 질문이므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "예약:병원 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-subagent-hospital.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": null,
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "근처에서 우산을 살 수 있을까요?"
+      },
+      "scenario_key": "예약:병원 예약",
+      "source_suggestion_id": "ai-seed-hospital",
+      "suggestion_id": "ai-subagent-hospital"
+    },
+    {
+      "conversation_group_id": "ai-subagent-study-room",
+      "drafting_rationale": "스터디룸 날짜·시작 시간·인원·이용 시간과 무관하므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "예약:스터디룸 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-subagent-study-room.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "노트북 배터리를 오래 쓰는 방법이 궁금해요."
+      },
+      "scenario_key": "예약:스터디룸 예약",
+      "source_suggestion_id": "ai-seed-study-room",
+      "suggestion_id": "ai-subagent-study-room"
+    },
+    {
+      "conversation_group_id": "ai-subagent-restaurant",
+      "drafting_rationale": "식당 예약과 무관하고 예약 필드가 없으므로 unknown이다.",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "예약:식당 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-subagent-restaurant.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "냉장고 적정 온도는 몇 도인가요?"
+      },
+      "scenario_key": "예약:식당 예약",
+      "source_suggestion_id": "ai-seed-restaurant",
+      "suggestion_id": "ai-subagent-restaurant"
+    }
+  ]
+}
