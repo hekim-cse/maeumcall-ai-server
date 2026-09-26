@@ -1,0 +1,46 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "professor-assignment-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "assignment_topic": {
+            "accepted_values": [
+              "과제 범위 확인"
+            ]
+          },
+          "course_name": {
+            "accepted_values": [
+              "인공지능"
+            ]
+          },
+          "question": {
+            "accepted_values": [
+              "과제 범위 확인"
+            ]
+          },
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "assignment_inquiry",
+        "user_action": "provide_assignment_info"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "교수님 안녕하세요. 인공지능 수업듣는 홍길동입니다. 인공지능 수업에서 과제로 내주신 범위를 다시 확인하고 싶어 연락드립니다."
+    }
+  ],
+  "conversation_group_id": "professor-assignment-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "교수님:과제 문의"
+}

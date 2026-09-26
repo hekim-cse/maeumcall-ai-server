@@ -1,0 +1,46 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "professor-appointment-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "appointment_purpose": {
+            "accepted_values": [
+              "취업"
+            ]
+          },
+          "date": {
+            "accepted_values": [
+              "오늘"
+            ]
+          },
+          "time": {
+            "accepted_values": [
+              "5시"
+            ]
+          },
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "appointment_booking",
+        "user_action": "provide_appointment_info"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "교수님 안녕하세요. ~학과 홍길동입니다. 혹시 취업에 관해 오늘 5시에 면담 가능하시나요?"
+    }
+  ],
+  "conversation_group_id": "professor-appointment-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "교수님:면담 예약"
+}

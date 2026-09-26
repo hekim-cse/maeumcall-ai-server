@@ -17,6 +17,7 @@
 - 16개 시나리오별 서브 에이전트 대안·판단 근거 sidecar와 불변 AI-origin V1 지문 원장 기반 NFC 전역 원문 승격 차단
 - 16개 구조화 NLU 전체의 사람이 작성한 `greeting → unknown` hard-negative development 초안과 결정론적 compiled corpus
 - 예약 4종의 사람이 작성한 `greeting → continue_collecting` 다중 필드 정보 제공 development 초안
+- 교수님 3종의 사람이 작성한 `greeting → provide_*_info` 다중 필드 정보 제공 development 초안
 - digest로 고정한 Python 3.11 다단계 이미지와 비루트·읽기 전용 핵심 컨테이너 실행 경계
 - PostgreSQL 준비 후 Alembic 일회성 적용과 API 시작을 보장하는 Compose 서비스 의존성
 - 이미지 빌드·마이그레이션·권한·HTTP 상태 계약을 실제 컨테이너에서 검증하는 `test-container` CI
