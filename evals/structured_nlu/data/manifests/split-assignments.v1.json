@@ -29,11 +29,23 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "professor-absence-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "professor-appointment-human-hard-negative-001",
       "split": "development"
     },
     {
+      "conversation_group_id": "professor-appointment-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "professor-assignment-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "professor-assignment-human-information-provision-001",
       "split": "development"
     },
     {
