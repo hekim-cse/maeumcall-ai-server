@@ -1,0 +1,43 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "delay_detail": null,
+        "delay_resolution": null,
+        "inquiry_goal": null,
+        "order_number": null
+      },
+      "id": "delivery-delay-inquiry-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": {
+            "accepted_values": [
+              "estimated_arrival"
+            ]
+          },
+          "order_number": {
+            "accepted_values": [
+              "별빛 아파트 302호"
+            ]
+          }
+        },
+        "intent": "delivery_delay_inquiry",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 별빛 아파트 302호 배달 언제 완료되나요?"
+    }
+  ],
+  "conversation_group_id": "delivery-delay-inquiry-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "배달:배달 지연 문의"
+}

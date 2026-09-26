@@ -1,0 +1,53 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "support-service-request-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": {
+            "accepted_values": [
+              "오늘 4시"
+            ]
+          },
+          "product_type": {
+            "accepted_values": [
+              "휴대폰"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "액정 깨짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 휴대폰 액정이 깨져서 혹시 오늘 4시에 바로 as 맡길 수 있나요?"
+    }
+  ],
+  "conversation_group_id": "support-service-request-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "고객센터:a/s 접수"
+}

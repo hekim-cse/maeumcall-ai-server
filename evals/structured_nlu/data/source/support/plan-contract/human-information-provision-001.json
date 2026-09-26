@@ -1,0 +1,47 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "consent_scope": null,
+        "consultation_goal": null,
+        "current_service": null,
+        "inquiry_type": null
+      },
+      "id": "support-plan-contract-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "consent_scope": null,
+          "consultation_goal": {
+            "accepted_values": [
+              "더 싼 요금제로 변경"
+            ]
+          },
+          "current_service": {
+            "accepted_values": [
+              "kt 0청년 요금제"
+            ]
+          },
+          "inquiry_type": {
+            "accepted_values": [
+              "plan_change"
+            ]
+          }
+        },
+        "intent": "plan_contract_consultation",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 현재 kt 0청년 요금제 사용 중인데, 더 싼 요금제로 변경 가능하나요?"
+    }
+  ],
+  "conversation_group_id": "support-plan-contract-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "고객센터:요금/약정 상담"
+}
