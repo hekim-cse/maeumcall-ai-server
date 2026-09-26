@@ -105,11 +105,20 @@ def verify_review_ledger(
         annotation_guideline_path,
         label="annotation guideline",
     )
+    ledger_bytes = read_regular_artifact(review_ledger_path, label="review ledger")
+    return verify_review_ledger_snapshot(dataset, guideline_bytes, ledger_bytes)
+
+
+def verify_review_ledger_snapshot(
+    dataset: GoldDataset,
+    guideline_bytes: bytes,
+    ledger_bytes: bytes,
+) -> VerifiedReviewLedger:
+    """Verify review artifacts already captured in the caller's immutable snapshot."""
     guideline_fingerprint = hashlib.sha256(guideline_bytes).hexdigest()
     if guideline_fingerprint != ANNOTATION_GUIDELINE_V1_FINGERPRINT:
         raise ValueError("annotation guideline differs from the versioned guideline fingerprint")
 
-    ledger_bytes = read_regular_artifact(review_ledger_path, label="review ledger")
     try:
         decoded = normalize_text_tree(
             json.loads(ledger_bytes, object_pairs_hook=_object_from_unique_pairs)
@@ -121,7 +130,7 @@ def verify_review_ledger(
             raise ValueError(f"unsupported review ledger schema version: {schema_version}")
         ledger = ReviewLedgerV1.model_validate(decoded)
     except ValueError as exc:
-        raise ValueError(f"invalid review ledger: {review_ledger_path}") from exc
+        raise ValueError("invalid review ledger snapshot") from exc
     if ledger.annotation_guideline_fingerprint != guideline_fingerprint:
         raise ValueError("review ledger annotation guideline fingerprint does not match")
 

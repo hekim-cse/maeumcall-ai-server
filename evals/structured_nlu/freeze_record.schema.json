@@ -1,0 +1,414 @@
+{
+  "$defs": {
+    "FreezeArtifactFingerprintsV1": {
+      "additionalProperties": false,
+      "description": "Bind raw source artifacts and their semantic compiled identities.",
+      "properties": {
+        "annotation_guideline_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Annotation Guideline Fingerprint",
+          "type": "string"
+        },
+        "compiled_artifact_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Compiled Artifact Sha256",
+          "type": "string"
+        },
+        "contrast_manifest_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Contrast Manifest Fingerprint",
+          "type": "string"
+        },
+        "corpus_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Corpus Fingerprint",
+          "type": "string"
+        },
+        "group_source_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Group Source Fingerprint",
+          "type": "string"
+        },
+        "obligation_manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Obligation Manifest Sha256",
+          "type": "string"
+        },
+        "review_ledger_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Review Ledger Fingerprint",
+          "type": "string"
+        },
+        "split_assignment_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Split Assignment Fingerprint",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_source_fingerprint",
+        "split_assignment_fingerprint",
+        "compiled_artifact_sha256",
+        "corpus_fingerprint",
+        "annotation_guideline_fingerprint",
+        "review_ledger_fingerprint",
+        "contrast_manifest_fingerprint",
+        "obligation_manifest_sha256"
+      ],
+      "title": "FreezeArtifactFingerprintsV1",
+      "type": "object"
+    },
+    "FreezeArtifactPathsV1": {
+      "additionalProperties": false,
+      "description": "Store only explicit repository-relative artifact paths; no moving latest pointer.",
+      "properties": {
+        "annotation_guideline_path": {
+          "maxLength": 500,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Annotation Guideline Path",
+          "type": "string"
+        },
+        "compiled_corpus_path": {
+          "maxLength": 500,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Compiled Corpus Path",
+          "type": "string"
+        },
+        "contrast_manifest_path": {
+          "maxLength": 500,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Contrast Manifest Path",
+          "type": "string"
+        },
+        "group_source_root": {
+          "maxLength": 500,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Group Source Root",
+          "type": "string"
+        },
+        "obligation_manifest_path": {
+          "maxLength": 500,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Obligation Manifest Path",
+          "type": "string"
+        },
+        "review_ledger_path": {
+          "maxLength": 500,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Review Ledger Path",
+          "type": "string"
+        },
+        "split_assignment_path": {
+          "maxLength": 500,
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Split Assignment Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_source_root",
+        "split_assignment_path",
+        "compiled_corpus_path",
+        "annotation_guideline_path",
+        "review_ledger_path",
+        "contrast_manifest_path",
+        "obligation_manifest_path"
+      ],
+      "title": "FreezeArtifactPathsV1",
+      "type": "object"
+    },
+    "FreezeBenchmarkContractV1": {
+      "additionalProperties": false,
+      "description": "Pin the exact policy that turns a corpus into a qualified benchmark.",
+      "properties": {
+        "annotation_guideline_id": {
+          "const": "maeumcall-structured-nlu-annotation-v1",
+          "title": "Annotation Guideline Id",
+          "type": "string"
+        },
+        "contrast_policy_fingerprint": {
+          "const": "56698f126c46dd84718f215537ab058ebad38ab568fcfa58c4037c4a5b191673",
+          "title": "Contrast Policy Fingerprint",
+          "type": "string"
+        },
+        "coverage_contract_fingerprint": {
+          "const": "de9756e40c194829585f1785088fa51b4befc1e2e12a45efe2cc7b8402b418e6",
+          "title": "Coverage Contract Fingerprint",
+          "type": "string"
+        },
+        "coverage_contract_id": {
+          "const": "maeumcall-structured-nlu-coverage-v3",
+          "title": "Coverage Contract Id",
+          "type": "string"
+        },
+        "obligation_count": {
+          "exclusiveMinimum": 0,
+          "title": "Obligation Count",
+          "type": "integer"
+        },
+        "profile_fingerprint": {
+          "const": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+          "title": "Profile Fingerprint",
+          "type": "string"
+        },
+        "profile_id": {
+          "const": "maeumcall-structured-nlu-v3",
+          "title": "Profile Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile_id",
+        "profile_fingerprint",
+        "coverage_contract_id",
+        "coverage_contract_fingerprint",
+        "contrast_policy_fingerprint",
+        "annotation_guideline_id",
+        "obligation_count"
+      ],
+      "title": "FreezeBenchmarkContractV1",
+      "type": "object"
+    },
+    "FreezeContractVersionsV1": {
+      "additionalProperties": false,
+      "description": "Pin independently versioned authoring, review, and evaluation contracts.",
+      "properties": {
+        "authoring_schema_version": {
+          "const": 2,
+          "title": "Authoring Schema Version",
+          "type": "integer"
+        },
+        "contrast_manifest_schema_version": {
+          "const": 1,
+          "title": "Contrast Manifest Schema Version",
+          "type": "integer"
+        },
+        "coverage_profile_version": {
+          "const": 3,
+          "title": "Coverage Profile Version",
+          "type": "integer"
+        },
+        "dataset_schema_version": {
+          "const": 2,
+          "title": "Dataset Schema Version",
+          "type": "integer"
+        },
+        "review_ledger_schema_version": {
+          "const": 1,
+          "title": "Review Ledger Schema Version",
+          "type": "integer"
+        },
+        "split_assignment_schema_version": {
+          "const": 1,
+          "title": "Split Assignment Schema Version",
+          "type": "integer"
+        },
+        "state_contract_version": {
+          "const": 2,
+          "title": "State Contract Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "authoring_schema_version",
+        "split_assignment_schema_version",
+        "dataset_schema_version",
+        "state_contract_version",
+        "review_ledger_schema_version",
+        "contrast_manifest_schema_version",
+        "coverage_profile_version"
+      ],
+      "title": "FreezeContractVersionsV1",
+      "type": "object"
+    },
+    "FreezeCorpusInventoryV1": {
+      "additionalProperties": false,
+      "description": "Store diagnostic counts and exact ID-set identities without copying the corpus.",
+      "properties": {
+        "case_count": {
+          "exclusiveMinimum": 0,
+          "title": "Case Count",
+          "type": "integer"
+        },
+        "case_ids_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Case Ids Fingerprint",
+          "type": "string"
+        },
+        "development_case_count": {
+          "exclusiveMinimum": 0,
+          "title": "Development Case Count",
+          "type": "integer"
+        },
+        "group_count": {
+          "exclusiveMinimum": 0,
+          "title": "Group Count",
+          "type": "integer"
+        },
+        "group_ids_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Group Ids Fingerprint",
+          "type": "string"
+        },
+        "test_case_count": {
+          "exclusiveMinimum": 0,
+          "title": "Test Case Count",
+          "type": "integer"
+        },
+        "validation_case_count": {
+          "exclusiveMinimum": 0,
+          "title": "Validation Case Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "group_count",
+        "case_count",
+        "development_case_count",
+        "validation_case_count",
+        "test_case_count",
+        "group_ids_fingerprint",
+        "case_ids_fingerprint"
+      ],
+      "title": "FreezeCorpusInventoryV1",
+      "type": "object"
+    },
+    "GitInputRevisionV1": {
+      "additionalProperties": false,
+      "description": "Identify the committed input snapshot without referring to the later record commit.",
+      "properties": {
+        "commit": {
+          "title": "Commit",
+          "type": "string"
+        },
+        "object_format": {
+          "enum": [
+            "sha1",
+            "sha256"
+          ],
+          "title": "Object Format",
+          "type": "string"
+        }
+      },
+      "required": [
+        "object_format",
+        "commit"
+      ],
+      "title": "GitInputRevisionV1",
+      "type": "object"
+    }
+  },
+  "$id": "urn:maeumcall:structured-nlu:freeze-record:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Immutable V1 approval record for one exact structured-NLU benchmark snapshot.",
+  "properties": {
+    "artifacts": {
+      "$ref": "#/$defs/FreezeArtifactFingerprintsV1"
+    },
+    "benchmark": {
+      "$ref": "#/$defs/FreezeBenchmarkContractV1"
+    },
+    "benchmark_identity_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Benchmark Identity Fingerprint",
+      "type": "string"
+    },
+    "benchmark_identity_fingerprint_algorithm": {
+      "const": "structured-nlu-benchmark-identity-canonical-json-sha256-v1",
+      "title": "Benchmark Identity Fingerprint Algorithm",
+      "type": "string"
+    },
+    "freeze_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+      "title": "Freeze Id",
+      "type": "string"
+    },
+    "freeze_record_schema_version": {
+      "const": 1,
+      "title": "Freeze Record Schema Version",
+      "type": "integer"
+    },
+    "freeze_revision": {
+      "minimum": 1,
+      "title": "Freeze Revision",
+      "type": "integer"
+    },
+    "input_git_revision": {
+      "$ref": "#/$defs/GitInputRevisionV1"
+    },
+    "inventory": {
+      "$ref": "#/$defs/FreezeCorpusInventoryV1"
+    },
+    "paths": {
+      "$ref": "#/$defs/FreezeArtifactPathsV1"
+    },
+    "previous_freeze_record_fingerprint": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Previous Freeze Record Fingerprint"
+    },
+    "qualified_splits": {
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [
+        {
+          "const": "validation",
+          "type": "string"
+        },
+        {
+          "const": "test",
+          "type": "string"
+        }
+      ],
+      "title": "Qualified Splits",
+      "type": "array"
+    },
+    "record_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Record Fingerprint",
+      "type": "string"
+    },
+    "record_fingerprint_algorithm": {
+      "const": "freeze-record-canonical-json-sha256-v1",
+      "title": "Record Fingerprint Algorithm",
+      "type": "string"
+    },
+    "versions": {
+      "$ref": "#/$defs/FreezeContractVersionsV1"
+    }
+  },
+  "required": [
+    "freeze_record_schema_version",
+    "freeze_id",
+    "freeze_revision",
+    "previous_freeze_record_fingerprint",
+    "record_fingerprint_algorithm",
+    "benchmark_identity_fingerprint_algorithm",
+    "input_git_revision",
+    "versions",
+    "paths",
+    "artifacts",
+    "benchmark",
+    "inventory",
+    "qualified_splits",
+    "benchmark_identity_fingerprint",
+    "record_fingerprint"
+  ],
+  "title": "CorpusFreezeRecordV1",
+  "type": "object"
+}
