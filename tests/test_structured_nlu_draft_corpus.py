@@ -42,12 +42,12 @@ EXPECTED_INFORMATION_DRAFTS = {
         },
     },
     "교수님:과제 문의": {
-        "message": "교수님 안녕하세요. ~수업듣는 홍길동입니다. ~수업에서 과제로 내주신 범위를 다시 확인하고 싶어 연락드립니다.",
+        "message": "교수님 안녕하세요. 인공지능 수업듣는 홍길동입니다. 인공지능 수업에서 과제로 내주신 범위를 다시 확인하고 싶어 연락드립니다.",
         "intent": "assignment_inquiry",
         "user_action": "provide_assignment_info",
         "fields": {
             "assignment_topic": "과제 범위 확인",
-            "course_name": "~",
+            "course_name": "인공지능",
             "question": "과제 범위 확인",
             "user_name": "홍길동",
         },
