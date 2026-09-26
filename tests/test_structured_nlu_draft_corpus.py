@@ -21,6 +21,9 @@ EXPECTED_HUMAN_DRAFTS = {
     "예약:병원 예약": "여기 근처 맛집 알려줘.",
     "예약:스터디룸 예약": "쓰읍. 슬슬 머리 잘라야하는데.",
     "예약:식당 예약": "나 다리 아퍼.",
+    "시청:대형폐기물 배출": "계란 껍질은 일반쓰레기로 버리나요?",
+    "시청:여권 발급 문의": "가족 증명서 발급하고 싶어.",
+    "시청:주민등록 등본 문의": "여기 가로등 불 꺼졌어요",
 }
 
 
@@ -33,7 +36,7 @@ def test_committed_human_draft_corpus_matches_its_authoring_sources() -> None:
     )
 
     assert verified == dataset
-    assert len(dataset.cases) == 10
+    assert len(dataset.cases) == 13
     assert {case.scenario_key: case.user_message for case in dataset.cases} == (
         EXPECTED_HUMAN_DRAFTS
     )

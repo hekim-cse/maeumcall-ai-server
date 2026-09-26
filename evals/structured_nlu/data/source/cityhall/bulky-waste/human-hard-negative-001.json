@@ -1,0 +1,35 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "item_name": null,
+        "quantity": null,
+        "region": null,
+        "request_topic": null
+      },
+      "id": "cityhall-bulky-waste-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "item_name": null,
+          "quantity": null,
+          "region": null,
+          "request_topic": null
+        },
+        "intent": "bulky_waste_guidance",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "계란 껍질은 일반쓰레기로 버리나요?"
+    }
+  ],
+  "conversation_group_id": "cityhall-bulky-waste-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "시청:대형폐기물 배출"
+}
