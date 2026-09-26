@@ -1,0 +1,569 @@
+{
+  "draft_seed_schema_version": 1,
+  "generator_id": "openai-codex",
+  "human_review_required": true,
+  "profile_fingerprint": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+  "profile_id": "maeumcall-structured-nlu-v3",
+  "provenance": "ai_assisted_unreviewed",
+  "suggestions": [
+    {
+      "conversation_group_id": "ai-seed-support-service",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "고객센터:a/s 접수",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "id": "ai-seed-support-service.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "model_name": null,
+            "occurred_at": null,
+            "preferred_schedule": null,
+            "product_type": null,
+            "safety_status": null,
+            "service_channel": null,
+            "symptom": null
+          },
+          "intent": "service_request",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "내일 비가 오는지 알려 주세요."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "suggestion_id": "ai-seed-support-service"
+    },
+    {
+      "conversation_group_id": "ai-seed-support-plan",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "고객센터:요금/약정 상담",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "consent_scope": null,
+          "consultation_goal": null,
+          "current_service": null,
+          "inquiry_type": null
+        },
+        "id": "ai-seed-support-plan.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "consent_scope": null,
+            "consultation_goal": null,
+            "current_service": null,
+            "inquiry_type": null
+          },
+          "intent": "plan_contract_consultation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "새로 나온 영화가 무엇인가요?"
+      },
+      "scenario_key": "고객센터:요금/약정 상담",
+      "suggestion_id": "ai-seed-support-plan"
+    },
+    {
+      "conversation_group_id": "ai-seed-support-network",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "고객센터:인터넷/통화 문제 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "id": "ai-seed-support-network.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "next_action": null,
+            "occurred_at": null,
+            "scope": null,
+            "service_type": null,
+            "symptom": null,
+            "troubleshooting_done": null
+          },
+          "intent": "network_call_issue",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "이번 주말 공연 일정이 궁금해요."
+      },
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "suggestion_id": "ai-seed-support-network"
+    },
+    {
+      "conversation_group_id": "ai-seed-professor-absence",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "교수님:결석 사유 전달",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-seed-professor-absence.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "absence_date": null,
+            "absence_reason": null,
+            "class_name": null,
+            "user_name": null
+          },
+          "intent": "absence_notice",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "도서관 운영 시간이 궁금합니다."
+      },
+      "scenario_key": "교수님:결석 사유 전달",
+      "suggestion_id": "ai-seed-professor-absence"
+    },
+    {
+      "conversation_group_id": "ai-seed-professor-assignment",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "교수님:과제 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-seed-professor-assignment.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "assignment_topic": null,
+            "course_name": null,
+            "question": null,
+            "user_name": null
+          },
+          "intent": "assignment_inquiry",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "교수님 연구실 위치가 어디예요?"
+      },
+      "scenario_key": "교수님:과제 문의",
+      "suggestion_id": "ai-seed-professor-assignment"
+    },
+    {
+      "conversation_group_id": "ai-seed-professor-appointment",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "교수님:면담 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-seed-professor-appointment.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "appointment_purpose": null,
+            "date": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "appointment_booking",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "학교 축제는 언제 열리나요?"
+      },
+      "scenario_key": "교수님:면담 예약",
+      "suggestion_id": "ai-seed-professor-appointment"
+    },
+    {
+      "conversation_group_id": "ai-seed-delivery-delay",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "배달:배달 지연 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": null
+        },
+        "id": "ai-seed-delivery-delay.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "delay_detail": null,
+            "delay_resolution": null,
+            "inquiry_goal": null,
+            "order_number": null
+          },
+          "intent": "delivery_delay_inquiry",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "오늘 야구 경기 결과를 알려 주세요."
+      },
+      "scenario_key": "배달:배달 지연 문의",
+      "suggestion_id": "ai-seed-delivery-delay"
+    },
+    {
+      "conversation_group_id": "ai-seed-delivery-change",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "배달:주문 변경",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "change_type": null,
+          "order_number": null,
+          "requested_change": null,
+          "unavailable_preference": null
+        },
+        "id": "ai-seed-delivery-change.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "change_type": null,
+            "order_number": null,
+            "requested_change": null,
+            "unavailable_preference": null
+          },
+          "intent": "delivery_order_change",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "배달 앱 배경색을 바꿀 수 있나요?"
+      },
+      "scenario_key": "배달:주문 변경",
+      "suggestion_id": "ai-seed-delivery-change"
+    },
+    {
+      "conversation_group_id": "ai-seed-delivery-refund",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "배달:환불/재배달 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "id": "ai-seed-delivery-refund.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "evidence_status": null,
+            "issue_detail": null,
+            "issue_type": null,
+            "order_number": null,
+            "resolution_preference": null
+          },
+          "intent": "delivery_refund_redelivery",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "휴대폰 배경화면을 추천해 주세요."
+      },
+      "scenario_key": "배달:환불/재배달 문의",
+      "suggestion_id": "ai-seed-delivery-refund"
+    },
+    {
+      "conversation_group_id": "ai-seed-city-bulky-waste",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "시청:대형폐기물 배출",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "item_name": null,
+          "quantity": null,
+          "region": null,
+          "request_topic": null
+        },
+        "id": "ai-seed-city-bulky-waste.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "item_name": null,
+            "quantity": null,
+            "region": null,
+            "request_topic": null
+          },
+          "intent": "bulky_waste_guidance",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "시청 근처 카페를 추천해 주세요."
+      },
+      "scenario_key": "시청:대형폐기물 배출",
+      "suggestion_id": "ai-seed-city-bulky-waste"
+    },
+    {
+      "conversation_group_id": "ai-seed-city-passport",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "시청:여권 발급 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": null
+        },
+        "id": "ai-seed-city-passport.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "applicant_type": null,
+            "application_channel": null,
+            "application_type": null,
+            "inquiry_topic": null
+          },
+          "intent": "passport_guidance",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "근처 공원 산책로를 알려 주세요."
+      },
+      "scenario_key": "시청:여권 발급 문의",
+      "suggestion_id": "ai-seed-city-passport"
+    },
+    {
+      "conversation_group_id": "ai-seed-city-certificate",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "시청:주민등록 등본 문의",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {
+          "applicant_relation": null,
+          "document_type": null,
+          "inquiry_topic": null,
+          "issuance_channel": null
+        },
+        "id": "ai-seed-city-certificate.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "applicant_relation": null,
+            "document_type": null,
+            "inquiry_topic": null,
+            "issuance_channel": null
+          },
+          "intent": "resident_certificate_guidance",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "오늘 미세먼지는 어떤가요?"
+      },
+      "scenario_key": "시청:주민등록 등본 문의",
+      "suggestion_id": "ai-seed-city-certificate"
+    },
+    {
+      "conversation_group_id": "ai-seed-hair-salon",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "예약:미용실 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-seed-hair-salon.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "요즘 읽을 만한 책이 있나요?"
+      },
+      "scenario_key": "예약:미용실 예약",
+      "suggestion_id": "ai-seed-hair-salon"
+    },
+    {
+      "conversation_group_id": "ai-seed-hospital",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "예약:병원 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-seed-hospital.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": null,
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "오늘 날씨가 맑네요."
+      },
+      "scenario_key": "예약:병원 예약",
+      "suggestion_id": "ai-seed-hospital"
+    },
+    {
+      "conversation_group_id": "ai-seed-study-room",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "예약:스터디룸 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-seed-study-room.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "지하철 첫차 시간이 궁금해요."
+      },
+      "scenario_key": "예약:스터디룸 예약",
+      "suggestion_id": "ai-seed-study-room"
+    },
+    {
+      "conversation_group_id": "ai-seed-restaurant",
+      "primary_obligation": {
+        "dimension": "state_action",
+        "scenario_key": "예약:식당 예약",
+        "value": "greeting->unknown"
+      },
+      "proposed_case": {
+        "conversation_state": "greeting",
+        "current_fields": {},
+        "id": "ai-seed-restaurant.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "주말에 볼 영화 추천해 주세요."
+      },
+      "scenario_key": "예약:식당 예약",
+      "suggestion_id": "ai-seed-restaurant"
+    }
+  ]
+}

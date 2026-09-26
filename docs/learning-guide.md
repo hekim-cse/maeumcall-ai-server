@@ -198,6 +198,16 @@ guideline 또는 rubric이라고 합니다.
 - `reviewed`: 다른 시점의 검토에서 형식과 의미를 확인한 상태
 - `adjudicated`: 의견 차이나 오류를 해결해 최종 답으로 확정한 상태
 
+AI가 제안한 문장은 이 세 상태보다 앞선 별도 sidecar에 둡니다. 현재
+`ai-assisted-seeds.v1.json`에는 16개 구조화 NLU 시나리오마다 한 건씩 총 16건의
+시작 제안이 있지만, 모두 `ai_assisted_unreviewed`이고 split과 `review_status`가
+없습니다. 라이브 JSON 계약을 통과한다는 사실만으로 사람의 정답 판단을 대신할 수
+없기 때문입니다. 제안 문장이나 `ai-seed-*` ID를 그대로 복사해
+`human_authored`라고 표시하면 compiler가 거부합니다. 사람은 이를 참고 자료로만
+사용하고, 작성 지침을 기준으로 문장·상태·정답을 직접 새로 작성해야 비로소
+`human_authored` 초안이 됩니다. 이때도 곧바로 `adjudicated`가 되는 것은 아니며,
+검수 원장 절차를 별도로 거쳐야 합니다.
+
 `review_status="adjudicated"`라는 문자열만 직접 바꾸는 것으로는 충분하지 않습니다.
 별도 검수 원장은 최종 case 전체에서 SHA-256을 계산하고, 적용한 작성 지침의
 버전·지문, adjudicator 역할 ID, 확정 시각과 판단 근거를 함께 저장합니다. case의

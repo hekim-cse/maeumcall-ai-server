@@ -18,6 +18,10 @@ from evals.structured_nlu.contrast import (
     serialize_contrast_manifest_schema,
     verify_contrast_manifest,
 )
+from evals.structured_nlu.drafting import (
+    serialize_ai_draft_seed_manifest_v1,
+    serialize_ai_draft_seed_schema_v1,
+)
 from evals.structured_nlu.obligations import serialize_official_authoring_obligations
 from evals.structured_nlu.review import (
     serialize_review_ledger_schema,
@@ -122,6 +126,30 @@ def build_parser() -> argparse.ArgumentParser:
     check_contrast_parser.add_argument("split_assignments", type=Path)
     check_contrast_parser.add_argument("compiled", type=Path)
     check_contrast_parser.add_argument("manifest", type=Path)
+
+    draft_seed_parser = subparsers.add_parser(
+        "draft-seeds",
+        help="Write one unreviewed AI-assisted seed suggestion for every NLU scenario.",
+    )
+    draft_seed_parser.add_argument("output", type=Path)
+
+    check_draft_seed_parser = subparsers.add_parser(
+        "check-draft-seeds",
+        help="Verify that committed AI-assisted seed suggestions match the live contract.",
+    )
+    check_draft_seed_parser.add_argument("manifest", type=Path)
+
+    draft_schema_parser = subparsers.add_parser(
+        "draft-schema",
+        help="Write the editor-facing AI draft seed JSON Schema.",
+    )
+    draft_schema_parser.add_argument("output", type=Path)
+
+    check_draft_schema_parser = subparsers.add_parser(
+        "check-draft-schema",
+        help="Verify that the committed AI draft seed schema matches the code contract.",
+    )
+    check_draft_schema_parser.add_argument("schema", type=Path)
     return parser
 
 
@@ -193,6 +221,24 @@ def main() -> int:
             args.compiled,
         )
         verify_contrast_manifest(dataset, args.manifest)
+        return 0
+    if args.command == "draft-seeds":
+        _write_text(args.output, serialize_ai_draft_seed_manifest_v1())
+        return 0
+    if args.command == "check-draft-seeds":
+        if not args.manifest.is_file():
+            raise SystemExit(f"AI draft seed manifest does not exist: {args.manifest}")
+        if args.manifest.read_text(encoding="utf-8") != serialize_ai_draft_seed_manifest_v1():
+            raise SystemExit("AI draft seed manifest differs from the live contract")
+        return 0
+    if args.command == "draft-schema":
+        _write_text(args.output, serialize_ai_draft_seed_schema_v1())
+        return 0
+    if args.command == "check-draft-schema":
+        if not args.schema.is_file():
+            raise SystemExit(f"AI draft seed schema does not exist: {args.schema}")
+        if args.schema.read_text(encoding="utf-8") != serialize_ai_draft_seed_schema_v1():
+            raise SystemExit("AI draft seed schema differs from the code contract")
         return 0
 
     if args.command == "compile":
