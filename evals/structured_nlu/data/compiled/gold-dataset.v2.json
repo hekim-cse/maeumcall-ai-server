@@ -79,6 +79,101 @@
       "user_message": "교수님 혹시 시험 범위 한 번 더 알려주실 수 있으신가요?"
     },
     {
+      "conversation_group_id": "delivery-delay-inquiry-human-hard-negative-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "delay_detail": null,
+        "delay_resolution": null,
+        "inquiry_goal": null,
+        "order_number": null
+      },
+      "id": "delivery-delay-inquiry-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": null
+        },
+        "intent": "delivery_delay_inquiry",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:배달 지연 문의",
+      "split": "development",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "나무젓가락이 아직 안왔어요"
+    },
+    {
+      "conversation_group_id": "delivery-order-change-human-hard-negative-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "change_type": null,
+        "order_number": null,
+        "requested_change": null,
+        "unavailable_preference": null
+      },
+      "id": "delivery-order-change-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "change_type": null,
+          "order_number": null,
+          "requested_change": null,
+          "unavailable_preference": null
+        },
+        "intent": "delivery_order_change",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:주문 변경",
+      "split": "development",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "배달이 아직 안 왔어요"
+    },
+    {
+      "conversation_group_id": "delivery-refund-redelivery-human-hard-negative-001",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "evidence_status": null,
+        "issue_detail": null,
+        "issue_type": null,
+        "order_number": null,
+        "resolution_preference": null
+      },
+      "id": "delivery-refund-redelivery-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "intent": "delivery_refund_redelivery",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:환불/재배달 문의",
+      "split": "development",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "혹시 짜장면을 짬뽕으로 변경 가능한가요?"
+    },
+    {
       "conversation_group_id": "reservation-hair-salon-human-hard-negative-001",
       "conversation_state": "greeting",
       "current_fields": {},

@@ -1,6 +1,18 @@
 {
   "assignments": [
     {
+      "conversation_group_id": "delivery-delay-inquiry-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "delivery-order-change-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "delivery-refund-redelivery-human-hard-negative-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "professor-absence-human-hard-negative-001",
       "split": "development"
     },

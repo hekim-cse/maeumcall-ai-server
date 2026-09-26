@@ -1,0 +1,35 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "delay_detail": null,
+        "delay_resolution": null,
+        "inquiry_goal": null,
+        "order_number": null
+      },
+      "id": "delivery-delay-inquiry-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": null
+        },
+        "intent": "delivery_delay_inquiry",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "나무젓가락이 아직 안왔어요"
+    }
+  ],
+  "conversation_group_id": "delivery-delay-inquiry-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "배달:배달 지연 문의"
+}

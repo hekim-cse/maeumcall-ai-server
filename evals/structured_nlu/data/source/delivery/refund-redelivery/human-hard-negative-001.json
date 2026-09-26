@@ -1,0 +1,37 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "evidence_status": null,
+        "issue_detail": null,
+        "issue_type": null,
+        "order_number": null,
+        "resolution_preference": null
+      },
+      "id": "delivery-refund-redelivery-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "intent": "delivery_refund_redelivery",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "혹시 짜장면을 짬뽕으로 변경 가능한가요?"
+    }
+  ],
+  "conversation_group_id": "delivery-refund-redelivery-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "배달:환불/재배달 문의"
+}
