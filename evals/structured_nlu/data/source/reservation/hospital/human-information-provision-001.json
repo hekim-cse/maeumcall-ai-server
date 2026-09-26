@@ -1,0 +1,43 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-hospital-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "오늘"
+            ]
+          },
+          "department": {
+            "accepted_values": [
+              "이비인후과"
+            ]
+          },
+          "selected_time": null,
+          "time": {
+            "accepted_values": [
+              "3시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 오늘 3시에 이비인후과 예약하려고 하는데요."
+    }
+  ],
+  "conversation_group_id": "reservation-hospital-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:병원 예약"
+}

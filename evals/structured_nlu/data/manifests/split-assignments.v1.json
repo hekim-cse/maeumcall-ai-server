@@ -41,7 +41,15 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "reservation-hair-salon-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "reservation-hospital-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "reservation-hospital-human-information-provision-001",
       "split": "development"
     },
     {
@@ -49,7 +57,15 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "reservation-restaurant-human-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "reservation-study-room-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "reservation-study-room-human-information-provision-001",
       "split": "development"
     },
     {

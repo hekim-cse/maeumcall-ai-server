@@ -1,0 +1,44 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-study-room-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "오늘"
+            ]
+          },
+          "duration": null,
+          "party_size": {
+            "accepted_values": [
+              "1명"
+            ]
+          },
+          "selected_time": null,
+          "start_time": {
+            "accepted_values": [
+              "5시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 오늘 5시에 1명 예약 가능하나요?"
+    }
+  ],
+  "conversation_group_id": "reservation-study-room-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:스터디룸 예약"
+}

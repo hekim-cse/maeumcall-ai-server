@@ -1,0 +1,39 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "reservation-restaurant-human-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "9/26"
+            ]
+          },
+          "party_size": {
+            "accepted_values": [
+              "5명"
+            ]
+          },
+          "selected_time": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "안녕하세요. 9/26일날 5명 예약하려고 하는데 가능하나요?"
+    }
+  ],
+  "conversation_group_id": "reservation-restaurant-human-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:식당 예약"
+}
