@@ -181,7 +181,7 @@ def _build_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         repo_root=repo,
         freeze_id="structured-nlu-corpus-r0001",
         freeze_revision=1,
-        previous_record_path=None,
+        previous_record_paths=(),
         input_git_revision=commit,
         paths=paths,
     )
@@ -261,7 +261,7 @@ def test_later_freeze_revision_requires_the_exact_previous_record(
         repo_root=repo,
         freeze_id=first.freeze_id,
         freeze_revision=2,
-        previous_record_path=first_path,
+        previous_record_paths=(first_path,),
         input_git_revision="HEAD",
         paths=paths,
     )
@@ -271,16 +271,26 @@ def test_later_freeze_revision_requires_the_exact_previous_record(
     write_new_freeze_record(second_path, second)
     _git(repo, "add", "freezes/revision-2.json")
     _git(repo, "commit", "-m", "test: commit second freeze revision")
-    with pytest.raises(ValueError, match="explicit previous record"):
+    with pytest.raises(ValueError, match="every previous record"):
         verify_freeze_record(repo_root=repo, record_path=second_path)
     assert (
         verify_freeze_record(
             repo_root=repo,
             record_path=second_path,
-            previous_record_path=first_path,
+            previous_record_paths=(first_path,),
         ).record
         == second
     )
+
+    third = build_freeze_record(
+        repo_root=repo,
+        freeze_id=first.freeze_id,
+        freeze_revision=3,
+        previous_record_paths=(first_path, second_path),
+        input_git_revision="HEAD",
+        paths=paths,
+    )
+    assert third.previous_freeze_record_fingerprint == second.record_fingerprint
 
     forged = second.model_copy(
         update={"previous_freeze_record_fingerprint": "9" * 64},
@@ -296,15 +306,15 @@ def test_later_freeze_revision_requires_the_exact_previous_record(
         verify_freeze_record(
             repo_root=repo,
             record_path=forged_path,
-            previous_record_path=first_path,
+            previous_record_paths=(first_path,),
         )
 
-    with pytest.raises(ValueError, match="explicit previous record"):
+    with pytest.raises(ValueError, match="every previous record"):
         build_freeze_record(
             repo_root=repo,
             freeze_id=first.freeze_id,
             freeze_revision=2,
-            previous_record_path=None,
+            previous_record_paths=(),
             input_git_revision="HEAD",
             paths=paths,
         )
@@ -313,7 +323,49 @@ def test_later_freeze_revision_requires_the_exact_previous_record(
             repo_root=repo,
             freeze_id="different-lineage",
             freeze_revision=2,
-            previous_record_path=first_path,
+            previous_record_paths=(first_path,),
+            input_git_revision="HEAD",
+            paths=paths,
+        )
+
+
+def test_full_lineage_rejects_a_predecessor_with_forged_artifact_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    repo, paths, first, verified_inputs = _build_record(tmp_path, monkeypatch)
+    forged_artifacts = first.artifacts.model_copy(
+        update={"group_source_fingerprint": "9" * 64},
+    )
+    forged = first.model_copy(
+        update={
+            "artifacts": forged_artifacts,
+            "benchmark_identity_fingerprint": freeze_module._benchmark_identity_fingerprint(
+                versions=first.versions,
+                artifacts=forged_artifacts,
+                benchmark=first.benchmark,
+            ),
+        },
+    )
+    forged = forged.model_copy(
+        update={"record_fingerprint": freeze_module._record_fingerprint(forged)},
+    )
+    first_path = repo / "freezes" / "forged-revision-1.json"
+    write_new_freeze_record(first_path, forged)
+    _git(repo, "add", "freezes/forged-revision-1.json")
+    _git(repo, "commit", "-m", "test: commit forged first freeze revision")
+    monkeypatch.setattr(
+        freeze_module,
+        "_verify_freeze_input_snapshot",
+        lambda _snapshot: verified_inputs,
+    )
+
+    with pytest.raises(ValueError, match="artifact fingerprints do not match"):
+        build_freeze_record(
+            repo_root=repo,
+            freeze_id=first.freeze_id,
+            freeze_revision=2,
+            previous_record_paths=(first_path,),
             input_git_revision="HEAD",
             paths=paths,
         )
@@ -347,7 +399,12 @@ def test_real_freeze_snapshot_check_rejects_a_stale_obligation_manifest(
     dataset = _dataset()
     repo, paths, commit = _init_repo(tmp_path, dataset)
     resolved = freeze_module._resolve_artifact_paths(repo, paths)
-    snapshot = freeze_module._capture_git_input_snapshot(repo, commit, paths, resolved)
+    snapshot = freeze_module._capture_git_input_snapshot(
+        repo,
+        commit,
+        paths,
+        group_source_root=resolved.group_source_root,
+    )
     bundle, _, _ = _fake_verified_inputs(dataset)
     monkeypatch.setattr(
         freeze_module,
@@ -371,6 +428,24 @@ def test_real_freeze_snapshot_check_rejects_a_stale_obligation_manifest(
 
     with pytest.raises(ValueError, match="coverage obligation manifest differs"):
         freeze_module._verify_freeze_input_snapshot(snapshot)
+
+
+def test_git_source_snapshot_preserves_non_ascii_json_paths(tmp_path: Path):
+    dataset = _dataset()
+    repo, paths, _ = _init_repo(tmp_path, dataset)
+    _git(repo, "mv", "data/source/group.json", "data/source/면담.json")
+    _git(repo, "commit", "-m", "test: use a Korean source filename")
+    commit = _git(repo, "rev-parse", "HEAD").strip()
+    resolved = freeze_module._resolve_artifact_paths(repo, paths)
+
+    snapshot = freeze_module._capture_git_input_snapshot(
+        repo,
+        commit,
+        paths,
+        group_source_root=resolved.group_source_root,
+    )
+
+    assert tuple(file.relative_path for file in snapshot.authoring.files) == ("면담.json",)
 
 
 def test_freeze_record_creation_is_create_only_and_preserves_existing_bytes(
@@ -446,7 +521,7 @@ def test_freeze_creation_rejects_changed_inputs_after_the_git_anchor(
             repo_root=repo,
             freeze_id="structured-nlu-corpus-r0001",
             freeze_revision=1,
-            previous_record_path=None,
+            previous_record_paths=(),
             input_git_revision=commit,
             paths=paths,
         )
@@ -472,7 +547,7 @@ def test_freeze_creation_requires_current_head_and_a_clean_worktree(
             repo_root=repo,
             freeze_id="structured-nlu-corpus-r0001",
             freeze_revision=1,
-            previous_record_path=None,
+            previous_record_paths=(),
             input_git_revision=first_commit,
             paths=paths,
         )
@@ -483,7 +558,7 @@ def test_freeze_creation_requires_current_head_and_a_clean_worktree(
             repo_root=repo,
             freeze_id="structured-nlu-corpus-r0001",
             freeze_revision=1,
-            previous_record_path=None,
+            previous_record_paths=(),
             input_git_revision="HEAD",
             paths=paths,
         )
@@ -511,7 +586,7 @@ def test_freeze_paths_reject_aliases_parent_traversal_and_source_outputs(
             output_path=Path(paths.group_source_root) / "record.json",
             freeze_id="structured-nlu-corpus-r0001",
             freeze_revision=1,
-            previous_record_path=None,
+            previous_record_paths=(),
             input_git_revision="HEAD",
             paths=paths,
         )

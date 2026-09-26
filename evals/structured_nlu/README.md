@@ -204,9 +204,10 @@ case 지문이 달라져 과거 승인을 재사용할 수 없다. development�
 커밋된 정확한 blob이어야 한다.
 
 첫 revision은 이전 레코드가 없어야 한다. 다음 revision은 임의의 SHA 문자열이 아니라
-호출자가 명시한 실제 이전 레코드 파일을 읽어 같은 `freeze_id`, 바로 앞 revision,
-자기 지문이 모두 맞는지 확인한다. 생성 때뿐 아니라 공식 준비·채점 검증 때도
-revision 2 이상은 같은 이전 레코드 경로를 명시해야 한다. 새 레코드는 기존 경로를 덮어쓰지 않고 새 파일로만
+호출자가 revision 1부터 순서대로 명시한 모든 이전 레코드 파일을 읽어 같은 `freeze_id`,
+연속 revision, 직전 지문을 확인한다. 각 과거 레코드가 가리킨 Git 입력 artifact와 자신의
+지문도 과거 커밋에서 다시 검증하며, 과거 artifact가 현재 작업 파일과 같을 필요는 없다.
+생성·공식 준비·채점은 모두 같은 전체 계보를 검증한다. 새 레코드는 기존 경로를 덮어쓰지 않고 새 파일로만
 원자적으로 생성한다. 절대경로, `..`, source 내부 출력, symbolic-link 경로와
 `latest` 기본 탐색은 허용하지 않는다.
 
@@ -331,7 +332,7 @@ python -m scripts.freeze_structured_nlu_benchmark create \
   --output evals/structured_nlu/freezes/structured-nlu-corpus.r1.json
 
 # record 파일을 다음 커밋에 추가한 뒤, 명시한 record와 현재 Git blob을 다시 검증한다.
-# revision 2 이상은 --previous-record로 바로 앞 revision 파일도 함께 넘긴다.
+# revision 2 이상은 --previous-record를 반복해 revision 1부터의 모든 이전 파일을 순서대로 넘긴다.
 python -m scripts.freeze_structured_nlu_benchmark verify \
   --repo-root . \
   --record evals/structured_nlu/freezes/structured-nlu-corpus.r1.json

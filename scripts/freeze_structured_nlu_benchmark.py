@@ -39,7 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
     create_parser.add_argument("--output", type=Path, required=True)
     create_parser.add_argument("--freeze-id", required=True)
     create_parser.add_argument("--freeze-revision", type=int, required=True)
-    create_parser.add_argument("--previous-record", type=Path)
+    create_parser.add_argument("--previous-record", type=Path, action="append", default=[])
     create_parser.add_argument("--input-git-revision", required=True)
 
     verify_parser = subparsers.add_parser(
@@ -48,7 +48,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     verify_parser.add_argument("--repo-root", type=Path, required=True)
     verify_parser.add_argument("--record", type=Path, required=True)
-    verify_parser.add_argument("--previous-record", type=Path)
+    verify_parser.add_argument("--previous-record", type=Path, action="append", default=[])
     return parser
 
 
@@ -78,7 +78,7 @@ def main() -> int:
         verified = verify_freeze_record(
             repo_root=args.repo_root,
             record_path=args.record,
-            previous_record_path=args.previous_record,
+            previous_record_paths=tuple(args.previous_record),
         )
         print(verified.record.record_fingerprint)
         return 0
@@ -97,7 +97,7 @@ def main() -> int:
         output_path=args.output,
         freeze_id=args.freeze_id,
         freeze_revision=args.freeze_revision,
-        previous_record_path=args.previous_record,
+        previous_record_paths=tuple(args.previous_record),
         input_git_revision=args.input_git_revision,
         paths=paths,
     )

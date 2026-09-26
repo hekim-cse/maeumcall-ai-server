@@ -231,7 +231,7 @@ def create_freeze_record_file(
     output_path: Path,
     freeze_id: str,
     freeze_revision: int,
-    previous_record_path: Path | None,
+    previous_record_paths: tuple[Path, ...],
     input_git_revision: str,
     paths: FreezeArtifactPathsV1,
 ) -> CorpusFreezeRecordV1:
@@ -248,7 +248,7 @@ def create_freeze_record_file(
         repo_root=resolved_repo_root,
         freeze_id=freeze_id,
         freeze_revision=freeze_revision,
-        previous_record_path=previous_record_path,
+        previous_record_paths=previous_record_paths,
         input_git_revision=input_git_revision,
         paths=paths,
     )
@@ -261,7 +261,7 @@ def build_freeze_record(
     repo_root: Path,
     freeze_id: str,
     freeze_revision: int,
-    previous_record_path: Path | None,
+    previous_record_paths: tuple[Path, ...],
     input_git_revision: str,
     paths: FreezeArtifactPathsV1,
 ) -> CorpusFreezeRecordV1:
@@ -275,17 +275,18 @@ def build_freeze_record(
     if resolved_commit != head_commit:
         raise ValueError("freeze creation requires input_git_revision to be the current HEAD")
     resolved_paths = _resolve_artifact_paths(resolved_repo_root, paths)
-    previous_freeze_record_fingerprint = _verified_previous_record_fingerprint(
+    previous_freeze_record_fingerprint = _verified_previous_record_chain(
         resolved_repo_root,
         freeze_id=freeze_id,
         freeze_revision=freeze_revision,
-        previous_record_path=previous_record_path,
+        next_input_commit=resolved_commit,
+        previous_record_paths=previous_record_paths,
     )
     input_snapshot = _capture_git_input_snapshot(
         resolved_repo_root,
         resolved_commit,
         paths,
-        resolved_paths,
+        group_source_root=resolved_paths.group_source_root,
     )
     _require_worktree_matches_snapshot(resolved_paths, input_snapshot)
     _require_clean_worktree(resolved_repo_root)
@@ -337,43 +338,75 @@ def build_freeze_record(
     return CorpusFreezeRecordV1.model_validate(payload)
 
 
-def _verified_previous_record_fingerprint(
+def _verified_previous_record_chain(
     repo_root: Path,
     *,
     freeze_id: str,
     freeze_revision: int,
-    previous_record_path: Path | None,
+    next_input_commit: str,
+    previous_record_paths: tuple[Path, ...],
 ) -> str | None:
-    if freeze_revision == 1:
-        if previous_record_path is not None:
-            raise ValueError("the first freeze revision must not provide a previous record")
+    expected_count = freeze_revision - 1
+    if len(previous_record_paths) != expected_count:
+        if freeze_revision == 1:
+            raise ValueError("the first freeze revision must not provide previous records")
+        raise ValueError("freeze revision requires every previous record in revision order")
+    if not previous_record_paths:
         return None
-    if previous_record_path is None:
-        raise ValueError("later freeze revisions require an explicit previous record")
-    resolved_previous_path = _resolve_external_record_path(repo_root, previous_record_path)
-    previous = _load_committed_freeze_record(repo_root, resolved_previous_path)
-    if previous.freeze_id != freeze_id:
-        raise ValueError("previous freeze record belongs to a different freeze lineage")
-    if previous.freeze_revision != freeze_revision - 1:
-        raise ValueError("previous freeze record revision is not contiguous")
-    return previous.record_fingerprint
+
+    resolved_paths = tuple(
+        _resolve_external_record_path(repo_root, path) for path in previous_record_paths
+    )
+    if len(set(resolved_paths)) != len(resolved_paths):
+        raise ValueError("freeze record lineage paths must be unique")
+    successor_input_commit = next_input_commit
+    successor_previous_fingerprint: str | None = None
+    immediate_fingerprint: str | None = None
+    for expected_revision, path in reversed(tuple(enumerate(resolved_paths, start=1))):
+        previous = _load_freeze_record_from_git(
+            repo_root,
+            successor_input_commit,
+            path,
+        )
+        if previous.freeze_id != freeze_id:
+            raise ValueError("previous freeze record belongs to a different freeze lineage")
+        if previous.freeze_revision != expected_revision:
+            raise ValueError("previous freeze record revision is not contiguous")
+        _require_git_ancestor(
+            repo_root,
+            previous.input_git_revision.commit,
+            successor_input_commit,
+        )
+        _verify_historical_freeze_record(repo_root, previous)
+        if successor_previous_fingerprint is not None and (
+            successor_previous_fingerprint != previous.record_fingerprint
+        ):
+            raise ValueError("freeze record predecessor fingerprint does not match")
+        if immediate_fingerprint is None:
+            immediate_fingerprint = previous.record_fingerprint
+        successor_previous_fingerprint = previous.previous_freeze_record_fingerprint
+        successor_input_commit = previous.input_git_revision.commit
+    if successor_previous_fingerprint is not None:
+        raise ValueError("the first freeze revision must not name a predecessor")
+    return immediate_fingerprint
 
 
 def verify_freeze_record(
     *,
     repo_root: Path,
     record_path: Path,
-    previous_record_path: Path | None = None,
+    previous_record_paths: tuple[Path, ...] = (),
 ) -> VerifiedFrozenCorpus:
     """Recompute every governed value from an explicit record immediately before use."""
     resolved_repo_root = _verified_repo_root(repo_root)
     resolved_record_path = _resolve_external_record_path(resolved_repo_root, record_path)
     record = _load_committed_freeze_record(resolved_repo_root, resolved_record_path)
-    previous_fingerprint = _verified_previous_record_fingerprint(
+    previous_fingerprint = _verified_previous_record_chain(
         resolved_repo_root,
         freeze_id=record.freeze_id,
         freeze_revision=record.freeze_revision,
-        previous_record_path=previous_record_path,
+        next_input_commit=record.input_git_revision.commit,
+        previous_record_paths=previous_record_paths,
     )
     if record.previous_freeze_record_fingerprint != previous_fingerprint:
         raise ValueError("freeze record predecessor fingerprint does not match")
@@ -392,15 +425,63 @@ def verify_freeze_record(
         resolved_repo_root,
         resolved_commit,
         record.paths,
-        resolved_paths,
+        group_source_root=resolved_paths.group_source_root,
     )
     _require_worktree_matches_snapshot(resolved_paths, input_snapshot)
     bundle, benchmark, obligation_sha256 = _verify_freeze_input_snapshot(input_snapshot)
-    expected = _record_evidence(
+    _assert_record_evidence(
+        record,
         bundle=bundle,
         benchmark=benchmark,
         obligation_sha256=obligation_sha256,
         compiled_artifact_sha256=_sha256_bytes(input_snapshot.compiled_corpus),
+    )
+    return VerifiedFrozenCorpus(record=record, bundle=bundle, benchmark=benchmark)
+
+
+def _verify_historical_freeze_record(
+    repo_root: Path,
+    record: CorpusFreezeRecordV1,
+) -> None:
+    """Verify one predecessor from its own Git input without consulting the worktree."""
+    resolved_commit, object_format = _resolve_git_revision(
+        repo_root,
+        record.input_git_revision.commit,
+    )
+    if (
+        resolved_commit != record.input_git_revision.commit
+        or object_format != record.input_git_revision.object_format
+    ):
+        raise ValueError("historical freeze input Git revision does not match")
+    input_snapshot = _capture_git_input_snapshot(
+        repo_root,
+        resolved_commit,
+        record.paths,
+        group_source_root=repo_root / PurePosixPath(record.paths.group_source_root),
+    )
+    bundle, benchmark, obligation_sha256 = _verify_freeze_input_snapshot(input_snapshot)
+    _assert_record_evidence(
+        record,
+        bundle=bundle,
+        benchmark=benchmark,
+        obligation_sha256=obligation_sha256,
+        compiled_artifact_sha256=_sha256_bytes(input_snapshot.compiled_corpus),
+    )
+
+
+def _assert_record_evidence(
+    record: CorpusFreezeRecordV1,
+    *,
+    bundle: VerifiedAuthoringBundle,
+    benchmark: QualifiedTestSlice,
+    obligation_sha256: str,
+    compiled_artifact_sha256: str,
+) -> None:
+    expected = _record_evidence(
+        bundle=bundle,
+        benchmark=benchmark,
+        obligation_sha256=obligation_sha256,
+        compiled_artifact_sha256=compiled_artifact_sha256,
     )
     if record.versions != expected["versions"]:
         raise ValueError("freeze contract versions do not match the live contracts")
@@ -410,20 +491,19 @@ def verify_freeze_record(
         raise ValueError("freeze benchmark contract does not match the live contract")
     if record.inventory != expected["inventory"]:
         raise ValueError("freeze corpus inventory does not match the live corpus")
-    return VerifiedFrozenCorpus(record=record, bundle=bundle, benchmark=benchmark)
 
 
 def prepare_qualified_test_slice_from_freeze(
     *,
     repo_root: Path,
     record_path: Path,
-    previous_record_path: Path | None = None,
+    previous_record_paths: tuple[Path, ...] = (),
 ) -> QualifiedTestSlice:
     """Public official preparation boundary; an explicit freeze record is mandatory."""
     return verify_freeze_record(
         repo_root=repo_root,
         record_path=record_path,
-        previous_record_path=previous_record_path,
+        previous_record_paths=previous_record_paths,
     ).benchmark
 
 
@@ -431,7 +511,7 @@ def score_qualified_test_slice_from_freeze(
     *,
     repo_root: Path,
     record_path: Path,
-    previous_record_path: Path | None = None,
+    previous_record_paths: tuple[Path, ...] = (),
     benchmark: QualifiedTestSlice,
     predictions: tuple[CasePrediction, ...],
 ) -> EvaluationScores:
@@ -439,7 +519,7 @@ def score_qualified_test_slice_from_freeze(
     verified = verify_freeze_record(
         repo_root=repo_root,
         record_path=record_path,
-        previous_record_path=previous_record_path,
+        previous_record_paths=previous_record_paths,
     )
     if benchmark != verified.benchmark:
         raise ValueError("qualified benchmark does not match the explicit freeze record")
@@ -772,39 +852,33 @@ def _require_git_ancestor(repo_root: Path, ancestor: str, descendant: str) -> No
         capture_output=True,
     )
     if result.returncode != 0:
-        raise ValueError("freeze input Git revision must be an ancestor of the current HEAD")
+        raise ValueError("freeze input Git revision must be an ancestor of its successor")
 
 
 def _capture_git_input_snapshot(
     repo_root: Path,
     commit: str,
     paths: FreezeArtifactPathsV1,
-    resolved: _ResolvedFreezeArtifactPaths,
+    *,
+    group_source_root: Path,
 ) -> _FreezeInputSnapshot:
     source_prefix = paths.group_source_root.rstrip("/") + "/"
     tracked_source_files = tuple(
-        line
-        for line in _run_git(
+        raw_path.decode("utf-8")
+        for raw_path in _run_git(
             repo_root,
             "ls-tree",
             "-r",
+            "-z",
             "--name-only",
             commit,
             "--",
             paths.group_source_root,
         )
-        .decode("utf-8")
-        .splitlines()
-        if line.endswith(".json")
+        .rstrip(b"\0")
+        .split(b"\0")
+        if raw_path.endswith(b".json")
     )
-    current_source_files = tuple(
-        sorted(
-            f"{source_prefix}{path.relative_to(resolved.group_source_root).as_posix()}"
-            for path in resolved.group_source_root.rglob("*.json")
-        )
-    )
-    if tracked_source_files != current_source_files:
-        raise ValueError("group source file set differs from the input Git revision")
     authoring_files = tuple(
         AuthoringSourceFile(
             relative_path=relative.removeprefix(source_prefix),
@@ -814,7 +888,7 @@ def _capture_git_input_snapshot(
     )
     return _FreezeInputSnapshot(
         authoring=AuthoringSourceSnapshot(
-            source_dir=resolved.group_source_root,
+            source_dir=group_source_root,
             files=authoring_files,
             split_assignments=AuthoringSourceFile(
                 relative_path="@split-assignments.v1.json",
@@ -888,6 +962,17 @@ def _load_committed_freeze_record(
     if committed != worktree:
         raise ValueError("freeze record differs from the exact Git HEAD blob")
     return _parse_freeze_record(committed, label=f"HEAD:{relative}")
+
+
+def _load_freeze_record_from_git(
+    repo_root: Path,
+    revision: str,
+    record_path: Path,
+) -> CorpusFreezeRecordV1:
+    """Load a predecessor from the successor's immutable Git input snapshot."""
+    relative = record_path.relative_to(repo_root).as_posix()
+    committed = _git_file_bytes(repo_root, revision, relative)
+    return _parse_freeze_record(committed, label=f"{revision}:{relative}")
 
 
 def _run_git(repo_root: Path, *args: str) -> bytes:
