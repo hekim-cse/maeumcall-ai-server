@@ -11,6 +11,11 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from evals.structured_nlu.ai_origin_policy import (
+    EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1,
+    ai_origin_policy_fingerprint_v1,
+    serialize_ai_origin_policy_v1,
+)
 from evals.structured_nlu.authoring import (
     AuthoringSourceFile,
     AuthoringSourceSnapshot,
@@ -52,10 +57,15 @@ from evals.structured_nlu.schema import (
 )
 from services.flow.common.state_contract import SCENARIO_STATE_VERSION
 
-FREEZE_RECORD_SCHEMA_VERSION = 1
+FREEZE_RECORD_SCHEMA_VERSION_V1 = 1
+FREEZE_RECORD_SCHEMA_VERSION = 2
 FREEZE_RECORD_FINGERPRINT_ALGORITHM_V1 = "freeze-record-canonical-json-sha256-v1"
+FREEZE_RECORD_FINGERPRINT_ALGORITHM_V2 = "freeze-record-canonical-json-sha256-v2"
 BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V1 = (
     "structured-nlu-benchmark-identity-canonical-json-sha256-v1"
+)
+BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V2 = (
+    "structured-nlu-benchmark-identity-canonical-json-sha256-v2"
 )
 ID_SET_FINGERPRINT_ALGORITHM_V1 = "sorted-id-set-canonical-json-sha256-v1"
 
@@ -96,6 +106,12 @@ class FreezeContractVersionsV1(BaseModel):
     coverage_profile_version: Literal[3]
 
 
+class FreezeContractVersionsV2(FreezeContractVersionsV1):
+    """Add the immutable AI-origin policy version to the governed contracts."""
+
+    ai_origin_policy_schema_version: Literal[1]
+
+
 class FreezeArtifactPathsV1(BaseModel):
     """Store only explicit repository-relative artifact paths; no moving latest pointer."""
 
@@ -123,6 +139,12 @@ class FreezeArtifactPathsV1(BaseModel):
         return self
 
 
+class FreezeArtifactPathsV2(FreezeArtifactPathsV1):
+    """Add the repository-owned AI-origin policy artifact to the frozen inputs."""
+
+    ai_origin_policy_path: RepoRelativePath
+
+
 class FreezeArtifactFingerprintsV1(BaseModel):
     """Bind raw source artifacts and their semantic compiled identities."""
 
@@ -136,6 +158,13 @@ class FreezeArtifactFingerprintsV1(BaseModel):
     review_ledger_fingerprint: Sha256Fingerprint
     contrast_manifest_fingerprint: Sha256Fingerprint
     obligation_manifest_sha256: Sha256Fingerprint
+
+
+class FreezeArtifactFingerprintsV2(FreezeArtifactFingerprintsV1):
+    """Bind both raw and semantic identities of the AI-origin policy."""
+
+    ai_origin_policy_artifact_sha256: Sha256Fingerprint
+    ai_origin_policy_fingerprint: Literal[EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1]
 
 
 class FreezeBenchmarkContractV1(BaseModel):
@@ -185,7 +214,7 @@ class CorpusFreezeRecordV1(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
-    freeze_record_schema_version: Literal[FREEZE_RECORD_SCHEMA_VERSION]
+    freeze_record_schema_version: Literal[FREEZE_RECORD_SCHEMA_VERSION_V1]
     freeze_id: FreezeId
     freeze_revision: int = Field(ge=1)
     previous_freeze_record_fingerprint: Sha256Fingerprint | None
@@ -218,9 +247,50 @@ class CorpusFreezeRecordV1(BaseModel):
         return self
 
 
+class CorpusFreezeRecordV2(BaseModel):
+    """Current record format, including the exact AI-origin exclusion policy."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    freeze_record_schema_version: Literal[FREEZE_RECORD_SCHEMA_VERSION]
+    freeze_id: FreezeId
+    freeze_revision: int = Field(ge=1)
+    previous_freeze_record_fingerprint: Sha256Fingerprint | None
+    record_fingerprint_algorithm: Literal[FREEZE_RECORD_FINGERPRINT_ALGORITHM_V2]
+    benchmark_identity_fingerprint_algorithm: Literal[BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V2]
+    input_git_revision: GitInputRevisionV1
+    versions: FreezeContractVersionsV2
+    paths: FreezeArtifactPathsV2
+    artifacts: FreezeArtifactFingerprintsV2
+    benchmark: FreezeBenchmarkContractV1
+    inventory: FreezeCorpusInventoryV1
+    qualified_splits: tuple[Literal["validation"], Literal["test"]]
+    benchmark_identity_fingerprint: Sha256Fingerprint
+    record_fingerprint: Sha256Fingerprint
+
+    @model_validator(mode="after")
+    def record_is_self_consistent(self) -> CorpusFreezeRecordV2:
+        if self.freeze_revision == 1 and self.previous_freeze_record_fingerprint is not None:
+            raise ValueError("the first freeze revision must not name a previous record")
+        if self.freeze_revision > 1 and self.previous_freeze_record_fingerprint is None:
+            raise ValueError("later freeze revisions require a previous record fingerprint")
+        if self.benchmark_identity_fingerprint != _benchmark_identity_fingerprint(
+            versions=self.versions,
+            artifacts=self.artifacts,
+            benchmark=self.benchmark,
+        ):
+            raise ValueError("freeze benchmark identity fingerprint does not match")
+        if self.record_fingerprint != _record_fingerprint(self):
+            raise ValueError("freeze record fingerprint does not match")
+        return self
+
+
+CorpusFreezeRecord = CorpusFreezeRecordV1 | CorpusFreezeRecordV2
+
+
 @dataclass(frozen=True)
 class VerifiedFrozenCorpus:
-    record: CorpusFreezeRecordV1
+    record: CorpusFreezeRecord
     bundle: VerifiedAuthoringBundle
     benchmark: QualifiedTestSlice
 
@@ -233,8 +303,8 @@ def create_freeze_record_file(
     freeze_revision: int,
     previous_record_paths: tuple[Path, ...],
     input_git_revision: str,
-    paths: FreezeArtifactPathsV1,
-) -> CorpusFreezeRecordV1:
+    paths: FreezeArtifactPathsV2,
+) -> CorpusFreezeRecordV2:
     """Build and atomically create one explicit record without replacing any artifact."""
     resolved_repo_root = _verified_repo_root(repo_root)
     resolved_output = _resolve_external_record_path(resolved_repo_root, output_path)
@@ -263,8 +333,8 @@ def build_freeze_record(
     freeze_revision: int,
     previous_record_paths: tuple[Path, ...],
     input_git_revision: str,
-    paths: FreezeArtifactPathsV1,
-) -> CorpusFreezeRecordV1:
+    paths: FreezeArtifactPathsV2,
+) -> CorpusFreezeRecordV2:
     """Build a record only from committed, fully qualified worktree artifacts."""
     resolved_repo_root = _verified_repo_root(repo_root)
     resolved_commit, object_format = _resolve_git_revision(
@@ -292,7 +362,8 @@ def build_freeze_record(
     _require_clean_worktree(resolved_repo_root)
     bundle, benchmark, obligation_sha256 = _verify_freeze_input_snapshot(input_snapshot)
     inventory = _build_inventory(bundle)
-    artifacts = FreezeArtifactFingerprintsV1(
+    policy_artifact_sha256 = _verify_ai_origin_policy_snapshot(input_snapshot.ai_origin_policy)
+    artifacts = FreezeArtifactFingerprintsV2(
         group_source_fingerprint=bundle.group_source_fingerprint,
         split_assignment_fingerprint=bundle.split_assignment_fingerprint,
         compiled_artifact_sha256=_sha256_bytes(input_snapshot.compiled_corpus),
@@ -301,6 +372,8 @@ def build_freeze_record(
         review_ledger_fingerprint=bundle.review.ledger_fingerprint,
         contrast_manifest_fingerprint=bundle.contrast.fingerprint,
         obligation_manifest_sha256=obligation_sha256,
+        ai_origin_policy_artifact_sha256=policy_artifact_sha256,
+        ai_origin_policy_fingerprint=ai_origin_policy_fingerprint_v1(),
     )
     versions = _current_versions()
     benchmark_contract = _current_benchmark_contract()
@@ -309,8 +382,8 @@ def build_freeze_record(
         "freeze_id": freeze_id,
         "freeze_revision": freeze_revision,
         "previous_freeze_record_fingerprint": previous_freeze_record_fingerprint,
-        "record_fingerprint_algorithm": FREEZE_RECORD_FINGERPRINT_ALGORITHM_V1,
-        "benchmark_identity_fingerprint_algorithm": (BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V1),
+        "record_fingerprint_algorithm": FREEZE_RECORD_FINGERPRINT_ALGORITHM_V2,
+        "benchmark_identity_fingerprint_algorithm": (BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V2),
         "input_git_revision": {
             "object_format": object_format,
             "commit": resolved_commit,
@@ -330,12 +403,12 @@ def build_freeze_record(
     payload["record_fingerprint"] = _sha256_text(
         canonical_json_text(
             {
-                "algorithm": FREEZE_RECORD_FINGERPRINT_ALGORITHM_V1,
+                "algorithm": FREEZE_RECORD_FINGERPRINT_ALGORITHM_V2,
                 "record": payload,
             }
         )
     )
-    return CorpusFreezeRecordV1.model_validate(payload)
+    return CorpusFreezeRecordV2.model_validate(payload)
 
 
 def _verified_previous_record_chain(
@@ -435,13 +508,18 @@ def verify_freeze_record(
         benchmark=benchmark,
         obligation_sha256=obligation_sha256,
         compiled_artifact_sha256=_sha256_bytes(input_snapshot.compiled_corpus),
+        ai_origin_policy_artifact_sha256=(
+            _verify_ai_origin_policy_snapshot(input_snapshot.ai_origin_policy)
+            if isinstance(record, CorpusFreezeRecordV2)
+            else None
+        ),
     )
     return VerifiedFrozenCorpus(record=record, bundle=bundle, benchmark=benchmark)
 
 
 def _verify_historical_freeze_record(
     repo_root: Path,
-    record: CorpusFreezeRecordV1,
+    record: CorpusFreezeRecord,
 ) -> None:
     """Verify one predecessor from its own Git input without consulting the worktree."""
     resolved_commit, object_format = _resolve_git_revision(
@@ -466,22 +544,30 @@ def _verify_historical_freeze_record(
         benchmark=benchmark,
         obligation_sha256=obligation_sha256,
         compiled_artifact_sha256=_sha256_bytes(input_snapshot.compiled_corpus),
+        ai_origin_policy_artifact_sha256=(
+            _verify_ai_origin_policy_snapshot(input_snapshot.ai_origin_policy)
+            if isinstance(record, CorpusFreezeRecordV2)
+            else None
+        ),
     )
 
 
 def _assert_record_evidence(
-    record: CorpusFreezeRecordV1,
+    record: CorpusFreezeRecord,
     *,
     bundle: VerifiedAuthoringBundle,
     benchmark: QualifiedTestSlice,
     obligation_sha256: str,
     compiled_artifact_sha256: str,
+    ai_origin_policy_artifact_sha256: str | None = None,
 ) -> None:
     expected = _record_evidence(
         bundle=bundle,
         benchmark=benchmark,
         obligation_sha256=obligation_sha256,
         compiled_artifact_sha256=compiled_artifact_sha256,
+        record=record,
+        ai_origin_policy_artifact_sha256=ai_origin_policy_artifact_sha256,
     )
     if record.versions != expected["versions"]:
         raise ValueError("freeze contract versions do not match the live contracts")
@@ -526,25 +612,28 @@ def score_qualified_test_slice_from_freeze(
     return _score_qualified_test_slice(benchmark, predictions)
 
 
-def load_freeze_record(path: Path) -> CorpusFreezeRecordV1:
+def load_freeze_record(path: Path) -> CorpusFreezeRecord:
     raw = read_regular_artifact(path, label="freeze record")
     return _parse_freeze_record(raw, label=str(path))
 
 
-def _parse_freeze_record(raw: bytes, *, label: str) -> CorpusFreezeRecordV1:
+def _parse_freeze_record(raw: bytes, *, label: str) -> CorpusFreezeRecord:
     """Parse one already captured record snapshot without rereading its path."""
     try:
         decoded = normalize_text_tree(json.loads(raw, object_pairs_hook=_object_from_unique_pairs))
         if not isinstance(decoded, dict):
             raise ValueError("freeze record root must be an object")
-        if decoded.get("freeze_record_schema_version") != FREEZE_RECORD_SCHEMA_VERSION:
-            raise ValueError("unsupported freeze record schema version")
-        return CorpusFreezeRecordV1.model_validate(decoded)
+        version = decoded.get("freeze_record_schema_version")
+        if version == FREEZE_RECORD_SCHEMA_VERSION_V1:
+            return CorpusFreezeRecordV1.model_validate(decoded)
+        if version == FREEZE_RECORD_SCHEMA_VERSION:
+            return CorpusFreezeRecordV2.model_validate(decoded)
+        raise ValueError("unsupported freeze record schema version")
     except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
         raise ValueError(f"invalid freeze record: {label}") from exc
 
 
-def serialize_freeze_record(record: CorpusFreezeRecordV1) -> str:
+def serialize_freeze_record(record: CorpusFreezeRecord) -> str:
     return (
         json.dumps(record.model_dump(mode="json"), ensure_ascii=False, indent=2, sort_keys=True)
         + "\n"
@@ -552,13 +641,13 @@ def serialize_freeze_record(record: CorpusFreezeRecordV1) -> str:
 
 
 def serialize_freeze_record_schema() -> str:
-    schema = CorpusFreezeRecordV1.model_json_schema()
+    schema = CorpusFreezeRecordV2.model_json_schema()
     schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-    schema["$id"] = "urn:maeumcall:structured-nlu:freeze-record:v1"
+    schema["$id"] = "urn:maeumcall:structured-nlu:freeze-record:v2"
     return json.dumps(schema, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
 
-def write_new_freeze_record(path: Path, record: CorpusFreezeRecordV1) -> None:
+def write_new_freeze_record(path: Path, record: CorpusFreezeRecord) -> None:
     """Create one immutable record atomically and refuse every overwrite attempt."""
     _require_absolute_path_without_symlinks(path, label="freeze record output")
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -597,6 +686,7 @@ class _FreezeInputSnapshot:
     review_ledger: bytes
     contrast_manifest: bytes
     obligation_manifest: bytes
+    ai_origin_policy: bytes | None = None
 
 
 def _verify_freeze_input_snapshot(
@@ -639,10 +729,14 @@ def _record_evidence(
     benchmark: QualifiedTestSlice,
     obligation_sha256: str,
     compiled_artifact_sha256: str,
+    record: CorpusFreezeRecord,
+    ai_origin_policy_artifact_sha256: str | None,
 ) -> dict[str, BaseModel]:
-    return {
-        "versions": _current_versions(),
-        "artifacts": FreezeArtifactFingerprintsV1(
+    if isinstance(record, CorpusFreezeRecordV2):
+        if ai_origin_policy_artifact_sha256 is None:
+            raise ValueError("freeze record V2 requires the AI-origin policy artifact")
+        versions: BaseModel = _current_versions()
+        artifacts: BaseModel = FreezeArtifactFingerprintsV2(
             group_source_fingerprint=bundle.group_source_fingerprint,
             split_assignment_fingerprint=bundle.split_assignment_fingerprint,
             compiled_artifact_sha256=compiled_artifact_sha256,
@@ -651,14 +745,39 @@ def _record_evidence(
             review_ledger_fingerprint=bundle.review.ledger_fingerprint,
             contrast_manifest_fingerprint=bundle.contrast.fingerprint,
             obligation_manifest_sha256=obligation_sha256,
-        ),
+            ai_origin_policy_artifact_sha256=ai_origin_policy_artifact_sha256,
+            ai_origin_policy_fingerprint=ai_origin_policy_fingerprint_v1(),
+        )
+    else:
+        versions = FreezeContractVersionsV1(
+            authoring_schema_version=2,
+            split_assignment_schema_version=1,
+            dataset_schema_version=STRUCTURED_NLU_DATASET_VERSION,
+            state_contract_version=SCENARIO_STATE_VERSION,
+            review_ledger_schema_version=1,
+            contrast_manifest_schema_version=CONTRAST_MANIFEST_SCHEMA_VERSION,
+            coverage_profile_version=3,
+        )
+        artifacts = FreezeArtifactFingerprintsV1(
+            group_source_fingerprint=bundle.group_source_fingerprint,
+            split_assignment_fingerprint=bundle.split_assignment_fingerprint,
+            compiled_artifact_sha256=compiled_artifact_sha256,
+            corpus_fingerprint=benchmark.corpus_fingerprint,
+            annotation_guideline_fingerprint=bundle.review.guideline_fingerprint,
+            review_ledger_fingerprint=bundle.review.ledger_fingerprint,
+            contrast_manifest_fingerprint=bundle.contrast.fingerprint,
+            obligation_manifest_sha256=obligation_sha256,
+        )
+    return {
+        "versions": versions,
+        "artifacts": artifacts,
         "benchmark": _current_benchmark_contract(),
         "inventory": _build_inventory(bundle),
     }
 
 
-def _current_versions() -> FreezeContractVersionsV1:
-    return FreezeContractVersionsV1(
+def _current_versions() -> FreezeContractVersionsV2:
+    return FreezeContractVersionsV2(
         authoring_schema_version=2,
         split_assignment_schema_version=1,
         dataset_schema_version=STRUCTURED_NLU_DATASET_VERSION,
@@ -666,6 +785,7 @@ def _current_versions() -> FreezeContractVersionsV1:
         review_ledger_schema_version=1,
         contrast_manifest_schema_version=CONTRAST_MANIFEST_SCHEMA_VERSION,
         coverage_profile_version=3,
+        ai_origin_policy_schema_version=1,
     )
 
 
@@ -699,12 +819,17 @@ def _build_inventory(bundle: VerifiedAuthoringBundle) -> FreezeCorpusInventoryV1
 
 def _benchmark_identity_fingerprint(
     *,
-    versions: FreezeContractVersionsV1,
-    artifacts: FreezeArtifactFingerprintsV1,
+    versions: FreezeContractVersionsV1 | FreezeContractVersionsV2,
+    artifacts: FreezeArtifactFingerprintsV1 | FreezeArtifactFingerprintsV2,
     benchmark: FreezeBenchmarkContractV1,
 ) -> str:
+    is_v2 = isinstance(artifacts, FreezeArtifactFingerprintsV2)
     payload = {
-        "algorithm": BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V1,
+        "algorithm": (
+            BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V2
+            if is_v2
+            else BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V1
+        ),
         "versions": versions.model_dump(mode="json"),
         "semantic_artifacts": {
             "split_assignment_fingerprint": artifacts.split_assignment_fingerprint,
@@ -716,15 +841,27 @@ def _benchmark_identity_fingerprint(
         },
         "benchmark": benchmark.model_dump(mode="json"),
     }
+    if is_v2:
+        payload["semantic_artifacts"].update(
+            {
+                "ai_origin_policy_fingerprint": artifacts.ai_origin_policy_fingerprint,
+                "ai_origin_policy_artifact_sha256": (artifacts.ai_origin_policy_artifact_sha256),
+            }
+        )
     return _sha256_text(canonical_json_text(payload))
 
 
-def _record_fingerprint(record: CorpusFreezeRecordV1) -> str:
+def _record_fingerprint(record: CorpusFreezeRecord) -> str:
+    algorithm = (
+        FREEZE_RECORD_FINGERPRINT_ALGORITHM_V2
+        if isinstance(record, CorpusFreezeRecordV2)
+        else FREEZE_RECORD_FINGERPRINT_ALGORITHM_V1
+    )
     payload = record.model_dump(mode="json", exclude={"record_fingerprint"})
     return _sha256_text(
         canonical_json_text(
             {
-                "algorithm": FREEZE_RECORD_FINGERPRINT_ALGORITHM_V1,
+                "algorithm": algorithm,
                 "record": payload,
             }
         )
@@ -752,11 +889,12 @@ class _ResolvedFreezeArtifactPaths:
     review_ledger_path: Path
     contrast_manifest_path: Path
     obligation_manifest_path: Path
+    ai_origin_policy_path: Path | None = None
 
 
 def _resolve_artifact_paths(
     repo_root: Path,
-    paths: FreezeArtifactPathsV1,
+    paths: FreezeArtifactPathsV1 | FreezeArtifactPathsV2,
 ) -> _ResolvedFreezeArtifactPaths:
     values = {
         name: _resolve_repo_artifact(repo_root, relative, label=name.replace("_", " "))
@@ -858,7 +996,7 @@ def _require_git_ancestor(repo_root: Path, ancestor: str, descendant: str) -> No
 def _capture_git_input_snapshot(
     repo_root: Path,
     commit: str,
-    paths: FreezeArtifactPathsV1,
+    paths: FreezeArtifactPathsV1 | FreezeArtifactPathsV2,
     *,
     group_source_root: Path,
 ) -> _FreezeInputSnapshot:
@@ -904,6 +1042,11 @@ def _capture_git_input_snapshot(
         review_ledger=_git_file_bytes(repo_root, commit, paths.review_ledger_path),
         contrast_manifest=_git_file_bytes(repo_root, commit, paths.contrast_manifest_path),
         obligation_manifest=_git_file_bytes(repo_root, commit, paths.obligation_manifest_path),
+        ai_origin_policy=(
+            _git_file_bytes(repo_root, commit, paths.ai_origin_policy_path)
+            if isinstance(paths, FreezeArtifactPathsV2)
+            else None
+        ),
     )
 
 
@@ -935,6 +1078,8 @@ def _require_worktree_matches_snapshot(
         resolved.contrast_manifest_path: snapshot.contrast_manifest,
         resolved.obligation_manifest_path: snapshot.obligation_manifest,
     }
+    if resolved.ai_origin_policy_path is not None and snapshot.ai_origin_policy is not None:
+        expected_files[resolved.ai_origin_policy_path] = snapshot.ai_origin_policy
     for path, expected in expected_files.items():
         if path.read_bytes() != expected:
             raise ValueError(f"governed artifact differs from the input Git revision: {path.name}")
@@ -954,7 +1099,7 @@ def _git_file_bytes(repo_root: Path, commit: str, relative: str) -> bytes:
 def _load_committed_freeze_record(
     repo_root: Path,
     record_path: Path,
-) -> CorpusFreezeRecordV1:
+) -> CorpusFreezeRecord:
     """Parse the immutable HEAD blob and compare the worktree file to those same bytes."""
     relative = record_path.relative_to(repo_root).as_posix()
     committed = _git_file_bytes(repo_root, "HEAD", relative)
@@ -968,7 +1113,7 @@ def _load_freeze_record_from_git(
     repo_root: Path,
     revision: str,
     record_path: Path,
-) -> CorpusFreezeRecordV1:
+) -> CorpusFreezeRecord:
     """Load a predecessor from the successor's immutable Git input snapshot."""
     relative = record_path.relative_to(repo_root).as_posix()
     committed = _git_file_bytes(repo_root, revision, relative)
@@ -994,6 +1139,17 @@ def _object_from_unique_pairs(pairs: list[tuple[str, object]]) -> dict[str, obje
             raise ValueError(f"freeze record contains a duplicate JSON key: {key}")
         result[key] = value
     return result
+
+
+def _verify_ai_origin_policy_snapshot(policy: bytes | None) -> str:
+    if policy is None:
+        raise ValueError("freeze record V2 requires the AI-origin policy artifact")
+    expected = serialize_ai_origin_policy_v1().encode("utf-8")
+    if policy != expected:
+        raise ValueError("AI-origin policy artifact differs from immutable policy V1")
+    if ai_origin_policy_fingerprint_v1() != EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1:
+        raise ValueError("AI-origin policy fingerprint differs from immutable policy V1")
+    return _sha256_bytes(policy)
 
 
 def _sha256_bytes(value: bytes) -> str:

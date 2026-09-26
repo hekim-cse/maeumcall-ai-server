@@ -353,7 +353,8 @@ validation·test corpus가 아직 없으므로 실제 검수 원장이나 freeze
 
 split 원장은 각 의미 그룹이 development·validation·test 중 어디에 속하는지만
 관리합니다. Freeze record는 그 원장을 포함해 작성 source, compiled corpus, 작성
-지침, 검수 원장, contrast manifest, Coverage V3 정책이 **어떤 조합으로 승인됐는지**
+지침, 검수 원장, contrast manifest, Coverage V3 정책과 AI-origin 차단 정책이
+**어떤 조합으로 승인됐는지**
 한 장에 묶는 버전 있는 확인서입니다.
 
 레코드를 만들 때 입력 artifact는 먼저 커밋 A에 들어 있어야 합니다. 레코드는 커밋
@@ -378,3 +379,9 @@ B에 추가합니다. 이렇게 해야 레코드가 자기 자신을 포함한 �
 자체 시각과 SHA-256만으로 정말 모델 결과를 보기 전에 사람이 승인했다는 사실까지
 증명하지는 않습니다. 실제 사전 승인 시점은 레코드를 먼저 리뷰·병합하는 Git/PR
 운영 순서와 후속 실행 manifest가 함께 남겨야 합니다.
+
+현재 생성 형식인 Freeze Record V2는 `ai-origin-policy.v1.json`의 경로와 raw SHA-256,
+semantic policy fingerprint, schema version도 함께 고정합니다. 따라서 나중에 AI 후보
+목록이나 예약 ID 정책이 바뀌면 기존 동결과 같은 작성 경계였던 것처럼 취급할 수
+없습니다. Freeze Record V1 계약은 과거 형식을 읽기 위해 남겨 두고 새 레코드는 V2로만
+생성합니다.

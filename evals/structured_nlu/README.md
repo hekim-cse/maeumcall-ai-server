@@ -107,7 +107,7 @@
 - 그룹 파일과 분리된 원장에서 `conversation_group_id`별 split을 한 번만 소유하고, 원장과 작성 그룹의 정확한 일치를 강제하는 검사
 - 공식 결과 후보에 split 원장의 의미 기반 SHA-256 식별값을 함께 보존하고 채점 직전에 다시 대조하는 검사
 - 라이브 계약과 V3 문맥·대조 정책에서 1,562개 작성 의무를 자동 생성하는 V3 의무 목록
-- source·split·compiled corpus·작성 지침·검수 원장·contrast·Coverage V3 조합과 입력 Git 커밋을 한 레코드로 고정하는 freeze record V1 계약
+- source·split·compiled corpus·작성 지침·검수 원장·contrast·Coverage V3·AI-origin policy 조합과 입력 Git 커밋을 한 레코드로 고정하는 freeze record V2 계약
 - freeze record가 가리킨 Git blob snapshot으로 공식 test를 준비하고 채점 직전에 같은 레코드·artifact·프로필을 다시 검증하는 경계
 - 선택형 필드 한 건이 여러 enum 선택지 coverage를 대신하지 못하게 하는 검사
 - 작성자가 다른 그룹 ID를 붙여도 완전히 동일한 모델 입력의 corpus 내 중복을 막는 검사
@@ -195,6 +195,7 @@ case 지문이 달라져 과거 승인을 재사용할 수 없다. development�
 - 작성 그룹 source, split 배정 원장, compiled corpus의 raw·semantic 지문
 - 작성 지침, validation·test 검수 원장, contrast manifest 지문
 - Coverage V3 의무 manifest와 공식 프로필·coverage·contrast 정책 지문
+- 공식 corpus에서 그대로 승격할 수 없는 AI 원문·예약 ID를 고정한 AI-origin policy V1의 raw·semantic 지문
 - dataset·state·authoring·split·review·contrast의 서로 독립적인 버전
 - split별 case 수와 전체 group·case ID 집합 지문
 - 이 입력들이 커밋된 정확한 Git object format과 full commit SHA
@@ -221,8 +222,10 @@ case 지문이 달라져 과거 승인을 재사용할 수 없다. development�
 증명하지 않으므로, 사전 승인 순서는 레코드를 먼저 리뷰·병합하는 Git/PR 이력과
 후속 실행 manifest에서 관리해야 한다.
 
-현재 구현은 **freeze record V1 형식, 생성·검증기와 freeze-only 공식 준비·채점
-경계**까지다. 실제 source·원장·corpus가 없으므로 실제 freeze record 파일을 만들거나
+현재 생성 형식은 **freeze record V2**다. V2는 V1의 source·split·검수·contrast·coverage
+조합에 AI-origin policy V1의 경로, 정확한 artifact SHA-256, semantic policy fingerprint와
+schema version을 추가한다. V1 모델과 해시 알고리즘은 과거 레코드 해석을 위해 코드에
+남기지만, 새 레코드는 V2로만 생성한다. 실제 source·원장·corpus가 없으므로 실제 freeze record 파일을 만들거나
 데이터셋 동결이 끝났다고 기록하지 않는다.
 
 ## 작성 원본과 compiler
@@ -406,6 +409,7 @@ python -m scripts.freeze_structured_nlu_benchmark create \
   --review-ledger-path evals/structured_nlu/manifests/review-ledger.v1.json \
   --contrast-manifest-path evals/structured_nlu/manifests/contrast-groups.v1.json \
   --obligation-manifest-path evals/structured_nlu/manifests/coverage-obligations.v3.json \
+  --ai-origin-policy-path evals/structured_nlu/manifests/ai-origin-policy.v1.json \
   --output evals/structured_nlu/freezes/structured-nlu-corpus.r1.json
 
 # record 파일을 다음 커밋에 추가한 뒤, 명시한 record와 현재 Git blob을 다시 검증한다.

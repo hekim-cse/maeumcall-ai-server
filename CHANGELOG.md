@@ -11,7 +11,7 @@
 - 그룹 파일과 분리된 split 배정 원장, 작성 그룹 일대일 대조, 공식 채점 직전 split 원장 지문 재검증
 - 버전 지정 구조화 NLU 정답 작성 지침과 validation·test case·지침 지문을 공식 준비·채점 직전에 대조하는 검수 원장 계약
 - validation·test별 시나리오 태그, 이전 필드 문맥, 예약 대안시간 관계와 검수 지문이 연결된 명시적 대조 역할을 고정한 Coverage V3 프로필·1,562개 의무 목록
-- 구조화 NLU source·split·검수·contrast·Coverage V3 조합과 입력 Git blob snapshot을 고정하는 versioned freeze record V1 스키마·생성기·검증기
+- 구조화 NLU source·split·검수·contrast·Coverage V3 조합과 입력 Git blob snapshot을 고정하는 versioned freeze record V1 기반 및 AI-origin policy까지 포함한 V2 생성·검증 경계
 - AI 제안을 사람 작성 골든 source와 분리하고 16개 구조화 NLU 시나리오의 미검수 hard-negative 시작 제안을 제공하는 draft sidecar 계약
 - 16개 AI 제안을 사람이 새 발화·정답·판단 근거로 다시 작성하기 위한 결정론적 검수 작업지와 계약 일치 검사
 - 16개 시나리오별 서브 에이전트 대안·판단 근거 sidecar와 불변 AI-origin V1 지문 원장 기반 NFC 전역 원문 승격 차단
