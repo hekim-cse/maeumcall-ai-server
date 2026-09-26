@@ -1,0 +1,35 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "consent_scope": null,
+        "consultation_goal": null,
+        "current_service": null,
+        "inquiry_type": null
+      },
+      "id": "support-plan-contract-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "consent_scope": null,
+          "consultation_goal": null,
+          "current_service": null,
+          "inquiry_type": null
+        },
+        "intent": "plan_contract_consultation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "아니 나 멤버십 vip 혜택 받고 싶은데 어떻게 사용해."
+    }
+  ],
+  "conversation_group_id": "support-plan-contract-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "고객센터:요금/약정 상담"
+}

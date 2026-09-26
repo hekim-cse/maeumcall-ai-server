@@ -24,6 +24,9 @@ EXPECTED_HUMAN_DRAFTS = {
     "시청:대형폐기물 배출": "계란 껍질은 일반쓰레기로 버리나요?",
     "시청:여권 발급 문의": "가족 증명서 발급하고 싶어.",
     "시청:주민등록 등본 문의": "여기 가로등 불 꺼졌어요",
+    "고객센터:a/s 접수": "아니 나 요금제 너무 비싸. 다른 걸로 바꿔줘.",
+    "고객센터:요금/약정 상담": "아니 나 멤버십 vip 혜택 받고 싶은데 어떻게 사용해.",
+    "고객센터:인터넷/통화 문제 문의": "나 핸드폰이 안켜져.",
 }
 
 
@@ -36,7 +39,7 @@ def test_committed_human_draft_corpus_matches_its_authoring_sources() -> None:
     )
 
     assert verified == dataset
-    assert len(dataset.cases) == 13
+    assert len(dataset.cases) == 16
     assert {case.scenario_key: case.user_message for case in dataset.cases} == (
         EXPECTED_HUMAN_DRAFTS
     )

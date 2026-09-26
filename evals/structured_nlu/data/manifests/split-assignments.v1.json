@@ -51,6 +51,18 @@
     {
       "conversation_group_id": "reservation-study-room-human-hard-negative-001",
       "split": "development"
+    },
+    {
+      "conversation_group_id": "support-network-call-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "support-plan-contract-human-hard-negative-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "support-service-request-human-hard-negative-001",
+      "split": "development"
     }
   ],
   "dataset_version": 2,

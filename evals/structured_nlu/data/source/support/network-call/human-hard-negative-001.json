@@ -1,0 +1,39 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "greeting",
+      "current_fields": {
+        "next_action": null,
+        "occurred_at": null,
+        "scope": null,
+        "service_type": null,
+        "symptom": null,
+        "troubleshooting_done": null
+      },
+      "id": "support-network-call-human-hard-negative-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "intent": "network_call_issue",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "나 핸드폰이 안켜져."
+    }
+  ],
+  "conversation_group_id": "support-network-call-human-hard-negative-001",
+  "provenance": "human_authored",
+  "scenario_key": "고객센터:인터넷/통화 문제 문의"
+}
