@@ -276,7 +276,7 @@ def test_subagent_manifest_rejects_nfc_duplicates_and_fixed_content_drift() -> N
     payload["suggestions"][0]["proposed_case"]["user_message"] = unicodedata.normalize(
         "NFD", seed.proposed_case.user_message
     )
-    with pytest.raises(ValidationError):
+    with pytest.raises(ValidationError, match="message does not match the V1 policy"):
         AISubagentCandidateManifestV1.model_validate(payload)
 
     payload = json.loads(serialize_ai_subagent_candidate_manifest_v1())
