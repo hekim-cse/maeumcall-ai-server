@@ -162,6 +162,11 @@ def _init_repo(tmp_path: Path, dataset: GoldDataset) -> tuple[Path, FreezeArtifa
                 encoding="utf-8"
             )
         ),
+        "manifests/ai-origin-policy.v6.json": (
+            Path("evals/structured_nlu/manifests/ai-origin-policy.v6.json").read_text(
+                encoding="utf-8"
+            )
+        ),
     }
     for relative, content in files.items():
         path = repo / relative
@@ -181,7 +186,7 @@ def _init_repo(tmp_path: Path, dataset: GoldDataset) -> tuple[Path, FreezeArtifa
         review_ledger_path="data/review-ledger.v1.json",
         contrast_manifest_path="data/contrast-groups.v1.json",
         obligation_manifest_path="manifests/coverage-obligations.v3.json",
-        ai_origin_policy_path="manifests/ai-origin-policy.v5.json",
+        ai_origin_policy_path="manifests/ai-origin-policy.v6.json",
     )
     return repo, paths, commit
 
@@ -348,21 +353,21 @@ def _as_historical_v3(
     )
 
 
-def _as_audit_v4_policy_v4(
+def _as_audit_v4_policy_v5(
     record: freeze_module.CorpusFreezeRecordV4,
 ) -> freeze_module.CorpusFreezeRecordV4:
-    versions = record.versions.model_copy(update={"ai_origin_policy_schema_version": 4})
+    versions = record.versions.model_copy(update={"ai_origin_policy_schema_version": 5})
     paths = record.paths.model_copy(
-        update={"ai_origin_policy_path": "manifests/ai-origin-policy.v4.json"}
+        update={"ai_origin_policy_path": "manifests/ai-origin-policy.v5.json"}
     )
-    policy_v4 = Path("evals/structured_nlu/manifests/ai-origin-policy.v4.json").read_bytes()
-    descriptor = freeze_module.ai_origin_policy_descriptor(4)
+    policy_v5 = Path("evals/structured_nlu/manifests/ai-origin-policy.v5.json").read_bytes()
+    descriptor = freeze_module.ai_origin_policy_descriptor(5)
     artifacts = record.artifacts.model_copy(
         update={
             "ai_origin_policy": freeze_module.FreezeAIOriginPolicyDescriptorV1(
-                schema_version=4,
+                schema_version=5,
                 policy_id=descriptor.policy_id,
-                artifact_sha256=freeze_module._sha256_bytes(policy_v4),
+                artifact_sha256=freeze_module._sha256_bytes(policy_v5),
                 policy_fingerprint=descriptor.policy_fingerprint,
             )
         }
@@ -396,8 +401,8 @@ def test_freeze_record_binds_the_committed_benchmark_snapshot(
     assert record.inventory.group_count == 3
     assert record.benchmark.obligation_count == 1562
     assert record.record_fingerprint_algorithm == FREEZE_RECORD_FINGERPRINT_ALGORITHM_V4
-    assert record.versions.ai_origin_policy_schema_version == 5
-    assert record.paths.ai_origin_policy_path == "manifests/ai-origin-policy.v5.json"
+    assert record.versions.ai_origin_policy_schema_version == 6
+    assert record.paths.ai_origin_policy_path == "manifests/ai-origin-policy.v6.json"
     changed_policy = record.artifacts.model_copy(
         update={
             "ai_origin_policy": record.artifacts.ai_origin_policy.model_copy(
@@ -545,11 +550,11 @@ def test_v4_audit_can_replay_registered_policy_but_official_verify_requires_curr
     monkeypatch: pytest.MonkeyPatch,
 ):
     repo, _, current, verified_inputs = _build_record(tmp_path, monkeypatch)
-    audit_record = _as_audit_v4_policy_v4(current)
-    record_path = repo / "freezes" / "audit-v4-policy-v4.json"
+    audit_record = _as_audit_v4_policy_v5(current)
+    record_path = repo / "freezes" / "audit-v4-policy-v5.json"
     write_new_freeze_record(record_path, audit_record)
-    _git(repo, "add", "freezes/audit-v4-policy-v4.json")
-    _git(repo, "commit", "-m", "test: add V4 audit record with policy V4")
+    _git(repo, "add", "freezes/audit-v4-policy-v5.json")
+    _git(repo, "commit", "-m", "test: add V4 audit record with policy V5")
     monkeypatch.setattr(
         freeze_module,
         "_verify_freeze_input_snapshot",
@@ -570,8 +575,8 @@ def test_v4_audit_can_replay_registered_policy_but_official_verify_requires_curr
         ({"schema_version": 2}, {}, "descriptor version does not match"),
         ({"policy_fingerprint": "9" * 64}, {}, "descriptor is not registered"),
         (
-            {"schema_version": 6},
-            {"ai_origin_policy_schema_version": 6},
+            {"schema_version": 7},
+            {"ai_origin_policy_schema_version": 7},
             "unsupported AI-origin policy",
         ),
     ],
