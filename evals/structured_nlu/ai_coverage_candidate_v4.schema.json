@@ -25,6 +25,24 @@
           "$ref": "#/$defs/ProposedAuthoringCase"
         },
         "scenario_key": {
+          "enum": [
+            "고객센터:a/s 접수",
+            "고객센터:요금/약정 상담",
+            "고객센터:인터넷/통화 문제 문의",
+            "교수님:결석 사유 전달",
+            "교수님:과제 문의",
+            "교수님:면담 예약",
+            "배달:배달 지연 문의",
+            "배달:주문 변경",
+            "배달:환불/재배달 문의",
+            "시청:대형폐기물 배출",
+            "시청:여권 발급 문의",
+            "시청:주민등록 등본 문의",
+            "예약:미용실 예약",
+            "예약:병원 예약",
+            "예약:스터디룸 예약",
+            "예약:식당 예약"
+          ],
           "maxLength": 1000,
           "minLength": 1,
           "pattern": "\\S",
@@ -116,6 +134,24 @@
           "$ref": "#/$defs/CoverageDimension"
         },
         "scenario_key": {
+          "enum": [
+            "고객센터:a/s 접수",
+            "고객센터:요금/약정 상담",
+            "고객센터:인터넷/통화 문제 문의",
+            "교수님:결석 사유 전달",
+            "교수님:과제 문의",
+            "교수님:면담 예약",
+            "배달:배달 지연 문의",
+            "배달:주문 변경",
+            "배달:환불/재배달 문의",
+            "시청:대형폐기물 배출",
+            "시청:여권 발급 문의",
+            "시청:주민등록 등본 문의",
+            "예약:미용실 예약",
+            "예약:병원 예약",
+            "예약:스터디룸 예약",
+            "예약:식당 예약"
+          ],
           "maxLength": 1000,
           "minLength": 1,
           "pattern": "\\S",
@@ -380,11 +416,13 @@
       "type": "string"
     },
     "profile_fingerprint": {
+      "const": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
       "pattern": "^[0-9a-f]{64}$",
       "title": "Profile Fingerprint",
       "type": "string"
     },
     "profile_id": {
+      "const": "maeumcall-structured-nlu-v3",
       "maxLength": 1000,
       "minLength": 1,
       "pattern": "\\S",

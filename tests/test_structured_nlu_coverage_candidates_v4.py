@@ -109,17 +109,40 @@ def test_v4_rejects_cross_batch_conversation_group_id() -> None:
         AICoverageCandidateManifestV4.model_validate(payload)
 
 
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda payload: payload["suggestions"][0].__setitem__("unexpected", 1),
+        lambda payload: payload["suggestions"][0]["target_obligations"][0].__setitem__(
+            "dimension", "not_a_dimension"
+        ),
+        lambda payload: payload["suggestions"][0]["proposed_case"].__setitem__(
+            "user_message", "   "
+        ),
+        lambda payload: payload["suggestions"][0].__setitem__(
+            "scenario_key", "시청:여권 발급 문의"
+        ),
+        lambda payload: payload["suggestions"][0]["target_obligations"].pop(),
+    ],
+)
+def test_v4_rejects_tampered_manifest(mutate) -> None:
+    payload = build_ai_coverage_candidate_manifest_v4().model_dump(mode="json")
+    mutate(payload)
+    with pytest.raises(ValidationError):
+        AICoverageCandidateManifestV4.model_validate(payload)
+
+
 def test_v4_artifacts_are_deterministic() -> None:
     base = ROOT / "evals/structured_nlu"
-    assert (
-        base / "drafts/coverage-candidates.v4.json"
-    ).read_text() == serialize_ai_coverage_candidate_manifest_v4()
-    assert (
-        base / "ai_coverage_candidate_v4.schema.json"
-    ).read_text() == serialize_ai_coverage_candidate_schema_v4()
-    assert (
-        base / "drafts/coverage-review-packet.v4.md"
-    ).read_text() == render_ai_coverage_candidate_review_packet_v4()
+    assert (base / "drafts/coverage-candidates.v4.json").read_text(
+        encoding="utf-8"
+    ) == serialize_ai_coverage_candidate_manifest_v4()
+    assert (base / "ai_coverage_candidate_v4.schema.json").read_text(
+        encoding="utf-8"
+    ) == serialize_ai_coverage_candidate_schema_v4()
+    assert (base / "drafts/coverage-review-packet.v4.md").read_text(
+        encoding="utf-8"
+    ) == render_ai_coverage_candidate_review_packet_v4()
     assert (
         build_ai_coverage_candidate_manifest_v4().predecessor_artifact_sha256
         == "c30d43ede76fd4db84797be270201b5382eecc7b8fa71a93c2b36d55a0ea8e03"

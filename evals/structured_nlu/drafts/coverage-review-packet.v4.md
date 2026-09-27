@@ -14,6 +14,7 @@
 
 - 후보 ID: `ai-coverage-v4-city-certificate-documents-bundle`
 - AI 후보 발화: “주민센터에 자전거 보관소가 있나요?”
+
 ```json
 {
   "current_fields": {
@@ -77,12 +78,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 02. 시청:주민등록 등본 문의
 
 - 후보 ID: `ai-coverage-v4-city-certificate-eligibility-bundle`
 - AI 후보 발화: “무인민원발급기 화면 밝기를 조절할 수 있나요?”
+
 ```json
 {
   "current_fields": {
@@ -141,12 +144,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 03. 시청:주민등록 등본 문의
 
 - 후보 ID: `ai-coverage-v4-city-certificate-fee-in-person`
 - AI 후보 발화: “주민센터 문화 강좌 일정이 궁금해요.”
+
 ```json
 {
   "current_fields": {
@@ -195,12 +200,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 04. 시청:여권 발급 문의
 
 - 후보 ID: `ai-coverage-v4-city-passport-office-bundle`
 - AI 후보 발화: “시청 주차 요금이 궁금합니다.”
+
 ```json
 {
   "current_fields": {
@@ -264,12 +271,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 05. 시청:여권 발급 문의
 
 - 후보 ID: `ai-coverage-v4-city-passport-processing-channel`
 - AI 후보 발화: “근처 도서관 휴관일을 알려 주세요.”
+
 ```json
 {
   "current_fields": {
@@ -318,12 +327,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 06. 시청:대형폐기물 배출
 
 - 후보 ID: `ai-coverage-v4-city-waste-collection`
 - AI 후보 발화: “시청 민원실 점심시간이 언제예요?”
+
 ```json
 {
   "current_fields": {
@@ -367,12 +378,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 07. 시청:대형폐기물 배출
 
 - 후보 ID: `ai-coverage-v4-city-waste-fee`
 - AI 후보 발화: “동네 체육관 운영 시간을 알려 주세요.”
+
 ```json
 {
   "current_fields": {
@@ -411,12 +424,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 08. 시청:대형폐기물 배출
 
 - 후보 ID: `ai-coverage-v4-city-waste-place`
 - AI 후보 발화: “가로등 고장은 어디에 신고하나요?”
+
 ```json
 {
   "current_fields": {
@@ -455,12 +470,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 09. 배달:주문 변경
 
 - 후보 ID: `ai-coverage-v4-delivery-change-address-cancel`
 - AI 후보 발화: “배달 기사님 평점은 어디서 보나요?”
+
 ```json
 {
   "current_fields": {
@@ -514,12 +531,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 10. 배달:주문 변경
 
 - 후보 ID: `ai-coverage-v4-delivery-change-menu-option-keep`
 - AI 후보 발화: “앱 알림 소리를 끌 수 있나요?”
+
 ```json
 {
   "current_fields": {
@@ -568,12 +587,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 11. 배달:주문 변경
 
 - 후보 ID: `ai-coverage-v4-delivery-change-menu-quantity`
 - AI 후보 발화: “이번 달 쿠폰은 언제 나오나요?”
+
 ```json
 {
   "current_fields": {
@@ -612,12 +633,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 12. 배달:배달 지연 문의
 
 - 후보 ID: `ai-coverage-v4-delivery-delay-cancel-estimated`
 - AI 후보 발화: “배달 앱 글자 크기를 키울 수 있나요?”
+
 ```json
 {
   "current_fields": {
@@ -671,12 +694,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 13. 배달:배달 지연 문의
 
 - 후보 ID: `ai-coverage-v4-delivery-delay-wait`
 - AI 후보 발화: “리뷰를 작성하면 포인트를 주나요?”
+
 ```json
 {
   "current_fields": {
@@ -715,12 +740,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 14. 배달:환불/재배달 문의
 
 - 후보 ID: `ai-coverage-v4-delivery-refund-wrong-refund`
 - AI 후보 발화: “배달 앱 테마를 어둡게 바꾸고 싶어요.”
+
 ```json
 {
   "current_fields": {
@@ -776,12 +803,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 15. 고객센터:인터넷/통화 문제 문의
 
 - 후보 ID: `ai-coverage-v4-support-network-wifi-multiple`
 - AI 후보 발화: “새 휴대폰 케이스 색상을 추천해 주세요.”
+
 ```json
 {
   "current_fields": {
@@ -839,12 +868,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 16. 고객센터:요금/약정 상담
 
 - 후보 ID: `ai-coverage-v4-support-plan-contract-expiry-general`
 - AI 후보 발화: “멤버십으로 영화 할인도 받을 수 있나요?”
+
 ```json
 {
   "current_fields": {
@@ -898,12 +929,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 17. 고객센터:요금/약정 상담
 
 - 후보 ID: `ai-coverage-v4-support-plan-discount`
 - AI 후보 발화: “휴대폰 배경화면을 바꾸는 방법이 궁금해요.”
+
 ```json
 {
   "current_fields": {
@@ -942,12 +975,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 18. 고객센터:요금/약정 상담
 
 - 후보 ID: `ai-coverage-v4-support-plan-plan-change`
 - AI 후보 발화: “가까운 대리점 주차장이 넓은가요?”
+
 ```json
 {
   "current_fields": {
@@ -986,12 +1021,14 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부
 
 ## 19. 고객센터:a/s 접수
 
 - 후보 ID: `ai-coverage-v4-support-service-safety-visit`
 - AI 후보 발화: “보호필름 할인 행사도 하나요?”
+
 ```json
 {
   "current_fields": {
@@ -1062,4 +1099,5 @@
   ]
 }
 ```
+
 - 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부

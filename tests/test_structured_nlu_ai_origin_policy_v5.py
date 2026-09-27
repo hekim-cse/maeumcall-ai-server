@@ -102,7 +102,9 @@ def test_policy_v5_preserves_every_historical_policy_and_freeze_schema() -> None
         "manifests/ai-origin-policy.v2.json": "e6d758fed6309ffeaa7b47ccd56dec257f7606cfdd4c0e40cf2bf81ac1f4eebc",
         "manifests/ai-origin-policy.v3.json": "011869376751dbe0584f65d5c59e3545b796ec2d93c0cd0fc88901c7ad1195ea",
         "manifests/ai-origin-policy.v4.json": "f96afea477612853305fdee8fe8782dbe6815c754890908463a8a4b09709016c",
+        "manifests/ai-origin-policy.v5.json": "5ed38f1013d15351b25c31a728520dbe91d68829a8b81b4650f20b3d8a3d3bc3",
         "ai_origin_policy.schema.v4.json": "2b618d274eec4c4b7ec471c14bd2e866173e19f21372c3dd703aea943c678ab9",
+        "ai_origin_policy.schema.v5.json": "013b619d65ffa23552c15692747cfe6fe12c73a7b677fd3943a1a453a67b9341",
         "freeze_record.schema.json": "195e1457f2860e1c493db38eb8992f8c2b0ac79e19f2488346f3a6e65ae046e1",
     }
     assert {

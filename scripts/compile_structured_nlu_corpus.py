@@ -35,6 +35,7 @@ from evals.structured_nlu.coverage_progress import (
 )
 from evals.structured_nlu.drafting import (
     AI_COVERAGE_V1_MANIFEST_SHA256,
+    AI_COVERAGE_V4_PREDECESSOR_SHA256,
     build_ai_coverage_candidate_manifest_v1,
     build_ai_coverage_candidate_manifest_v2,
     build_ai_coverage_candidate_manifest_v3,
@@ -67,7 +68,6 @@ from evals.structured_nlu.review import (
 )
 
 AI_COVERAGE_V2_MANIFEST_SHA256 = "88c18840f4a35db70b925bde0642a6801a48c501f8db7f1621ae9a193d85ec8a"
-AI_COVERAGE_V3_MANIFEST_SHA256 = "c30d43ede76fd4db84797be270201b5382eecc7b8fa71a93c2b36d55a0ea8e03"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -981,7 +981,7 @@ def _verify_coverage_candidate_v4_chain(
         raise SystemExit("AI coverage V2 predecessor manifest differs from the immutable policy")
 
     v3_bytes = read_regular_artifact(v3_manifest, label="AI coverage V3 predecessor manifest")
-    if hashlib.sha256(v3_bytes).hexdigest() != AI_COVERAGE_V3_MANIFEST_SHA256:
+    if hashlib.sha256(v3_bytes).hexdigest() != AI_COVERAGE_V4_PREDECESSOR_SHA256:
         raise SystemExit("AI coverage V3 predecessor manifest fingerprint differs")
     if v3_bytes.decode("utf-8") != serialize_ai_coverage_candidate_manifest_v3():
         raise SystemExit("AI coverage V3 predecessor manifest differs from the immutable policy")

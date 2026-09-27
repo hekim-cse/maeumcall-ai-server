@@ -92,6 +92,8 @@ AI_COVERAGE_V4_PREDECESSOR_SHA256 = (
     "c30d43ede76fd4db84797be270201b5382eecc7b8fa71a93c2b36d55a0ea8e03"
 )
 AI_COVERAGE_V4_PROJECTED_MARGINAL_GAIN = 45
+AI_COVERAGE_V4_PROJECTED_COVERED_OBLIGATION_COUNT = 713
+AI_COVERAGE_V4_PROJECTED_MISSING_OBLIGATION_COUNT = 849
 
 
 class DraftObligationReference(BaseModel):
@@ -672,12 +674,12 @@ class AICoverageCandidateManifestV4(BaseModel):
     baseline_case_count: Literal[AI_COVERAGE_BASELINE_CASE_COUNT]
     baseline_corpus_fingerprint: Literal[AI_COVERAGE_BASELINE_CORPUS_FINGERPRINT]
     baseline_diagnostic_case_ids: tuple[CaseId, ...] = Field(min_length=1)
-    baseline_covered_obligation_count: Literal[668]
-    baseline_missing_obligation_count: Literal[894]
+    baseline_covered_obligation_count: Literal[AI_COVERAGE_V3_PROJECTED_COVERED_OBLIGATION_COUNT]
+    baseline_missing_obligation_count: Literal[AI_COVERAGE_V3_PROJECTED_MISSING_OBLIGATION_COUNT]
     official_obligation_count: Literal[AI_COVERAGE_OFFICIAL_OBLIGATION_COUNT]
     projected_marginal_gain: Literal[AI_COVERAGE_V4_PROJECTED_MARGINAL_GAIN]
-    projected_covered_obligation_count: Literal[713]
-    projected_missing_obligation_count: Literal[849]
+    projected_covered_obligation_count: Literal[AI_COVERAGE_V4_PROJECTED_COVERED_OBLIGATION_COUNT]
+    projected_missing_obligation_count: Literal[AI_COVERAGE_V4_PROJECTED_MISSING_OBLIGATION_COUNT]
     suggestions: tuple[AICoverageCandidateSuggestionV4, ...] = Field(min_length=1)
 
     @model_validator(mode="after")
@@ -744,6 +746,10 @@ class AICoverageCandidateManifestV4(BaseModel):
         ):
             raise ValueError("AI coverage V4 ids and messages must be globally unique")
         by_id = {s.suggestion_id: s for s in self.suggestions}
+        official = {
+            (item.scenario_key, item.dimension, item.value)
+            for item in build_official_authoring_obligations()
+        }
         targets = set()
         projected = set()
         for slug, spec in COVERAGE_CANDIDATE_SPECS_V4.items():
@@ -752,6 +758,7 @@ class AICoverageCandidateManifestV4(BaseModel):
             if (
                 suggestion is None
                 or suggestion.conversation_group_id != expected_id
+                or suggestion.scenario_key != spec.scenario_key
                 or suggestion.proposed_case != _coverage_proposed_case(spec, expected_id)
             ):
                 raise ValueError("AI coverage V4 proposed case drifted from policy")
@@ -770,6 +777,11 @@ class AICoverageCandidateManifestV4(BaseModel):
                 raise ValueError("AI coverage V4 obligations drifted from policy")
             targets.update((r.scenario_key, r.dimension, r.value) for r in expected_targets)
             projected.update((r.scenario_key, r.dimension, r.value) for r in expected_projected)
+            if any(
+                (reference.scenario_key, reference.dimension, reference.value) not in official
+                for reference in expected_projected
+            ):
+                raise ValueError("AI coverage V4 projected obligation is not official")
             _validate_proposed_case(suggestion)
         if len(targets) != 34 or any(
             k[1] is not CoverageDimension.CURRENT_FIELD_OPTION for k in targets
@@ -1087,12 +1099,12 @@ def build_ai_coverage_candidate_manifest_v4() -> AICoverageCandidateManifestV4:
         baseline_diagnostic_case_ids=tuple(
             sorted(s.proposed_case.id for m in previous for s in m.suggestions)
         ),
-        baseline_covered_obligation_count=668,
-        baseline_missing_obligation_count=894,
-        official_obligation_count=1562,
-        projected_marginal_gain=45,
-        projected_covered_obligation_count=713,
-        projected_missing_obligation_count=849,
+        baseline_covered_obligation_count=AI_COVERAGE_V3_PROJECTED_COVERED_OBLIGATION_COUNT,
+        baseline_missing_obligation_count=AI_COVERAGE_V3_PROJECTED_MISSING_OBLIGATION_COUNT,
+        official_obligation_count=AI_COVERAGE_OFFICIAL_OBLIGATION_COUNT,
+        projected_marginal_gain=AI_COVERAGE_V4_PROJECTED_MARGINAL_GAIN,
+        projected_covered_obligation_count=AI_COVERAGE_V4_PROJECTED_COVERED_OBLIGATION_COUNT,
+        projected_missing_obligation_count=AI_COVERAGE_V4_PROJECTED_MISSING_OBLIGATION_COUNT,
         suggestions=tuple(suggestions),
     )
 
@@ -1299,6 +1311,15 @@ def serialize_ai_coverage_candidate_schema_v4() -> str:
     schema = AICoverageCandidateManifestV4.model_json_schema()
     schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     schema["$id"] = "urn:maeumcall:structured-nlu:ai-coverage-candidates:v4"
+    schema["properties"]["profile_id"]["const"] = OFFICIAL_BENCHMARK_PROFILE.profile_id
+    schema["properties"]["profile_fingerprint"]["const"] = OFFICIAL_BENCHMARK_PROFILE.fingerprint
+    scenario_keys = sorted(EVALUATION_CONTRACTS)
+    schema["$defs"]["AICoverageCandidateSuggestionV4"]["properties"]["scenario_key"]["enum"] = (
+        scenario_keys
+    )
+    schema["$defs"]["DraftObligationReference"]["properties"]["scenario_key"]["enum"] = (
+        scenario_keys
+    )
     return json.dumps(schema, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
 
@@ -1664,9 +1685,11 @@ def render_ai_coverage_candidate_review_packet_v4() -> str:
                 "",
                 f"- 후보 ID: `{item.suggestion_id}`",
                 f"- AI 후보 발화: “{item.proposed_case.user_message}”",
+                "",
                 "```json",
                 payload,
                 "```",
+                "",
                 "- 검토 판단: [ ] 승인  [ ] 수정 필요  [ ] 거부",
                 "",
             ]
