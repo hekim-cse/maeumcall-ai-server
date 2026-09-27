@@ -1,0 +1,2068 @@
+{
+  "case_count": 36,
+  "corpus_fingerprint": "246e22b0d0b83b5ee0619f6ade5629c52fecb07e3b450f477efd2317da5e5ca7",
+  "coverage_progress_schema_version": 1,
+  "covered_dimension_counts": {
+    "action_field_present": 52,
+    "current_delta_relation": 22,
+    "current_field_absent": 42,
+    "current_fields_context": 9,
+    "field_absent": 76,
+    "field_option": 10,
+    "field_present": 52,
+    "intent": 17,
+    "scenario_difficulty_tag": 33,
+    "state_action": 36
+  },
+  "covered_obligation_count": 349,
+  "missing_dimension_counts": {
+    "action_field_absent": 68,
+    "action_field_present": 94,
+    "alternative_time_relation": 35,
+    "change_field": 42,
+    "contrast_role": 75,
+    "current_delta_relation": 146,
+    "current_field_option": 76,
+    "current_field_present": 42,
+    "current_fields_context": 103,
+    "field_option": 66,
+    "field_present": 24,
+    "scenario_difficulty_tag": 135,
+    "state_action": 307
+  },
+  "missing_obligation_count": 1213,
+  "missing_obligations": [
+    {
+      "dimension": "contrast_role",
+      "missing_values": [
+        "positive-vs-unknown-고객센터-a-s-접수->positive",
+        "positive-vs-unknown-고객센터-a-s-접수->unknown",
+        "positive-vs-unknown-고객센터-요금-약정-상담->positive",
+        "positive-vs-unknown-고객센터-요금-약정-상담->unknown",
+        "positive-vs-unknown-고객센터-인터넷-통화-문제-문의->positive",
+        "positive-vs-unknown-고객센터-인터넷-통화-문제-문의->unknown",
+        "positive-vs-unknown-교수님-결석-사유-전달->positive",
+        "positive-vs-unknown-교수님-결석-사유-전달->unknown",
+        "positive-vs-unknown-교수님-과제-문의->positive",
+        "positive-vs-unknown-교수님-과제-문의->unknown",
+        "positive-vs-unknown-교수님-면담-예약->positive",
+        "positive-vs-unknown-교수님-면담-예약->unknown",
+        "positive-vs-unknown-배달-배달-지연-문의->positive",
+        "positive-vs-unknown-배달-배달-지연-문의->unknown",
+        "positive-vs-unknown-배달-주문-변경->positive",
+        "positive-vs-unknown-배달-주문-변경->unknown",
+        "positive-vs-unknown-배달-환불-재배달-문의->positive",
+        "positive-vs-unknown-배달-환불-재배달-문의->unknown",
+        "positive-vs-unknown-시청-대형폐기물-배출->positive",
+        "positive-vs-unknown-시청-대형폐기물-배출->unknown",
+        "positive-vs-unknown-시청-여권-발급-문의->positive",
+        "positive-vs-unknown-시청-여권-발급-문의->unknown",
+        "positive-vs-unknown-시청-주민등록-등본-문의->positive",
+        "positive-vs-unknown-시청-주민등록-등본-문의->unknown",
+        "positive-vs-unknown-예약-미용실-예약->positive",
+        "positive-vs-unknown-예약-미용실-예약->unknown",
+        "positive-vs-unknown-예약-병원-예약->positive",
+        "positive-vs-unknown-예약-병원-예약->unknown",
+        "positive-vs-unknown-예약-스터디룸-예약->positive",
+        "positive-vs-unknown-예약-스터디룸-예약->unknown",
+        "positive-vs-unknown-예약-식당-예약->positive",
+        "positive-vs-unknown-예약-식당-예약->unknown",
+        "reservation-alternative-action-미용실-예약->ask_other_time",
+        "reservation-alternative-action-미용실-예약->change_date",
+        "reservation-alternative-action-미용실-예약->select_alternative_time",
+        "reservation-alternative-action-미용실-예약->unknown",
+        "reservation-alternative-action-병원-예약->ask_other_time",
+        "reservation-alternative-action-병원-예약->change_date",
+        "reservation-alternative-action-병원-예약->select_alternative_time",
+        "reservation-alternative-action-병원-예약->unknown",
+        "reservation-alternative-action-스터디룸-예약->ask_other_time",
+        "reservation-alternative-action-스터디룸-예약->change_date",
+        "reservation-alternative-action-스터디룸-예약->select_alternative_time",
+        "reservation-alternative-action-스터디룸-예약->unknown",
+        "reservation-alternative-action-식당-예약->ask_other_time",
+        "reservation-alternative-action-식당-예약->change_date",
+        "reservation-alternative-action-식당-예약->select_alternative_time",
+        "reservation-alternative-action-식당-예약->unknown",
+        "workflow-stage-action-고객센터-a-s-접수->cancel",
+        "workflow-stage-action-고객센터-a-s-접수->complete",
+        "workflow-stage-action-고객센터-a-s-접수->confirm",
+        "workflow-stage-action-고객센터-요금-약정-상담->cancel",
+        "workflow-stage-action-고객센터-요금-약정-상담->complete",
+        "workflow-stage-action-고객센터-요금-약정-상담->confirm",
+        "workflow-stage-action-고객센터-인터넷-통화-문제-문의->cancel",
+        "workflow-stage-action-고객센터-인터넷-통화-문제-문의->complete",
+        "workflow-stage-action-고객센터-인터넷-통화-문제-문의->confirm",
+        "workflow-stage-action-배달-배달-지연-문의->cancel",
+        "workflow-stage-action-배달-배달-지연-문의->complete",
+        "workflow-stage-action-배달-배달-지연-문의->confirm",
+        "workflow-stage-action-배달-주문-변경->cancel",
+        "workflow-stage-action-배달-주문-변경->complete",
+        "workflow-stage-action-배달-주문-변경->confirm",
+        "workflow-stage-action-배달-환불-재배달-문의->cancel",
+        "workflow-stage-action-배달-환불-재배달-문의->complete",
+        "workflow-stage-action-배달-환불-재배달-문의->confirm",
+        "workflow-stage-action-시청-대형폐기물-배출->cancel",
+        "workflow-stage-action-시청-대형폐기물-배출->complete",
+        "workflow-stage-action-시청-대형폐기물-배출->confirm",
+        "workflow-stage-action-시청-여권-발급-문의->cancel",
+        "workflow-stage-action-시청-여권-발급-문의->complete",
+        "workflow-stage-action-시청-여권-발급-문의->confirm",
+        "workflow-stage-action-시청-주민등록-등본-문의->cancel",
+        "workflow-stage-action-시청-주민등록-등본-문의->complete",
+        "workflow-stage-action-시청-주민등록-등본-문의->confirm"
+      ],
+      "scenario_key": null
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->model_name",
+        "change_detail->occurred_at",
+        "change_detail->preferred_schedule",
+        "change_detail->product_type",
+        "change_detail->safety_status",
+        "change_detail->service_channel",
+        "change_detail->symptom"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->model_name",
+        "change_detail->occurred_at",
+        "change_detail->preferred_schedule",
+        "change_detail->product_type",
+        "change_detail->safety_status",
+        "change_detail->service_channel",
+        "change_detail->symptom",
+        "provide_details->model_name",
+        "provide_details->occurred_at",
+        "provide_details->safety_status",
+        "provide_details->service_channel"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "model_name",
+        "occurred_at",
+        "preferred_schedule",
+        "product_type",
+        "safety_status",
+        "service_channel",
+        "symptom"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "model_name->current_value_not_reemitted",
+        "model_name->existing_value_cleared",
+        "model_name->existing_value_replaced",
+        "model_name->missing_value_provided",
+        "occurred_at->current_value_not_reemitted",
+        "occurred_at->existing_value_cleared",
+        "occurred_at->existing_value_replaced",
+        "occurred_at->missing_value_provided",
+        "preferred_schedule->current_value_not_reemitted",
+        "preferred_schedule->existing_value_cleared",
+        "preferred_schedule->existing_value_replaced",
+        "product_type->current_value_not_reemitted",
+        "product_type->existing_value_cleared",
+        "product_type->existing_value_replaced",
+        "safety_status->current_value_not_reemitted",
+        "safety_status->existing_value_cleared",
+        "safety_status->existing_value_replaced",
+        "safety_status->missing_value_provided",
+        "service_channel->current_value_not_reemitted",
+        "service_channel->existing_value_cleared",
+        "service_channel->existing_value_replaced",
+        "service_channel->missing_value_provided",
+        "symptom->current_value_not_reemitted",
+        "symptom->existing_value_cleared",
+        "symptom->existing_value_replaced"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "safety_status=no_safety_issue",
+        "safety_status=safety_issue",
+        "service_channel=agent_review",
+        "service_channel=onsite",
+        "service_channel=parcel",
+        "service_channel=visit"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "model_name",
+        "occurred_at",
+        "preferred_schedule",
+        "product_type",
+        "safety_status",
+        "service_channel",
+        "symptom"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "closing->complete",
+        "closing->empty",
+        "closing->guarded_complete",
+        "closing->guarded_partial",
+        "closing->partial",
+        "collecting_service_request->empty",
+        "collecting_service_request->partial",
+        "confirming_service_request->complete",
+        "safety_action_required->guarded_complete",
+        "safety_action_required->guarded_partial",
+        "service_request_ready->complete",
+        "service_request_simulation_completed->complete"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "safety_status=no_safety_issue",
+        "safety_status=safety_issue",
+        "service_channel=agent_review",
+        "service_channel=onsite",
+        "service_channel=parcel",
+        "service_channel=visit"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "model_name",
+        "occurred_at",
+        "safety_status",
+        "service_channel"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "safety",
+        "single_field"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_service_request->cancel_workflow",
+        "collecting_service_request->change_detail",
+        "collecting_service_request->provide_details",
+        "collecting_service_request->unknown",
+        "confirming_service_request->cancel_workflow",
+        "confirming_service_request->change_detail",
+        "confirming_service_request->confirm_details",
+        "confirming_service_request->provide_details",
+        "confirming_service_request->unknown",
+        "greeting->cancel_workflow",
+        "safety_action_required->change_detail",
+        "safety_action_required->go_closing",
+        "safety_action_required->unknown",
+        "service_request_ready->cancel_workflow",
+        "service_request_ready->change_detail",
+        "service_request_ready->complete_simulation",
+        "service_request_ready->unknown",
+        "service_request_simulation_completed->go_closing",
+        "service_request_simulation_completed->unknown"
+      ],
+      "scenario_key": "고객센터:a/s 접수"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->consent_scope",
+        "change_detail->consultation_goal",
+        "change_detail->current_service",
+        "change_detail->inquiry_type"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->consent_scope",
+        "change_detail->consultation_goal",
+        "change_detail->current_service",
+        "change_detail->inquiry_type",
+        "provide_details->consent_scope"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "consent_scope",
+        "consultation_goal",
+        "current_service",
+        "inquiry_type"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "consent_scope->current_value_not_reemitted",
+        "consent_scope->existing_value_cleared",
+        "consent_scope->existing_value_replaced",
+        "consent_scope->missing_value_provided",
+        "consultation_goal->current_value_not_reemitted",
+        "consultation_goal->existing_value_cleared",
+        "consultation_goal->existing_value_replaced",
+        "current_service->current_value_not_reemitted",
+        "current_service->existing_value_cleared",
+        "current_service->existing_value_replaced",
+        "inquiry_type->current_value_not_reemitted",
+        "inquiry_type->existing_value_cleared",
+        "inquiry_type->existing_value_replaced"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "consent_scope=authenticated_lookup",
+        "consent_scope=general_guidance",
+        "inquiry_type=billing",
+        "inquiry_type=contract_expiry",
+        "inquiry_type=discount",
+        "inquiry_type=plan_change"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "consent_scope",
+        "consultation_goal",
+        "current_service",
+        "inquiry_type"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "closing->complete",
+        "closing->empty",
+        "closing->partial",
+        "collecting_plan_contract->empty",
+        "collecting_plan_contract->partial",
+        "confirming_plan_contract->complete",
+        "plan_consultation_ready->complete",
+        "plan_contract_consultation_simulation_completed->complete"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "consent_scope=authenticated_lookup",
+        "consent_scope=general_guidance",
+        "inquiry_type=billing",
+        "inquiry_type=contract_expiry",
+        "inquiry_type=discount"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "consent_scope"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_plan_contract->cancel_workflow",
+        "collecting_plan_contract->change_detail",
+        "collecting_plan_contract->provide_details",
+        "collecting_plan_contract->unknown",
+        "confirming_plan_contract->cancel_workflow",
+        "confirming_plan_contract->change_detail",
+        "confirming_plan_contract->confirm_details",
+        "confirming_plan_contract->provide_details",
+        "confirming_plan_contract->unknown",
+        "greeting->cancel_workflow",
+        "plan_consultation_ready->cancel_workflow",
+        "plan_consultation_ready->change_detail",
+        "plan_consultation_ready->complete_simulation",
+        "plan_consultation_ready->unknown",
+        "plan_contract_consultation_simulation_completed->go_closing",
+        "plan_contract_consultation_simulation_completed->unknown"
+      ],
+      "scenario_key": "고객센터:요금/약정 상담"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->next_action",
+        "change_detail->occurred_at",
+        "change_detail->scope",
+        "change_detail->service_type",
+        "change_detail->symptom",
+        "change_detail->troubleshooting_done"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->next_action",
+        "change_detail->occurred_at",
+        "change_detail->scope",
+        "change_detail->service_type",
+        "change_detail->symptom",
+        "change_detail->troubleshooting_done",
+        "provide_details->occurred_at",
+        "provide_details->scope",
+        "provide_details->service_type",
+        "provide_details->troubleshooting_done"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "next_action",
+        "occurred_at",
+        "scope",
+        "service_type",
+        "symptom",
+        "troubleshooting_done"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "next_action->current_value_not_reemitted",
+        "next_action->existing_value_cleared",
+        "next_action->existing_value_replaced",
+        "occurred_at->current_value_not_reemitted",
+        "occurred_at->existing_value_cleared",
+        "occurred_at->existing_value_replaced",
+        "occurred_at->missing_value_provided",
+        "scope->current_value_not_reemitted",
+        "scope->existing_value_cleared",
+        "scope->existing_value_replaced",
+        "scope->missing_value_provided",
+        "service_type->current_value_not_reemitted",
+        "service_type->existing_value_cleared",
+        "service_type->existing_value_replaced",
+        "service_type->missing_value_provided",
+        "symptom->current_value_not_reemitted",
+        "symptom->existing_value_cleared",
+        "symptom->existing_value_replaced",
+        "troubleshooting_done->current_value_not_reemitted",
+        "troubleshooting_done->existing_value_cleared",
+        "troubleshooting_done->existing_value_replaced",
+        "troubleshooting_done->missing_value_provided"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "next_action=agent_handoff",
+        "next_action=guided_diagnosis",
+        "next_action=remote_check",
+        "next_action=service_request",
+        "scope=all_locations",
+        "scope=multiple_devices",
+        "scope=single_device",
+        "scope=specific_location",
+        "service_type=mobile_data",
+        "service_type=voice_call",
+        "service_type=wifi",
+        "service_type=wired_internet"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "next_action",
+        "occurred_at",
+        "scope",
+        "service_type",
+        "symptom",
+        "troubleshooting_done"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "closing->complete",
+        "closing->empty",
+        "closing->partial",
+        "collecting_network_issue->empty",
+        "collecting_network_issue->partial",
+        "confirming_network_issue->complete",
+        "network_call_issue_simulation_completed->complete",
+        "network_diagnosis_ready->complete"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "next_action=agent_handoff",
+        "next_action=remote_check",
+        "next_action=service_request",
+        "scope=all_locations",
+        "scope=multiple_devices",
+        "scope=single_device",
+        "scope=specific_location",
+        "service_type=mobile_data",
+        "service_type=voice_call",
+        "service_type=wifi",
+        "service_type=wired_internet"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "occurred_at",
+        "scope",
+        "service_type",
+        "troubleshooting_done"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_network_issue->cancel_workflow",
+        "collecting_network_issue->change_detail",
+        "collecting_network_issue->provide_details",
+        "collecting_network_issue->unknown",
+        "confirming_network_issue->cancel_workflow",
+        "confirming_network_issue->change_detail",
+        "confirming_network_issue->confirm_details",
+        "confirming_network_issue->provide_details",
+        "confirming_network_issue->unknown",
+        "greeting->cancel_workflow",
+        "network_call_issue_simulation_completed->go_closing",
+        "network_call_issue_simulation_completed->unknown",
+        "network_diagnosis_ready->cancel_workflow",
+        "network_diagnosis_ready->change_detail",
+        "network_diagnosis_ready->complete_simulation",
+        "network_diagnosis_ready->unknown"
+      ],
+      "scenario_key": "고객센터:인터넷/통화 문제 문의"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_absence_date->absence_date",
+        "change_absence_reason->absence_reason",
+        "change_class_name->class_name",
+        "change_user_name->user_name"
+      ],
+      "scenario_key": "교수님:결석 사유 전달"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_absence_date->absence_date",
+        "change_absence_reason->absence_reason",
+        "change_class_name->class_name",
+        "change_user_name->user_name"
+      ],
+      "scenario_key": "교수님:결석 사유 전달"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "교수님:결석 사유 전달"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "absence_noted->go_closing",
+        "absence_noted->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_absence_info->provide_absence_info",
+        "collecting_absence_info->unknown",
+        "confirming_absence_info->change_absence_date",
+        "confirming_absence_info->change_absence_reason",
+        "confirming_absence_info->change_class_name",
+        "confirming_absence_info->change_user_name",
+        "confirming_absence_info->confirm_info",
+        "confirming_absence_info->unknown"
+      ],
+      "scenario_key": "교수님:결석 사유 전달"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "ask_follow_up->assignment_topic",
+        "ask_follow_up->question"
+      ],
+      "scenario_key": "교수님:과제 문의"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "closing",
+        "colloquial",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "교수님:과제 문의"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "answering_assignment_question->ask_follow_up",
+        "answering_assignment_question->go_closing",
+        "answering_assignment_question->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_assignment_info->provide_assignment_info",
+        "collecting_assignment_info->unknown"
+      ],
+      "scenario_key": "교수님:과제 문의"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_date->date",
+        "change_purpose->appointment_purpose",
+        "change_time->time",
+        "change_user_name->user_name"
+      ],
+      "scenario_key": "교수님:면담 예약"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_date->date",
+        "change_purpose->appointment_purpose",
+        "change_time->time",
+        "change_user_name->user_name"
+      ],
+      "scenario_key": "교수님:면담 예약"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "교수님:면담 예약"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "appointment_confirmed->go_closing",
+        "appointment_confirmed->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_appointment_info->provide_appointment_info",
+        "collecting_appointment_info->unknown",
+        "confirming_info->change_date",
+        "confirming_info->change_purpose",
+        "confirming_info->change_time",
+        "confirming_info->change_user_name",
+        "confirming_info->confirm_info",
+        "confirming_info->unknown"
+      ],
+      "scenario_key": "교수님:면담 예약"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->delay_detail",
+        "change_detail->delay_resolution",
+        "change_detail->inquiry_goal",
+        "change_detail->order_number"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->delay_detail",
+        "change_detail->delay_resolution",
+        "change_detail->inquiry_goal",
+        "change_detail->order_number",
+        "provide_details->delay_detail",
+        "provide_details->delay_resolution"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "delay_detail",
+        "delay_resolution",
+        "inquiry_goal",
+        "order_number"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "delay_detail->current_value_not_reemitted",
+        "delay_detail->existing_value_cleared",
+        "delay_detail->existing_value_replaced",
+        "delay_detail->missing_value_provided",
+        "delay_resolution->current_value_not_reemitted",
+        "delay_resolution->existing_value_cleared",
+        "delay_resolution->existing_value_replaced",
+        "delay_resolution->missing_value_provided",
+        "inquiry_goal->current_value_not_reemitted",
+        "inquiry_goal->existing_value_cleared",
+        "inquiry_goal->existing_value_replaced",
+        "order_number->current_value_not_reemitted",
+        "order_number->existing_value_cleared",
+        "order_number->existing_value_replaced"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "delay_resolution=agent_handoff",
+        "delay_resolution=check_cancellation",
+        "delay_resolution=wait",
+        "inquiry_goal=delay_reason",
+        "inquiry_goal=delivery_location",
+        "inquiry_goal=estimated_arrival"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "delay_detail",
+        "delay_resolution",
+        "inquiry_goal",
+        "order_number"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "closing->complete",
+        "closing->empty",
+        "closing->partial",
+        "collecting_delay_inquiry->empty",
+        "collecting_delay_inquiry->partial",
+        "confirming_delay_inquiry->complete",
+        "delay_inquiry_ready->complete",
+        "delivery_delay_inquiry_simulation_completed->complete"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "delay_resolution=agent_handoff",
+        "delay_resolution=check_cancellation",
+        "delay_resolution=wait",
+        "inquiry_goal=delay_reason",
+        "inquiry_goal=delivery_location"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "delay_detail",
+        "delay_resolution"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_delay_inquiry->cancel_workflow",
+        "collecting_delay_inquiry->change_detail",
+        "collecting_delay_inquiry->provide_details",
+        "collecting_delay_inquiry->unknown",
+        "confirming_delay_inquiry->cancel_workflow",
+        "confirming_delay_inquiry->change_detail",
+        "confirming_delay_inquiry->confirm_details",
+        "confirming_delay_inquiry->provide_details",
+        "confirming_delay_inquiry->unknown",
+        "delay_inquiry_ready->cancel_workflow",
+        "delay_inquiry_ready->change_detail",
+        "delay_inquiry_ready->complete_simulation",
+        "delay_inquiry_ready->unknown",
+        "delivery_delay_inquiry_simulation_completed->go_closing",
+        "delivery_delay_inquiry_simulation_completed->unknown",
+        "greeting->cancel_workflow"
+      ],
+      "scenario_key": "배달:배달 지연 문의"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->change_type",
+        "change_detail->order_number",
+        "change_detail->requested_change",
+        "change_detail->unavailable_preference"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->change_type",
+        "change_detail->order_number",
+        "change_detail->requested_change",
+        "change_detail->unavailable_preference",
+        "provide_details->unavailable_preference"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "change_type",
+        "order_number",
+        "requested_change",
+        "unavailable_preference"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "change_type->current_value_not_reemitted",
+        "change_type->existing_value_cleared",
+        "change_type->existing_value_replaced",
+        "order_number->current_value_not_reemitted",
+        "order_number->existing_value_cleared",
+        "order_number->existing_value_replaced",
+        "requested_change->current_value_not_reemitted",
+        "requested_change->existing_value_cleared",
+        "requested_change->existing_value_replaced",
+        "unavailable_preference->current_value_not_reemitted",
+        "unavailable_preference->existing_value_cleared",
+        "unavailable_preference->existing_value_replaced",
+        "unavailable_preference->missing_value_provided"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "change_type=contact",
+        "change_type=delivery_address",
+        "change_type=menu_option",
+        "change_type=menu_or_quantity",
+        "unavailable_preference=agent_handoff",
+        "unavailable_preference=check_cancellation",
+        "unavailable_preference=keep_order"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "change_type",
+        "order_number",
+        "requested_change",
+        "unavailable_preference"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "closing->complete",
+        "closing->empty",
+        "closing->partial",
+        "collecting_order_change->empty",
+        "collecting_order_change->partial",
+        "confirming_order_change->complete",
+        "delivery_order_change_simulation_completed->complete",
+        "order_change_request_ready->complete"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "change_type=contact",
+        "change_type=delivery_address",
+        "change_type=menu_option",
+        "unavailable_preference=agent_handoff",
+        "unavailable_preference=check_cancellation",
+        "unavailable_preference=keep_order"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "unavailable_preference"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_order_change->cancel_workflow",
+        "collecting_order_change->change_detail",
+        "collecting_order_change->provide_details",
+        "collecting_order_change->unknown",
+        "confirming_order_change->cancel_workflow",
+        "confirming_order_change->change_detail",
+        "confirming_order_change->confirm_details",
+        "confirming_order_change->provide_details",
+        "confirming_order_change->unknown",
+        "delivery_order_change_simulation_completed->go_closing",
+        "delivery_order_change_simulation_completed->unknown",
+        "greeting->cancel_workflow",
+        "order_change_request_ready->cancel_workflow",
+        "order_change_request_ready->change_detail",
+        "order_change_request_ready->complete_simulation",
+        "order_change_request_ready->unknown"
+      ],
+      "scenario_key": "배달:주문 변경"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->evidence_status",
+        "change_detail->issue_detail",
+        "change_detail->issue_type",
+        "change_detail->order_number",
+        "change_detail->resolution_preference"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->evidence_status",
+        "change_detail->issue_detail",
+        "change_detail->issue_type",
+        "change_detail->order_number",
+        "change_detail->resolution_preference",
+        "provide_details->evidence_status",
+        "provide_details->order_number",
+        "provide_details->resolution_preference"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "evidence_status",
+        "issue_detail",
+        "issue_type",
+        "order_number",
+        "resolution_preference"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "evidence_status->current_value_not_reemitted",
+        "evidence_status->existing_value_cleared",
+        "evidence_status->existing_value_replaced",
+        "evidence_status->missing_value_provided",
+        "issue_detail->current_value_not_reemitted",
+        "issue_detail->existing_value_cleared",
+        "issue_detail->existing_value_replaced",
+        "issue_type->current_value_not_reemitted",
+        "issue_type->existing_value_cleared",
+        "issue_type->existing_value_replaced",
+        "order_number->current_value_not_reemitted",
+        "order_number->existing_value_cleared",
+        "order_number->existing_value_replaced",
+        "order_number->missing_value_provided",
+        "resolution_preference->current_value_not_reemitted",
+        "resolution_preference->existing_value_cleared",
+        "resolution_preference->existing_value_replaced",
+        "resolution_preference->missing_value_provided"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "evidence_status=available",
+        "evidence_status=unavailable",
+        "issue_type=damaged_or_quality",
+        "issue_type=missing_item",
+        "issue_type=not_received",
+        "issue_type=wrong_item",
+        "resolution_preference=agent_review",
+        "resolution_preference=redelivery",
+        "resolution_preference=refund"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "evidence_status",
+        "issue_detail",
+        "issue_type",
+        "order_number",
+        "resolution_preference"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "closing->complete",
+        "closing->empty",
+        "closing->partial",
+        "collecting_refund_redelivery->empty",
+        "collecting_refund_redelivery->partial",
+        "confirming_refund_redelivery->complete",
+        "delivery_refund_redelivery_simulation_completed->complete",
+        "refund_redelivery_request_ready->complete"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "evidence_status=available",
+        "evidence_status=unavailable",
+        "issue_type=missing_item",
+        "issue_type=not_received",
+        "issue_type=wrong_item",
+        "resolution_preference=agent_review",
+        "resolution_preference=redelivery",
+        "resolution_preference=refund"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "evidence_status",
+        "order_number",
+        "resolution_preference"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_refund_redelivery->cancel_workflow",
+        "collecting_refund_redelivery->change_detail",
+        "collecting_refund_redelivery->provide_details",
+        "collecting_refund_redelivery->unknown",
+        "confirming_refund_redelivery->cancel_workflow",
+        "confirming_refund_redelivery->change_detail",
+        "confirming_refund_redelivery->confirm_details",
+        "confirming_refund_redelivery->provide_details",
+        "confirming_refund_redelivery->unknown",
+        "delivery_refund_redelivery_simulation_completed->go_closing",
+        "delivery_refund_redelivery_simulation_completed->unknown",
+        "greeting->cancel_workflow",
+        "refund_redelivery_request_ready->cancel_workflow",
+        "refund_redelivery_request_ready->change_detail",
+        "refund_redelivery_request_ready->complete_simulation",
+        "refund_redelivery_request_ready->unknown"
+      ],
+      "scenario_key": "배달:환불/재배달 문의"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->item_name",
+        "change_detail->quantity",
+        "change_detail->region",
+        "change_detail->request_topic"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->item_name",
+        "change_detail->quantity",
+        "change_detail->region",
+        "change_detail->request_topic",
+        "provide_details->quantity"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "item_name",
+        "quantity",
+        "region",
+        "request_topic"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "item_name->current_value_not_reemitted",
+        "item_name->existing_value_cleared",
+        "item_name->existing_value_replaced",
+        "quantity->current_value_not_reemitted",
+        "quantity->existing_value_cleared",
+        "quantity->existing_value_replaced",
+        "quantity->missing_value_provided",
+        "region->current_value_not_reemitted",
+        "region->existing_value_cleared",
+        "region->existing_value_replaced",
+        "request_topic->current_value_not_reemitted",
+        "request_topic->existing_value_cleared",
+        "request_topic->existing_value_replaced"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "request_topic=application",
+        "request_topic=collection_status",
+        "request_topic=fee",
+        "request_topic=place_and_schedule"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "item_name",
+        "quantity",
+        "region",
+        "request_topic"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "bulky_waste_guidance_ready->complete",
+        "bulky_waste_guidance_simulation_completed->complete",
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "closing->complete",
+        "closing->empty",
+        "closing->partial",
+        "collecting_bulky_waste->empty",
+        "collecting_bulky_waste->partial",
+        "confirming_bulky_waste->complete"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "request_topic=collection_status",
+        "request_topic=fee",
+        "request_topic=place_and_schedule"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "quantity"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "bulky_waste_guidance_ready->cancel_workflow",
+        "bulky_waste_guidance_ready->change_detail",
+        "bulky_waste_guidance_ready->complete_simulation",
+        "bulky_waste_guidance_ready->unknown",
+        "bulky_waste_guidance_simulation_completed->go_closing",
+        "bulky_waste_guidance_simulation_completed->unknown",
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_bulky_waste->cancel_workflow",
+        "collecting_bulky_waste->change_detail",
+        "collecting_bulky_waste->provide_details",
+        "collecting_bulky_waste->unknown",
+        "confirming_bulky_waste->cancel_workflow",
+        "confirming_bulky_waste->change_detail",
+        "confirming_bulky_waste->confirm_details",
+        "confirming_bulky_waste->provide_details",
+        "confirming_bulky_waste->unknown",
+        "greeting->cancel_workflow"
+      ],
+      "scenario_key": "시청:대형폐기물 배출"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->applicant_type",
+        "change_detail->application_channel",
+        "change_detail->application_type",
+        "change_detail->inquiry_topic"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->applicant_type",
+        "change_detail->application_channel",
+        "change_detail->application_type",
+        "change_detail->inquiry_topic",
+        "provide_details->applicant_type",
+        "provide_details->application_channel",
+        "provide_details->application_type"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "applicant_type",
+        "application_channel",
+        "application_type",
+        "inquiry_topic"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "applicant_type->current_value_not_reemitted",
+        "applicant_type->existing_value_cleared",
+        "applicant_type->existing_value_replaced",
+        "applicant_type->missing_value_provided",
+        "application_channel->current_value_not_reemitted",
+        "application_channel->existing_value_cleared",
+        "application_channel->existing_value_replaced",
+        "application_channel->missing_value_provided",
+        "application_type->current_value_not_reemitted",
+        "application_type->existing_value_cleared",
+        "application_type->existing_value_replaced",
+        "application_type->missing_value_provided",
+        "inquiry_topic->current_value_not_reemitted",
+        "inquiry_topic->existing_value_cleared",
+        "inquiry_topic->existing_value_replaced"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "applicant_type=adult_self",
+        "applicant_type=legal_representative",
+        "applicant_type=minor",
+        "application_channel=government24",
+        "application_channel=in_person",
+        "application_channel=overseas_mission",
+        "application_type=emergency",
+        "application_type=first_issue",
+        "application_type=reissue",
+        "inquiry_topic=documents",
+        "inquiry_topic=fee",
+        "inquiry_topic=office",
+        "inquiry_topic=online_eligibility",
+        "inquiry_topic=processing_time"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "applicant_type",
+        "application_channel",
+        "application_type",
+        "inquiry_topic"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "closing->complete",
+        "closing->empty",
+        "closing->partial",
+        "collecting_passport_inquiry->empty",
+        "collecting_passport_inquiry->partial",
+        "confirming_passport_inquiry->complete",
+        "passport_guidance_ready->complete",
+        "passport_guidance_simulation_completed->complete"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "applicant_type=adult_self",
+        "applicant_type=legal_representative",
+        "applicant_type=minor",
+        "application_channel=government24",
+        "application_channel=in_person",
+        "application_channel=overseas_mission",
+        "application_type=emergency",
+        "application_type=first_issue",
+        "application_type=reissue",
+        "inquiry_topic=documents",
+        "inquiry_topic=fee",
+        "inquiry_topic=office",
+        "inquiry_topic=online_eligibility"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "applicant_type",
+        "application_channel",
+        "application_type"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "multi_field",
+        "negation"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_passport_inquiry->cancel_workflow",
+        "collecting_passport_inquiry->change_detail",
+        "collecting_passport_inquiry->provide_details",
+        "collecting_passport_inquiry->unknown",
+        "confirming_passport_inquiry->cancel_workflow",
+        "confirming_passport_inquiry->change_detail",
+        "confirming_passport_inquiry->confirm_details",
+        "confirming_passport_inquiry->provide_details",
+        "confirming_passport_inquiry->unknown",
+        "greeting->cancel_workflow",
+        "passport_guidance_ready->cancel_workflow",
+        "passport_guidance_ready->change_detail",
+        "passport_guidance_ready->complete_simulation",
+        "passport_guidance_ready->unknown",
+        "passport_guidance_simulation_completed->go_closing",
+        "passport_guidance_simulation_completed->unknown"
+      ],
+      "scenario_key": "시청:여권 발급 문의"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_detail->applicant_relation",
+        "change_detail->document_type",
+        "change_detail->inquiry_topic",
+        "change_detail->issuance_channel"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_detail->applicant_relation",
+        "change_detail->document_type",
+        "change_detail->inquiry_topic",
+        "change_detail->issuance_channel",
+        "provide_details->issuance_channel"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "change_field",
+      "missing_values": [
+        "applicant_relation",
+        "document_type",
+        "inquiry_topic",
+        "issuance_channel"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "current_delta_relation",
+      "missing_values": [
+        "applicant_relation->current_value_not_reemitted",
+        "applicant_relation->existing_value_cleared",
+        "applicant_relation->existing_value_replaced",
+        "document_type->current_value_not_reemitted",
+        "document_type->existing_value_cleared",
+        "document_type->existing_value_replaced",
+        "inquiry_topic->current_value_not_reemitted",
+        "inquiry_topic->existing_value_cleared",
+        "inquiry_topic->existing_value_replaced",
+        "issuance_channel->current_value_not_reemitted",
+        "issuance_channel->existing_value_cleared",
+        "issuance_channel->existing_value_replaced",
+        "issuance_channel->missing_value_provided"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "current_field_option",
+      "missing_values": [
+        "applicant_relation=representative",
+        "applicant_relation=same_household",
+        "applicant_relation=self",
+        "document_type=individual_extract",
+        "document_type=register_copy",
+        "inquiry_topic=delivery",
+        "inquiry_topic=documents",
+        "inquiry_topic=eligibility",
+        "inquiry_topic=fee",
+        "issuance_channel=government24",
+        "issuance_channel=in_person",
+        "issuance_channel=kiosk"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "current_field_present",
+      "missing_values": [
+        "applicant_relation",
+        "document_type",
+        "inquiry_topic",
+        "issuance_channel"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "current_fields_context",
+      "missing_values": [
+        "cancelled->complete",
+        "cancelled->empty",
+        "cancelled->partial",
+        "certificate_guidance_ready->complete",
+        "closing->complete",
+        "closing->empty",
+        "closing->partial",
+        "collecting_certificate_inquiry->empty",
+        "collecting_certificate_inquiry->partial",
+        "confirming_certificate_inquiry->complete",
+        "resident_certificate_guidance_simulation_completed->complete"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "field_option",
+      "missing_values": [
+        "applicant_relation=representative",
+        "applicant_relation=same_household",
+        "document_type=individual_extract",
+        "inquiry_topic=documents",
+        "inquiry_topic=eligibility",
+        "inquiry_topic=fee",
+        "issuance_channel=government24",
+        "issuance_channel=in_person",
+        "issuance_channel=kiosk"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "issuance_channel"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "cancellation",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "cancelled->go_closing",
+        "cancelled->unknown",
+        "certificate_guidance_ready->cancel_workflow",
+        "certificate_guidance_ready->change_detail",
+        "certificate_guidance_ready->complete_simulation",
+        "certificate_guidance_ready->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_certificate_inquiry->cancel_workflow",
+        "collecting_certificate_inquiry->change_detail",
+        "collecting_certificate_inquiry->provide_details",
+        "collecting_certificate_inquiry->unknown",
+        "confirming_certificate_inquiry->cancel_workflow",
+        "confirming_certificate_inquiry->change_detail",
+        "confirming_certificate_inquiry->confirm_details",
+        "confirming_certificate_inquiry->provide_details",
+        "confirming_certificate_inquiry->unknown",
+        "greeting->cancel_workflow",
+        "resident_certificate_guidance_simulation_completed->go_closing",
+        "resident_certificate_guidance_simulation_completed->unknown"
+      ],
+      "scenario_key": "시청:주민등록 등본 문의"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_date->date",
+        "change_designer->designer",
+        "change_service_type->service_type",
+        "change_time->time",
+        "change_user_name->user_name"
+      ],
+      "scenario_key": "예약:미용실 예약"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_date->date",
+        "change_designer->designer",
+        "change_service_type->service_type",
+        "change_time->time",
+        "change_user_name->user_name",
+        "select_alternative_time->selected_time"
+      ],
+      "scenario_key": "예약:미용실 예약"
+    },
+    {
+      "dimension": "alternative_time_relation",
+      "missing_values": [
+        "reservation_unavailable->ask_other_time->no_offers",
+        "reservation_unavailable->ask_other_time->offers_unselected",
+        "reservation_unavailable->change_date->no_offers",
+        "reservation_unavailable->change_date->offers_unselected",
+        "reservation_unavailable->select_alternative_time->selected_offer",
+        "reservation_unavailable->unknown->no_offers",
+        "reservation_unavailable->unknown->offers_unselected"
+      ],
+      "scenario_key": "예약:미용실 예약"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "selected_time"
+      ],
+      "scenario_key": "예약:미용실 예약"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "예약:미용실 예약"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_reservation_info->unknown",
+        "confirming_info->change_date",
+        "confirming_info->change_designer",
+        "confirming_info->change_info",
+        "confirming_info->change_service_type",
+        "confirming_info->change_time",
+        "confirming_info->change_user_name",
+        "confirming_info->confirm",
+        "confirming_info->unknown",
+        "reservation_available->ask_other_time",
+        "reservation_available->change_date",
+        "reservation_available->confirm_reservation",
+        "reservation_available->unknown",
+        "reservation_confirmed->go_closing",
+        "reservation_confirmed->unknown",
+        "reservation_unavailable->ask_other_time",
+        "reservation_unavailable->change_date",
+        "reservation_unavailable->select_alternative_time",
+        "reservation_unavailable->unknown"
+      ],
+      "scenario_key": "예약:미용실 예약"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_date->date",
+        "change_department->department",
+        "change_time->time",
+        "change_user_name->user_name"
+      ],
+      "scenario_key": "예약:병원 예약"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_date->date",
+        "change_department->department",
+        "change_time->time",
+        "change_user_name->user_name",
+        "select_alternative_time->selected_time"
+      ],
+      "scenario_key": "예약:병원 예약"
+    },
+    {
+      "dimension": "alternative_time_relation",
+      "missing_values": [
+        "reservation_unavailable->ask_other_time->no_offers",
+        "reservation_unavailable->ask_other_time->offers_unselected",
+        "reservation_unavailable->change_date->no_offers",
+        "reservation_unavailable->change_date->offers_unselected",
+        "reservation_unavailable->select_alternative_time->selected_offer",
+        "reservation_unavailable->unknown->no_offers",
+        "reservation_unavailable->unknown->offers_unselected",
+        "suggest_alternative->ask_other_time->no_offers",
+        "suggest_alternative->ask_other_time->offers_unselected",
+        "suggest_alternative->change_date->no_offers",
+        "suggest_alternative->change_date->offers_unselected",
+        "suggest_alternative->select_alternative_time->selected_offer",
+        "suggest_alternative->unknown->no_offers",
+        "suggest_alternative->unknown->offers_unselected"
+      ],
+      "scenario_key": "예약:병원 예약"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "selected_time"
+      ],
+      "scenario_key": "예약:병원 예약"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation"
+      ],
+      "scenario_key": "예약:병원 예약"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "asking_date->continue_collecting",
+        "asking_date->unknown",
+        "asking_department->continue_collecting",
+        "asking_department->unknown",
+        "asking_purpose->continue_collecting",
+        "asking_purpose->unknown",
+        "asking_time->continue_collecting",
+        "asking_time->unknown",
+        "asking_user_name->unknown",
+        "checking_availability->lookup_availability",
+        "checking_availability->unknown",
+        "closing->end_call",
+        "closing->unknown",
+        "confirming_info->change_date",
+        "confirming_info->change_department",
+        "confirming_info->change_time",
+        "confirming_info->change_user_name",
+        "confirming_info->confirm_reservation_info",
+        "confirming_info->unknown",
+        "reservation_available->ask_other_time",
+        "reservation_available->confirm_available_time",
+        "reservation_available->unknown",
+        "reservation_confirmed->go_closing",
+        "reservation_confirmed->unknown",
+        "reservation_unavailable->ask_other_time",
+        "reservation_unavailable->change_date",
+        "reservation_unavailable->select_alternative_time",
+        "reservation_unavailable->unknown",
+        "suggest_alternative->ask_other_time",
+        "suggest_alternative->change_date",
+        "suggest_alternative->select_alternative_time",
+        "suggest_alternative->unknown"
+      ],
+      "scenario_key": "예약:병원 예약"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_date->date",
+        "change_duration->duration",
+        "change_party_size->party_size",
+        "change_start_time->start_time",
+        "change_user_name->user_name"
+      ],
+      "scenario_key": "예약:스터디룸 예약"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_date->date",
+        "change_duration->duration",
+        "change_party_size->party_size",
+        "change_start_time->start_time",
+        "change_user_name->user_name",
+        "select_alternative_time->selected_time"
+      ],
+      "scenario_key": "예약:스터디룸 예약"
+    },
+    {
+      "dimension": "alternative_time_relation",
+      "missing_values": [
+        "reservation_unavailable->ask_other_time->no_offers",
+        "reservation_unavailable->ask_other_time->offers_unselected",
+        "reservation_unavailable->change_date->no_offers",
+        "reservation_unavailable->change_date->offers_unselected",
+        "reservation_unavailable->select_alternative_time->selected_offer",
+        "reservation_unavailable->unknown->no_offers",
+        "reservation_unavailable->unknown->offers_unselected"
+      ],
+      "scenario_key": "예약:스터디룸 예약"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "selected_time"
+      ],
+      "scenario_key": "예약:스터디룸 예약"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "예약:스터디룸 예약"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_reservation_info->unknown",
+        "confirming_info->change_date",
+        "confirming_info->change_duration",
+        "confirming_info->change_info",
+        "confirming_info->change_party_size",
+        "confirming_info->change_start_time",
+        "confirming_info->change_user_name",
+        "confirming_info->confirm",
+        "confirming_info->unknown",
+        "reservation_available->ask_other_time",
+        "reservation_available->change_date",
+        "reservation_available->confirm_reservation",
+        "reservation_available->unknown",
+        "reservation_confirmed->go_closing",
+        "reservation_confirmed->unknown",
+        "reservation_unavailable->ask_other_time",
+        "reservation_unavailable->change_date",
+        "reservation_unavailable->select_alternative_time",
+        "reservation_unavailable->unknown"
+      ],
+      "scenario_key": "예약:스터디룸 예약"
+    },
+    {
+      "dimension": "action_field_absent",
+      "missing_values": [
+        "change_date->date",
+        "change_party_size->party_size",
+        "change_time->time",
+        "change_user_name->user_name"
+      ],
+      "scenario_key": "예약:식당 예약"
+    },
+    {
+      "dimension": "action_field_present",
+      "missing_values": [
+        "change_date->date",
+        "change_party_size->party_size",
+        "change_time->time",
+        "change_user_name->user_name",
+        "select_alternative_time->selected_time"
+      ],
+      "scenario_key": "예약:식당 예약"
+    },
+    {
+      "dimension": "alternative_time_relation",
+      "missing_values": [
+        "reservation_unavailable->ask_other_time->no_offers",
+        "reservation_unavailable->ask_other_time->offers_unselected",
+        "reservation_unavailable->change_date->no_offers",
+        "reservation_unavailable->change_date->offers_unselected",
+        "reservation_unavailable->select_alternative_time->selected_offer",
+        "reservation_unavailable->unknown->no_offers",
+        "reservation_unavailable->unknown->offers_unselected"
+      ],
+      "scenario_key": "예약:식당 예약"
+    },
+    {
+      "dimension": "field_present",
+      "missing_values": [
+        "selected_time"
+      ],
+      "scenario_key": "예약:식당 예약"
+    },
+    {
+      "dimension": "scenario_difficulty_tag",
+      "missing_values": [
+        "ambiguous",
+        "closing",
+        "colloquial",
+        "confirmation",
+        "correction",
+        "ellipsis",
+        "negation",
+        "single_field"
+      ],
+      "scenario_key": "예약:식당 예약"
+    },
+    {
+      "dimension": "state_action",
+      "missing_values": [
+        "closing->end_call",
+        "closing->unknown",
+        "collecting_reservation_info->unknown",
+        "confirming_info->change_date",
+        "confirming_info->change_info",
+        "confirming_info->change_party_size",
+        "confirming_info->change_time",
+        "confirming_info->change_user_name",
+        "confirming_info->confirm",
+        "confirming_info->unknown",
+        "reservation_available->ask_other_time",
+        "reservation_available->confirm_reservation",
+        "reservation_available->unknown",
+        "reservation_confirmed->go_closing",
+        "reservation_confirmed->unknown",
+        "reservation_unavailable->ask_other_time",
+        "reservation_unavailable->change_date",
+        "reservation_unavailable->select_alternative_time",
+        "reservation_unavailable->unknown"
+      ],
+      "scenario_key": "예약:식당 예약"
+    }
+  ],
+  "profile_fingerprint": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+  "profile_id": "maeumcall-structured-nlu-v3",
+  "qualification_status": "unqualified_development_diagnostic",
+  "report_id": "maeumcall-structured-nlu-development-progress-v1",
+  "required_obligation_count": 1562,
+  "review_status_counts": {
+    "draft": 36
+  },
+  "split": "development"
+}
