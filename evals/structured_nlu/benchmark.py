@@ -4,6 +4,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from enum import StrEnum
+from typing import Protocol
 
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from evals.structured_nlu.contrast import contrast_policy_payload
@@ -20,8 +21,22 @@ from evals.structured_nlu.schema import (
     DifficultyTag,
     EvaluationCase,
     GoldDataset,
+    GoldLabels,
     ReviewStatus,
 )
+
+
+class CoverageCaseLike(Protocol):
+    """Minimal semantic case view used by coverage-only diagnostics."""
+
+    id: str
+    scenario_key: str
+    conversation_state: str
+    current_fields: dict[str, str | None]
+    offered_alternative_times: tuple[str, ...]
+    labels: GoldLabels
+    tags: tuple[DifficultyTag, ...]
+    review_status: ReviewStatus
 
 
 class CoverageDimension(StrEnum):
@@ -317,8 +332,14 @@ def inspect_benchmark_coverage(
     *,
     split: DatasetSplit,
     profile: BenchmarkProfile = OFFICIAL_BENCHMARK_PROFILE,
+    diagnostic_cases: tuple[CoverageCaseLike, ...] = (),
 ) -> BenchmarkCoverageReport:
-    cases = tuple(case for case in dataset.cases if case.split is split)
+    if diagnostic_cases and split is not DatasetSplit.DEVELOPMENT:
+        raise ValueError("diagnostic coverage cases are development-only")
+    cases: tuple[CoverageCaseLike, ...] = (
+        *(case for case in dataset.cases if case.split is split),
+        *diagnostic_cases,
+    )
     issues: list[CoverageIssue] = []
     unapproved_ids = sorted(
         case.id for case in cases if case.review_status is not ReviewStatus.ADJUDICATED
@@ -504,7 +525,7 @@ def _append_v3_scenario_coverage_issues(
     issues: list[CoverageIssue],
     *,
     scenario_key: str,
-    scenario_cases: tuple[EvaluationCase, ...],
+    scenario_cases: tuple[CoverageCaseLike, ...],
 ) -> None:
     contract = EVALUATION_CONTRACTS[scenario_key]
     policy = OFFICIAL_COVERAGE_CONTRACT_V3.scenario_policies[scenario_key]
@@ -613,7 +634,7 @@ def _append_v3_scenario_coverage_issues(
         )
 
 
-def _canonical_gold_fields(case: EvaluationCase) -> dict[str, str | None]:
+def _canonical_gold_fields(case: CoverageCaseLike) -> dict[str, str | None]:
     return {
         field_name: expected.accepted_values[0] if expected is not None else None
         for field_name, expected in case.labels.fields.items()

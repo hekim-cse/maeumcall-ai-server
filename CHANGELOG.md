@@ -11,7 +11,7 @@
 - 그룹 파일과 분리된 split 배정 원장, 작성 그룹 일대일 대조, 공식 채점 직전 split 원장 지문 재검증
 - 버전 지정 구조화 NLU 정답 작성 지침과 validation·test case·지침 지문을 공식 준비·채점 직전에 대조하는 검수 원장 계약
 - validation·test별 시나리오 태그, 이전 필드 문맥, 예약 대안시간 관계와 검수 지문이 연결된 명시적 대조 역할을 고정한 Coverage V3 프로필·1,562개 의무 목록
-- 구조화 NLU source·split·검수·contrast·Coverage V3 조합과 입력 Git blob snapshot을 고정하는 versioned freeze record V1 기반 및 AI-origin policy까지 포함한 V2 생성·검증 경계
+- 구조화 NLU source·split·검수·contrast·Coverage V3 조합과 입력 Git blob snapshot을 고정하는 versioned freeze record V1 기반, AI-origin policy V1을 포함한 V2 역사 형식, additive policy V2를 포함한 현재 V3 생성·검증 경계
 - AI 제안을 사람 작성 골든 source와 분리하고 16개 구조화 NLU 시나리오의 미검수 hard-negative 시작 제안을 제공하는 draft sidecar 계약
 - 16개 AI 제안을 사람이 새 발화·정답·판단 근거로 다시 작성하기 위한 결정론적 검수 작업지와 계약 일치 검사
 - 16개 시나리오별 서브 에이전트 대안·판단 근거 sidecar와 불변 AI-origin V1 지문 원장 기반 NFC 전역 원문 승격 차단
@@ -21,6 +21,7 @@
 - 배달·시청·고객센터 9종의 사람이 작성한 `greeting → provide_details` 정보 제공 development 초안
 - 예약 4종에서 이미 수집한 값을 반복하지 않고 부족한 필드만 채우는 사람이 작성한 후속 정보 제공 development 초안
 - development 초안에서 정적으로 관측·미관측된 Coverage V3 의무를 공식 결과와 구분해 산출하는 `unqualified` 작성 진척 보고서
+- 미관측 `field_present` 24개를 정확히 겨냥한 AI coverage 후보·승인/수정/거부 작업지와 기존 32개 원문을 보존한 additive AI-origin policy V2
 - digest로 고정한 Python 3.11 다단계 이미지와 비루트·읽기 전용 핵심 컨테이너 실행 경계
 - PostgreSQL 준비 후 Alembic 일회성 적용과 API 시작을 보장하는 Compose 서비스 의존성
 - 이미지 빌드·마이그레이션·권한·HTTP 상태 계약을 실제 컨테이너에서 검증하는 `test-container` CI

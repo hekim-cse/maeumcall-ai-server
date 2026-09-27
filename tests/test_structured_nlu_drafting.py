@@ -11,13 +11,18 @@ from pydantic import ValidationError
 import evals.structured_nlu.ai_origin_policy as ai_origin_policy
 from evals.structured_nlu.ai_origin_policy import (
     AI_ORIGIN_TEXT_FINGERPRINTS_V1,
+    AI_ORIGIN_TEXT_FINGERPRINTS_V2,
     EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1,
+    EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V2,
     ai_origin_policy_fingerprint_v1,
+    ai_origin_policy_fingerprint_v2,
     serialize_ai_origin_policy_v1,
+    serialize_ai_origin_policy_v2,
 )
 from evals.structured_nlu.authoring import AuthoringGroup
 from evals.structured_nlu.benchmark import CoverageDimension
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
+from evals.structured_nlu.coverage_candidate_policy import COVERAGE_CANDIDATE_SPECS_V1
 from evals.structured_nlu.drafting import (
     AI_DRAFT_GENERATOR_ID,
     AI_DRAFT_PROVENANCE,
@@ -48,6 +53,7 @@ SUBAGENT_REVIEW_PACKET_PATH = (
     REPO_ROOT / "evals/structured_nlu/drafts/subagent-human-review-packet.v1.md"
 )
 AI_ORIGIN_POLICY_PATH = REPO_ROOT / "evals/structured_nlu/manifests/ai-origin-policy.v1.json"
+AI_ORIGIN_POLICY_V2_PATH = REPO_ROOT / "evals/structured_nlu/manifests/ai-origin-policy.v2.json"
 
 
 def test_ai_draft_seeds_cover_all_structured_nlu_scenarios() -> None:
@@ -350,6 +356,63 @@ def test_ai_origin_policy_fingerprint_includes_reserved_id_prefixes(
     assert ai_origin_policy_fingerprint_v1() != baseline
 
 
+def test_ai_origin_policy_v2_fingerprint_includes_latest_reserved_prefixes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    baseline = ai_origin_policy_fingerprint_v2()
+
+    monkeypatch.setattr(ai_origin_policy, "AI_ORIGIN_ID_PREFIXES_V2", ("ai-different-",))
+
+    assert ai_origin_policy_fingerprint_v2() != baseline
+
+
+def test_ai_origin_policy_v2_adds_coverage_candidates_without_rewriting_v1() -> None:
+    assert len(COVERAGE_CANDIDATE_SPECS_V1) == 24
+    assert len(AI_ORIGIN_TEXT_FINGERPRINTS_V1) == 32
+    assert len(AI_ORIGIN_TEXT_FINGERPRINTS_V2) == 56
+    assert ai_origin_policy_fingerprint_v1() == EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1
+    assert ai_origin_policy_fingerprint_v2() == EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V2
+    assert AI_ORIGIN_POLICY_PATH.read_text(encoding="utf-8") == serialize_ai_origin_policy_v1()
+    assert AI_ORIGIN_POLICY_V2_PATH.read_text(encoding="utf-8") == serialize_ai_origin_policy_v2()
+
+
+def test_coverage_candidate_cannot_be_relabelled_as_human_authored() -> None:
+    candidate = next(iter(COVERAGE_CANDIDATE_SPECS_V1.values()))
+    fields = {
+        name: None if values is None else {"accepted_values": list(values)}
+        for name, values in candidate.fields
+    }
+    base_case = {
+        "id": "human-renamed-coverage.c1",
+        "conversation_state": candidate.conversation_state,
+        "current_fields": dict(candidate.current_fields),
+        "offered_alternative_times": list(candidate.offered_alternative_times),
+        "user_message": candidate.user_message,
+        "labels": {
+            "intent": candidate.intent,
+            "fields": fields,
+            "user_action": candidate.user_action,
+            "change_field": candidate.change_field,
+        },
+        "tags": [tag.value for tag in candidate.tags],
+        "review_status": "draft",
+    }
+    payload = {
+        "authoring_schema_version": 2,
+        "conversation_group_id": "human-renamed-coverage",
+        "scenario_key": candidate.scenario_key,
+        "provenance": "human_authored",
+        "cases": [base_case],
+    }
+    with pytest.raises(ValidationError, match="verbatim AI-origin text"):
+        AuthoringGroup.model_validate(payload)
+
+    payload["conversation_group_id"] = f"ai-coverage-v1-{candidate.slug}"
+    payload["cases"][0]["user_message"] = "사람이 별도로 작성한 문장입니다."
+    with pytest.raises(ValidationError, match="AI-origin ids"):
+        AuthoringGroup.model_validate(payload)
+
+
 def test_subagent_review_packet_keeps_all_candidates_unreviewed() -> None:
     packet = render_ai_subagent_human_review_packet_v1()
     manifest = build_ai_subagent_candidate_manifest_v1()
@@ -372,6 +435,7 @@ def test_subagent_review_packet_keeps_all_candidates_unreviewed() -> None:
         ("draft-subagent-candidates", serialize_ai_subagent_candidate_manifest_v1),
         ("draft-subagent-review-packet", render_ai_subagent_human_review_packet_v1),
         ("ai-origin-policy", serialize_ai_origin_policy_v1),
+        ("ai-origin-policy-v2", serialize_ai_origin_policy_v2),
     ],
 )
 def test_ai_draft_cli_writes_deterministic_artifact(
@@ -397,6 +461,7 @@ def test_ai_draft_cli_writes_deterministic_artifact(
         ("check-draft-subagent-candidates", SUBAGENT_CANDIDATE_PATH),
         ("check-draft-subagent-review-packet", SUBAGENT_REVIEW_PACKET_PATH),
         ("check-ai-origin-policy", AI_ORIGIN_POLICY_PATH),
+        ("check-ai-origin-policy-v2", AI_ORIGIN_POLICY_V2_PATH),
     ],
 )
 def test_ai_draft_cli_checks_committed_artifact(
