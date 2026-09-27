@@ -1,0 +1,1589 @@
+{
+  "automatic_promotion_allowed": false,
+  "baseline_case_count": 36,
+  "baseline_corpus_fingerprint": "246e22b0d0b83b5ee0619f6ade5629c52fecb07e3b450f477efd2317da5e5ca7",
+  "baseline_covered_obligation_count": 613,
+  "baseline_diagnostic_case_ids": [
+    "ai-coverage-v1-city-bulky-waste-quantity.c1",
+    "ai-coverage-v1-city-certificate-issuance-channel.c1",
+    "ai-coverage-v1-city-passport-applicant-type.c1",
+    "ai-coverage-v1-city-passport-application-channel.c1",
+    "ai-coverage-v1-city-passport-application-type.c1",
+    "ai-coverage-v1-delivery-change-unavailable-preference.c1",
+    "ai-coverage-v1-delivery-delay-delay-detail.c1",
+    "ai-coverage-v1-delivery-delay-delay-resolution.c1",
+    "ai-coverage-v1-delivery-refund-evidence-status.c1",
+    "ai-coverage-v1-delivery-refund-order-number.c1",
+    "ai-coverage-v1-delivery-refund-resolution-preference.c1",
+    "ai-coverage-v1-reservation-hair-salon-selected-time.c1",
+    "ai-coverage-v1-reservation-hospital-selected-time.c1",
+    "ai-coverage-v1-reservation-restaurant-selected-time.c1",
+    "ai-coverage-v1-reservation-study-room-selected-time.c1",
+    "ai-coverage-v1-support-network-occurred-at.c1",
+    "ai-coverage-v1-support-network-scope.c1",
+    "ai-coverage-v1-support-network-service-type.c1",
+    "ai-coverage-v1-support-network-troubleshooting-done.c1",
+    "ai-coverage-v1-support-plan-consent-scope.c1",
+    "ai-coverage-v1-support-service-model-name.c1",
+    "ai-coverage-v1-support-service-occurred-at.c1",
+    "ai-coverage-v1-support-service-safety-status.c1",
+    "ai-coverage-v1-support-service-service-channel.c1",
+    "ai-coverage-v2-city-bulky-waste-quantity-clear.c1",
+    "ai-coverage-v2-city-certificate-issuance-channel-clear.c1",
+    "ai-coverage-v2-delivery-change-unavailable-preference-clear.c1",
+    "ai-coverage-v2-support-plan-consent-scope-clear.c1"
+  ],
+  "baseline_missing_obligation_count": 949,
+  "baseline_source_root": "evals/structured_nlu/data/source",
+  "baseline_split_assignment_path": "evals/structured_nlu/data/manifests/split-assignments.v1.json",
+  "candidate_set_id": "structured-nlu-coverage-candidates-v3",
+  "coverage_candidate_schema_version": 3,
+  "generator_id": "openai-codex-coverage-candidates",
+  "human_review_required": true,
+  "official_obligation_count": 1562,
+  "predecessor_candidate_set_id": "structured-nlu-coverage-candidates-v2",
+  "profile_fingerprint": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+  "profile_id": "maeumcall-structured-nlu-v3",
+  "projected_covered_obligation_count": 668,
+  "projected_marginal_gain": 55,
+  "projected_missing_obligation_count": 894,
+  "provenance": "ai_assisted_unreviewed",
+  "suggestions": [
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hair-salon-unavailable-ask-other-time-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:미용실 예약",
+        "value": "reservation_unavailable->ask_other_time->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->ask_other_time->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->ask_other_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hair-salon-unavailable-ask-other-time-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "그럼 가능한 다른 시술 시간이 있나요?"
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hair-salon-unavailable-ask-other-time-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hair-salon-unavailable-ask-other-time-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:미용실 예약",
+        "value": "reservation_unavailable->ask_other_time->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->ask_other_time->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hair-salon-unavailable-ask-other-time-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "말씀해 주신 시간 말고 다른 시술 시간도 있나요?"
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hair-salon-unavailable-ask-other-time-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hair-salon-unavailable-change-date-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:미용실 예약",
+        "value": "reservation_unavailable->change_date->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_date->date"
+        },
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->change_date->no_offers"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "예약:미용실 예약",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->change_date"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hair-salon-unavailable-change-date-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "이번 주 목요일"
+              ]
+            },
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "미용실 예약 날짜를 이번 주 목요일로 바꿀게요."
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hair-salon-unavailable-change-date-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hair-salon-unavailable-change-date-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:미용실 예약",
+        "value": "reservation_unavailable->change_date->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->change_date->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hair-salon-unavailable-change-date-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "다음 주 화요일"
+              ]
+            },
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "제시된 시간 대신 미용실 예약을 다음 주 화요일로 바꿀게요."
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hair-salon-unavailable-change-date-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hair-salon-unavailable-unknown-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:미용실 예약",
+        "value": "reservation_unavailable->unknown->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->unknown->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->unknown"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hair-salon-unavailable-unknown-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "주차 지원이 되나요?"
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hair-salon-unavailable-unknown-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hair-salon-unavailable-unknown-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:미용실 예약",
+        "value": "reservation_unavailable->unknown->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:미용실 예약",
+          "value": "reservation_unavailable->unknown->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hair-salon-unavailable-unknown-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "제시된 시간은 선택하지 않고 주차 지원 여부를 알고 싶어요."
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hair-salon-unavailable-unknown-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-suggest-ask-other-time-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "suggest_alternative->ask_other_time->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->ask_other_time->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->ask_other_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "suggest_alternative",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-suggest-ask-other-time-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "다른 진료 가능 시간도 더 알려주세요."
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-suggest-ask-other-time-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-suggest-ask-other-time-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "suggest_alternative->ask_other_time->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->ask_other_time->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "suggest_alternative",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-suggest-ask-other-time-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "제안하신 두 시간 외에 다른 진료 시간도 있나요?"
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-suggest-ask-other-time-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-suggest-change-date-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "suggest_alternative->change_date->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->change_date->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->change_date"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "suggest_alternative",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-suggest-change-date-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "이번 주 금요일"
+              ]
+            },
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "병원 예약 날짜를 이번 주 금요일로 바꿀게요."
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-suggest-change-date-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-suggest-change-date-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "suggest_alternative->change_date->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->change_date->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "suggest_alternative",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-suggest-change-date-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "다음 주 월요일"
+              ]
+            },
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "제안 시간 대신 예약 날짜를 다음 주 월요일로 바꿀게요."
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-suggest-change-date-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-suggest-select-alternative-time-selected-offer",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "suggest_alternative->select_alternative_time->selected_offer"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->select_alternative_time->selected_offer"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->select_alternative_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "suggest_alternative",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-suggest-select-alternative-time-selected-offer.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": {
+              "accepted_values": [
+                "오후 3시"
+              ]
+            },
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "select_alternative_time"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "single_field"
+        ],
+        "user_message": "제안해 주신 진료 시간 중 오후 3시로 할게요."
+      },
+      "relation": "selected_offer",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-suggest-select-alternative-time-selected-offer"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-suggest-unknown-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "suggest_alternative->unknown->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->unknown->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->unknown"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "suggest_alternative",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-suggest-unknown-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "진료비 결제 방법이 궁금해요."
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-suggest-unknown-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-suggest-unknown-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "suggest_alternative->unknown->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "suggest_alternative->unknown->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "suggest_alternative",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-suggest-unknown-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "제안 시간은 선택하지 않을게요. 진료비 결제 방법이 궁금해요."
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-suggest-unknown-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-unavailable-ask-other-time-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "reservation_unavailable->ask_other_time->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->ask_other_time->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->ask_other_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-unavailable-ask-other-time-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "그럼 가능한 다른 진료 시간이 있나요?"
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-unavailable-ask-other-time-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-unavailable-ask-other-time-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "reservation_unavailable->ask_other_time->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->ask_other_time->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-unavailable-ask-other-time-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "말씀해 주신 시간 말고 다른 진료 시간도 있나요?"
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-unavailable-ask-other-time-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-unavailable-change-date-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "reservation_unavailable->change_date->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:병원 예약",
+          "value": "change_date->date"
+        },
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->change_date->no_offers"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "예약:병원 예약",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->change_date"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-unavailable-change-date-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "내일"
+              ]
+            },
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "그럼 병원 예약 날짜를 내일로 바꿀게요."
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-unavailable-change-date-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-unavailable-change-date-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "reservation_unavailable->change_date->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->change_date->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-unavailable-change-date-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "모레"
+              ]
+            },
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "제시된 진료 시간 대신 예약 날짜를 모레로 바꿀게요."
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-unavailable-change-date-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-unavailable-unknown-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "reservation_unavailable->unknown->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->unknown->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->unknown"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-unavailable-unknown-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "병원 주차장은 어디예요?"
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-unavailable-unknown-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-hospital-unavailable-unknown-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:병원 예약",
+        "value": "reservation_unavailable->unknown->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:병원 예약",
+          "value": "reservation_unavailable->unknown->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-hospital-unavailable-unknown-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "그 시간들은 고르지 않을게요. 병원 주차장은 어디예요?"
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-hospital-unavailable-unknown-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-restaurant-unavailable-ask-other-time-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:식당 예약",
+        "value": "reservation_unavailable->ask_other_time->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->ask_other_time->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->ask_other_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-restaurant-unavailable-ask-other-time-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "그럼 가능한 다른 식사 시간이 있나요?"
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-restaurant-unavailable-ask-other-time-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-restaurant-unavailable-ask-other-time-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:식당 예약",
+        "value": "reservation_unavailable->ask_other_time->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->ask_other_time->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-restaurant-unavailable-ask-other-time-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "말씀해 주신 시간 말고 다른 식사 시간도 있나요?"
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-restaurant-unavailable-ask-other-time-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-restaurant-unavailable-change-date-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:식당 예약",
+        "value": "reservation_unavailable->change_date->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:식당 예약",
+          "value": "change_date->date"
+        },
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->change_date->no_offers"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "예약:식당 예약",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->change_date"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-restaurant-unavailable-change-date-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "이번 주 토요일"
+              ]
+            },
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "식당 예약 날짜를 이번 주 토요일로 바꿀게요."
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-restaurant-unavailable-change-date-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-restaurant-unavailable-change-date-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:식당 예약",
+        "value": "reservation_unavailable->change_date->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->change_date->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-restaurant-unavailable-change-date-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "다음 주 토요일"
+              ]
+            },
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "제시된 시간 대신 식당 예약을 다음 주 토요일로 바꿀게요."
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-restaurant-unavailable-change-date-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-restaurant-unavailable-unknown-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:식당 예약",
+        "value": "reservation_unavailable->unknown->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->unknown->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->unknown"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-restaurant-unavailable-unknown-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "식당에 주차할 수 있나요?"
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-restaurant-unavailable-unknown-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-restaurant-unavailable-unknown-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:식당 예약",
+        "value": "reservation_unavailable->unknown->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:식당 예약",
+          "value": "reservation_unavailable->unknown->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-restaurant-unavailable-unknown-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "그 시간들은 고르지 않을게요. 식당 주차가 가능한가요?"
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-restaurant-unavailable-unknown-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-study-room-unavailable-ask-other-time-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:스터디룸 예약",
+        "value": "reservation_unavailable->ask_other_time->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->ask_other_time->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->ask_other_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-study-room-unavailable-ask-other-time-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "그럼 가능한 다른 이용 시간이 있나요?"
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-study-room-unavailable-ask-other-time-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-study-room-unavailable-ask-other-time-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:스터디룸 예약",
+        "value": "reservation_unavailable->ask_other_time->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->ask_other_time->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-study-room-unavailable-ask-other-time-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "ask_other_time"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "ellipsis"
+        ],
+        "user_message": "말씀해 주신 시간 말고 다른 이용 시간도 있나요?"
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-study-room-unavailable-ask-other-time-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-study-room-unavailable-change-date-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:스터디룸 예약",
+        "value": "reservation_unavailable->change_date->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_date->date"
+        },
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->change_date->no_offers"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->change_date"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-study-room-unavailable-change-date-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "내일"
+              ]
+            },
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "스터디룸 예약 날짜를 내일로 바꿀게요."
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-study-room-unavailable-change-date-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-study-room-unavailable-change-date-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:스터디룸 예약",
+        "value": "reservation_unavailable->change_date->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->change_date->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-study-room-unavailable-change-date-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": {
+              "accepted_values": [
+                "이번 주 일요일"
+              ]
+            },
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "제시된 시간 대신 스터디룸 예약을 이번 주 일요일로 바꿀게요."
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-study-room-unavailable-change-date-offers-unselected"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-study-room-unavailable-unknown-no-offers",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:스터디룸 예약",
+        "value": "reservation_unavailable->unknown->no_offers"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->unknown->no_offers"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->unknown"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-study-room-unavailable-unknown-no-offers.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "스터디룸에 화이트보드가 있나요?"
+      },
+      "relation": "no_offers",
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-study-room-unavailable-unknown-no-offers"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v3-study-room-unavailable-unknown-offers-unselected",
+      "primary_obligation": {
+        "dimension": "alternative_time_relation",
+        "scenario_key": "예약:스터디룸 예약",
+        "value": "reservation_unavailable->unknown->offers_unselected"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "alternative_time_relation",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "reservation_unavailable->unknown->offers_unselected"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "reservation_unavailable",
+        "current_fields": {},
+        "id": "ai-coverage-v3-study-room-unavailable-unknown-offers-unselected.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "unknown"
+        },
+        "offered_alternative_times": [
+          "오후 3시",
+          "오후 4시"
+        ],
+        "tags": [
+          "hard_negative"
+        ],
+        "user_message": "그 시간들은 고르지 않을게요. 화이트보드가 있나요?"
+      },
+      "relation": "offers_unselected",
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v3-study-room-unavailable-unknown-offers-unselected"
+    }
+  ]
+}

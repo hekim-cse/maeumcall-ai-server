@@ -12,6 +12,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from evals.structured_nlu.ai_origin_policy import (
+    CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
     EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1,
     EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V2,
     ai_origin_policy_descriptor,
@@ -499,13 +500,14 @@ def build_freeze_record(
     _require_clean_worktree(resolved_repo_root)
     bundle, benchmark, obligation_sha256 = _verify_freeze_input_snapshot(
         input_snapshot,
-        ai_origin_policy_schema_version=3,
+        ai_origin_policy_schema_version=CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
     )
     inventory = _build_inventory(bundle)
     policy_artifact_sha256 = _verify_ai_origin_policy_snapshot(
-        input_snapshot.ai_origin_policy, schema_version=3
+        input_snapshot.ai_origin_policy,
+        schema_version=CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
     )
-    policy_descriptor = ai_origin_policy_descriptor(3)
+    policy_descriptor = ai_origin_policy_descriptor(CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION)
     artifacts = FreezeArtifactFingerprintsV4(
         group_source_fingerprint=bundle.group_source_fingerprint,
         split_assignment_fingerprint=bundle.split_assignment_fingerprint,
@@ -896,7 +898,7 @@ class _FreezeInputSnapshot:
 def _verify_freeze_input_snapshot(
     snapshot: _FreezeInputSnapshot,
     *,
-    ai_origin_policy_schema_version: int = 3,
+    ai_origin_policy_schema_version: int = CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
 ) -> tuple[VerifiedAuthoringBundle, QualifiedTestSlice, str]:
     dataset, group_source_fingerprint, split_assignment_fingerprint = (
         verify_compiled_authoring_snapshot(
@@ -1050,7 +1052,7 @@ def _current_versions() -> FreezeContractVersionsV4:
         review_ledger_schema_version=1,
         contrast_manifest_schema_version=CONTRAST_MANIFEST_SCHEMA_VERSION,
         coverage_profile_version=3,
-        ai_origin_policy_schema_version=3,
+        ai_origin_policy_schema_version=CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
     )
 
 
@@ -1430,7 +1432,11 @@ def _object_from_unique_pairs(pairs: list[tuple[str, object]]) -> dict[str, obje
     return result
 
 
-def _verify_ai_origin_policy_snapshot(policy: bytes | None, *, schema_version: int = 3) -> str:
+def _verify_ai_origin_policy_snapshot(
+    policy: bytes | None,
+    *,
+    schema_version: int = CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
+) -> str:
     if policy is None:
         raise ValueError("freeze record requires the AI-origin policy artifact")
     expected = serialize_ai_origin_policy(schema_version).encode("utf-8")
