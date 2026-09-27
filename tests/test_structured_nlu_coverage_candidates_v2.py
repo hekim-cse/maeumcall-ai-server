@@ -6,7 +6,6 @@ import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 from pydantic import ValidationError
@@ -18,13 +17,14 @@ from evals.structured_nlu.drafting import (
     AICoverageCandidateManifestV2,
     build_ai_coverage_candidate_manifest_v1,
     build_ai_coverage_candidate_manifest_v2,
+    coverage_candidate_diagnostic_cases,
     render_ai_coverage_candidate_review_packet_v2,
     serialize_ai_coverage_candidate_manifest_v1,
     serialize_ai_coverage_candidate_manifest_v2,
     serialize_ai_coverage_candidate_schema_v1,
     serialize_ai_coverage_candidate_schema_v2,
 )
-from evals.structured_nlu.schema import ReviewStatus
+from scripts import compile_structured_nlu_corpus as compile_script
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = REPO_ROOT / "evals/structured_nlu/data"
@@ -35,23 +35,6 @@ V1_SCHEMA_PATH = REPO_ROOT / "evals/structured_nlu/ai_coverage_candidate.schema.
 V2_CANDIDATE_PATH = REPO_ROOT / "evals/structured_nlu/drafts/coverage-candidates.v2.json"
 V2_SCHEMA_PATH = REPO_ROOT / "evals/structured_nlu/ai_coverage_candidate_v2.schema.json"
 V2_PACKET_PATH = REPO_ROOT / "evals/structured_nlu/drafts/coverage-review-packet.v2.md"
-
-
-def _diagnostic_cases(*manifests):
-    return tuple(
-        SimpleNamespace(
-            id=suggestion.proposed_case.id,
-            scenario_key=suggestion.scenario_key,
-            conversation_state=suggestion.proposed_case.conversation_state,
-            current_fields=suggestion.proposed_case.current_fields,
-            offered_alternative_times=suggestion.proposed_case.offered_alternative_times,
-            labels=suggestion.proposed_case.labels,
-            tags=suggestion.proposed_case.tags,
-            review_status=ReviewStatus.DRAFT,
-        )
-        for manifest in manifests
-        for suggestion in manifest.suggestions
-    )
 
 
 def _missing_keys(report):
@@ -68,7 +51,7 @@ def test_v2_targets_the_exact_current_field_present_frontier_after_v1() -> None:
     v2 = build_ai_coverage_candidate_manifest_v2()
     baseline = build_development_coverage_progress(
         dataset,
-        diagnostic_cases=_diagnostic_cases(v1),
+        diagnostic_cases=coverage_candidate_diagnostic_cases(v1),
     )
     missing = {
         (gap.scenario_key, value)
@@ -110,11 +93,11 @@ def test_v2_projection_is_the_exact_31_obligation_delta() -> None:
     v2 = build_ai_coverage_candidate_manifest_v2()
     before = build_development_coverage_progress(
         dataset,
-        diagnostic_cases=_diagnostic_cases(v1),
+        diagnostic_cases=coverage_candidate_diagnostic_cases(v1),
     )
     after = build_development_coverage_progress(
         dataset,
-        diagnostic_cases=_diagnostic_cases(v1, v2),
+        diagnostic_cases=coverage_candidate_diagnostic_cases(v1, v2),
     )
     gained = _missing_keys(before) - _missing_keys(after)
     declared = {
@@ -191,6 +174,25 @@ def test_v2_payload_cannot_be_promoted_or_drifted() -> None:
 
     payload["suggestions"][0]["proposed_case"]["user_message"] += " 수정"
     with pytest.raises(ValidationError, match="drifted from policy"):
+        AICoverageCandidateManifestV2.model_validate(payload)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda payload: payload["suggestions"][0]["projected_obligations"][0].update(
+            dimension="not_a_dimension"
+        ),
+        lambda payload: payload.update(extra_field=1),
+        lambda payload: payload["suggestions"][0].update(target_field="   "),
+        lambda payload: payload.update(automatic_promotion_allowed=True),
+    ],
+)
+def test_v2_manifest_rejects_invalid_shapes(mutation) -> None:
+    payload = json.loads(serialize_ai_coverage_candidate_manifest_v2())
+    mutation(payload)
+
+    with pytest.raises(ValidationError):
         AICoverageCandidateManifestV2.model_validate(payload)
 
 
@@ -282,3 +284,21 @@ def test_v2_cli_writes_and_checks_exact_artifacts(
         text=True,
     )
     assert stale.returncode != 0
+
+
+def test_create_only_writer_cleans_temporary_file_after_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output = tmp_path / "new-version.json"
+
+    def fail_link(_source, _destination) -> None:
+        raise OSError("injected link failure")
+
+    monkeypatch.setattr(compile_script.os, "link", fail_link)
+    with pytest.raises(OSError, match="injected link failure"):
+        compile_script._write_new_text(output, "{}\n")
+
+    assert not output.exists()
+    assert not tuple(tmp_path.glob("*.writing"))
+    assert not tuple(tmp_path.glob(".*.writing"))

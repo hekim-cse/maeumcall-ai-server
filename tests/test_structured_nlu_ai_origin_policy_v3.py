@@ -14,6 +14,7 @@ from evals.structured_nlu.ai_origin_policy import (
     EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1,
     EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V2,
     EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V3,
+    ai_origin_policy_descriptor,
     ai_origin_policy_fingerprint_v1,
     ai_origin_policy_fingerprint_v2,
     ai_origin_policy_fingerprint_v3,
@@ -97,6 +98,21 @@ def test_authoring_default_is_v3_but_historical_dispatch_is_immutable() -> None:
     AuthoringGroup.model_validate(payload, context={"ai_origin_policy_schema_version": 0})
     with pytest.raises(ValidationError, match="unsupported AI-origin policy"):
         AuthoringGroup.model_validate(payload, context={"ai_origin_policy_schema_version": 4})
+
+
+@pytest.mark.parametrize("version", [True, "3", 3.0, None, -1])
+def test_authoring_rejects_invalid_policy_version_types(version) -> None:
+    with pytest.raises(ValidationError, match="unsupported AI-origin policy"):
+        AuthoringGroup.model_validate(
+            _authoring_payload(),
+            context={"ai_origin_policy_schema_version": version},
+        )
+
+
+@pytest.mark.parametrize("version", [True, "3", 0, 4])
+def test_policy_descriptor_rejects_unregistered_versions(version) -> None:
+    with pytest.raises(ValueError, match="unsupported AI-origin policy"):
+        ai_origin_policy_descriptor(version)
 
 
 def test_policy_dispatcher_preserves_each_additive_history_boundary() -> None:

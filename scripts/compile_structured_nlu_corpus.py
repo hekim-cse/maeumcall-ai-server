@@ -680,13 +680,27 @@ def _write_new_text(path: Path, content: str) -> None:
     resolved_parent.mkdir(parents=True, exist_ok=True)
     if path.exists() or path.is_symlink():
         raise SystemExit(f"versioned artifact output already exists: {path}")
+    temporary_path: Path | None = None
     try:
-        with path.open("x", encoding="utf-8", newline="\n") as handle:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            newline="\n",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".writing",
+            delete=False,
+        ) as handle:
+            temporary_path = Path(handle.name)
             handle.write(content)
             handle.flush()
             os.fsync(handle.fileno())
+        os.link(temporary_path, path)
     except FileExistsError as exc:
         raise SystemExit(f"versioned artifact output already exists: {path}") from exc
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
 
 
 def _write_text(path: Path, content: str) -> None:

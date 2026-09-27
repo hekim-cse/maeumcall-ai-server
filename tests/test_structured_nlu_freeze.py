@@ -554,6 +554,34 @@ def test_v4_audit_can_replay_registered_policy_but_official_verify_requires_curr
         verify_freeze_record(repo_root=repo, record_path=record_path)
 
 
+@pytest.mark.parametrize(
+    ("descriptor_update", "versions_update", "match"),
+    [
+        ({"schema_version": 2}, {}, "descriptor version does not match"),
+        ({"policy_fingerprint": "9" * 64}, {}, "descriptor is not registered"),
+        (
+            {"schema_version": 4},
+            {"ai_origin_policy_schema_version": 4},
+            "unsupported AI-origin policy",
+        ),
+    ],
+)
+def test_v4_rejects_forged_policy_descriptors(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    descriptor_update: dict[str, object],
+    versions_update: dict[str, object],
+    match: str,
+) -> None:
+    _, _, record, _ = _build_record(tmp_path, monkeypatch)
+    payload = record.model_dump(mode="json")
+    payload["artifacts"]["ai_origin_policy"].update(descriptor_update)
+    payload["versions"].update(versions_update)
+
+    with pytest.raises((ValidationError, ValueError), match=match):
+        freeze_module.CorpusFreezeRecordV4.model_validate(payload)
+
+
 def test_freeze_record_rejects_self_hash_and_lineage_tampering(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
