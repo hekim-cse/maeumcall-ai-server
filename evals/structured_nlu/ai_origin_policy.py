@@ -9,6 +9,7 @@ from types import MappingProxyType
 from evals.structured_nlu.coverage_candidate_policy import COVERAGE_CANDIDATE_SPECS_V1
 from evals.structured_nlu.coverage_candidate_policy_v2 import COVERAGE_CANDIDATE_SPECS_V2
 from evals.structured_nlu.coverage_candidate_policy_v3 import COVERAGE_CANDIDATE_SPECS_V3
+from evals.structured_nlu.coverage_candidate_policy_v4 import COVERAGE_CANDIDATE_SPECS_V4
 from evals.structured_nlu.draft_seed_policy import AI_DRAFT_SEED_SPECS_V1
 from evals.structured_nlu.subagent_candidate_policy import AI_SUBAGENT_CANDIDATE_SPECS_V1
 
@@ -16,11 +17,13 @@ AI_ORIGIN_ID_PREFIXES_V1 = ("ai-seed-", "ai-subagent-")
 AI_ORIGIN_ID_PREFIXES_V2 = (*AI_ORIGIN_ID_PREFIXES_V1, "ai-coverage-")
 AI_ORIGIN_ID_PREFIXES_V3 = AI_ORIGIN_ID_PREFIXES_V2
 AI_ORIGIN_ID_PREFIXES_V4 = AI_ORIGIN_ID_PREFIXES_V3
+AI_ORIGIN_ID_PREFIXES_V5 = AI_ORIGIN_ID_PREFIXES_V4
 AI_ORIGIN_POLICY_ID_V1 = "maeumcall-structured-nlu-ai-origin-policy-v1"
 AI_ORIGIN_POLICY_ID_V2 = "maeumcall-structured-nlu-ai-origin-policy-v2"
 AI_ORIGIN_POLICY_ID_V3 = "maeumcall-structured-nlu-ai-origin-policy-v3"
 AI_ORIGIN_POLICY_ID_V4 = "maeumcall-structured-nlu-ai-origin-policy-v4"
-CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION = 4
+AI_ORIGIN_POLICY_ID_V5 = "maeumcall-structured-nlu-ai-origin-policy-v5"
+CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION = 5
 AI_ORIGIN_TEXT_FINGERPRINT_ALGORITHM_V1 = "nfc-utf8-sha256-v1"
 EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1 = (
     "75074881c33a8c6174f6827c58d2b593783c5e77190d6b6f6219f55fd1f87b78"
@@ -33,6 +36,9 @@ EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V3 = (
 )
 EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V4 = (
     "2fa6122b17724edf036a1734b5da2d37f94843a229f3de87bbc07ac9a93c5f96"
+)
+EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V5 = (
+    "ad8ddd2d59926fe6277193785ea4144059636167687bb92b92ea8cb350db83fb"
 )
 
 
@@ -88,6 +94,16 @@ AI_ORIGIN_TEXT_FINGERPRINTS_V4 = frozenset(
 )
 if len(AI_ORIGIN_TEXT_FINGERPRINTS_V4) != len(_AI_ORIGIN_TEXTS_V4):
     raise RuntimeError("AI-origin V4 texts must be globally unique after NFC normalization")
+
+_AI_ORIGIN_TEXTS_V5 = (
+    *_AI_ORIGIN_TEXTS_V4,
+    *(spec.user_message for spec in COVERAGE_CANDIDATE_SPECS_V4.values()),
+)
+AI_ORIGIN_TEXT_FINGERPRINTS_V5 = frozenset(
+    ai_origin_text_fingerprint_v1(value) for value in _AI_ORIGIN_TEXTS_V5
+)
+if len(AI_ORIGIN_TEXT_FINGERPRINTS_V5) != len(_AI_ORIGIN_TEXTS_V5):
+    raise RuntimeError("AI-origin V5 texts must be globally unique after NFC normalization")
 
 
 def ai_origin_policy_payload_v1() -> dict[str, object]:
@@ -266,6 +282,49 @@ def serialize_ai_origin_policy_v4() -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
 
+def ai_origin_policy_payload_v5() -> dict[str, object]:
+    """Extend immutable V4 with coverage batch-004 without rewriting history."""
+    v4_entries = ai_origin_policy_payload_v4()["entries"]
+    if not isinstance(v4_entries, list):
+        raise RuntimeError("AI-origin policy V4 entries must be a list")
+    coverage_entries = [
+        {
+            "origin_id": f"ai-coverage-v4-{spec.slug}",
+            "origin_kind": "coverage_candidate_batch_004",
+            "scenario_key": spec.scenario_key,
+            "text_fingerprint": ai_origin_text_fingerprint_v1(spec.user_message),
+        }
+        for spec in COVERAGE_CANDIDATE_SPECS_V4.values()
+    ]
+    return {
+        "ai_origin_policy_schema_version": 5,
+        "policy_id": AI_ORIGIN_POLICY_ID_V5,
+        "text_fingerprint_algorithm": AI_ORIGIN_TEXT_FINGERPRINT_ALGORITHM_V1,
+        "reserved_id_prefixes": sorted(AI_ORIGIN_ID_PREFIXES_V5),
+        "entries": sorted(
+            [*v4_entries, *coverage_entries], key=lambda entry: str(entry["origin_id"])
+        ),
+    }
+
+
+def ai_origin_policy_fingerprint_v5() -> str:
+    canonical = json.dumps(
+        ai_origin_policy_payload_v5(),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def serialize_ai_origin_policy_v5() -> str:
+    payload = {
+        **ai_origin_policy_payload_v5(),
+        "policy_fingerprint": ai_origin_policy_fingerprint_v5(),
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+
 def serialize_ai_origin_policy_schema_v3() -> str:
     """Serialize the committed validation contract for policy V3 artifacts."""
     schema = {
@@ -368,6 +427,57 @@ def serialize_ai_origin_policy_schema_v4() -> str:
     return json.dumps(schema, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
 
+def serialize_ai_origin_policy_schema_v5() -> str:
+    """Serialize the committed validation contract for policy V5 artifacts."""
+    schema = {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:maeumcall:structured-nlu:ai-origin-policy:v5",
+        "type": "object",
+        "additionalProperties": False,
+        "required": [
+            "ai_origin_policy_schema_version",
+            "policy_id",
+            "text_fingerprint_algorithm",
+            "reserved_id_prefixes",
+            "entries",
+            "policy_fingerprint",
+        ],
+        "properties": {
+            "ai_origin_policy_schema_version": {"const": 5},
+            "policy_id": {"const": AI_ORIGIN_POLICY_ID_V5},
+            "text_fingerprint_algorithm": {"const": AI_ORIGIN_TEXT_FINGERPRINT_ALGORITHM_V1},
+            "reserved_id_prefixes": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1},
+                "uniqueItems": True,
+            },
+            "entries": {
+                "type": "array",
+                "minItems": 110,
+                "maxItems": 110,
+                "items": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": [
+                        "origin_id",
+                        "origin_kind",
+                        "scenario_key",
+                        "text_fingerprint",
+                    ],
+                    "properties": {
+                        "origin_id": {"type": "string", "minLength": 1},
+                        "origin_kind": {"type": "string", "minLength": 1},
+                        "scenario_key": {"type": "string", "minLength": 1},
+                        "text_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                    },
+                },
+            },
+            "policy_fingerprint": {"const": EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V5},
+        },
+    }
+    return json.dumps(schema, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+
 if ai_origin_policy_fingerprint_v1() != EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V1:
     raise RuntimeError("AI-origin policy V1 changed; create a new version instead of rewriting V1")
 if ai_origin_policy_fingerprint_v2() != EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V2:
@@ -376,6 +486,8 @@ if ai_origin_policy_fingerprint_v3() != EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V3
     raise RuntimeError("AI-origin policy V3 changed; create a new version instead of rewriting V3")
 if ai_origin_policy_fingerprint_v4() != EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V4:
     raise RuntimeError("AI-origin policy V4 changed; create a new version instead of rewriting V4")
+if ai_origin_policy_fingerprint_v5() != EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V5:
+    raise RuntimeError("AI-origin policy V5 changed; create a new version instead of rewriting V5")
 
 
 @dataclass(frozen=True)
@@ -418,12 +530,19 @@ def _policy_descriptors() -> MappingProxyType[int, AIOriginPolicyDescriptor]:
                 AI_ORIGIN_ID_PREFIXES_V4,
                 AI_ORIGIN_TEXT_FINGERPRINTS_V4,
             ),
+            5: AIOriginPolicyDescriptor(
+                5,
+                AI_ORIGIN_POLICY_ID_V5,
+                EXPECTED_AI_ORIGIN_POLICY_FINGERPRINT_V5,
+                AI_ORIGIN_ID_PREFIXES_V5,
+                AI_ORIGIN_TEXT_FINGERPRINTS_V5,
+            ),
         }
     )
 
 
 def ai_origin_policy_descriptor(schema_version: int) -> AIOriginPolicyDescriptor:
-    if type(schema_version) is not int or schema_version not in (1, 2, 3, 4):
+    if type(schema_version) is not int or schema_version not in (1, 2, 3, 4, 5):
         raise ValueError("unsupported AI-origin policy schema version")
     return _policy_descriptors()[schema_version]
 
@@ -434,6 +553,7 @@ def serialize_ai_origin_policy(schema_version: int) -> str:
         2: serialize_ai_origin_policy_v2,
         3: serialize_ai_origin_policy_v3,
         4: serialize_ai_origin_policy_v4,
+        5: serialize_ai_origin_policy_v5,
     }
     ai_origin_policy_descriptor(schema_version)
     return serializers[schema_version]()

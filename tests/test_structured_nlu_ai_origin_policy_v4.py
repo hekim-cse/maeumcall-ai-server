@@ -111,7 +111,7 @@ def test_policy_v4_preserves_historical_policy_and_freeze_schema_bytes() -> None
     )
 
 
-def test_authoring_defaults_to_v4_while_policy_v3_remains_replayable() -> None:
+def test_authoring_current_policy_rejects_v4_text_while_v3_remains_replayable() -> None:
     payload = _authoring_payload()
     message = next(iter(COVERAGE_CANDIDATE_SPECS_V3.values())).user_message
 
