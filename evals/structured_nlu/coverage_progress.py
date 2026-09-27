@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from evals.structured_nlu.benchmark import (
     OFFICIAL_BENCHMARK_PROFILE,
     OFFICIAL_BENCHMARK_PROFILE_FINGERPRINT,
+    CoverageCaseLike,
     CoverageDimension,
     corpus_fingerprint,
     inspect_benchmark_coverage,
@@ -134,7 +135,11 @@ class CoverageProgressReportV1(BaseModel):
         return self
 
 
-def build_development_coverage_progress(dataset: GoldDataset) -> CoverageProgressReportV1:
+def build_development_coverage_progress(
+    dataset: GoldDataset,
+    *,
+    diagnostic_cases: tuple[CoverageCaseLike, ...] = (),
+) -> CoverageProgressReportV1:
     """Compare development drafts with the V3 inventory without qualifying the split."""
     official = build_official_authoring_obligations()
     official_dimensions = frozenset(item.dimension for item in official)
@@ -147,6 +152,7 @@ def build_development_coverage_progress(dataset: GoldDataset) -> CoverageProgres
         dataset,
         split=DatasetSplit.DEVELOPMENT,
         profile=OFFICIAL_BENCHMARK_PROFILE,
+        diagnostic_cases=diagnostic_cases,
     )
     missing_keys = {
         (issue.scenario_key, issue.dimension, value)

@@ -1,8 +1,8 @@
 {
   "$defs": {
-    "FreezeArtifactFingerprintsV2": {
+    "FreezeArtifactFingerprintsV3": {
       "additionalProperties": false,
-      "description": "Bind both raw and semantic identities of the AI-origin policy.",
+      "description": "Bind the additive V2 AI-origin policy without changing historical V2 records.",
       "properties": {
         "ai_origin_policy_artifact_sha256": {
           "pattern": "^[0-9a-f]{64}$",
@@ -10,7 +10,7 @@
           "type": "string"
         },
         "ai_origin_policy_fingerprint": {
-          "const": "75074881c33a8c6174f6827c58d2b593783c5e77190d6b6f6219f55fd1f87b78",
+          "const": "25dbf8816653a97d6f8e7fc84cfa2f7676745febd9af80a04257bbf4b98ccee1",
           "title": "Ai Origin Policy Fingerprint",
           "type": "string"
         },
@@ -67,7 +67,7 @@
         "ai_origin_policy_artifact_sha256",
         "ai_origin_policy_fingerprint"
       ],
-      "title": "FreezeArtifactFingerprintsV2",
+      "title": "FreezeArtifactFingerprintsV3",
       "type": "object"
     },
     "FreezeArtifactPathsV2": {
@@ -196,12 +196,12 @@
       "title": "FreezeBenchmarkContractV1",
       "type": "object"
     },
-    "FreezeContractVersionsV2": {
+    "FreezeContractVersionsV3": {
       "additionalProperties": false,
-      "description": "Add the immutable AI-origin policy version to the governed contracts.",
+      "description": "Pin the additive AI-origin policy V2 used by current records.",
       "properties": {
         "ai_origin_policy_schema_version": {
-          "const": 1,
+          "const": 2,
           "title": "Ai Origin Policy Schema Version",
           "type": "integer"
         },
@@ -251,7 +251,7 @@
         "coverage_profile_version",
         "ai_origin_policy_schema_version"
       ],
-      "title": "FreezeContractVersionsV2",
+      "title": "FreezeContractVersionsV3",
       "type": "object"
     },
     "FreezeCorpusInventoryV1": {
@@ -331,13 +331,13 @@
       "type": "object"
     }
   },
-  "$id": "urn:maeumcall:structured-nlu:freeze-record:v2",
+  "$id": "urn:maeumcall:structured-nlu:freeze-record:v3",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
-  "description": "Current record format, including the exact AI-origin exclusion policy.",
+  "description": "Current record format, including additive AI-origin policy V2.",
   "properties": {
     "artifacts": {
-      "$ref": "#/$defs/FreezeArtifactFingerprintsV2"
+      "$ref": "#/$defs/FreezeArtifactFingerprintsV3"
     },
     "benchmark": {
       "$ref": "#/$defs/FreezeBenchmarkContractV1"
@@ -348,7 +348,7 @@
       "type": "string"
     },
     "benchmark_identity_fingerprint_algorithm": {
-      "const": "structured-nlu-benchmark-identity-canonical-json-sha256-v2",
+      "const": "structured-nlu-benchmark-identity-canonical-json-sha256-v3",
       "title": "Benchmark Identity Fingerprint Algorithm",
       "type": "string"
     },
@@ -358,7 +358,7 @@
       "type": "string"
     },
     "freeze_record_schema_version": {
-      "const": 2,
+      "const": 3,
       "title": "Freeze Record Schema Version",
       "type": "integer"
     },
@@ -410,12 +410,12 @@
       "type": "string"
     },
     "record_fingerprint_algorithm": {
-      "const": "freeze-record-canonical-json-sha256-v2",
+      "const": "freeze-record-canonical-json-sha256-v3",
       "title": "Record Fingerprint Algorithm",
       "type": "string"
     },
     "versions": {
-      "$ref": "#/$defs/FreezeContractVersionsV2"
+      "$ref": "#/$defs/FreezeContractVersionsV3"
     }
   },
   "required": [
@@ -435,6 +435,6 @@
     "benchmark_identity_fingerprint",
     "record_fingerprint"
   ],
-  "title": "CorpusFreezeRecordV2",
+  "title": "CorpusFreezeRecordV3",
   "type": "object"
 }

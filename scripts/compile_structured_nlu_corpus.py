@@ -5,7 +5,10 @@ import os
 import tempfile
 from pathlib import Path
 
-from evals.structured_nlu.ai_origin_policy import serialize_ai_origin_policy_v1
+from evals.structured_nlu.ai_origin_policy import (
+    serialize_ai_origin_policy_v1,
+    serialize_ai_origin_policy_v2,
+)
 from evals.structured_nlu.authoring import (
     compile_authoring_directory,
     ensure_output_does_not_replace_manifest,
@@ -21,8 +24,11 @@ from evals.structured_nlu.contrast import (
 )
 from evals.structured_nlu.coverage_progress import serialize_development_coverage_progress
 from evals.structured_nlu.drafting import (
+    render_ai_coverage_candidate_review_packet_v1,
     render_ai_draft_human_review_packet_v1,
     render_ai_subagent_human_review_packet_v1,
+    serialize_ai_coverage_candidate_manifest_v1,
+    serialize_ai_coverage_candidate_schema_v1,
     serialize_ai_draft_seed_manifest_v1,
     serialize_ai_draft_seed_schema_v1,
     serialize_ai_subagent_candidate_manifest_v1,
@@ -221,6 +227,42 @@ def build_parser() -> argparse.ArgumentParser:
     )
     check_subagent_review_packet_parser.add_argument("packet", type=Path)
 
+    coverage_candidate_parser = subparsers.add_parser(
+        "draft-coverage-candidates",
+        help="Write 24 unreviewed AI proposals for exact development coverage gaps.",
+    )
+    coverage_candidate_parser.add_argument("output", type=Path)
+
+    check_coverage_candidate_parser = subparsers.add_parser(
+        "check-draft-coverage-candidates",
+        help="Verify committed coverage-gap candidates against the V1 policy.",
+    )
+    check_coverage_candidate_parser.add_argument("manifest", type=Path)
+
+    coverage_candidate_schema_parser = subparsers.add_parser(
+        "draft-coverage-schema",
+        help="Write the editor-facing coverage candidate JSON Schema.",
+    )
+    coverage_candidate_schema_parser.add_argument("output", type=Path)
+
+    check_coverage_candidate_schema_parser = subparsers.add_parser(
+        "check-draft-coverage-schema",
+        help="Verify the committed coverage candidate JSON Schema.",
+    )
+    check_coverage_candidate_schema_parser.add_argument("schema", type=Path)
+
+    coverage_candidate_review_parser = subparsers.add_parser(
+        "draft-coverage-review-packet",
+        help="Write the approve/edit/reject worksheet for coverage candidates.",
+    )
+    coverage_candidate_review_parser.add_argument("output", type=Path)
+
+    check_coverage_candidate_review_parser = subparsers.add_parser(
+        "check-draft-coverage-review-packet",
+        help="Verify the committed coverage candidate review worksheet.",
+    )
+    check_coverage_candidate_review_parser.add_argument("packet", type=Path)
+
     ai_origin_policy_parser = subparsers.add_parser(
         "ai-origin-policy",
         help="Write the immutable NFC fingerprint registry for all V1 AI-origin text.",
@@ -232,6 +274,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify the committed V1 AI-origin policy registry.",
     )
     check_ai_origin_policy_parser.add_argument("manifest", type=Path)
+
+    ai_origin_policy_v2_parser = subparsers.add_parser(
+        "ai-origin-policy-v2",
+        help="Write the additive V2 NFC registry including coverage candidates.",
+    )
+    ai_origin_policy_v2_parser.add_argument("output", type=Path)
+
+    check_ai_origin_policy_v2_parser = subparsers.add_parser(
+        "check-ai-origin-policy-v2",
+        help="Verify the committed additive V2 AI-origin registry.",
+    )
+    check_ai_origin_policy_v2_parser.add_argument("manifest", type=Path)
     return parser
 
 
@@ -376,6 +430,37 @@ def main() -> int:
         if args.packet.read_text(encoding="utf-8") != (render_ai_subagent_human_review_packet_v1()):
             raise SystemExit("AI subagent review packet differs from the candidates")
         return 0
+    if args.command == "draft-coverage-candidates":
+        _write_text(args.output, serialize_ai_coverage_candidate_manifest_v1())
+        return 0
+    if args.command == "check-draft-coverage-candidates":
+        if not args.manifest.is_file():
+            raise SystemExit(f"AI coverage candidate manifest does not exist: {args.manifest}")
+        if args.manifest.read_text(encoding="utf-8") != (
+            serialize_ai_coverage_candidate_manifest_v1()
+        ):
+            raise SystemExit("AI coverage candidate manifest differs from the V1 policy")
+        return 0
+    if args.command == "draft-coverage-schema":
+        _write_text(args.output, serialize_ai_coverage_candidate_schema_v1())
+        return 0
+    if args.command == "check-draft-coverage-schema":
+        if not args.schema.is_file():
+            raise SystemExit(f"AI coverage candidate schema does not exist: {args.schema}")
+        if args.schema.read_text(encoding="utf-8") != (serialize_ai_coverage_candidate_schema_v1()):
+            raise SystemExit("AI coverage candidate schema differs from the code contract")
+        return 0
+    if args.command == "draft-coverage-review-packet":
+        _write_text(args.output, render_ai_coverage_candidate_review_packet_v1())
+        return 0
+    if args.command == "check-draft-coverage-review-packet":
+        if not args.packet.is_file():
+            raise SystemExit(f"AI coverage review packet does not exist: {args.packet}")
+        if args.packet.read_text(encoding="utf-8") != (
+            render_ai_coverage_candidate_review_packet_v1()
+        ):
+            raise SystemExit("AI coverage review packet differs from the candidates")
+        return 0
     if args.command == "ai-origin-policy":
         _write_text(args.output, serialize_ai_origin_policy_v1())
         return 0
@@ -384,6 +469,15 @@ def main() -> int:
             raise SystemExit(f"AI-origin policy manifest does not exist: {args.manifest}")
         if args.manifest.read_text(encoding="utf-8") != serialize_ai_origin_policy_v1():
             raise SystemExit("AI-origin policy manifest differs from immutable V1")
+        return 0
+    if args.command == "ai-origin-policy-v2":
+        _write_text(args.output, serialize_ai_origin_policy_v2())
+        return 0
+    if args.command == "check-ai-origin-policy-v2":
+        if not args.manifest.is_file():
+            raise SystemExit(f"AI-origin policy V2 manifest does not exist: {args.manifest}")
+        if args.manifest.read_text(encoding="utf-8") != serialize_ai_origin_policy_v2():
+            raise SystemExit("AI-origin policy manifest differs from immutable V2")
         return 0
 
     if args.command == "compile":
