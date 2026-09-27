@@ -1,0 +1,40 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "collecting_reservation_info",
+      "current_fields": {},
+      "id": "reservation-study-room-human-followup-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "duration": {
+            "accepted_values": [
+              "4시간"
+            ]
+          },
+          "party_size": null,
+          "selected_time": null,
+          "start_time": null,
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "총 4시간 이용할 예정입니다. 이름은 홍길동입니다."
+    }
+  ],
+  "conversation_group_id": "reservation-study-room-human-followup-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:스터디룸 예약"
+}

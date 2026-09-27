@@ -151,11 +151,14 @@ workflow 기반 상세 그래프는 현재 필드 문맥도 검사하므로, 확
 채워져야 하고 선택형 필드는 계약에 선언된 값만 사용해야 한다.
 
 현재 사람 작성 development 초안은 16개 구조화 NLU 시나리오의 hard-negative
-1건씩과 16개 시나리오의 정상 정보 제공 1건씩을 합쳐 총 32건이 존재한다.
+1건씩, 16개 시나리오의 첫 정상 정보 제공 1건씩, 예약 4개 시나리오의 후속 정보
+제공 1건씩을 합쳐 총 36건이 존재한다.
 정보 제공 사례는 사용자가 실제로 말한 필드만 정답으로 채우고 나머지는 `null`로
 두며, 예약은 `greeting → continue_collecting`, 교수님 시나리오는 각 업무별
-`provide_*_info`, 배달·시청·고객센터 workflow는 `provide_details` 계약을 검증한다. 아직 구현하지
-않은 범위는 공식 validation·test 골든 데이터와 그 데이터에 대응하는 검수 원장·
+`provide_*_info`, 배달·시청·고객센터 workflow는 `provide_details` 계약을 검증한다.
+예약 후속 사례는 그래프에 이미 저장된 값을 라벨에 반복하지 않고 이번 발화에서
+새로 제공한 필드만 검증한다. 아직 구현하지 않은 범위는 공식 validation·test 골든
+데이터와 그 데이터에 대응하는 검수 원장·
 contrast manifest·실제 freeze record, 실모델 실행기,
 시나리오·태그별 집계, p50·p95·토큰·메모리 측정, 실행 manifest와 결과 파일이다.
 따라서 현재 단위 테스트 수치는 후보 모델의 성능 점수가 아니다.
@@ -231,7 +234,7 @@ validation·test corpus가 없으므로
 현재 생성 형식은 **freeze record V2**다. V2는 V1의 source·split·검수·contrast·coverage
 조합에 AI-origin policy V1의 경로, 정확한 artifact SHA-256, semantic policy fingerprint와
 schema version을 추가한다. V1 모델과 해시 알고리즘은 과거 레코드 해석을 위해 코드에
-남기지만, 새 레코드는 V2로만 생성한다. 현재는 development 사람 작성 초안 32건과 그
+남기지만, 새 레코드는 V2로만 생성한다. 현재는 development 사람 작성 초안 36건과 그
 split 원장·compiled corpus만 있으므로 실제 freeze record 파일을 만들거나 데이터셋
 동결이 끝났다고 기록하지 않는다.
 
@@ -271,11 +274,12 @@ compiler가 거부한다. 사람은 제안을 참고 자료로만 사용하고, 
 `manifests/ai-origin-policy.v1.json`에 결정론적으로 저장한다. V1 정책 지문은 코드에
 고정되어 있으므로 기존 파일을 바꾸면 검사가 중단된다. 후보를 더 추가할 때는 V1을
 덮어쓰지 않고 새 정책 버전과 이에 대응하는 작성·freeze 계약 버전을 만들어야 한다.
-현재 16개 구조화 NLU 전체의 사람 작성 hard-negative와 정상 정보 제공 사례를
-development 초안으로 한 건씩 저장했다. hard-negative는 `greeting → unknown`, 예약
-정보 제공은 `greeting → continue_collecting`, 교수님 정보 제공은 각 업무별
+현재 16개 구조화 NLU 전체의 사람 작성 hard-negative와 첫 정상 정보 제공 사례를
+development 초안으로 한 건씩 저장했고, 예약 4개에는 부족한 값을 다음 발화에서
+채우는 후속 정보 제공 사례도 한 건씩 추가했다. hard-negative는 `greeting → unknown`,
+예약 첫 정보 제공과 후속 정보 제공은 `continue_collecting`, 교수님 정보 제공은 각 업무별
 `provide_*_info`, 배달·시청·고객센터 workflow 정보 제공은 `provide_details`이며 모두
-`review_status: draft`다. 이 32건만으로는 공식 validation·test coverage나
+`review_status: draft`다. 이 36건만으로는 공식 validation·test coverage나
 adjudication을 충족하지 않는다. 실제 freeze record도 없으므로 데이터셋 동결을
 완료한 것은 아니다.
 

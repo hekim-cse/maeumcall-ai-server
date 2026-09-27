@@ -1,0 +1,40 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "collecting_reservation_info",
+      "current_fields": {},
+      "id": "reservation-hair-salon-human-followup-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "designer": {
+            "accepted_values": [
+              "김아름"
+            ]
+          },
+          "selected_time": null,
+          "service_type": null,
+          "time": null,
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "김아름 디자이너로 하겠습니다. 예약자는 홍길동 입니다."
+    }
+  ],
+  "conversation_group_id": "reservation-hair-salon-human-followup-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:미용실 예약"
+}

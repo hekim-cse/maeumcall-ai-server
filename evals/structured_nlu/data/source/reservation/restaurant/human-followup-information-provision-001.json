@@ -1,0 +1,39 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "collecting_reservation_info",
+      "current_fields": {},
+      "id": "reservation-restaurant-human-followup-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "party_size": null,
+          "selected_time": null,
+          "time": {
+            "accepted_values": [
+              "오후 6시"
+            ]
+          },
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "오후 6시 예약자 홍길동 입니다."
+    }
+  ],
+  "conversation_group_id": "reservation-restaurant-human-followup-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:식당 예약"
+}

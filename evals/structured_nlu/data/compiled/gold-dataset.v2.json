@@ -875,6 +875,42 @@
       "user_message": "안녕하세요. 제 주민등록 등본 발급하려고 하는데요 꼭 방문해야 발급이 가능하나요?"
     },
     {
+      "conversation_group_id": "reservation-hair-salon-human-followup-information-provision-001",
+      "conversation_state": "collecting_reservation_info",
+      "current_fields": {},
+      "id": "reservation-hair-salon-human-followup-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "designer": {
+            "accepted_values": [
+              "김아름"
+            ]
+          },
+          "selected_time": null,
+          "service_type": null,
+          "time": null,
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:미용실 예약",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "김아름 디자이너로 하겠습니다. 예약자는 홍길동 입니다."
+    },
+    {
       "conversation_group_id": "reservation-hair-salon-human-hard-negative-001",
       "conversation_state": "greeting",
       "current_fields": {},
@@ -943,6 +979,37 @@
       "user_message": "안녕하세요. 내일 2시에 컷으로 예약 가능하나요?"
     },
     {
+      "conversation_group_id": "reservation-hospital-human-followup-information-provision-001",
+      "conversation_state": "asking_user_name",
+      "current_fields": {},
+      "id": "reservation-hospital-human-followup-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "department": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:병원 예약",
+      "split": "development",
+      "tags": [
+        "single_field"
+      ],
+      "user_message": "홍길동 입니다."
+    },
+    {
       "conversation_group_id": "reservation-hospital-human-hard-negative-001",
       "conversation_state": "greeting",
       "current_fields": {},
@@ -1007,6 +1074,42 @@
         "multi_field"
       ],
       "user_message": "안녕하세요. 오늘 3시에 이비인후과 예약하려고 하는데요."
+    },
+    {
+      "conversation_group_id": "reservation-study-room-human-followup-information-provision-001",
+      "conversation_state": "collecting_reservation_info",
+      "current_fields": {},
+      "id": "reservation-study-room-human-followup-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "duration": {
+            "accepted_values": [
+              "4시간"
+            ]
+          },
+          "party_size": null,
+          "selected_time": null,
+          "start_time": null,
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:스터디룸 예약",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "총 4시간 이용할 예정입니다. 이름은 홍길동입니다."
     },
     {
       "conversation_group_id": "reservation-study-room-human-hard-negative-001",
@@ -1075,6 +1178,41 @@
         "multi_field"
       ],
       "user_message": "안녕하세요. 오늘 5시에 1명 예약 가능하나요?"
+    },
+    {
+      "conversation_group_id": "reservation-restaurant-human-followup-information-provision-001",
+      "conversation_state": "collecting_reservation_info",
+      "current_fields": {},
+      "id": "reservation-restaurant-human-followup-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "party_size": null,
+          "selected_time": null,
+          "time": {
+            "accepted_values": [
+              "오후 6시"
+            ]
+          },
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "human_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:식당 예약",
+      "split": "development",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "오후 6시 예약자 홍길동 입니다."
     },
     {
       "conversation_group_id": "reservation-restaurant-human-hard-negative-001",
