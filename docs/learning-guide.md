@@ -172,6 +172,8 @@ Apache-2.0 라이선스, 한국어 지원, 9개 고정 음색, 로컬 실행, �
 
 마음콜 프로젝트 내부 공식 벤치마크 결과가 되려면 고정된 프로필의 coverage를 통과하고, `test` split의 모든 케이스가 `adjudicated`여야 하며, 데이터·모델·프롬프트·런타임(실행 환경)·Git 리비전과 실행 결과를 함께 보존해야 합니다. 현재는 coverage·test split·adjudicated 상태를 검사하는 계약, 프로필 지문, 검수 원장 형식·검증기와 공식 준비·채점 경계 연결까지 구현했습니다. 16개 구조화 NLU 전체에 사람이 작성한 hard-negative 16건과 첫 정상 정보 제공 16건, 예약 4개의 후속 정보 제공 4건을 development `draft`로 저장했지만, 공식 validation·test 골든 데이터·검수 원장·contrast manifest·실모델 실행기·실행 조건 기록 파일·후보 모델 점수는 아직 작성·산출하지 않았습니다.
 
+이 36건의 development 작성 진척은 Coverage V3 의무 1,562개 중 349개가 정적 계약상 관측되고 1,213개가 아직 관측되지 않은 것으로 자동 계산합니다. 보고서에는 반드시 `unqualified_development_diagnostic`이라고 적어, 초안 진척률을 공식 coverage 통과나 모델 성능으로 오해하지 않게 합니다. 문장 의미에 대한 사람 판단이 필요한 `negation`·`ellipsis`·`colloquial`·`ambiguous` 태그는 초안에 문자열만 추가해도 진척으로 세지 않습니다. 이 목록을 바탕으로 다음 AI 보조 후보의 작업 대상을 정할 수 있지만, AI 후보 자체는 공식 사람 작성 corpus에 자동으로 들어가지 않습니다.
+
 `conversation_group_id`는 같은 원본 대화에서 파생된 문장에 붙이는 묶음 번호입니다. 예를 들어 “내일 예약할게요”와 “내일로 예약 부탁해요”가 같은 원본을 바꿔 쓴 문장이라면 같은 그룹 ID를 사용합니다. 코드는 한 그룹이 development와 test에 동시에 들어가는 것을 거부하므로, 연습 중 본 표현이 최종 시험 점수를 부풀리는 일을 막습니다.
 
 여기서 **corpus(코퍼스)**는 세 split을 모두 담은 평가 문장 전체 묶음이고, **test slice**는 그중 최종 시험에 쓰는 test 사례만 꺼낸 묶음입니다. test 파일만 따로 받으면 같은 원본 문장이 development나 validation에 있는지 확인할 수 없습니다. 그래서 공식 결과 후보 관문은 완전한 corpus를 요구하고, 전체 내용 식별값을 확인한 뒤 test slice를 다시 꺼냅니다.

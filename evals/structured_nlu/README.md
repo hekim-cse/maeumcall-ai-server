@@ -163,6 +163,15 @@ contrast manifest·실제 freeze record, 실모델 실행기,
 시나리오·태그별 집계, p50·p95·토큰·메모리 측정, 실행 manifest와 결과 파일이다.
 따라서 현재 단위 테스트 수치는 후보 모델의 성능 점수가 아니다.
 
+현재 36건을 Coverage V3 작성 의무 목록과 대조한 development 진단은 전체 1,562개 중
+349개가 정적 계약상 관측되고 1,213개가 미관측 상태다. 이 결과는 `qualification_status`가
+`unqualified_development_diagnostic`으로 고정된 작성 진척 보고서다. development 초안의
+범위를 보여 줄 뿐 공식 validation·test coverage 통과나 모델 점수를 뜻하지 않는다.
+contrast 역할 75개는 실제 contrast manifest가 없으므로 모두 미충족으로 유지한다.
+`negation`·`ellipsis`·`colloquial`·`ambiguous`처럼 문장 의미를 사람이 판단해야 하는
+태그는 development draft에 문자열만 붙여도 진척이 늘지 않으며, 검수 전까지 미관측으로
+유지한다.
+
 ## 정답 작성 지침과 검수 원장
 
 `guidelines/annotation-guideline.v1.md`는 필드의 `null` 판정, 행동과 이번 발화
@@ -351,6 +360,15 @@ python -m scripts.compile_structured_nlu_corpus obligations \
 # 커밋된 의무 목록이 현재 라이브 계약과 같은지 검사한다.
 python -m scripts.compile_structured_nlu_corpus check-obligations \
   evals/structured_nlu/manifests/coverage-obligations.v3.json
+
+python -m scripts.compile_structured_nlu_corpus coverage-progress \
+  evals/structured_nlu/data/source \
+  evals/structured_nlu/data/manifests/split-assignments.v1.json \
+  evals/structured_nlu/data/manifests/development-coverage-progress.v1.json
+python -m scripts.compile_structured_nlu_corpus check-coverage-progress \
+  evals/structured_nlu/data/source \
+  evals/structured_nlu/data/manifests/split-assignments.v1.json \
+  evals/structured_nlu/data/manifests/development-coverage-progress.v1.json
 
 # 편집기용 작성 원본 JSON Schema를 코드 계약에서 다시 생성한다.
 python -m scripts.compile_structured_nlu_corpus schema \

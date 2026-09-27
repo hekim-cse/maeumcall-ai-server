@@ -20,6 +20,7 @@
 - 교수님 3종의 사람이 작성한 `greeting → provide_*_info` 다중 필드 정보 제공 development 초안
 - 배달·시청·고객센터 9종의 사람이 작성한 `greeting → provide_details` 정보 제공 development 초안
 - 예약 4종에서 이미 수집한 값을 반복하지 않고 부족한 필드만 채우는 사람이 작성한 후속 정보 제공 development 초안
+- development 초안에서 정적으로 관측·미관측된 Coverage V3 의무를 공식 결과와 구분해 산출하는 `unqualified` 작성 진척 보고서
 - digest로 고정한 Python 3.11 다단계 이미지와 비루트·읽기 전용 핵심 컨테이너 실행 경계
 - PostgreSQL 준비 후 Alembic 일회성 적용과 API 시작을 보장하는 Compose 서비스 의존성
 - 이미지 빌드·마이그레이션·권한·HTTP 상태 계약을 실제 컨테이너에서 검증하는 `test-container` CI

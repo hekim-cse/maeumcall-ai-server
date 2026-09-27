@@ -19,6 +19,7 @@ from evals.structured_nlu.contrast import (
     serialize_contrast_manifest_schema,
     verify_contrast_manifest,
 )
+from evals.structured_nlu.coverage_progress import serialize_development_coverage_progress
 from evals.structured_nlu.drafting import (
     render_ai_draft_human_review_packet_v1,
     render_ai_subagent_human_review_packet_v1,
@@ -64,6 +65,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify that the committed authoring inventory matches the live contract.",
     )
     check_obligations_parser.add_argument("manifest", type=Path)
+
+    coverage_progress_parser = subparsers.add_parser(
+        "coverage-progress",
+        help="Write an explicitly unqualified development coverage diagnostic.",
+    )
+    coverage_progress_parser.add_argument("source_dir", type=Path)
+    coverage_progress_parser.add_argument("split_assignments", type=Path)
+    coverage_progress_parser.add_argument("output", type=Path)
+
+    check_coverage_progress_parser = subparsers.add_parser(
+        "check-coverage-progress",
+        help="Verify the committed development coverage diagnostic against the sources.",
+    )
+    check_coverage_progress_parser.add_argument("source_dir", type=Path)
+    check_coverage_progress_parser.add_argument("split_assignments", type=Path)
+    check_coverage_progress_parser.add_argument("report", type=Path)
 
     schema_parser = subparsers.add_parser(
         "schema",
@@ -230,6 +247,22 @@ def main() -> int:
             serialize_official_authoring_obligations()
         ):
             raise SystemExit("obligation manifest differs from the live contract")
+        return 0
+    if args.command == "coverage-progress":
+        ensure_output_outside_source(args.source_dir, args.output)
+        ensure_output_does_not_replace_manifest(args.split_assignments, args.output)
+        dataset = compile_authoring_directory(args.source_dir, args.split_assignments)
+        _write_text(args.output, serialize_development_coverage_progress(dataset))
+        return 0
+    if args.command == "check-coverage-progress":
+        ensure_output_outside_source(args.source_dir, args.report)
+        ensure_output_does_not_replace_manifest(args.split_assignments, args.report)
+        if not args.report.is_file():
+            raise SystemExit(f"development coverage report does not exist: {args.report}")
+        dataset = compile_authoring_directory(args.source_dir, args.split_assignments)
+        expected = serialize_development_coverage_progress(dataset)
+        if args.report.read_text(encoding="utf-8") != expected:
+            raise SystemExit("development coverage report differs from the authoring sources")
         return 0
     if args.command == "schema":
         _write_text(args.output, serialize_authoring_group_schema())

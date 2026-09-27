@@ -688,7 +688,7 @@ def _prepare_qualified_test_slice(
         split_assignment_fingerprint=split_assignment_fingerprint,
         annotation_guideline_fingerprint=annotation_guideline_fingerprint,
         review_ledger_fingerprint=review_ledger_fingerprint,
-        corpus_fingerprint=_corpus_fingerprint(dataset),
+        corpus_fingerprint=corpus_fingerprint(dataset),
         corpus_cases=dataset.cases,
     )
 
@@ -730,7 +730,7 @@ def _score_qualified_test_slice(
         cases=benchmark.corpus_cases,
     )
     _require_complete_corpus(corpus)
-    if benchmark.corpus_fingerprint != _corpus_fingerprint(corpus):
+    if benchmark.corpus_fingerprint != corpus_fingerprint(corpus):
         raise ValueError("qualified test corpus fingerprint does not match")
     expected_test_cases = tuple(case for case in corpus.cases if case.split is DatasetSplit.TEST)
     if benchmark.cases != expected_test_cases:
@@ -770,7 +770,8 @@ def _dataset_fingerprint(dataset: GoldDataset, *, split: DatasetSplit) -> str:
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
 
-def _corpus_fingerprint(dataset: GoldDataset) -> str:
+def corpus_fingerprint(dataset: GoldDataset) -> str:
+    """Identify the complete semantic corpus independently of JSON formatting."""
     payload = {
         "dataset_version": dataset.dataset_version,
         "state_contract_version": dataset.state_contract_version,
