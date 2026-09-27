@@ -1,0 +1,369 @@
+{
+  "automatic_promotion_allowed": false,
+  "baseline_case_count": 36,
+  "baseline_corpus_fingerprint": "246e22b0d0b83b5ee0619f6ade5629c52fecb07e3b450f477efd2317da5e5ca7",
+  "baseline_covered_obligation_count": 582,
+  "baseline_diagnostic_case_ids": [
+    "ai-coverage-v1-city-bulky-waste-quantity.c1",
+    "ai-coverage-v1-city-certificate-issuance-channel.c1",
+    "ai-coverage-v1-city-passport-applicant-type.c1",
+    "ai-coverage-v1-city-passport-application-channel.c1",
+    "ai-coverage-v1-city-passport-application-type.c1",
+    "ai-coverage-v1-delivery-change-unavailable-preference.c1",
+    "ai-coverage-v1-delivery-delay-delay-detail.c1",
+    "ai-coverage-v1-delivery-delay-delay-resolution.c1",
+    "ai-coverage-v1-delivery-refund-evidence-status.c1",
+    "ai-coverage-v1-delivery-refund-order-number.c1",
+    "ai-coverage-v1-delivery-refund-resolution-preference.c1",
+    "ai-coverage-v1-reservation-hair-salon-selected-time.c1",
+    "ai-coverage-v1-reservation-hospital-selected-time.c1",
+    "ai-coverage-v1-reservation-restaurant-selected-time.c1",
+    "ai-coverage-v1-reservation-study-room-selected-time.c1",
+    "ai-coverage-v1-support-network-occurred-at.c1",
+    "ai-coverage-v1-support-network-scope.c1",
+    "ai-coverage-v1-support-network-service-type.c1",
+    "ai-coverage-v1-support-network-troubleshooting-done.c1",
+    "ai-coverage-v1-support-plan-consent-scope.c1",
+    "ai-coverage-v1-support-service-model-name.c1",
+    "ai-coverage-v1-support-service-occurred-at.c1",
+    "ai-coverage-v1-support-service-safety-status.c1",
+    "ai-coverage-v1-support-service-service-channel.c1"
+  ],
+  "baseline_missing_obligation_count": 980,
+  "baseline_source_root": "evals/structured_nlu/data/source",
+  "baseline_split_assignment_path": "evals/structured_nlu/data/manifests/split-assignments.v1.json",
+  "candidate_set_id": "structured-nlu-coverage-candidates-v2",
+  "coverage_candidate_schema_version": 2,
+  "generator_id": "openai-codex-coverage-candidates",
+  "human_review_required": true,
+  "official_obligation_count": 1562,
+  "predecessor_candidate_manifest_sha256": "28128c46b3b3a3a559066dd8dfbbf17e95344bc2d58079603a09da0c8fa5f6dc",
+  "predecessor_candidate_set_id": "structured-nlu-coverage-candidates-v1",
+  "profile_fingerprint": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+  "profile_id": "maeumcall-structured-nlu-v3",
+  "projected_covered_obligation_count": 613,
+  "projected_marginal_gain": 31,
+  "projected_missing_obligation_count": 949,
+  "provenance": "ai_assisted_unreviewed",
+  "suggestions": [
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v2-city-bulky-waste-quantity-clear",
+      "primary_obligation": {
+        "dimension": "current_field_present",
+        "scenario_key": "시청:대형폐기물 배출",
+        "value": "quantity"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "action_field_absent",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "change_detail->quantity"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "quantity"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "quantity->current_value_not_reemitted"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "quantity->existing_value_cleared"
+        },
+        {
+          "dimension": "current_field_present",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "quantity"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "collecting_bulky_waste->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_bulky_waste",
+        "current_fields": {
+          "item_name": "소파",
+          "quantity": "1개",
+          "region": "인천 독산동",
+          "request_topic": null
+        },
+        "id": "ai-coverage-v2-city-bulky-waste-quantity-clear.c1",
+        "labels": {
+          "change_field": "quantity",
+          "fields": {
+            "item_name": null,
+            "quantity": null,
+            "region": null,
+            "request_topic": null
+          },
+          "intent": "bulky_waste_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "correction"
+        ],
+        "user_message": "수량은 아직 정하지 않았어요."
+      },
+      "scenario_key": "시청:대형폐기물 배출",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v2-city-bulky-waste-quantity-clear",
+      "target_field": "quantity"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v2-city-certificate-issuance-channel-clear",
+      "primary_obligation": {
+        "dimension": "current_field_present",
+        "scenario_key": "시청:주민등록 등본 문의",
+        "value": "issuance_channel"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "action_field_absent",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "change_detail->issuance_channel"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "issuance_channel"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "issuance_channel->current_value_not_reemitted"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "issuance_channel->existing_value_cleared"
+        },
+        {
+          "dimension": "current_field_option",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "issuance_channel=government24"
+        },
+        {
+          "dimension": "current_field_present",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "issuance_channel"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "collecting_certificate_inquiry->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_certificate_inquiry",
+        "current_fields": {
+          "applicant_relation": "self",
+          "document_type": "individual_extract",
+          "inquiry_topic": null,
+          "issuance_channel": "government24"
+        },
+        "id": "ai-coverage-v2-city-certificate-issuance-channel-clear.c1",
+        "labels": {
+          "change_field": "issuance_channel",
+          "fields": {
+            "applicant_relation": null,
+            "document_type": null,
+            "inquiry_topic": null,
+            "issuance_channel": null
+          },
+          "intent": "resident_certificate_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "correction"
+        ],
+        "user_message": "발급 방법은 아직 정하지 않을게요."
+      },
+      "scenario_key": "시청:주민등록 등본 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v2-city-certificate-issuance-channel-clear",
+      "target_field": "issuance_channel"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v2-delivery-change-unavailable-preference-clear",
+      "primary_obligation": {
+        "dimension": "current_field_present",
+        "scenario_key": "배달:주문 변경",
+        "value": "unavailable_preference"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "action_field_absent",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_detail->unavailable_preference"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:주문 변경",
+          "value": "unavailable_preference"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:주문 변경",
+          "value": "unavailable_preference->current_value_not_reemitted"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:주문 변경",
+          "value": "unavailable_preference->existing_value_cleared"
+        },
+        {
+          "dimension": "current_field_option",
+          "scenario_key": "배달:주문 변경",
+          "value": "unavailable_preference=agent_handoff"
+        },
+        {
+          "dimension": "current_field_present",
+          "scenario_key": "배달:주문 변경",
+          "value": "unavailable_preference"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "배달:주문 변경",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "배달:주문 변경",
+          "value": "collecting_order_change->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_order_change",
+        "current_fields": {
+          "change_type": "contact",
+          "order_number": "별빛아파트 301호",
+          "requested_change": null,
+          "unavailable_preference": "agent_handoff"
+        },
+        "id": "ai-coverage-v2-delivery-change-unavailable-preference-clear.c1",
+        "labels": {
+          "change_field": "unavailable_preference",
+          "fields": {
+            "change_type": null,
+            "order_number": null,
+            "requested_change": null,
+            "unavailable_preference": null
+          },
+          "intent": "delivery_order_change",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "correction"
+        ],
+        "user_message": "변경이 안 될 때 상담원 연결 요청은 취소할게요."
+      },
+      "scenario_key": "배달:주문 변경",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v2-delivery-change-unavailable-preference-clear",
+      "target_field": "unavailable_preference"
+    },
+    {
+      "baseline_obligation_missing": true,
+      "conversation_group_id": "ai-coverage-v2-support-plan-consent-scope-clear",
+      "primary_obligation": {
+        "dimension": "current_field_present",
+        "scenario_key": "고객센터:요금/약정 상담",
+        "value": "consent_scope"
+      },
+      "projected_obligations": [
+        {
+          "dimension": "action_field_absent",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "change_detail->consent_scope"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consent_scope"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consent_scope->current_value_not_reemitted"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consent_scope->existing_value_cleared"
+        },
+        {
+          "dimension": "current_field_option",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consent_scope=authenticated_lookup"
+        },
+        {
+          "dimension": "current_field_present",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consent_scope"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "collecting_plan_contract->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_plan_contract",
+        "current_fields": {
+          "consent_scope": "authenticated_lookup",
+          "consultation_goal": null,
+          "current_service": "0청년 요금제",
+          "inquiry_type": "billing"
+        },
+        "id": "ai-coverage-v2-support-plan-consent-scope-clear.c1",
+        "labels": {
+          "change_field": "consent_scope",
+          "fields": {
+            "consent_scope": null,
+            "consultation_goal": null,
+            "current_service": null,
+            "inquiry_type": null
+          },
+          "intent": "plan_contract_consultation",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "correction"
+        ],
+        "user_message": "가입 정보 조회 동의는 취소할게요."
+      },
+      "scenario_key": "고객센터:요금/약정 상담",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v2-support-plan-consent-scope-clear",
+      "target_field": "consent_scope"
+    }
+  ]
+}

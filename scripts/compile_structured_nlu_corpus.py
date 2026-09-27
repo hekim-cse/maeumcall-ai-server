@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import tempfile
 from pathlib import Path
 
 from evals.structured_nlu.ai_origin_policy import (
+    serialize_ai_origin_policy_schema_v3,
     serialize_ai_origin_policy_v1,
     serialize_ai_origin_policy_v2,
+    serialize_ai_origin_policy_v3,
 )
 from evals.structured_nlu.authoring import (
     compile_authoring_directory,
@@ -22,13 +25,23 @@ from evals.structured_nlu.contrast import (
     serialize_contrast_manifest_schema,
     verify_contrast_manifest,
 )
-from evals.structured_nlu.coverage_progress import serialize_development_coverage_progress
+from evals.structured_nlu.coverage_progress import (
+    build_development_coverage_progress,
+    serialize_development_coverage_progress,
+)
 from evals.structured_nlu.drafting import (
+    AI_COVERAGE_V1_MANIFEST_SHA256,
+    build_ai_coverage_candidate_manifest_v1,
+    build_ai_coverage_candidate_manifest_v2,
+    coverage_candidate_diagnostic_cases,
     render_ai_coverage_candidate_review_packet_v1,
+    render_ai_coverage_candidate_review_packet_v2,
     render_ai_draft_human_review_packet_v1,
     render_ai_subagent_human_review_packet_v1,
     serialize_ai_coverage_candidate_manifest_v1,
+    serialize_ai_coverage_candidate_manifest_v2,
     serialize_ai_coverage_candidate_schema_v1,
+    serialize_ai_coverage_candidate_schema_v2,
     serialize_ai_draft_seed_manifest_v1,
     serialize_ai_draft_seed_schema_v1,
     serialize_ai_subagent_candidate_manifest_v1,
@@ -36,6 +49,7 @@ from evals.structured_nlu.drafting import (
 )
 from evals.structured_nlu.obligations import serialize_official_authoring_obligations
 from evals.structured_nlu.review import (
+    read_regular_artifact,
     serialize_review_ledger_schema,
     verify_review_ledger,
 )
@@ -263,6 +277,45 @@ def build_parser() -> argparse.ArgumentParser:
     )
     check_coverage_candidate_review_parser.add_argument("packet", type=Path)
 
+    coverage_candidate_v2_parser = subparsers.add_parser(
+        "draft-coverage-candidates-v2",
+        help="Write the second unreviewed AI coverage-gap candidate batch.",
+    )
+    coverage_candidate_v2_parser.add_argument("output", type=Path)
+
+    check_coverage_candidate_v2_parser = subparsers.add_parser(
+        "check-draft-coverage-candidates-v2",
+        help="Verify the committed second coverage-gap candidate batch.",
+    )
+    check_coverage_candidate_v2_parser.add_argument("source_dir", type=Path)
+    check_coverage_candidate_v2_parser.add_argument("split_assignments", type=Path)
+    check_coverage_candidate_v2_parser.add_argument("predecessor_manifest", type=Path)
+    check_coverage_candidate_v2_parser.add_argument("manifest", type=Path)
+
+    coverage_candidate_schema_v2_parser = subparsers.add_parser(
+        "draft-coverage-schema-v2",
+        help="Write the editor-facing second coverage candidate JSON Schema.",
+    )
+    coverage_candidate_schema_v2_parser.add_argument("output", type=Path)
+
+    check_coverage_candidate_schema_v2_parser = subparsers.add_parser(
+        "check-draft-coverage-schema-v2",
+        help="Verify the committed second coverage candidate JSON Schema.",
+    )
+    check_coverage_candidate_schema_v2_parser.add_argument("schema", type=Path)
+
+    coverage_candidate_review_v2_parser = subparsers.add_parser(
+        "draft-coverage-review-packet-v2",
+        help="Write the approve/edit/reject worksheet for the second candidate batch.",
+    )
+    coverage_candidate_review_v2_parser.add_argument("output", type=Path)
+
+    check_coverage_candidate_review_v2_parser = subparsers.add_parser(
+        "check-draft-coverage-review-packet-v2",
+        help="Verify the committed second coverage candidate review worksheet.",
+    )
+    check_coverage_candidate_review_v2_parser.add_argument("packet", type=Path)
+
     ai_origin_policy_parser = subparsers.add_parser(
         "ai-origin-policy",
         help="Write the immutable NFC fingerprint registry for all V1 AI-origin text.",
@@ -286,6 +339,30 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify the committed additive V2 AI-origin registry.",
     )
     check_ai_origin_policy_v2_parser.add_argument("manifest", type=Path)
+
+    ai_origin_policy_v3_parser = subparsers.add_parser(
+        "ai-origin-policy-v3",
+        help="Write the additive V3 NFC registry including both coverage batches.",
+    )
+    ai_origin_policy_v3_parser.add_argument("output", type=Path)
+
+    check_ai_origin_policy_v3_parser = subparsers.add_parser(
+        "check-ai-origin-policy-v3",
+        help="Verify the committed additive V3 AI-origin registry.",
+    )
+    check_ai_origin_policy_v3_parser.add_argument("manifest", type=Path)
+
+    ai_origin_policy_schema_v3_parser = subparsers.add_parser(
+        "ai-origin-policy-schema-v3",
+        help="Write the editor-facing additive V3 AI-origin policy JSON Schema.",
+    )
+    ai_origin_policy_schema_v3_parser.add_argument("output", type=Path)
+
+    check_ai_origin_policy_schema_v3_parser = subparsers.add_parser(
+        "check-ai-origin-policy-schema-v3",
+        help="Verify the committed additive V3 AI-origin policy JSON Schema.",
+    )
+    check_ai_origin_policy_schema_v3_parser.add_argument("schema", type=Path)
     return parser
 
 
@@ -461,6 +538,37 @@ def main() -> int:
         ):
             raise SystemExit("AI coverage review packet differs from the candidates")
         return 0
+    if args.command == "draft-coverage-candidates-v2":
+        _write_new_text(args.output, serialize_ai_coverage_candidate_manifest_v2())
+        return 0
+    if args.command == "check-draft-coverage-candidates-v2":
+        _verify_coverage_candidate_v2_chain(
+            source_dir=args.source_dir,
+            split_assignments=args.split_assignments,
+            predecessor_manifest=args.predecessor_manifest,
+            manifest=args.manifest,
+        )
+        return 0
+    if args.command == "draft-coverage-schema-v2":
+        _write_new_text(args.output, serialize_ai_coverage_candidate_schema_v2())
+        return 0
+    if args.command == "check-draft-coverage-schema-v2":
+        if not args.schema.is_file():
+            raise SystemExit(f"AI coverage V2 schema does not exist: {args.schema}")
+        if args.schema.read_text(encoding="utf-8") != serialize_ai_coverage_candidate_schema_v2():
+            raise SystemExit("AI coverage candidate V2 schema differs from the code contract")
+        return 0
+    if args.command == "draft-coverage-review-packet-v2":
+        _write_new_text(args.output, render_ai_coverage_candidate_review_packet_v2())
+        return 0
+    if args.command == "check-draft-coverage-review-packet-v2":
+        if not args.packet.is_file():
+            raise SystemExit(f"AI coverage V2 review packet does not exist: {args.packet}")
+        if args.packet.read_text(encoding="utf-8") != (
+            render_ai_coverage_candidate_review_packet_v2()
+        ):
+            raise SystemExit("AI coverage V2 review packet differs from the candidates")
+        return 0
     if args.command == "ai-origin-policy":
         _write_text(args.output, serialize_ai_origin_policy_v1())
         return 0
@@ -479,6 +587,24 @@ def main() -> int:
         if args.manifest.read_text(encoding="utf-8") != serialize_ai_origin_policy_v2():
             raise SystemExit("AI-origin policy manifest differs from immutable V2")
         return 0
+    if args.command == "ai-origin-policy-v3":
+        _write_new_text(args.output, serialize_ai_origin_policy_v3())
+        return 0
+    if args.command == "check-ai-origin-policy-v3":
+        if not args.manifest.is_file():
+            raise SystemExit(f"AI-origin policy V3 manifest does not exist: {args.manifest}")
+        if args.manifest.read_text(encoding="utf-8") != serialize_ai_origin_policy_v3():
+            raise SystemExit("AI-origin policy manifest differs from immutable V3")
+        return 0
+    if args.command == "ai-origin-policy-schema-v3":
+        _write_new_text(args.output, serialize_ai_origin_policy_schema_v3())
+        return 0
+    if args.command == "check-ai-origin-policy-schema-v3":
+        if not args.schema.is_file():
+            raise SystemExit(f"AI-origin policy V3 schema does not exist: {args.schema}")
+        if args.schema.read_text(encoding="utf-8") != serialize_ai_origin_policy_schema_v3():
+            raise SystemExit("AI-origin policy V3 schema differs from the code contract")
+        return 0
 
     if args.command == "compile":
         ensure_output_outside_source(args.source_dir, args.output)
@@ -495,6 +621,86 @@ def main() -> int:
         args.compiled,
     )
     return 0
+
+
+def _verify_coverage_candidate_v2_chain(
+    *,
+    source_dir: Path,
+    split_assignments: Path,
+    predecessor_manifest: Path,
+    manifest: Path,
+) -> None:
+    predecessor_bytes = read_regular_artifact(
+        predecessor_manifest,
+        label="AI coverage V1 predecessor manifest",
+    )
+    if hashlib.sha256(predecessor_bytes).hexdigest() != AI_COVERAGE_V1_MANIFEST_SHA256:
+        raise SystemExit("AI coverage V1 predecessor manifest fingerprint differs")
+    if predecessor_bytes.decode("utf-8") != serialize_ai_coverage_candidate_manifest_v1():
+        raise SystemExit("AI coverage V1 predecessor manifest differs from the immutable policy")
+
+    manifest_bytes = read_regular_artifact(manifest, label="AI coverage V2 manifest")
+    if manifest_bytes.decode("utf-8") != serialize_ai_coverage_candidate_manifest_v2():
+        raise SystemExit("AI coverage candidate manifest differs from the V2 policy")
+
+    dataset = compile_authoring_directory(source_dir, split_assignments)
+    v1 = build_ai_coverage_candidate_manifest_v1()
+    v2 = build_ai_coverage_candidate_manifest_v2()
+    baseline = build_development_coverage_progress(
+        dataset,
+        diagnostic_cases=coverage_candidate_diagnostic_cases(v1),
+    )
+    projected = build_development_coverage_progress(
+        dataset,
+        diagnostic_cases=coverage_candidate_diagnostic_cases(v1, v2),
+    )
+    if (
+        baseline.corpus_fingerprint != v2.baseline_corpus_fingerprint
+        or baseline.covered_obligation_count != v2.baseline_covered_obligation_count
+        or baseline.missing_obligation_count != v2.baseline_missing_obligation_count
+    ):
+        raise SystemExit("AI coverage V2 baseline differs from source plus V1 diagnostics")
+    if (
+        projected.covered_obligation_count != v2.projected_covered_obligation_count
+        or projected.missing_obligation_count != v2.projected_missing_obligation_count
+        or projected.covered_obligation_count - baseline.covered_obligation_count
+        != v2.projected_marginal_gain
+    ):
+        raise SystemExit("AI coverage V2 projection differs from the declared gain")
+
+
+def _write_new_text(path: Path, content: str) -> None:
+    """Create a new versioned artifact and refuse every overwrite or symlink alias."""
+    resolved_parent = path.parent.resolve(strict=False)
+    current = path.parent
+    while current != current.parent:
+        if current.is_symlink():
+            raise SystemExit(f"versioned artifact output must not contain symlinks: {path}")
+        current = current.parent
+    resolved_parent.mkdir(parents=True, exist_ok=True)
+    if path.exists() or path.is_symlink():
+        raise SystemExit(f"versioned artifact output already exists: {path}")
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            newline="\n",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".writing",
+            delete=False,
+        ) as handle:
+            temporary_path = Path(handle.name)
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.link(temporary_path, path)
+    except FileExistsError as exc:
+        raise SystemExit(f"versioned artifact output already exists: {path}") from exc
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
 
 
 def _write_text(path: Path, content: str) -> None:

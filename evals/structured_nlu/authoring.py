@@ -11,10 +11,8 @@ from typing import TYPE_CHECKING, Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, model_validator
 
 from evals.structured_nlu.ai_origin_policy import (
-    is_reserved_ai_origin_id,
-    is_reserved_ai_origin_id_v1,
-    is_verbatim_ai_origin_text,
-    is_verbatim_ai_origin_text_v1,
+    is_reserved_ai_origin_id_for_policy,
+    is_verbatim_ai_origin_text_for_policy,
 )
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from evals.structured_nlu.schema import (
@@ -73,23 +71,22 @@ class AuthoringGroup(BaseModel):
         case_ids = [case.id for case in self.cases]
         if len(set(case_ids)) != len(case_ids):
             raise ValueError("authoring case ids must be unique within a group")
-        policy_version = 2
+        policy_version = 3
         if isinstance(info.context, dict):
-            policy_version = info.context.get("ai_origin_policy_schema_version", 2)
-        if type(policy_version) is not int or policy_version not in (0, 1, 2):
+            policy_version = info.context.get("ai_origin_policy_schema_version", 3)
+        if type(policy_version) is not int or policy_version not in (0, 1, 2, 3):
             raise ValueError("unsupported AI-origin policy schema version")
-        reserved_id = (
-            is_reserved_ai_origin_id_v1 if policy_version == 1 else is_reserved_ai_origin_id
-        )
-        verbatim_text = (
-            is_verbatim_ai_origin_text_v1 if policy_version == 1 else is_verbatim_ai_origin_text
-        )
         if policy_version and (
-            reserved_id(self.conversation_group_id)
-            or any(reserved_id(case.id) for case in self.cases)
+            is_reserved_ai_origin_id_for_policy(self.conversation_group_id, policy_version)
+            or any(
+                is_reserved_ai_origin_id_for_policy(case.id, policy_version) for case in self.cases
+            )
         ):
             raise ValueError("AI-origin ids cannot be promoted into human-authored source")
-        if policy_version and any(verbatim_text(case.user_message) for case in self.cases):
+        if policy_version and any(
+            is_verbatim_ai_origin_text_for_policy(case.user_message, policy_version)
+            for case in self.cases
+        ):
             raise ValueError(
                 "verbatim AI-origin text cannot be promoted into human-authored source"
             )
@@ -244,7 +241,7 @@ def capture_authoring_source(
 def compile_authoring_snapshot(
     snapshot: AuthoringSourceSnapshot,
     *,
-    ai_origin_policy_schema_version: int = 2,
+    ai_origin_policy_schema_version: int = 3,
 ) -> GoldDataset:
     assignment_manifest = _load_split_assignment_manifest(snapshot)
 
@@ -421,7 +418,7 @@ def verify_compiled_authoring_snapshot(
     snapshot: AuthoringSourceSnapshot,
     compiled_bytes: bytes,
     *,
-    ai_origin_policy_schema_version: int = 2,
+    ai_origin_policy_schema_version: int = 3,
 ) -> tuple[GoldDataset, str, str]:
     """Verify one immutable in-memory source snapshot and its compiled bytes."""
     expected_dataset = compile_authoring_snapshot(

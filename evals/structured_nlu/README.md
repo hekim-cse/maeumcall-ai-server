@@ -107,7 +107,7 @@
 - 그룹 파일과 분리된 원장에서 `conversation_group_id`별 split을 한 번만 소유하고, 원장과 작성 그룹의 정확한 일치를 강제하는 검사
 - 공식 결과 후보에 split 원장의 의미 기반 SHA-256 식별값을 함께 보존하고 채점 직전에 다시 대조하는 검사
 - 라이브 계약과 V3 문맥·대조 정책에서 1,562개 작성 의무를 자동 생성하는 V3 의무 목록
-- source·split·compiled corpus·작성 지침·검수 원장·contrast·Coverage V3·AI-origin policy 조합과 입력 Git 커밋을 한 레코드로 고정하는 현재 freeze record V3 계약
+- source·split·compiled corpus·작성 지침·검수 원장·contrast·Coverage V3·AI-origin policy 조합과 입력 Git 커밋을 한 레코드로 고정하는 현재 freeze record V4 계약
 - freeze record가 가리킨 Git blob snapshot으로 공식 test를 준비하고 채점 직전에 같은 레코드·artifact·프로필을 다시 검증하는 경계
 - 선택형 필드 한 건이 여러 enum 선택지 coverage를 대신하지 못하게 하는 검사
 - 작성자가 다른 그룹 ID를 붙여도 완전히 동일한 모델 입력의 corpus 내 중복을 막는 검사
@@ -182,6 +182,13 @@ contrast 역할 75개는 실제 contrast manifest가 없으므로 모두 미충�
 각 후보를 승인·수정 필요·거부 중 하나로 검토할 수 있지만, 체크만으로 corpus에 들어가지는
 않는다.
 
+첫 후보 묶음을 누적한 뒤에도 미관측인 `current_field_present` 의무 4개는
+`drafts/coverage-candidates.v2.json`의 두 번째 독립 묶음이 정확히 한 번씩 겨냥한다.
+기존 값의 삭제를 요청하는 `change_detail` 사례이며, V1 후보까지 포함한 진단 투영
+582개에서 31개를 더 관측해 613개가 된다. 이 수치 역시 실제 corpus에 후보를 넣은 결과가
+아니라 provenance-neutral 진단 입력의 잠재 범위다. 실제 사람 작성 corpus는 계속 36건,
+정적 관측 349개이고 두 후보 묶음 모두 자동 승격할 수 없다.
+
 ## 정답 작성 지침과 검수 원장
 
 `guidelines/annotation-guideline.v1.md`는 필드의 `null` 판정, 행동과 이번 발화
@@ -223,7 +230,7 @@ validation·test corpus가 없으므로
 - 작성 그룹 source, split 배정 원장, compiled corpus의 raw·semantic 지문
 - 작성 지침, validation·test 검수 원장, contrast manifest 지문
 - Coverage V3 의무 manifest와 공식 프로필·coverage·contrast 정책 지문
-- 공식 corpus에서 그대로 승격할 수 없는 AI 원문·예약 ID를 고정한 additive AI-origin policy V2의 raw·semantic 지문
+- 공식 corpus에서 그대로 승격할 수 없는 AI 원문·예약 ID를 누적한 additive AI-origin policy V3의 raw·semantic 지문
 - dataset·state·authoring·split·review·contrast의 서로 독립적인 버전
 - split별 case 수와 전체 group·case ID 집합 지문
 - 이 입력들이 커밋된 정확한 Git object format과 full commit SHA
@@ -250,11 +257,12 @@ validation·test corpus가 없으므로
 증명하지 않으므로, 사전 승인 순서는 레코드를 먼저 리뷰·병합하는 Git/PR 이력과
 후속 실행 manifest에서 관리해야 한다.
 
-현재 생성 형식은 **freeze record V3**다. V2는 V1의 source·split·검수·contrast·coverage
-조합에 AI-origin policy V1을 추가한 역사 형식이고, V3는 기존 32개 원문과 coverage 후보
-24개를 합한 additive AI-origin policy V2의 경로, 정확한 artifact SHA-256, semantic policy
-fingerprint와 schema version을 고정한다. V1·V2 모델과 해시 알고리즘은 과거 레코드
-재생을 위해 코드에 남기지만, 새 레코드는 V3로만 생성한다. 현재는 development 사람 작성 초안 36건과 그
+현재 생성 형식은 **freeze record V4**다. V2는 V1의 source·split·검수·contrast·coverage
+조합에 AI-origin policy V1을 추가한 역사 형식이고, V3는 coverage 후보 V1까지 포함한
+AI-origin policy V2를 고정한 역사 형식이다. V4는 정책 ID·schema version·artifact
+SHA-256·semantic fingerprint를 일반화해 두 번째 coverage 후보 묶음까지 누적한
+AI-origin policy V3를 고정한다. V1–V3 모델과 해시 알고리즘은 과거 레코드 감사 재생을
+위해 코드에 남기지만 새 레코드와 공식 준비·채점은 V4만 사용한다. 현재는 development 사람 작성 초안 36건과 그
 split 원장·compiled corpus만 있으므로 실제 freeze record 파일을 만들거나 데이터셋
 동결이 끝났다고 기록하지 않는다.
 
@@ -294,8 +302,10 @@ AI 출처라고 판별하지 않는다. `human_authored` 문자열도 실제 인
 기존 32개 원문의 ID·종류·시나리오·NFC 지문은
 `manifests/ai-origin-policy.v1.json`에 역사 기준으로 그대로 보존한다. 새 coverage 후보
 24개를 더한 총 56개 원문은 additive `manifests/ai-origin-policy.v2.json`에 저장한다.
-V1·V2 정책 지문은 각각 코드에 고정되어 기존 파일을 바꾸면 검사가 중단되며, 현재
-AuthoringGroup 차단과 Freeze Record V3는 V2를 사용한다.
+두 번째 coverage 후보 4개까지 누적한 총 60개 원문은
+`manifests/ai-origin-policy.v3.json`에 저장한다. V1–V3 정책 지문은 각각 코드에 고정되어
+기존 파일을 바꾸면 검사가 중단되며, 현재 AuthoringGroup 차단과 Freeze Record V4는
+V3를 사용한다.
 
 `drafts/coverage-candidates.v1.json`은 현재 development 진단에서 빠진 24개 필드의
 단일 필드 정보 제공 사례다. 20개 workflow 후보는 기존 값이 일부 채워진 collecting
@@ -305,6 +315,12 @@ AuthoringGroup 차단과 Freeze Record V3는 V2를 사용한다.
 커밋된 원본은 결정론적 생성물이므로 직접 체크하지 않고 작업용 사본에 판단을 기록한다.
 승인은 후보의 검토 의사일 뿐 `human_authored`, `reviewed`, `adjudicated` 또는 자동 승격을
 뜻하지 않는다.
+
+`drafts/coverage-candidates.v2.json`은 V1을 덮어쓰지 않는 두 번째 묶음이다. V1 투영 뒤
+남은 `current_field_present` 의무 4개를 모두 겨냥하며, 현재 저장값을 지우는 수정 발화의
+문맥·행동·delta 관계를 함께 검사한다. 대응 작업지 역시 커밋 원본이 아니라 작업용
+사본에서만 판단을 기록한다. V1과 V2의 ID·NFC 원문은 전역으로 중복될 수 없고, V2
+투영은 V1 artifact와 실제 36건 corpus를 다시 검증한 뒤에만 582 → 613으로 계산한다.
 현재 16개 구조화 NLU 전체의 사람 작성 hard-negative와 첫 정상 정보 제공 사례를
 development 초안으로 한 건씩 저장했고, 예약 4개에는 부족한 값을 다음 발화에서
 채우는 후속 정보 제공 사례도 한 건씩 추가했다. hard-negative는 `greeting → unknown`,
@@ -368,6 +384,21 @@ python -m scripts.compile_structured_nlu_corpus ai-origin-policy-v2 \
   evals/structured_nlu/manifests/ai-origin-policy.v2.json
 python -m scripts.compile_structured_nlu_corpus check-ai-origin-policy-v2 \
   evals/structured_nlu/manifests/ai-origin-policy.v2.json
+
+# V1 투영 후 남은 current_field_present 4개용 두 번째 후보 묶음을 검사한다.
+python -m scripts.compile_structured_nlu_corpus check-draft-coverage-schema-v2 \
+  evals/structured_nlu/ai_coverage_candidate_v2.schema.json
+python -m scripts.compile_structured_nlu_corpus check-draft-coverage-candidates-v2 \
+  evals/structured_nlu/data/source \
+  evals/structured_nlu/data/manifests/split-assignments.v1.json \
+  evals/structured_nlu/drafts/coverage-candidates.v1.json \
+  evals/structured_nlu/drafts/coverage-candidates.v2.json
+python -m scripts.compile_structured_nlu_corpus check-draft-coverage-review-packet-v2 \
+  evals/structured_nlu/drafts/coverage-review-packet.v2.md
+python -m scripts.compile_structured_nlu_corpus check-ai-origin-policy-v3 \
+  evals/structured_nlu/manifests/ai-origin-policy.v3.json
+python -m scripts.compile_structured_nlu_corpus check-ai-origin-policy-schema-v3 \
+  evals/structured_nlu/ai_origin_policy.schema.v3.json
 ```
 
 실제 corpus는 하나의 거대한 JSON을 직접 편집하지 않는다. 같은 의미 원본에서
