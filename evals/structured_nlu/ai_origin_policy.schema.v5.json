@@ -1,0 +1,69 @@
+{
+  "$id": "urn:maeumcall:structured-nlu:ai-origin-policy:v5",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "ai_origin_policy_schema_version": {
+      "const": 5
+    },
+    "entries": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "origin_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "origin_kind": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "scenario_key": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "text_fingerprint": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "origin_id",
+          "origin_kind",
+          "scenario_key",
+          "text_fingerprint"
+        ],
+        "type": "object"
+      },
+      "maxItems": 110,
+      "minItems": 110,
+      "type": "array"
+    },
+    "policy_fingerprint": {
+      "const": "ad8ddd2d59926fe6277193785ea4144059636167687bb92b92ea8cb350db83fb"
+    },
+    "policy_id": {
+      "const": "maeumcall-structured-nlu-ai-origin-policy-v5"
+    },
+    "reserved_id_prefixes": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "text_fingerprint_algorithm": {
+      "const": "nfc-utf8-sha256-v1"
+    }
+  },
+  "required": [
+    "ai_origin_policy_schema_version",
+    "policy_id",
+    "text_fingerprint_algorithm",
+    "reserved_id_prefixes",
+    "entries",
+    "policy_fingerprint"
+  ],
+  "type": "object"
+}
