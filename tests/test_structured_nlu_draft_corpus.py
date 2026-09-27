@@ -188,6 +188,41 @@ EXPECTED_INFORMATION_DRAFTS = {
     },
 }
 
+EXPECTED_RESERVATION_FOLLOWUP_DRAFTS = {
+    "예약:미용실 예약": {
+        "conversation_state": "collecting_reservation_info",
+        "message": "김아름 디자이너로 하겠습니다. 예약자는 홍길동 입니다.",
+        "intent": "reservation",
+        "user_action": "continue_collecting",
+        "tags": ("multi_field",),
+        "fields": {"designer": "김아름", "user_name": "홍길동"},
+    },
+    "예약:병원 예약": {
+        "conversation_state": "asking_user_name",
+        "message": "홍길동 입니다.",
+        "intent": "reservation",
+        "user_action": "continue_collecting",
+        "tags": ("single_field",),
+        "fields": {"user_name": "홍길동"},
+    },
+    "예약:스터디룸 예약": {
+        "conversation_state": "collecting_reservation_info",
+        "message": "총 4시간 이용할 예정입니다. 이름은 홍길동입니다.",
+        "intent": "reservation",
+        "user_action": "continue_collecting",
+        "tags": ("multi_field",),
+        "fields": {"duration": "4시간", "user_name": "홍길동"},
+    },
+    "예약:식당 예약": {
+        "conversation_state": "collecting_reservation_info",
+        "message": "오후 6시 예약자 홍길동 입니다.",
+        "intent": "reservation",
+        "user_action": "continue_collecting",
+        "tags": ("multi_field",),
+        "fields": {"time": "오후 6시", "user_name": "홍길동"},
+    },
+}
+
 
 def test_committed_human_draft_corpus_matches_its_authoring_sources() -> None:
     dataset = compile_authoring_directory(SOURCE_DIR, SPLIT_ASSIGNMENTS_PATH)
@@ -198,11 +233,15 @@ def test_committed_human_draft_corpus_matches_its_authoring_sources() -> None:
     )
 
     assert verified == dataset
-    assert len(dataset.cases) == 32
+    assert len(dataset.cases) == 36
     assert {case.provenance for case in dataset.cases} == {"human_authored"}
     assert {case.review_status.value for case in dataset.cases} == {"draft"}
     assert {case.split.value for case in dataset.cases} == {"development"}
-    assert {case.conversation_state for case in dataset.cases} == {"greeting"}
+    assert {case.conversation_state for case in dataset.cases} == {
+        "asking_user_name",
+        "collecting_reservation_info",
+        "greeting",
+    }
 
     hard_negatives = [case for case in dataset.cases if case.tags == ("hard_negative",)]
     assert len(hard_negatives) == 16
@@ -211,23 +250,41 @@ def test_committed_human_draft_corpus_matches_its_authoring_sources() -> None:
     )
     assert {case.labels.user_action for case in hard_negatives} == {"unknown"}
 
-    information_cases = [case for case in dataset.cases if case.labels.user_action != "unknown"]
+    information_cases = [
+        case
+        for case in dataset.cases
+        if case.conversation_state == "greeting" and case.labels.user_action != "unknown"
+    ]
     assert len(information_cases) == 16
     assert {case.scenario_key for case in information_cases} == set(EXPECTED_INFORMATION_DRAFTS)
     for case in information_cases:
         expected = EXPECTED_INFORMATION_DRAFTS[case.scenario_key]
-        assert case.user_message == expected["message"]
-        assert case.labels.intent == expected["intent"]
-        assert case.labels.user_action == expected["user_action"]
-        assert case.tags == expected["tags"]
-        assert case.offered_alternative_times == ()
-        assert all(value is None for value in case.current_fields.values())
-        if "selected_time" in case.labels.fields:
-            assert case.labels.fields["selected_time"] is None
-        for field_name, label in case.labels.fields.items():
-            expected_value = expected["fields"].get(field_name)
-            if expected_value is None:
-                assert label is None
-            else:
-                assert label is not None
-                assert label.accepted_values == (expected_value,)
+        _assert_case_matches(case, expected)
+
+    followup_cases = [case for case in dataset.cases if case.conversation_state != "greeting"]
+    assert len(followup_cases) == 4
+    assert {case.scenario_key for case in followup_cases} == set(
+        EXPECTED_RESERVATION_FOLLOWUP_DRAFTS
+    )
+    for case in followup_cases:
+        expected = EXPECTED_RESERVATION_FOLLOWUP_DRAFTS[case.scenario_key]
+        assert case.conversation_state == expected["conversation_state"]
+        _assert_case_matches(case, expected)
+
+
+def _assert_case_matches(case, expected) -> None:
+    assert case.user_message == expected["message"]
+    assert case.labels.intent == expected["intent"]
+    assert case.labels.user_action == expected["user_action"]
+    assert case.tags == expected["tags"]
+    assert case.offered_alternative_times == ()
+    assert all(value is None for value in case.current_fields.values())
+    if "selected_time" in case.labels.fields:
+        assert case.labels.fields["selected_time"] is None
+    for field_name, label in case.labels.fields.items():
+        expected_value = expected["fields"].get(field_name)
+        if expected_value is None:
+            assert label is None
+        else:
+            assert label is not None
+            assert label.accepted_values == (expected_value,)

@@ -73,11 +73,19 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "reservation-hair-salon-human-followup-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "reservation-hair-salon-human-hard-negative-001",
       "split": "development"
     },
     {
       "conversation_group_id": "reservation-hair-salon-human-information-provision-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "reservation-hospital-human-followup-information-provision-001",
       "split": "development"
     },
     {
@@ -89,11 +97,19 @@
       "split": "development"
     },
     {
+      "conversation_group_id": "reservation-restaurant-human-followup-information-provision-001",
+      "split": "development"
+    },
+    {
       "conversation_group_id": "reservation-restaurant-human-hard-negative-001",
       "split": "development"
     },
     {
       "conversation_group_id": "reservation-restaurant-human-information-provision-001",
+      "split": "development"
+    },
+    {
+      "conversation_group_id": "reservation-study-room-human-followup-information-provision-001",
       "split": "development"
     },
     {

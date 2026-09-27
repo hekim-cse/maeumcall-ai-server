@@ -1,0 +1,35 @@
+{
+  "authoring_schema_version": 2,
+  "cases": [
+    {
+      "conversation_state": "asking_user_name",
+      "current_fields": {},
+      "id": "reservation-hospital-human-followup-information-provision-001.c1",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "department": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": {
+            "accepted_values": [
+              "홍길동"
+            ]
+          }
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "review_status": "draft",
+      "tags": [
+        "single_field"
+      ],
+      "user_message": "홍길동 입니다."
+    }
+  ],
+  "conversation_group_id": "reservation-hospital-human-followup-information-provision-001",
+  "provenance": "human_authored",
+  "scenario_key": "예약:병원 예약"
+}
