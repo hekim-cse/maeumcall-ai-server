@@ -23,6 +23,7 @@ from evals.structured_nlu.schema import (
     GoldDataset,
     GoldLabels,
     ReviewStatus,
+    validate_evaluation_case_semantics,
 )
 
 
@@ -336,6 +337,15 @@ def inspect_benchmark_coverage(
 ) -> BenchmarkCoverageReport:
     if diagnostic_cases and split is not DatasetSplit.DEVELOPMENT:
         raise ValueError("diagnostic coverage cases are development-only")
+    for case in diagnostic_cases:
+        validate_evaluation_case_semantics(
+            scenario_key=case.scenario_key,
+            conversation_state=case.conversation_state,
+            current_fields=case.current_fields,
+            offered_alternative_times=case.offered_alternative_times,
+            labels=case.labels,
+            tags=case.tags,
+        )
     cases: tuple[CoverageCaseLike, ...] = (
         *(case for case in dataset.cases if case.split is split),
         *diagnostic_cases,

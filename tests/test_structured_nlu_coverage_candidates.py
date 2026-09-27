@@ -132,10 +132,44 @@ def test_coverage_candidate_payload_cannot_be_promoted_or_drifted() -> None:
         context={"ai_origin_policy_schema_version": 1},
     )
     assert historical.provenance == "human_authored"
+    with pytest.raises(ValidationError, match="unsupported AI-origin policy schema version"):
+        AuthoringGroup.model_validate(
+            source_payload,
+            context={"ai_origin_policy_schema_version": False},
+        )
 
     payload = json.loads(serialize_ai_coverage_candidate_manifest_v1())
     payload["suggestions"][0]["proposed_case"]["user_message"] += " 수정"
     with pytest.raises(ValidationError, match="drifted from the V1 policy"):
+        AICoverageCandidateManifestV1.model_validate(payload)
+
+
+@pytest.mark.parametrize(
+    ("path", "invalid_value"),
+    [
+        (("provenance",), "human_authored"),
+        (("suggestions", 0, "proposed_case", "user_message"), "   "),
+    ],
+)
+def test_coverage_candidate_manifest_rejects_invalid_literals_and_blank_text(
+    path: tuple[str | int, ...],
+    invalid_value: str,
+) -> None:
+    payload = json.loads(serialize_ai_coverage_candidate_manifest_v1())
+    target = payload
+    for key in path[:-1]:
+        target = target[key]
+    target[path[-1]] = invalid_value
+
+    with pytest.raises(ValidationError):
+        AICoverageCandidateManifestV1.model_validate(payload)
+
+
+def test_coverage_candidate_manifest_rejects_unknown_proposed_case_fields() -> None:
+    payload = json.loads(serialize_ai_coverage_candidate_manifest_v1())
+    payload["suggestions"][0]["proposed_case"]["unexpected"] = True
+
+    with pytest.raises(ValidationError):
         AICoverageCandidateManifestV1.model_validate(payload)
 
 

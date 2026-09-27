@@ -41,7 +41,7 @@
       "origin_id": "ai-coverage-v1-delivery-delay-delay-detail",
       "origin_kind": "coverage_candidate",
       "scenario_key": "배달:배달 지연 문의",
-      "text_fingerprint": "a422ee26a90ae30b8b2b2e70f628c20ca655f64b2769d78e405816a2445e3590"
+      "text_fingerprint": "981d538be8821883089e377259df54271ade8ec88ce69cc6f94264b848fdff1f"
     },
     {
       "origin_id": "ai-coverage-v1-delivery-delay-delay-resolution",
@@ -338,7 +338,7 @@
       "text_fingerprint": "1b47ece4d400db592be11f85117584a93d9922630e323c7672b5d50575e05ab1"
     }
   ],
-  "policy_fingerprint": "0a625b7ba6cb9b17c8a4fce81ddfc17a7d40b5caa0eefec868b8e7d55dcc5044",
+  "policy_fingerprint": "25dbf8816653a97d6f8e7fc84cfa2f7676745febd9af80a04257bbf4b98ccee1",
   "policy_id": "maeumcall-structured-nlu-ai-origin-policy-v2",
   "reserved_id_prefixes": [
     "ai-coverage-",

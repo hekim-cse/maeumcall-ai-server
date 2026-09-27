@@ -311,7 +311,7 @@
         "tags": [
           "single_field"
         ],
-        "user_message": "주문한 지 한 시간이 지났어요."
+        "user_message": "예정 배달 시간보다 한 시간이 지났어요."
       },
       "scenario_key": "배달:배달 지연 문의",
       "semantic_valid": true,

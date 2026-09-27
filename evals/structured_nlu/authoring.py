@@ -76,7 +76,7 @@ class AuthoringGroup(BaseModel):
         policy_version = 2
         if isinstance(info.context, dict):
             policy_version = info.context.get("ai_origin_policy_schema_version", 2)
-        if policy_version not in (0, 1, 2):
+        if type(policy_version) is not int or policy_version not in (0, 1, 2):
             raise ValueError("unsupported AI-origin policy schema version")
         reserved_id = (
             is_reserved_ai_origin_id_v1 if policy_version == 1 else is_reserved_ai_origin_id

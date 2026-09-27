@@ -10,7 +10,7 @@
           "type": "string"
         },
         "ai_origin_policy_fingerprint": {
-          "const": "0a625b7ba6cb9b17c8a4fce81ddfc17a7d40b5caa0eefec868b8e7d55dcc5044",
+          "const": "25dbf8816653a97d6f8e7fc84cfa2f7676745febd9af80a04257bbf4b98ccee1",
           "title": "Ai Origin Policy Fingerprint",
           "type": "string"
         },

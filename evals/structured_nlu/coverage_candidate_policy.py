@@ -351,7 +351,7 @@ COVERAGE_CANDIDATE_SPECS_V1 = MappingProxyType(
                 ("delay_resolution", "agent_handoff"),
             ),
             (),
-            "주문한 지 한 시간이 지났어요.",
+            "예정 배달 시간보다 한 시간이 지났어요.",
             "delivery_delay_inquiry",
             "provide_details",
             NONE,
