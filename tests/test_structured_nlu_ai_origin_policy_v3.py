@@ -89,7 +89,7 @@ def test_policy_artifacts_and_v3_schema_are_deterministic() -> None:
     )
 
 
-def test_authoring_default_is_v3_but_historical_dispatch_is_immutable() -> None:
+def test_authoring_default_rejects_v3_text_but_historical_dispatch_is_immutable() -> None:
     payload = _authoring_payload()
 
     with pytest.raises(ValidationError, match="verbatim AI-origin text"):
@@ -97,7 +97,7 @@ def test_authoring_default_is_v3_but_historical_dispatch_is_immutable() -> None:
     AuthoringGroup.model_validate(payload, context={"ai_origin_policy_schema_version": 2})
     AuthoringGroup.model_validate(payload, context={"ai_origin_policy_schema_version": 0})
     with pytest.raises(ValidationError, match="unsupported AI-origin policy"):
-        AuthoringGroup.model_validate(payload, context={"ai_origin_policy_schema_version": 4})
+        AuthoringGroup.model_validate(payload, context={"ai_origin_policy_schema_version": 5})
 
 
 @pytest.mark.parametrize("version", [True, "3", 3.0, None, -1])
@@ -109,7 +109,7 @@ def test_authoring_rejects_invalid_policy_version_types(version) -> None:
         )
 
 
-@pytest.mark.parametrize("version", [True, "3", 0, 4])
+@pytest.mark.parametrize("version", [True, "3", 0, 5])
 def test_policy_descriptor_rejects_unregistered_versions(version) -> None:
     with pytest.raises(ValueError, match="unsupported AI-origin policy"):
         ai_origin_policy_descriptor(version)

@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, model_validator
 
 from evals.structured_nlu.ai_origin_policy import (
+    CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
     is_reserved_ai_origin_id_for_policy,
     is_verbatim_ai_origin_text_for_policy,
 )
@@ -71,10 +72,12 @@ class AuthoringGroup(BaseModel):
         case_ids = [case.id for case in self.cases]
         if len(set(case_ids)) != len(case_ids):
             raise ValueError("authoring case ids must be unique within a group")
-        policy_version = 3
+        policy_version = CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION
         if isinstance(info.context, dict):
-            policy_version = info.context.get("ai_origin_policy_schema_version", 3)
-        if type(policy_version) is not int or policy_version not in (0, 1, 2, 3):
+            policy_version = info.context.get(
+                "ai_origin_policy_schema_version", CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION
+            )
+        if type(policy_version) is not int or policy_version not in (0, 1, 2, 3, 4):
             raise ValueError("unsupported AI-origin policy schema version")
         if policy_version and (
             is_reserved_ai_origin_id_for_policy(self.conversation_group_id, policy_version)
@@ -241,7 +244,7 @@ def capture_authoring_source(
 def compile_authoring_snapshot(
     snapshot: AuthoringSourceSnapshot,
     *,
-    ai_origin_policy_schema_version: int = 3,
+    ai_origin_policy_schema_version: int = CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
 ) -> GoldDataset:
     assignment_manifest = _load_split_assignment_manifest(snapshot)
 
@@ -418,7 +421,7 @@ def verify_compiled_authoring_snapshot(
     snapshot: AuthoringSourceSnapshot,
     compiled_bytes: bytes,
     *,
-    ai_origin_policy_schema_version: int = 3,
+    ai_origin_policy_schema_version: int = CURRENT_AI_ORIGIN_POLICY_SCHEMA_VERSION,
 ) -> tuple[GoldDataset, str, str]:
     """Verify one immutable in-memory source snapshot and its compiled bytes."""
     expected_dataset = compile_authoring_snapshot(
