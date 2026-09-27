@@ -23,6 +23,7 @@ COVERAGE_PROGRESS_SCHEMA_VERSION = 1
 COVERAGE_PROGRESS_REPORT_ID = "maeumcall-structured-nlu-development-progress-v1"
 COVERAGE_PROGRESS_QUALIFICATION = "unqualified_development_diagnostic"
 _UNVERIFIED_SEMANTIC_TAGS = frozenset({"ambiguous", "colloquial", "ellipsis", "negation"})
+CoverageProgressValue = Annotated[str, Field(min_length=1, pattern=r".*\S.*")]
 _SUPPORTED_PROGRESS_DIMENSIONS = frozenset(
     {
         CoverageDimension.ACTION_FIELD_ABSENT,
@@ -52,7 +53,7 @@ class CoverageProgressGapV1(BaseModel):
 
     scenario_key: str | None
     dimension: CoverageDimension
-    missing_values: tuple[str, ...] = Field(min_length=1)
+    missing_values: tuple[CoverageProgressValue, ...] = Field(min_length=1)
 
     @model_validator(mode="after")
     def values_are_unique_and_sorted(self) -> CoverageProgressGapV1:
@@ -156,6 +157,13 @@ def build_development_coverage_progress(dataset: GoldDataset) -> CoverageProgres
     present_scenarios = {
         case.scenario_key for case in dataset.cases if case.split is DatasetSplit.DEVELOPMENT
     }
+    adjudicated_semantic_tags = {
+        (case.scenario_key, tag.value)
+        for case in dataset.cases
+        if case.split is DatasetSplit.DEVELOPMENT and case.review_status is ReviewStatus.ADJUDICATED
+        for tag in case.tags
+        if tag.value in _UNVERIFIED_SEMANTIC_TAGS
+    }
     missing_keys.update(
         key for key in official_by_key if key[0] is not None and key[0] not in present_scenarios
     )
@@ -164,6 +172,7 @@ def build_development_coverage_progress(dataset: GoldDataset) -> CoverageProgres
         for key in official_by_key
         if key[1] is CoverageDimension.SCENARIO_DIFFICULTY_TAG
         and key[2] in _UNVERIFIED_SEMANTIC_TAGS
+        and (key[0], key[2]) not in adjudicated_semantic_tags
     )
     missing_keys.update(key for key in official_by_key if key[1] is CoverageDimension.CONTRAST_ROLE)
     missing = tuple(official_by_key[key] for key in sorted(missing_keys, key=_sort_key))

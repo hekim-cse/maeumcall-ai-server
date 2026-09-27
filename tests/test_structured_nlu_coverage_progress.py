@@ -8,6 +8,7 @@ from evals.structured_nlu.authoring import compile_authoring_directory
 from evals.structured_nlu.benchmark import CoverageDimension
 from evals.structured_nlu.coverage_progress import (
     COVERAGE_PROGRESS_QUALIFICATION,
+    CoverageProgressGapV1,
     build_development_coverage_progress,
     serialize_development_coverage_progress,
 )
@@ -154,7 +155,7 @@ def test_coverage_progress_cli_writes_checks_and_rejects_unsafe_outputs(tmp_path
     assert SPLIT_ASSIGNMENTS_PATH.read_bytes() == manifest_before
 
 
-def test_unreviewed_semantic_tags_do_not_increase_progress() -> None:
+def test_only_adjudicated_semantic_tags_increase_progress() -> None:
     dataset = compile_authoring_directory(SOURCE_DIR, SPLIT_ASSIGNMENTS_PATH)
     case = next(item for item in dataset.cases if item.tags == (DifficultyTag.HARD_NEGATIVE,))
     relabelled = EvaluationCase.model_validate(
@@ -177,6 +178,15 @@ def test_unreviewed_semantic_tags_do_not_increase_progress() -> None:
 
     assert build_development_coverage_progress(changed).covered_obligation_count == 349
 
+    adjudicated = relabelled.model_copy(update={"review_status": ReviewStatus.ADJUDICATED})
+    changed = dataset.model_copy(
+        update={
+            "cases": tuple(adjudicated if item.id == case.id else item for item in dataset.cases)
+        }
+    )
+
+    assert build_development_coverage_progress(changed).covered_obligation_count == 353
+
 
 def test_progress_model_rejects_self_inconsistent_counts() -> None:
     dataset = compile_authoring_directory(SOURCE_DIR, SPLIT_ASSIGNMENTS_PATH)
@@ -192,6 +202,24 @@ def test_progress_model_rejects_self_inconsistent_counts() -> None:
 
     with pytest.raises(ValueError, match="greater than or equal to 0"):
         type(report).model_validate(payload)
+
+    for invalid_gap in (
+        {"scenario_key": None, "dimension": "not-a-dimension", "missing_values": ["x"]},
+        {
+            "scenario_key": None,
+            "dimension": CoverageDimension.CONTRAST_ROLE,
+            "missing_values": ["x"],
+            "unexpected": True,
+        },
+        {"scenario_key": None, "dimension": CoverageDimension.CONTRAST_ROLE, "missing_values": []},
+        {
+            "scenario_key": None,
+            "dimension": CoverageDimension.CONTRAST_ROLE,
+            "missing_values": ["   "],
+        },
+    ):
+        with pytest.raises(ValueError):
+            CoverageProgressGapV1.model_validate(invalid_gap)
 
     payload = report.model_dump(mode="json")
     payload["covered_dimension_counts"][CoverageDimension.INTENT.value] = -1
