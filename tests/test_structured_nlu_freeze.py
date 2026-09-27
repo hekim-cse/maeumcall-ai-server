@@ -20,7 +20,7 @@ from evals.structured_nlu.benchmark import (
 )
 from evals.structured_nlu.coverage_v3 import OFFICIAL_COVERAGE_CONTRACT_V3
 from evals.structured_nlu.freeze import (
-    FREEZE_RECORD_FINGERPRINT_ALGORITHM_V3,
+    FREEZE_RECORD_FINGERPRINT_ALGORITHM_V4,
     FreezeArtifactPathsV2,
     build_freeze_record,
     create_freeze_record_file,
@@ -30,6 +30,7 @@ from evals.structured_nlu.freeze import (
     serialize_freeze_record,
     serialize_freeze_record_schema,
     verify_freeze_record,
+    verify_freeze_record_for_audit,
     write_new_freeze_record,
 )
 from evals.structured_nlu.schema import EvaluationCase, GoldDataset
@@ -146,6 +147,11 @@ def _init_repo(tmp_path: Path, dataset: GoldDataset) -> tuple[Path, FreezeArtifa
                 encoding="utf-8"
             )
         ),
+        "manifests/ai-origin-policy.v3.json": (
+            Path("evals/structured_nlu/manifests/ai-origin-policy.v3.json").read_text(
+                encoding="utf-8"
+            )
+        ),
     }
     for relative, content in files.items():
         path = repo / relative
@@ -165,7 +171,7 @@ def _init_repo(tmp_path: Path, dataset: GoldDataset) -> tuple[Path, FreezeArtifa
         review_ledger_path="data/review-ledger.v1.json",
         contrast_manifest_path="data/contrast-groups.v1.json",
         obligation_manifest_path="manifests/coverage-obligations.v3.json",
-        ai_origin_policy_path="manifests/ai-origin-policy.v2.json",
+        ai_origin_policy_path="manifests/ai-origin-policy.v3.json",
     )
     return repo, paths, commit
 
@@ -200,7 +206,7 @@ def _build_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
 
 
 def _as_historical_v1(
-    record: freeze_module.CorpusFreezeRecordV3,
+    record: freeze_module.CorpusFreezeRecordV4,
 ) -> freeze_module.CorpusFreezeRecordV1:
     versions = freeze_module.FreezeContractVersionsV1.model_validate(
         record.versions.model_dump(mode="json", exclude={"ai_origin_policy_schema_version"})
@@ -209,13 +215,7 @@ def _as_historical_v1(
         record.paths.model_dump(mode="json", exclude={"ai_origin_policy_path"})
     )
     artifacts = freeze_module.FreezeArtifactFingerprintsV1.model_validate(
-        record.artifacts.model_dump(
-            mode="json",
-            exclude={
-                "ai_origin_policy_artifact_sha256",
-                "ai_origin_policy_fingerprint",
-            },
-        )
+        record.artifacts.model_dump(mode="json", exclude={"ai_origin_policy"})
     )
     provisional = freeze_module.CorpusFreezeRecordV1.model_construct(
         freeze_record_schema_version=1,
@@ -247,7 +247,7 @@ def _as_historical_v1(
 
 
 def _as_historical_v2(
-    record: freeze_module.CorpusFreezeRecordV3,
+    record: freeze_module.CorpusFreezeRecordV4,
 ) -> freeze_module.CorpusFreezeRecordV2:
     versions = freeze_module.FreezeContractVersionsV2.model_validate(
         record.versions.model_dump(mode="json") | {"ai_origin_policy_schema_version": 1}
@@ -257,7 +257,7 @@ def _as_historical_v2(
     )
     policy_v1 = Path("evals/structured_nlu/manifests/ai-origin-policy.v1.json").read_bytes()
     artifacts = freeze_module.FreezeArtifactFingerprintsV2.model_validate(
-        record.artifacts.model_dump(mode="json")
+        record.artifacts.model_dump(mode="json", exclude={"ai_origin_policy"})
         | {
             "ai_origin_policy_artifact_sha256": freeze_module._sha256_bytes(policy_v1),
             "ai_origin_policy_fingerprint": (freeze_module.ai_origin_policy_fingerprint_v1()),
@@ -292,6 +292,88 @@ def _as_historical_v2(
     )
 
 
+def _as_historical_v3(
+    record: freeze_module.CorpusFreezeRecordV4,
+) -> freeze_module.CorpusFreezeRecordV3:
+    versions = freeze_module.FreezeContractVersionsV3.model_validate(
+        record.versions.model_dump(mode="json") | {"ai_origin_policy_schema_version": 2}
+    )
+    paths = record.paths.model_copy(
+        update={"ai_origin_policy_path": "manifests/ai-origin-policy.v2.json"}
+    )
+    policy_v2 = Path("evals/structured_nlu/manifests/ai-origin-policy.v2.json").read_bytes()
+    artifacts = freeze_module.FreezeArtifactFingerprintsV3.model_validate(
+        record.artifacts.model_dump(mode="json", exclude={"ai_origin_policy"})
+        | {
+            "ai_origin_policy_artifact_sha256": freeze_module._sha256_bytes(policy_v2),
+            "ai_origin_policy_fingerprint": freeze_module.ai_origin_policy_fingerprint_v2(),
+        }
+    )
+    provisional = freeze_module.CorpusFreezeRecordV3.model_construct(
+        freeze_record_schema_version=3,
+        freeze_id=record.freeze_id,
+        freeze_revision=record.freeze_revision,
+        previous_freeze_record_fingerprint=record.previous_freeze_record_fingerprint,
+        record_fingerprint_algorithm=freeze_module.FREEZE_RECORD_FINGERPRINT_ALGORITHM_V3,
+        benchmark_identity_fingerprint_algorithm=(
+            freeze_module.BENCHMARK_IDENTITY_FINGERPRINT_ALGORITHM_V3
+        ),
+        input_git_revision=record.input_git_revision,
+        versions=versions,
+        paths=paths,
+        artifacts=artifacts,
+        benchmark=record.benchmark,
+        inventory=record.inventory,
+        qualified_splits=record.qualified_splits,
+        benchmark_identity_fingerprint=freeze_module._benchmark_identity_fingerprint(
+            versions=versions,
+            artifacts=artifacts,
+            benchmark=record.benchmark,
+        ),
+        record_fingerprint="0" * 64,
+    )
+    return freeze_module.CorpusFreezeRecordV3.model_validate(
+        provisional.model_dump(mode="json")
+        | {"record_fingerprint": freeze_module._record_fingerprint(provisional)}
+    )
+
+
+def _as_audit_v4_policy_v2(
+    record: freeze_module.CorpusFreezeRecordV4,
+) -> freeze_module.CorpusFreezeRecordV4:
+    versions = record.versions.model_copy(update={"ai_origin_policy_schema_version": 2})
+    paths = record.paths.model_copy(
+        update={"ai_origin_policy_path": "manifests/ai-origin-policy.v2.json"}
+    )
+    policy_v2 = Path("evals/structured_nlu/manifests/ai-origin-policy.v2.json").read_bytes()
+    descriptor = freeze_module.ai_origin_policy_descriptor(2)
+    artifacts = record.artifacts.model_copy(
+        update={
+            "ai_origin_policy": freeze_module.FreezeAIOriginPolicyDescriptorV1(
+                schema_version=2,
+                policy_id=descriptor.policy_id,
+                artifact_sha256=freeze_module._sha256_bytes(policy_v2),
+                policy_fingerprint=descriptor.policy_fingerprint,
+            )
+        }
+    )
+    provisional = record.model_copy(
+        update={
+            "versions": versions,
+            "paths": paths,
+            "artifacts": artifacts,
+            "benchmark_identity_fingerprint": freeze_module._benchmark_identity_fingerprint(
+                versions=versions, artifacts=artifacts, benchmark=record.benchmark
+            ),
+            "record_fingerprint": "0" * 64,
+        }
+    )
+    return freeze_module.CorpusFreezeRecordV4.model_validate(
+        provisional.model_dump(mode="json")
+        | {"record_fingerprint": freeze_module._record_fingerprint(provisional)}
+    )
+
+
 def test_freeze_record_binds_the_committed_benchmark_snapshot(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -303,11 +385,15 @@ def test_freeze_record_binds_the_committed_benchmark_snapshot(
     assert record.inventory.case_count == 3
     assert record.inventory.group_count == 3
     assert record.benchmark.obligation_count == 1562
-    assert record.record_fingerprint_algorithm == FREEZE_RECORD_FINGERPRINT_ALGORITHM_V3
-    assert record.versions.ai_origin_policy_schema_version == 2
-    assert record.paths.ai_origin_policy_path == "manifests/ai-origin-policy.v2.json"
+    assert record.record_fingerprint_algorithm == FREEZE_RECORD_FINGERPRINT_ALGORITHM_V4
+    assert record.versions.ai_origin_policy_schema_version == 3
+    assert record.paths.ai_origin_policy_path == "manifests/ai-origin-policy.v3.json"
     changed_policy = record.artifacts.model_copy(
-        update={"ai_origin_policy_artifact_sha256": "9" * 64}
+        update={
+            "ai_origin_policy": record.artifacts.ai_origin_policy.model_copy(
+                update={"artifact_sha256": "9" * 64}
+            )
+        }
     )
     assert record.benchmark_identity_fingerprint != (
         freeze_module._benchmark_identity_fingerprint(
@@ -371,11 +457,11 @@ def test_freeze_parser_preserves_historical_v1_records(
         lambda _snapshot, **_kwargs: verified_inputs,
     )
 
-    verified = verify_freeze_record(repo_root=repo, record_path=record_path)
+    verified = verify_freeze_record_for_audit(repo_root=repo, record_path=record_path)
 
     assert verified.record == historical
     assert verified.benchmark == verified_inputs[1]
-    with pytest.raises(ValueError, match="require Freeze Record V3"):
+    with pytest.raises(ValueError, match="require Freeze Record V4"):
         prepare_qualified_test_slice_from_freeze(
             repo_root=repo,
             record_path=record_path,
@@ -406,14 +492,66 @@ def test_freeze_parser_and_verifier_preserve_historical_v2_records(
         lambda _snapshot, **_kwargs: verified_inputs,
     )
 
-    verified = verify_freeze_record(repo_root=repo, record_path=record_path)
+    verified = verify_freeze_record_for_audit(repo_root=repo, record_path=record_path)
     assert verified.record == historical
     assert verified.benchmark == verified_inputs[1]
-    with pytest.raises(ValueError, match="require Freeze Record V3"):
+    with pytest.raises(ValueError, match="require Freeze Record V4"):
         prepare_qualified_test_slice_from_freeze(
             repo_root=repo,
             record_path=record_path,
         )
+
+
+def test_freeze_parser_and_audit_preserve_historical_v3_records(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    repo, _, current, verified_inputs = _build_record(tmp_path, monkeypatch)
+    historical = _as_historical_v3(current)
+    parsed = freeze_module._parse_freeze_record(
+        serialize_freeze_record(historical).encode("utf-8"), label="historical-v3"
+    )
+    assert parsed == historical
+
+    record_path = repo / "freezes" / "historical-v3.json"
+    write_new_freeze_record(record_path, historical)
+    _git(repo, "add", "freezes/historical-v3.json")
+    _git(repo, "commit", "-m", "test: add historical V3 freeze record")
+    monkeypatch.setattr(
+        freeze_module,
+        "_verify_freeze_input_snapshot",
+        lambda _snapshot, **_kwargs: verified_inputs,
+    )
+
+    assert (
+        verify_freeze_record_for_audit(repo_root=repo, record_path=record_path).record == historical
+    )
+    with pytest.raises(ValueError, match="require Freeze Record V4"):
+        verify_freeze_record(repo_root=repo, record_path=record_path)
+
+
+def test_v4_audit_can_replay_registered_policy_but_official_verify_requires_current(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    repo, _, current, verified_inputs = _build_record(tmp_path, monkeypatch)
+    audit_record = _as_audit_v4_policy_v2(current)
+    record_path = repo / "freezes" / "audit-v4-policy-v2.json"
+    write_new_freeze_record(record_path, audit_record)
+    _git(repo, "add", "freezes/audit-v4-policy-v2.json")
+    _git(repo, "commit", "-m", "test: add V4 audit record with policy V2")
+    monkeypatch.setattr(
+        freeze_module,
+        "_verify_freeze_input_snapshot",
+        lambda _snapshot, **_kwargs: verified_inputs,
+    )
+
+    assert (
+        verify_freeze_record_for_audit(repo_root=repo, record_path=record_path).record
+        == audit_record
+    )
+    with pytest.raises(ValueError, match="current contract versions"):
+        verify_freeze_record(repo_root=repo, record_path=record_path)
 
 
 def test_freeze_record_rejects_self_hash_and_lineage_tampering(
@@ -424,12 +562,12 @@ def test_freeze_record_rejects_self_hash_and_lineage_tampering(
     payload = record.model_dump(mode="json")
     payload["freeze_id"] = "structured-nlu-corpus-forged"
     with pytest.raises(ValidationError, match="record fingerprint does not match"):
-        freeze_module.CorpusFreezeRecordV3.model_validate(payload)
+        freeze_module.CorpusFreezeRecordV4.model_validate(payload)
 
     payload = record.model_dump(mode="json")
     payload["freeze_revision"] = 2
     with pytest.raises(ValidationError, match="require a previous record fingerprint"):
-        freeze_module.CorpusFreezeRecordV3.model_validate(payload)
+        freeze_module.CorpusFreezeRecordV4.model_validate(payload)
 
 
 def test_later_freeze_revision_requires_the_exact_previous_record(
@@ -836,8 +974,8 @@ def test_committed_freeze_schema_matches_the_code_contract():
 
     assert path.read_text(encoding="utf-8") == serialized
     schema = json.loads(serialized)
-    assert schema["$id"] == "urn:maeumcall:structured-nlu:freeze-record:v3"
-    assert schema["properties"]["freeze_record_schema_version"]["const"] == 3
+    assert schema["$id"] == "urn:maeumcall:structured-nlu:freeze-record:v4"
+    assert schema["properties"]["freeze_record_schema_version"]["const"] == 4
     assert schema["properties"]["qualified_splits"]["prefixItems"] == [
         {"const": "validation", "type": "string"},
         {"const": "test", "type": "string"},
