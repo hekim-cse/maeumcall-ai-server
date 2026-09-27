@@ -194,6 +194,13 @@ Apache-2.0 라이선스, 한국어 지원, 9개 고정 음색, 로컬 실행, �
 19개 후보로 구성됩니다. 네 묶음을 함께 진단기에 대입하면 668개에서 713개로 45개
 늘고 849개가 남습니다. 이 수치도 비공식 잠재 범위이며 실제 corpus는 그대로입니다.
 
+다섯 번째 독립 묶음은 그 다음에도 남아 있던 `field_option` 의무 53개를 모두
+겨냥합니다. 한 case에는 같은 필드의 선택값을 하나만 둘 수 있지만 서로 다른 필드의
+값은 함께 제공할 수 있으므로, 시나리오별 최대 잔여값 수를 합한 구조적 최소 27개
+후보로 구성됩니다. 다섯 묶음을 함께 진단기에 대입하면 713개에서 776개로 63개
+늘고 786개가 남습니다. 이 역시 AI sidecar의 비공식 잠재 범위이며 실제 corpus는
+36건·349개 관측으로 그대로입니다.
+
 `conversation_group_id`는 같은 원본 대화에서 파생된 문장에 붙이는 묶음 번호입니다. 예를 들어 “내일 예약할게요”와 “내일로 예약 부탁해요”가 같은 원본을 바꿔 쓴 문장이라면 같은 그룹 ID를 사용합니다. 코드는 한 그룹이 development와 test에 동시에 들어가는 것을 거부하므로, 연습 중 본 표현이 최종 시험 점수를 부풀리는 일을 막습니다.
 
 여기서 **corpus(코퍼스)**는 세 split을 모두 담은 평가 문장 전체 묶음이고, **test slice**는 그중 최종 시험에 쓰는 test 사례만 꺼낸 묶음입니다. test 파일만 따로 받으면 같은 원본 문장이 development나 validation에 있는지 확인할 수 없습니다. 그래서 공식 결과 후보 관문은 완전한 corpus를 요구하고, 전체 내용 식별값을 확인한 뒤 test slice를 다시 꺼냅니다.
@@ -256,8 +263,9 @@ AI가 제안한 문장은 이 세 상태보다 앞선 별도 sidecar에 둡니�
 기존 seed와 서브 에이전트 후보 32개는 AI-origin policy V1에 남고, coverage 후보
 V1을 더한 총 56개는 policy V2, 두 번째 후보 4개까지 합한 총 60개는 additive
 policy V3, 세 번째 후보 31개까지 합한 총 91개는 policy V4, 네 번째 후보 19개까지
-합한 총 110개는 policy V5에 기록됩니다. 현재 compiler는 V5의 ID prefix와 NFC 원문 지문을
-사용하며, Freeze Record V4가 같은 정책 artifact와 지문을 고정합니다. 과거
+합한 총 110개는 policy V5, 다섯 번째 후보 27개까지 합한 총 137개는 policy V6에
+기록됩니다. 현재 compiler는 V6의 ID prefix와 NFC 원문 지문을 사용하며, Freeze Record
+V4가 같은 정책 artifact와 지문을 고정합니다. 과거
 Freeze Record V1–V3는 각 시점의 정책과 함께 감사 용도로만 재생할 수 있습니다.
 
 `review_status="adjudicated"`라는 문자열만 직접 바꾸는 것으로는 충분하지 않습니다.
@@ -411,9 +419,9 @@ B에 추가합니다. 이렇게 해야 레코드가 자기 자신을 포함한 �
 증명하지는 않습니다. 실제 사전 승인 시점은 레코드를 먼저 리뷰·병합하는 Git/PR
 운영 순서와 후속 실행 manifest가 함께 남겨야 합니다.
 
-현재 생성 형식인 Freeze Record V4는 네 coverage 후보 묶음까지 누적한
-`ai-origin-policy.v5.json`의 정책 ID, schema version, raw SHA-256, semantic policy
+현재 생성 형식인 Freeze Record V4는 다섯 coverage 후보 묶음까지 누적한
+`ai-origin-policy.v6.json`의 정책 ID, schema version, raw SHA-256, semantic policy
 fingerprint를 함께 고정합니다. 따라서 AI 후보 목록이나 예약 ID 정책이 바뀌면 기존 동결과
 같은 작성 경계였던 것처럼 취급할 수 없습니다. Freeze Record V1–V3 계약은 과거 감사를
 위해 읽고 재검증할 수 있고, 이전 policy를 가리키는 V4 레코드도 감사 전용입니다. 새 레코드와
-공식 평가는 현재 policy V5를 가리키는 Freeze Record V4만 사용합니다.
+공식 평가는 현재 policy V6를 가리키는 Freeze Record V4만 사용합니다.
