@@ -1,0 +1,1648 @@
+{
+  "automatic_promotion_allowed": false,
+  "baseline_case_count": 36,
+  "baseline_corpus_fingerprint": "246e22b0d0b83b5ee0619f6ade5629c52fecb07e3b450f477efd2317da5e5ca7",
+  "baseline_covered_obligation_count": 900,
+  "baseline_diagnostic_case_ids": [
+    "ai-coverage-v1-city-bulky-waste-quantity.c1",
+    "ai-coverage-v1-city-certificate-issuance-channel.c1",
+    "ai-coverage-v1-city-passport-applicant-type.c1",
+    "ai-coverage-v1-city-passport-application-channel.c1",
+    "ai-coverage-v1-city-passport-application-type.c1",
+    "ai-coverage-v1-delivery-change-unavailable-preference.c1",
+    "ai-coverage-v1-delivery-delay-delay-detail.c1",
+    "ai-coverage-v1-delivery-delay-delay-resolution.c1",
+    "ai-coverage-v1-delivery-refund-evidence-status.c1",
+    "ai-coverage-v1-delivery-refund-order-number.c1",
+    "ai-coverage-v1-delivery-refund-resolution-preference.c1",
+    "ai-coverage-v1-reservation-hair-salon-selected-time.c1",
+    "ai-coverage-v1-reservation-hospital-selected-time.c1",
+    "ai-coverage-v1-reservation-restaurant-selected-time.c1",
+    "ai-coverage-v1-reservation-study-room-selected-time.c1",
+    "ai-coverage-v1-support-network-occurred-at.c1",
+    "ai-coverage-v1-support-network-scope.c1",
+    "ai-coverage-v1-support-network-service-type.c1",
+    "ai-coverage-v1-support-network-troubleshooting-done.c1",
+    "ai-coverage-v1-support-plan-consent-scope.c1",
+    "ai-coverage-v1-support-service-model-name.c1",
+    "ai-coverage-v1-support-service-occurred-at.c1",
+    "ai-coverage-v1-support-service-safety-status.c1",
+    "ai-coverage-v1-support-service-service-channel.c1",
+    "ai-coverage-v2-city-bulky-waste-quantity-clear.c1",
+    "ai-coverage-v2-city-certificate-issuance-channel-clear.c1",
+    "ai-coverage-v2-delivery-change-unavailable-preference-clear.c1",
+    "ai-coverage-v2-support-plan-consent-scope-clear.c1",
+    "ai-coverage-v3-hair-salon-unavailable-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-hair-salon-unavailable-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-hair-salon-unavailable-change-date-no-offers.c1",
+    "ai-coverage-v3-hair-salon-unavailable-change-date-offers-unselected.c1",
+    "ai-coverage-v3-hair-salon-unavailable-unknown-no-offers.c1",
+    "ai-coverage-v3-hair-salon-unavailable-unknown-offers-unselected.c1",
+    "ai-coverage-v3-hospital-suggest-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-hospital-suggest-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-hospital-suggest-change-date-no-offers.c1",
+    "ai-coverage-v3-hospital-suggest-change-date-offers-unselected.c1",
+    "ai-coverage-v3-hospital-suggest-select-alternative-time-selected-offer.c1",
+    "ai-coverage-v3-hospital-suggest-unknown-no-offers.c1",
+    "ai-coverage-v3-hospital-suggest-unknown-offers-unselected.c1",
+    "ai-coverage-v3-hospital-unavailable-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-hospital-unavailable-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-hospital-unavailable-change-date-no-offers.c1",
+    "ai-coverage-v3-hospital-unavailable-change-date-offers-unselected.c1",
+    "ai-coverage-v3-hospital-unavailable-unknown-no-offers.c1",
+    "ai-coverage-v3-hospital-unavailable-unknown-offers-unselected.c1",
+    "ai-coverage-v3-restaurant-unavailable-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-restaurant-unavailable-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-restaurant-unavailable-change-date-no-offers.c1",
+    "ai-coverage-v3-restaurant-unavailable-change-date-offers-unselected.c1",
+    "ai-coverage-v3-restaurant-unavailable-unknown-no-offers.c1",
+    "ai-coverage-v3-restaurant-unavailable-unknown-offers-unselected.c1",
+    "ai-coverage-v3-study-room-unavailable-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-study-room-unavailable-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-study-room-unavailable-change-date-no-offers.c1",
+    "ai-coverage-v3-study-room-unavailable-change-date-offers-unselected.c1",
+    "ai-coverage-v3-study-room-unavailable-unknown-no-offers.c1",
+    "ai-coverage-v3-study-room-unavailable-unknown-offers-unselected.c1",
+    "ai-coverage-v4-city-certificate-documents-bundle.c1",
+    "ai-coverage-v4-city-certificate-eligibility-bundle.c1",
+    "ai-coverage-v4-city-certificate-fee-in-person.c1",
+    "ai-coverage-v4-city-passport-office-bundle.c1",
+    "ai-coverage-v4-city-passport-processing-channel.c1",
+    "ai-coverage-v4-city-waste-collection.c1",
+    "ai-coverage-v4-city-waste-fee.c1",
+    "ai-coverage-v4-city-waste-place.c1",
+    "ai-coverage-v4-delivery-change-address-cancel.c1",
+    "ai-coverage-v4-delivery-change-menu-option-keep.c1",
+    "ai-coverage-v4-delivery-change-menu-quantity.c1",
+    "ai-coverage-v4-delivery-delay-cancel-estimated.c1",
+    "ai-coverage-v4-delivery-delay-wait.c1",
+    "ai-coverage-v4-delivery-refund-wrong-refund.c1",
+    "ai-coverage-v4-support-network-wifi-multiple.c1",
+    "ai-coverage-v4-support-plan-contract-expiry-general.c1",
+    "ai-coverage-v4-support-plan-discount.c1",
+    "ai-coverage-v4-support-plan-plan-change.c1",
+    "ai-coverage-v4-support-service-safety-visit.c1",
+    "ai-coverage-v5-city-certificate-extract-representative-documents-in-person.c1",
+    "ai-coverage-v5-city-certificate-fee.c1",
+    "ai-coverage-v5-city-certificate-household-kiosk-eligibility.c1",
+    "ai-coverage-v5-city-passport-first-legal-documents-in-person.c1",
+    "ai-coverage-v5-city-passport-office.c1",
+    "ai-coverage-v5-city-passport-online-eligibility.c1",
+    "ai-coverage-v5-city-passport-reissue-minor-fee-overseas.c1",
+    "ai-coverage-v5-city-waste-collection.c1",
+    "ai-coverage-v5-city-waste-fee.c1",
+    "ai-coverage-v5-city-waste-place-schedule.c1",
+    "ai-coverage-v5-delivery-change-address-keep.c1",
+    "ai-coverage-v5-delivery-change-contact-cancel.c1",
+    "ai-coverage-v5-delivery-change-menu-option.c1",
+    "ai-coverage-v5-delivery-delay-location-wait.c1",
+    "ai-coverage-v5-delivery-delay-reason-cancel.c1",
+    "ai-coverage-v5-delivery-refund-missing-unavailable-redelivery.c1",
+    "ai-coverage-v5-delivery-refund-not-received-refund.c1",
+    "ai-coverage-v5-delivery-refund-wrong-item.c1",
+    "ai-coverage-v5-support-network-voice-multiple-agent.c1",
+    "ai-coverage-v5-support-network-wifi-single-remote.c1",
+    "ai-coverage-v5-support-network-wired-location-service.c1",
+    "ai-coverage-v5-support-plan-billing-authenticated.c1",
+    "ai-coverage-v5-support-plan-contract-general.c1",
+    "ai-coverage-v5-support-plan-discount.c1",
+    "ai-coverage-v5-support-service-parcel.c1",
+    "ai-coverage-v5-support-service-safety-onsite.c1",
+    "ai-coverage-v5-support-service-visit.c1",
+    "ai-coverage-v6-city-certificate-document-type.c1",
+    "ai-coverage-v6-city-certificate-relation.c1",
+    "ai-coverage-v6-city-certificate-topic.c1",
+    "ai-coverage-v6-city-passport-applicant-type.c1",
+    "ai-coverage-v6-city-passport-application-type.c1",
+    "ai-coverage-v6-city-passport-channel.c1",
+    "ai-coverage-v6-city-passport-topic.c1",
+    "ai-coverage-v6-city-waste-item.c1",
+    "ai-coverage-v6-city-waste-region.c1",
+    "ai-coverage-v6-city-waste-topic.c1",
+    "ai-coverage-v6-delivery-change-order-number.c1",
+    "ai-coverage-v6-delivery-change-request.c1",
+    "ai-coverage-v6-delivery-change-type.c1",
+    "ai-coverage-v6-delivery-delay-detail.c1",
+    "ai-coverage-v6-delivery-delay-goal.c1",
+    "ai-coverage-v6-delivery-delay-order-number.c1",
+    "ai-coverage-v6-delivery-delay-resolution.c1",
+    "ai-coverage-v6-delivery-refund-detail.c1",
+    "ai-coverage-v6-delivery-refund-evidence.c1",
+    "ai-coverage-v6-delivery-refund-issue-type.c1",
+    "ai-coverage-v6-delivery-refund-order-number.c1",
+    "ai-coverage-v6-delivery-refund-resolution.c1",
+    "ai-coverage-v6-support-network-next-action.c1",
+    "ai-coverage-v6-support-network-occurred-at.c1",
+    "ai-coverage-v6-support-network-scope.c1",
+    "ai-coverage-v6-support-network-service-type.c1",
+    "ai-coverage-v6-support-network-symptom.c1",
+    "ai-coverage-v6-support-network-troubleshooting.c1",
+    "ai-coverage-v6-support-plan-current-service.c1",
+    "ai-coverage-v6-support-plan-goal.c1",
+    "ai-coverage-v6-support-plan-inquiry-type.c1",
+    "ai-coverage-v6-support-service-channel.c1",
+    "ai-coverage-v6-support-service-model-name.c1",
+    "ai-coverage-v6-support-service-occurred-at.c1",
+    "ai-coverage-v6-support-service-product-type.c1",
+    "ai-coverage-v6-support-service-safety-status.c1",
+    "ai-coverage-v6-support-service-schedule.c1",
+    "ai-coverage-v6-support-service-symptom.c1"
+  ],
+  "baseline_missing_obligation_count": 662,
+  "baseline_source_root": "evals/structured_nlu/data/source",
+  "baseline_split_assignment_path": "evals/structured_nlu/data/manifests/split-assignments.v1.json",
+  "candidate_set_id": "structured-nlu-coverage-candidates-v7",
+  "coverage_candidate_schema_version": 7,
+  "generator_id": "openai-codex-coverage-candidates",
+  "human_review_required": true,
+  "official_obligation_count": 1562,
+  "predecessor_artifact_sha256": "70c8e8d6c3000d58d361d03effdd66c4d7833be9a31c09ebda75886ca6834630",
+  "predecessor_candidate_set_id": "structured-nlu-coverage-candidates-v6",
+  "profile_fingerprint": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+  "profile_id": "maeumcall-structured-nlu-v3",
+  "projected_covered_obligation_count": 959,
+  "projected_marginal_gain": 59,
+  "projected_missing_obligation_count": 603,
+  "provenance": "ai_assisted_unreviewed",
+  "suggestions": [
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-city-certificate-channel",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "change_detail->issuance_channel"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "issuance_channel->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_certificate_inquiry",
+        "current_fields": {
+          "applicant_relation": null,
+          "document_type": null,
+          "inquiry_topic": null,
+          "issuance_channel": "government24"
+        },
+        "id": "ai-coverage-v7-city-certificate-channel.c1",
+        "labels": {
+          "change_field": "issuance_channel",
+          "fields": {
+            "applicant_relation": null,
+            "document_type": null,
+            "inquiry_topic": null,
+            "issuance_channel": {
+              "accepted_values": [
+                "kiosk"
+              ]
+            }
+          },
+          "intent": "resident_certificate_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "정부24 발급 대신 무인발급기 이용으로 바꿀게요."
+      },
+      "scenario_key": "시청:주민등록 등본 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-city-certificate-channel",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "change_detail->issuance_channel"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-city-waste-quantity",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "change_detail->quantity"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "quantity->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_bulky_waste",
+        "current_fields": {
+          "item_name": null,
+          "quantity": "1개",
+          "region": null,
+          "request_topic": null
+        },
+        "id": "ai-coverage-v7-city-waste-quantity.c1",
+        "labels": {
+          "change_field": "quantity",
+          "fields": {
+            "item_name": null,
+            "quantity": {
+              "accepted_values": [
+                "2개"
+              ]
+            },
+            "region": null,
+            "request_topic": null
+          },
+          "intent": "bulky_waste_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "수량을 한 개가 아니라 두 개로 정정합니다."
+      },
+      "scenario_key": "시청:대형폐기물 배출",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-city-waste-quantity",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "change_detail->quantity"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-delivery-change-unavailable-preference",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_detail->unavailable_preference"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:주문 변경",
+          "value": "unavailable_preference->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_order_change",
+        "current_fields": {
+          "change_type": null,
+          "order_number": null,
+          "requested_change": null,
+          "unavailable_preference": "check_cancellation"
+        },
+        "id": "ai-coverage-v7-delivery-change-unavailable-preference.c1",
+        "labels": {
+          "change_field": "unavailable_preference",
+          "fields": {
+            "change_type": null,
+            "order_number": null,
+            "requested_change": null,
+            "unavailable_preference": {
+              "accepted_values": [
+                "keep_order"
+              ]
+            }
+          },
+          "intent": "delivery_order_change",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "변경이 안 되면 취소 여부를 확인하지 말고 기존 주문을 유지해 주세요."
+      },
+      "scenario_key": "배달:주문 변경",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-delivery-change-unavailable-preference",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_detail->unavailable_preference"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-absence-class",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "change_class_name->class_name"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "confirming_absence_info->change_class_name"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_absence_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-absence-class.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "absence_date": null,
+            "absence_reason": null,
+            "class_name": {
+              "accepted_values": [
+                "자료구조"
+              ]
+            },
+            "user_name": null
+          },
+          "intent": "absence_notice",
+          "user_action": "change_class_name"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "수업명은 인공지능이 아니라 자료구조입니다."
+      },
+      "scenario_key": "교수님:결석 사유 전달",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-absence-class",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "change_class_name->class_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-absence-date",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "change_absence_date->absence_date"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "correction"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "single_field"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "confirming_absence_info->change_absence_date"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_absence_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-absence-date.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "absence_date": {
+              "accepted_values": [
+                "내일"
+              ]
+            },
+            "absence_reason": null,
+            "class_name": null,
+            "user_name": null
+          },
+          "intent": "absence_notice",
+          "user_action": "change_absence_date"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "결석 날짜는 오늘이 아니라 내일입니다."
+      },
+      "scenario_key": "교수님:결석 사유 전달",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-absence-date",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "change_absence_date->absence_date"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-absence-name",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "change_user_name->user_name"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "confirming_absence_info->change_user_name"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_absence_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-absence-name.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "absence_date": null,
+            "absence_reason": null,
+            "class_name": null,
+            "user_name": {
+              "accepted_values": [
+                "김민수"
+              ]
+            }
+          },
+          "intent": "absence_notice",
+          "user_action": "change_user_name"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "학생 이름을 홍길동이 아니라 김민수로 정정합니다."
+      },
+      "scenario_key": "교수님:결석 사유 전달",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-absence-name",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "change_user_name->user_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-absence-reason",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "change_absence_reason->absence_reason"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "confirming_absence_info->change_absence_reason"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_absence_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-absence-reason.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "absence_date": null,
+            "absence_reason": {
+              "accepted_values": [
+                "병원 진료"
+              ]
+            },
+            "class_name": null,
+            "user_name": null
+          },
+          "intent": "absence_notice",
+          "user_action": "change_absence_reason"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "결석 사유를 예비군이 아니라 병원 진료로 수정하겠습니다."
+      },
+      "scenario_key": "교수님:결석 사유 전달",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-absence-reason",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:결석 사유 전달",
+          "value": "change_absence_reason->absence_reason"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-appointment-date",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:면담 예약",
+          "value": "change_date->date"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "교수님:면담 예약",
+          "value": "correction"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "교수님:면담 예약",
+          "value": "single_field"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:면담 예약",
+          "value": "confirming_info->change_date"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-appointment-date.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "appointment_purpose": null,
+            "date": {
+              "accepted_values": [
+                "다음 주 월요일"
+              ]
+            },
+            "time": null,
+            "user_name": null
+          },
+          "intent": "appointment_booking",
+          "user_action": "change_date"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "면담 날짜를 내일이 아니라 다음 주 월요일로 바꾸고 싶습니다."
+      },
+      "scenario_key": "교수님:면담 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-appointment-date",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:면담 예약",
+          "value": "change_date->date"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-appointment-name",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:면담 예약",
+          "value": "change_user_name->user_name"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:면담 예약",
+          "value": "confirming_info->change_user_name"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-appointment-name.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "appointment_purpose": null,
+            "date": null,
+            "time": null,
+            "user_name": {
+              "accepted_values": [
+                "이서연"
+              ]
+            }
+          },
+          "intent": "appointment_booking",
+          "user_action": "change_user_name"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "학생 이름은 홍길동이 아니라 이서연입니다."
+      },
+      "scenario_key": "교수님:면담 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-appointment-name",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:면담 예약",
+          "value": "change_user_name->user_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-appointment-purpose",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:면담 예약",
+          "value": "change_purpose->appointment_purpose"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:면담 예약",
+          "value": "confirming_info->change_purpose"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-appointment-purpose.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "appointment_purpose": {
+              "accepted_values": [
+                "진로 상담"
+              ]
+            },
+            "date": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "appointment_booking",
+          "user_action": "change_purpose"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "면담 목적은 과제 문의가 아니라 진로 상담입니다."
+      },
+      "scenario_key": "교수님:면담 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-appointment-purpose",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:면담 예약",
+          "value": "change_purpose->appointment_purpose"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-appointment-time",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:면담 예약",
+          "value": "change_time->time"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:면담 예약",
+          "value": "confirming_info->change_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-appointment-time.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "appointment_purpose": null,
+            "date": null,
+            "time": {
+              "accepted_values": [
+                "오후 4시"
+              ]
+            },
+            "user_name": null
+          },
+          "intent": "appointment_booking",
+          "user_action": "change_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "면담 시간을 오후 3시에서 4시로 변경해 주세요."
+      },
+      "scenario_key": "교수님:면담 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-appointment-time",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:면담 예약",
+          "value": "change_time->time"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-professor-assignment-follow-up",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:과제 문의",
+          "value": "ask_follow_up->assignment_topic"
+        },
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:과제 문의",
+          "value": "ask_follow_up->question"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "교수님:과제 문의",
+          "value": "answering_assignment_question->ask_follow_up"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "answering_assignment_question",
+        "current_fields": {},
+        "id": "ai-coverage-v7-professor-assignment-follow-up.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "assignment_topic": {
+              "accepted_values": [
+                "팀 프로젝트"
+              ]
+            },
+            "course_name": null,
+            "question": {
+              "accepted_values": [
+                "제출 형식이 PDF인지"
+              ]
+            },
+            "user_name": null
+          },
+          "intent": "assignment_inquiry",
+          "user_action": "ask_follow_up"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "multi_field"
+        ],
+        "user_message": "팀 프로젝트 과제인데 제출 형식이 PDF인지도 알려 주실 수 있나요?"
+      },
+      "scenario_key": "교수님:과제 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-professor-assignment-follow-up",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:과제 문의",
+          "value": "ask_follow_up->assignment_topic"
+        },
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "교수님:과제 문의",
+          "value": "ask_follow_up->question"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-hair-designer",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_designer->designer"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:미용실 예약",
+          "value": "confirming_info->change_designer"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-hair-designer.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": {
+              "accepted_values": [
+                "김아름"
+              ]
+            },
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_designer"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "디자이너를 박지수 선생님에서 김아름 선생님으로 바꿔 주세요."
+      },
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-hair-designer",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_designer->designer"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-hair-name",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_user_name->user_name"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:미용실 예약",
+          "value": "confirming_info->change_user_name"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-hair-name.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": null,
+            "user_name": {
+              "accepted_values": [
+                "최유진"
+              ]
+            }
+          },
+          "intent": "reservation",
+          "user_action": "change_user_name"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "예약자 이름은 김민지가 아니라 최유진입니다."
+      },
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-hair-name",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_user_name->user_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-hair-service",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_service_type->service_type"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:미용실 예약",
+          "value": "confirming_info->change_service_type"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-hair-service.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": {
+              "accepted_values": [
+                "염색"
+              ]
+            },
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_service_type"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "시술을 커트가 아니라 염색으로 변경할게요."
+      },
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-hair-service",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_service_type->service_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-hair-time",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_time->time"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:미용실 예약",
+          "value": "confirming_info->change_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-hair-time.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "designer": null,
+            "selected_time": null,
+            "service_type": null,
+            "time": {
+              "accepted_values": [
+                "오후 5시"
+              ]
+            },
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "예약 시간을 오후 2시에서 5시로 바꾸고 싶어요."
+      },
+      "scenario_key": "예약:미용실 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-hair-time",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:미용실 예약",
+          "value": "change_time->time"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-hospital-department",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:병원 예약",
+          "value": "change_department->department"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "confirming_info->change_department"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-hospital-department.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": {
+              "accepted_values": [
+                "정형외과"
+              ]
+            },
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_department"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "진료과를 내과에서 정형외과로 변경해 주세요."
+      },
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-hospital-department",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:병원 예약",
+          "value": "change_department->department"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-hospital-name",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:병원 예약",
+          "value": "change_user_name->user_name"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "confirming_info->change_user_name"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-hospital-name.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": {
+              "accepted_values": [
+                "박서준"
+              ]
+            }
+          },
+          "intent": "reservation",
+          "user_action": "change_user_name"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "예약자 이름을 홍길동에서 박서준으로 정정합니다."
+      },
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-hospital-name",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:병원 예약",
+          "value": "change_user_name->user_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-hospital-time",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:병원 예약",
+          "value": "change_time->time"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:병원 예약",
+          "value": "confirming_info->change_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-hospital-time.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "department": null,
+            "selected_time": null,
+            "time": {
+              "accepted_values": [
+                "오전 11시"
+              ]
+            },
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "진료 시간을 오전 10시가 아니라 11시로 바꿀게요."
+      },
+      "scenario_key": "예약:병원 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-hospital-time",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:병원 예약",
+          "value": "change_time->time"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-restaurant-name",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:식당 예약",
+          "value": "change_user_name->user_name"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:식당 예약",
+          "value": "confirming_info->change_user_name"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-restaurant-name.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": null,
+            "selected_time": null,
+            "time": null,
+            "user_name": {
+              "accepted_values": [
+                "윤지호"
+              ]
+            }
+          },
+          "intent": "reservation",
+          "user_action": "change_user_name"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "예약자 이름을 홍길동에서 윤지호로 수정해 주세요."
+      },
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-restaurant-name",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:식당 예약",
+          "value": "change_user_name->user_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-restaurant-party",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:식당 예약",
+          "value": "change_party_size->party_size"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:식당 예약",
+          "value": "confirming_info->change_party_size"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-restaurant-party.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": {
+              "accepted_values": [
+                "6명"
+              ]
+            },
+            "selected_time": null,
+            "time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_party_size"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "예약 인원을 다섯 명에서 여섯 명으로 바꿔 주세요."
+      },
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-restaurant-party",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:식당 예약",
+          "value": "change_party_size->party_size"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-restaurant-time",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:식당 예약",
+          "value": "change_time->time"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:식당 예약",
+          "value": "confirming_info->change_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-restaurant-time.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "party_size": null,
+            "selected_time": null,
+            "time": {
+              "accepted_values": [
+                "오후 7시"
+              ]
+            },
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "예약 시간을 오후 6시가 아니라 7시로 변경할게요."
+      },
+      "scenario_key": "예약:식당 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-restaurant-time",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:식당 예약",
+          "value": "change_time->time"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-study-duration",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_duration->duration"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "confirming_info->change_duration"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-study-duration.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": {
+              "accepted_values": [
+                "3시간"
+              ]
+            },
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_duration"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "이용 시간을 두 시간에서 세 시간으로 변경해 주세요."
+      },
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-study-duration",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_duration->duration"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-study-name",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_user_name->user_name"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "confirming_info->change_user_name"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-study-name.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": null,
+            "user_name": {
+              "accepted_values": [
+                "정하늘"
+              ]
+            }
+          },
+          "intent": "reservation",
+          "user_action": "change_user_name"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "예약자 이름은 김민수 대신 정하늘로 해 주세요."
+      },
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-study-name",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_user_name->user_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-study-party",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_party_size->party_size"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "confirming_info->change_party_size"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-study-party.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": {
+              "accepted_values": [
+                "4명"
+              ]
+            },
+            "selected_time": null,
+            "start_time": null,
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_party_size"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "이용 인원을 세 명이 아니라 네 명으로 바꿀게요."
+      },
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-study-party",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_party_size->party_size"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-reservation-study-start",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_start_time->start_time"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "confirming_info->change_start_time"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "confirming_info",
+        "current_fields": {},
+        "id": "ai-coverage-v7-reservation-study-start.c1",
+        "labels": {
+          "change_field": null,
+          "fields": {
+            "date": null,
+            "duration": null,
+            "party_size": null,
+            "selected_time": null,
+            "start_time": {
+              "accepted_values": [
+                "오후 6시"
+              ]
+            },
+            "user_name": null
+          },
+          "intent": "reservation",
+          "user_action": "change_start_time"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "시작 시간을 오후 5시에서 6시로 변경하고 싶습니다."
+      },
+      "scenario_key": "예약:스터디룸 예약",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-reservation-study-start",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "예약:스터디룸 예약",
+          "value": "change_start_time->start_time"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v7-support-plan-consent-scope",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "change_detail->consent_scope"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consent_scope->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_plan_contract",
+        "current_fields": {
+          "consent_scope": "authenticated_lookup",
+          "consultation_goal": null,
+          "current_service": null,
+          "inquiry_type": null
+        },
+        "id": "ai-coverage-v7-support-plan-consent-scope.c1",
+        "labels": {
+          "change_field": "consent_scope",
+          "fields": {
+            "consent_scope": {
+              "accepted_values": [
+                "general_guidance"
+              ]
+            },
+            "consultation_goal": null,
+            "current_service": null,
+            "inquiry_type": null
+          },
+          "intent": "plan_contract_consultation",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "개인정보 조회 동의를 취소하고 일반 안내만 받겠습니다."
+      },
+      "scenario_key": "고객센터:요금/약정 상담",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v7-support-plan-consent-scope",
+      "target_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "change_detail->consent_scope"
+        }
+      ]
+    }
+  ]
+}

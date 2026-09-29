@@ -121,7 +121,7 @@ def test_policy_v7_preserves_every_historical_policy_and_freeze_schema() -> None
     } == expected_hashes
 
 
-def test_authoring_defaults_to_v7_while_policy_v6_remains_replayable() -> None:
+def test_authoring_current_policy_rejects_v7_text_while_v6_remains_replayable() -> None:
     payload = _authoring_payload()
     message = next(iter(COVERAGE_CANDIDATE_SPECS_V6.values())).user_message
 

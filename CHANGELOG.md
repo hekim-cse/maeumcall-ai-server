@@ -11,7 +11,7 @@
 - 그룹 파일과 분리된 split 배정 원장, 작성 그룹 일대일 대조, 공식 채점 직전 split 원장 지문 재검증
 - 버전 지정 구조화 NLU 정답 작성 지침과 validation·test case·지침 지문을 공식 준비·채점 직전에 대조하는 검수 원장 계약
 - validation·test별 시나리오 태그, 이전 필드 문맥, 예약 대안시간 관계와 검수 지문이 연결된 명시적 대조 역할을 고정한 Coverage V3 프로필·1,562개 의무 목록
-- 구조화 NLU source·split·검수·contrast·Coverage V3 조합과 입력 Git blob snapshot을 고정하는 versioned freeze record V1 기반, AI-origin policy V1·V2를 각각 고정한 V2·V3 역사 형식, 일반화된 policy descriptor와 additive policy V7을 포함한 현재 V4 생성·검증 경계
+- 구조화 NLU source·split·검수·contrast·Coverage V3 조합과 입력 Git blob snapshot을 고정하는 versioned freeze record V1 기반, AI-origin policy V1·V2를 각각 고정한 V2·V3 역사 형식, 일반화된 policy descriptor와 additive policy V8을 포함한 현재 V4 생성·검증 경계
 - AI 제안을 사람 작성 골든 source와 분리하고 16개 구조화 NLU 시나리오의 미검수 hard-negative 시작 제안을 제공하는 draft sidecar 계약
 - 16개 AI 제안을 사람이 새 발화·정답·판단 근거로 다시 작성하기 위한 결정론적 검수 작업지와 계약 일치 검사
 - 16개 시나리오별 서브 에이전트 대안·판단 근거 sidecar와 불변 AI-origin V1 지문 원장 기반 NFC 전역 원문 승격 차단
@@ -27,6 +27,7 @@
 - 세 번째 투영 뒤 남은 현재 선택값 의무 34개를 구조적 최소 19건으로 모두 겨냥하는 네 번째 AI 후보 묶음·검토 작업지, 668 → 713의 provenance-neutral 진단 투영과 총 110개 원문을 누적한 AI-origin policy V5
 - 네 번째 투영 뒤 남은 출력 선택값 의무 53개를 구조적 최소 27건으로 모두 겨냥하는 다섯 번째 AI 후보 묶음·검토 작업지, 713 → 776의 provenance-neutral 진단 투영과 총 137개 원문을 누적한 AI-origin policy V6
 - 다섯 번째 투영 뒤 남은 변경 대상 의무 38개를 구조적 최소 38건으로 모두 겨냥하는 여섯 번째 AI 후보 묶음·검토 작업지, 776 → 900의 provenance-neutral 진단 투영과 총 175개 원문을 누적한 AI-origin policy V7
+- 여섯 번째 투영 뒤 남은 행동-필드 있음 의무 28개를 구조적 최소 27건으로 모두 겨냥하는 일곱 번째 AI 후보 묶음·검토 작업지, 900 → 959의 provenance-neutral 진단 투영과 총 202개 원문을 누적한 AI-origin policy V8
 - digest로 고정한 Python 3.11 다단계 이미지와 비루트·읽기 전용 핵심 컨테이너 실행 경계
 - PostgreSQL 준비 후 Alembic 일회성 적용과 API 시작을 보장하는 Compose 서비스 의존성
 - 이미지 빌드·마이그레이션·권한·HTTP 상태 계약을 실제 컨테이너에서 검증하는 `test-container` CI
