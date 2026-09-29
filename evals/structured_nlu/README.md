@@ -342,9 +342,10 @@ AI 출처라고 판별하지 않는다. `human_authored` 문자열도 실제 인
 19개까지 누적한 총 110개 원문은 `manifests/ai-origin-policy.v5.json`에 저장한다. 다섯 번째
 coverage 후보 27개까지 누적한 총 137개 원문은 `manifests/ai-origin-policy.v6.json`에 저장한다.
 여섯 번째 coverage 후보 38개까지 누적한 총 175개 원문은
-`manifests/ai-origin-policy.v7.json`에 저장한다. V1–V7 정책 지문은 각각 코드에 고정되어
-기존 파일을 바꾸면 검사가 중단되며, 현재 AuthoringGroup 차단과 Freeze Record V4는
-V7을 사용한다.
+`manifests/ai-origin-policy.v7.json`에 저장한다. 일곱 번째 coverage 후보 27개까지 누적한
+총 202개 원문은 `manifests/ai-origin-policy.v8.json`에 저장한다. V1–V8 정책 지문은 각각
+코드에 고정되어 기존 파일을 바꾸면 검사가 중단되며, 현재 AuthoringGroup 차단과
+Freeze Record V4는 V8을 사용한다.
 
 `drafts/coverage-candidates.v1.json`은 현재 development 진단에서 빠진 24개 필드의
 단일 필드 정보 제공 사례다. 20개 workflow 후보는 기존 값이 일부 채워진 collecting
@@ -384,7 +385,7 @@ policy V5 descriptor를 요구한다.
 부수적으로 관측되는 의무까지 포함한 실제 marginal gain은 63이다. 실제 사람 작성
 corpus는 계속 36건·349개 정적 관측으로 변하지 않는다. AI-origin policy V6는 이전
 110개 원문에 새 27개를 누적한 총 137개 exact NFC 원문을 관리한다. Freeze Record
-형식은 V4를 유지하고 현재 공식 경계만 policy V6 descriptor를 요구한다.
+형식은 V4를 유지했으며, 이 단계의 공식 경계는 policy V6 descriptor를 요구했다.
 
 `drafts/coverage-candidates.v6.json`은 앞선 다섯 묶음의 105개 후보를 모두 다시 투영한 뒤
 남은 `change_field` 의무 38개를 겨냥하는 여섯 번째 묶음이다. 한 case가 하나의 변경
@@ -393,8 +394,8 @@ corpus는 계속 36건·349개 정적 관측으로 변하지 않는다. AI-origi
 기존 값 교체, 일부 상태-행동과 correction 태그까지 함께 관측되어 실제 marginal gain은
 124다. 실제 사람 작성 corpus는 계속 36건·349개 정적 관측으로 변하지 않는다.
 AI-origin policy V7은 이전 137개 원문에 새 38개를 누적한 총 175개 exact NFC 원문을
-관리한다. Freeze Record 형식은 V4를 유지하고 현재 공식 경계만 policy V7 descriptor를
-요구한다.
+관리한다. Freeze Record 형식은 V4를 유지했으며, 이 단계의 공식 경계는 policy V7
+descriptor를 요구했다.
 
 `drafts/coverage-candidates.v7.json`은 앞선 여섯 묶음의 143개 후보를 모두 다시 투영한 뒤
 남은 `action_field_present` 의무 28개를 겨냥하는 일곱 번째 묶음이다. 과제 후속 질문의
