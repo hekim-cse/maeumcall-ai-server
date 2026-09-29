@@ -1,0 +1,1225 @@
+{
+  "ai_origin_policy_schema_version": 8,
+  "entries": [
+    {
+      "origin_id": "ai-coverage-v1-city-bulky-waste-quantity",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "9d647f28114deb138cd73a7d20341b113ba7c466d4ae3d3891cc1bd4b7d8f3a5"
+    },
+    {
+      "origin_id": "ai-coverage-v1-city-certificate-issuance-channel",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "e5fc70aaa5ee5a66a22580114ffcbc3e1ec51074f9df608cab9224169ba04f95"
+    },
+    {
+      "origin_id": "ai-coverage-v1-city-passport-applicant-type",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "9cd546de8a128be3d005ec6329f1b950a7f2869be69c785250f0d4317eb486b4"
+    },
+    {
+      "origin_id": "ai-coverage-v1-city-passport-application-channel",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "c11dc61aba02d3b3a580c5dd7b2e08552dcf62b07dbda0b7e3a2bff8f5b5857b"
+    },
+    {
+      "origin_id": "ai-coverage-v1-city-passport-application-type",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "d3c96e270655c73fd8ab272d94dda94bd529324b4c2ac9a1493583cd68c4572d"
+    },
+    {
+      "origin_id": "ai-coverage-v1-delivery-change-unavailable-preference",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "71fae814daeecb8e58e5e2e8016625159e429d95bdfd28302c738717f783fd51"
+    },
+    {
+      "origin_id": "ai-coverage-v1-delivery-delay-delay-detail",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "981d538be8821883089e377259df54271ade8ec88ce69cc6f94264b848fdff1f"
+    },
+    {
+      "origin_id": "ai-coverage-v1-delivery-delay-delay-resolution",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "c7ace84a032c4c14b099c4081084b5e9ff8541f3590b3c8279ccc62dcb1bfcc7"
+    },
+    {
+      "origin_id": "ai-coverage-v1-delivery-refund-evidence-status",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "481a98927022789c155cc16d413937d398a5fa1c3fe127d1fa90d93106c0a731"
+    },
+    {
+      "origin_id": "ai-coverage-v1-delivery-refund-order-number",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "b45e3b784a6b5cf5a17007ef21bbbb34482bd56ff97326a48ebecfc55685fc52"
+    },
+    {
+      "origin_id": "ai-coverage-v1-delivery-refund-resolution-preference",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "767a3f51deaf7f0a672347e7602a6a19e11e35a463b0c48362f71f64b4a3fb60"
+    },
+    {
+      "origin_id": "ai-coverage-v1-reservation-hair-salon-selected-time",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "e8c858e78a4057ebd5a9ea12a6d92f1c33d3b02d658fa8a582aee309c174ab90"
+    },
+    {
+      "origin_id": "ai-coverage-v1-reservation-hospital-selected-time",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "9e1a10ff74cbfe705a7653021b67e828c8386bf5b46d7eed51a901dfc8e76420"
+    },
+    {
+      "origin_id": "ai-coverage-v1-reservation-restaurant-selected-time",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "4e6a84eb78b19563a381d589431abcd3c2c336ae989e3869d40e4412197fe60b"
+    },
+    {
+      "origin_id": "ai-coverage-v1-reservation-study-room-selected-time",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "bf6615d96c04419f1d8828521004b51b9e0780654bd29966edba36ec55e452dd"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-network-occurred-at",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "2feb8ee6c09e5d89bdbce87067eba05370614705af3b1e64185da21b9d74428e"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-network-scope",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "009d1f157efab5f32583c5691a173e8579c8ccb50932a654c8801a9713b35ab4"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-network-service-type",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "b21132cf22dde225524e9a6fb5aaee0bb69e83ca3443a57c9f83e45bd87bdcd3"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-network-troubleshooting-done",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "d2273970e5f03153c522aa5967479c8af90fdb5a1854d9e9903a28e16b230255"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-plan-consent-scope",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "7622435148c674f7bd60c6a212666ba80bf830ce212de0ed99974395baf7fd8e"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-service-model-name",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "98a7ef9a303c10e97fd41d746147d40c4b5abf1a274dd751d7c0c2e3466ad972"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-service-occurred-at",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "397b85c2d6b4393821efca5f47ac4464804c902316eeb095af0febaf9754c2f3"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-service-safety-status",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "f39ee3f0b324160d7db59260ed3d9b0dbc6d0077297e24509a4bc7e744a3c02b"
+    },
+    {
+      "origin_id": "ai-coverage-v1-support-service-service-channel",
+      "origin_kind": "coverage_candidate",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "8f2a155943b2f4bdb4a2bbc22f7f4be4b37c0608d1585ded1f80460cfd0288dc"
+    },
+    {
+      "origin_id": "ai-coverage-v2-city-bulky-waste-quantity-clear",
+      "origin_kind": "coverage_candidate_batch_002",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "f9b819a6d4b2a3eeba713c061ce54c50f6f689bf5fdb0e4f5fd1374573953b87"
+    },
+    {
+      "origin_id": "ai-coverage-v2-city-certificate-issuance-channel-clear",
+      "origin_kind": "coverage_candidate_batch_002",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "26795e61691492ffc150ee17f182559d5766541c754c0b27a16a66f0cfb747cd"
+    },
+    {
+      "origin_id": "ai-coverage-v2-delivery-change-unavailable-preference-clear",
+      "origin_kind": "coverage_candidate_batch_002",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "97c6dd1877565a6f651b83bafd02dd85c11c0b95cc8c2d5f52d3602552a31652"
+    },
+    {
+      "origin_id": "ai-coverage-v2-support-plan-consent-scope-clear",
+      "origin_kind": "coverage_candidate_batch_002",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "35a42da4808abb5bc15149a6777fd384e0e6856789bb22e8eb9503112103cf9d"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hair-salon-unavailable-ask-other-time-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "07c34bf53a16ebe27993146fb008d389b37e3d4035e24f785404c43af5de11d1"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hair-salon-unavailable-ask-other-time-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "89b851fc44cf39bef4fd857ac2b410ff65a02ef2b5308fb6315b1650b73da18b"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hair-salon-unavailable-change-date-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "5cab0dfacca1cfca47088f69d42c934240e39fcb430753c3f33e1b96afc3607e"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hair-salon-unavailable-change-date-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "e611c8200b9f818da07bc113ae86a2c53f1795090bbb1f9cae9024ecd02fcb7c"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hair-salon-unavailable-unknown-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "e3341455d215156cc22ec38cc9e57849f5a5c537d2980badf80a2571bc5e007c"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hair-salon-unavailable-unknown-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "b0921c961f28a0d8f12b9feabe09772e75da189090808af319f9e28cecb4c3c3"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-suggest-ask-other-time-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "9760292caf8c320fa88031175d2c89aa50327fa1f1012b2badbf73b63c12f48c"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-suggest-ask-other-time-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "5b38d0c84fdbe573214905501c39119b3043ac62abfd18ca7afce6c86a59feb8"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-suggest-change-date-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "3645dc0cd180ecd595079d89071546edc1550a50b58e1e1bfa56791c37c54c8f"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-suggest-change-date-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "5646c0e41a03d075b118b1ff9055cd0d3c7ffc03eb42c1f10f8455ec412ce31e"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-suggest-select-alternative-time-selected-offer",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "e44d4d48f008a1d62142552354022b92b082e97bb33aa6e72e1ac92819191b3b"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-suggest-unknown-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "9217c58ae0debb8ffdd91b30ee0bf69ec8a42a231994d2be7b9d717c62009d74"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-suggest-unknown-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "ca5d1468dce9a57692f381ec5fd11d48e7f3e7e9e794653ce64ef3678b71ade9"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-unavailable-ask-other-time-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "654cdd8c00b2ff060dafaec5ed3d9324dad27b89f21ae556789ecc738fe93588"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-unavailable-ask-other-time-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "c3cfc752b1a4b55854b647b7b722fefaa3824a581d30bac6947044ffb6718c4f"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-unavailable-change-date-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "75f9766b0b4e8752ef566174f9fc87e3b019e47e7d661cebbbd1c6e5c4670b94"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-unavailable-change-date-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "b73feaa96103c1a2069502c344d4f9bb149ec54602ede8b99c221d3134d893a7"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-unavailable-unknown-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "41dba7dd26228e9966f3227402d6aec7f43f8b8591732f105f14ce98137ddc5e"
+    },
+    {
+      "origin_id": "ai-coverage-v3-hospital-unavailable-unknown-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "e58b79f2f7364ebaef42502b55592d425629c7c4178196d25a2393b570c48138"
+    },
+    {
+      "origin_id": "ai-coverage-v3-restaurant-unavailable-ask-other-time-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "37692c66ca7e2b7099976cdc67077994c85394fdee4329689d04c07012441feb"
+    },
+    {
+      "origin_id": "ai-coverage-v3-restaurant-unavailable-ask-other-time-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "894b61c567cc0b84fe6eb1abaf2db9d9cd05327db506ae50edd870082e05891e"
+    },
+    {
+      "origin_id": "ai-coverage-v3-restaurant-unavailable-change-date-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "91d8f0964cbc02ffa058ef2a0adeed657e821d4a3b27a1812a170a567d82d34f"
+    },
+    {
+      "origin_id": "ai-coverage-v3-restaurant-unavailable-change-date-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "ba7351f739b08e2b2eb2581adc2001425ce03f9f336d1d94b4bae4c41bcc14da"
+    },
+    {
+      "origin_id": "ai-coverage-v3-restaurant-unavailable-unknown-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "6351f888889d82ddc67abc5bfbc13a73f164682029d5e9086e97fe6b8218cb92"
+    },
+    {
+      "origin_id": "ai-coverage-v3-restaurant-unavailable-unknown-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "f0f1276fe91053c46619c042edd000e2a29c7ae12c7ce51523c24132b5ea853d"
+    },
+    {
+      "origin_id": "ai-coverage-v3-study-room-unavailable-ask-other-time-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "ff8146379aca6aab08be3d48185fff1477d578c3231dbcf3401da57b00aed0f4"
+    },
+    {
+      "origin_id": "ai-coverage-v3-study-room-unavailable-ask-other-time-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "d8ec3d51bcaae464fac6b0524a848680d1310e0e9f1ce97ef9c32e9d4cdcec63"
+    },
+    {
+      "origin_id": "ai-coverage-v3-study-room-unavailable-change-date-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "6f8c89b1078642030fb16edee2a8b3a3585f1b0614caea13bcd5c3e2f7de84da"
+    },
+    {
+      "origin_id": "ai-coverage-v3-study-room-unavailable-change-date-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "0d42ed9ded9a95ca87e9600e2a0640a306294e2446d61bd9efa76f7fae1e19f6"
+    },
+    {
+      "origin_id": "ai-coverage-v3-study-room-unavailable-unknown-no-offers",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "723329bdc52adfb310d82adf62a33627b4d8b74b4589b607eada62e164a0dbf1"
+    },
+    {
+      "origin_id": "ai-coverage-v3-study-room-unavailable-unknown-offers-unselected",
+      "origin_kind": "coverage_candidate_batch_003",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "6c9f3d4d5f20f01ccd656a41227c80c8f543e539e8a95874f890ca4f873b003f"
+    },
+    {
+      "origin_id": "ai-coverage-v4-city-certificate-documents-bundle",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "cc655710bfe028941891f3276647bdc45b5ae5bafec14cd2c0a90064da3fc7f2"
+    },
+    {
+      "origin_id": "ai-coverage-v4-city-certificate-eligibility-bundle",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "8fc2c2dd21940e9f5ce658a72a3dd1c4119b1909b81fa40baf3e68f9d5f6fb79"
+    },
+    {
+      "origin_id": "ai-coverage-v4-city-certificate-fee-in-person",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "2b4bc088621e9abc22a95b13d419049f0452f4cb3e8068dedc541d1d48cbec0c"
+    },
+    {
+      "origin_id": "ai-coverage-v4-city-passport-office-bundle",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "f41356566150b4dc84f48346b1f1f93a9e3838a0fa13b2545984aa3f4d077928"
+    },
+    {
+      "origin_id": "ai-coverage-v4-city-passport-processing-channel",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "b6524df63797f87e14d4a373dc18e383521f2b55fbd7729f93153d5a633e278e"
+    },
+    {
+      "origin_id": "ai-coverage-v4-city-waste-collection",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "7ba9e97469275b1ffa1bb2202b5abcd8ac1363d0d908719640af054af9e068e5"
+    },
+    {
+      "origin_id": "ai-coverage-v4-city-waste-fee",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "0d56cca2e9775d8d7be68a9a688a05b6520f929608d16af6182675b7308a5432"
+    },
+    {
+      "origin_id": "ai-coverage-v4-city-waste-place",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "3277584541369199416f059169e6be4b89598b3a1b7fd840748f36e0af5fef2a"
+    },
+    {
+      "origin_id": "ai-coverage-v4-delivery-change-address-cancel",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "5d7ec5a6aefd51fffa954c46f910f0a337a997b28f39db0ce153d2e7e26c014f"
+    },
+    {
+      "origin_id": "ai-coverage-v4-delivery-change-menu-option-keep",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "39530920326a24705f2f70299f30e0db18a0884ab568f52f688916f46a3e08d9"
+    },
+    {
+      "origin_id": "ai-coverage-v4-delivery-change-menu-quantity",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "9c305e575d0f905040f7581236d7709c824ff3f6e7369406749f55a8e42b1018"
+    },
+    {
+      "origin_id": "ai-coverage-v4-delivery-delay-cancel-estimated",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "fe22fdf7c3e6cb57d41b27a0e64f5f5770270280330971a5f63cb84bd1b6205f"
+    },
+    {
+      "origin_id": "ai-coverage-v4-delivery-delay-wait",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "118a8df0ce7801549f7b94e0fe493e3c028bd903e56155a83f98e73c8d6c731e"
+    },
+    {
+      "origin_id": "ai-coverage-v4-delivery-refund-wrong-refund",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "c56d812201ce2704f767cc9a4cabf5c0e8f644fa7d9078f89f1bcfd39ef2cd0c"
+    },
+    {
+      "origin_id": "ai-coverage-v4-support-network-wifi-multiple",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "47e5fb24db924d71d77befb604948294db688281a34ce460f0802a9355b864d0"
+    },
+    {
+      "origin_id": "ai-coverage-v4-support-plan-contract-expiry-general",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "2a21b814f36402e4f2ed11c5824ddab4d70ed5e2ff9ee996993de40cd055ce51"
+    },
+    {
+      "origin_id": "ai-coverage-v4-support-plan-discount",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "f945bbc28488e598e4ef06e3451425937e1a802d0db7b5d542d390fe7f587751"
+    },
+    {
+      "origin_id": "ai-coverage-v4-support-plan-plan-change",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "9311af1587bfb48b301482e5ae85bc5afb9f41b66aa76575b9383af39518101a"
+    },
+    {
+      "origin_id": "ai-coverage-v4-support-service-safety-visit",
+      "origin_kind": "coverage_candidate_batch_004",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "1d88b99829e4fa97840b131a9f4d93270ec8425894cb87f2e9774234b58265e4"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-certificate-extract-representative-documents-in-person",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "3b480f76afa9c91da0410b907b292f26105096e47c51d374e670fdc7aefd05ff"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-certificate-fee",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "4074fc3c7c15e37e30df7e20f85f03fc5ace64ca40781824fe36a3cff67a9ec2"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-certificate-household-kiosk-eligibility",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "4f09c4c1f78d68a607bf0e2a7fd8546d5461ce89edc8286d85eff8fd5c0e616f"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-passport-first-legal-documents-in-person",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "0c481a8b500715d0be5eeec29eb64377aeff9a86b71bf0d2c5f74aee730928a4"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-passport-office",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "3dedb83c2136ef9713c050f45397d2942e429806353397c53e1811fe126423bb"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-passport-online-eligibility",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "1630fc37715dbc527aa025ebcf8866cfaf52302efc501a52af5d981651dca102"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-passport-reissue-minor-fee-overseas",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "04615756980e4a9865843bda7be3d36b9455051aa4b0febcaf952242339cc16f"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-waste-collection",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "88e016d35edf5d0c5f444d6dcdc9ebf655cacb2d49248bfd00e7ace9e801a2f8"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-waste-fee",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "223aa59370c6a27ed3e9a82f9661543d008845996d65946e33f36ce8c4a4b5c7"
+    },
+    {
+      "origin_id": "ai-coverage-v5-city-waste-place-schedule",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "de9d68fa67eecf2fe69396f69a1a2d176fe781c81325e242b9afbf7222081a0f"
+    },
+    {
+      "origin_id": "ai-coverage-v5-delivery-change-address-keep",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "4ddfa9cb7991d3557492230322575e650e2e5892e0bcecba66be9503a86f7e90"
+    },
+    {
+      "origin_id": "ai-coverage-v5-delivery-change-contact-cancel",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "a7432ae10bee120d851f330b9ee90946453f19d69eae8114761ebdae9c9e8f7a"
+    },
+    {
+      "origin_id": "ai-coverage-v5-delivery-change-menu-option",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "69a59f69703e5f09b5b4f4aa3ea7a980dcdc7afe98d5902fecadb3efe4754056"
+    },
+    {
+      "origin_id": "ai-coverage-v5-delivery-delay-location-wait",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "70fa4864f7cf7ac9b31dd45567c451ad08d237144e3fb7193656241180a59dc2"
+    },
+    {
+      "origin_id": "ai-coverage-v5-delivery-delay-reason-cancel",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "848c2b9a6630cecf1aa17d63a7ab071b1559916da5bdfa38e9396267f21eedd4"
+    },
+    {
+      "origin_id": "ai-coverage-v5-delivery-refund-missing-unavailable-redelivery",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "a5c3f0c0ddf5e3381976a79f1b166f0f2b3452e7a05e58279ad2a1361a9ff353"
+    },
+    {
+      "origin_id": "ai-coverage-v5-delivery-refund-not-received-refund",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "f7f51c34ed05ed8c120e0ac820e51c9bbf90fcca891de767008f8771967b7d05"
+    },
+    {
+      "origin_id": "ai-coverage-v5-delivery-refund-wrong-item",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "8704e9315f6386ddd49e2f501fedefdd99a2d1113ec654277ef52609ba149ec0"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-network-voice-multiple-agent",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "3e7cfeda42afed1c23de918b9d8e927e59dbb99f47280daf9fd7fcafbfec7bea"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-network-wifi-single-remote",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "0f4e68d24bc48748e0fdd87e47ab14714e6de815d6bc5d87a6a93310922f57fd"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-network-wired-location-service",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "406e1c096df10cd6db2b3d64ae8b7de8d5b005b1d4abd236fbdd796f0f7b90ce"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-plan-billing-authenticated",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "3a7c07a5d36c75557355e165f5f7c728fd92d12cf527bac62bbe9e5f82d4bf02"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-plan-contract-general",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "ef3c28a9ce62fafd26476172d32ccddf2f62de77b282b79499cc57a537a6c399"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-plan-discount",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "29c0039b63d51c3e7c658950cb527d9c6e5faaee2d78bb0369876283996d1564"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-service-parcel",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "48150d73bb2f1488e721e6e2bb6fbab50cae3e0d60c7d9f071cd7ef253c80c8d"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-service-safety-onsite",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "3dfbb8fa36f9e0f2175b6eb51b2f8c38c96d01d9c8725c6e41f658945164d72a"
+    },
+    {
+      "origin_id": "ai-coverage-v5-support-service-visit",
+      "origin_kind": "coverage_candidate_batch_005",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "2e88333dc095b36701b1ff58746522216ca06f6cd4144869cc7c2564bf35c03a"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-certificate-document-type",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "230e5a3b3a928f271cf28a1f755d74a3a04103d368299ac02cd03692a561c50c"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-certificate-relation",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "62b89e1684d43a2599c636c164ec5812604b45d1d7aea7c3d714d1eef3fdb2d1"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-certificate-topic",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "e969135e03ba59deb5f4ed38ecde46b356b5d8f74f71f045849910f4dd6eea73"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-passport-applicant-type",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "3c73d7cac666513c7006518269cbf32fe5cfbbeaf89ae02c81ecca9e9f1458f9"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-passport-application-type",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "112c7c717e0cbac77b02358fa1a1eb6fb643c48d7c8d52df14d12623715c977f"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-passport-channel",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "1d3302db540442cb23cfb300cbfef6326a2c054067e062a7f1b712e35d125f93"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-passport-topic",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "6ee0b64df39577b445b996d494960eeef9ab9a182ebe55f09bf764bb4a0b9c0d"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-waste-item",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "8b69823c389d34dc45e100b158bfb35519bd6c2d08a6d9438304364102e0dcc3"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-waste-region",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "195e2d888ada7f42033a73cd3b7effc44ab98c7e22a8446f577f1aa4805d54cd"
+    },
+    {
+      "origin_id": "ai-coverage-v6-city-waste-topic",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "4c45f79bc869f875f0e6571ca9c71530f63269041fdca8027842a714d06613e1"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-change-order-number",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "084a1584402d87d08fb100d6e5136927d91a1f86f107452b2fe3f5af72d6d43c"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-change-request",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "1e799d0d8b5371a1b32b03246722eb1dd7b43aef15aff398365bfc8271f54deb"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-change-type",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "4e9c1a3e94af328c852e931a956b1bbfa28951138c33668d374aae90c6e97ae6"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-delay-detail",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "c5d3685c21ccd4cddfd9a9cffe7e785f164023e03423475c1103a674658da7ba"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-delay-goal",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "5057bec6ff0d090cafc9aff6439db747a7424737181d8d4394ff4e97b4d1628c"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-delay-order-number",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "5553eafd717dbaa47f42d3e7be06d8f6d20d654f3b878ae4e552bea2a246e136"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-delay-resolution",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "871f55ebff173024976d70bf0f3e5661f62e13d6a7ade52d64381fe102722cef"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-refund-detail",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "95262e7fc2406a602143bdcad34cc693d600d8733d30f66c6b06e5e5f30e9cde"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-refund-evidence",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "4ad2de07c67f1f887ee24cbd89f7ab69decb47139c531de24b42cef2b635f710"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-refund-issue-type",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "98691749ed70b583b840593d49ce2ddb752c24a7982675d6e78abf3f23b2d7dc"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-refund-order-number",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "b86551f6acbfe407d626dd5ad8b4b0aa097ad1d157bcd312fc3be9b6721eedf1"
+    },
+    {
+      "origin_id": "ai-coverage-v6-delivery-refund-resolution",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "d059c6ab1ee90786757227a6aa9c72a472abf3db9ea2df9218ec590d00fcf8cb"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-network-next-action",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "1411b3744195b2ed42d08003d7b73a9c713e825e21845c770016eac87159d76d"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-network-occurred-at",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "e480870fbaadc13dca59ba999d46dc692a75c4aa2bbc417165953f78e4866823"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-network-scope",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "bec013de3d4590c87044ae73c4c8072eb34958e229e414cf8ce270509960e661"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-network-service-type",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "4e6364a9db1b00187eabc1f25494ad65e3b68fdf642801c1ac732eea3d12a291"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-network-symptom",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "c49c67b375233a53c13cee59347f487b51e1916b8569f53f99e2bc20f605bd92"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-network-troubleshooting",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "9fefb96c8e5962ab9b482b300624c27a97916ea5180f1a9910ab244c5a49a949"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-plan-current-service",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "8a70790701d0318ae7696dfae310d099c2ee5ca1114d337114853f059e24e99b"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-plan-goal",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "3385567b6fdf5e5e5fd6fe2a5cfb7d45355daaba8cb63dd674aad9e6bf02644b"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-plan-inquiry-type",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "542f4277e41da7becf993e6d4b86f6ecd63472663f77a74123c4559f29d800bb"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-service-channel",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "6f2c8ef9d24bb24bc488acccf3d2a1aac60b31d069bf6d7632bc8247afdf43fb"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-service-model-name",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "fbb7dbaf0da302a83455ad0668bd6cf91826578eb47b3f07eb9ae96471a3b855"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-service-occurred-at",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "1c3d24b7642508d4e13acbe6ec74c4278463e916aaedb73eb6739f2497421422"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-service-product-type",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "9e5c33f62fd1faa1d8f2e1de3e2a767d8650d2b44519c862036f68428be9e1fc"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-service-safety-status",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "716a6bcf33f2c3bc0bc3d8d47683ad6b3163eba1e32f23edaa2c4c5938e5da14"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-service-schedule",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "7fc167e4fe04398012cfad19fadec981909d518a59a16cf6bfc61f6b08fe9bd4"
+    },
+    {
+      "origin_id": "ai-coverage-v6-support-service-symptom",
+      "origin_kind": "coverage_candidate_batch_006",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "c1e8a2684bce5e711a2d27eaa45e888f24785885a359093852668c41173139a5"
+    },
+    {
+      "origin_id": "ai-coverage-v7-city-certificate-channel",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "4009683b414b8b9fcd2e341d14c2ef19b91cecd5dd23360625529b040656e1b0"
+    },
+    {
+      "origin_id": "ai-coverage-v7-city-waste-quantity",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "d304153ec616798f051ba679ab32bfd66041600b7cad8562422f8c2db756142c"
+    },
+    {
+      "origin_id": "ai-coverage-v7-delivery-change-unavailable-preference",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "22971e1ded132222210028d2df8fd3cfb8ba610a19774a9777158d1e5846e9f1"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-absence-class",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:결석 사유 전달",
+      "text_fingerprint": "087f9010b8a4836fe14573de61ece2505d471f9bed110adbcfce1ed2b68c1db0"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-absence-date",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:결석 사유 전달",
+      "text_fingerprint": "6e81c44d297afd7ef2592bad10087b4f6f0a0f32227c4c095268400e81744a94"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-absence-name",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:결석 사유 전달",
+      "text_fingerprint": "e4192d40d1e0f2cdc9924f3034cd7d72e93b20312bfabb56769c9261b19211d4"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-absence-reason",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:결석 사유 전달",
+      "text_fingerprint": "eea8eb1af8a003dcd76aed67ea7034d06ce333da8f83694dbc1154a00db71b5c"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-appointment-date",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:면담 예약",
+      "text_fingerprint": "15b9a67099b3104b207e18b235c20666dde3f03dab46b4b876d47191e8a5179e"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-appointment-name",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:면담 예약",
+      "text_fingerprint": "74f1763b2e7bfec1a74129312613d9a81bc7eac663a203cca8444ae933daa4e7"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-appointment-purpose",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:면담 예약",
+      "text_fingerprint": "91ed275f34038874c515c463d10c2c96a7030feb172f0801aba83cf8dca8ae98"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-appointment-time",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:면담 예약",
+      "text_fingerprint": "2278389cf7ea1006cdd79f0c2bbb941c65ba703ae8efd4d1c9f1668fea873833"
+    },
+    {
+      "origin_id": "ai-coverage-v7-professor-assignment-follow-up",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "교수님:과제 문의",
+      "text_fingerprint": "d8f3d30a73a0d79d0959f6367d6f9a3ba4739d8ff9a375ed308f89b2dcfbbe77"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-hair-designer",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "248e99ad15b64621e1601760341f4f256aac0ecccde4f79ef1619a3c97beb4d9"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-hair-name",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "15fd8874e4543b9c227eca7d98dcc8bd6f188573280b02c297b974a3e26d0073"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-hair-service",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "fb6a3be3b9b7f331ab17de4698100f6256841413f0caeef9ce90168a3c53c1e9"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-hair-time",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "ca151b3b52089dc8fd742cdb125f063c29bf78a7fcd9cf41f331ad0ea694a040"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-hospital-department",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "01ecb7531db5b14473ff1f87799bb76f02b36db1021fc0bf447c612f806f81c4"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-hospital-name",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "2301549369b40fd0a12b2d3b18e9af4a57957cdc8b5f3fdaf318be0dcfba2167"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-hospital-time",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "fcd357bf5bfd8437370cf97f81a5c117f5cdbd32b431853e76a0552c5a38118d"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-restaurant-name",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "d9497e898ffd22080cbb67c3a725fe79a3619007bd7335d0a881e9b00a6d079d"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-restaurant-party",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "6cf28831b2098cdb6f5907eed2f01c9f88921a1b1e6485033f447ad27ea59c17"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-restaurant-time",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "2a8b4201b3039d8e57f8a6d2b0d6d681f76ed45d172739568a188fa280e6a7fa"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-study-duration",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "3226d9214d7be3de154588a9e1863bb4aa068f44d0faf5b9fdaf0fc04f503e2b"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-study-name",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "3d379eeda7adfbe2c5d33250cfa7a8f650c91bfde6d10605b8e8b63b7a6104c9"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-study-party",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "aa747269234906255bfddd6dde0cd0ace841a60b1d2b00e88f603ea3400b9c48"
+    },
+    {
+      "origin_id": "ai-coverage-v7-reservation-study-start",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "38bdb4386ee0b254d59fd4d93dac952a76b22c67d840d5bdaadcf1fb75b873b1"
+    },
+    {
+      "origin_id": "ai-coverage-v7-support-plan-consent-scope",
+      "origin_kind": "coverage_candidate_batch_007",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "bcfd3b2dde5866cc471d1a6bbce0427f4fcf9b82d241b93b72cc72fef8681c6d"
+    },
+    {
+      "origin_id": "ai-seed-city-bulky-waste",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "60624453726aedd60adebd4467d987d5cdadfd58bbc759c23767ad39dfc99b0d"
+    },
+    {
+      "origin_id": "ai-seed-city-certificate",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "2722314fd2d37e11c4c3db4e82daf8ed8ce22d3a39f8d57b17af56752e20254e"
+    },
+    {
+      "origin_id": "ai-seed-city-passport",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "e1002d4cbca89dd820ff9576758e84ab8ff40c651615a5126529cd0fcfc25f06"
+    },
+    {
+      "origin_id": "ai-seed-delivery-change",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "2ad418a1466ed90173397e7e459e03189ef35c7eec452f633368c8b1739c964b"
+    },
+    {
+      "origin_id": "ai-seed-delivery-delay",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "870bba587f2f5aac20f9aedeefe2a6aa2232446426489448c24bc30214058a80"
+    },
+    {
+      "origin_id": "ai-seed-delivery-refund",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "44c48850b43c8f67a2d5e283d687d90f033316382b455a50b935c70f476369c4"
+    },
+    {
+      "origin_id": "ai-seed-hair-salon",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "1e159ac48a8d349a9b7af1176922964e621bb2130eda4d9514ae0e9e416068d3"
+    },
+    {
+      "origin_id": "ai-seed-hospital",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "b7286631a1f92f1eb318ea5e2d6f9bfc983fd6f92ebd517c282c6d3e36f9afa8"
+    },
+    {
+      "origin_id": "ai-seed-professor-absence",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "교수님:결석 사유 전달",
+      "text_fingerprint": "196c8d1de3f59a5fb48974e70d1c44cee44096f494e93149c4377054713c6c3a"
+    },
+    {
+      "origin_id": "ai-seed-professor-appointment",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "교수님:면담 예약",
+      "text_fingerprint": "de6eebd1351d4e61185149a4a06b78f29084850f16e0a6d5e8d3537919e9a1d9"
+    },
+    {
+      "origin_id": "ai-seed-professor-assignment",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "교수님:과제 문의",
+      "text_fingerprint": "fd11425fd2983a783466314b57db1d21d8bde2914560a7a9e714098e64c6f6fe"
+    },
+    {
+      "origin_id": "ai-seed-restaurant",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "dfa5d059302dfc4d682ed1a9539b402561c0ac500460e6fad2e5abbe61c4ae38"
+    },
+    {
+      "origin_id": "ai-seed-study-room",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "9d5f6990251b780b66b8c23c6e6788ffa0b5ed747859bd2fd0905dc0617628b4"
+    },
+    {
+      "origin_id": "ai-seed-support-network",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "24512ad22cafa0b91db8fad4bf0d54a7a2aa37dfff33885fb92a25813b2dc250"
+    },
+    {
+      "origin_id": "ai-seed-support-plan",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "0713405ecf907d0abe2e428a11ec11e65bf4ae0c75c07a81e0e18cfcae2152cb"
+    },
+    {
+      "origin_id": "ai-seed-support-service",
+      "origin_kind": "bootstrap_seed",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "5222dfbd0be231bac2520d501d171d15d5d5718899c646f17b69edefa9e631d6"
+    },
+    {
+      "origin_id": "ai-subagent-city-bulky-waste",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "시청:대형폐기물 배출",
+      "text_fingerprint": "3ad2e23086d19224a1cadb2c7b3f946488bee2ff9e51fe26c422f3cb627d629c"
+    },
+    {
+      "origin_id": "ai-subagent-city-certificate",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "text_fingerprint": "2382f5db27b3c9c6ea5ef8e9141baffe633643f411a503f2e22cd0e25ba23a2a"
+    },
+    {
+      "origin_id": "ai-subagent-city-passport",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "시청:여권 발급 문의",
+      "text_fingerprint": "c435df4a9a489976936eb85cd46ee32cef2ae407b78a8b12f91775966ce2ac8e"
+    },
+    {
+      "origin_id": "ai-subagent-delivery-change",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "배달:주문 변경",
+      "text_fingerprint": "4fb05d88b87efa2b4bace68bf485aab274b570fcb344e10cd3634a4f54e63954"
+    },
+    {
+      "origin_id": "ai-subagent-delivery-delay",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "배달:배달 지연 문의",
+      "text_fingerprint": "c1b62e0cb08d0971a11dd748969785453490d3e2bdd0fbd426ca0b9516076c4c"
+    },
+    {
+      "origin_id": "ai-subagent-delivery-refund",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "배달:환불/재배달 문의",
+      "text_fingerprint": "f5e271cf66d279a5b1b9b03f87382ac5819afc4d303f6588955eb6db110ff987"
+    },
+    {
+      "origin_id": "ai-subagent-hair-salon",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "예약:미용실 예약",
+      "text_fingerprint": "7ca3046d2857a12e5b8b6fb90b804d8a91b12a587de792843a21650647d7d24c"
+    },
+    {
+      "origin_id": "ai-subagent-hospital",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "예약:병원 예약",
+      "text_fingerprint": "9f98a6c46b50474079abe76d43ed294e85a1a0d13bf13237cfd555d366a9fa8b"
+    },
+    {
+      "origin_id": "ai-subagent-professor-absence",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "교수님:결석 사유 전달",
+      "text_fingerprint": "ce21685a0ea40ed7daaa3020baefa448ce60b83025a1821cfc02fc7bed4dc21b"
+    },
+    {
+      "origin_id": "ai-subagent-professor-appointment",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "교수님:면담 예약",
+      "text_fingerprint": "b18a1bfb6af8d1b554d043f9090c9d2f347cad2f246f7a0f7027171c1783c8cd"
+    },
+    {
+      "origin_id": "ai-subagent-professor-assignment",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "교수님:과제 문의",
+      "text_fingerprint": "cc0933e65c3f4bd998e61f5a14816d30a6f513b17200664f3dc6e0f6bbc1f994"
+    },
+    {
+      "origin_id": "ai-subagent-restaurant",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "예약:식당 예약",
+      "text_fingerprint": "2e0c814422c840c227cf951b5cbcd1c253300b57ce850b2f60a6b29c064d0489"
+    },
+    {
+      "origin_id": "ai-subagent-study-room",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "예약:스터디룸 예약",
+      "text_fingerprint": "e7d6543db86b5a7e76e0698086ec2f69888a3ba8a2f275a112c88f32e5d1ae49"
+    },
+    {
+      "origin_id": "ai-subagent-support-network",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "text_fingerprint": "cba0da3cb084cac4e5f1646f2bcaebb4151deb0aba3a0b46a47888fd6cca59f5"
+    },
+    {
+      "origin_id": "ai-subagent-support-plan",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "text_fingerprint": "a750f11da05693256ba09c7d8fcf02f264a261d38a1cc3b09ea419946a6178aa"
+    },
+    {
+      "origin_id": "ai-subagent-support-service",
+      "origin_kind": "subagent_candidate",
+      "scenario_key": "고객센터:a/s 접수",
+      "text_fingerprint": "1b47ece4d400db592be11f85117584a93d9922630e323c7672b5d50575e05ab1"
+    }
+  ],
+  "policy_fingerprint": "61e28153e776a941075ca9006b022832d609045b4735a4996d3673a36f6b4e58",
+  "policy_id": "maeumcall-structured-nlu-ai-origin-policy-v8",
+  "reserved_id_prefixes": [
+    "ai-coverage-",
+    "ai-seed-",
+    "ai-subagent-"
+  ],
+  "text_fingerprint_algorithm": "nfc-utf8-sha256-v1"
+}
