@@ -129,6 +129,12 @@ def test_v6_artifacts_are_deterministic_and_bind_v5() -> None:
             "change_field", "not_a_field"
         ),
         lambda payload: payload.__setitem__("projected_marginal_gain", 123),
+        lambda payload: payload["suggestions"][0]["target_obligations"][0].__setitem__(
+            "dimension", "not_a_dimension"
+        ),
+        lambda payload: payload["suggestions"][0]["proposed_case"].__setitem__(
+            "user_message", "   "
+        ),
     ],
 )
 def test_v6_rejects_manifest_drift(mutate) -> None:
