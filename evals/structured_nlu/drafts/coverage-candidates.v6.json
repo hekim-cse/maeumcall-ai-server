@@ -1,0 +1,2614 @@
+{
+  "automatic_promotion_allowed": false,
+  "baseline_case_count": 36,
+  "baseline_corpus_fingerprint": "246e22b0d0b83b5ee0619f6ade5629c52fecb07e3b450f477efd2317da5e5ca7",
+  "baseline_covered_obligation_count": 776,
+  "baseline_diagnostic_case_ids": [
+    "ai-coverage-v1-city-bulky-waste-quantity.c1",
+    "ai-coverage-v1-city-certificate-issuance-channel.c1",
+    "ai-coverage-v1-city-passport-applicant-type.c1",
+    "ai-coverage-v1-city-passport-application-channel.c1",
+    "ai-coverage-v1-city-passport-application-type.c1",
+    "ai-coverage-v1-delivery-change-unavailable-preference.c1",
+    "ai-coverage-v1-delivery-delay-delay-detail.c1",
+    "ai-coverage-v1-delivery-delay-delay-resolution.c1",
+    "ai-coverage-v1-delivery-refund-evidence-status.c1",
+    "ai-coverage-v1-delivery-refund-order-number.c1",
+    "ai-coverage-v1-delivery-refund-resolution-preference.c1",
+    "ai-coverage-v1-reservation-hair-salon-selected-time.c1",
+    "ai-coverage-v1-reservation-hospital-selected-time.c1",
+    "ai-coverage-v1-reservation-restaurant-selected-time.c1",
+    "ai-coverage-v1-reservation-study-room-selected-time.c1",
+    "ai-coverage-v1-support-network-occurred-at.c1",
+    "ai-coverage-v1-support-network-scope.c1",
+    "ai-coverage-v1-support-network-service-type.c1",
+    "ai-coverage-v1-support-network-troubleshooting-done.c1",
+    "ai-coverage-v1-support-plan-consent-scope.c1",
+    "ai-coverage-v1-support-service-model-name.c1",
+    "ai-coverage-v1-support-service-occurred-at.c1",
+    "ai-coverage-v1-support-service-safety-status.c1",
+    "ai-coverage-v1-support-service-service-channel.c1",
+    "ai-coverage-v2-city-bulky-waste-quantity-clear.c1",
+    "ai-coverage-v2-city-certificate-issuance-channel-clear.c1",
+    "ai-coverage-v2-delivery-change-unavailable-preference-clear.c1",
+    "ai-coverage-v2-support-plan-consent-scope-clear.c1",
+    "ai-coverage-v3-hair-salon-unavailable-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-hair-salon-unavailable-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-hair-salon-unavailable-change-date-no-offers.c1",
+    "ai-coverage-v3-hair-salon-unavailable-change-date-offers-unselected.c1",
+    "ai-coverage-v3-hair-salon-unavailable-unknown-no-offers.c1",
+    "ai-coverage-v3-hair-salon-unavailable-unknown-offers-unselected.c1",
+    "ai-coverage-v3-hospital-suggest-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-hospital-suggest-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-hospital-suggest-change-date-no-offers.c1",
+    "ai-coverage-v3-hospital-suggest-change-date-offers-unselected.c1",
+    "ai-coverage-v3-hospital-suggest-select-alternative-time-selected-offer.c1",
+    "ai-coverage-v3-hospital-suggest-unknown-no-offers.c1",
+    "ai-coverage-v3-hospital-suggest-unknown-offers-unselected.c1",
+    "ai-coverage-v3-hospital-unavailable-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-hospital-unavailable-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-hospital-unavailable-change-date-no-offers.c1",
+    "ai-coverage-v3-hospital-unavailable-change-date-offers-unselected.c1",
+    "ai-coverage-v3-hospital-unavailable-unknown-no-offers.c1",
+    "ai-coverage-v3-hospital-unavailable-unknown-offers-unselected.c1",
+    "ai-coverage-v3-restaurant-unavailable-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-restaurant-unavailable-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-restaurant-unavailable-change-date-no-offers.c1",
+    "ai-coverage-v3-restaurant-unavailable-change-date-offers-unselected.c1",
+    "ai-coverage-v3-restaurant-unavailable-unknown-no-offers.c1",
+    "ai-coverage-v3-restaurant-unavailable-unknown-offers-unselected.c1",
+    "ai-coverage-v3-study-room-unavailable-ask-other-time-no-offers.c1",
+    "ai-coverage-v3-study-room-unavailable-ask-other-time-offers-unselected.c1",
+    "ai-coverage-v3-study-room-unavailable-change-date-no-offers.c1",
+    "ai-coverage-v3-study-room-unavailable-change-date-offers-unselected.c1",
+    "ai-coverage-v3-study-room-unavailable-unknown-no-offers.c1",
+    "ai-coverage-v3-study-room-unavailable-unknown-offers-unselected.c1",
+    "ai-coverage-v4-city-certificate-documents-bundle.c1",
+    "ai-coverage-v4-city-certificate-eligibility-bundle.c1",
+    "ai-coverage-v4-city-certificate-fee-in-person.c1",
+    "ai-coverage-v4-city-passport-office-bundle.c1",
+    "ai-coverage-v4-city-passport-processing-channel.c1",
+    "ai-coverage-v4-city-waste-collection.c1",
+    "ai-coverage-v4-city-waste-fee.c1",
+    "ai-coverage-v4-city-waste-place.c1",
+    "ai-coverage-v4-delivery-change-address-cancel.c1",
+    "ai-coverage-v4-delivery-change-menu-option-keep.c1",
+    "ai-coverage-v4-delivery-change-menu-quantity.c1",
+    "ai-coverage-v4-delivery-delay-cancel-estimated.c1",
+    "ai-coverage-v4-delivery-delay-wait.c1",
+    "ai-coverage-v4-delivery-refund-wrong-refund.c1",
+    "ai-coverage-v4-support-network-wifi-multiple.c1",
+    "ai-coverage-v4-support-plan-contract-expiry-general.c1",
+    "ai-coverage-v4-support-plan-discount.c1",
+    "ai-coverage-v4-support-plan-plan-change.c1",
+    "ai-coverage-v4-support-service-safety-visit.c1",
+    "ai-coverage-v5-city-certificate-extract-representative-documents-in-person.c1",
+    "ai-coverage-v5-city-certificate-fee.c1",
+    "ai-coverage-v5-city-certificate-household-kiosk-eligibility.c1",
+    "ai-coverage-v5-city-passport-first-legal-documents-in-person.c1",
+    "ai-coverage-v5-city-passport-office.c1",
+    "ai-coverage-v5-city-passport-online-eligibility.c1",
+    "ai-coverage-v5-city-passport-reissue-minor-fee-overseas.c1",
+    "ai-coverage-v5-city-waste-collection.c1",
+    "ai-coverage-v5-city-waste-fee.c1",
+    "ai-coverage-v5-city-waste-place-schedule.c1",
+    "ai-coverage-v5-delivery-change-address-keep.c1",
+    "ai-coverage-v5-delivery-change-contact-cancel.c1",
+    "ai-coverage-v5-delivery-change-menu-option.c1",
+    "ai-coverage-v5-delivery-delay-location-wait.c1",
+    "ai-coverage-v5-delivery-delay-reason-cancel.c1",
+    "ai-coverage-v5-delivery-refund-missing-unavailable-redelivery.c1",
+    "ai-coverage-v5-delivery-refund-not-received-refund.c1",
+    "ai-coverage-v5-delivery-refund-wrong-item.c1",
+    "ai-coverage-v5-support-network-voice-multiple-agent.c1",
+    "ai-coverage-v5-support-network-wifi-single-remote.c1",
+    "ai-coverage-v5-support-network-wired-location-service.c1",
+    "ai-coverage-v5-support-plan-billing-authenticated.c1",
+    "ai-coverage-v5-support-plan-contract-general.c1",
+    "ai-coverage-v5-support-plan-discount.c1",
+    "ai-coverage-v5-support-service-parcel.c1",
+    "ai-coverage-v5-support-service-safety-onsite.c1",
+    "ai-coverage-v5-support-service-visit.c1"
+  ],
+  "baseline_missing_obligation_count": 786,
+  "baseline_source_root": "evals/structured_nlu/data/source",
+  "baseline_split_assignment_path": "evals/structured_nlu/data/manifests/split-assignments.v1.json",
+  "candidate_set_id": "structured-nlu-coverage-candidates-v6",
+  "coverage_candidate_schema_version": 6,
+  "generator_id": "openai-codex-coverage-candidates",
+  "human_review_required": true,
+  "official_obligation_count": 1562,
+  "predecessor_artifact_sha256": "4865192fcd1f662ffca533035f99f9f9b0ae6a2cb675b62278ab0358385434c5",
+  "predecessor_candidate_set_id": "structured-nlu-coverage-candidates-v5",
+  "profile_fingerprint": "3b6fc800eca438fa0d5c49f9004f83c638930284dd26c8f365aae1be411bf580",
+  "profile_id": "maeumcall-structured-nlu-v3",
+  "projected_covered_obligation_count": 900,
+  "projected_marginal_gain": 124,
+  "projected_missing_obligation_count": 662,
+  "provenance": "ai_assisted_unreviewed",
+  "suggestions": [
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-certificate-document-type",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "change_detail->document_type"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "document_type"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "document_type->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_certificate_inquiry",
+        "current_fields": {
+          "applicant_relation": null,
+          "document_type": "register_copy",
+          "inquiry_topic": null,
+          "issuance_channel": null
+        },
+        "id": "ai-coverage-v6-city-certificate-document-type.c1",
+        "labels": {
+          "change_field": "document_type",
+          "fields": {
+            "applicant_relation": null,
+            "document_type": {
+              "accepted_values": [
+                "individual_extract"
+              ]
+            },
+            "inquiry_topic": null,
+            "issuance_channel": null
+          },
+          "intent": "resident_certificate_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "등본이 아니라 주민등록 초본을 발급하려고 합니다."
+      },
+      "scenario_key": "시청:주민등록 등본 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-certificate-document-type",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "document_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-certificate-relation",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "change_detail->applicant_relation"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "applicant_relation"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "applicant_relation->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_certificate_inquiry",
+        "current_fields": {
+          "applicant_relation": "self",
+          "document_type": null,
+          "inquiry_topic": null,
+          "issuance_channel": null
+        },
+        "id": "ai-coverage-v6-city-certificate-relation.c1",
+        "labels": {
+          "change_field": "applicant_relation",
+          "fields": {
+            "applicant_relation": {
+              "accepted_values": [
+                "representative"
+              ]
+            },
+            "document_type": null,
+            "inquiry_topic": null,
+            "issuance_channel": null
+          },
+          "intent": "resident_certificate_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "본인 신청이 아니라 대리인 신청입니다."
+      },
+      "scenario_key": "시청:주민등록 등본 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-certificate-relation",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "applicant_relation"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-certificate-topic",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "change_detail->inquiry_topic"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "inquiry_topic"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "inquiry_topic->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_certificate_inquiry",
+        "current_fields": {
+          "applicant_relation": null,
+          "document_type": null,
+          "inquiry_topic": "delivery",
+          "issuance_channel": null
+        },
+        "id": "ai-coverage-v6-city-certificate-topic.c1",
+        "labels": {
+          "change_field": "inquiry_topic",
+          "fields": {
+            "applicant_relation": null,
+            "document_type": null,
+            "inquiry_topic": {
+              "accepted_values": [
+                "fee"
+              ]
+            },
+            "issuance_channel": null
+          },
+          "intent": "resident_certificate_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "수령 방법이 아니라 발급 수수료가 궁금합니다."
+      },
+      "scenario_key": "시청:주민등록 등본 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-certificate-topic",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:주민등록 등본 문의",
+          "value": "inquiry_topic"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-passport-applicant-type",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "change_detail->applicant_type"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "applicant_type"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "applicant_type->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_passport_inquiry",
+        "current_fields": {
+          "applicant_type": "adult_self",
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": null
+        },
+        "id": "ai-coverage-v6-city-passport-applicant-type.c1",
+        "labels": {
+          "change_field": "applicant_type",
+          "fields": {
+            "applicant_type": {
+              "accepted_values": [
+                "minor"
+              ]
+            },
+            "application_channel": null,
+            "application_type": null,
+            "inquiry_topic": null
+          },
+          "intent": "passport_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "성인 본인 신청이 아니라 미성년자 신청 건입니다."
+      },
+      "scenario_key": "시청:여권 발급 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-passport-applicant-type",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "applicant_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-passport-application-type",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "change_detail->application_type"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "application_type"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "application_type->existing_value_replaced"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "collecting_passport_inquiry->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_passport_inquiry",
+        "current_fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": "first_issue",
+          "inquiry_topic": null
+        },
+        "id": "ai-coverage-v6-city-passport-application-type.c1",
+        "labels": {
+          "change_field": "application_type",
+          "fields": {
+            "applicant_type": null,
+            "application_channel": null,
+            "application_type": {
+              "accepted_values": [
+                "reissue"
+              ]
+            },
+            "inquiry_topic": null
+          },
+          "intent": "passport_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "최초 발급이 아니라 재발급 문의입니다."
+      },
+      "scenario_key": "시청:여권 발급 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-passport-application-type",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "application_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-passport-channel",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "change_detail->application_channel"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "application_channel"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "application_channel->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_passport_inquiry",
+        "current_fields": {
+          "applicant_type": null,
+          "application_channel": "government24",
+          "application_type": null,
+          "inquiry_topic": null
+        },
+        "id": "ai-coverage-v6-city-passport-channel.c1",
+        "labels": {
+          "change_field": "application_channel",
+          "fields": {
+            "applicant_type": null,
+            "application_channel": {
+              "accepted_values": [
+                "in_person"
+              ]
+            },
+            "application_type": null,
+            "inquiry_topic": null
+          },
+          "intent": "passport_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "정부24 온라인 신청 대신 직접 방문 신청으로 바꾸겠습니다."
+      },
+      "scenario_key": "시청:여권 발급 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-passport-channel",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "application_channel"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-passport-topic",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "change_detail->inquiry_topic"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "inquiry_topic"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "inquiry_topic->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_passport_inquiry",
+        "current_fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": "processing_time"
+        },
+        "id": "ai-coverage-v6-city-passport-topic.c1",
+        "labels": {
+          "change_field": "inquiry_topic",
+          "fields": {
+            "applicant_type": null,
+            "application_channel": null,
+            "application_type": null,
+            "inquiry_topic": {
+              "accepted_values": [
+                "documents"
+              ]
+            }
+          },
+          "intent": "passport_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "처리 기간이 아니라 필요한 서류를 알고 싶어요."
+      },
+      "scenario_key": "시청:여권 발급 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-passport-topic",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:여권 발급 문의",
+          "value": "inquiry_topic"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-waste-item",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "change_detail->item_name"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "item_name"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "item_name->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_bulky_waste",
+        "current_fields": {
+          "item_name": "소파",
+          "quantity": null,
+          "region": null,
+          "request_topic": null
+        },
+        "id": "ai-coverage-v6-city-waste-item.c1",
+        "labels": {
+          "change_field": "item_name",
+          "fields": {
+            "item_name": {
+              "accepted_values": [
+                "장롱"
+              ]
+            },
+            "quantity": null,
+            "region": null,
+            "request_topic": null
+          },
+          "intent": "bulky_waste_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "버릴 물건을 소파에서 장롱으로 정정할게요."
+      },
+      "scenario_key": "시청:대형폐기물 배출",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-waste-item",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "item_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-waste-region",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "change_detail->region"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "region"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "region->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_bulky_waste",
+        "current_fields": {
+          "item_name": null,
+          "quantity": null,
+          "region": "서울 독산동",
+          "request_topic": null
+        },
+        "id": "ai-coverage-v6-city-waste-region.c1",
+        "labels": {
+          "change_field": "region",
+          "fields": {
+            "item_name": null,
+            "quantity": null,
+            "region": {
+              "accepted_values": [
+                "인천 구월동"
+              ]
+            },
+            "request_topic": null
+          },
+          "intent": "bulky_waste_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "배출 지역은 서울 독산동이 아니라 인천 구월동입니다."
+      },
+      "scenario_key": "시청:대형폐기물 배출",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-waste-region",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "region"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-city-waste-topic",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "change_detail->request_topic"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "request_topic"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "request_topic->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_bulky_waste",
+        "current_fields": {
+          "item_name": null,
+          "quantity": null,
+          "region": null,
+          "request_topic": "application"
+        },
+        "id": "ai-coverage-v6-city-waste-topic.c1",
+        "labels": {
+          "change_field": "request_topic",
+          "fields": {
+            "item_name": null,
+            "quantity": null,
+            "region": null,
+            "request_topic": {
+              "accepted_values": [
+                "fee"
+              ]
+            }
+          },
+          "intent": "bulky_waste_guidance",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "신고 방법이 아니라 배출 수수료를 문의하려고 합니다."
+      },
+      "scenario_key": "시청:대형폐기물 배출",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-city-waste-topic",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "시청:대형폐기물 배출",
+          "value": "request_topic"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-change-order-number",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_detail->order_number"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:주문 변경",
+          "value": "order_number"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:주문 변경",
+          "value": "order_number->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_order_change",
+        "current_fields": {
+          "change_type": null,
+          "order_number": "B-201",
+          "requested_change": null,
+          "unavailable_preference": null
+        },
+        "id": "ai-coverage-v6-delivery-change-order-number.c1",
+        "labels": {
+          "change_field": "order_number",
+          "fields": {
+            "change_type": null,
+            "order_number": {
+              "accepted_values": [
+                "B-202"
+              ]
+            },
+            "requested_change": null,
+            "unavailable_preference": null
+          },
+          "intent": "delivery_order_change",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "변경할 주문번호는 B-201이 아니라 B-202예요."
+      },
+      "scenario_key": "배달:주문 변경",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-change-order-number",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:주문 변경",
+          "value": "order_number"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-change-request",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_detail->requested_change"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:주문 변경",
+          "value": "requested_change"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:주문 변경",
+          "value": "requested_change->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_order_change",
+        "current_fields": {
+          "change_type": null,
+          "order_number": null,
+          "requested_change": "맵기 보통",
+          "unavailable_preference": null
+        },
+        "id": "ai-coverage-v6-delivery-change-request.c1",
+        "labels": {
+          "change_field": "requested_change",
+          "fields": {
+            "change_type": null,
+            "order_number": null,
+            "requested_change": {
+              "accepted_values": [
+                "맵기 순한맛"
+              ]
+            },
+            "unavailable_preference": null
+          },
+          "intent": "delivery_order_change",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "변경 내용은 맵기 보통이 아니라 순한맛입니다."
+      },
+      "scenario_key": "배달:주문 변경",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-change-request",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:주문 변경",
+          "value": "requested_change"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-change-type",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_detail->change_type"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_type"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_type->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_order_change",
+        "current_fields": {
+          "change_type": "menu_option",
+          "order_number": null,
+          "requested_change": null,
+          "unavailable_preference": null
+        },
+        "id": "ai-coverage-v6-delivery-change-type.c1",
+        "labels": {
+          "change_field": "change_type",
+          "fields": {
+            "change_type": {
+              "accepted_values": [
+                "delivery_address"
+              ]
+            },
+            "order_number": null,
+            "requested_change": null,
+            "unavailable_preference": null
+          },
+          "intent": "delivery_order_change",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "메뉴 옵션이 아니라 배달 주소를 변경하려는 겁니다."
+      },
+      "scenario_key": "배달:주문 변경",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-change-type",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:주문 변경",
+          "value": "change_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-delay-detail",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "change_detail->delay_detail"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "delay_detail"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "delay_detail->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_delay_inquiry",
+        "current_fields": {
+          "delay_detail": "30분 지연",
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": null
+        },
+        "id": "ai-coverage-v6-delivery-delay-detail.c1",
+        "labels": {
+          "change_field": "delay_detail",
+          "fields": {
+            "delay_detail": {
+              "accepted_values": [
+                "한 시간 지연"
+              ]
+            },
+            "delay_resolution": null,
+            "inquiry_goal": null,
+            "order_number": null
+          },
+          "intent": "delivery_delay_inquiry",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "30분 늦은 게 아니라 벌써 한 시간째 지연 중입니다."
+      },
+      "scenario_key": "배달:배달 지연 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-delay-detail",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "delay_detail"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-delay-goal",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "change_detail->inquiry_goal"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "inquiry_goal"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "inquiry_goal->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_delay_inquiry",
+        "current_fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": "estimated_arrival",
+          "order_number": null
+        },
+        "id": "ai-coverage-v6-delivery-delay-goal.c1",
+        "labels": {
+          "change_field": "inquiry_goal",
+          "fields": {
+            "delay_detail": null,
+            "delay_resolution": null,
+            "inquiry_goal": {
+              "accepted_values": [
+                "delay_reason"
+              ]
+            },
+            "order_number": null
+          },
+          "intent": "delivery_delay_inquiry",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "예상 도착 시간보다 지연 이유를 확인해 주세요."
+      },
+      "scenario_key": "배달:배달 지연 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-delay-goal",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "inquiry_goal"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-delay-order-number",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "change_detail->order_number"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "order_number"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "order_number->existing_value_replaced"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "collecting_delay_inquiry->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_delay_inquiry",
+        "current_fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": "A-101"
+        },
+        "id": "ai-coverage-v6-delivery-delay-order-number.c1",
+        "labels": {
+          "change_field": "order_number",
+          "fields": {
+            "delay_detail": null,
+            "delay_resolution": null,
+            "inquiry_goal": null,
+            "order_number": {
+              "accepted_values": [
+                "A-102"
+              ]
+            }
+          },
+          "intent": "delivery_delay_inquiry",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "주문번호는 A-101이 아니라 A-102입니다."
+      },
+      "scenario_key": "배달:배달 지연 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-delay-order-number",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "order_number"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-delay-resolution",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "change_detail->delay_resolution"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "delay_resolution"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "delay_resolution->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_delay_inquiry",
+        "current_fields": {
+          "delay_detail": null,
+          "delay_resolution": "wait",
+          "inquiry_goal": null,
+          "order_number": null
+        },
+        "id": "ai-coverage-v6-delivery-delay-resolution.c1",
+        "labels": {
+          "change_field": "delay_resolution",
+          "fields": {
+            "delay_detail": null,
+            "delay_resolution": {
+              "accepted_values": [
+                "check_cancellation"
+              ]
+            },
+            "inquiry_goal": null,
+            "order_number": null
+          },
+          "intent": "delivery_delay_inquiry",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "더 기다리지 않고 취소 가능한지 확인하고 싶습니다."
+      },
+      "scenario_key": "배달:배달 지연 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-delay-resolution",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:배달 지연 문의",
+          "value": "delay_resolution"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-refund-detail",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "change_detail->issue_detail"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "issue_detail"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "issue_detail->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_refund_redelivery",
+        "current_fields": {
+          "evidence_status": null,
+          "issue_detail": "용기가 찌그러짐",
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "id": "ai-coverage-v6-delivery-refund-detail.c1",
+        "labels": {
+          "change_field": "issue_detail",
+          "fields": {
+            "evidence_status": null,
+            "issue_detail": {
+              "accepted_values": [
+                "주문과 다른 음료 도착"
+              ]
+            },
+            "issue_type": null,
+            "order_number": null,
+            "resolution_preference": null
+          },
+          "intent": "delivery_refund_redelivery",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "상세 내용은 용기 파손이 아니라 주문과 다른 음료가 온 것입니다."
+      },
+      "scenario_key": "배달:환불/재배달 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-refund-detail",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "issue_detail"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-refund-evidence",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "change_detail->evidence_status"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "evidence_status"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "evidence_status->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_refund_redelivery",
+        "current_fields": {
+          "evidence_status": "available",
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "id": "ai-coverage-v6-delivery-refund-evidence.c1",
+        "labels": {
+          "change_field": "evidence_status",
+          "fields": {
+            "evidence_status": {
+              "accepted_values": [
+                "unavailable"
+              ]
+            },
+            "issue_detail": null,
+            "issue_type": null,
+            "order_number": null,
+            "resolution_preference": null
+          },
+          "intent": "delivery_refund_redelivery",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "사진이 있다고 했는데 확인해 보니 증빙 자료가 없습니다."
+      },
+      "scenario_key": "배달:환불/재배달 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-refund-evidence",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "evidence_status"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-refund-issue-type",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "change_detail->issue_type"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "issue_type"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "issue_type->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_refund_redelivery",
+        "current_fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": "damaged_or_quality",
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "id": "ai-coverage-v6-delivery-refund-issue-type.c1",
+        "labels": {
+          "change_field": "issue_type",
+          "fields": {
+            "evidence_status": null,
+            "issue_detail": null,
+            "issue_type": {
+              "accepted_values": [
+                "wrong_item"
+              ]
+            },
+            "order_number": null,
+            "resolution_preference": null
+          },
+          "intent": "delivery_refund_redelivery",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "음식이 상한 문제가 아니라 다른 메뉴가 온 문제입니다."
+      },
+      "scenario_key": "배달:환불/재배달 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-refund-issue-type",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "issue_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-refund-order-number",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "change_detail->order_number"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "order_number"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "order_number->existing_value_replaced"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "collecting_refund_redelivery->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_refund_redelivery",
+        "current_fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": "C-301",
+          "resolution_preference": null
+        },
+        "id": "ai-coverage-v6-delivery-refund-order-number.c1",
+        "labels": {
+          "change_field": "order_number",
+          "fields": {
+            "evidence_status": null,
+            "issue_detail": null,
+            "issue_type": null,
+            "order_number": {
+              "accepted_values": [
+                "C-302"
+              ]
+            },
+            "resolution_preference": null
+          },
+          "intent": "delivery_refund_redelivery",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "문제 주문은 C-301이 아니라 C-302입니다."
+      },
+      "scenario_key": "배달:환불/재배달 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-refund-order-number",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "order_number"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-delivery-refund-resolution",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "change_detail->resolution_preference"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "resolution_preference"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "resolution_preference->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_refund_redelivery",
+        "current_fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": "refund"
+        },
+        "id": "ai-coverage-v6-delivery-refund-resolution.c1",
+        "labels": {
+          "change_field": "resolution_preference",
+          "fields": {
+            "evidence_status": null,
+            "issue_detail": null,
+            "issue_type": null,
+            "order_number": null,
+            "resolution_preference": {
+              "accepted_values": [
+                "redelivery"
+              ]
+            }
+          },
+          "intent": "delivery_refund_redelivery",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "환불 대신 같은 메뉴를 다시 배달해 주세요."
+      },
+      "scenario_key": "배달:환불/재배달 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-delivery-refund-resolution",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "배달:환불/재배달 문의",
+          "value": "resolution_preference"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-network-next-action",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "change_detail->next_action"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "next_action"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "next_action->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_network_issue",
+        "current_fields": {
+          "next_action": "guided_diagnosis",
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "id": "ai-coverage-v6-support-network-next-action.c1",
+        "labels": {
+          "change_field": "next_action",
+          "fields": {
+            "next_action": {
+              "accepted_values": [
+                "agent_handoff"
+              ]
+            },
+            "occurred_at": null,
+            "scope": null,
+            "service_type": null,
+            "symptom": null,
+            "troubleshooting_done": null
+          },
+          "intent": "network_call_issue",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "안내에 따라 진단하는 대신 상담원 연결을 원합니다."
+      },
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-network-next-action",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "next_action"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-network-occurred-at",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "change_detail->occurred_at"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "occurred_at"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "occurred_at->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_network_issue",
+        "current_fields": {
+          "next_action": null,
+          "occurred_at": "어제",
+          "scope": null,
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "id": "ai-coverage-v6-support-network-occurred-at.c1",
+        "labels": {
+          "change_field": "occurred_at",
+          "fields": {
+            "next_action": null,
+            "occurred_at": {
+              "accepted_values": [
+                "오늘 오전"
+              ]
+            },
+            "scope": null,
+            "service_type": null,
+            "symptom": null,
+            "troubleshooting_done": null
+          },
+          "intent": "network_call_issue",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "발생 시점은 어제가 아니라 오늘 오전입니다."
+      },
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-network-occurred-at",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "occurred_at"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-network-scope",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "change_detail->scope"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "scope"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "scope->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_network_issue",
+        "current_fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": "single_device",
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "id": "ai-coverage-v6-support-network-scope.c1",
+        "labels": {
+          "change_field": "scope",
+          "fields": {
+            "next_action": null,
+            "occurred_at": null,
+            "scope": {
+              "accepted_values": [
+                "multiple_devices"
+              ]
+            },
+            "service_type": null,
+            "symptom": null,
+            "troubleshooting_done": null
+          },
+          "intent": "network_call_issue",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "한 대만 그런 줄 알았는데 여러 기기에서 발생합니다."
+      },
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-network-scope",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "scope"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-network-service-type",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "change_detail->service_type"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "service_type"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "service_type->existing_value_replaced"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "collecting_network_issue->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_network_issue",
+        "current_fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": null,
+          "service_type": "mobile_data",
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "id": "ai-coverage-v6-support-network-service-type.c1",
+        "labels": {
+          "change_field": "service_type",
+          "fields": {
+            "next_action": null,
+            "occurred_at": null,
+            "scope": null,
+            "service_type": {
+              "accepted_values": [
+                "wifi"
+              ]
+            },
+            "symptom": null,
+            "troubleshooting_done": null
+          },
+          "intent": "network_call_issue",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "모바일 데이터 문제가 아니라 와이파이 문제예요."
+      },
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-network-service-type",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "service_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-network-symptom",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "change_detail->symptom"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "symptom"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "symptom->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_network_issue",
+        "current_fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": "속도 저하",
+          "troubleshooting_done": null
+        },
+        "id": "ai-coverage-v6-support-network-symptom.c1",
+        "labels": {
+          "change_field": "symptom",
+          "fields": {
+            "next_action": null,
+            "occurred_at": null,
+            "scope": null,
+            "service_type": null,
+            "symptom": {
+              "accepted_values": [
+                "연결 끊김"
+              ]
+            },
+            "troubleshooting_done": null
+          },
+          "intent": "network_call_issue",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "속도가 느린 게 아니라 연결이 계속 끊기는 증상입니다."
+      },
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-network-symptom",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "symptom"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-network-troubleshooting",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "change_detail->troubleshooting_done"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "troubleshooting_done"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "troubleshooting_done->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_network_issue",
+        "current_fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": "공유기 재부팅"
+        },
+        "id": "ai-coverage-v6-support-network-troubleshooting.c1",
+        "labels": {
+          "change_field": "troubleshooting_done",
+          "fields": {
+            "next_action": null,
+            "occurred_at": null,
+            "scope": null,
+            "service_type": null,
+            "symptom": null,
+            "troubleshooting_done": {
+              "accepted_values": [
+                "비행기 모드 전환"
+              ]
+            }
+          },
+          "intent": "network_call_issue",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "시도한 조치는 공유기 재부팅이 아니라 비행기 모드 전환입니다."
+      },
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-network-troubleshooting",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:인터넷/통화 문제 문의",
+          "value": "troubleshooting_done"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-plan-current-service",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "change_detail->current_service"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "current_service"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "current_service->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_plan_contract",
+        "current_fields": {
+          "consent_scope": null,
+          "consultation_goal": null,
+          "current_service": "5G 프리미엄",
+          "inquiry_type": null
+        },
+        "id": "ai-coverage-v6-support-plan-current-service.c1",
+        "labels": {
+          "change_field": "current_service",
+          "fields": {
+            "consent_scope": null,
+            "consultation_goal": null,
+            "current_service": {
+              "accepted_values": [
+                "LTE 베이직"
+              ]
+            },
+            "inquiry_type": null
+          },
+          "intent": "plan_contract_consultation",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "현재 요금제는 5G 프리미엄이 아니라 LTE 베이직입니다."
+      },
+      "scenario_key": "고객센터:요금/약정 상담",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-plan-current-service",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "current_service"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-plan-goal",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "change_detail->consultation_goal"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consultation_goal"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consultation_goal->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_plan_contract",
+        "current_fields": {
+          "consent_scope": null,
+          "consultation_goal": "요금 절감",
+          "current_service": null,
+          "inquiry_type": null
+        },
+        "id": "ai-coverage-v6-support-plan-goal.c1",
+        "labels": {
+          "change_field": "consultation_goal",
+          "fields": {
+            "consent_scope": null,
+            "consultation_goal": {
+              "accepted_values": [
+                "데이터 확대"
+              ]
+            },
+            "current_service": null,
+            "inquiry_type": null
+          },
+          "intent": "plan_contract_consultation",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "상담 목표를 요금 절감에서 데이터 제공량 확대로 바꾸겠습니다."
+      },
+      "scenario_key": "고객센터:요금/약정 상담",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-plan-goal",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "consultation_goal"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-plan-inquiry-type",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "change_detail->inquiry_type"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "inquiry_type"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "inquiry_type->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_plan_contract",
+        "current_fields": {
+          "consent_scope": null,
+          "consultation_goal": null,
+          "current_service": null,
+          "inquiry_type": "billing"
+        },
+        "id": "ai-coverage-v6-support-plan-inquiry-type.c1",
+        "labels": {
+          "change_field": "inquiry_type",
+          "fields": {
+            "consent_scope": null,
+            "consultation_goal": null,
+            "current_service": null,
+            "inquiry_type": {
+              "accepted_values": [
+                "discount"
+              ]
+            }
+          },
+          "intent": "plan_contract_consultation",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "청구 문의가 아니라 할인 상담으로 변경해 주세요."
+      },
+      "scenario_key": "고객센터:요금/약정 상담",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-plan-inquiry-type",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:요금/약정 상담",
+          "value": "inquiry_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-service-channel",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "change_detail->service_channel"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "service_channel"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "service_channel->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_service_request",
+        "current_fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": "parcel",
+          "symptom": null
+        },
+        "id": "ai-coverage-v6-support-service-channel.c1",
+        "labels": {
+          "change_field": "service_channel",
+          "fields": {
+            "model_name": null,
+            "occurred_at": null,
+            "preferred_schedule": null,
+            "product_type": null,
+            "safety_status": null,
+            "service_channel": {
+              "accepted_values": [
+                "visit"
+              ]
+            },
+            "symptom": null
+          },
+          "intent": "service_request",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "택배 접수 대신 서비스센터 방문으로 변경해 주세요."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-service-channel",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "service_channel"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-service-model-name",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "change_detail->model_name"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "model_name"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "model_name->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_service_request",
+        "current_fields": {
+          "model_name": "갤럭시 S24",
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "id": "ai-coverage-v6-support-service-model-name.c1",
+        "labels": {
+          "change_field": "model_name",
+          "fields": {
+            "model_name": {
+              "accepted_values": [
+                "아이폰 16"
+              ]
+            },
+            "occurred_at": null,
+            "preferred_schedule": null,
+            "product_type": null,
+            "safety_status": null,
+            "service_channel": null,
+            "symptom": null
+          },
+          "intent": "service_request",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "모델명을 갤럭시 S24에서 아이폰 16으로 바꿔 주세요."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-service-model-name",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "model_name"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-service-occurred-at",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "change_detail->occurred_at"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "occurred_at"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "occurred_at->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_service_request",
+        "current_fields": {
+          "model_name": null,
+          "occurred_at": "어제",
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "id": "ai-coverage-v6-support-service-occurred-at.c1",
+        "labels": {
+          "change_field": "occurred_at",
+          "fields": {
+            "model_name": null,
+            "occurred_at": {
+              "accepted_values": [
+                "오늘 아침"
+              ]
+            },
+            "preferred_schedule": null,
+            "product_type": null,
+            "safety_status": null,
+            "service_channel": null,
+            "symptom": null
+          },
+          "intent": "service_request",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "고장이 난 시점은 어제가 아니라 오늘 아침이에요."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-service-occurred-at",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "occurred_at"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-service-product-type",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "change_detail->product_type"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "product_type"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "product_type->existing_value_replaced"
+        },
+        {
+          "dimension": "scenario_difficulty_tag",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "correction"
+        },
+        {
+          "dimension": "state_action",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "collecting_service_request->change_detail"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_service_request",
+        "current_fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": "휴대폰",
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "id": "ai-coverage-v6-support-service-product-type.c1",
+        "labels": {
+          "change_field": "product_type",
+          "fields": {
+            "model_name": null,
+            "occurred_at": null,
+            "preferred_schedule": null,
+            "product_type": {
+              "accepted_values": [
+                "노트북"
+              ]
+            },
+            "safety_status": null,
+            "service_channel": null,
+            "symptom": null
+          },
+          "intent": "service_request",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "제품 종류를 휴대폰이 아니라 노트북으로 정정할게요."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-service-product-type",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "product_type"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-service-safety-status",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "change_detail->safety_status"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "safety_status"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "safety_status->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_service_request",
+        "current_fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": "no_safety_issue",
+          "service_channel": null,
+          "symptom": null
+        },
+        "id": "ai-coverage-v6-support-service-safety-status.c1",
+        "labels": {
+          "change_field": "safety_status",
+          "fields": {
+            "model_name": null,
+            "occurred_at": null,
+            "preferred_schedule": null,
+            "product_type": null,
+            "safety_status": {
+              "accepted_values": [
+                "safety_issue"
+              ]
+            },
+            "service_channel": null,
+            "symptom": null
+          },
+          "intent": "service_request",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction",
+          "safety"
+        ],
+        "user_message": "안전 문제는 없다고 했는데 배터리가 부풀어 올라 위험한 상태로 정정합니다."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-service-safety-status",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "safety_status"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-service-schedule",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "change_detail->preferred_schedule"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "preferred_schedule"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "preferred_schedule->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_service_request",
+        "current_fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": "월요일 오전",
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "id": "ai-coverage-v6-support-service-schedule.c1",
+        "labels": {
+          "change_field": "preferred_schedule",
+          "fields": {
+            "model_name": null,
+            "occurred_at": null,
+            "preferred_schedule": {
+              "accepted_values": [
+                "화요일 오후"
+              ]
+            },
+            "product_type": null,
+            "safety_status": null,
+            "service_channel": null,
+            "symptom": null
+          },
+          "intent": "service_request",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "희망 일정을 월요일 오전에서 화요일 오후로 바꿀게요."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-service-schedule",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "preferred_schedule"
+        }
+      ]
+    },
+    {
+      "baseline_obligations_missing": true,
+      "conversation_group_id": "ai-coverage-v6-support-service-symptom",
+      "projected_obligations": [
+        {
+          "dimension": "action_field_present",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "change_detail->symptom"
+        },
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "symptom"
+        },
+        {
+          "dimension": "current_delta_relation",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "symptom->existing_value_replaced"
+        }
+      ],
+      "proposed_case": {
+        "conversation_state": "collecting_service_request",
+        "current_fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": "화면 파손"
+        },
+        "id": "ai-coverage-v6-support-service-symptom.c1",
+        "labels": {
+          "change_field": "symptom",
+          "fields": {
+            "model_name": null,
+            "occurred_at": null,
+            "preferred_schedule": null,
+            "product_type": null,
+            "safety_status": null,
+            "service_channel": null,
+            "symptom": {
+              "accepted_values": [
+                "전원 불량"
+              ]
+            }
+          },
+          "intent": "service_request",
+          "user_action": "change_detail"
+        },
+        "offered_alternative_times": [],
+        "tags": [
+          "single_field",
+          "correction"
+        ],
+        "user_message": "증상은 화면 파손이 아니라 전원이 켜지지 않는 문제입니다."
+      },
+      "scenario_key": "고객센터:a/s 접수",
+      "semantic_valid": true,
+      "suggestion_id": "ai-coverage-v6-support-service-symptom",
+      "target_obligations": [
+        {
+          "dimension": "change_field",
+          "scenario_key": "고객센터:a/s 접수",
+          "value": "symptom"
+        }
+      ]
+    }
+  ]
+}
