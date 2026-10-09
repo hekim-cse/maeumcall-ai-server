@@ -14,7 +14,9 @@ from core.config import (
 )
 from llm.errors import AIProviderExecutionError, AIProviderUnavailableError
 
-logger = logging.getLogger(__name__)
+# Uvicorn configures this logger at INFO; module loggers otherwise inherit the
+# process default WARNING level and hide the latency measurements.
+logger = logging.getLogger("uvicorn.error.maeumcall.huggingface")
 
 _tokenizer = None
 _model = None
@@ -74,6 +76,7 @@ def load_hf_model(
         ):
             return _tokenizer, _model
 
+        load_started_at = time.perf_counter()
         logger.info("Loading Hugging Face model: %s", model_name)
         tokenizer = AutoTokenizer.from_pretrained(
             model_name,
@@ -92,7 +95,11 @@ def load_hf_model(
         _model = model
         _loaded_model_name = model_name
         _loaded_model_revision = revision
-        logger.info("Hugging Face model loaded: %s", model_name)
+        logger.info(
+            "Hugging Face model loaded: %s load_seconds=%.2f",
+            model_name,
+            time.perf_counter() - load_started_at,
+        )
         return _tokenizer, _model
 
 
@@ -166,7 +173,12 @@ def _complete_hf_messages(
         generated_tokens = outputs[0][input_length:]
         decoded = tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
 
-        logger.debug("HF generation latency: %.2fs", elapsed)
+        logger.info(
+            "HF generation completed input_tokens=%d output_tokens=%d generate_seconds=%.2f",
+            input_length,
+            len(generated_tokens),
+            elapsed,
+        )
 
         return decoded
 
