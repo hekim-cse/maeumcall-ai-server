@@ -6,11 +6,13 @@ import threading
 import time
 
 from core.config import (
+    HF_CPU_THREADS,
     HF_LOCAL_FILES_ONLY,
     HF_LOCAL_MODEL_ENABLED,
     HF_MODEL_DTYPE,
     HF_MODEL_NAME,
     HF_MODEL_REVISION,
+    HF_WARMUP_ON_STARTUP,
 )
 from llm.errors import AIProviderExecutionError, AIProviderUnavailableError
 
@@ -76,6 +78,15 @@ def load_hf_model(
         ):
             return _tokenizer, _model
 
+        import torch
+
+        if HF_CPU_THREADS is not None:
+            if torch.cuda.is_available() or (
+                getattr(torch.backends, "mps", None) and torch.backends.mps.is_available()
+            ):
+                raise ValueError("HF_CPU_THREADS requires a CPU-only model runtime")
+            torch.set_num_threads(HF_CPU_THREADS)
+
         load_started_at = time.perf_counter()
         logger.info("Loading Hugging Face model: %s", model_name)
         tokenizer = AutoTokenizer.from_pretrained(
@@ -91,14 +102,33 @@ def load_hf_model(
             local_files_only=HF_LOCAL_FILES_ONLY,
         )
         model.eval()
+        weights_load_seconds = time.perf_counter() - load_started_at
+        if HF_WARMUP_ON_STARTUP:
+            warmup_started_at = time.perf_counter()
+            prompt = _messages_to_prompt(tokenizer, [{"role": "user", "content": "준비 상태 확인"}])
+            inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+            with torch.inference_mode():
+                model.generate(
+                    **inputs,
+                    max_new_tokens=1,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                )
+            logger.info(
+                "Hugging Face model warmup completed: seconds=%.2f input_tokens=%d",
+                time.perf_counter() - warmup_started_at,
+                inputs["input_ids"].shape[-1],
+            )
         _tokenizer = tokenizer
         _model = model
         _loaded_model_name = model_name
         _loaded_model_revision = revision
         logger.info(
-            "Hugging Face model loaded: %s load_seconds=%.2f",
+            "Hugging Face model loaded: %s load_seconds=%.2f ready_seconds=%.2f cpu_threads=%d",
             model_name,
+            weights_load_seconds,
             time.perf_counter() - load_started_at,
+            torch.get_num_threads(),
         )
         return _tokenizer, _model
 

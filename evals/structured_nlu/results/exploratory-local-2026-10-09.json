@@ -1,0 +1,143 @@
+{
+  "kind": "exploratory_chat_latency_v1",
+  "not_official_quality_score": true,
+  "created_at_utc": "2026-10-09T10:42:40.305616+00:00",
+  "corpus_sha256": "2ef9081644689d7675b2fc3f67845c77e3d437ccd240f2f9d8d8a5fd408d0ddb",
+  "endpoint": "http://127.0.0.1:18001/chat",
+  "case_count": 16,
+  "repeats": 1,
+  "http_200_count": 13,
+  "median_seconds_http_200": 57.855,
+  "observations": [
+    {
+      "case_id": "support-service-request-human-information-provision-001.c1",
+      "scenario_key": "고객센터:a/s 접수",
+      "elapsed_seconds": 77.752,
+      "http_status": 200,
+      "conversation_state": "collecting_service_request",
+      "external_effect": false
+    },
+    {
+      "case_id": "support-plan-contract-human-information-provision-001.c1",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "elapsed_seconds": 60.365,
+      "http_status": 200,
+      "conversation_state": "collecting_plan_contract",
+      "external_effect": false
+    },
+    {
+      "case_id": "support-network-call-human-information-provision-001.c1",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "elapsed_seconds": 72.436,
+      "http_status": 200,
+      "conversation_state": "collecting_network_issue",
+      "external_effect": false
+    },
+    {
+      "case_id": "professor-absence-human-information-provision-001.c1",
+      "scenario_key": "교수님:결석 사유 전달",
+      "elapsed_seconds": 40.912,
+      "http_status": 200,
+      "conversation_state": "confirming_absence_info",
+      "external_effect": false
+    },
+    {
+      "case_id": "professor-assignment-human-information-provision-001.c1",
+      "scenario_key": "교수님:과제 문의",
+      "elapsed_seconds": 38.43,
+      "http_status": 200,
+      "conversation_state": "collecting_assignment_info",
+      "external_effect": false
+    },
+    {
+      "case_id": "professor-appointment-human-information-provision-001.c1",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 34.462,
+      "http_status": 200,
+      "conversation_state": "confirming_info",
+      "external_effect": false
+    },
+    {
+      "case_id": "delivery-delay-inquiry-human-information-provision-001.c1",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 64.436,
+      "http_status": 200,
+      "conversation_state": "collecting_delay_inquiry",
+      "external_effect": false
+    },
+    {
+      "case_id": "delivery-order-change-human-information-provision-001.c1",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 156.816,
+      "http_status": 200,
+      "conversation_state": "collecting_order_change",
+      "external_effect": false
+    },
+    {
+      "case_id": "delivery-refund-redelivery-human-information-provision-001.c1",
+      "scenario_key": "배달:환불/재배달 문의",
+      "elapsed_seconds": 164.577,
+      "http_status": 502,
+      "error_code": "AI_RESPONSE_VALIDATION_FAILED"
+    },
+    {
+      "case_id": "cityhall-bulky-waste-human-information-provision-001.c1",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 60.545,
+      "http_status": 200,
+      "conversation_state": "collecting_bulky_waste",
+      "external_effect": false
+    },
+    {
+      "case_id": "cityhall-passport-human-information-provision-001.c1",
+      "scenario_key": "시청:여권 발급 문의",
+      "elapsed_seconds": 57.855,
+      "http_status": 200,
+      "conversation_state": "collecting_passport_inquiry",
+      "external_effect": false
+    },
+    {
+      "case_id": "cityhall-resident-certificate-human-information-provision-001.c1",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "elapsed_seconds": 119.348,
+      "http_status": 502,
+      "error_code": "AI_RESPONSE_VALIDATION_FAILED"
+    },
+    {
+      "case_id": "reservation-hair-salon-human-information-provision-001.c1",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 48.849,
+      "http_status": 200,
+      "conversation_state": "collecting_reservation_info",
+      "external_effect": false
+    },
+    {
+      "case_id": "reservation-hospital-human-information-provision-001.c1",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 71.839,
+      "http_status": 502,
+      "error_code": "AI_RESPONSE_VALIDATION_FAILED"
+    },
+    {
+      "case_id": "reservation-study-room-human-information-provision-001.c1",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 44.231,
+      "http_status": 200,
+      "conversation_state": "collecting_reservation_info",
+      "external_effect": false
+    },
+    {
+      "case_id": "reservation-restaurant-human-information-provision-001.c1",
+      "scenario_key": "예약:식당 예약",
+      "elapsed_seconds": 35.793,
+      "http_status": 200,
+      "conversation_state": "collecting_reservation_info",
+      "external_effect": false
+    }
+  ],
+  "probe_checkout_head": "e1a8e188031b54f75b81c1874fc73a4cb6695435",
+  "probe_runner_uncommitted_at_run": true,
+  "service_artifact": "sha256:448fdff14781d4dd40a5b664dcfdd909e6a93a557f7803d110381394b736f271",
+  "service_provider_sha256": "ccd06e537632670c6d1be90f6deadbadbfdc98a362d5cb75b86d6a801af2925e",
+  "service_provenance_note": "Image ID and provider hash were verified after the run; the provider hash matches git show 9796e13:llm/huggingface_provider.py. The full image source tree was not verified."
+}

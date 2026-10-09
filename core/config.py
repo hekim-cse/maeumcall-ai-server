@@ -64,6 +64,7 @@ OPENAI_TIMEOUT = getenv_int("OPENAI_TIMEOUT", 8)
 PROMPT_CACHE = getenv_bool("PROMPT_CACHE", True)
 HF_LOCAL_MODEL_ENABLED = getenv_bool("HF_LOCAL_MODEL_ENABLED", False)
 HF_LOCAL_FILES_ONLY = getenv_bool("HF_LOCAL_FILES_ONLY", True)
+HF_WARMUP_ON_STARTUP = getenv_bool("HF_WARMUP_ON_STARTUP", False)
 HF_MODEL_NAME = getenv(
     "HF_MODEL_NAME",
     "kakaocorp/kanana-1.5-2.1b-instruct-2505",
@@ -75,6 +76,13 @@ HF_MODEL_REVISION = getenv(
 HF_MODEL_DTYPE = getenv("HF_MODEL_DTYPE", "")
 if HF_MODEL_DTYPE not in {"", "float32", "float16", "bfloat16"}:
     raise ValueError("HF_MODEL_DTYPE must be one of: float32, float16, bfloat16")
+_hf_cpu_threads = getenv("HF_CPU_THREADS")
+try:
+    HF_CPU_THREADS = int(_hf_cpu_threads) if _hf_cpu_threads else None
+except ValueError as exc:
+    raise ValueError("HF_CPU_THREADS must be a positive integer") from exc
+if HF_CPU_THREADS is not None and HF_CPU_THREADS < 1:
+    raise ValueError("HF_CPU_THREADS must be a positive integer")
 
 _cors_origins = getenv("CORS_ALLOW_ORIGINS", "*")
 CORS_ALLOW_ORIGINS = [item.strip() for item in _cors_origins.split(",") if item.strip()]
