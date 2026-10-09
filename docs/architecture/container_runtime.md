@@ -82,6 +82,25 @@ Docker의 `HEALTHCHECK`는 liveness를 사용한다. 아직 로컬 모델을 넣
 
 현재 `core-runtime`은 로컬 Hugging Face NLU 실행 패키지와 모델 가중치를 의도적으로 포함하지 않는다. Compose도 호스트 `.env`와 관계없이 `HF_LOCAL_MODEL_ENABLED=0`, `TTS_ENABLED=0`으로 고정한다. 따라서 검증 환경에서 `/health`는 200이고 `/health/ready`는 `local_nlu`만 미준비인 503이어야 한다. 모델이 없는 상태를 준비 완료로 표시하지 않는다.
 
+## 로컬 NLU 모델 이미지
+
+`Dockerfile`의 `ml-runtime` 대상은 `requirements-ml.txt`를 핵심 이미지에 추가한다. 모델 가중치는 이미지에 복사하지 않는다. `docker-compose.ml.yml`을 기본 Compose 파일 뒤에 적용하면 API만 `ml-runtime`을 사용하고, PostgreSQL·마이그레이션은 기존 핵심 이미지를 유지한다. `HF_MODEL_CACHE_DIR`은 승인한 모델 리비전이 미리 다운로드된 Hugging Face 캐시의 호스트 절대 경로다. API에는 이 경로를 `/models`로 읽기 전용 마운트한다.
+
+```bash
+export HF_MODEL_CACHE_DIR=/absolute/path/to/huggingface/cache
+mkdir -p "$HF_MODEL_CACHE_DIR"
+docker build --target ml-runtime --tag maeum-call-ai-server:2.2.0-ml .
+docker run --rm --user 0:0 \
+  --volume "$HF_MODEL_CACHE_DIR:/models" --env HF_HOME=/models \
+  --entrypoint python maeum-call-ai-server:2.2.0-ml \
+  -m scripts.prepare_hf_model_cache
+docker compose -f docker-compose.yml -f docker-compose.ml.yml config --quiet
+```
+
+모델이 활성화되면 API 시작 단계에서 고정된 `HF_MODEL_NAME`·`HF_MODEL_REVISION`을 로드한다. ML Compose는 이 모델에서 확인한 `HF_MODEL_DTYPE=bfloat16`을 명시하고, 다른 실행 장치에서는 검증된 dtype으로 재설정할 수 있다. 파일이 없거나 로딩에 실패하면 서버 시작이 실패하며, 단순히 `HF_LOCAL_MODEL_ENABLED=1`이라는 이유로 준비 완료를 반환하지 않는다. 실제 대화 품질, 장치별 지연 시간, TTS는 별도로 검증해야 한다. 기본 `docker build` 및 `docker-compose.yml`은 계속 모델 없는 핵심 이미지를 사용한다.
+
+2026-10-09 로컬 확인은 Apple Silicon의 Linux ARM Docker 환경에서 수행했다. 고정 리비전의 토크나이저에 채팅 템플릿이 있었고, CPU bfloat16 로딩과 4토큰 생성이 성공했다. ML Compose의 `/health/ready`는 200, 병원 예약 대화 한 턴은 HTTP 200이었다. 그 한 요청은 약 34초 걸렸으며 당시 API 컨테이너의 메모리 사용량은 별도 시점의 한 번의 조회에서 약 4.95GiB였다. 이 값들은 벤치마크나 AWS GPU 실행 결과가 아니다. 해당 ARM 이미지의 PyTorch는 CPU 빌드였으므로 EKS GPU 배포 전에 대상 아키텍처·CUDA 패키지·GPU 노드에서 이미지를 다시 빌드하고 실추론을 검증해야 한다.
+
 ## 로컬 실행
 
 저장소 밖 `.env`에 URL에서 사용할 수 있는 `POSTGRES_PASSWORD`와 필요한 인증·HMAC 값을 설정한다. Compose는 PostgreSQL 내부 호스트명인 `postgres`를 사용해 `DATABASE_URL`을 구성한다.

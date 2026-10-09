@@ -1,0 +1,12 @@
+services:
+  api:
+    image: maeum-call-ai-server:${AI_SERVER_ML_IMAGE_TAG:-2.2.0-ml}
+    build:
+      target: ml-runtime
+    environment:
+      HF_LOCAL_MODEL_ENABLED: "1"
+      HF_LOCAL_FILES_ONLY: "1"
+      HF_MODEL_DTYPE: ${HF_MODEL_DTYPE:-bfloat16}
+      HF_HOME: /models
+    volumes:
+      - ${HF_MODEL_CACHE_DIR:?HF_MODEL_CACHE_DIR must point to a populated Hugging Face cache}:/models:ro

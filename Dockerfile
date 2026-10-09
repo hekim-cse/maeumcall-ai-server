@@ -21,6 +21,12 @@ COPY requirements.txt ./
 RUN python -m pip install --no-compile --requirement requirements.txt
 
 
+FROM core-dependencies AS ml-dependencies
+
+COPY requirements-ml.txt ./
+RUN python -m pip install --no-compile --requirement requirements-ml.txt
+
+
 FROM ${PYTHON_IMAGE} AS core-runtime
 
 ENV PATH="/opt/maeumcall-venv/bin:${PATH}" \
@@ -50,3 +56,14 @@ HEALTHCHECK --interval=10s --timeout=3s --start-period=15s --retries=3 \
     CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=2).read()"]
 
 CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
+
+
+FROM core-runtime AS ml-runtime
+
+ENV HF_HOME=/models
+
+COPY --from=ml-dependencies /opt/maeumcall-venv /opt/maeumcall-venv
+
+
+# Keep a plain `docker build` on the model-free core image.
+FROM core-runtime AS default-runtime

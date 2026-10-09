@@ -72,6 +72,9 @@ HF_MODEL_REVISION = getenv(
     "HF_MODEL_REVISION",
     "7df4bc35ccd610e451809d7106e1c3cf82bfd44c",
 )
+HF_MODEL_DTYPE = getenv("HF_MODEL_DTYPE", "")
+if HF_MODEL_DTYPE not in {"", "float32", "float16", "bfloat16"}:
+    raise ValueError("HF_MODEL_DTYPE must be one of: float32, float16, bfloat16")
 
 _cors_origins = getenv("CORS_ALLOW_ORIGINS", "*")
 CORS_ALLOW_ORIGINS = [item.strip() for item in _cors_origins.split(",") if item.strip()]

@@ -8,6 +8,7 @@ import time
 from core.config import (
     HF_LOCAL_FILES_ONLY,
     HF_LOCAL_MODEL_ENABLED,
+    HF_MODEL_DTYPE,
     HF_MODEL_NAME,
     HF_MODEL_REVISION,
 )
@@ -22,6 +23,19 @@ _loaded_model_revision: str | None = None
 _MODEL_LOCK = threading.Lock()
 
 
+def local_model_ready() -> bool:
+    """Report whether the configured model and tokenizer are loaded in this process."""
+    if not HF_LOCAL_MODEL_ENABLED:
+        return False
+    with _MODEL_LOCK:
+        return (
+            _tokenizer is not None
+            and _model is not None
+            and _loaded_model_name == HF_MODEL_NAME
+            and _loaded_model_revision == HF_MODEL_REVISION
+        )
+
+
 def _get_device_dtype():
     """
     Mac M 계열에서는 MPS 사용 가능 여부를 확인한다.
@@ -30,6 +44,8 @@ def _get_device_dtype():
     """
     import torch
 
+    if HF_MODEL_DTYPE:
+        return getattr(torch, HF_MODEL_DTYPE)
     if torch.cuda.is_available():
         return torch.float16
     if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
@@ -81,10 +97,7 @@ def load_hf_model(
 
 
 def _messages_to_prompt(tokenizer, messages: list[dict[str, str]]) -> str:
-    """
-    모델별 chat_template이 있으면 사용하고,
-    없으면 system/user 내용을 단순 문자열로 합친다.
-    """
+    """Use the configured tokenizer's chat template or fail explicitly."""
     normalized_messages = []
 
     for message in messages:
@@ -104,19 +117,13 @@ def _messages_to_prompt(tokenizer, messages: list[dict[str, str]]) -> str:
             }
         )
 
-    if hasattr(tokenizer, "apply_chat_template") and tokenizer.chat_template:
-        return tokenizer.apply_chat_template(
-            normalized_messages,
-            tokenize=False,
-            add_generation_prompt=True,
-        )
-
-    prompt_parts = []
-    for message in normalized_messages:
-        prompt_parts.append(f"{message['role']}: {message['content']}")
-
-    prompt_parts.append("assistant:")
-    return "\n".join(prompt_parts)
+    if not hasattr(tokenizer, "apply_chat_template") or not tokenizer.chat_template:
+        raise AIProviderExecutionError("Configured tokenizer has no chat template")
+    return tokenizer.apply_chat_template(
+        normalized_messages,
+        tokenize=False,
+        add_generation_prompt=True,
+    )
 
 
 def _complete_hf_messages(
