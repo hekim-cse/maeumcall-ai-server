@@ -27,6 +27,14 @@ COPY requirements-ml.txt ./
 RUN python -m pip install --no-compile --requirement requirements-ml.txt
 
 
+FROM core-dependencies AS ml-cpu-dependencies
+
+RUN python -m pip install --no-compile torch==2.8.0 \
+    --index-url https://download.pytorch.org/whl/cpu
+COPY requirements-ml.txt ./
+RUN python -m pip install --no-compile --requirement requirements-ml.txt
+
+
 FROM ${PYTHON_IMAGE} AS core-runtime
 
 ENV PATH="/opt/maeumcall-venv/bin:${PATH}" \
@@ -63,6 +71,13 @@ FROM core-runtime AS ml-runtime
 ENV HF_HOME=/models
 
 COPY --from=ml-dependencies /opt/maeumcall-venv /opt/maeumcall-venv
+
+
+FROM core-runtime AS ml-cpu-runtime
+
+ENV HF_HOME=/models
+
+COPY --from=ml-cpu-dependencies /opt/maeumcall-venv /opt/maeumcall-venv
 
 
 # Keep a plain `docker build` on the model-free core image.

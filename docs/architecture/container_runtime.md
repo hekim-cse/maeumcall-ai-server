@@ -86,6 +86,8 @@ Docker의 `HEALTHCHECK`는 liveness를 사용한다. 아직 로컬 모델을 넣
 
 `Dockerfile`의 `ml-runtime` 대상은 `requirements-ml.txt`를 핵심 이미지에 추가한다. 모델 가중치는 이미지에 복사하지 않는다. `docker-compose.ml.yml`을 기본 Compose 파일 뒤에 적용하면 API만 `ml-runtime`을 사용하고, PostgreSQL·마이그레이션은 기존 핵심 이미지를 유지한다. `HF_MODEL_CACHE_DIR`은 승인한 모델 리비전이 미리 다운로드된 Hugging Face 캐시의 호스트 절대 경로다. API에는 이 경로를 `/models`로 읽기 전용 마운트한다.
 
+GPU 없이 x86_64 CPU 서버에서 실행할 때는 `ml-cpu-runtime`을 사용한다. PyTorch 2.8.0 CPU 전용 wheel을 공식 CPU 저장소에서 먼저 설치해, x86 기본 PyPI 패키지가 끌어오는 CUDA 의존성을 이미지에 포함하지 않는다. `ml-runtime`의 기존 패키지 계약과는 별도 대상이다. AWS 소형 실습 결과와 비용 경계는 [`aws_small_lab.md`](aws_small_lab.md)에 기록했다.
+
 ```bash
 export HF_MODEL_CACHE_DIR=/absolute/path/to/huggingface/cache
 mkdir -p "$HF_MODEL_CACHE_DIR"

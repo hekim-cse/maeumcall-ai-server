@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maeumcall-api
+  namespace: maeumcall-lab
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: maeumcall-api
+  template:
+    metadata:
+      labels:
+        app: maeumcall-api
+    spec:
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+      containers:
+        - name: api
+          image: maeum-call-ai-server:2.2.0-ml
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8001
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: maeumcall-lab
+                  key: DATABASE_URL
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: maeumcall-lab
+                  key: OPENAI_API_KEY
+            - name: BASELINE_ID_HMAC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: maeumcall-lab
+                  key: BASELINE_ID_HMAC_SECRET
+            - name: AUTH_SUBJECT_HMAC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: maeumcall-lab
+                  key: AUTH_SUBJECT_HMAC_SECRET
+            - name: KAKAO_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: maeumcall-lab
+                  key: KAKAO_APP_ID
+            - name: FIREBASE_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: maeumcall-lab
+                  key: FIREBASE_PROJECT_ID
+            - name: HF_HOME
+              value: /models
+            - name: HF_LOCAL_MODEL_ENABLED
+              value: "1"
+            - name: HF_LOCAL_FILES_ONLY
+              value: "1"
+            - name: HF_MODEL_DTYPE
+              value: bfloat16
+            - name: TTS_ENABLED
+              value: "0"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8001
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: 5Gi
+              cpu: 1000m
+            limits:
+              memory: 7Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: model-cache
+              mountPath: /models
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp/maeumcall
+      volumes:
+        - name: model-cache
+          hostPath:
+            path: /models
+            type: Directory
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maeumcall-api
+  namespace: maeumcall-lab
+spec:
+  selector:
+    app: maeumcall-api
+  ports:
+    - port: 8001
+      targetPort: 8001
