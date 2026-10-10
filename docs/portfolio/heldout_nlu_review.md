@@ -4,6 +4,8 @@
 아래 수량은 작은 탐색 평가의 작성 목표이며, 공식 V3 benchmark의 coverage
 충족이나 통계적 대표성을 뜻하지 않는다. 공식 결과 조건은
 [`evals/structured_nlu/README.md`](../../evals/structured_nlu/README.md)에 있다.
+사람 검토를 시작할 자료로 [AI 초안 후보 36건](heldout_nlu_ai_candidates.md)을
+제공한다. 후보는 정답이나 승인 기록이 아니다.
 
 ## 먼저 고정할 범위
 
