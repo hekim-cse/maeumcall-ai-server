@@ -1,0 +1,340 @@
+{
+  "kind": "exploratory_gguf_time_instruction_v1",
+  "not_official_quality_score": true,
+  "created_at_utc": "2026-10-10T01:52:06.797226+00:00",
+  "corpus_sha256": "2ef9081644689d7675b2fc3f67845c77e3d437ccd240f2f9d8d8a5fd408d0ddb",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "instruction": "시간 값은 사용자가 말한 시간 표현만 보존하세요. 사용자가 오전·오후·저녁을 말하지 않았다면 시간대를 추가하거나 24시간제로 변환하지 마세요. 예를 들어 '5시'라고만 말했다면 '5시'로 반환하세요.",
+  "case_ids": [
+    "professor-appointment-human-information-provision-001.c1",
+    "reservation-hair-salon-human-information-provision-001.c1",
+    "reservation-hospital-human-information-provision-001.c1",
+    "reservation-study-room-human-information-provision-001.c1"
+  ],
+  "repeats": 2,
+  "observations": [
+    {
+      "repeat": 1,
+      "mode": "baseline",
+      "case_id": "professor-appointment-human-information-provision-001.c1",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 12.431,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 12.431,
+          "prompt_tokens": 615,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 59,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "variant",
+      "case_id": "professor-appointment-human-information-provision-001.c1",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 12.808,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 12.808,
+          "prompt_tokens": 680,
+          "cached_prompt_tokens": 51,
+          "completion_tokens": 58,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "baseline",
+      "case_id": "reservation-hair-salon-human-information-provision-001.c1",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 20.635,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "service_type",
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 20.635,
+          "prompt_tokens": 1007,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 70,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "variant",
+      "case_id": "reservation-hair-salon-human-information-provision-001.c1",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 21.05,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "service_type"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 21.049,
+          "prompt_tokens": 1072,
+          "cached_prompt_tokens": 56,
+          "completion_tokens": 66,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "baseline",
+      "case_id": "reservation-hospital-human-information-provision-001.c1",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 15.762,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 15.761,
+          "prompt_tokens": 772,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 64,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "variant",
+      "case_id": "reservation-hospital-human-information-provision-001.c1",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 10.812,
+      "contract_valid": false,
+      "attempts": [
+        {
+          "elapsed_seconds": 6.66,
+          "prompt_tokens": 837,
+          "cached_prompt_tokens": 642,
+          "completion_tokens": 53,
+          "finish_reason": "stop"
+        },
+        {
+          "elapsed_seconds": 4.149,
+          "prompt_tokens": 946,
+          "cached_prompt_tokens": 889,
+          "completion_tokens": 53,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "baseline",
+      "case_id": "reservation-study-room-human-information-provision-001.c1",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 16.697,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "start_time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 16.697,
+          "prompt_tokens": 801,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 70,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "variant",
+      "case_id": "reservation-study-room-human-information-provision-001.c1",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 16.853,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 16.852,
+          "prompt_tokens": 866,
+          "cached_prompt_tokens": 51,
+          "completion_tokens": 66,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "variant",
+      "case_id": "professor-appointment-human-information-provision-001.c1",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 2.993,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 2.992,
+          "prompt_tokens": 680,
+          "cached_prompt_tokens": 679,
+          "completion_tokens": 58,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "baseline",
+      "case_id": "professor-appointment-human-information-provision-001.c1",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 3.038,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 3.037,
+          "prompt_tokens": 615,
+          "cached_prompt_tokens": 614,
+          "completion_tokens": 59,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "variant",
+      "case_id": "reservation-hair-salon-human-information-provision-001.c1",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 3.906,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "service_type"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 3.906,
+          "prompt_tokens": 1072,
+          "cached_prompt_tokens": 1071,
+          "completion_tokens": 66,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "baseline",
+      "case_id": "reservation-hair-salon-human-information-provision-001.c1",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 4.079,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "service_type",
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 4.079,
+          "prompt_tokens": 1007,
+          "cached_prompt_tokens": 1006,
+          "completion_tokens": 70,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "variant",
+      "case_id": "reservation-hospital-human-information-provision-001.c1",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 7.076,
+      "contract_valid": false,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.925,
+          "prompt_tokens": 837,
+          "cached_prompt_tokens": 836,
+          "completion_tokens": 53,
+          "finish_reason": "stop"
+        },
+        {
+          "elapsed_seconds": 4.15,
+          "prompt_tokens": 946,
+          "cached_prompt_tokens": 889,
+          "completion_tokens": 53,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "baseline",
+      "case_id": "reservation-hospital-human-information-provision-001.c1",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 6.045,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 6.045,
+          "prompt_tokens": 772,
+          "cached_prompt_tokens": 642,
+          "completion_tokens": 64,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "variant",
+      "case_id": "reservation-study-room-human-information-provision-001.c1",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 3.622,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 3.622,
+          "prompt_tokens": 866,
+          "cached_prompt_tokens": 865,
+          "completion_tokens": 66,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "mode": "baseline",
+      "case_id": "reservation-study-room-human-information-provision-001.c1",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 3.829,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "start_time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 3.829,
+          "prompt_tokens": 801,
+          "cached_prompt_tokens": 800,
+          "completion_tokens": 70,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  ]
+}
