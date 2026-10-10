@@ -21,6 +21,7 @@ from evals.structured_nlu.benchmark import (
     inspect_benchmark_coverage,
     prepare_benchmark_slice,
 )
+from evals.structured_nlu.comparison import compare_test_predictions
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from evals.structured_nlu.contrast import (
     DETAILED_POSITIVE_CONTRASTS_V1,
@@ -516,6 +517,57 @@ def test_metrics_case_exact_match_requires_every_label_and_valid_contract():
 
     assert scores.counts.fully_correct_cases == 1
     assert scores.case_exact_match_rate == 0.5
+
+
+def test_paired_accuracy_uses_the_same_adjudicated_test_cases():
+    cases = tuple(
+        _case(
+            case_id=f"appointment.paired-{index}",
+            message=f"{date} 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=(date,))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+            split="test",
+        )
+        for index, date in enumerate(("내일", "모레"), start=1)
+    )
+    exact_fields = (
+        {"appointment_purpose": None, "date": "내일", "time": None, "user_name": None},
+        {"appointment_purpose": None, "date": "모레", "time": None, "user_name": None},
+    )
+    baseline = (
+        _prediction(cases[0].id, fields=exact_fields[0], action="provide_appointment_info"),
+        _prediction(
+            cases[1].id,
+            fields={**exact_fields[1], "time": "오후 3시"},
+            action="provide_appointment_info",
+        ),
+    )
+    candidate = tuple(
+        _prediction(case.id, fields=fields, action="provide_appointment_info")
+        for case, fields in zip(cases, exact_fields, strict=True)
+    )
+
+    result = compare_test_predictions(cases, baseline, candidate)
+
+    assert result.cases == 2
+    assert result.baseline_correct == 1
+    assert result.candidate_correct == 2
+    assert result.difference_percentage_points == 50.0
+    assert result.relative_change_percent == 100.0
+    zero_baseline = compare_test_predictions(cases[1:], baseline[1:], candidate[1:])
+    assert zero_baseline.baseline_correct == 0
+    assert zero_baseline.relative_change_percent is None
+    with pytest.raises(ValueError, match="test cases only"):
+        compare_test_predictions(
+            (cases[0].model_copy(update={"split": "development"}),), baseline[:1], candidate[:1]
+        )
+    with pytest.raises(ValueError, match="requires adjudicated"):
+        compare_test_predictions(
+            (cases[0].model_copy(update={"review_status": "draft"}),), baseline[:1], candidate[:1]
+        )
+    with pytest.raises(ValueError, match="prediction ids do not match"):
+        compare_test_predictions(cases, baseline[:1], candidate)
 
 
 def test_metrics_require_exactly_one_prediction_per_case():
