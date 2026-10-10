@@ -95,11 +95,18 @@ def main() -> None:
     parser.add_argument("--server-image-digest", required=True)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--timeout", type=int, default=180)
+    parser.add_argument("--case-ids", nargs="*", default=None)
     args = parser.parse_args()
     if args.timeout < 1 or args.output.exists():
         parser.error("timeout must be positive and output must not already exist")
 
     cases, candidate_bytes, corpus_bytes = load_draft_cases()
+    if args.case_ids is not None:
+        selected = set(args.case_ids)
+        known = {case["id"] for case in cases}
+        if not selected or selected - known:
+            parser.error(f"case-ids must be nonempty known IDs: {sorted(selected - known)}")
+        cases = [case for case in cases if case["id"] in selected]
     observations = []
     try:
         for index, case in enumerate(cases, start=1):
@@ -132,6 +139,7 @@ def main() -> None:
                 "stop": ["<|eot_id|>"],
             },
             "case_count": len(cases),
+            "selected_case_ids": [case["id"] for case in cases],
             "observations": observations,
         }
         args.output.parent.mkdir(parents=True, exist_ok=True)

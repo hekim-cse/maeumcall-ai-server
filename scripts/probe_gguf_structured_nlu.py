@@ -18,6 +18,7 @@ from unittest.mock import patch
 
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from llm.errors import AIResponseValidationError
+from llm.structured_output import StructuredKeyError
 from scripts.probe_chat_latency import CORPUS, select_cases
 
 DIRECT_ANALYZERS = {
@@ -57,6 +58,30 @@ DIRECT_ANALYZERS = {
         False,
     ),
 }
+
+
+def safe_failure_code(cause: BaseException | None) -> str | None:
+    """Classify known validator failures without saving model text or values."""
+    if cause is None:
+        return None
+    if isinstance(cause, StructuredKeyError):
+        return "schema_keys_mismatch"
+    message = str(cause)
+    if "user_action must be one of" in message:
+        return "action_not_allowed_for_state"
+    if "intent must be" in message:
+        return "intent_not_allowed"
+    if "must not include current-turn fields" in message:
+        return "action_has_forbidden_fields"
+    if "requires at least one current-turn field" in message:
+        return "action_missing_required_field"
+    if "requires current-turn fields" in message:
+        return "action_missing_required_field"
+    if "change_field must be null" in message:
+        return "unexpected_change_field"
+    if "must be one of" in message:
+        return "field_value_not_allowed"
+    return "other_validation_failure"
 
 
 def draft_mismatches(case: dict, normalized: dict) -> list[str]:
@@ -140,12 +165,21 @@ def run_case(case: dict, *, endpoint: str, model: str, timeout: int) -> dict:
     with patch.object(module, "complete_hf_json", completion):
         try:
             normalized = analyze()
-        except AIResponseValidationError:
+        except AIResponseValidationError as exc:
+            cause = exc.__cause__
+            failure = {
+                "last_error_type": type(cause).__name__ if cause else None,
+                "last_error_code": safe_failure_code(cause),
+            }
+            if isinstance(cause, StructuredKeyError):
+                failure["missing_output_keys"] = sorted(cause.missing)
+                failure["unexpected_output_key_count"] = len(cause.unexpected)
             return {
                 "case_id": case["id"],
                 "scenario_key": case["scenario_key"],
                 "elapsed_seconds": round(time.perf_counter() - started, 3),
                 "contract_valid": False,
+                "failure": failure,
                 "attempts": attempts,
             }
     return {

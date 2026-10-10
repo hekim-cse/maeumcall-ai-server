@@ -1,0 +1,160 @@
+{
+  "kind": "exploratory_gguf_ai_candidate_probe_v1",
+  "candidate_status": "ai_assisted_unreviewed",
+  "not_official_quality_score": true,
+  "complete": true,
+  "created_at_utc": "2026-10-10T02:27:34.880842+00:00",
+  "candidate_source_sha256": "39013d51b7c35a1b30f31e92842402a92e38e7925d6acad45f31e819a1718d23",
+  "reference_corpus_sha256": "2ef9081644689d7675b2fc3f67845c77e3d437ccd240f2f9d8d8a5fd408d0ddb",
+  "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "request_settings": {
+    "max_tokens": 180,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ]
+  },
+  "case_count": 5,
+  "selected_case_ids": [
+    "C06",
+    "C08",
+    "C12",
+    "C16",
+    "C20"
+  ],
+  "observations": [
+    {
+      "case_id": "C06",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "elapsed_seconds": 10.464,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "attempts": [
+        {
+          "elapsed_seconds": 4.655,
+          "prompt_tokens": 1283,
+          "cached_prompt_tokens": 1282,
+          "completion_tokens": 79,
+          "finish_reason": "stop"
+        },
+        {
+          "elapsed_seconds": 5.807,
+          "prompt_tokens": 1416,
+          "cached_prompt_tokens": 1361,
+          "completion_tokens": 79,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "C08",
+      "scenario_key": "교수님:결석 사유 전달",
+      "elapsed_seconds": 6.246,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "attempts": [
+        {
+          "elapsed_seconds": 2.578,
+          "prompt_tokens": 629,
+          "cached_prompt_tokens": 628,
+          "completion_tokens": 53,
+          "finish_reason": "stop"
+        },
+        {
+          "elapsed_seconds": 3.668,
+          "prompt_tokens": 738,
+          "cached_prompt_tokens": 681,
+          "completion_tokens": 53,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "C12",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 5.8,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "attempts": [
+        {
+          "elapsed_seconds": 2.421,
+          "prompt_tokens": 600,
+          "cached_prompt_tokens": 599,
+          "completion_tokens": 49,
+          "finish_reason": "stop"
+        },
+        {
+          "elapsed_seconds": 3.378,
+          "prompt_tokens": 705,
+          "cached_prompt_tokens": 648,
+          "completion_tokens": 49,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "C16",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 8.193,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "attempts": [
+        {
+          "elapsed_seconds": 3.469,
+          "prompt_tokens": 1116,
+          "cached_prompt_tokens": 1115,
+          "completion_tokens": 64,
+          "finish_reason": "stop"
+        },
+        {
+          "elapsed_seconds": 4.723,
+          "prompt_tokens": 1234,
+          "cached_prompt_tokens": 1179,
+          "completion_tokens": 64,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "C20",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 8.111,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "attempts": [
+        {
+          "elapsed_seconds": 3.464,
+          "prompt_tokens": 1069,
+          "cached_prompt_tokens": 1068,
+          "completion_tokens": 64,
+          "finish_reason": "stop"
+        },
+        {
+          "elapsed_seconds": 4.646,
+          "prompt_tokens": 1187,
+          "cached_prompt_tokens": 1132,
+          "completion_tokens": 64,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  ]
+}
