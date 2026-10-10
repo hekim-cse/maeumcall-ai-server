@@ -474,6 +474,48 @@ def test_metrics_count_contract_retry_hallucination_omission_and_exact_values():
     assert scores.hallucination_rate == pytest.approx(1 / 3)
     assert scores.omission_rate == pytest.approx(1 / 5)
     assert scores.change_field_accuracy is None
+    assert scores.case_exact_match_rate == 0.0
+
+
+def test_metrics_case_exact_match_requires_every_label_and_valid_contract():
+    cases = (
+        _case(
+            case_id="appointment.exact",
+            message="내일 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+        ),
+        _case(
+            case_id="appointment.extra-time",
+            message="모레 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=("모레",))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+        ),
+    )
+    predictions = (
+        _prediction(
+            "appointment.exact",
+            fields={"appointment_purpose": None, "date": "내일", "time": None, "user_name": None},
+            action="provide_appointment_info",
+        ),
+        _prediction(
+            "appointment.extra-time",
+            fields={
+                "appointment_purpose": None,
+                "date": "모레",
+                "time": "오후 3시",
+                "user_name": None,
+            },
+            action="provide_appointment_info",
+        ),
+    )
+
+    scores = score_predictions(cases, predictions)
+
+    assert scores.counts.fully_correct_cases == 1
+    assert scores.case_exact_match_rate == 0.5
 
 
 def test_metrics_require_exactly_one_prediction_per_case():
@@ -535,6 +577,7 @@ def test_metrics_count_prediction_fields_outside_the_live_contract_as_contract_f
 
     assert scores.final_contract_success_rate == 0.0
     assert scores.complete_failure_rate == 1.0
+    assert scores.case_exact_match_rate == 0.0
     assert scores.counts.gold_present_slots == 0
     assert scores.counts.gold_absent_slots == 0
 
