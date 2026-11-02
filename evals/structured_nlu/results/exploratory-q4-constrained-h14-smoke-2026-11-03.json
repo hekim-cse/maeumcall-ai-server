@@ -1,0 +1,70 @@
+{
+  "kind": "exploratory_gguf_review_draft_round2_v1",
+  "candidate_status": "ai_assisted_unreviewed",
+  "not_official_quality_score": true,
+  "output_shape_capture": true,
+  "workflow_schema_constrained": true,
+  "complete": true,
+  "created_at_utc": "2026-11-02T17:57:10.047047+00:00",
+  "sentence_draft_sha256": "f8e51b48bb7303b58e623af8c93d823b9397f2c5729f4a7f9f9c52eba6eae301",
+  "label_draft_sha256": "bd1c35e6f20d3e2832247d6c026b4b0e1e483ad6f774c23c89a87cd4763a1e17",
+  "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF",
+  "model_sha256": "62a63f912a0708d9a522f974997b5bbd4927e01d739b07fe4c55c1f545241561",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runtime": "Docker Desktop linux/arm64 CPU",
+  "container_cpu_limit": 2,
+  "server_threads": 2,
+  "context_size": 4096,
+  "request_settings": {
+    "max_tokens": 180,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ]
+  },
+  "case_count": 1,
+  "selected_case_ids": [
+    "H14"
+  ],
+  "observations": [
+    {
+      "case_id": "H14",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 7.354,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "attempts": [
+        {
+          "elapsed_seconds": 3.347,
+          "prompt_tokens": 1113,
+          "cached_prompt_tokens": 1112,
+          "completion_tokens": 65,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.006,
+          "prompt_tokens": 1232,
+          "cached_prompt_tokens": 1177,
+          "completion_tokens": 65,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    }
+  ]
+}

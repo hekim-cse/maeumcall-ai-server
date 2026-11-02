@@ -19,6 +19,7 @@ from unittest.mock import patch
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from llm.errors import AIResponseValidationError
 from llm.structured_output import StructuredKeyError
+from scripts.gguf_service_workflow_schema import workflow_response_schema
 from scripts.probe_chat_latency import CORPUS, select_cases
 
 DIRECT_ANALYZERS = {
@@ -104,8 +105,56 @@ def draft_mismatches(case: dict, normalized: dict) -> list[str]:
     return sorted(mismatched)
 
 
-def run_case(case: dict, *, endpoint: str, model: str, timeout: int) -> dict:
+def safe_output_shape(raw: str, *, field_names: tuple[str, ...], actions: frozenset[str]) -> dict:
+    """Retain only whitelisted action and field names, never generated values."""
+    try:
+        parsed = json.loads(raw)
+    except (json.JSONDecodeError, TypeError):
+        return {"json_object": False}
+    if not isinstance(parsed, dict):
+        return {"json_object": False}
+    action = parsed.get("user_action")
+    fields = parsed.get("fields")
+    if not isinstance(fields, dict):
+        fields = parsed
+    return {
+        "json_object": True,
+        "user_action": action if isinstance(action, str) and action in actions else "__other__",
+        "present_field_names": sorted(name for name in field_names if fields.get(name) is not None),
+        "change_field": (
+            parsed.get("change_field")
+            if parsed.get("change_field") in field_names
+            else None
+            if parsed.get("change_field") is None
+            else "__other__"
+        ),
+    }
+
+
+def run_case(
+    case: dict,
+    *,
+    endpoint: str,
+    model: str,
+    timeout: int,
+    capture_shape: bool = False,
+    constrain_workflow: bool = False,
+    schema_format: str = "json_schema",
+) -> dict:
     attempts: list[dict] = []
+    contract = EVALUATION_CONTRACTS[case["scenario_key"]]
+    if constrain_workflow:
+        if schema_format not in {"json_schema", "json_object"}:
+            raise ValueError("unsupported schema format")
+        if contract.workflow_spec is None:
+            raise ValueError("workflow schema is available only for service-workflow cases")
+        response_schema = workflow_response_schema(
+            contract.workflow_spec,
+            conversation_state=case["conversation_state"],
+            current_fields=case["current_fields"],
+        )
+    else:
+        response_schema = None
 
     def completion(messages: list[dict[str, str]]) -> str:
         payload = {
@@ -116,6 +165,8 @@ def run_case(case: dict, *, endpoint: str, model: str, timeout: int) -> dict:
             "repeat_penalty": 1.05,
             "stop": ["<|eot_id|>"],
         }
+        if response_schema is not None:
+            payload["response_format"] = {"type": schema_format, "schema": response_schema}
         request = urllib.request.Request(
             endpoint,
             data=json.dumps(payload, ensure_ascii=False).encode(),
@@ -126,18 +177,21 @@ def run_case(case: dict, *, endpoint: str, model: str, timeout: int) -> dict:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             body = json.load(response)
         usage = body.get("usage", {})
-        attempts.append(
-            {
-                "elapsed_seconds": round(time.perf_counter() - started, 3),
-                "prompt_tokens": usage.get("prompt_tokens"),
-                "cached_prompt_tokens": usage.get("prompt_tokens_details", {}).get("cached_tokens"),
-                "completion_tokens": usage.get("completion_tokens"),
-                "finish_reason": body["choices"][0].get("finish_reason"),
-            }
-        )
-        return body["choices"][0]["message"]["content"]
+        attempt = {
+            "elapsed_seconds": round(time.perf_counter() - started, 3),
+            "prompt_tokens": usage.get("prompt_tokens"),
+            "cached_prompt_tokens": usage.get("prompt_tokens_details", {}).get("cached_tokens"),
+            "completion_tokens": usage.get("completion_tokens"),
+            "finish_reason": body["choices"][0].get("finish_reason"),
+        }
+        raw = body["choices"][0]["message"]["content"]
+        if capture_shape:
+            attempt["output_shape"] = safe_output_shape(
+                raw, field_names=contract.field_names, actions=contract.user_actions
+            )
+        attempts.append(attempt)
+        return raw
 
-    contract = EVALUATION_CONTRACTS[case["scenario_key"]]
     if contract.workflow_spec is not None:
         module = importlib.import_module("services.flow.service_workflow.structured")
 

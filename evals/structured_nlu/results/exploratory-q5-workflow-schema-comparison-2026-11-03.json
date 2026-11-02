@@ -1,0 +1,38 @@
+{
+  "kind": "exploratory_workflow_schema_comparison_v1",
+  "not_official_quality_score": true,
+  "created_at_utc": "2026-11-02T18:14:01.373166+00:00",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "sentence_draft_sha256": "f8e51b48bb7303b58e623af8c93d823b9397f2c5729f4a7f9f9c52eba6eae301",
+  "label_draft_sha256": "bd1c35e6f20d3e2832247d6c026b4b0e1e483ad6f774c23c89a87cd4763a1e17",
+  "schema_format": "json_object",
+  "case_count": 8,
+  "case_ids": [
+    "H13",
+    "H14",
+    "H15",
+    "H16",
+    "H17",
+    "H18",
+    "H19",
+    "H20"
+  ],
+  "plain_contract_passes": 3,
+  "constrained_contract_passes": 8,
+  "plain_draft_matches": 0,
+  "constrained_draft_matches": 3,
+  "new_contract_pass_case_ids": [
+    "H14",
+    "H16",
+    "H18",
+    "H19",
+    "H20"
+  ],
+  "lost_contract_pass_case_ids": [],
+  "new_draft_match_case_ids": [
+    "H14",
+    "H16",
+    "H18"
+  ],
+  "lost_draft_match_case_ids": []
+}
