@@ -2,7 +2,7 @@ services:
   api:
     image: maeum-call-ai-server:${AI_SERVER_ML_IMAGE_TAG:-2.2.0-ml}
     build:
-      target: ml-runtime
+      target: ${AI_SERVER_ML_BUILD_TARGET:-ml-runtime}
     environment:
       HF_LOCAL_MODEL_ENABLED: "1"
       HF_LOCAL_FILES_ONLY: "1"

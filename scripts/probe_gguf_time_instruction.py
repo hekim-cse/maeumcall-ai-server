@@ -85,21 +85,21 @@ def main() -> None:
                     )
     finally:
         urllib.request.urlopen = original_urlopen
-
-    report = {
-        "kind": "exploratory_gguf_time_instruction_v1",
-        "not_official_quality_score": True,
-        "created_at_utc": datetime.now(UTC).isoformat(),
-        "corpus_sha256": hashlib.sha256(corpus_bytes).hexdigest(),
-        "model_sha256": args.model_sha256,
-        "server_image_digest": args.server_image_digest,
-        "instruction": INSTRUCTION,
-        "case_ids": CASE_IDS,
-        "repeats": args.repeats,
-        "observations": observations,
-    }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+        report = {
+            "kind": "exploratory_gguf_time_instruction_v1",
+            "not_official_quality_score": True,
+            "complete": len(observations) == len(cases) * args.repeats * 2,
+            "created_at_utc": datetime.now(UTC).isoformat(),
+            "corpus_sha256": hashlib.sha256(corpus_bytes).hexdigest(),
+            "model_sha256": args.model_sha256,
+            "server_image_digest": args.server_image_digest,
+            "instruction": INSTRUCTION,
+            "case_ids": CASE_IDS,
+            "repeats": args.repeats,
+            "observations": observations,
+        }
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
 
 
 if __name__ == "__main__":

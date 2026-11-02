@@ -11,7 +11,7 @@
 
 ```bash
 export HF_MODEL_CACHE_DIR=/absolute/path/to/huggingface/cache
-export LAB_KUBECONFIG=/private/tmp/maeumcall-kind-kubeconfig
+export LAB_KUBECONFIG=/tmp/maeumcall-kind-kubeconfig
 
 docker build --target core-runtime --tag maeum-call-ai-server:2.2.0-core .
 docker build --target ml-runtime --tag maeum-call-ai-server:2.2.0-ml .
@@ -21,7 +21,7 @@ docker run --rm --user 0:0 \
   --entrypoint python maeum-call-ai-server:2.2.0-ml \
   -m scripts.prepare_hf_model_cache
 
-cat > /private/tmp/maeumcall-kind-config.yaml <<EOF
+cat > /tmp/maeumcall-kind-config.yaml <<EOF
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -33,7 +33,7 @@ nodes:
 EOF
 
 kind create cluster --name maeumcall-lab \
-  --config /private/tmp/maeumcall-kind-config.yaml \
+  --config /tmp/maeumcall-kind-config.yaml \
   --kubeconfig "$LAB_KUBECONFIG"
 kind load docker-image maeum-call-ai-server:2.2.0-core \
   maeum-call-ai-server:2.2.0-ml --name maeumcall-lab
@@ -59,6 +59,8 @@ kubectl --kubeconfig "$LAB_KUBECONFIG" --context kind-maeumcall-lab \
   apply -f deploy/kind/postgres.yaml
 kubectl --kubeconfig "$LAB_KUBECONFIG" --context kind-maeumcall-lab \
   -n maeumcall-lab rollout status deployment/postgres --timeout=180s
+kubectl --kubeconfig "$LAB_KUBECONFIG" --context kind-maeumcall-lab \
+  -n maeumcall-lab delete job maeumcall-migrate --ignore-not-found
 kubectl --kubeconfig "$LAB_KUBECONFIG" --context kind-maeumcall-lab \
   apply -f deploy/kind/migrate.yaml
 kubectl --kubeconfig "$LAB_KUBECONFIG" --context kind-maeumcall-lab \

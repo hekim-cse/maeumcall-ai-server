@@ -207,35 +207,40 @@ def main() -> None:
     corpus_bytes = CORPUS.read_bytes()
     cases = select_cases(json.loads(corpus_bytes), [], False)
     observations = []
-    for index, case in enumerate(cases, start=1):
-        observation = run_case(case, endpoint=args.endpoint, model=args.model, timeout=args.timeout)
-        observations.append(observation)
-        print(
-            f"{index}/{len(cases)} case={case['id']} "
-            f"contract_valid={observation['contract_valid']} "
-            f"elapsed={observation['elapsed_seconds']:.3f}s",
-            flush=True,
-        )
-    report = {
-        "kind": "exploratory_gguf_structured_nlu_v1",
-        "not_official_quality_score": True,
-        "created_at_utc": datetime.now(UTC).isoformat(),
-        "corpus_sha256": hashlib.sha256(corpus_bytes).hexdigest(),
-        "probe_runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        "model": args.model,
-        "model_sha256": args.model_sha256,
-        "server_image_digest": args.server_image_digest,
-        "request_settings": {
-            "max_tokens": 180,
-            "temperature": 0,
-            "repeat_penalty": 1.05,
-            "stop": ["<|eot_id|>"],
-        },
-        "case_count": len(cases),
-        "observations": observations,
-    }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    try:
+        for index, case in enumerate(cases, start=1):
+            observation = run_case(
+                case, endpoint=args.endpoint, model=args.model, timeout=args.timeout
+            )
+            observations.append(observation)
+            print(
+                f"{index}/{len(cases)} case={case['id']} "
+                f"contract_valid={observation['contract_valid']} "
+                f"elapsed={observation['elapsed_seconds']:.3f}s",
+                flush=True,
+            )
+    finally:
+        report = {
+            "kind": "exploratory_gguf_structured_nlu_v1",
+            "not_official_quality_score": True,
+            "complete": len(observations) == len(cases),
+            "created_at_utc": datetime.now(UTC).isoformat(),
+            "corpus_sha256": hashlib.sha256(corpus_bytes).hexdigest(),
+            "probe_runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "model": args.model,
+            "model_sha256": args.model_sha256,
+            "server_image_digest": args.server_image_digest,
+            "request_settings": {
+                "max_tokens": 180,
+                "temperature": 0,
+                "repeat_penalty": 1.05,
+                "stop": ["<|eot_id|>"],
+            },
+            "case_count": len(cases),
+            "observations": observations,
+        }
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(
         f"cases={len(cases)} contract_valid={sum(item['contract_valid'] for item in observations)} "
         f"output={args.output}"

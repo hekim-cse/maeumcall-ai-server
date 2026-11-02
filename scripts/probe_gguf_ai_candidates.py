@@ -17,7 +17,7 @@ from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from scripts.probe_chat_latency import CORPUS
 from scripts.probe_gguf_structured_nlu import run_case
 
-CANDIDATES = Path("docs/portfolio/heldout_nlu_ai_candidates.md")
+CANDIDATES = Path(__file__).resolve().parents[1] / "docs/portfolio/heldout_nlu_ai_candidates.md"
 ROW = re.compile(r"^\| (C\d\d) \|")
 CODE_SPAN = re.compile(r"`([^`]+)`")
 

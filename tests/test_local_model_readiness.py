@@ -13,7 +13,7 @@ pytestmark = pytest.mark.unit
 
 def test_local_model_readiness_requires_loaded_configured_revision(monkeypatch):
     monkeypatch.setattr(provider, "HF_LOCAL_MODEL_ENABLED", True)
-    monkeypatch.setattr(provider, "_tokenizer", object())
+    monkeypatch.setattr(provider, "_tokenizer", SimpleNamespace(chat_template="template"))
     monkeypatch.setattr(provider, "_model", object())
     monkeypatch.setattr(provider, "_loaded_model_name", provider.HF_MODEL_NAME)
     monkeypatch.setattr(provider, "_loaded_model_revision", "different-revision")
@@ -21,6 +21,9 @@ def test_local_model_readiness_requires_loaded_configured_revision(monkeypatch):
 
     monkeypatch.setattr(provider, "_loaded_model_revision", provider.HF_MODEL_REVISION)
     assert provider.local_model_ready() is True
+
+    monkeypatch.setattr(provider, "_tokenizer", SimpleNamespace(chat_template=None))
+    assert provider.local_model_ready() is False
 
 
 def test_missing_chat_template_is_rejected():

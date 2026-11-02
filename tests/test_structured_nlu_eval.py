@@ -519,6 +519,98 @@ def test_metrics_case_exact_match_requires_every_label_and_valid_contract():
     assert scores.case_exact_match_rate == 0.5
 
 
+def test_metrics_case_exact_match_rejects_valid_action_mismatch():
+    case = _case(
+        case_id="appointment.action-mismatch",
+        message="네, 확인했습니다.",
+        fields=_appointment_fields(),
+        action="confirm_info",
+        tags=("confirmation",),
+        conversation_state="confirming_info",
+    )
+    prediction = _prediction(
+        case.id,
+        fields=dict.fromkeys(case.labels.fields),
+        action="unknown",
+    )
+
+    scores = score_predictions((case,), (prediction,))
+
+    assert scores.counts.final_contract_passes == 1
+    assert scores.counts.fully_correct_cases == 0
+
+
+def test_metrics_case_exact_match_rejects_valid_intent_mismatch():
+    contract = EVALUATION_CONTRACTS["예약:병원 예약"]
+    fields = dict.fromkeys(contract.field_names)
+    case = EvaluationCase(
+        id="hospital.intent-mismatch",
+        conversation_group_id="hospital.intent-mismatch",
+        split="development",
+        scenario_key=contract.scenario_key,
+        conversation_state="asking_date",
+        current_fields={},
+        offered_alternative_times=(),
+        user_message="날짜를 생각해 볼게요.",
+        labels=GoldLabels(
+            intent="reservation",
+            fields=fields,
+            user_action="unknown",
+            change_field=None,
+        ),
+        tags=("hard_negative",),
+        provenance="human_authored",
+        review_status="adjudicated",
+    )
+    prediction = _prediction(case.id, fields=fields, action="unknown", intent=None)
+
+    scores = score_predictions((case,), (prediction,))
+
+    assert scores.counts.final_contract_passes == 1
+    assert scores.counts.fully_correct_cases == 0
+
+
+def test_metrics_case_exact_match_rejects_valid_change_field_mismatch():
+    contract = EVALUATION_CONTRACTS["배달:주문 변경"]
+    fields = dict.fromkeys(contract.field_names)
+    case = EvaluationCase(
+        id="delivery.change-field-mismatch",
+        conversation_group_id="delivery.change-field-mismatch",
+        split="development",
+        scenario_key=contract.scenario_key,
+        conversation_state=ORDER_CHANGE_SPEC.confirming_state,
+        current_fields={
+            "order_number": "A-100",
+            "change_type": "delivery_address",
+            "requested_change": "서울시 새 주소",
+            "unavailable_preference": "keep_order",
+        },
+        offered_alternative_times=(),
+        user_message="주문 정보를 바꾸고 싶어요.",
+        labels=GoldLabels(
+            intent=ORDER_CHANGE_SPEC.intent,
+            fields=fields,
+            user_action="change_detail",
+            change_field="order_number",
+        ),
+        tags=("correction",),
+        provenance="human_authored",
+        review_status="adjudicated",
+    )
+    prediction = _prediction(
+        case.id,
+        fields=fields,
+        action="change_detail",
+        intent=ORDER_CHANGE_SPEC.intent,
+        change_field="requested_change",
+    )
+
+    scores = score_predictions((case,), (prediction,))
+
+    assert scores.counts.final_contract_passes == 1
+    assert scores.counts.fully_correct_cases == 0
+
+
 def test_paired_accuracy_uses_the_same_adjudicated_test_cases():
     cases = tuple(
         _case(

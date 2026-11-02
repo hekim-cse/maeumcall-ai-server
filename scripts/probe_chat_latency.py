@@ -67,7 +67,10 @@ def probe(endpoint: str, case: dict, timeout: int) -> dict:
             status = response.status
     except urllib.error.HTTPError as exc:
         status = exc.code
-        body = json.load(exc)
+        try:
+            body = json.load(exc)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            body = {}
     except (TimeoutError, urllib.error.URLError) as exc:
         return {
             "case_id": case["id"],
@@ -86,7 +89,8 @@ def probe(endpoint: str, case: dict, timeout: int) -> dict:
         result["conversation_state"] = body.get("conversationState")
         result["external_effect"] = body.get("simulation", {}).get("externalEffect")
     else:
-        result["error_code"] = body.get("error", {}).get("code")
+        error = body.get("error") if isinstance(body, dict) else None
+        result["error_code"] = error.get("code") if isinstance(error, dict) else None
     return result
 
 

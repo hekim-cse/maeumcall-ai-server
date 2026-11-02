@@ -34,6 +34,7 @@ def local_model_ready() -> bool:
     with _MODEL_LOCK:
         return (
             _tokenizer is not None
+            and bool(getattr(_tokenizer, "chat_template", None))
             and _model is not None
             and _loaded_model_name == HF_MODEL_NAME
             and _loaded_model_revision == HF_MODEL_REVISION
