@@ -21,6 +21,7 @@ from evals.structured_nlu.benchmark import (
     inspect_benchmark_coverage,
     prepare_benchmark_slice,
 )
+from evals.structured_nlu.comparison import compare_test_predictions
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from evals.structured_nlu.contrast import (
     DETAILED_POSITIVE_CONTRASTS_V1,
@@ -474,6 +475,191 @@ def test_metrics_count_contract_retry_hallucination_omission_and_exact_values():
     assert scores.hallucination_rate == pytest.approx(1 / 3)
     assert scores.omission_rate == pytest.approx(1 / 5)
     assert scores.change_field_accuracy is None
+    assert scores.case_exact_match_rate == 0.0
+
+
+def test_metrics_case_exact_match_requires_every_label_and_valid_contract():
+    cases = (
+        _case(
+            case_id="appointment.exact",
+            message="내일 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+        ),
+        _case(
+            case_id="appointment.extra-time",
+            message="모레 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=("모레",))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+        ),
+    )
+    predictions = (
+        _prediction(
+            "appointment.exact",
+            fields={"appointment_purpose": None, "date": "내일", "time": None, "user_name": None},
+            action="provide_appointment_info",
+        ),
+        _prediction(
+            "appointment.extra-time",
+            fields={
+                "appointment_purpose": None,
+                "date": "모레",
+                "time": "오후 3시",
+                "user_name": None,
+            },
+            action="provide_appointment_info",
+        ),
+    )
+
+    scores = score_predictions(cases, predictions)
+
+    assert scores.counts.fully_correct_cases == 1
+    assert scores.case_exact_match_rate == 0.5
+
+
+def test_metrics_case_exact_match_rejects_valid_action_mismatch():
+    case = _case(
+        case_id="appointment.action-mismatch",
+        message="네, 확인했습니다.",
+        fields=_appointment_fields(),
+        action="confirm_info",
+        tags=("confirmation",),
+        conversation_state="confirming_info",
+    )
+    prediction = _prediction(
+        case.id,
+        fields=dict.fromkeys(case.labels.fields),
+        action="unknown",
+    )
+
+    scores = score_predictions((case,), (prediction,))
+
+    assert scores.counts.final_contract_passes == 1
+    assert scores.counts.fully_correct_cases == 0
+
+
+def test_metrics_case_exact_match_rejects_valid_intent_mismatch():
+    contract = EVALUATION_CONTRACTS["예약:병원 예약"]
+    fields = dict.fromkeys(contract.field_names)
+    case = EvaluationCase(
+        id="hospital.intent-mismatch",
+        conversation_group_id="hospital.intent-mismatch",
+        split="development",
+        scenario_key=contract.scenario_key,
+        conversation_state="asking_date",
+        current_fields={},
+        offered_alternative_times=(),
+        user_message="날짜를 생각해 볼게요.",
+        labels=GoldLabels(
+            intent="reservation",
+            fields=fields,
+            user_action="unknown",
+            change_field=None,
+        ),
+        tags=("hard_negative",),
+        provenance="human_authored",
+        review_status="adjudicated",
+    )
+    prediction = _prediction(case.id, fields=fields, action="unknown", intent=None)
+
+    scores = score_predictions((case,), (prediction,))
+
+    assert scores.counts.final_contract_passes == 1
+    assert scores.counts.fully_correct_cases == 0
+
+
+def test_metrics_case_exact_match_rejects_valid_change_field_mismatch():
+    contract = EVALUATION_CONTRACTS["배달:주문 변경"]
+    fields = dict.fromkeys(contract.field_names)
+    case = EvaluationCase(
+        id="delivery.change-field-mismatch",
+        conversation_group_id="delivery.change-field-mismatch",
+        split="development",
+        scenario_key=contract.scenario_key,
+        conversation_state=ORDER_CHANGE_SPEC.confirming_state,
+        current_fields={
+            "order_number": "A-100",
+            "change_type": "delivery_address",
+            "requested_change": "서울시 새 주소",
+            "unavailable_preference": "keep_order",
+        },
+        offered_alternative_times=(),
+        user_message="주문 정보를 바꾸고 싶어요.",
+        labels=GoldLabels(
+            intent=ORDER_CHANGE_SPEC.intent,
+            fields=fields,
+            user_action="change_detail",
+            change_field="order_number",
+        ),
+        tags=("correction",),
+        provenance="human_authored",
+        review_status="adjudicated",
+    )
+    prediction = _prediction(
+        case.id,
+        fields=fields,
+        action="change_detail",
+        intent=ORDER_CHANGE_SPEC.intent,
+        change_field="requested_change",
+    )
+
+    scores = score_predictions((case,), (prediction,))
+
+    assert scores.counts.final_contract_passes == 1
+    assert scores.counts.fully_correct_cases == 0
+
+
+def test_paired_accuracy_uses_the_same_adjudicated_test_cases():
+    cases = tuple(
+        _case(
+            case_id=f"appointment.paired-{index}",
+            message=f"{date} 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=(date,))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+            split="test",
+        )
+        for index, date in enumerate(("내일", "모레"), start=1)
+    )
+    exact_fields = (
+        {"appointment_purpose": None, "date": "내일", "time": None, "user_name": None},
+        {"appointment_purpose": None, "date": "모레", "time": None, "user_name": None},
+    )
+    baseline = (
+        _prediction(cases[0].id, fields=exact_fields[0], action="provide_appointment_info"),
+        _prediction(
+            cases[1].id,
+            fields={**exact_fields[1], "time": "오후 3시"},
+            action="provide_appointment_info",
+        ),
+    )
+    candidate = tuple(
+        _prediction(case.id, fields=fields, action="provide_appointment_info")
+        for case, fields in zip(cases, exact_fields, strict=True)
+    )
+
+    result = compare_test_predictions(cases, baseline, candidate)
+
+    assert result.cases == 2
+    assert result.baseline_correct == 1
+    assert result.candidate_correct == 2
+    assert result.difference_percentage_points == 50.0
+    assert result.relative_change_percent == 100.0
+    zero_baseline = compare_test_predictions(cases[1:], baseline[1:], candidate[1:])
+    assert zero_baseline.baseline_correct == 0
+    assert zero_baseline.relative_change_percent is None
+    with pytest.raises(ValueError, match="test cases only"):
+        compare_test_predictions(
+            (cases[0].model_copy(update={"split": "development"}),), baseline[:1], candidate[:1]
+        )
+    with pytest.raises(ValueError, match="requires adjudicated"):
+        compare_test_predictions(
+            (cases[0].model_copy(update={"review_status": "draft"}),), baseline[:1], candidate[:1]
+        )
+    with pytest.raises(ValueError, match="prediction ids do not match"):
+        compare_test_predictions(cases, baseline[:1], candidate)
 
 
 def test_metrics_require_exactly_one_prediction_per_case():
@@ -535,6 +721,7 @@ def test_metrics_count_prediction_fields_outside_the_live_contract_as_contract_f
 
     assert scores.final_contract_success_rate == 0.0
     assert scores.complete_failure_rate == 1.0
+    assert scores.case_exact_match_rate == 0.0
     assert scores.counts.gold_present_slots == 0
     assert scores.counts.gold_absent_slots == 0
 

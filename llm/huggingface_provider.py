@@ -6,20 +6,39 @@ import threading
 import time
 
 from core.config import (
+    HF_CPU_THREADS,
     HF_LOCAL_FILES_ONLY,
     HF_LOCAL_MODEL_ENABLED,
+    HF_MODEL_DTYPE,
     HF_MODEL_NAME,
     HF_MODEL_REVISION,
+    HF_WARMUP_ON_STARTUP,
 )
 from llm.errors import AIProviderExecutionError, AIProviderUnavailableError
 
-logger = logging.getLogger(__name__)
+# Uvicorn configures this logger at INFO; module loggers otherwise inherit the
+# process default WARNING level and hide the latency measurements.
+logger = logging.getLogger("uvicorn.error.maeumcall.huggingface")
 
 _tokenizer = None
 _model = None
 _loaded_model_name: str | None = None
 _loaded_model_revision: str | None = None
 _MODEL_LOCK = threading.Lock()
+
+
+def local_model_ready() -> bool:
+    """Report whether the configured model and tokenizer are loaded in this process."""
+    if not HF_LOCAL_MODEL_ENABLED:
+        return False
+    with _MODEL_LOCK:
+        return (
+            _tokenizer is not None
+            and bool(getattr(_tokenizer, "chat_template", None))
+            and _model is not None
+            and _loaded_model_name == HF_MODEL_NAME
+            and _loaded_model_revision == HF_MODEL_REVISION
+        )
 
 
 def _get_device_dtype():
@@ -30,6 +49,8 @@ def _get_device_dtype():
     """
     import torch
 
+    if HF_MODEL_DTYPE:
+        return getattr(torch, HF_MODEL_DTYPE)
     if torch.cuda.is_available():
         return torch.float16
     if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
@@ -58,6 +79,16 @@ def load_hf_model(
         ):
             return _tokenizer, _model
 
+        import torch
+
+        if HF_CPU_THREADS is not None:
+            if torch.cuda.is_available() or (
+                getattr(torch.backends, "mps", None) and torch.backends.mps.is_available()
+            ):
+                raise ValueError("HF_CPU_THREADS requires a CPU-only model runtime")
+            torch.set_num_threads(HF_CPU_THREADS)
+
+        load_started_at = time.perf_counter()
         logger.info("Loading Hugging Face model: %s", model_name)
         tokenizer = AutoTokenizer.from_pretrained(
             model_name,
@@ -72,19 +103,39 @@ def load_hf_model(
             local_files_only=HF_LOCAL_FILES_ONLY,
         )
         model.eval()
+        weights_load_seconds = time.perf_counter() - load_started_at
+        if HF_WARMUP_ON_STARTUP:
+            warmup_started_at = time.perf_counter()
+            prompt = _messages_to_prompt(tokenizer, [{"role": "user", "content": "준비 상태 확인"}])
+            inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+            with torch.inference_mode():
+                model.generate(
+                    **inputs,
+                    max_new_tokens=1,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                )
+            logger.info(
+                "Hugging Face model warmup completed: seconds=%.2f input_tokens=%d",
+                time.perf_counter() - warmup_started_at,
+                inputs["input_ids"].shape[-1],
+            )
         _tokenizer = tokenizer
         _model = model
         _loaded_model_name = model_name
         _loaded_model_revision = revision
-        logger.info("Hugging Face model loaded: %s", model_name)
+        logger.info(
+            "Hugging Face model loaded: %s load_seconds=%.2f ready_seconds=%.2f cpu_threads=%d",
+            model_name,
+            weights_load_seconds,
+            time.perf_counter() - load_started_at,
+            torch.get_num_threads(),
+        )
         return _tokenizer, _model
 
 
 def _messages_to_prompt(tokenizer, messages: list[dict[str, str]]) -> str:
-    """
-    모델별 chat_template이 있으면 사용하고,
-    없으면 system/user 내용을 단순 문자열로 합친다.
-    """
+    """Use the configured tokenizer's chat template or fail explicitly."""
     normalized_messages = []
 
     for message in messages:
@@ -104,19 +155,13 @@ def _messages_to_prompt(tokenizer, messages: list[dict[str, str]]) -> str:
             }
         )
 
-    if hasattr(tokenizer, "apply_chat_template") and tokenizer.chat_template:
-        return tokenizer.apply_chat_template(
-            normalized_messages,
-            tokenize=False,
-            add_generation_prompt=True,
-        )
-
-    prompt_parts = []
-    for message in normalized_messages:
-        prompt_parts.append(f"{message['role']}: {message['content']}")
-
-    prompt_parts.append("assistant:")
-    return "\n".join(prompt_parts)
+    if not hasattr(tokenizer, "apply_chat_template") or not tokenizer.chat_template:
+        raise AIProviderExecutionError("Configured tokenizer has no chat template")
+    return tokenizer.apply_chat_template(
+        normalized_messages,
+        tokenize=False,
+        add_generation_prompt=True,
+    )
 
 
 def _complete_hf_messages(
@@ -159,7 +204,12 @@ def _complete_hf_messages(
         generated_tokens = outputs[0][input_length:]
         decoded = tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
 
-        logger.debug("HF generation latency: %.2fs", elapsed)
+        logger.info(
+            "HF generation completed input_tokens=%d output_tokens=%d generate_seconds=%.2f",
+            input_length,
+            len(generated_tokens),
+            elapsed,
+        )
 
         return decoded
 

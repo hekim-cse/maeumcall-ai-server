@@ -1,6 +1,7 @@
 # 📄 main.py
 from __future__ import annotations
 
+import asyncio
 import logging
 import shutil
 import time
@@ -26,6 +27,7 @@ from core.config import (
 from core.database import database_is_ready, dispose_engine
 from core.observability import record_contract_failure, render_metrics
 from llm.errors import AIServiceError
+from llm.huggingface_provider import load_hf_model, local_model_ready
 from routes.auth_routes import router as auth_router
 from routes.chat_routes import router as chat_router
 from routes.suggest_routes import router as suggest_router
@@ -51,6 +53,8 @@ logger = logging.getLogger("maeumcall.http")
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    if HF_LOCAL_MODEL_ENABLED:
+        await asyncio.to_thread(load_hf_model)
     yield
     await dispose_engine()
 
@@ -225,7 +229,7 @@ async def readiness():
 
     components = {
         "openai": {"ready": bool(OPENAI_API_KEY)},
-        "local_nlu": {"ready": HF_LOCAL_MODEL_ENABLED},
+        "local_nlu": {"ready": local_model_ready()},
         "voice_baseline_security": {
             "ready": len(BASELINE_ID_HMAC_SECRET) >= 32,
         },

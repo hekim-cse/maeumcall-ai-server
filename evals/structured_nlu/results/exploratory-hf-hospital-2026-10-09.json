@@ -1,0 +1,33 @@
+{
+  "kind": "exploratory_hf_hospital_v1",
+  "not_official_quality_score": true,
+  "case_id": "reservation-hospital-human-information-provision-001.c1",
+  "corpus_sha256": "2ef9081644689d7675b2fc3f67845c77e3d437ccd240f2f9d8d8a5fd408d0ddb",
+  "service_image_id": "sha256:448fdff14781d4dd40a5b664dcfdd909e6a93a557f7803d110381394b736f271",
+  "model_revision": "7df4bc35ccd610e451809d7106e1c3cf82bfd44c",
+  "runtime": "Docker Desktop linux/arm64 CPU",
+  "container_cpu_limit": 2,
+  "torch_cpu_threads": 2,
+  "dtype": "bfloat16",
+  "max_new_tokens": 180,
+  "repetition_penalty": 1.05,
+  "runner_provenance": "One-off local script, uncommitted at run; exact command and limitations documented in results/README.md",
+  "load_seconds": 4.236,
+  "observations": [
+    {
+      "elapsed_seconds": 136.489,
+      "contract_valid": false,
+      "failure_type": "StructuredKeyError"
+    },
+    {
+      "elapsed_seconds": 138.591,
+      "contract_valid": false,
+      "failure_type": "StructuredKeyError"
+    },
+    {
+      "elapsed_seconds": 138.454,
+      "contract_valid": false,
+      "failure_type": "StructuredKeyError"
+    }
+  ]
+}

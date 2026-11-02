@@ -17,6 +17,17 @@ Completion = Callable[[list[dict[str, str]]], str]
 Validator = Callable[[dict[str, Any]], ValidatedOutput]
 
 
+class StructuredKeyError(ValueError):
+    """An output object has missing or unexpected schema keys."""
+
+    def __init__(self, missing: set[str], unexpected: set[str]) -> None:
+        self.missing = frozenset(missing)
+        self.unexpected = frozenset(unexpected)
+        super().__init__(
+            f"response keys mismatch; missing={sorted(missing)}, unexpected={sorted(unexpected)}"
+        )
+
+
 @dataclass(frozen=True)
 class ActionFieldRule:
     """Declare which current-turn field deltas one action may carry."""
@@ -108,8 +119,9 @@ def apply_action_field_delta(
 def require_exact_keys(data: Mapping[str, Any], expected: Collection[str]) -> None:
     """Reject missing and unknown model-output keys before domain normalization."""
     expected_keys = set(expected)
-    if set(data) != expected_keys:
-        raise ValueError(f"response keys must be exactly {sorted(expected_keys)}")
+    actual_keys = set(data)
+    if actual_keys != expected_keys:
+        raise StructuredKeyError(expected_keys - actual_keys, actual_keys - expected_keys)
 
 
 def build_state_action_contract(
@@ -225,8 +237,21 @@ def complete_validated_json(
             return validator(parsed)
         except (json.JSONDecodeError, TypeError, ValueError) as exc:
             last_error = exc
-            failure_reason = type(exc).__name__
+            failure_reason = (
+                "SCHEMA_KEYS_MISMATCH"
+                if isinstance(exc, StructuredKeyError)
+                else type(exc).__name__
+            )
             record_contract_failure("structured_output", failure_reason)
+            if isinstance(exc, StructuredKeyError):
+                # Schema names are fixed by the server; never log the model text.
+                logger.warning(
+                    "Structured response keys mismatch (attempt %d/%d): missing=%s unexpected_count=%d",
+                    attempt,
+                    max_attempts,
+                    sorted(exc.missing),
+                    len(exc.unexpected),
+                )
             logger.warning(
                 "Structured response validation failed (attempt %d/%d): %s",
                 attempt,

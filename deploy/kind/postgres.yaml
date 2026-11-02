@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: maeumcall-lab
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: maeumcall-lab
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-data
+  namespace: maeumcall-lab
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: maeumcall-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18.6
+          env:
+            - name: POSTGRES_DB
+              value: maeumcall
+            - name: POSTGRES_USER
+              value: maeumcall
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: maeumcall-lab
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 5432
+          readinessProbe:
+            exec:
+              command: [pg_isready, -U, maeumcall, -d, maeumcall]
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-data

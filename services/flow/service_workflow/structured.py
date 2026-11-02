@@ -9,6 +9,7 @@ from llm.structured_output import (
     allowed_string_for_state,
     complete_validated_json,
     optional_string,
+    require_exact_keys,
 )
 from services.flow.service_workflow.contracts import (
     MAX_WORKFLOW_FIELD_LENGTH,
@@ -113,15 +114,14 @@ def _validate_analysis(
     conversation_state: str,
     current_fields: dict[str, str | None],
 ) -> dict[str, Any]:
-    expected_keys = {"intent", "fields", "user_action", "change_field"}
-    if set(parsed) != expected_keys:
-        raise ValueError(f"response keys must be exactly {sorted(expected_keys)}")
+    require_exact_keys(parsed, {"intent", "fields", "user_action", "change_field"})
     if parsed.get("intent") != spec.intent:
         raise ValueError(f"intent must be {spec.intent}")
 
     raw_fields = parsed.get("fields")
-    if not isinstance(raw_fields, dict) or set(raw_fields) != set(spec.field_keys):
-        raise ValueError(f"fields keys must be exactly {sorted(spec.field_keys)}")
+    if not isinstance(raw_fields, dict):
+        raise ValueError("fields must be an object")
+    require_exact_keys(raw_fields, spec.field_keys)
     fields: dict[str, str | None] = {}
     for field in spec.fields:
         value = optional_string(raw_fields, field.key)

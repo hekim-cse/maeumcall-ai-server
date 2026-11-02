@@ -1,0 +1,321 @@
+{
+  "kind": "exploratory_gguf_structured_nlu_v1",
+  "not_official_quality_score": true,
+  "created_at_utc": "2026-10-09T12:41:16.446008+00:00",
+  "corpus_sha256": "2ef9081644689d7675b2fc3f67845c77e3d437ccd240f2f9d8d8a5fd408d0ddb",
+  "probe_runner_sha256": "6145d6737c9e2e9768d7184ecdae02f73b45554834cbbfe6cf584c4524dd8a08",
+  "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF",
+  "model_repo_revision": "f2f883a35e6183c00fcb70e22a010ce7745ea0b4",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runtime": "Docker Desktop linux/arm64 CPU",
+  "container_cpu_limit": 2,
+  "server_threads": 2,
+  "context_size": 4096,
+  "request_settings": {
+    "max_tokens": 180,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ]
+  },
+  "case_count": 16,
+  "observations": [
+    {
+      "case_id": "support-service-request-human-information-provision-001.c1",
+      "scenario_key": "고객센터:a/s 접수",
+      "elapsed_seconds": 26.224,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "preferred_schedule",
+        "product_type",
+        "symptom"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 26.223,
+          "prompt_tokens": 1255,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 94,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "support-plan-contract-human-information-provision-001.c1",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "elapsed_seconds": 21.842,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "consultation_goal"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 21.841,
+          "prompt_tokens": 1123,
+          "cached_prompt_tokens": 61,
+          "completion_tokens": 78,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "support-network-call-human-information-provision-001.c1",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "elapsed_seconds": 26.333,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "next_action",
+        "symptom"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 26.333,
+          "prompt_tokens": 1287,
+          "cached_prompt_tokens": 61,
+          "completion_tokens": 89,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "professor-absence-human-information-provision-001.c1",
+      "scenario_key": "교수님:결석 사유 전달",
+      "elapsed_seconds": 12.707,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 12.707,
+          "prompt_tokens": 644,
+          "cached_prompt_tokens": 21,
+          "completion_tokens": 64,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "professor-assignment-human-information-provision-001.c1",
+      "scenario_key": "교수님:과제 문의",
+      "elapsed_seconds": 10.681,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "assignment_topic",
+        "course_name",
+        "question"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 10.68,
+          "prompt_tokens": 546,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 70,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "professor-appointment-human-information-provision-001.c1",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 11.323,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 11.323,
+          "prompt_tokens": 615,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 59,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "delivery-delay-inquiry-human-information-provision-001.c1",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 22.101,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 22.1,
+          "prompt_tokens": 1106,
+          "cached_prompt_tokens": 21,
+          "completion_tokens": 75,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "delivery-order-change-human-information-provision-001.c1",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 21.173,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "change_type",
+        "requested_change"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 21.173,
+          "prompt_tokens": 1128,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 66,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "delivery-refund-redelivery-human-information-provision-001.c1",
+      "scenario_key": "배달:환불/재배달 문의",
+      "elapsed_seconds": 24.85,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "issue_detail",
+        "issue_type",
+        "resolution_preference"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 24.849,
+          "prompt_tokens": 1217,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 96,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "cityhall-bulky-waste-human-information-provision-001.c1",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 20.426,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "item_name"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 20.426,
+          "prompt_tokens": 1078,
+          "cached_prompt_tokens": 57,
+          "completion_tokens": 70,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "cityhall-passport-human-information-provision-001.c1",
+      "scenario_key": "시청:여권 발급 문의",
+      "elapsed_seconds": 22.791,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 22.791,
+          "prompt_tokens": 1210,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 66,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "cityhall-resident-certificate-human-information-provision-001.c1",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "elapsed_seconds": 27.573,
+      "contract_valid": false,
+      "attempts": [
+        {
+          "elapsed_seconds": 22.742,
+          "prompt_tokens": 1199,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 67,
+          "finish_reason": "stop"
+        },
+        {
+          "elapsed_seconds": 4.829,
+          "prompt_tokens": 1320,
+          "cached_prompt_tokens": 1265,
+          "completion_tokens": 67,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "reservation-hair-salon-human-information-provision-001.c1",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 20.065,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "service_type",
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 20.065,
+          "prompt_tokens": 1007,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 70,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "reservation-hospital-human-information-provision-001.c1",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 15.13,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 15.13,
+          "prompt_tokens": 772,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 64,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "reservation-study-room-human-information-provision-001.c1",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 16.034,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "start_time"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 16.034,
+          "prompt_tokens": 801,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 70,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "case_id": "reservation-restaurant-human-information-provision-001.c1",
+      "scenario_key": "예약:식당 예약",
+      "elapsed_seconds": 13.118,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "party_size"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 13.118,
+          "prompt_tokens": 681,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 57,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  ]
+}

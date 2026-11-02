@@ -16,6 +16,7 @@ from evals.structured_nlu.schema import (
 @dataclass(frozen=True)
 class ScoreCounts:
     cases: int
+    fully_correct_cases: int
     first_attempt_contract_passes: int
     final_contract_passes: int
     retried_cases: int
@@ -36,6 +37,7 @@ class ScoreCounts:
 @dataclass(frozen=True)
 class EvaluationScores:
     counts: ScoreCounts
+    case_exact_match_rate: float
     first_attempt_contract_success_rate: float
     final_contract_success_rate: float
     retry_rate: float
@@ -82,6 +84,7 @@ def score_predictions(
 
     first_passes = 0
     final_passes = 0
+    fully_correct_cases = 0
     retried = 0
     intent_matches = 0
     action_matches = 0
@@ -124,6 +127,20 @@ def score_predictions(
             final_passes += 1
             if output.intent == case.labels.intent:
                 intent_matches += 1
+            if (
+                output.intent == case.labels.intent
+                and output.user_action == case.labels.user_action
+                and output.change_field == case.labels.change_field
+                and all(
+                    (
+                        output.fields[name] is None
+                        if expected is None
+                        else output.fields[name] in expected.accepted_values
+                    )
+                    for name, expected in case.labels.fields.items()
+                )
+            ):
+                fully_correct_cases += 1
 
         gold_action = case.labels.user_action
         predicted_action = output.user_action if output is not None else "__contract_failure__"
@@ -163,6 +180,7 @@ def score_predictions(
     return EvaluationScores(
         counts=ScoreCounts(
             cases=len(cases),
+            fully_correct_cases=fully_correct_cases,
             first_attempt_contract_passes=first_passes,
             final_contract_passes=final_passes,
             retried_cases=retried,
@@ -179,6 +197,7 @@ def score_predictions(
             applicable_change_fields=applicable_change_fields,
             change_field_matches=change_field_matches,
         ),
+        case_exact_match_rate=_safe_ratio(fully_correct_cases, len(cases)),
         first_attempt_contract_success_rate=_safe_ratio(first_passes, len(cases)),
         final_contract_success_rate=_safe_ratio(final_passes, len(cases)),
         retry_rate=_safe_ratio(retried, len(cases)),

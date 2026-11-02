@@ -1,0 +1,69 @@
+{
+  "kind": "exploratory_q5_mismatch_audit_v1",
+  "official_quality_score": false,
+  "review_status": "ai_assisted_unreviewed",
+  "source_report": "exploratory-q5-16-development-2026-10-09.json",
+  "method": "One additional local rerun of the 12 draft-mismatch cases and one contract-failure case; model outputs inspected transiently and not saved. Field classifications are agent interpretation and require human adjudication.",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "field_class_counts": {
+    "draft_null_disagreement": 1,
+    "draft_present_value_omitted": 9,
+    "equivalent_expression_candidate": 6,
+    "formatting_variant_candidate": 1,
+    "unsupported_daypart": 3,
+    "wrong_time_conversion": 1
+  },
+  "field_classifications": {
+    "support-service-request-human-information-provision-001.c1": {
+      "preferred_schedule": "draft_present_value_omitted",
+      "product_type": "draft_present_value_omitted",
+      "symptom": "equivalent_expression_candidate"
+    },
+    "support-plan-contract-human-information-provision-001.c1": {
+      "consultation_goal": "draft_present_value_omitted"
+    },
+    "support-network-call-human-information-provision-001.c1": {
+      "next_action": "draft_present_value_omitted",
+      "symptom": "equivalent_expression_candidate"
+    },
+    "professor-assignment-human-information-provision-001.c1": {
+      "assignment_topic": "equivalent_expression_candidate",
+      "course_name": "draft_present_value_omitted",
+      "question": "equivalent_expression_candidate"
+    },
+    "professor-appointment-human-information-provision-001.c1": {
+      "time": "wrong_time_conversion"
+    },
+    "delivery-order-change-human-information-provision-001.c1": {
+      "change_type": "draft_present_value_omitted",
+      "requested_change": "draft_present_value_omitted"
+    },
+    "delivery-refund-redelivery-human-information-provision-001.c1": {
+      "issue_detail": "equivalent_expression_candidate",
+      "issue_type": "draft_present_value_omitted",
+      "resolution_preference": "draft_null_disagreement"
+    },
+    "cityhall-bulky-waste-human-information-provision-001.c1": {
+      "item_name": "draft_present_value_omitted"
+    },
+    "reservation-hair-salon-human-information-provision-001.c1": {
+      "service_type": "equivalent_expression_candidate",
+      "time": "unsupported_daypart"
+    },
+    "reservation-hospital-human-information-provision-001.c1": {
+      "time": "unsupported_daypart"
+    },
+    "reservation-study-room-human-information-provision-001.c1": {
+      "start_time": "unsupported_daypart"
+    },
+    "reservation-restaurant-human-information-provision-001.c1": {
+      "party_size": "formatting_variant_candidate"
+    }
+  },
+  "contract_failure": {
+    "case_id": "cityhall-resident-certificate-human-information-provision-001.c1",
+    "classification": "action_field_inconsistency",
+    "detail": "provide_details with all current-turn fields null on both observed attempts"
+  }
+}

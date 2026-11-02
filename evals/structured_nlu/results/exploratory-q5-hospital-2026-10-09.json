@@ -1,0 +1,69 @@
+{
+  "kind": "exploratory_gguf_hospital_v1",
+  "not_official_quality_score": true,
+  "created_at_utc": "2026-10-09T11:13:56.770688+00:00",
+  "case_id": "reservation-hospital-human-information-provision-001.c1",
+  "corpus_sha256": "2ef9081644689d7675b2fc3f67845c77e3d437ccd240f2f9d8d8a5fd408d0ddb",
+  "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF",
+  "model_repo_revision": "f2f883a35e6183c00fcb70e22a010ce7745ea0b4",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runtime": "Docker Desktop linux/arm64 CPU",
+  "container_cpu_limit": 2,
+  "server_threads": 2,
+  "context_size": 2048,
+  "max_completion_tokens": 180,
+  "stop": [
+    "<|eot_id|>"
+  ],
+  "observations": [
+    {
+      "elapsed_seconds": 15.5,
+      "usage": {
+        "completion_tokens": 64,
+        "prompt_tokens": 772,
+        "total_tokens": 836,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "finish_reason": "stop",
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ]
+    },
+    {
+      "elapsed_seconds": 3.082,
+      "usage": {
+        "completion_tokens": 64,
+        "prompt_tokens": 772,
+        "total_tokens": 836,
+        "prompt_tokens_details": {
+          "cached_tokens": 771
+        }
+      },
+      "finish_reason": "stop",
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ]
+    },
+    {
+      "elapsed_seconds": 3.071,
+      "usage": {
+        "completion_tokens": 64,
+        "prompt_tokens": 772,
+        "total_tokens": 836,
+        "prompt_tokens_details": {
+          "cached_tokens": 771
+        }
+      },
+      "finish_reason": "stop",
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "time"
+      ]
+    }
+  ]
+}
