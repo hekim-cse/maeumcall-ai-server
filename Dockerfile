@@ -40,8 +40,7 @@ FROM ${PYTHON_IMAGE} AS core-runtime
 ENV PATH="/opt/maeumcall-venv/bin:${PATH}" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONFAULTHANDLER=1 \
-    TMPDIR=/tmp/maeumcall
+    PYTHONFAULTHANDLER=1
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && apt-get install --yes --no-install-recommends ca-certificates ffmpeg \
@@ -50,6 +49,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && useradd --uid 10001 --gid 10001 --no-create-home --shell /usr/sbin/nologin maeumcall \
     && mkdir --parents /app /tmp/maeumcall \
     && chown --recursive maeumcall:maeumcall /app /tmp/maeumcall
+
+ENV TMPDIR=/tmp/maeumcall
 
 COPY --from=core-dependencies /opt/maeumcall-venv /opt/maeumcall-venv
 
