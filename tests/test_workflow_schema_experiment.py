@@ -31,6 +31,30 @@ def test_schema_cannot_emit_provide_details_with_all_null_fields():
         )
 
 
+def test_change_detail_enum_excludes_current_option_but_keeps_null():
+    spec = EVALUATION_CONTRACTS["배달:배달 지연 문의"].workflow_spec
+    option_fields = [field for field in spec.fields if field.options]
+    if not option_fields:
+        pytest.skip("scenario has no option fields")
+    option_field = option_fields[0]
+    current_fields = dict.fromkeys(spec.field_keys)
+    current_fields[option_field.key] = option_field.options[0].value
+    schema = workflow_response_schema(
+        spec,
+        conversation_state=spec.collecting_state,
+        current_fields=current_fields,
+    )
+    branches = [
+        branch for branch in schema["anyOf"]
+        if branch["properties"]["user_action"]["enum"] == ["change_detail"]
+        and branch["properties"]["change_field"]["enum"] == [option_field.key]
+    ]
+    assert branches
+    allowed = branches[0]["properties"]["fields"]["properties"][option_field.key]["enum"]
+    assert current_fields[option_field.key] not in allowed
+    assert None in allowed
+
+
 def test_ablation_comparison_rejects_changed_model_or_source():
     baseline = {
         "kind": "exploratory_gguf_review_draft_round2_v1",

@@ -87,7 +87,13 @@ def load_draft_cases(*, sentences_path: Path = SENTENCES) -> list[dict]:
         cells = labels[slot]
         state, intent, action = (cell.strip("`") for cell in cells[1:4])
         fields = dict.fromkeys(contract.field_names)
-        for assignment in re.findall(r"`([^`]+)`", cells[4]):
+        assignments = re.findall(r"`([^`]+)`", cells[4])
+        remainder = re.sub(r"`[^`]+`", "", cells[4])
+        if remainder.strip(" ;,") not in ("", "없음") or (assignments and remainder.strip(" ;,")):
+            raise ValueError(f"invalid label field text in {slot}: {cells[4]}")
+        for assignment in assignments:
+            if "=" not in assignment:
+                raise ValueError(f"invalid label field assignment in {slot}: {assignment}")
             field, value = assignment.split("=", 1)
             if field not in fields:
                 raise ValueError(f"unknown label field in {slot}: {field}")

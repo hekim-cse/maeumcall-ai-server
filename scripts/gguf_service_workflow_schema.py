@@ -46,7 +46,11 @@ def workflow_response_schema(
             elif action == "provide_details":
                 field_properties[name] = shape
             elif action == "change_detail" and name == change_field:
-                field_properties[name] = shape
+                field_properties[name] = (
+                    {"enum": [value for value in shape["enum"] if value != current_fields[name]]}
+                    if "enum" in shape
+                    else shape
+                )
             else:
                 field_properties[name] = {"type": "null"}
         return {

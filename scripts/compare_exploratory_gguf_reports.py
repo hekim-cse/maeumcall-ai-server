@@ -46,6 +46,9 @@ def _draft_match(observation: dict) -> bool:
 
 
 def compare(baseline: dict, candidate: dict) -> dict:
+    for key in ("workflow_schema_constrained", "schema_format"):
+        if baseline.get(key) != candidate.get(key):
+            raise ValueError(f"paired reports must share {key}")
     for key in (
         "sentence_draft_sha256",
         "label_draft_sha256",
