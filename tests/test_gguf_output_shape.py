@@ -32,7 +32,9 @@ def test_shape_capture_never_persists_generated_values():
     assert "private generated value" not in json.dumps(shape)
 
 
-@pytest.mark.parametrize("change_field", [["private generated value"], {"secret": "private generated value"}])
+@pytest.mark.parametrize(
+    "change_field", [["private generated value"], {"secret": "private generated value"}]
+)
 def test_shape_capture_redacts_non_scalar_change_field(change_field):
     raw = json.dumps({"user_action": "provide_details", "change_field": change_field})
     shape = safe_output_shape(

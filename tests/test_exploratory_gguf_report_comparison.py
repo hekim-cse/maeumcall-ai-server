@@ -79,7 +79,9 @@ def test_report_loader_rejects_partial_results(tmp_path):
         _load(path)
 
 
-@pytest.mark.parametrize("key,value", [("workflow_schema_constrained", True), ("schema_format", "json_object")])
+@pytest.mark.parametrize(
+    "key,value", [("workflow_schema_constrained", True), ("schema_format", "json_object")]
+)
 def test_comparison_rejects_different_schema_conditions(key, value):
     baseline = _report(matches=(True, False), model_sha="1" * 64)
     candidate = _report(matches=(True, False), model_sha="2" * 64)

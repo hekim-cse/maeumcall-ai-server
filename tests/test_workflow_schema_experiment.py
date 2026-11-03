@@ -45,7 +45,8 @@ def test_change_detail_enum_excludes_current_option_but_keeps_null():
         current_fields=current_fields,
     )
     branches = [
-        branch for branch in schema["anyOf"]
+        branch
+        for branch in schema["anyOf"]
         if branch["properties"]["user_action"]["enum"] == ["change_detail"]
         and branch["properties"]["change_field"]["enum"] == [option_field.key]
     ]
