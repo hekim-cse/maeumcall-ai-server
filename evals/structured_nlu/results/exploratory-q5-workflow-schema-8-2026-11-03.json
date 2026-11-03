@@ -1,0 +1,246 @@
+{
+  "kind": "exploratory_gguf_review_draft_round2_v1",
+  "candidate_status": "ai_assisted_unreviewed",
+  "not_official_quality_score": true,
+  "output_shape_capture": true,
+  "workflow_schema_constrained": true,
+  "schema_format": "json_object",
+  "complete": true,
+  "created_at_utc": "2026-11-02T18:12:31.906431+00:00",
+  "sentence_draft_sha256": "f8e51b48bb7303b58e623af8c93d823b9397f2c5729f4a7f9f9c52eba6eae301",
+  "label_draft_sha256": "bd1c35e6f20d3e2832247d6c026b4b0e1e483ad6f774c23c89a87cd4763a1e17",
+  "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runtime": "Docker Desktop linux/arm64 CPU",
+  "container_cpu_limit": 2,
+  "server_threads": 2,
+  "context_size": 4096,
+  "request_settings": {
+    "max_tokens": 180,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ]
+  },
+  "case_count": 8,
+  "selected_case_ids": [
+    "H13",
+    "H14",
+    "H15",
+    "H16",
+    "H17",
+    "H18",
+    "H19",
+    "H20"
+  ],
+  "observations": [
+    {
+      "case_id": "H13",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 22.515,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "delay_detail"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 22.515,
+          "prompt_tokens": 1121,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 70,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_goal",
+              "order_number"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H14",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 15.258,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 15.258,
+          "prompt_tokens": 1113,
+          "cached_prompt_tokens": 442,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "unknown",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H15",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 22.315,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "requested_change"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 22.315,
+          "prompt_tokens": 1120,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "change_type",
+              "order_number"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H16",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 16.19,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 16.189,
+          "prompt_tokens": 1125,
+          "cached_prompt_tokens": 439,
+          "completion_tokens": 63,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "unknown",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H17",
+      "scenario_key": "배달:환불/재배달 문의",
+      "elapsed_seconds": 26.181,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "evidence_status",
+        "issue_detail"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 26.179,
+          "prompt_tokens": 1222,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 104,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "evidence_status",
+              "issue_detail",
+              "issue_type",
+              "order_number",
+              "resolution_preference"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H18",
+      "scenario_key": "배달:환불/재배달 문의",
+      "elapsed_seconds": 17.561,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "attempts": [
+        {
+          "elapsed_seconds": 17.561,
+          "prompt_tokens": 1214,
+          "cached_prompt_tokens": 457,
+          "completion_tokens": 72,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "unknown",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H19",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 21.437,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "item_name",
+        "quantity",
+        "region",
+        "request_topic",
+        "user_action"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 21.436,
+          "prompt_tokens": 1083,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 63,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "unknown",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "H20",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 15.001,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "request_topic",
+        "user_action"
+      ],
+      "attempts": [
+        {
+          "elapsed_seconds": 15.0,
+          "prompt_tokens": 1086,
+          "cached_prompt_tokens": 437,
+          "completion_tokens": 65,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "request_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    }
+  ]
+}
