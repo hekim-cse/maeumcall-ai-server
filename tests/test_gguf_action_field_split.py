@@ -77,3 +77,49 @@ def test_split_probe_calls_action_then_fields_without_persisting_generated_value
     assert [attempt["stage"] for attempt in result["attempts"]] == ["action", "fields"]
     assert all(request["response_format"]["type"] == "json_object" for request in requests)
     assert case["user_message"] not in json.dumps(result, ensure_ascii=False)
+
+
+def test_split_probe_exhausts_invalid_action_retries_without_field_request(monkeypatch):
+    case = next(case for case in load_draft_cases() if case["id"] == "H14")
+    requests = []
+
+    class FakeResponse:
+        def read(self):
+            return json.dumps(
+                {
+                    "choices": [
+                        {
+                            "message": {
+                                "content": json.dumps(
+                                    {"user_action": "invalid_action", "change_field": None}
+                                )
+                            },
+                            "finish_reason": "stop",
+                        }
+                    ],
+                    "usage": {"prompt_tokens": 10, "completion_tokens": 5},
+                }
+            ).encode()
+
+    def fake_urlopen(request, timeout):
+        requests.append(json.loads(request.data))
+        return nullcontext(FakeResponse())
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    result = run_case(
+        case,
+        endpoint="http://127.0.0.1:18080/v1/chat/completions",
+        model="fake",
+        timeout=1,
+        capture_shape=True,
+        constrain_workflow=True,
+        schema_format="json_object",
+        split_workflow=True,
+    )
+
+    assert result["contract_valid"] is False
+    assert result["selected_action"] is None
+    assert result["first_stage_action_draft_match"] is None
+    assert len(requests) == 2
+    assert [attempt["stage"] for attempt in result["attempts"]] == ["action", "action"]
+    assert case["user_message"] not in json.dumps(result, ensure_ascii=False)

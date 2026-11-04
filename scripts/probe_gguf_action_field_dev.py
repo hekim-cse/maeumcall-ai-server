@@ -140,6 +140,8 @@ def main() -> None:
     if len(args.case_id) != len(set(args.case_id)) or set(args.case_id) - set(by_id):
         parser.error("case IDs must be unique known development IDs")
     cases = [by_id[case_id] for case_id in args.case_id] if args.case_id else all_cases
+    if subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=False).returncode:
+        parser.error("probe requires committed tracked files")
     implementation_digest = implementation_sha256()
     code_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 
