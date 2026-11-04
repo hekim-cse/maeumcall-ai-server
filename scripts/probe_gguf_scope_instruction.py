@@ -197,6 +197,8 @@ def main() -> None:
             "code_git_commit": code_commit,
             "model": args.model,
             "model_sha256": args.model_sha256,
+            "model_sha256_provenance": "operator_declared_local_file_checked",
+            "served_model_checked": False,
             "server_image_digest": args.server_image_digest,
             "runtime": args.runtime,
             "container_cpu_limit": args.container_cpu_limit,
