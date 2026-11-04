@@ -6,6 +6,8 @@ and the schema cannot determine whether a field value was stated by the user.
 
 from __future__ import annotations
 
+import json
+
 from services.flow.service_workflow.contracts import MAX_WORKFLOW_FIELD_LENGTH, ServiceWorkflowSpec
 
 
@@ -90,4 +92,61 @@ def workflow_response_schema(
             branches.append(branch(action))
     if not branches:
         raise ValueError("state has no valid schema branches")
+    return {"anyOf": branches}
+
+
+def workflow_action_schema(
+    spec: ServiceWorkflowSpec,
+    *,
+    conversation_state: str,
+    current_fields: dict[str, str | None],
+) -> dict:
+    """Project the live workflow schema onto action and change target only."""
+    full = workflow_response_schema(
+        spec, conversation_state=conversation_state, current_fields=current_fields
+    )
+    branches = []
+    seen = set()
+    for branch in full["anyOf"]:
+        properties = branch["properties"]
+        projected = {
+            "type": "object",
+            "properties": {
+                "user_action": properties["user_action"],
+                "change_field": properties["change_field"],
+            },
+            "required": ["user_action", "change_field"],
+            "additionalProperties": False,
+        }
+        fingerprint = json.dumps(projected, sort_keys=True)
+        if fingerprint not in seen:
+            branches.append(projected)
+            seen.add(fingerprint)
+    return {"anyOf": branches}
+
+
+def workflow_schema_for_selected_action(
+    spec: ServiceWorkflowSpec,
+    *,
+    conversation_state: str,
+    current_fields: dict[str, str | None],
+    user_action: str,
+    change_field: str | None,
+) -> dict:
+    """Retain only branches consistent with the validated first-stage choice."""
+    full = workflow_response_schema(
+        spec, conversation_state=conversation_state, current_fields=current_fields
+    )
+    branches = [
+        branch
+        for branch in full["anyOf"]
+        if branch["properties"]["user_action"]["enum"] == [user_action]
+        and (
+            branch["properties"]["change_field"] == {"type": "null"}
+            if change_field is None
+            else branch["properties"]["change_field"] == {"enum": [change_field]}
+        )
+    ]
+    if not branches:
+        raise ValueError("selected action has no valid workflow schema branch")
     return {"anyOf": branches}

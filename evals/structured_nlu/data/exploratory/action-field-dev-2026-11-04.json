@@ -1,0 +1,81 @@
+{
+  "kind": "exploratory_action_field_dev_cases_v1",
+  "provenance": "ai_assisted_unreviewed",
+  "reviewed_scope": "user_reviewed_sentence_and_action_field_meaning_on_2026-11-04",
+  "normalized_value_status": "ai_draft_unreviewed",
+  "not_official_test": true,
+  "cases": [
+    {
+      "id": "D01",
+      "scenario_key": "배달:배달 지연 문의",
+      "user_message": "주문번호 D-846의 도착 예정 시각이 20분 지났습니다. 언제쯤 도착할까요?",
+      "user_action": "provide_details",
+      "draft_fields": {
+        "order_number": "D-846",
+        "delay_detail": "도착 예정 시각이 20분 지남",
+        "inquiry_goal": "estimated_arrival"
+      }
+    },
+    {
+      "id": "D02",
+      "scenario_key": "배달:배달 지연 문의",
+      "user_message": "이번 주문은 이미 받았는데, 다음 주문부터는 수령 장소를 경비실로 지정할 수 있나요?",
+      "user_action": "unknown",
+      "draft_fields": {}
+    },
+    {
+      "id": "D03",
+      "scenario_key": "배달:주문 변경",
+      "user_message": "주문번호 T-642의 김밥을 한 줄 더 추가하고 싶습니다.",
+      "user_action": "provide_details",
+      "draft_fields": {
+        "order_number": "T-642",
+        "change_type": "menu_or_quantity",
+        "requested_change": "김밥 한 줄 추가"
+      }
+    },
+    {
+      "id": "D04",
+      "scenario_key": "배달:주문 변경",
+      "user_message": "결제 영수증을 이메일로 받고 싶은데, 가능하나요?",
+      "user_action": "unknown",
+      "draft_fields": {}
+    },
+    {
+      "id": "D05",
+      "scenario_key": "배달:환불/재배달 문의",
+      "user_message": "떡볶이를 주문했는데 라면이 배송 와서요. 혹시 환불 가능하나요?",
+      "user_action": "provide_details",
+      "draft_fields": {
+        "issue_type": "wrong_item",
+        "issue_detail": "떡볶이 대신 라면이 배송됨"
+      }
+    },
+    {
+      "id": "D06",
+      "scenario_key": "배달:환불/재배달 문의",
+      "user_message": "먹고 남은 국물은 냉장 보관하면 며칠간 먹을 수 있나요?",
+      "user_action": "unknown",
+      "draft_fields": {}
+    },
+    {
+      "id": "D07",
+      "scenario_key": "시청:대형폐기물 배출",
+      "user_message": "광주 북구에서 책장 두 개를 버리려고 합니다. 수수료가 얼마인지 알고 싶어요.",
+      "user_action": "provide_details",
+      "draft_fields": {
+        "region": "광주 북구",
+        "item_name": "책장",
+        "quantity": "2개",
+        "request_topic": "fee"
+      }
+    },
+    {
+      "id": "D08",
+      "scenario_key": "시청:대형폐기물 배출",
+      "user_message": "대형폐기물 신고가 아니라 폐건전지 수거함 위치를 알려주세요.",
+      "user_action": "unknown",
+      "draft_fields": {}
+    }
+  ]
+}

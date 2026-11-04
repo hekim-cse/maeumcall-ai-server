@@ -4,7 +4,11 @@ import pytest
 
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from scripts.compare_workflow_schema_experiment import compare
-from scripts.gguf_service_workflow_schema import workflow_response_schema
+from scripts.gguf_service_workflow_schema import (
+    workflow_action_schema,
+    workflow_response_schema,
+    workflow_schema_for_selected_action,
+)
 
 pytestmark = pytest.mark.unit
 
@@ -54,6 +58,52 @@ def test_change_detail_enum_excludes_current_option_but_keeps_null():
     allowed = branches[0]["properties"]["fields"]["properties"][option_field.key]["enum"]
     assert current_fields[option_field.key] not in allowed
     assert None in allowed
+
+
+def test_split_schema_projects_actions_and_restricts_fields_to_selected_action():
+    spec = EVALUATION_CONTRACTS["배달:주문 변경"].workflow_spec
+    current_fields = dict.fromkeys(spec.field_keys)
+    current_fields["order_number"] = "T-642"
+    action_schema = workflow_action_schema(
+        spec,
+        conversation_state=spec.collecting_state,
+        current_fields=current_fields,
+    )
+    action_branches = action_schema["anyOf"]
+    assert len(action_branches) == len(
+        {
+            (
+                branch["properties"]["user_action"]["enum"][0],
+                tuple(branch["properties"]["change_field"].get("enum", ())),
+            )
+            for branch in action_branches
+        }
+    )
+    assert all(
+        set(branch["properties"]) == {"user_action", "change_field"} for branch in action_branches
+    )
+
+    selected = workflow_schema_for_selected_action(
+        spec,
+        conversation_state=spec.collecting_state,
+        current_fields=current_fields,
+        user_action="change_detail",
+        change_field="order_number",
+    )
+    assert selected["anyOf"]
+    assert all(
+        branch["properties"]["user_action"]["enum"] == ["change_detail"]
+        and branch["properties"]["change_field"]["enum"] == ["order_number"]
+        for branch in selected["anyOf"]
+    )
+    with pytest.raises(ValueError, match="no valid workflow schema branch"):
+        workflow_schema_for_selected_action(
+            spec,
+            conversation_state=spec.collecting_state,
+            current_fields=current_fields,
+            user_action="change_detail",
+            change_field="requested_change",
+        )
 
 
 def test_ablation_comparison_rejects_changed_model_or_source():
