@@ -107,6 +107,19 @@ def main() -> None:
     cases = load_cases()
     if subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=False).returncode:
         parser.error("probe requires committed tracked files")
+    committed_inputs = [
+        *IMPLEMENTATION_PATHS,
+        str(SENTENCES.relative_to(ROOT)),
+        str(FIELD_DRAFT.relative_to(ROOT)),
+    ]
+    if subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "--", *committed_inputs],
+        cwd=ROOT,
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    ).returncode:
+        parser.error("probe requires every implementation and source file to be committed")
     code_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     code_sha = implementation_sha256()
 

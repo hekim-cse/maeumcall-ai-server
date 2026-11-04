@@ -70,6 +70,11 @@ def load_cases(
             raise ValueError(f"unknown draft field in {case_id}")
         if positive and not supplied:
             raise ValueError(f"positive case requires a field draft: {case_id}")
+        if any(
+            value is not None and (not isinstance(value, str) or not value.strip())
+            for value in supplied.values()
+        ):
+            raise ValueError(f"field draft values must be nonblank strings or null: {case_id}")
         fields.update(supplied)
         intent = (
             None

@@ -46,6 +46,24 @@ def test_broad_ai_source_rejects_unreviewed_metadata(tmp_path):
         load_cases(fields_path=changed)
 
 
+@pytest.mark.parametrize(
+    ("case_id", "field", "value", "expected"),
+    [
+        ("B03", "inquiry_type", "not-an-option", "not allowed"),
+        ("B01", "symptom", "   ", "nonblank strings"),
+        ("B01", "unknown_field", "value", "unknown draft field"),
+    ],
+)
+def test_broad_ai_source_rejects_invalid_field_drafts(tmp_path, case_id, field, value, expected):
+    source = json.loads(FIELD_DRAFT.read_text())
+    pair = next(pair for pair in source["pairs"] if pair["positive_id"] == case_id)
+    pair["positive_fields"][field] = value
+    changed = tmp_path / "changed.json"
+    changed.write_text(json.dumps(source))
+    with pytest.raises(ValueError, match=expected):
+        load_cases(fields_path=changed)
+
+
 def _report(model: str, model_hash: str) -> dict:
     cases = load_cases()
     observations = [
@@ -108,4 +126,9 @@ def test_broad_ai_comparison_verifies_paired_inputs_and_summaries():
 
     second["summary"]["contract_passes"] = 0
     with pytest.raises(ValueError, match="summary differs"):
+        compare(first, second)
+    second["summary"] = summarize(second["observations"])
+    second["repetitions"] = 0
+    first["repetitions"] = 0
+    with pytest.raises(ValueError, match="positive repetitions"):
         compare(first, second)

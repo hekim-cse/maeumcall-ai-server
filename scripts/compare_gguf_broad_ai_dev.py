@@ -38,6 +38,8 @@ def compare(first: dict, second: dict) -> dict:
         raise ValueError("reports must be broad AI exploratory probe reports")
     if first.get("complete") is not True or second.get("complete") is not True:
         raise ValueError("both probe reports must be complete")
+    if not isinstance(first.get("repetitions"), int) or first["repetitions"] < 1:
+        raise ValueError("reports must have positive repetitions")
     if (
         first.get("candidate_status") != "ai_assisted_unreviewed"
         or first.get("normalized_value_status") != "ai_draft_unreviewed"
