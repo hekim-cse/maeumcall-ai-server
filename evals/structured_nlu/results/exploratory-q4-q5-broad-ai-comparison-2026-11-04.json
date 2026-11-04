@@ -1,0 +1,595 @@
+{
+  "kind": "exploratory_broad_ai_gguf_comparison_v1",
+  "not_official_quality_score": true,
+  "created_at_utc": "2026-11-04T11:38:30.760364+00:00",
+  "sentence_source_sha256": "5290a876f305fedb2a936d3c3a4d0bd441c21a5e973317397c0e0990c42ba37e",
+  "field_draft_sha256": "680751d9843d071e3f9e5c29a0cb7853621515c2ed0208ec49fba7e79eb69a0c",
+  "code_git_commit": "19facf8d1a3f2af8784b7112c7f3fc26fa92c95b",
+  "implementation_sha256": "d82a1d1666d4bb6a96e342ecc02f33a32627945f647e08a36e5e5a668ddd9d68",
+  "case_count": 32,
+  "repetitions": 2,
+  "models": [
+    {
+      "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF",
+      "model_sha256": "62a63f912a0708d9a522f974997b5bbd4927e01d739b07fe4c55c1f545241561",
+      "summary": {
+        "observations": 64,
+        "unique_cases": 32,
+        "contract_passes": 48,
+        "action_draft_matches_on_contract_pass": 30,
+        "field_draft_matches_on_contract_pass": 12,
+        "full_ai_draft_matches": 8,
+        "requests": 91,
+        "elapsed_seconds_sum": 691.397,
+        "prompt_tokens_sum": 96353,
+        "cached_prompt_tokens_sum": 70022,
+        "completion_tokens_sum": 6351
+      }
+    },
+    {
+      "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF",
+      "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+      "summary": {
+        "observations": 64,
+        "unique_cases": 32,
+        "contract_passes": 48,
+        "action_draft_matches_on_contract_pass": 32,
+        "field_draft_matches_on_contract_pass": 12,
+        "full_ai_draft_matches": 8,
+        "requests": 83,
+        "elapsed_seconds_sum": 728.295,
+        "prompt_tokens_sum": 85257,
+        "cached_prompt_tokens_sum": 59375,
+        "completion_tokens_sum": 5809
+      }
+    }
+  ],
+  "paired_contract": {
+    "first_only": [
+      "B02.r1",
+      "B02.r2",
+      "B19.r1",
+      "B19.r2"
+    ],
+    "second_only": [
+      "B17.r1",
+      "B17.r2",
+      "B21.r2",
+      "B31.r2"
+    ]
+  },
+  "paired_action_draft_match": {
+    "first_only": [
+      "B19.r1",
+      "B19.r2"
+    ],
+    "second_only": [
+      "B17.r1",
+      "B17.r2",
+      "B21.r2",
+      "B31.r2"
+    ]
+  },
+  "by_polarity": {
+    "in_scope": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 32,
+        "unique_cases": 16,
+        "contract_passes": 28,
+        "action_draft_matches_on_contract_pass": 28,
+        "field_draft_matches_on_contract_pass": 6,
+        "full_ai_draft_matches": 6,
+        "requests": 45,
+        "elapsed_seconds_sum": 389.23,
+        "prompt_tokens_sum": 47963,
+        "cached_prompt_tokens_sum": 32087,
+        "completion_tokens_sum": 3249
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 32,
+        "unique_cases": 16,
+        "contract_passes": 30,
+        "action_draft_matches_on_contract_pass": 30,
+        "field_draft_matches_on_contract_pass": 6,
+        "full_ai_draft_matches": 6,
+        "requests": 36,
+        "elapsed_seconds_sum": 383.257,
+        "prompt_tokens_sum": 35466,
+        "cached_prompt_tokens_sum": 20102,
+        "completion_tokens_sum": 2617
+      }
+    },
+    "near_scope_out": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 32,
+        "unique_cases": 16,
+        "contract_passes": 20,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 6,
+        "full_ai_draft_matches": 2,
+        "requests": 46,
+        "elapsed_seconds_sum": 302.167,
+        "prompt_tokens_sum": 48390,
+        "cached_prompt_tokens_sum": 37935,
+        "completion_tokens_sum": 3102
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 32,
+        "unique_cases": 16,
+        "contract_passes": 18,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 6,
+        "full_ai_draft_matches": 2,
+        "requests": 47,
+        "elapsed_seconds_sum": 345.038,
+        "prompt_tokens_sum": 49791,
+        "cached_prompt_tokens_sum": 39273,
+        "completion_tokens_sum": 3192
+      }
+    }
+  },
+  "repeat_consistency": {
+    "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+      "cases": 32,
+      "contract_stable_cases": 30,
+      "action_draft_match_stable_cases": 23,
+      "action_draft_match_observed_cases": 23
+    },
+    "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+      "cases": 32,
+      "contract_stable_cases": 32,
+      "action_draft_match_stable_cases": 24,
+      "action_draft_match_observed_cases": 24
+    }
+  },
+  "by_scenario": {
+    "고객센터:a/s 접수": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 52.726,
+        "prompt_tokens_sum": 5032,
+        "cached_prompt_tokens_sum": 2994,
+        "completion_tokens_sum": 403
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 6,
+        "elapsed_seconds_sum": 69.425,
+        "prompt_tokens_sum": 7820,
+        "cached_prompt_tokens_sum": 5672,
+        "completion_tokens_sum": 545
+      }
+    },
+    "고객센터:요금/약정 상담": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 40.648,
+        "prompt_tokens_sum": 4500,
+        "cached_prompt_tokens_sum": 2758,
+        "completion_tokens_sum": 276
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 45.198,
+        "prompt_tokens_sum": 4500,
+        "cached_prompt_tokens_sum": 2758,
+        "completion_tokens_sum": 276
+      }
+    },
+    "고객센터:인터넷/통화 문제 문의": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 8,
+        "elapsed_seconds_sum": 69.119,
+        "prompt_tokens_sum": 10908,
+        "cached_prompt_tokens_sum": 8627,
+        "completion_tokens_sum": 684
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 6,
+        "elapsed_seconds_sum": 65.543,
+        "prompt_tokens_sum": 8016,
+        "cached_prompt_tokens_sum": 5849,
+        "completion_tokens_sum": 492
+      }
+    },
+    "교수님:결석 사유 전달": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 6,
+        "elapsed_seconds_sum": 29.317,
+        "prompt_tokens_sum": 4054,
+        "cached_prompt_tokens_sum": 2891,
+        "completion_tokens_sum": 340
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 6,
+        "elapsed_seconds_sum": 33.298,
+        "prompt_tokens_sum": 4054,
+        "cached_prompt_tokens_sum": 2891,
+        "completion_tokens_sum": 340
+      }
+    },
+    "교수님:과제 문의": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 22.322,
+        "prompt_tokens_sum": 2112,
+        "cached_prompt_tokens_sum": 1316,
+        "completion_tokens_sum": 286
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 25.065,
+        "prompt_tokens_sum": 2112,
+        "cached_prompt_tokens_sum": 1316,
+        "completion_tokens_sum": 292
+      }
+    },
+    "교수님:면담 예약": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 1,
+        "full_ai_draft_matches": 1,
+        "requests": 4,
+        "elapsed_seconds_sum": 22.58,
+        "prompt_tokens_sum": 2438,
+        "cached_prompt_tokens_sum": 1484,
+        "completion_tokens_sum": 231
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 25.651,
+        "prompt_tokens_sum": 2438,
+        "cached_prompt_tokens_sum": 1484,
+        "completion_tokens_sum": 254
+      }
+    },
+    "배달:배달 지연 문의": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 8,
+        "elapsed_seconds_sum": 57.292,
+        "prompt_tokens_sum": 9519,
+        "cached_prompt_tokens_sum": 7499,
+        "completion_tokens_sum": 553
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 45.111,
+        "prompt_tokens_sum": 4506,
+        "cached_prompt_tokens_sum": 2714,
+        "completion_tokens_sum": 300
+      }
+    },
+    "배달:주문 변경": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 8,
+        "elapsed_seconds_sum": 58.304,
+        "prompt_tokens_sum": 9508,
+        "cached_prompt_tokens_sum": 7535,
+        "completion_tokens_sum": 592
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 6,
+        "elapsed_seconds_sum": 51.239,
+        "prompt_tokens_sum": 6950,
+        "cached_prompt_tokens_sum": 5095,
+        "completion_tokens_sum": 390
+      }
+    },
+    "배달:환불/재배달 문의": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 0,
+        "action_draft_matches_on_contract_pass": 0,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 8,
+        "elapsed_seconds_sum": 61.595,
+        "prompt_tokens_sum": 10208,
+        "cached_prompt_tokens_sum": 8078,
+        "completion_tokens_sum": 584
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 6,
+        "elapsed_seconds_sum": 61.128,
+        "prompt_tokens_sum": 7520,
+        "cached_prompt_tokens_sum": 5500,
+        "completion_tokens_sum": 490
+      }
+    },
+    "시청:대형폐기물 배출": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 8,
+        "elapsed_seconds_sum": 52.639,
+        "prompt_tokens_sum": 9140,
+        "cached_prompt_tokens_sum": 7244,
+        "completion_tokens_sum": 526
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 0,
+        "action_draft_matches_on_contract_pass": 0,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 8,
+        "elapsed_seconds_sum": 61.159,
+        "prompt_tokens_sum": 9156,
+        "cached_prompt_tokens_sum": 7260,
+        "completion_tokens_sum": 560
+      }
+    },
+    "시청:여권 발급 문의": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 1,
+        "action_draft_matches_on_contract_pass": 1,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 8,
+        "elapsed_seconds_sum": 59.648,
+        "prompt_tokens_sum": 10270,
+        "cached_prompt_tokens_sum": 8101,
+        "completion_tokens_sum": 530
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 2,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 6,
+        "elapsed_seconds_sum": 55.99,
+        "prompt_tokens_sum": 7570,
+        "cached_prompt_tokens_sum": 5515,
+        "completion_tokens_sum": 386
+      }
+    },
+    "시청:주민등록 등본 문의": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 43.283,
+        "prompt_tokens_sum": 4806,
+        "cached_prompt_tokens_sum": 2910,
+        "completion_tokens_sum": 274
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 46.189,
+        "prompt_tokens_sum": 4806,
+        "cached_prompt_tokens_sum": 2910,
+        "completion_tokens_sum": 274
+      }
+    },
+    "예약:미용실 예약": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 4,
+        "field_draft_matches_on_contract_pass": 4,
+        "full_ai_draft_matches": 4,
+        "requests": 4,
+        "elapsed_seconds_sum": 39.789,
+        "prompt_tokens_sum": 4036,
+        "cached_prompt_tokens_sum": 2211,
+        "completion_tokens_sum": 262
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 4,
+        "field_draft_matches_on_contract_pass": 4,
+        "full_ai_draft_matches": 4,
+        "requests": 5,
+        "elapsed_seconds_sum": 48.682,
+        "prompt_tokens_sum": 5193,
+        "cached_prompt_tokens_sum": 3297,
+        "completion_tokens_sum": 340
+      }
+    },
+    "예약:병원 예약": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 4,
+        "full_ai_draft_matches": 2,
+        "requests": 4,
+        "elapsed_seconds_sum": 20.871,
+        "prompt_tokens_sum": 3082,
+        "cached_prompt_tokens_sum": 2256,
+        "completion_tokens_sum": 228
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 4,
+        "full_ai_draft_matches": 2,
+        "requests": 4,
+        "elapsed_seconds_sum": 23.405,
+        "prompt_tokens_sum": 3082,
+        "cached_prompt_tokens_sum": 2256,
+        "completion_tokens_sum": 228
+      }
+    },
+    "예약:스터디룸 예약": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 32.493,
+        "prompt_tokens_sum": 3232,
+        "cached_prompt_tokens_sum": 1842,
+        "completion_tokens_sum": 292
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_ai_draft_matches": 0,
+        "requests": 4,
+        "elapsed_seconds_sum": 35.759,
+        "prompt_tokens_sum": 3232,
+        "cached_prompt_tokens_sum": 1842,
+        "completion_tokens_sum": 292
+      }
+    },
+    "예약:식당 예약": {
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 3,
+        "action_draft_matches_on_contract_pass": 1,
+        "field_draft_matches_on_contract_pass": 3,
+        "full_ai_draft_matches": 1,
+        "requests": 5,
+        "elapsed_seconds_sum": 28.771,
+        "prompt_tokens_sum": 3508,
+        "cached_prompt_tokens_sum": 2276,
+        "completion_tokens_sum": 290
+      },
+      "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF": {
+        "observations": 4,
+        "unique_cases": 2,
+        "contract_passes": 4,
+        "action_draft_matches_on_contract_pass": 2,
+        "field_draft_matches_on_contract_pass": 4,
+        "full_ai_draft_matches": 2,
+        "requests": 6,
+        "elapsed_seconds_sum": 35.453,
+        "prompt_tokens_sum": 4302,
+        "cached_prompt_tokens_sum": 3016,
+        "completion_tokens_sum": 350
+      }
+    }
+  }
+}
