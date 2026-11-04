@@ -31,6 +31,7 @@ def main() -> None:
     parser.add_argument("--case-id", action="append", default=[])
     parser.add_argument("--capture-shape", action="store_true")
     parser.add_argument("--constrain-workflow", action="store_true")
+    parser.add_argument("--split-workflow", action="store_true")
     parser.add_argument(
         "--schema-format", choices=("json_schema", "json_object"), default="json_schema"
     )
@@ -41,6 +42,8 @@ def main() -> None:
         or args.output.exists()
     ):
         parser.error("numeric settings must be positive and output must not already exist")
+    if args.split_workflow and (not args.constrain_workflow or args.schema_format != "json_object"):
+        parser.error("split workflow requires --constrain-workflow --schema-format json_object")
 
     all_cases = load_draft_cases(sentences_path=args.sentence_source)
     by_id = {case["id"]: case for case in all_cases}
@@ -61,6 +64,7 @@ def main() -> None:
                 capture_shape=args.capture_shape,
                 constrain_workflow=args.constrain_workflow,
                 schema_format=args.schema_format,
+                split_workflow=args.split_workflow,
             )
             observations.append(observation)
             print(
@@ -75,6 +79,7 @@ def main() -> None:
             "not_official_quality_score": True,
             "output_shape_capture": args.capture_shape,
             "workflow_schema_constrained": args.constrain_workflow,
+            "action_field_split": args.split_workflow,
             "schema_format": args.schema_format if args.constrain_workflow else None,
             "complete": len(observations) == len(cases),
             "created_at_utc": datetime.now(UTC).isoformat(),

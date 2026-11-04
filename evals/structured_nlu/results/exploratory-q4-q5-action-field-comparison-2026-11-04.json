@@ -1,0 +1,85 @@
+{
+  "kind": "exploratory_action_field_model_comparison_v1",
+  "not_official_quality_score": true,
+  "created_at_utc": "2026-11-04T09:04:32.462266+00:00",
+  "case_source_sha256": "c7151d8051a5fbc857e6246c8e8ea2706314d23ff096ec092d7dc08396948357",
+  "implementation_sha256": "28ba6adee3b19b4af3980670f386a237f7a96a1bf9403a98d3336dd925dc0ab6",
+  "code_git_commit": "3c1293ad55f74262e57217e6563ff4c7e18adb99",
+  "case_ids": [
+    "D01",
+    "D02",
+    "D03",
+    "D04",
+    "D05",
+    "D06",
+    "D07",
+    "D08"
+  ],
+  "repetitions": 2,
+  "model_results": [
+    {
+      "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF",
+      "model_sha256": "62a63f912a0708d9a522f974997b5bbd4927e01d739b07fe4c55c1f545241561",
+      "paired_observations": 16,
+      "case_count": 8,
+      "baseline": {
+        "contract_passes": 16,
+        "action_draft_matches_on_contract_pass": 12,
+        "field_draft_matches_on_contract_pass": 6,
+        "full_draft_matches": 6,
+        "requests": 16,
+        "elapsed_seconds_sum": 144.467,
+        "prompt_tokens_sum": 18146,
+        "cached_prompt_tokens_sum": 12639,
+        "completion_tokens_sum": 1112
+      },
+      "split": {
+        "contract_passes": 16,
+        "action_draft_matches_on_contract_pass": 8,
+        "field_draft_matches_on_contract_pass": 0,
+        "full_draft_matches": 0,
+        "requests": 32,
+        "elapsed_seconds_sum": 217.604,
+        "prompt_tokens_sum": 25464,
+        "cached_prompt_tokens_sum": 16327,
+        "completion_tokens_sum": 1372,
+        "first_stage_action_draft_matches": 8,
+        "first_stage_action_draft_observed": 16
+      },
+      "paired_contract_new_passes": [],
+      "paired_contract_lost_passes": []
+    },
+    {
+      "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF",
+      "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+      "paired_observations": 16,
+      "case_count": 8,
+      "baseline": {
+        "contract_passes": 16,
+        "action_draft_matches_on_contract_pass": 12,
+        "field_draft_matches_on_contract_pass": 6,
+        "full_draft_matches": 6,
+        "requests": 16,
+        "elapsed_seconds_sum": 189.221,
+        "prompt_tokens_sum": 18146,
+        "cached_prompt_tokens_sum": 10839,
+        "completion_tokens_sum": 1091
+      },
+      "split": {
+        "contract_passes": 16,
+        "action_draft_matches_on_contract_pass": 10,
+        "field_draft_matches_on_contract_pass": 2,
+        "full_draft_matches": 2,
+        "requests": 32,
+        "elapsed_seconds_sum": 246.882,
+        "prompt_tokens_sum": 25464,
+        "cached_prompt_tokens_sum": 15424,
+        "completion_tokens_sum": 1350,
+        "first_stage_action_draft_matches": 10,
+        "first_stage_action_draft_observed": 16
+      },
+      "paired_contract_new_passes": [],
+      "paired_contract_lost_passes": []
+    }
+  ]
+}

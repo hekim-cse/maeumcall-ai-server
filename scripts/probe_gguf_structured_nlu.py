@@ -18,8 +18,13 @@ from unittest.mock import patch
 
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from llm.errors import AIResponseValidationError
-from llm.structured_output import StructuredKeyError
-from scripts.gguf_service_workflow_schema import workflow_response_schema
+from llm.structured_output import StructuredKeyError, complete_validated_json
+from scripts.gguf_action_field_split import action_messages, validate_action_choice
+from scripts.gguf_service_workflow_schema import (
+    workflow_action_schema,
+    workflow_response_schema,
+    workflow_schema_for_selected_action,
+)
 from scripts.probe_chat_latency import CORPUS, select_cases
 
 DIRECT_ANALYZERS = {
@@ -140,9 +145,14 @@ def run_case(
     capture_shape: bool = False,
     constrain_workflow: bool = False,
     schema_format: str = "json_schema",
+    split_workflow: bool = False,
 ) -> dict:
     attempts: list[dict] = []
     contract = EVALUATION_CONTRACTS[case["scenario_key"]]
+    if split_workflow and (not constrain_workflow or contract.workflow_spec is None):
+        raise ValueError("split workflow requires a constrained service-workflow case")
+    if split_workflow and schema_format != "json_object":
+        raise ValueError("split workflow requires the observed json_object schema format")
     if constrain_workflow:
         if schema_format not in {"json_schema", "json_object"}:
             raise ValueError("unsupported schema format")
@@ -155,6 +165,7 @@ def run_case(
         )
     else:
         response_schema = None
+    stage = "action" if split_workflow else "single"
 
     def completion(messages: list[dict[str, str]]) -> str:
         payload = {
@@ -184,6 +195,8 @@ def run_case(
             "completion_tokens": usage.get("completion_tokens"),
             "finish_reason": body["choices"][0].get("finish_reason"),
         }
+        if split_workflow:
+            attempt["stage"] = stage
         raw = body["choices"][0]["message"]["content"]
         if capture_shape:
             attempt["output_shape"] = safe_output_shape(
@@ -216,32 +229,104 @@ def run_case(
             return getattr(module, function_name)(*args)
 
     started = time.perf_counter()
-    with patch.object(module, "complete_hf_json", completion):
-        try:
+    selected_action: dict[str, str | None] | None = None
+    try:
+        if split_workflow:
+            spec = contract.workflow_spec
+            workflow_fields = {
+                name: case["current_fields"].get(name) for name in contract.field_names
+            }
+            response_schema = workflow_action_schema(
+                spec,
+                conversation_state=case["conversation_state"],
+                current_fields=workflow_fields,
+            )
+            selected_action = complete_validated_json(
+                action_messages(
+                    spec,
+                    conversation_state=case["conversation_state"],
+                    current_fields=workflow_fields,
+                    user_message=case["user_message"],
+                ),
+                completion=completion,
+                validator=lambda parsed: validate_action_choice(
+                    parsed,
+                    spec=spec,
+                    conversation_state=case["conversation_state"],
+                    current_fields=workflow_fields,
+                ),
+                operation=f"{spec.graph_name}_action_probe",
+            )
+            response_schema = workflow_schema_for_selected_action(
+                spec,
+                conversation_state=case["conversation_state"],
+                current_fields=workflow_fields,
+                user_action=selected_action["user_action"],
+                change_field=selected_action["change_field"],
+            )
+            stage = "fields"
+        with patch.object(module, "complete_hf_json", completion):
             normalized = analyze()
-        except AIResponseValidationError as exc:
-            cause = exc.__cause__
-            failure = {
-                "last_error_type": type(cause).__name__ if cause else None,
-                "last_error_code": safe_failure_code(cause),
-            }
-            if isinstance(cause, StructuredKeyError):
-                failure["missing_output_keys"] = sorted(cause.missing)
-                failure["unexpected_output_key_count"] = len(cause.unexpected)
-            return {
-                "case_id": case["id"],
-                "scenario_key": case["scenario_key"],
-                "elapsed_seconds": round(time.perf_counter() - started, 3),
-                "contract_valid": False,
-                "failure": failure,
-                "attempts": attempts,
-            }
+    except AIResponseValidationError as exc:
+        cause = exc.__cause__
+        failure = {
+            "last_error_type": type(cause).__name__ if cause else None,
+            "last_error_code": safe_failure_code(cause),
+        }
+        if isinstance(cause, StructuredKeyError):
+            failure["missing_output_keys"] = sorted(cause.missing)
+            failure["unexpected_output_key_count"] = len(cause.unexpected)
+        return {
+            "case_id": case["id"],
+            "scenario_key": case["scenario_key"],
+            "elapsed_seconds": round(time.perf_counter() - started, 3),
+            "contract_valid": False,
+            "failure": failure,
+            "selected_action": selected_action,
+            "first_stage_action_draft_match": (
+                selected_action["user_action"] == case["labels"]["user_action"]
+                and selected_action["change_field"] == case["labels"]["change_field"]
+                if selected_action is not None
+                else None
+            ),
+            "attempts": attempts,
+        }
+    if selected_action is not None and (
+        normalized["user_action"] != selected_action["user_action"]
+        or normalized["change_field"] != selected_action["change_field"]
+    ):
+        return {
+            "case_id": case["id"],
+            "scenario_key": case["scenario_key"],
+            "elapsed_seconds": round(time.perf_counter() - started, 3),
+            "contract_valid": False,
+            "failure": {
+                "last_error_type": "ValueError",
+                "last_error_code": "stage_action_mismatch",
+            },
+            "selected_action": selected_action,
+            "first_stage_action_draft_match": (
+                selected_action["user_action"] == case["labels"]["user_action"]
+                and selected_action["change_field"] == case["labels"]["change_field"]
+            ),
+            "attempts": attempts,
+        }
+    mismatch_fields = draft_mismatches(case, normalized)
     return {
         "case_id": case["id"],
         "scenario_key": case["scenario_key"],
         "elapsed_seconds": round(time.perf_counter() - started, 3),
         "contract_valid": True,
-        "draft_label_mismatch_fields": draft_mismatches(case, normalized),
+        "draft_label_mismatch_fields": mismatch_fields,
+        "action_draft_match": not {"user_action", "change_field"} & set(mismatch_fields),
+        "field_draft_match": not (set(mismatch_fields) - {"intent", "user_action", "change_field"}),
+        "selected_action": selected_action,
+        "first_stage_action_draft_match": (
+            selected_action["user_action"] == case["labels"]["user_action"]
+            and selected_action["change_field"] == case["labels"]["change_field"]
+            if selected_action is not None
+            else None
+        ),
         "attempts": attempts,
     }
 

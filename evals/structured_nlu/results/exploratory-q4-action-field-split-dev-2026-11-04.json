@@ -1,0 +1,1470 @@
+{
+  "kind": "exploratory_action_field_split_dev_v1",
+  "not_official_quality_score": true,
+  "candidate_status": "ai_assisted_unreviewed",
+  "review_scope": "user_reviewed_sentence_and_action_field_meaning",
+  "normalized_value_status": "ai_draft_unreviewed",
+  "complete": true,
+  "created_at_utc": "2026-11-04T08:49:16.036973+00:00",
+  "case_source_sha256": "c7151d8051a5fbc857e6246c8e8ea2706314d23ff096ec092d7dc08396948357",
+  "implementation_sha256": "28ba6adee3b19b4af3980670f386a237f7a96a1bf9403a98d3336dd925dc0ab6",
+  "code_git_commit": "3c1293ad55f74262e57217e6563ff4c7e18adb99",
+  "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q4_K_M-GGUF",
+  "model_sha256": "62a63f912a0708d9a522f974997b5bbd4927e01d739b07fe4c55c1f545241561",
+  "model_file_bytes": 1522796736,
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runtime": "Docker Desktop linux/arm64 CPU",
+  "container_cpu_limit": 2,
+  "server_threads": 2,
+  "context_size": 4096,
+  "request_settings": {
+    "max_tokens": 180,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ]
+  },
+  "schema_format": "json_object",
+  "case_ids": [
+    "D01",
+    "D02",
+    "D03",
+    "D04",
+    "D05",
+    "D06",
+    "D07",
+    "D08"
+  ],
+  "repetitions": 2,
+  "summary": {
+    "paired_observations": 16,
+    "case_count": 8,
+    "baseline": {
+      "contract_passes": 16,
+      "action_draft_matches_on_contract_pass": 12,
+      "field_draft_matches_on_contract_pass": 6,
+      "full_draft_matches": 6,
+      "requests": 16,
+      "elapsed_seconds_sum": 144.467,
+      "prompt_tokens_sum": 18146,
+      "cached_prompt_tokens_sum": 12639,
+      "completion_tokens_sum": 1112
+    },
+    "split": {
+      "contract_passes": 16,
+      "action_draft_matches_on_contract_pass": 8,
+      "field_draft_matches_on_contract_pass": 0,
+      "full_draft_matches": 0,
+      "requests": 32,
+      "elapsed_seconds_sum": 217.604,
+      "prompt_tokens_sum": 25464,
+      "cached_prompt_tokens_sum": 16327,
+      "completion_tokens_sum": 1372,
+      "first_stage_action_draft_matches": 8,
+      "first_stage_action_draft_observed": 16
+    },
+    "paired_contract_new_passes": [],
+    "paired_contract_lost_passes": []
+  },
+  "pairs": [
+    {
+      "case_id": "D01",
+      "repetition": 1,
+      "order": [
+        "baseline",
+        "split"
+      ],
+      "baseline": {
+        "case_id": "D01",
+        "scenario_key": "배달:배달 지연 문의",
+        "elapsed_seconds": 2.905,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "delay_detail"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.905,
+            "prompt_tokens": 1123,
+            "cached_prompt_tokens": 1122,
+            "completion_tokens": 71,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "inquiry_goal",
+                "order_number"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "split": {
+        "case_id": "D01",
+        "scenario_key": "배달:배달 지연 문의",
+        "elapsed_seconds": 6.956,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "delay_detail"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": true,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.408,
+            "prompt_tokens": 451,
+            "cached_prompt_tokens": 223,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 2.547,
+            "prompt_tokens": 1123,
+            "cached_prompt_tokens": 1122,
+            "completion_tokens": 71,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "inquiry_goal",
+                "order_number"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D02",
+      "repetition": 1,
+      "order": [
+        "split",
+        "baseline"
+      ],
+      "split": {
+        "case_id": "D02",
+        "scenario_key": "배달:배달 지연 문의",
+        "elapsed_seconds": 19.813,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "delay_resolution",
+          "inquiry_goal",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": false,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.405,
+            "prompt_tokens": 449,
+            "cached_prompt_tokens": 223,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 15.407,
+            "prompt_tokens": 1121,
+            "cached_prompt_tokens": 442,
+            "completion_tokens": 69,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "delay_resolution",
+                "inquiry_goal"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "case_id": "D02",
+        "scenario_key": "배달:배달 지연 문의",
+        "elapsed_seconds": 2.577,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "delay_resolution",
+          "inquiry_goal",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.577,
+            "prompt_tokens": 1121,
+            "cached_prompt_tokens": 1120,
+            "completion_tokens": 69,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "delay_resolution",
+                "inquiry_goal"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D03",
+      "repetition": 1,
+      "order": [
+        "baseline",
+        "split"
+      ],
+      "baseline": {
+        "case_id": "D03",
+        "scenario_key": "배달:주문 변경",
+        "elapsed_seconds": 22.507,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "requested_change"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 22.506,
+            "prompt_tokens": 1117,
+            "cached_prompt_tokens": 0,
+            "completion_tokens": 74,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "change_type",
+                "order_number",
+                "requested_change"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "split": {
+        "case_id": "D03",
+        "scenario_key": "배달:주문 변경",
+        "elapsed_seconds": 10.25,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "requested_change"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": true,
+        "attempts": [
+          {
+            "elapsed_seconds": 7.419,
+            "prompt_tokens": 440,
+            "cached_prompt_tokens": 0,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 2.83,
+            "prompt_tokens": 1117,
+            "cached_prompt_tokens": 1116,
+            "completion_tokens": 74,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "change_type",
+                "order_number",
+                "requested_change"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D04",
+      "repetition": 1,
+      "order": [
+        "split",
+        "baseline"
+      ],
+      "split": {
+        "case_id": "D04",
+        "scenario_key": "배달:주문 변경",
+        "elapsed_seconds": 19.803,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "unavailable_preference",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": false,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.266,
+            "prompt_tokens": 442,
+            "cached_prompt_tokens": 222,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 15.536,
+            "prompt_tokens": 1119,
+            "cached_prompt_tokens": 438,
+            "completion_tokens": 66,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "unavailable_preference"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "case_id": "D04",
+        "scenario_key": "배달:주문 변경",
+        "elapsed_seconds": 2.314,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [],
+        "action_draft_match": true,
+        "field_draft_match": true,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.314,
+            "prompt_tokens": 1119,
+            "cached_prompt_tokens": 1118,
+            "completion_tokens": 63,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "unknown",
+              "present_field_names": [],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D05",
+      "repetition": 1,
+      "order": [
+        "baseline",
+        "split"
+      ],
+      "baseline": {
+        "case_id": "D05",
+        "scenario_key": "배달:환불/재배달 문의",
+        "elapsed_seconds": 24.203,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "issue_detail",
+          "issue_type",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 24.202,
+            "prompt_tokens": 1215,
+            "cached_prompt_tokens": 0,
+            "completion_tokens": 72,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "unknown",
+              "present_field_names": [],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "split": {
+        "case_id": "D05",
+        "scenario_key": "배달:환불/재배달 문의",
+        "elapsed_seconds": 11.171,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "issue_detail",
+          "issue_type",
+          "resolution_preference"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": true,
+        "attempts": [
+          {
+            "elapsed_seconds": 8.167,
+            "prompt_tokens": 485,
+            "cached_prompt_tokens": 0,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 3.003,
+            "prompt_tokens": 1215,
+            "cached_prompt_tokens": 1214,
+            "completion_tokens": 74,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "resolution_preference"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D06",
+      "repetition": 1,
+      "order": [
+        "split",
+        "baseline"
+      ],
+      "split": {
+        "case_id": "D06",
+        "scenario_key": "배달:환불/재배달 문의",
+        "elapsed_seconds": 21.943,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "resolution_preference",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": false,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.246,
+            "prompt_tokens": 484,
+            "cached_prompt_tokens": 261,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 17.696,
+            "prompt_tokens": 1214,
+            "cached_prompt_tokens": 457,
+            "completion_tokens": 75,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "resolution_preference"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "case_id": "D06",
+        "scenario_key": "배달:환불/재배달 문의",
+        "elapsed_seconds": 2.672,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [],
+        "action_draft_match": true,
+        "field_draft_match": true,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.671,
+            "prompt_tokens": 1214,
+            "cached_prompt_tokens": 1213,
+            "completion_tokens": 72,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "unknown",
+              "present_field_names": [],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D07",
+      "repetition": 1,
+      "order": [
+        "baseline",
+        "split"
+      ],
+      "baseline": {
+        "case_id": "D07",
+        "scenario_key": "시청:대형폐기물 배출",
+        "elapsed_seconds": 21.609,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "quantity"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 21.608,
+            "prompt_tokens": 1084,
+            "cached_prompt_tokens": 0,
+            "completion_tokens": 72,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "item_name",
+                "quantity",
+                "region",
+                "request_topic"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "split": {
+        "case_id": "D07",
+        "scenario_key": "시청:대형폐기물 배출",
+        "elapsed_seconds": 10.447,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "quantity"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": true,
+        "attempts": [
+          {
+            "elapsed_seconds": 7.745,
+            "prompt_tokens": 456,
+            "cached_prompt_tokens": 0,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 2.701,
+            "prompt_tokens": 1084,
+            "cached_prompt_tokens": 1083,
+            "completion_tokens": 72,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "item_name",
+                "quantity",
+                "region",
+                "request_topic"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D08",
+      "repetition": 1,
+      "order": [
+        "split",
+        "baseline"
+      ],
+      "split": {
+        "case_id": "D08",
+        "scenario_key": "시청:대형폐기물 배출",
+        "elapsed_seconds": 19.025,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "request_topic",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": false,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.161,
+            "prompt_tokens": 452,
+            "cached_prompt_tokens": 231,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 14.863,
+            "prompt_tokens": 1080,
+            "cached_prompt_tokens": 437,
+            "completion_tokens": 65,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "request_topic"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "case_id": "D08",
+        "scenario_key": "시청:대형폐기물 배출",
+        "elapsed_seconds": 2.316,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [],
+        "action_draft_match": true,
+        "field_draft_match": true,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.316,
+            "prompt_tokens": 1080,
+            "cached_prompt_tokens": 1079,
+            "completion_tokens": 63,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "unknown",
+              "present_field_names": [],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D01",
+      "repetition": 2,
+      "order": [
+        "split",
+        "baseline"
+      ],
+      "split": {
+        "case_id": "D01",
+        "scenario_key": "배달:배달 지연 문의",
+        "elapsed_seconds": 6.967,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "delay_detail"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": true,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.391,
+            "prompt_tokens": 451,
+            "cached_prompt_tokens": 223,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 2.574,
+            "prompt_tokens": 1123,
+            "cached_prompt_tokens": 1122,
+            "completion_tokens": 71,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "inquiry_goal",
+                "order_number"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "case_id": "D01",
+        "scenario_key": "배달:배달 지연 문의",
+        "elapsed_seconds": 2.556,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "delay_detail"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.555,
+            "prompt_tokens": 1123,
+            "cached_prompt_tokens": 1122,
+            "completion_tokens": 71,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "inquiry_goal",
+                "order_number"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D02",
+      "repetition": 2,
+      "order": [
+        "baseline",
+        "split"
+      ],
+      "baseline": {
+        "case_id": "D02",
+        "scenario_key": "배달:배달 지연 문의",
+        "elapsed_seconds": 2.848,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "delay_resolution",
+          "inquiry_goal",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.848,
+            "prompt_tokens": 1121,
+            "cached_prompt_tokens": 1120,
+            "completion_tokens": 69,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "delay_resolution",
+                "inquiry_goal"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "split": {
+        "case_id": "D02",
+        "scenario_key": "배달:배달 지연 문의",
+        "elapsed_seconds": 6.873,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "delay_resolution",
+          "inquiry_goal",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": false,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.359,
+            "prompt_tokens": 449,
+            "cached_prompt_tokens": 223,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 2.513,
+            "prompt_tokens": 1121,
+            "cached_prompt_tokens": 1120,
+            "completion_tokens": 69,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "delay_resolution",
+                "inquiry_goal"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D03",
+      "repetition": 2,
+      "order": [
+        "split",
+        "baseline"
+      ],
+      "split": {
+        "case_id": "D03",
+        "scenario_key": "배달:주문 변경",
+        "elapsed_seconds": 20.237,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "requested_change"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": true,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.254,
+            "prompt_tokens": 440,
+            "cached_prompt_tokens": 222,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 15.981,
+            "prompt_tokens": 1117,
+            "cached_prompt_tokens": 438,
+            "completion_tokens": 74,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "change_type",
+                "order_number",
+                "requested_change"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "case_id": "D03",
+        "scenario_key": "배달:주문 변경",
+        "elapsed_seconds": 2.877,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "requested_change"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.876,
+            "prompt_tokens": 1117,
+            "cached_prompt_tokens": 1116,
+            "completion_tokens": 74,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "change_type",
+                "order_number",
+                "requested_change"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D04",
+      "repetition": 2,
+      "order": [
+        "baseline",
+        "split"
+      ],
+      "baseline": {
+        "case_id": "D04",
+        "scenario_key": "배달:주문 변경",
+        "elapsed_seconds": 15.763,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [],
+        "action_draft_match": true,
+        "field_draft_match": true,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 15.762,
+            "prompt_tokens": 1119,
+            "cached_prompt_tokens": 438,
+            "completion_tokens": 63,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "unknown",
+              "present_field_names": [],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "split": {
+        "case_id": "D04",
+        "scenario_key": "배달:주문 변경",
+        "elapsed_seconds": 6.906,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "unavailable_preference",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": false,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.382,
+            "prompt_tokens": 442,
+            "cached_prompt_tokens": 222,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 2.523,
+            "prompt_tokens": 1119,
+            "cached_prompt_tokens": 1118,
+            "completion_tokens": 66,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "unavailable_preference"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D05",
+      "repetition": 2,
+      "order": [
+        "split",
+        "baseline"
+      ],
+      "split": {
+        "case_id": "D05",
+        "scenario_key": "배달:환불/재배달 문의",
+        "elapsed_seconds": 22.589,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "issue_detail",
+          "issue_type",
+          "resolution_preference"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": true,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.593,
+            "prompt_tokens": 485,
+            "cached_prompt_tokens": 261,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 17.995,
+            "prompt_tokens": 1215,
+            "cached_prompt_tokens": 457,
+            "completion_tokens": 74,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "resolution_preference"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "case_id": "D05",
+        "scenario_key": "배달:환불/재배달 문의",
+        "elapsed_seconds": 2.834,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "issue_detail",
+          "issue_type",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.834,
+            "prompt_tokens": 1215,
+            "cached_prompt_tokens": 1214,
+            "completion_tokens": 72,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "unknown",
+              "present_field_names": [],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D06",
+      "repetition": 2,
+      "order": [
+        "baseline",
+        "split"
+      ],
+      "baseline": {
+        "case_id": "D06",
+        "scenario_key": "배달:환불/재배달 문의",
+        "elapsed_seconds": 18.207,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [],
+        "action_draft_match": true,
+        "field_draft_match": true,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 18.206,
+            "prompt_tokens": 1214,
+            "cached_prompt_tokens": 457,
+            "completion_tokens": 72,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "unknown",
+              "present_field_names": [],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "split": {
+        "case_id": "D06",
+        "scenario_key": "배달:환불/재배달 문의",
+        "elapsed_seconds": 7.34,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "resolution_preference",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": false,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.441,
+            "prompt_tokens": 484,
+            "cached_prompt_tokens": 261,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 2.897,
+            "prompt_tokens": 1214,
+            "cached_prompt_tokens": 1213,
+            "completion_tokens": 75,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "resolution_preference"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D07",
+      "repetition": 2,
+      "order": [
+        "split",
+        "baseline"
+      ],
+      "split": {
+        "case_id": "D07",
+        "scenario_key": "시청:대형폐기물 배출",
+        "elapsed_seconds": 20.426,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "quantity"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": true,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.452,
+            "prompt_tokens": 456,
+            "cached_prompt_tokens": 231,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 15.973,
+            "prompt_tokens": 1084,
+            "cached_prompt_tokens": 437,
+            "completion_tokens": 72,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "item_name",
+                "quantity",
+                "region",
+                "request_topic"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "case_id": "D07",
+        "scenario_key": "시청:대형폐기물 배출",
+        "elapsed_seconds": 2.761,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "quantity"
+        ],
+        "action_draft_match": true,
+        "field_draft_match": false,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 2.761,
+            "prompt_tokens": 1084,
+            "cached_prompt_tokens": 1083,
+            "completion_tokens": 72,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "item_name",
+                "quantity",
+                "region",
+                "request_topic"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "D08",
+      "repetition": 2,
+      "order": [
+        "baseline",
+        "split"
+      ],
+      "baseline": {
+        "case_id": "D08",
+        "scenario_key": "시청:대형폐기물 배출",
+        "elapsed_seconds": 15.518,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [],
+        "action_draft_match": true,
+        "field_draft_match": true,
+        "selected_action": null,
+        "first_stage_action_draft_match": null,
+        "attempts": [
+          {
+            "elapsed_seconds": 15.518,
+            "prompt_tokens": 1080,
+            "cached_prompt_tokens": 437,
+            "completion_tokens": 63,
+            "finish_reason": "stop",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "unknown",
+              "present_field_names": [],
+              "change_field": null
+            }
+          }
+        ]
+      },
+      "split": {
+        "case_id": "D08",
+        "scenario_key": "시청:대형폐기물 배출",
+        "elapsed_seconds": 6.858,
+        "contract_valid": true,
+        "draft_label_mismatch_fields": [
+          "request_topic",
+          "user_action"
+        ],
+        "action_draft_match": false,
+        "field_draft_match": false,
+        "selected_action": {
+          "user_action": "provide_details",
+          "change_field": null
+        },
+        "first_stage_action_draft_match": false,
+        "attempts": [
+          {
+            "elapsed_seconds": 4.559,
+            "prompt_tokens": 452,
+            "cached_prompt_tokens": 231,
+            "completion_tokens": 15,
+            "finish_reason": "stop",
+            "stage": "action",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [],
+              "change_field": null
+            }
+          },
+          {
+            "elapsed_seconds": 2.299,
+            "prompt_tokens": 1080,
+            "cached_prompt_tokens": 1079,
+            "completion_tokens": 65,
+            "finish_reason": "stop",
+            "stage": "fields",
+            "output_shape": {
+              "json_object": true,
+              "user_action": "provide_details",
+              "present_field_names": [
+                "request_topic"
+              ],
+              "change_field": null
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
