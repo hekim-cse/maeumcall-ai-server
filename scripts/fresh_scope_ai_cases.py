@@ -15,6 +15,24 @@ FIELD_DRAFT = (
 )
 EXPECTED_IDS = [f"F{number:02}" for number in range(1, 33)]
 ROW = re.compile(r"^\| (F\d{2}) \| ([^|]+) \| ([^|]+) \| `([a-z_]+)` \|$")
+DISPLAY_NAME_BY_SCENARIO = {
+    "고객센터:a/s 접수": "고객센터 A/S 접수",
+    "고객센터:요금/약정 상담": "고객센터 요금·약정 상담",
+    "고객센터:인터넷/통화 문제 문의": "고객센터 인터넷·통화 문제",
+    "교수님:결석 사유 전달": "교수님 결석 사유 전달",
+    "교수님:과제 문의": "교수님 과제 문의",
+    "교수님:면담 예약": "교수님 면담 예약",
+    "배달:배달 지연 문의": "배달 지연 문의",
+    "배달:주문 변경": "배달 주문 변경",
+    "배달:환불/재배달 문의": "배달 환불·재배달 문의",
+    "시청:대형폐기물 배출": "시청 대형폐기물 배출",
+    "시청:여권 발급 문의": "시청 여권 발급 문의",
+    "시청:주민등록 등본 문의": "시청 주민등록 등본 문의",
+    "예약:미용실 예약": "미용실 예약",
+    "예약:병원 예약": "병원 예약",
+    "예약:스터디룸 예약": "스터디룸 예약",
+    "예약:식당 예약": "식당 예약",
+}
 
 
 def load_cases(
@@ -29,6 +47,8 @@ def load_cases(
     ]
     if [row[0] for row in rows] != EXPECTED_IDS:
         raise ValueError("sentence draft must contain exactly F01 through F32")
+    if set(DISPLAY_NAME_BY_SCENARIO) != set(EVALUATION_CONTRACTS):
+        raise ValueError("scenario display mapping differs from live contracts")
     messages = [row[2].strip() for row in rows]
     if any(not message for message in messages) or len(set(messages)) != len(messages):
         raise ValueError("exploratory messages must be nonempty and unique")
@@ -61,10 +81,12 @@ def load_cases(
         raise ValueError("field source case IDs differ from sentence draft")
 
     cases = []
-    for case_id, _display_name, message, action in rows:
+    for case_id, display_name, message, action in rows:
         pair, positive = pair_by_id[case_id]
         if positive != (int(case_id[1:]) % 2 == 1):
             raise ValueError(f"pair polarity differs from case ID: {case_id}")
+        if display_name.strip() != DISPLAY_NAME_BY_SCENARIO[pair["scenario_key"]]:
+            raise ValueError(f"scenario display name differs from case assignment: {case_id}")
         contract = EVALUATION_CONTRACTS[pair["scenario_key"]]
         state = contract.workflow_spec.collecting_state if contract.workflow_spec else "greeting"
         current_fields = dict.fromkeys(contract.field_names) if contract.uses_current_fields else {}

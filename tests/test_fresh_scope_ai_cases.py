@@ -35,3 +35,14 @@ def test_fresh_scope_cases_reject_invalid_field_drafts(tmp_path, case_id, field,
     changed.write_text(json.dumps(source))
     with pytest.raises(ValueError, match=expected):
         load_cases(fields_path=changed)
+
+
+def test_fresh_scope_cases_reject_swapped_scenario_assignments(tmp_path):
+    source = json.loads(FIELD_DRAFT.read_text())
+    first, later = source["pairs"][0], source["pairs"][12]
+    for key in ("positive_id", "negative_id"):
+        first[key], later[key] = later[key], first[key]
+    changed = tmp_path / "swapped.json"
+    changed.write_text(json.dumps(source))
+    with pytest.raises(ValueError, match="scenario display name differs"):
+        load_cases(fields_path=changed)
