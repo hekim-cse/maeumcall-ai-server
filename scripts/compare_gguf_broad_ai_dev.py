@@ -96,6 +96,34 @@ def compare(first: dict, second: dict) -> dict:
             )
             for report in (first, second)
         }
+    by_polarity = {
+        "in_scope": {},
+        "near_scope_out": {},
+    }
+    repeat_consistency = {}
+    for report in (first, second):
+        for polarity, parity in (("in_scope", 1), ("near_scope_out", 0)):
+            by_polarity[polarity][report["model"]] = summarize(
+                [item for item in report["observations"] if int(item["case_id"][1:]) % 2 == parity]
+            )
+        by_case = {
+            case_id: [item for item in report["observations"] if item["case_id"] == case_id]
+            for case_id in expected_ids
+        }
+        repeat_consistency[report["model"]] = {
+            "cases": len(expected_ids),
+            "contract_stable_cases": sum(
+                len({item["contract_valid"] for item in items}) == 1 for items in by_case.values()
+            ),
+            "action_draft_match_stable_cases": sum(
+                len({item["action_draft_match"] for item in items}) == 1
+                for items in by_case.values()
+                if all(item["contract_valid"] for item in items)
+            ),
+            "action_draft_match_observed_cases": sum(
+                all(item["contract_valid"] for item in items) for items in by_case.values()
+            ),
+        }
     return {
         "kind": "exploratory_broad_ai_gguf_comparison_v1",
         "not_official_quality_score": True,
@@ -116,6 +144,8 @@ def compare(first: dict, second: dict) -> dict:
         ],
         "paired_contract": paired_contract,
         "paired_action_draft_match": paired_action,
+        "by_polarity": by_polarity,
+        "repeat_consistency": repeat_consistency,
         "by_scenario": by_scenario,
     }
 

@@ -102,6 +102,9 @@ def test_broad_ai_comparison_verifies_paired_inputs_and_summaries():
     assert result["case_count"] == 32
     assert result["paired_action_draft_match"]["first_only"] == ["B01.r1"]
     assert result["models"][0]["summary"]["observations"] == 64
+    assert result["by_polarity"]["in_scope"]["Q4"]["observations"] == 32
+    assert result["by_polarity"]["near_scope_out"]["Q5"]["observations"] == 32
+    assert result["repeat_consistency"]["Q4"]["contract_stable_cases"] == 32
 
     second["summary"]["contract_passes"] = 0
     with pytest.raises(ValueError, match="summary differs"):

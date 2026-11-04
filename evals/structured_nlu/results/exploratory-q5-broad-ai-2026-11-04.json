@@ -1,0 +1,2360 @@
+{
+  "kind": "exploratory_broad_ai_16_scenarios_v1",
+  "candidate_status": "ai_assisted_unreviewed",
+  "sentence_action_review": "user_accepted_for_exploration_2026-11-04",
+  "normalized_value_status": "ai_draft_unreviewed",
+  "not_official_quality_score": true,
+  "complete": true,
+  "created_at_utc": "2026-11-04T11:34:59.768396+00:00",
+  "sentence_source_sha256": "5290a876f305fedb2a936d3c3a4d0bd441c21a5e973317397c0e0990c42ba37e",
+  "field_draft_sha256": "680751d9843d071e3f9e5c29a0cb7853621515c2ed0208ec49fba7e79eb69a0c",
+  "implementation_sha256": "d82a1d1666d4bb6a96e342ecc02f33a32627945f647e08a36e5e5a668ddd9d68",
+  "code_git_commit": "19facf8d1a3f2af8784b7112c7f3fc26fa92c95b",
+  "model": "TaeyoungLeeJack/kanana-1.5-2.1b-instruct-2505-Q5_K_M-GGUF",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "model_file_bytes": 1736633184,
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runtime": "Docker Desktop linux/arm64 CPU",
+  "container_cpu_limit": 2,
+  "container_memory_gib": 6,
+  "server_threads": 2,
+  "server_parallel": 1,
+  "context_size": 4096,
+  "request_settings": {
+    "max_tokens": 180,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ]
+  },
+  "case_ids": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08",
+    "B09",
+    "B10",
+    "B11",
+    "B12",
+    "B13",
+    "B14",
+    "B15",
+    "B16",
+    "B17",
+    "B18",
+    "B19",
+    "B20",
+    "B21",
+    "B22",
+    "B23",
+    "B24",
+    "B25",
+    "B26",
+    "B27",
+    "B28",
+    "B29",
+    "B30",
+    "B31",
+    "B32"
+  ],
+  "repetitions": 2,
+  "summary": {
+    "observations": 64,
+    "unique_cases": 32,
+    "contract_passes": 48,
+    "action_draft_matches_on_contract_pass": 32,
+    "field_draft_matches_on_contract_pass": 12,
+    "full_ai_draft_matches": 8,
+    "requests": 83,
+    "elapsed_seconds_sum": 728.295,
+    "prompt_tokens_sum": 85257,
+    "cached_prompt_tokens_sum": 59375,
+    "completion_tokens_sum": 5809
+  },
+  "observations": [
+    {
+      "repetition": 1,
+      "case_id": "B01",
+      "scenario_key": "고객센터:a/s 접수",
+      "elapsed_seconds": 27.679,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "product_type",
+        "safety_status",
+        "symptom"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 27.678,
+          "prompt_tokens": 1261,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 102,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "symptom"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B02",
+      "scenario_key": "고객센터:a/s 접수",
+      "elapsed_seconds": 25.104,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 19.297,
+          "prompt_tokens": 1255,
+          "cached_prompt_tokens": 480,
+          "completion_tokens": 85,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 5.805,
+          "prompt_tokens": 1394,
+          "cached_prompt_tokens": 1339,
+          "completion_tokens": 85,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B03",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "elapsed_seconds": 21.42,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "consultation_goal"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 21.419,
+          "prompt_tokens": 1127,
+          "cached_prompt_tokens": 61,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_type"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B04",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "elapsed_seconds": 15.978,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "inquiry_type",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 15.977,
+          "prompt_tokens": 1123,
+          "cached_prompt_tokens": 449,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_type"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B05",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "elapsed_seconds": 26.37,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "symptom"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 26.369,
+          "prompt_tokens": 1297,
+          "cached_prompt_tokens": 61,
+          "completion_tokens": 88,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "scope",
+              "service_type",
+              "symptom"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B06",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "elapsed_seconds": 24.68,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 19.332,
+          "prompt_tokens": 1289,
+          "cached_prompt_tokens": 470,
+          "completion_tokens": 79,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 5.345,
+          "prompt_tokens": 1422,
+          "cached_prompt_tokens": 1367,
+          "completion_tokens": 79,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B07",
+      "scenario_key": "교수님:결석 사유 전달",
+      "elapsed_seconds": 12.357,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "user_name"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 12.357,
+          "prompt_tokens": 640,
+          "cached_prompt_tokens": 21,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_absence_info",
+            "present_field_names": [
+              "absence_date",
+              "absence_reason",
+              "class_name",
+              "user_name"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B08",
+      "scenario_key": "교수님:결석 사유 전달",
+      "elapsed_seconds": 12.529,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 9.144,
+          "prompt_tokens": 639,
+          "cached_prompt_tokens": 211,
+          "completion_tokens": 53,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_absence_info",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 3.385,
+          "prompt_tokens": 748,
+          "cached_prompt_tokens": 691,
+          "completion_tokens": 53,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_absence_info",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B09",
+      "scenario_key": "교수님:과제 문의",
+      "elapsed_seconds": 10.455,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "assignment_topic",
+        "course_name",
+        "question"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 10.454,
+          "prompt_tokens": 529,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_assignment_info",
+            "present_field_names": [
+              "assignment_topic",
+              "question"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B10",
+      "scenario_key": "교수님:과제 문의",
+      "elapsed_seconds": 8.272,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "assignment_topic",
+        "question",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 8.272,
+          "prompt_tokens": 527,
+          "cached_prompt_tokens": 202,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_assignment_info",
+            "present_field_names": [
+              "assignment_topic",
+              "question"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B11",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 10.961,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "appointment_purpose",
+        "user_name"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 10.96,
+          "prompt_tokens": 613,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 62,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_appointment_info",
+            "present_field_names": [
+              "appointment_purpose",
+              "date",
+              "time",
+              "user_name"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B12",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 9.185,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "appointment_purpose",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 9.184,
+          "prompt_tokens": 606,
+          "cached_prompt_tokens": 207,
+          "completion_tokens": 65,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_appointment_info",
+            "present_field_names": [
+              "appointment_purpose"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B13",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 21.807,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "delay_detail"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 21.806,
+          "prompt_tokens": 1129,
+          "cached_prompt_tokens": 21,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_goal"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B14",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 15.962,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "delay_detail",
+        "inquiry_goal",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 15.961,
+          "prompt_tokens": 1124,
+          "cached_prompt_tokens": 442,
+          "completion_tokens": 83,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "delay_detail",
+              "inquiry_goal"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B15",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 20.874,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "change_type",
+        "requested_change"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 20.874,
+          "prompt_tokens": 1127,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "order_number"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B16",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 19.492,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 15.091,
+          "prompt_tokens": 1115,
+          "cached_prompt_tokens": 439,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.399,
+          "prompt_tokens": 1233,
+          "cached_prompt_tokens": 1178,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B17",
+      "scenario_key": "배달:환불/재배달 문의",
+      "elapsed_seconds": 25.083,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "issue_detail",
+        "issue_type"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 25.083,
+          "prompt_tokens": 1217,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 99,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "issue_detail"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B18",
+      "scenario_key": "배달:환불/재배달 문의",
+      "elapsed_seconds": 22.508,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 17.478,
+          "prompt_tokens": 1208,
+          "cached_prompt_tokens": 457,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 5.029,
+          "prompt_tokens": 1335,
+          "cached_prompt_tokens": 1280,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B19",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 25.759,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "unexpected_change_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 20.658,
+          "prompt_tokens": 1085,
+          "cached_prompt_tokens": 57,
+          "completion_tokens": 76,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "item_name",
+              "quantity",
+              "region",
+              "request_topic"
+            ],
+            "change_field": "region"
+          }
+        },
+        {
+          "elapsed_seconds": 5.101,
+          "prompt_tokens": 1217,
+          "cached_prompt_tokens": 1160,
+          "completion_tokens": 76,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "item_name",
+              "quantity",
+              "region",
+              "request_topic"
+            ],
+            "change_field": "region"
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B20",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 19.346,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 14.951,
+          "prompt_tokens": 1079,
+          "cached_prompt_tokens": 437,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.394,
+          "prompt_tokens": 1197,
+          "cached_prompt_tokens": 1142,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B21",
+      "scenario_key": "시청:여권 발급 문의",
+      "elapsed_seconds": 23.294,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "applicant_type",
+        "application_type"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 23.294,
+          "prompt_tokens": 1225,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 65,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B22",
+      "scenario_key": "시청:여권 발급 문의",
+      "elapsed_seconds": 21.749,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 17.202,
+          "prompt_tokens": 1221,
+          "cached_prompt_tokens": 443,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.546,
+          "prompt_tokens": 1339,
+          "cached_prompt_tokens": 1284,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B23",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "elapsed_seconds": 22.38,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "document_type",
+        "issuance_channel"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 22.38,
+          "prompt_tokens": 1204,
+          "cached_prompt_tokens": 60,
+          "completion_tokens": 68,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B24",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "elapsed_seconds": 16.9,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "inquiry_topic",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 16.9,
+          "prompt_tokens": 1199,
+          "cached_prompt_tokens": 449,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B25",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 20.383,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "action_draft_match": true,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 20.382,
+          "prompt_tokens": 1009,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "service_type",
+              "time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B26",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 22.065,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "action_draft_match": true,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 17.546,
+          "prompt_tokens": 1009,
+          "cached_prompt_tokens": 183,
+          "completion_tokens": 78,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "unknown",
+            "present_field_names": [
+              "date",
+              "designer",
+              "service_type",
+              "time",
+              "user_name"
+            ],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.518,
+          "prompt_tokens": 1157,
+          "cached_prompt_tokens": 1086,
+          "completion_tokens": 58,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "unknown",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B27",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 14.707,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "action_draft_match": true,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 14.706,
+          "prompt_tokens": 772,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 63,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "department",
+              "time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B28",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 2.888,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.888,
+          "prompt_tokens": 769,
+          "cached_prompt_tokens": 738,
+          "completion_tokens": 51,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B29",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 15.932,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "date"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 15.931,
+          "prompt_tokens": 807,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 74,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B30",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 13.175,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "date",
+        "duration",
+        "party_size",
+        "start_time",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 13.175,
+          "prompt_tokens": 809,
+          "cached_prompt_tokens": 216,
+          "completion_tokens": 72,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B31",
+      "scenario_key": "예약:식당 예약",
+      "elapsed_seconds": 16.637,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "action_draft_match": true,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 12.879,
+          "prompt_tokens": 680,
+          "cached_prompt_tokens": 12,
+          "completion_tokens": 61,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "party_size",
+              "selected_time",
+              "time"
+            ],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 3.758,
+          "prompt_tokens": 794,
+          "cached_prompt_tokens": 740,
+          "completion_tokens": 61,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "party_size",
+              "selected_time",
+              "time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 1,
+      "case_id": "B32",
+      "scenario_key": "예약:식당 예약",
+      "elapsed_seconds": 10.124,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 10.123,
+          "prompt_tokens": 677,
+          "cached_prompt_tokens": 169,
+          "completion_tokens": 53,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B32",
+      "scenario_key": "예약:식당 예약",
+      "elapsed_seconds": 2.255,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.255,
+          "prompt_tokens": 677,
+          "cached_prompt_tokens": 676,
+          "completion_tokens": 53,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B31",
+      "scenario_key": "예약:식당 예약",
+      "elapsed_seconds": 6.437,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "action_draft_match": true,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.674,
+          "prompt_tokens": 680,
+          "cached_prompt_tokens": 679,
+          "completion_tokens": 61,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "party_size",
+              "selected_time",
+              "time"
+            ],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 3.762,
+          "prompt_tokens": 794,
+          "cached_prompt_tokens": 740,
+          "completion_tokens": 61,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "party_size",
+              "selected_time",
+              "time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B30",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 3.287,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "date",
+        "duration",
+        "party_size",
+        "start_time",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.287,
+          "prompt_tokens": 809,
+          "cached_prompt_tokens": 808,
+          "completion_tokens": 72,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B29",
+      "scenario_key": "예약:스터디룸 예약",
+      "elapsed_seconds": 3.365,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "date"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.365,
+          "prompt_tokens": 807,
+          "cached_prompt_tokens": 806,
+          "completion_tokens": 74,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B28",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 2.333,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.332,
+          "prompt_tokens": 769,
+          "cached_prompt_tokens": 768,
+          "completion_tokens": 51,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B27",
+      "scenario_key": "예약:병원 예약",
+      "elapsed_seconds": 3.477,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "action_draft_match": true,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.477,
+          "prompt_tokens": 772,
+          "cached_prompt_tokens": 738,
+          "completion_tokens": 63,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "department",
+              "time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B26",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 2.761,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "action_draft_match": true,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.761,
+          "prompt_tokens": 1009,
+          "cached_prompt_tokens": 1008,
+          "completion_tokens": 58,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "unknown",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B25",
+      "scenario_key": "예약:미용실 예약",
+      "elapsed_seconds": 3.473,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [],
+      "action_draft_match": true,
+      "field_draft_match": true,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.473,
+          "prompt_tokens": 1009,
+          "cached_prompt_tokens": 1008,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "service_type",
+              "time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B24",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "elapsed_seconds": 3.576,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "inquiry_topic",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.574,
+          "prompt_tokens": 1199,
+          "cached_prompt_tokens": 1198,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B23",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "elapsed_seconds": 3.333,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "document_type",
+        "issuance_channel"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.333,
+          "prompt_tokens": 1204,
+          "cached_prompt_tokens": 1203,
+          "completion_tokens": 68,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B22",
+      "scenario_key": "시청:여권 발급 문의",
+      "elapsed_seconds": 7.698,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.195,
+          "prompt_tokens": 1221,
+          "cached_prompt_tokens": 1220,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.502,
+          "prompt_tokens": 1339,
+          "cached_prompt_tokens": 1284,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B21",
+      "scenario_key": "시청:여권 발급 문의",
+      "elapsed_seconds": 3.249,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "applicant_type",
+        "application_type"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.249,
+          "prompt_tokens": 1225,
+          "cached_prompt_tokens": 1224,
+          "completion_tokens": 65,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B20",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 7.412,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.156,
+          "prompt_tokens": 1079,
+          "cached_prompt_tokens": 1078,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.254,
+          "prompt_tokens": 1197,
+          "cached_prompt_tokens": 1142,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B19",
+      "scenario_key": "시청:대형폐기물 배출",
+      "elapsed_seconds": 8.642,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "unexpected_change_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.757,
+          "prompt_tokens": 1085,
+          "cached_prompt_tokens": 1084,
+          "completion_tokens": 76,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "item_name",
+              "quantity",
+              "region",
+              "request_topic"
+            ],
+            "change_field": "region"
+          }
+        },
+        {
+          "elapsed_seconds": 4.884,
+          "prompt_tokens": 1217,
+          "cached_prompt_tokens": 1160,
+          "completion_tokens": 76,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "item_name",
+              "quantity",
+              "region",
+              "request_topic"
+            ],
+            "change_field": "region"
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B18",
+      "scenario_key": "배달:환불/재배달 문의",
+      "elapsed_seconds": 8.58,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.615,
+          "prompt_tokens": 1208,
+          "cached_prompt_tokens": 1207,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.964,
+          "prompt_tokens": 1335,
+          "cached_prompt_tokens": 1280,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B17",
+      "scenario_key": "배달:환불/재배달 문의",
+      "elapsed_seconds": 4.957,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "issue_detail",
+        "issue_type"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 4.956,
+          "prompt_tokens": 1217,
+          "cached_prompt_tokens": 1216,
+          "completion_tokens": 99,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "issue_detail"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B16",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 7.564,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.251,
+          "prompt_tokens": 1115,
+          "cached_prompt_tokens": 1114,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 4.313,
+          "prompt_tokens": 1233,
+          "cached_prompt_tokens": 1178,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B15",
+      "scenario_key": "배달:주문 변경",
+      "elapsed_seconds": 3.309,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "change_type",
+        "requested_change"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.309,
+          "prompt_tokens": 1127,
+          "cached_prompt_tokens": 1126,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "order_number"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B14",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 4.053,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "delay_detail",
+        "inquiry_goal",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 4.052,
+          "prompt_tokens": 1124,
+          "cached_prompt_tokens": 1123,
+          "completion_tokens": 83,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "delay_detail",
+              "inquiry_goal"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B13",
+      "scenario_key": "배달:배달 지연 문의",
+      "elapsed_seconds": 3.289,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "delay_detail"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.289,
+          "prompt_tokens": 1129,
+          "cached_prompt_tokens": 1128,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_goal"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B12",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 2.824,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "appointment_purpose",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.824,
+          "prompt_tokens": 606,
+          "cached_prompt_tokens": 605,
+          "completion_tokens": 65,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_appointment_info",
+            "present_field_names": [
+              "appointment_purpose"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B11",
+      "scenario_key": "교수님:면담 예약",
+      "elapsed_seconds": 2.681,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "appointment_purpose",
+        "user_name"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.681,
+          "prompt_tokens": 613,
+          "cached_prompt_tokens": 612,
+          "completion_tokens": 62,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_appointment_info",
+            "present_field_names": [
+              "appointment_purpose",
+              "date",
+              "time",
+              "user_name"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B10",
+      "scenario_key": "교수님:과제 문의",
+      "elapsed_seconds": 3.171,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "assignment_topic",
+        "question",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.17,
+          "prompt_tokens": 527,
+          "cached_prompt_tokens": 526,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_assignment_info",
+            "present_field_names": [
+              "assignment_topic",
+              "question"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B09",
+      "scenario_key": "교수님:과제 문의",
+      "elapsed_seconds": 3.167,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "assignment_topic",
+        "course_name",
+        "question"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.167,
+          "prompt_tokens": 529,
+          "cached_prompt_tokens": 528,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_assignment_info",
+            "present_field_names": [
+              "assignment_topic",
+              "question"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B08",
+      "scenario_key": "교수님:결석 사유 전달",
+      "elapsed_seconds": 5.644,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.288,
+          "prompt_tokens": 639,
+          "cached_prompt_tokens": 638,
+          "completion_tokens": 53,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_absence_info",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 3.355,
+          "prompt_tokens": 748,
+          "cached_prompt_tokens": 691,
+          "completion_tokens": 53,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_absence_info",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B07",
+      "scenario_key": "교수님:결석 사유 전달",
+      "elapsed_seconds": 2.768,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "user_name"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.768,
+          "prompt_tokens": 640,
+          "cached_prompt_tokens": 639,
+          "completion_tokens": 64,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_absence_info",
+            "present_field_names": [
+              "absence_date",
+              "absence_reason",
+              "class_name",
+              "user_name"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B06",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "elapsed_seconds": 9.426,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 4.121,
+          "prompt_tokens": 1289,
+          "cached_prompt_tokens": 1288,
+          "completion_tokens": 79,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 5.303,
+          "prompt_tokens": 1422,
+          "cached_prompt_tokens": 1367,
+          "completion_tokens": 79,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B05",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "elapsed_seconds": 5.067,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "symptom"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 5.01,
+          "prompt_tokens": 1297,
+          "cached_prompt_tokens": 1296,
+          "completion_tokens": 88,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "scope",
+              "service_type",
+              "symptom"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B04",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "elapsed_seconds": 4.375,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "inquiry_type",
+        "user_action"
+      ],
+      "action_draft_match": false,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 4.35,
+          "prompt_tokens": 1123,
+          "cached_prompt_tokens": 1122,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_type"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B03",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "elapsed_seconds": 3.425,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "consultation_goal"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.424,
+          "prompt_tokens": 1127,
+          "cached_prompt_tokens": 1126,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_type"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B02",
+      "scenario_key": "고객센터:a/s 접수",
+      "elapsed_seconds": 10.122,
+      "contract_valid": false,
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      },
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 4.492,
+          "prompt_tokens": 1255,
+          "cached_prompt_tokens": 1254,
+          "completion_tokens": 85,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 5.628,
+          "prompt_tokens": 1394,
+          "cached_prompt_tokens": 1339,
+          "completion_tokens": 85,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "repetition": 2,
+      "case_id": "B01",
+      "scenario_key": "고객센터:a/s 접수",
+      "elapsed_seconds": 6.52,
+      "contract_valid": true,
+      "draft_label_mismatch_fields": [
+        "product_type",
+        "safety_status",
+        "symptom"
+      ],
+      "action_draft_match": true,
+      "field_draft_match": false,
+      "selected_action": null,
+      "first_stage_action_draft_match": null,
+      "attempts": [
+        {
+          "elapsed_seconds": 6.519,
+          "prompt_tokens": 1261,
+          "cached_prompt_tokens": 1260,
+          "completion_tokens": 103,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "symptom"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    }
+  ]
+}
