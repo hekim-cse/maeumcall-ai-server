@@ -79,7 +79,9 @@ def main() -> None:
     parser.add_argument("--server-image-digest", required=True)
     parser.add_argument("--runtime", required=True)
     parser.add_argument("--container-cpu-limit", required=True, type=int)
+    parser.add_argument("--container-memory-gib", required=True, type=int)
     parser.add_argument("--server-threads", required=True, type=int)
+    parser.add_argument("--server-parallel", required=True, type=int)
     parser.add_argument("--context-size", required=True, type=int)
     parser.add_argument("--repetitions", type=int, default=2)
     parser.add_argument("--timeout", type=int, default=180)
@@ -88,7 +90,9 @@ def main() -> None:
     if (
         min(
             args.container_cpu_limit,
+            args.container_memory_gib,
             args.server_threads,
+            args.server_parallel,
             args.context_size,
             args.repetitions,
             args.timeout,
@@ -143,7 +147,9 @@ def main() -> None:
             "server_image_digest": args.server_image_digest,
             "runtime": args.runtime,
             "container_cpu_limit": args.container_cpu_limit,
+            "container_memory_gib": args.container_memory_gib,
             "server_threads": args.server_threads,
+            "server_parallel": args.server_parallel,
             "context_size": args.context_size,
             "request_settings": REQUEST_SETTINGS,
             "case_ids": [case["id"] for case in cases],
