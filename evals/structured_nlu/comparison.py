@@ -25,6 +25,18 @@ class PairedAccuracyComparison:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class SlicedPairedAccuracyComparison:
+    """Paired exact-match comparisons for overlapping test-case slices."""
+
+    overall: PairedAccuracyComparison
+    by_scenario: dict[str, PairedAccuracyComparison]
+    by_tag: dict[str, PairedAccuracyComparison]
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
 def compare_test_predictions(
     cases: tuple[EvaluationCase, ...],
     baseline: tuple[CasePrediction, ...],
@@ -48,4 +60,38 @@ def compare_test_predictions(
         relative_change_percent=(
             (candidate_rate - baseline_rate) / baseline_rate * 100 if baseline_rate > 0 else None
         ),
+    )
+
+
+def compare_test_predictions_by_slice(
+    cases: tuple[EvaluationCase, ...],
+    baseline: tuple[CasePrediction, ...],
+    candidate: tuple[CasePrediction, ...],
+) -> SlicedPairedAccuracyComparison:
+    """Compare the same test cases in each scenario and tag slice.
+
+    This low-level helper still requires the official freeze-record gate before
+    its output can be published as an official benchmark result.
+    """
+    overall = compare_test_predictions(cases, baseline, candidate)
+    baseline_by_id = {prediction.case_id: prediction for prediction in baseline}
+    candidate_by_id = {prediction.case_id: prediction for prediction in candidate}
+
+    def compare_group(group: tuple[EvaluationCase, ...]) -> PairedAccuracyComparison:
+        return compare_test_predictions(
+            group,
+            tuple(baseline_by_id[case.id] for case in group),
+            tuple(candidate_by_id[case.id] for case in group),
+        )
+
+    return SlicedPairedAccuracyComparison(
+        overall=overall,
+        by_scenario={
+            scenario: compare_group(tuple(case for case in cases if case.scenario_key == scenario))
+            for scenario in sorted({case.scenario_key for case in cases})
+        },
+        by_tag={
+            tag: compare_group(tuple(case for case in cases if tag in case.tags))
+            for tag in sorted({str(tag) for case in cases for tag in case.tags})
+        },
     )

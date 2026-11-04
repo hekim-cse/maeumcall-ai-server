@@ -21,7 +21,10 @@ from evals.structured_nlu.benchmark import (
     inspect_benchmark_coverage,
     prepare_benchmark_slice,
 )
-from evals.structured_nlu.comparison import compare_test_predictions
+from evals.structured_nlu.comparison import (
+    compare_test_predictions,
+    compare_test_predictions_by_slice,
+)
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from evals.structured_nlu.contrast import (
     DETAILED_POSITIVE_CONTRASTS_V1,
@@ -33,7 +36,7 @@ from evals.structured_nlu.contrast import (
     verify_contrast_manifest,
 )
 from evals.structured_nlu.coverage_v3 import OFFICIAL_COVERAGE_CONTRACT_V3
-from evals.structured_nlu.metrics import score_predictions
+from evals.structured_nlu.metrics import score_prediction_slices, score_predictions
 from evals.structured_nlu.review import evaluation_case_fingerprint
 from evals.structured_nlu.schema import (
     CasePrediction,
@@ -517,6 +520,63 @@ def test_metrics_case_exact_match_requires_every_label_and_valid_contract():
 
     assert scores.counts.fully_correct_cases == 1
     assert scores.case_exact_match_rate == 0.5
+
+
+def test_paired_slices_keep_overlapping_tag_denominators_and_case_ids():
+    cases = (
+        _case(
+            case_id="appointment.slice-one",
+            message="내일 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+            split="test",
+        ),
+        _case(
+            case_id="appointment.slice-two",
+            message="모레 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=("모레",))),
+            action="provide_appointment_info",
+            tags=("single_field", "ambiguous"),
+            split="test",
+        ),
+    )
+    baseline = (
+        _prediction(
+            "appointment.slice-one",
+            fields=_appointment_fields(date="내일"),
+            action="provide_appointment_info",
+        ),
+        _prediction(
+            "appointment.slice-two",
+            fields=_appointment_fields(date="모레", time="오후 3시"),
+            action="provide_appointment_info",
+        ),
+    )
+    candidate = (
+        baseline[0],
+        _prediction(
+            "appointment.slice-two",
+            fields=_appointment_fields(date="모레"),
+            action="provide_appointment_info",
+        ),
+    )
+
+    scores = score_prediction_slices(cases, candidate)
+    comparison = compare_test_predictions_by_slice(cases, baseline, candidate)
+
+    assert scores.overall.counts.cases == 2
+    assert scores.by_scenario["교수님:면담 예약"].counts.cases == 2
+    assert scores.by_tag["single_field"].counts.cases == 2
+    assert scores.by_tag["ambiguous"].counts.cases == 1
+    assert comparison.overall.baseline_correct == 1
+    assert comparison.overall.candidate_correct == 2
+    assert comparison.by_tag["ambiguous"].baseline_correct == 0
+    assert comparison.by_tag["ambiguous"].candidate_correct == 1
+    assert comparison.by_tag["single_field"].cases == 2
+    assert comparison.by_scenario["교수님:면담 예약"].cases == 2
+    with pytest.raises(ValueError, match="prediction ids do not match cases"):
+        compare_test_predictions_by_slice(cases, baseline[:-1], candidate)
 
 
 def test_metrics_case_exact_match_rejects_valid_action_mismatch():

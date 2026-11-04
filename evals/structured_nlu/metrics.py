@@ -58,6 +58,46 @@ class EvaluationScores:
         return result
 
 
+@dataclass(frozen=True)
+class SlicedEvaluationScores:
+    """Overlapping scenario and difficulty-tag views of one scored case set."""
+
+    overall: EvaluationScores
+    by_scenario: dict[str, EvaluationScores]
+    by_tag: dict[str, EvaluationScores]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def score_prediction_slices(
+    cases: tuple[EvaluationCase, ...],
+    predictions: tuple[CasePrediction, ...],
+) -> SlicedEvaluationScores:
+    """Score each nonempty slice with the same contract rules as the overall set.
+
+    Tag slices overlap; their case counts must not be added together.
+    This low-level scorer does not replace the official freeze-record gate.
+    """
+    overall = score_predictions(cases, predictions)
+    prediction_by_id = {prediction.case_id: prediction for prediction in predictions}
+
+    def score_group(group: tuple[EvaluationCase, ...]) -> EvaluationScores:
+        return score_predictions(group, tuple(prediction_by_id[case.id] for case in group))
+
+    return SlicedEvaluationScores(
+        overall=overall,
+        by_scenario={
+            scenario: score_group(tuple(case for case in cases if case.scenario_key == scenario))
+            for scenario in sorted({case.scenario_key for case in cases})
+        },
+        by_tag={
+            tag: score_group(tuple(case for case in cases if tag in case.tags))
+            for tag in sorted({str(tag) for case in cases for tag in case.tags})
+        },
+    )
+
+
 def score_predictions(
     cases: tuple[EvaluationCase, ...],
     predictions: tuple[CasePrediction, ...],
