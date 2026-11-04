@@ -1,0 +1,25 @@
+{
+  "kind": "exploratory_broad_ai_field_draft_v1",
+  "provenance": "ai_assisted_unreviewed",
+  "sentence_action_review": "user_accepted_for_exploration_2026-11-04",
+  "normalized_value_status": "ai_draft_unreviewed",
+  "not_official_test": true,
+  "pairs": [
+    {"positive_id": "B01", "negative_id": "B02", "scenario_key": "고객센터:a/s 접수", "positive_fields": {"product_type": "무선 이어폰", "symptom": "왼쪽에서 사용 중 탄 냄새가 남", "safety_status": "safety_issue"}},
+    {"positive_id": "B03", "negative_id": "B04", "scenario_key": "고객센터:요금/약정 상담", "positive_fields": {"inquiry_type": "billing", "consultation_goal": "데이터 추가 요금이 붙은 이유 상담"}},
+    {"positive_id": "B05", "negative_id": "B06", "scenario_key": "고객센터:인터넷/통화 문제 문의", "positive_fields": {"service_type": "wired_internet", "symptom": "집 데스크톱 유선 인터넷 연결 불가", "scope": "single_device"}},
+    {"positive_id": "B07", "negative_id": "B08", "scenario_key": "교수님:결석 사유 전달", "positive_fields": {"class_name": "자료구조", "absence_date": "내일", "absence_reason": "가족 행사"}},
+    {"positive_id": "B09", "negative_id": "B10", "scenario_key": "교수님:과제 문의", "positive_fields": {"course_name": "데이터베이스", "assignment_topic": "SQL 파일 제출 형식", "question": "압축해서 제출해야 하는지"}},
+    {"positive_id": "B11", "negative_id": "B12", "scenario_key": "교수님:면담 예약", "positive_fields": {"appointment_purpose": "졸업 논문 방향 상담", "date": "목요일", "time": "오후 3시"}},
+    {"positive_id": "B13", "negative_id": "B14", "scenario_key": "배달:배달 지연 문의", "positive_fields": {"delay_detail": "픽업 후 한 시간째 배달 상태 변화 없음", "inquiry_goal": "delivery_location"}},
+    {"positive_id": "B15", "negative_id": "B16", "scenario_key": "배달:주문 변경", "positive_fields": {"order_number": "M-408", "change_type": "menu_option", "requested_change": "떡볶이 맵기 보통에서 순한 맛으로 변경"}},
+    {"positive_id": "B17", "negative_id": "B18", "scenario_key": "배달:환불/재배달 문의", "positive_fields": {"issue_type": "missing_item", "issue_detail": "사이드 메뉴 누락"}},
+    {"positive_id": "B19", "negative_id": "B20", "scenario_key": "시청:대형폐기물 배출", "positive_fields": {"region": "원주시", "item_name": "접이식 침대", "quantity": "1개", "request_topic": "place_and_schedule"}},
+    {"positive_id": "B21", "negative_id": "B22", "scenario_key": "시청:여권 발급 문의", "positive_fields": {"application_type": "first_issue", "applicant_type": "minor", "inquiry_topic": "documents"}},
+    {"positive_id": "B23", "negative_id": "B24", "scenario_key": "시청:주민등록 등본 문의", "positive_fields": {"document_type": "register_copy", "issuance_channel": "kiosk", "inquiry_topic": "fee"}},
+    {"positive_id": "B25", "negative_id": "B26", "scenario_key": "예약:미용실 예약", "positive_fields": {"date": "다음 주 월요일", "time": "오후 2시", "service_type": "펌"}},
+    {"positive_id": "B27", "negative_id": "B28", "scenario_key": "예약:병원 예약", "positive_fields": {"department": "정형외과", "date": "월요일", "time": "오전 9시"}},
+    {"positive_id": "B29", "negative_id": "B30", "scenario_key": "예약:스터디룸 예약", "positive_fields": {"date": "일요일", "start_time": "오후 2시", "duration": "3시간", "party_size": "4명"}},
+    {"positive_id": "B31", "negative_id": "B32", "scenario_key": "예약:식당 예약", "positive_fields": {"date": "오늘", "time": "저녁 8시", "party_size": "4명"}}
+  ]
+}
