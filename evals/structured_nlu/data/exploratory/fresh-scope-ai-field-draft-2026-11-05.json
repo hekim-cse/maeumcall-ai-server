@@ -1,0 +1,26 @@
+{
+  "kind": "exploratory_fresh_scope_ai_field_draft_v1",
+  "provenance": "ai_assisted_unreviewed",
+  "sentence_action_review": "user_accepted_for_exploration_2026-11-05",
+  "normalized_value_status": "ai_draft_user_reviewed_for_exploration",
+  "normalized_value_review": "user_changed_F17_resolution_preference_and_F29_date_2026-11-05",
+  "not_official_test": true,
+  "pairs": [
+    {"positive_id": "F01", "negative_id": "F02", "scenario_key": "고객센터:a/s 접수", "positive_fields": {"product_type": "무선 청소기", "symptom": "모터에서 덜컹거리는 소리가 나고 몇 분 뒤 전원이 꺼짐"}},
+    {"positive_id": "F03", "negative_id": "F04", "scenario_key": "고객센터:요금/약정 상담", "positive_fields": {"inquiry_type": "discount", "current_service": "인터넷 결합", "consultation_goal": "약정과 할인 조건 확인"}},
+    {"positive_id": "F05", "negative_id": "F06", "scenario_key": "고객센터:인터넷/통화 문제 문의", "positive_fields": {"service_type": "voice_call", "symptom": "통화가 자꾸 끊김", "scope": "specific_location"}},
+    {"positive_id": "F07", "negative_id": "F08", "scenario_key": "교수님:결석 사유 전달", "positive_fields": {"class_name": "운영체제", "absence_date": "금요일", "absence_reason": "수술 후 진료 예약"}},
+    {"positive_id": "F09", "negative_id": "F10", "scenario_key": "교수님:과제 문의", "positive_fields": {"course_name": "알고리즘", "assignment_topic": "PDF 제출 마감 시각", "question": "금요일 자정인지 확인"}},
+    {"positive_id": "F11", "negative_id": "F12", "scenario_key": "교수님:면담 예약", "positive_fields": {"appointment_purpose": "장학금 지원 방향 상담", "date": "수요일", "time": "오후"}},
+    {"positive_id": "F13", "negative_id": "F14", "scenario_key": "배달:배달 지연 문의", "positive_fields": {"delay_detail": "예상 도착 시각이 30분 지났는데 배달 상태가 이동 중", "inquiry_goal": "estimated_arrival"}},
+    {"positive_id": "F15", "negative_id": "F16", "scenario_key": "배달:주문 변경", "positive_fields": {"change_type": "menu_option", "requested_change": "세트 음료를 콜라에서 사이다로 변경"}},
+    {"positive_id": "F17", "negative_id": "F18", "scenario_key": "배달:환불/재배달 문의", "positive_fields": {"issue_type": "damaged_or_quality", "issue_detail": "음료 뚜껑이 열려 내용물이 모두 쏟아짐", "resolution_preference": "redelivery"}},
+    {"positive_id": "F19", "negative_id": "F20", "scenario_key": "시청:대형폐기물 배출", "positive_fields": {"region": "수원시", "item_name": "부서진 사무용 의자", "quantity": "1개", "request_topic": "fee"}},
+    {"positive_id": "F21", "negative_id": "F22", "scenario_key": "시청:여권 발급 문의", "positive_fields": {"application_type": "reissue", "inquiry_topic": "documents"}},
+    {"positive_id": "F23", "negative_id": "F24", "scenario_key": "시청:주민등록 등본 문의", "positive_fields": {"document_type": "register_copy", "inquiry_topic": "delivery"}},
+    {"positive_id": "F25", "negative_id": "F26", "scenario_key": "예약:미용실 예약", "positive_fields": {"date": "내일", "time": "오전 11시", "service_type": "커트"}},
+    {"positive_id": "F27", "negative_id": "F28", "scenario_key": "예약:병원 예약", "positive_fields": {"department": "소아과", "date": "월요일", "time": "오후 2시"}},
+    {"positive_id": "F29", "negative_id": "F30", "scenario_key": "예약:스터디룸 예약", "positive_fields": {"start_time": "오전 10시", "duration": "2시간", "party_size": "2명"}},
+    {"positive_id": "F31", "negative_id": "F32", "scenario_key": "예약:식당 예약", "positive_fields": {"date": "일요일", "time": "오후 6시", "party_size": "5명"}}
+  ]
+}
