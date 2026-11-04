@@ -11,11 +11,23 @@ from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.broad_ai_exploration_cases import FIELD_DRAFT, SENTENCES, load_cases
+from scripts.broad_ai_exploration_cases import (
+    FIELD_DRAFT as BROAD_FIELD_DRAFT,
+)
+from scripts.broad_ai_exploration_cases import (
+    SENTENCES as BROAD_SENTENCES,
+)
+from scripts.broad_ai_exploration_cases import (
+    load_cases as load_broad_cases,
+)
+from scripts.fresh_scope_ai_cases import FIELD_DRAFT as FRESH_FIELD_DRAFT
+from scripts.fresh_scope_ai_cases import SENTENCES as FRESH_SENTENCES
+from scripts.fresh_scope_ai_cases import load_cases as load_fresh_cases
 from scripts.probe_gguf_broad_ai_dev import file_sha256, summarize
 from scripts.probe_gguf_structured_nlu import run_case
 
 ROOT = Path(__file__).resolve().parents[1]
+FRESH_FIELD_REVIEW = ROOT / "docs/portfolio/nlu_scope_fresh_ai_field_review.md"
 INSTRUCTION = (
     "현재 시나리오의 업무 목적과 직접 관련 없는 질문이나 요청은, 문장에 다른 업무의 "
     "구체적인 정보가 있더라도 현재 업무의 정보 제공으로 분류하지 마세요. "
@@ -33,8 +45,27 @@ SOURCE_PATHS = (
     "scripts/probe_gguf_scope_instruction.py",
     "scripts/probe_gguf_structured_nlu.py",
     "scripts/broad_ai_exploration_cases.py",
+    "scripts/fresh_scope_ai_cases.py",
     "scripts/probe_gguf_broad_ai_dev.py",
 )
+CASE_SETS = {
+    "broad": (
+        BROAD_SENTENCES,
+        BROAD_FIELD_DRAFT,
+        load_broad_cases,
+        "user_accepted_for_exploration_2026-11-04",
+        "ai_draft_unreviewed",
+        "exploratory_scope_instruction_pair_v1",
+    ),
+    "fresh": (
+        FRESH_SENTENCES,
+        FRESH_FIELD_DRAFT,
+        load_fresh_cases,
+        "user_accepted_for_exploration_2026-11-05",
+        "ai_draft_user_reviewed_for_exploration",
+        "exploratory_fresh_scope_instruction_pair_v1",
+    ),
+}
 
 
 def inject_scope_instruction(request: urllib.request.Request) -> urllib.request.Request:
@@ -98,6 +129,7 @@ def paired_summary(observations: list[dict], case_ids: list[str], repetitions: i
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--case-set", choices=CASE_SETS, default="broad")
     parser.add_argument("--endpoint", default="http://127.0.0.1:18080/v1/chat/completions")
     parser.add_argument("--model", required=True)
     parser.add_argument("--model-file", required=True, type=Path)
@@ -130,9 +162,23 @@ def main() -> None:
         parser.error("output already exists")
     if file_sha256(args.model_file) != args.model_sha256:
         parser.error("model file SHA-256 differs from declared SHA-256")
+    (
+        sentences,
+        field_draft,
+        load_source_cases,
+        sentence_action_review,
+        normalized_value_status,
+        report_kind,
+    ) = CASE_SETS[args.case_set]
+    field_review = FRESH_FIELD_REVIEW if args.case_set == "fresh" else None
     if subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=False).returncode:
         parser.error("probe requires committed tracked files")
-    tracked = [*SOURCE_PATHS, str(SENTENCES.relative_to(ROOT)), str(FIELD_DRAFT.relative_to(ROOT))]
+    tracked = [
+        *SOURCE_PATHS,
+        str(sentences.relative_to(ROOT)),
+        str(field_draft.relative_to(ROOT)),
+        *([str(field_review.relative_to(ROOT))] if field_review else []),
+    ]
     if subprocess.run(
         ["git", "ls-files", "--error-unmatch", "--", *tracked],
         cwd=ROOT,
@@ -142,7 +188,7 @@ def main() -> None:
     ).returncode:
         parser.error("probe requires committed source files")
 
-    cases = load_cases()
+    cases = load_source_cases()
     case_ids = [case["id"] for case in cases]
     code_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     code_sha = hashlib.sha256()
@@ -184,15 +230,17 @@ def main() -> None:
                         )
     finally:
         report = {
-            "kind": "exploratory_scope_instruction_pair_v1",
+            "kind": report_kind,
+            "case_set": args.case_set,
             "not_official_quality_score": True,
             "candidate_status": "ai_assisted_unreviewed",
-            "sentence_action_review": "user_accepted_for_exploration_2026-11-04",
-            "normalized_value_status": "ai_draft_unreviewed",
+            "sentence_action_review": sentence_action_review,
+            "normalized_value_status": normalized_value_status,
             "complete": len(observations) == len(cases) * args.repetitions * 2,
             "created_at_utc": datetime.now(UTC).isoformat(),
-            "sentence_source_sha256": file_sha256(SENTENCES),
-            "field_draft_sha256": file_sha256(FIELD_DRAFT),
+            "sentence_source_sha256": file_sha256(sentences),
+            "field_draft_sha256": file_sha256(field_draft),
+            "field_review_sha256": file_sha256(field_review) if field_review else None,
             "implementation_sha256": code_sha.hexdigest(),
             "code_git_commit": code_commit,
             "model": args.model,
