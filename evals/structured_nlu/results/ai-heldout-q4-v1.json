@@ -1,0 +1,734 @@
+{
+  "kind": "ai_authored_heldout_predictions_v1",
+  "role": "baseline",
+  "exposure_commit": "03a7b6d7fb050b975180be8daa1b3300a6897325",
+  "model_sha256": "62a63f912a0708d9a522f974997b5bbd4927e01d739b07fe4c55c1f545241561",
+  "request_policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "attempt_policy": "one_retry_after_contract_failure",
+  "predictions": [
+    {
+      "case_id": "ai-heldout-ah01",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 24333.553,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 5514.478,
+          "output": {
+            "intent": "service_request",
+            "fields": {
+              "product_type": "가전",
+              "model_name": null,
+              "symptom": "전자레인지 작동 버튼을 누르면 차단기가 내려감",
+              "occurred_at": null,
+              "safety_status": "safety_issue",
+              "service_channel": "visit",
+              "preferred_schedule": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah02",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 17706.534,
+          "output": {
+            "intent": "service_request",
+            "fields": {
+              "product_type": "가전",
+              "model_name": "공기청정기",
+              "symptom": "무상보증 기간 확인 방법",
+              "occurred_at": null,
+              "safety_status": null,
+              "service_channel": null,
+              "preferred_schedule": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah03",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 19187.942,
+          "output": {
+            "intent": "plan_contract_consultation",
+            "fields": {
+              "inquiry_type": "billing",
+              "current_service": null,
+              "consultation_goal": null,
+              "consent_scope": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah04",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 13703.97,
+          "output": {
+            "intent": "plan_contract_consultation",
+            "fields": {
+              "inquiry_type": "plan_change",
+              "current_service": null,
+              "consultation_goal": null,
+              "consent_scope": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah05",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 24145.961,
+          "output": {
+            "intent": "network_call_issue",
+            "fields": {
+              "service_type": null,
+              "symptom": "상대방 목소리는 들리는데 제 목소리가 전달되지 않습니다.",
+              "occurred_at": null,
+              "scope": null,
+              "troubleshooting_done": null,
+              "next_action": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah06",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 18114.672,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 4601.956,
+          "output": {
+            "intent": "network_call_issue",
+            "fields": {
+              "service_type": "wifi",
+              "symptom": "끊김",
+              "occurred_at": null,
+              "scope": "single_device",
+              "troubleshooting_done": null,
+              "next_action": "guided_diagnosis"
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah07",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 10944.222,
+          "output": {
+            "intent": "absence_notice",
+            "fields": {
+              "class_name": null,
+              "absence_date": null,
+              "absence_reason": "교통사고로 이동이 어려워 결석할 예정입니다",
+              "user_name": null
+            },
+            "user_action": "provide_absence_info",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah08",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 8472.775,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": false,
+          "latency_ms": 2683.733,
+          "output": null,
+          "error_type": "ValueError"
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah09",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 9155.523,
+          "output": {
+            "intent": "assignment_inquiry",
+            "fields": {
+              "course_name": null,
+              "assignment_topic": "report",
+              "question": "이번 보고서의 참고문헌은 본문 분량에 포함되나요? 제출 전에 기준을 확인하고 싶습니다.",
+              "user_name": null
+            },
+            "user_action": "provide_assignment_info",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah10",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 7443.987,
+          "output": {
+            "intent": "assignment_inquiry",
+            "fields": {
+              "course_name": null,
+              "assignment_topic": "학과 세미나 신청 링크",
+              "question": "학과 세미나 신청 링크를 어디서 찾을 수 있는지 여쭤봐도 될까요?",
+              "user_name": null
+            },
+            "user_action": "provide_assignment_info",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah11",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 9696.368,
+          "output": {
+            "intent": "appointment_booking",
+            "fields": {
+              "appointment_purpose": "진로 상담",
+              "date": "이번 주 금요일",
+              "time": "오전 10시",
+              "user_name": null
+            },
+            "user_action": "provide_appointment_info",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah12",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 7958.349,
+          "output": {
+            "intent": "appointment_booking",
+            "fields": {
+              "appointment_purpose": "연구 참여 신청 관련 상담",
+              "date": null,
+              "time": null,
+              "user_name": "학생 이름(예시)"
+            },
+            "user_action": "provide_appointment_info",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah13",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 20421.08,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 3628.34,
+          "output": {
+            "intent": "delivery_delay_inquiry",
+            "fields": {
+              "order_number": null,
+              "delay_detail": null,
+              "inquiry_goal": "estimated_arrival",
+              "delay_resolution": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah14",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 14940.749,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 3741.781,
+          "output": {
+            "intent": "delivery_delay_inquiry",
+            "fields": {
+              "order_number": null,
+              "delay_detail": null,
+              "inquiry_goal": "estimated_arrival",
+              "delay_resolution": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah15",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 20121.06,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 4119.394,
+          "output": {
+            "intent": "delivery_order_change",
+            "fields": {
+              "order_number": "V-208",
+              "change_type": "delivery_address",
+              "requested_change": "회사 로비에서 회사 후문으로 변경",
+              "unavailable_preference": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah16",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 14018.653,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": false,
+          "latency_ms": 3413.205,
+          "output": null,
+          "error_type": "ValueError"
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah17",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 22786.299,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 5641.98,
+          "output": {
+            "intent": "delivery_refund_redelivery",
+            "fields": {
+              "order_number": null,
+              "issue_type": "wrong_item",
+              "issue_detail": "배송된 우유의 유통기한이 어제까지였습니다. 사진은 찍어뒀는데 어떻게 처리하면 될까요?",
+              "evidence_status": "available",
+              "resolution_preference": "redelivery"
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah18",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 16924.445,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": false,
+          "latency_ms": 4222.222,
+          "output": null,
+          "error_type": "ValueError"
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah19",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 19680.973,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 3582.288,
+          "output": {
+            "intent": "bulky_waste_guidance",
+            "fields": {
+              "region": null,
+              "item_name": null,
+              "quantity": null,
+              "request_topic": "application"
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah20",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 13464.093,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 3466.55,
+          "output": {
+            "intent": "bulky_waste_guidance",
+            "fields": {
+              "region": null,
+              "item_name": null,
+              "quantity": null,
+              "request_topic": "application"
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah21",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 21765.111,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": true,
+          "latency_ms": 3859.982,
+          "output": {
+            "intent": "passport_guidance",
+            "fields": {
+              "application_type": null,
+              "applicant_type": null,
+              "inquiry_topic": "documents",
+              "application_channel": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah22",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 17344.661,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": false,
+          "latency_ms": 3663.816,
+          "output": null,
+          "error_type": "ValueError"
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah23",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 21398.028,
+          "output": {
+            "intent": "resident_certificate_guidance",
+            "fields": {
+              "document_type": null,
+              "applicant_relation": null,
+              "issuance_channel": null,
+              "inquiry_topic": "documents"
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah24",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 16114.116,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": false,
+          "latency_ms": 4503.163,
+          "output": null,
+          "error_type": "ValueError"
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah25",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 18434.181,
+          "output": {
+            "intent": "reservation",
+            "fields": {
+              "date": "화요일",
+              "time": "저녁 6시",
+              "service_type": "커트",
+              "designer": null,
+              "user_name": null,
+              "selected_time": null
+            },
+            "user_action": "continue_collecting",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah26",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 16310.817,
+          "output": {
+            "intent": "reservation",
+            "fields": {
+              "date": null,
+              "time": null,
+              "service_type": "염색",
+              "designer": "가능한 디자이너",
+              "user_name": null,
+              "selected_time": null
+            },
+            "user_action": "continue_collecting",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah27",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 13503.931,
+          "output": {
+            "intent": "reservation",
+            "fields": {
+              "department": "피부과",
+              "date": "다음 주 수요일",
+              "time": "오전",
+              "user_name": null,
+              "selected_time": null
+            },
+            "user_action": "continue_collecting",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah28",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 2574.644,
+          "output": {
+            "intent": null,
+            "fields": {
+              "department": null,
+              "date": null,
+              "time": null,
+              "user_name": null,
+              "selected_time": null
+            },
+            "user_action": "continue_collecting",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah29",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 14540.493,
+          "output": {
+            "intent": "reservation",
+            "fields": {
+              "date": "이번 주말",
+              "start_time": "금요일 저녁 7시",
+              "duration": "2시간",
+              "party_size": "3명",
+              "user_name": null,
+              "selected_time": null
+            },
+            "user_action": "continue_collecting",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah30",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 11564.622,
+          "output": {
+            "intent": "reservation",
+            "fields": {
+              "date": null,
+              "start_time": null,
+              "duration": null,
+              "party_size": null,
+              "user_name": null,
+              "selected_time": null
+            },
+            "user_action": "continue_collecting",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah31",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 11988.107,
+          "output": {
+            "intent": "reservation",
+            "fields": {
+              "date": "이번 주말",
+              "time": "오후 8시",
+              "party_size": "2명",
+              "user_name": "홍길동",
+              "selected_time": null
+            },
+            "user_action": "continue_collecting",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    {
+      "case_id": "ai-heldout-ah32",
+      "attempts": [
+        {
+          "contract_valid": false,
+          "latency_ms": 9848.475,
+          "output": null,
+          "error_type": "ValueError"
+        },
+        {
+          "contract_valid": false,
+          "latency_ms": 2723.956,
+          "output": null,
+          "error_type": "ValueError"
+        }
+      ]
+    }
+  ]
+}
