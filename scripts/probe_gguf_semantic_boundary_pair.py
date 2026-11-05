@@ -23,6 +23,8 @@ from scripts.probe_gguf_structured_nlu import run_case
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL = "kanana-1.5-2.1b-instruct-q5"
+EXPECTED_MODEL_SHA256 = "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d"
+EXPECTED_IMAGE_DIGEST = "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35"
 SOURCE_PATHS = (
     "scripts/probe_gguf_semantic_boundary_pair.py",
     "scripts/probe_gguf_structured_nlu.py",
@@ -34,6 +36,14 @@ SOURCE_PATHS = (
 def _sha256(path: Path) -> str:
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def verify_expected_runtime(runtime: dict) -> None:
+    """Reject a differently mounted model or server before exposure is recorded."""
+    if runtime["model_sha256"] != EXPECTED_MODEL_SHA256:
+        raise ValueError("mounted model differs from the frozen Q5 file")
+    if runtime["server_image_digest"] != EXPECTED_IMAGE_DIGEST:
+        raise ValueError("server image differs from the frozen runtime")
 
 
 def _case_for_runner(sentence: dict, field_draft: dict) -> dict:
@@ -86,18 +96,31 @@ def main() -> None:
     args = parser.parse_args()
     if args.output.exists() or args.repetitions < 1:
         parser.error("output must not exist and repetitions must be positive")
-    sentences = load_review_draft(for_model_run=True)
-    field_drafts = load_field_draft(for_model_run=True)
+    sentence_bytes = DEFAULT_DRAFT.read_bytes()
+    field_bytes = FIELD_DRAFT.read_bytes()
+    ledger_bytes = REVIEW_LEDGER.read_bytes()
+    sentences = load_review_draft(
+        for_model_run=True,
+        source_bytes=sentence_bytes,
+        field_draft_bytes=field_bytes,
+        ledger_bytes=ledger_bytes,
+    )
+    field_drafts = load_field_draft(
+        for_model_run=True,
+        source_bytes=field_bytes,
+        sentences=sentences,
+    )
     cases = [
         (sentence, _case_for_runner(sentence, field_draft))
         for sentence, field_draft in zip(sentences, field_drafts, strict=True)
     ]
     runtime = inspect_runtime(args.container_name)
+    verify_expected_runtime(runtime)
     source_hashes = {name: _sha256(ROOT / name) for name in SOURCE_PATHS}
     input_hashes = {
-        "sentences": _sha256(DEFAULT_DRAFT),
-        "fields": _sha256(FIELD_DRAFT),
-        "review_ledger": _sha256(REVIEW_LEDGER),
+        "sentences": hashlib.sha256(sentence_bytes).hexdigest(),
+        "fields": hashlib.sha256(field_bytes).hexdigest(),
+        "review_ledger": hashlib.sha256(ledger_bytes).hexdigest(),
     }
     exposure = {
         "kind": "semantic_boundary_model_exposure_v1",
@@ -106,6 +129,12 @@ def main() -> None:
         "input_sha256": input_hashes,
         "model_sha256": runtime["model_sha256"],
     }
+    with args.output.open("x", encoding="utf-8") as stream:
+        json.dump(
+            {"kind": "exploratory_q5_semantic_boundary_pair_v1", "complete": False},
+            stream,
+        )
+        stream.write("\n")
     with EXPOSURE_RECORD.open("x", encoding="utf-8") as stream:
         json.dump(exposure, stream, ensure_ascii=False, indent=2)
         stream.write("\n")

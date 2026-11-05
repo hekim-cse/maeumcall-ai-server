@@ -26,9 +26,13 @@ def load_review_draft(
     review_ledger: Path = REVIEW_LEDGER,
     exposure_record: Path = EXPOSURE_RECORD,
     field_draft_path: Path = FIELD_DRAFT,
+    source_bytes: bytes | None = None,
+    field_draft_bytes: bytes | None = None,
+    ledger_bytes: bytes | None = None,
 ) -> list[dict]:
     """Load a fixed-size draft; refuse model runs until exploratory acceptance."""
-    source = json.loads(path.read_text(encoding="utf-8"))
+    source_bytes = path.read_bytes() if source_bytes is None else source_bytes
+    source = json.loads(source_bytes)
     if (
         source.get("kind") != "ai_assisted_semantic_boundary_review_draft_v1"
         or source.get("provenance") != "ai_assisted_unreviewed"
@@ -48,16 +52,19 @@ def load_review_draft(
     if for_model_run and exposure_record.exists():
         raise ValueError("boundary draft has already been exposed to the model")
     if for_model_run:
-        if not review_ledger.is_file():
+        if ledger_bytes is None and not review_ledger.is_file():
             raise ValueError("matching user review ledger is required before model run")
-        ledger = json.loads(review_ledger.read_text(encoding="utf-8"))
-        draft_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+        ledger_bytes = review_ledger.read_bytes() if ledger_bytes is None else ledger_bytes
+        field_draft_bytes = (
+            field_draft_path.read_bytes() if field_draft_bytes is None else field_draft_bytes
+        )
+        ledger = json.loads(ledger_bytes)
+        draft_sha256 = hashlib.sha256(source_bytes).hexdigest()
         if (
             ledger.get("kind") != "semantic_boundary_user_review_ledger_v1"
             or ledger.get("reviewed_for") != "exploratory_model_run_only"
             or ledger.get("draft_sha256") != draft_sha256
-            or ledger.get("field_draft_sha256")
-            != hashlib.sha256(field_draft_path.read_bytes()).hexdigest()
+            or ledger.get("field_draft_sha256") != hashlib.sha256(field_draft_bytes).hexdigest()
             or ledger.get("accepted_case_ids") != list(EXPECTED_IDS)
             or not isinstance(ledger.get("review_note"), str)
             or not ledger["review_note"].strip()
@@ -107,9 +114,16 @@ def load_review_draft(
     return cases
 
 
-def load_field_draft(path: Path = FIELD_DRAFT, *, for_model_run: bool = False) -> list[dict]:
+def load_field_draft(
+    path: Path = FIELD_DRAFT,
+    *,
+    for_model_run: bool = False,
+    source_bytes: bytes | None = None,
+    sentences: list[dict] | None = None,
+) -> list[dict]:
     """Check all fields against the live contract without treating drafts as gold."""
-    source = json.loads(path.read_text(encoding="utf-8"))
+    source_bytes = path.read_bytes() if source_bytes is None else source_bytes
+    source = json.loads(source_bytes)
     if (
         source.get("kind") != "ai_assisted_semantic_boundary_field_draft_v1"
         or source.get("provenance") != "ai_assisted_unreviewed"
@@ -130,7 +144,12 @@ def load_field_draft(path: Path = FIELD_DRAFT, *, for_model_run: bool = False) -
     cases = source.get("cases")
     if not isinstance(cases, list) or tuple(case.get("id") for case in cases) != EXPECTED_IDS:
         raise ValueError("field draft requires exactly SB01 through SB12")
-    sentences = load_review_draft(for_model_run=for_model_run, field_draft_path=path)
+    if sentences is None:
+        sentences = load_review_draft(
+            for_model_run=for_model_run,
+            field_draft_path=path,
+            field_draft_bytes=source_bytes,
+        )
     result = []
     for sentence, case in zip(sentences, cases, strict=True):
         if not isinstance(case, dict) or set(case) != {"id", "draft_fields"}:

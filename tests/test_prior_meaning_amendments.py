@@ -34,3 +34,12 @@ def test_amendment_requires_source_fingerprint(tmp_path):
     path.write_text(json.dumps(source))
     with pytest.raises(ValueError, match="sources differ"):
         load_amended_development_cases(path)
+
+
+def test_amendment_rejects_value_outside_contract(tmp_path):
+    source = json.loads(AMENDMENTS.read_text())
+    source["amendments"][0]["new_value"] = "not_an_option"
+    path = tmp_path / "amendments.json"
+    path.write_text(json.dumps(source))
+    with pytest.raises(ValueError, match="outside live field options"):
+        load_amended_development_cases(path)

@@ -12,7 +12,13 @@ from evals.structured_nlu.semantic_boundary_review import (
     load_field_draft,
     load_review_draft,
 )
-from scripts.probe_gguf_semantic_boundary_pair import _case_for_runner, _safe_observation
+from scripts.probe_gguf_semantic_boundary_pair import (
+    EXPECTED_IMAGE_DIGEST,
+    EXPECTED_MODEL_SHA256,
+    _case_for_runner,
+    _safe_observation,
+    verify_expected_runtime,
+)
 from scripts.probe_gguf_structured_nlu import with_extra_instruction
 
 pytestmark = pytest.mark.unit
@@ -108,6 +114,16 @@ def test_field_draft_respects_live_contract(tmp_path):
         load_field_draft(path)
 
 
+@pytest.mark.parametrize("bad_fields", [{"unknown_field": "value"}, {"issue_type": "   "}])
+def test_field_draft_rejects_unknown_or_blank_values(tmp_path, bad_fields):
+    source = json.loads(FIELD_DRAFT.read_text())
+    source["cases"][0]["draft_fields"].update(bad_fields)
+    path = tmp_path / "fields.json"
+    path.write_text(json.dumps(source))
+    with pytest.raises(ValueError, match="unknown field|blank or non-string value"):
+        load_field_draft(path)
+
+
 def test_field_draft_cannot_contradict_focus_direction(tmp_path, monkeypatch):
     source = json.loads(FIELD_DRAFT.read_text())
     path = tmp_path / "fields.json"
@@ -144,6 +160,39 @@ def test_runner_labels_keep_focus_separate_from_other_fields():
     assert observation["action_matches_draft"] is True
     assert observation["focus_field_matches_draft"] is False
     assert observation["all_fields_and_action_match_draft"] is False
+
+
+def test_failed_contract_observation_preserves_failure_without_draft_credit():
+    sentence = load_review_draft()[0]
+    failure = {"last_error_code": "action_missing_required_field"}
+    observation = _safe_observation(
+        sentence,
+        "baseline",
+        1,
+        {
+            "contract_valid": False,
+            "failure": failure,
+            "elapsed_seconds": 0.1,
+            "attempts": [],
+        },
+    )
+    assert observation["contract_valid"] is False
+    assert observation["action_matches_draft"] is False
+    assert observation["focus_field_matches_draft"] is False
+    assert observation["all_fields_and_action_match_draft"] is False
+    assert observation["failure"] == failure
+
+
+def test_runner_rejects_unfrozen_model_or_server_image():
+    runtime = {
+        "model_sha256": EXPECTED_MODEL_SHA256,
+        "server_image_digest": EXPECTED_IMAGE_DIGEST,
+    }
+    verify_expected_runtime(runtime)
+    with pytest.raises(ValueError, match="mounted model differs"):
+        verify_expected_runtime(runtime | {"model_sha256": "0" * 64})
+    with pytest.raises(ValueError, match="server image differs"):
+        verify_expected_runtime(runtime | {"server_image_digest": "sha256:" + "0" * 64})
 
 
 def test_candidate_instruction_stays_on_original_user_message_during_retry():
