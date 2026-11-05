@@ -1,0 +1,24 @@
+{
+  "kind": "semantic_boundary_model_exposure_v1",
+  "started_at_utc": "2026-11-05T10:54:36.720834+00:00",
+  "case_ids": [
+    "SB01",
+    "SB02",
+    "SB03",
+    "SB04",
+    "SB05",
+    "SB06",
+    "SB07",
+    "SB08",
+    "SB09",
+    "SB10",
+    "SB11",
+    "SB12"
+  ],
+  "input_sha256": {
+    "sentences": "5116fed1263e33945e70077d1894184653359233599ebb7f5acd6285024410b2",
+    "fields": "89b5043032e4cc05dcce95b03f2d43f0794e49d8140c322ef1fa276e2e6cb3f0",
+    "review_ledger": "1ca6b3a0a4014859203b0891f26e47f22c2f428a6e2dd38aa75384b496b4b139"
+  },
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d"
+}

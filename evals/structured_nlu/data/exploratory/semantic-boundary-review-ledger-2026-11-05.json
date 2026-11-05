@@ -1,0 +1,10 @@
+{
+  "kind": "semantic_boundary_user_review_ledger_v1",
+  "reviewed_for": "exploratory_model_run_only",
+  "recorded_at_utc": "2026-11-05T10:48:22Z",
+  "draft_sha256": "5116fed1263e33945e70077d1894184653359233599ebb7f5acd6285024410b2",
+  "field_draft_sha256": "89b5043032e4cc05dcce95b03f2d43f0794e49d8140c322ef1fa276e2e6cb3f0",
+  "accepted_case_ids": ["SB01", "SB02", "SB03", "SB04", "SB05", "SB06", "SB07", "SB08", "SB09", "SB10", "SB11", "SB12"],
+  "review_note": "User accepted SB01-SB08 sentence, action and focus directions; changed SB02, SB04, SB06 and SB08 to supported and accepted remaining fields. User accepted SB09-SB12 sentence, action, blank-focus directions and remaining fields for exploration. D05 and F23 revisions are versioned separately.",
+  "not_official_test": true
+}

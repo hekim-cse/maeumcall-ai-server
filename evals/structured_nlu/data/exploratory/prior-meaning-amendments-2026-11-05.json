@@ -1,0 +1,16 @@
+{
+  "kind": "exploratory_prior_meaning_amendments_v1",
+  "provenance": "user_revised_direction_for_ai_assisted_development_cases",
+  "not_official_test": true,
+  "applies_to": "future_exploration_only",
+  "historical_reports_unchanged": true,
+  "source_sha256": {
+    "fresh_sentences": "a819c794ba9cc18bb39e722275be0724323268b5c6a7b933fe7cd1a175b9a4d1",
+    "fresh_field_draft": "4920a9149195022089bc1e2da6e81f00aa3d580a68007e3ab6aee347e84bd0d1",
+    "development_draft": "c7151d8051a5fbc857e6246c8e8ea2706314d23ff096ec092d7dc08396948357"
+  },
+  "amendments": [
+    {"case_id": "D05", "field": "resolution_preference", "old_value": null, "new_value": "refund"},
+    {"case_id": "F23", "field": "issuance_channel", "old_value": null, "new_value": "government24"}
+  ]
+}

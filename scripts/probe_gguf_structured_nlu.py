@@ -136,6 +136,18 @@ def safe_output_shape(raw: str, *, field_names: tuple[str, ...], actions: frozen
     }
 
 
+def with_extra_instruction(
+    messages: list[dict[str, str]], instruction: str
+) -> list[dict[str, str]]:
+    """Keep a candidate instruction attached to the original user turn on retries."""
+    augmented = list(messages)
+    for index, message in enumerate(augmented):
+        if message["role"] == "user":
+            augmented[index] = {**message, "content": message["content"] + "\n" + instruction}
+            return augmented
+    raise ValueError("an NLU request requires a user message")
+
+
 def run_case(
     case: dict,
     *,
@@ -146,6 +158,7 @@ def run_case(
     constrain_workflow: bool = False,
     schema_format: str = "json_schema",
     split_workflow: bool = False,
+    extra_instruction: str | None = None,
 ) -> dict:
     attempts: list[dict] = []
     contract = EVALUATION_CONTRACTS[case["scenario_key"]]
@@ -168,6 +181,8 @@ def run_case(
     stage = "action" if split_workflow else "single"
 
     def completion(messages: list[dict[str, str]]) -> str:
+        if extra_instruction:
+            messages = with_extra_instruction(messages, extra_instruction)
         payload = {
             "model": model,
             "messages": messages,
