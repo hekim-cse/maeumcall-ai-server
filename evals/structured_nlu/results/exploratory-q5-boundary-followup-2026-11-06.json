@@ -1,0 +1,1685 @@
+{
+  "kind": "exploratory_q5_boundary_followup_pair_v1",
+  "not_official_quality_score": true,
+  "complete": true,
+  "created_at_utc": "2026-11-05T19:53:40.112082+00:00",
+  "case_ids": [
+    "BF01",
+    "BF02",
+    "BF03",
+    "BF04",
+    "BF05",
+    "BF06",
+    "BF07",
+    "BF08",
+    "BF09",
+    "BF10"
+  ],
+  "repetitions": 2,
+  "source_sha256": {
+    "scripts/probe_gguf_boundary_followup_pair.py": "8b681aed9c19e66867c14800b0c89f88375ea9128558cab26f220d824f3f17a6",
+    "scripts/probe_gguf_structured_nlu.py": "152b7b60998278e88b2d9faf155a29864a2e3ad78b0ae0ed5631d5ce02665087",
+    "evals/structured_nlu/boundary_followup_review.py": "e163dafc391dac6de9f0c48c9feec631ed2d1abd43dfa7874315f035b5552175",
+    "evals/structured_nlu/boundary_followup_policy.py": "8361a9602af9f955e71aa89dfa7c9b5311cbf1a1d902c096ed62f7d4356ed76e"
+  },
+  "input_sha256": {
+    "draft": "5c5d92e5d1a6488986fd1ccd1cf413aefe8980436a29ba2c6070e851cc41cc1e",
+    "review_ledger": "e6e788ba11e10176dd83898f3c623449b3105a3865ab554bf265cccf8f51fcd7"
+  },
+  "exposure_record_sha256": "5e718433d22809388ff57abf4ec7c3030f68af93f22427040b92caa6936a5d27",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runtime": {
+    "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+    "model_sha256_provenance": "sha256_of_inspected_read_only_mount_source",
+    "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+    "server_image_id": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+    "runtime": "local-docker-arm64-cpu",
+    "container_cpu_limit": 4.0,
+    "container_memory_bytes": 6442450944,
+    "server_threads": 4,
+    "server_parallel": 1,
+    "context_size": 4096
+  },
+  "request_settings": {
+    "max_tokens": 180,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ]
+  },
+  "observations": [
+    {
+      "case_id": "BF01",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [
+        "issue_detail",
+        "issue_type"
+      ],
+      "elapsed_seconds": 13.419,
+      "attempts": [
+        {
+          "elapsed_seconds": 13.418,
+          "prompt_tokens": 1205,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 87,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "issue_detail"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF01",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 6.431,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.507,
+          "prompt_tokens": 1300,
+          "cached_prompt_tokens": 1199,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.923,
+          "prompt_tokens": 1427,
+          "cached_prompt_tokens": 1372,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF02",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 12.365,
+      "attempts": [
+        {
+          "elapsed_seconds": 9.325,
+          "prompt_tokens": 1212,
+          "cached_prompt_tokens": 467,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 3.037,
+          "prompt_tokens": 1339,
+          "cached_prompt_tokens": 1284,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF02",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": true,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "evidence_status",
+        "issue_detail",
+        "resolution_preference"
+      ],
+      "elapsed_seconds": 7.754,
+      "attempts": [
+        {
+          "elapsed_seconds": 4.196,
+          "prompt_tokens": 1307,
+          "cached_prompt_tokens": 1206,
+          "completion_tokens": 94,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "evidence_status",
+              "issue_detail",
+              "issue_type",
+              "resolution_preference"
+            ],
+            "change_field": "issue_detail"
+          }
+        },
+        {
+          "elapsed_seconds": 3.557,
+          "prompt_tokens": 1457,
+          "cached_prompt_tokens": 1400,
+          "completion_tokens": 92,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "evidence_status",
+              "issue_detail",
+              "issue_type",
+              "resolution_preference"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF03",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 12.427,
+      "attempts": [
+        {
+          "elapsed_seconds": 9.496,
+          "prompt_tokens": 1212,
+          "cached_prompt_tokens": 457,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.93,
+          "prompt_tokens": 1339,
+          "cached_prompt_tokens": 1284,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF03",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 6.817,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.807,
+          "prompt_tokens": 1307,
+          "cached_prompt_tokens": 1206,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 3.009,
+          "prompt_tokens": 1434,
+          "cached_prompt_tokens": 1379,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF04",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 15.027,
+      "attempts": [
+        {
+          "elapsed_seconds": 12.263,
+          "prompt_tokens": 1193,
+          "cached_prompt_tokens": 57,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.763,
+          "prompt_tokens": 1314,
+          "cached_prompt_tokens": 1259,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF04",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "document_type"
+      ],
+      "elapsed_seconds": 3.501,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.5,
+          "prompt_tokens": 1288,
+          "cached_prompt_tokens": 1187,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "document_type"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF05",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [
+        "document_type"
+      ],
+      "elapsed_seconds": 9.178,
+      "attempts": [
+        {
+          "elapsed_seconds": 9.177,
+          "prompt_tokens": 1195,
+          "cached_prompt_tokens": 454,
+          "completion_tokens": 68,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF05",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [
+        "document_type"
+      ],
+      "elapsed_seconds": 3.387,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.386,
+          "prompt_tokens": 1290,
+          "cached_prompt_tokens": 1189,
+          "completion_tokens": 68,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF06",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 11.966,
+      "attempts": [
+        {
+          "elapsed_seconds": 9.222,
+          "prompt_tokens": 1200,
+          "cached_prompt_tokens": 449,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.742,
+          "prompt_tokens": 1321,
+          "cached_prompt_tokens": 1266,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF06",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 6.105,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.348,
+          "prompt_tokens": 1295,
+          "cached_prompt_tokens": 1194,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.756,
+          "prompt_tokens": 1416,
+          "cached_prompt_tokens": 1361,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF07",
+      "group": "date_normalization",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 8.841,
+      "attempts": [
+        {
+          "elapsed_seconds": 8.841,
+          "prompt_tokens": 811,
+          "cached_prompt_tokens": 21,
+          "completion_tokens": 76,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF07",
+      "group": "date_normalization",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": true,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "duration",
+        "party_size",
+        "start_time"
+      ],
+      "elapsed_seconds": 3.156,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.155,
+          "prompt_tokens": 887,
+          "cached_prompt_tokens": 805,
+          "completion_tokens": 81,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF08",
+      "group": "date_normalization",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": true,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 7.952,
+      "attempts": [
+        {
+          "elapsed_seconds": 7.952,
+          "prompt_tokens": 813,
+          "cached_prompt_tokens": 222,
+          "completion_tokens": 81,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF08",
+      "group": "date_normalization",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size",
+        "start_time"
+      ],
+      "elapsed_seconds": 3.289,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.288,
+          "prompt_tokens": 889,
+          "cached_prompt_tokens": 807,
+          "completion_tokens": 81,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF09",
+      "group": "date_normalization",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration"
+      ],
+      "elapsed_seconds": 10.284,
+      "attempts": [
+        {
+          "elapsed_seconds": 7.55,
+          "prompt_tokens": 810,
+          "cached_prompt_tokens": 216,
+          "completion_tokens": 79,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "selected_time",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.733,
+          "prompt_tokens": 947,
+          "cached_prompt_tokens": 888,
+          "completion_tokens": 72,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF09",
+      "group": "date_normalization",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 3.007,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.007,
+          "prompt_tokens": 886,
+          "cached_prompt_tokens": 804,
+          "completion_tokens": 75,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF10",
+      "group": "date_normalization",
+      "mode": "baseline",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": true,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 10.312,
+      "attempts": [
+        {
+          "elapsed_seconds": 7.662,
+          "prompt_tokens": 809,
+          "cached_prompt_tokens": 216,
+          "completion_tokens": 80,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "selected_time",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.649,
+          "prompt_tokens": 947,
+          "cached_prompt_tokens": 888,
+          "completion_tokens": 70,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF10",
+      "group": "date_normalization",
+      "mode": "candidate",
+      "repetition": 1,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 3.01,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.01,
+          "prompt_tokens": 885,
+          "cached_prompt_tokens": 803,
+          "completion_tokens": 74,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF10",
+      "group": "date_normalization",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 2.206,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.206,
+          "prompt_tokens": 885,
+          "cached_prompt_tokens": 884,
+          "completion_tokens": 74,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF10",
+      "group": "date_normalization",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 2.291,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.291,
+          "prompt_tokens": 809,
+          "cached_prompt_tokens": 803,
+          "completion_tokens": 74,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF09",
+      "group": "date_normalization",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 2.221,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.22,
+          "prompt_tokens": 886,
+          "cached_prompt_tokens": 885,
+          "completion_tokens": 75,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF09",
+      "group": "date_normalization",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 5.268,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.498,
+          "prompt_tokens": 810,
+          "cached_prompt_tokens": 804,
+          "completion_tokens": 81,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "selected_time",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.77,
+          "prompt_tokens": 949,
+          "cached_prompt_tokens": 890,
+          "completion_tokens": 75,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF08",
+      "group": "date_normalization",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size",
+        "start_time"
+      ],
+      "elapsed_seconds": 2.331,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.331,
+          "prompt_tokens": 889,
+          "cached_prompt_tokens": 888,
+          "completion_tokens": 81,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF08",
+      "group": "date_normalization",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "date",
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 2.276,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.276,
+          "prompt_tokens": 813,
+          "cached_prompt_tokens": 807,
+          "completion_tokens": 76,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF07",
+      "group": "date_normalization",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": true,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "duration",
+        "party_size",
+        "start_time"
+      ],
+      "elapsed_seconds": 2.09,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.089,
+          "prompt_tokens": 887,
+          "cached_prompt_tokens": 886,
+          "completion_tokens": 72,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF07",
+      "group": "date_normalization",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": true,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "duration",
+        "party_size"
+      ],
+      "elapsed_seconds": 2.239,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.239,
+          "prompt_tokens": 811,
+          "cached_prompt_tokens": 805,
+          "completion_tokens": 76,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "continue_collecting",
+            "present_field_names": [
+              "date",
+              "duration",
+              "party_size",
+              "start_time"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF06",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": true,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [
+        "inquiry_topic",
+        "user_action"
+      ],
+      "elapsed_seconds": 2.205,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.204,
+          "prompt_tokens": 1295,
+          "cached_prompt_tokens": 1294,
+          "completion_tokens": 68,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF06",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 4.851,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.076,
+          "prompt_tokens": 1200,
+          "cached_prompt_tokens": 1194,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.774,
+          "prompt_tokens": 1321,
+          "cached_prompt_tokens": 1266,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF05",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [
+        "document_type"
+      ],
+      "elapsed_seconds": 2.233,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.232,
+          "prompt_tokens": 1290,
+          "cached_prompt_tokens": 1289,
+          "completion_tokens": 68,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF05",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [
+        "document_type"
+      ],
+      "elapsed_seconds": 2.118,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.117,
+          "prompt_tokens": 1195,
+          "cached_prompt_tokens": 1189,
+          "completion_tokens": 68,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "inquiry_topic"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF04",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "document_type"
+      ],
+      "elapsed_seconds": 2.269,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.268,
+          "prompt_tokens": 1288,
+          "cached_prompt_tokens": 1287,
+          "completion_tokens": 69,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "document_type"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF04",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 4.841,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.056,
+          "prompt_tokens": 1193,
+          "cached_prompt_tokens": 1187,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.784,
+          "prompt_tokens": 1314,
+          "cached_prompt_tokens": 1259,
+          "completion_tokens": 67,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF03",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 5.352,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.382,
+          "prompt_tokens": 1307,
+          "cached_prompt_tokens": 1306,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.968,
+          "prompt_tokens": 1434,
+          "cached_prompt_tokens": 1379,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF03",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 5.19,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.245,
+          "prompt_tokens": 1212,
+          "cached_prompt_tokens": 1206,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.943,
+          "prompt_tokens": 1339,
+          "cached_prompt_tokens": 1284,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF02",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": true,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": true,
+      "draft_mismatch_names": [
+        "evidence_status",
+        "issue_detail",
+        "resolution_preference"
+      ],
+      "elapsed_seconds": 6.608,
+      "attempts": [
+        {
+          "elapsed_seconds": 3.028,
+          "prompt_tokens": 1307,
+          "cached_prompt_tokens": 1306,
+          "completion_tokens": 94,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "evidence_status",
+              "issue_detail",
+              "issue_type",
+              "resolution_preference"
+            ],
+            "change_field": "issue_detail"
+          }
+        },
+        {
+          "elapsed_seconds": 3.579,
+          "prompt_tokens": 1457,
+          "cached_prompt_tokens": 1400,
+          "completion_tokens": 92,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "evidence_status",
+              "issue_detail",
+              "issue_type",
+              "resolution_preference"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "BF02",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 5.437,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.241,
+          "prompt_tokens": 1212,
+          "cached_prompt_tokens": 1206,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 3.196,
+          "prompt_tokens": 1339,
+          "cached_prompt_tokens": 1284,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF01",
+      "group": "workflow_field_presence",
+      "mode": "candidate",
+      "repetition": 2,
+      "contract_valid": false,
+      "action_matches_draft": false,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [],
+      "elapsed_seconds": 5.333,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.354,
+          "prompt_tokens": 1300,
+          "cached_prompt_tokens": 1299,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        },
+        {
+          "elapsed_seconds": 2.978,
+          "prompt_tokens": 1427,
+          "cached_prompt_tokens": 1372,
+          "completion_tokens": 73,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [],
+            "change_field": null
+          }
+        }
+      ],
+      "failure": {
+        "last_error_type": "ValueError",
+        "last_error_code": "action_missing_required_field"
+      }
+    },
+    {
+      "case_id": "BF01",
+      "group": "workflow_field_presence",
+      "mode": "baseline",
+      "repetition": 2,
+      "contract_valid": true,
+      "action_matches_draft": true,
+      "focus_field_matches_draft": false,
+      "all_fields_and_action_match_draft": false,
+      "focus_field_present_in_last_attempt": false,
+      "draft_mismatch_names": [
+        "issue_detail",
+        "issue_type"
+      ],
+      "elapsed_seconds": 2.656,
+      "attempts": [
+        {
+          "elapsed_seconds": 2.655,
+          "prompt_tokens": 1205,
+          "cached_prompt_tokens": 1199,
+          "completion_tokens": 87,
+          "finish_reason": "stop",
+          "output_shape": {
+            "json_object": true,
+            "user_action": "provide_details",
+            "present_field_names": [
+              "issue_detail"
+            ],
+            "change_field": null
+          }
+        }
+      ]
+    }
+  ]
+}

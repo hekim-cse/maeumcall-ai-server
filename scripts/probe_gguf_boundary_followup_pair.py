@@ -1,0 +1,227 @@
+"""Compare two independent prompt fixes on reviewed AI development cases."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import subprocess
+import tempfile
+from datetime import UTC, datetime
+from pathlib import Path
+
+from evals.structured_nlu.boundary_followup_policy import POLICY_BY_GROUP
+from evals.structured_nlu.boundary_followup_review import (
+    DEFAULT_DRAFT,
+    EXPOSURE_RECORD,
+    REVIEW_LEDGER,
+    load_followup_draft,
+)
+from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
+from scripts.probe_gguf_field_boundary import inspect_runtime
+from scripts.probe_gguf_structured_nlu import run_case
+
+ROOT = Path(__file__).resolve().parents[1]
+MODEL = "kanana-1.5-2.1b-instruct-q5"
+EXPECTED_MODEL_SHA256 = "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d"
+EXPECTED_IMAGE_DIGEST = "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35"
+SOURCE_PATHS = (
+    "scripts/probe_gguf_boundary_followup_pair.py",
+    "scripts/probe_gguf_structured_nlu.py",
+    "evals/structured_nlu/boundary_followup_review.py",
+    "evals/structured_nlu/boundary_followup_policy.py",
+    "evals/structured_nlu/contracts.py",
+    "llm/structured_output.py",
+    "scripts/probe_gguf_field_boundary.py",
+    "scripts/gguf_action_field_split.py",
+    "scripts/gguf_service_workflow_schema.py",
+    "services/flow/service_workflow/structured.py",
+    "services/flow/service_workflow/structured_contract.py",
+    "services/flow/service_workflow/contracts.py",
+    "services/flow/delivery/contracts.py",
+    "services/flow/cityhall/contracts.py",
+    "services/flow/reservation/study_room/llm_structured.py",
+)
+
+
+def _sha256(path: Path) -> str:
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def _code_git_commit() -> str:
+    """Identify the checkout whose code generated the report."""
+    dirty = subprocess.check_output(
+        ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT, text=True
+    )
+    if dirty:
+        raise ValueError("tracked checkout must be clean before model exposure")
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+
+
+def _write_report(path: Path, report: dict) -> None:
+    """Atomically checkpoint every completed observation as valid JSON."""
+    with tempfile.NamedTemporaryFile(
+        mode="w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", delete=False
+    ) as stream:
+        temporary = Path(stream.name)
+        json.dump(report, stream, ensure_ascii=False, indent=2)
+        stream.write("\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    try:
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def _runner_case(draft: dict) -> dict:
+    contract = EVALUATION_CONTRACTS[draft["scenario_key"]]
+    fields = dict.fromkeys(contract.field_names)
+    fields.update(draft["field_draft"])
+    return {
+        "id": draft["id"],
+        "scenario_key": draft["scenario_key"],
+        "conversation_state": draft["conversation_state"],
+        "current_fields": dict.fromkeys(contract.field_names)
+        if contract.uses_current_fields
+        else {},
+        "offered_alternative_times": [],
+        "user_message": draft["user_message"],
+        "labels": {
+            "intent": contract.workflow_spec.intent if contract.workflow_spec else "reservation",
+            "user_action": draft["action_draft"],
+            "change_field": None,
+            "fields": {
+                name: (
+                    None
+                    if value is None
+                    else {
+                        "accepted_values": (
+                            draft["focus_accepted_values"]
+                            if name == draft["focus_field"]
+                            else [value]
+                        )
+                    }
+                )
+                for name, value in fields.items()
+            },
+        },
+    }
+
+
+def _safe_observation(draft: dict, mode: str, repetition: int, result: dict) -> dict:
+    mismatches = result.get("draft_label_mismatch_fields", [])
+    passed = result["contract_valid"]
+    last_shape = result["attempts"][-1].get("output_shape", {}) if result["attempts"] else {}
+    return {
+        "case_id": draft["id"],
+        "group": draft["group"],
+        "mode": mode,
+        "repetition": repetition,
+        "contract_valid": passed,
+        "action_matches_draft": passed and "user_action" not in mismatches,
+        "focus_field_matches_draft": passed and draft["focus_field"] not in mismatches,
+        "all_fields_and_action_match_draft": passed and not mismatches,
+        "focus_field_present_in_last_attempt": draft["focus_field"]
+        in last_shape.get("present_field_names", []),
+        "draft_mismatch_names": mismatches,
+        "elapsed_seconds": result["elapsed_seconds"],
+        "attempts": result["attempts"],
+        **({"failure": result["failure"]} if "failure" in result else {}),
+    }
+
+
+def main() -> None:
+    """Record a bounded report after checking the exact reviewed input and runtime."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--container-name", required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists():
+        parser.error("output already exists")
+    draft_bytes = DEFAULT_DRAFT.read_bytes()
+    ledger_bytes = REVIEW_LEDGER.read_bytes()
+    drafts = load_followup_draft(
+        for_model_run=True, source_bytes=draft_bytes, ledger_bytes=ledger_bytes
+    )
+    cases = [(draft, _runner_case(draft)) for draft in drafts]
+    runtime = inspect_runtime(args.container_name)
+    if runtime["model_sha256"] != EXPECTED_MODEL_SHA256:
+        raise ValueError("mounted model differs from frozen Q5")
+    if runtime["server_image_digest"] != EXPECTED_IMAGE_DIGEST:
+        raise ValueError("server image differs from frozen runtime")
+    source_hashes = {name: _sha256(ROOT / name) for name in SOURCE_PATHS}
+    code_git_commit = _code_git_commit()
+    input_hashes = {
+        "draft": hashlib.sha256(draft_bytes).hexdigest(),
+        "review_ledger": hashlib.sha256(ledger_bytes).hexdigest(),
+    }
+    exposure = {
+        "kind": "boundary_followup_model_exposure_v1",
+        "started_at_utc": datetime.now(UTC).isoformat(),
+        "case_ids": [draft["id"] for draft in drafts],
+        "input_sha256": input_hashes,
+        "model_sha256": runtime["model_sha256"],
+    }
+    with args.output.open("x", encoding="utf-8") as stream:
+        json.dump({"kind": "exploratory_q5_boundary_followup_pair_v1", "complete": False}, stream)
+        stream.write("\n")
+    with EXPOSURE_RECORD.open("x", encoding="utf-8") as stream:
+        json.dump(exposure, stream, ensure_ascii=False, indent=2)
+        stream.write("\n")
+    observations: list[dict] = []
+    report = {
+        "kind": "exploratory_q5_boundary_followup_pair_v1",
+        "not_official_quality_score": True,
+        "complete": False,
+        "created_at_utc": datetime.now(UTC).isoformat(),
+        "case_ids": [draft["id"] for draft in drafts],
+        "repetitions": 2,
+        "code_git_commit": code_git_commit,
+        "source_sha256": source_hashes,
+        "input_sha256": input_hashes,
+        "exposure_record_sha256": _sha256(EXPOSURE_RECORD),
+        "model_sha256": runtime["model_sha256"],
+        "server_image_digest": runtime["server_image_digest"],
+        "runtime": {key: value for key, value in runtime.items() if key != "endpoint"},
+        "request_settings": {
+            "max_tokens": 180,
+            "temperature": 0,
+            "repeat_penalty": 1.05,
+            "stop": ["<|eot_id|>"],
+        },
+        "observations": observations,
+    }
+    _write_report(args.output, report)
+    try:
+        for repetition in (1, 2):
+            ordered = cases if repetition == 1 else list(reversed(cases))
+            modes = ("baseline", "candidate") if repetition == 1 else ("candidate", "baseline")
+            for draft, case in ordered:
+                for mode in modes:
+                    result = run_case(
+                        case,
+                        endpoint=runtime["endpoint"],
+                        model=MODEL,
+                        timeout=180,
+                        capture_shape=True,
+                        extra_instruction=POLICY_BY_GROUP[draft["group"]]
+                        if mode == "candidate"
+                        else None,
+                    )
+                    observations.append(_safe_observation(draft, mode, repetition, result))
+                    _write_report(args.output, report)
+                    print(
+                        f"{len(observations)} {draft['id']} {mode} "
+                        f"contract={result['contract_valid']}",
+                        flush=True,
+                    )
+    finally:
+        report["complete"] = len(observations) == len(cases) * 4
+        _write_report(args.output, report)
+
+
+if __name__ == "__main__":
+    main()

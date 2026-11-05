@@ -1,0 +1,21 @@
+{
+  "kind": "boundary_followup_model_exposure_v1",
+  "started_at_utc": "2026-11-05T19:49:51.866777+00:00",
+  "case_ids": [
+    "BF01",
+    "BF02",
+    "BF03",
+    "BF04",
+    "BF05",
+    "BF06",
+    "BF07",
+    "BF08",
+    "BF09",
+    "BF10"
+  ],
+  "input_sha256": {
+    "draft": "5c5d92e5d1a6488986fd1ccd1cf413aefe8980436a29ba2c6070e851cc41cc1e",
+    "review_ledger": "e6e788ba11e10176dd83898f3c623449b3105a3865ab554bf265cccf8f51fcd7"
+  },
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d"
+}
