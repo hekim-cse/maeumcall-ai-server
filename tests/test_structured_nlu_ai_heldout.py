@@ -11,7 +11,10 @@ import pytest
 from pydantic import ValidationError
 
 from evals.structured_nlu.ai_heldout import (
+    build_ai_heldout_exposure_record,
     build_ai_heldout_pre_exposure_freeze,
+    score_ai_heldout_pair_from_committed_artifacts,
+    verify_ai_heldout_exposure_preflight,
     verify_ai_heldout_pre_exposure_freeze,
     verify_ai_heldout_review,
 )
@@ -137,8 +140,27 @@ def _committed_input_repo(tmp_path: Path) -> tuple[Path, str]:
     dataset_bytes, ledger_bytes = _artifacts()
     (repo / "dataset.json").write_bytes(dataset_bytes)
     (repo / "review.json").write_bytes(ledger_bytes)
-    (repo / "protocol.md").write_text("Same cases and request settings for both models.\n")
-    _git(repo, "add", "dataset.json", "review.json", "protocol.md")
+    (repo / "protocol.json").write_text(
+        json.dumps(
+            {
+                "kind": "ai_authored_heldout_request_policy_v1",
+                "server_image_digest": "sha256:" + "c" * 64,
+                "runner_sha256": "d" * 64,
+                "prompt_revision_sha256": "e" * 64,
+                "cpu_count": 2,
+                "thread_count": 2,
+                "context_size": 4096,
+                "max_tokens": 180,
+                "temperature": 0,
+                "repeat_penalty": 1.05,
+                "stop": ["<|eot_id|>"],
+                "timeout_seconds": 180,
+                "cache_policy": "warm",
+                "retry_policy": "one_retry_after_contract_failure",
+            }
+        )
+    )
+    _git(repo, "add", "dataset.json", "review.json", "protocol.json")
     _git(repo, "commit", "-qm", "freeze inputs")
     return repo, _git(repo, "rev-parse", "HEAD")
 
@@ -149,7 +171,7 @@ def _write_record(repo: Path, input_commit: str) -> None:
         input_git_revision=input_commit,
         dataset_path="dataset.json",
         review_ledger_path="review.json",
-        protocol_path="protocol.md",
+        protocol_path="protocol.json",
         exposure_record_path="exposure.json",
     )
     (repo / "freeze.json").write_text(record.model_dump_json(indent=2) + "\n")
@@ -195,6 +217,137 @@ def test_pre_exposure_freeze_rejects_changed_record_or_protocol(tmp_path: Path) 
     with pytest.raises(ValueError, match="differs from the Git HEAD blob"):
         verify_ai_heldout_pre_exposure_freeze(repo_root=repo, record_path="freeze.json")
     _git(repo, "restore", "freeze.json")
-    (repo / "protocol.md").write_text("Changed request settings.\n")
+    (repo / "protocol.json").write_text('{"kind":"changed"}\n')
     with pytest.raises(ValueError, match="differs from input Git commit"):
         verify_ai_heldout_pre_exposure_freeze(repo_root=repo, record_path="freeze.json")
+
+
+def test_pre_exposure_freeze_rejects_unstructured_request_policy(tmp_path: Path) -> None:
+    repo, _input_commit = _committed_input_repo(tmp_path)
+    (repo / "protocol.json").write_text("Both models should use the same settings.\n")
+    _git(repo, "add", "protocol.json")
+    _git(repo, "commit", "-qm", "invalid prose policy")
+    with pytest.raises(ValidationError):
+        _write_record(repo, _git(repo, "rev-parse", "HEAD"))
+
+
+def _committed_exposure_repo(tmp_path: Path) -> tuple[Path, str]:
+    repo, input_commit = _committed_input_repo(tmp_path)
+    _write_record(repo, input_commit)
+    _git(repo, "add", "freeze.json")
+    _git(repo, "commit", "-qm", "freeze record")
+    exposure = build_ai_heldout_exposure_record(
+        repo_root=repo,
+        freeze_record_path="freeze.json",
+        baseline_model_sha256="a" * 64,
+        candidate_model_sha256="b" * 64,
+        baseline_prediction_path="baseline.json",
+        candidate_prediction_path="candidate.json",
+    )
+    (repo / "exposure.json").write_text(exposure.model_dump_json(indent=2) + "\n")
+    _git(repo, "add", "exposure.json")
+    _git(repo, "commit", "-qm", "exposure record before model calls")
+    return repo, _git(repo, "rev-parse", "HEAD")
+
+
+def _prediction_artifact(repo: Path, exposure_commit: str, role: str) -> dict:
+    dataset = json.loads((repo / "dataset.json").read_text())
+    exposure = json.loads((repo / "exposure.json").read_text())
+    predictions = []
+    baseline_changed = False
+    for case in dataset["cases"]:
+        labels = case["labels"]
+        fields = {
+            key: value["accepted_values"][0] if value is not None else None
+            for key, value in labels["fields"].items()
+        }
+        action = labels["user_action"]
+        if role == "baseline" and not baseline_changed and action != "unknown":
+            fields = dict.fromkeys(fields)
+            action = "unknown"
+            baseline_changed = True
+        predictions.append(
+            {
+                "case_id": case["id"],
+                "attempts": [
+                    {
+                        "contract_valid": True,
+                        "latency_ms": 1.0,
+                        "output": {
+                            "intent": labels["intent"],
+                            "fields": fields,
+                            "user_action": action,
+                            "change_field": labels["change_field"],
+                        },
+                    }
+                ],
+            }
+        )
+    return {
+        "kind": "ai_authored_heldout_predictions_v1",
+        "role": role,
+        "exposure_commit": exposure_commit,
+        "model_sha256": exposure[f"{role}_model_sha256"],
+        "request_policy_sha256": exposure["request_policy_sha256"],
+        "attempt_policy": exposure["attempt_policy"],
+        "predictions": predictions,
+    }
+
+
+def test_paired_score_requires_exposure_commit_before_prediction_commit(tmp_path: Path) -> None:
+    repo, exposure_commit = _committed_exposure_repo(tmp_path)
+    preflight = verify_ai_heldout_exposure_preflight(
+        repo_root=repo, freeze_record_path="freeze.json"
+    )
+    assert len(preflight.case_ids) == 16
+    with pytest.raises(ValueError, match="predictions must be committed after"):
+        score_ai_heldout_pair_from_committed_artifacts(
+            repo_root=repo,
+            freeze_record_path="freeze.json",
+            exposure_commit=exposure_commit,
+        )
+    for role in ("baseline", "candidate"):
+        (repo / f"{role}.json").write_text(
+            json.dumps(_prediction_artifact(repo, exposure_commit, role), ensure_ascii=False)
+        )
+    _git(repo, "add", "baseline.json", "candidate.json")
+    _git(repo, "commit", "-qm", "paired predictions")
+
+    scores = score_ai_heldout_pair_from_committed_artifacts(
+        repo_root=repo,
+        freeze_record_path="freeze.json",
+        exposure_commit=exposure_commit,
+    )
+    assert scores.cases == 16
+    assert (scores.baseline_correct, scores.candidate_correct) == (15, 16)
+    assert scores.difference_percentage_points == 6.25
+    assert scores.source == "ai_authored_human_adjudicated_heldout"
+
+
+def test_paired_score_rejects_missing_case_and_changed_policy(tmp_path: Path) -> None:
+    repo, exposure_commit = _committed_exposure_repo(tmp_path)
+    baseline = _prediction_artifact(repo, exposure_commit, "baseline")
+    baseline["predictions"].pop()
+    candidate = _prediction_artifact(repo, exposure_commit, "candidate")
+    (repo / "baseline.json").write_text(json.dumps(baseline, ensure_ascii=False))
+    (repo / "candidate.json").write_text(json.dumps(candidate, ensure_ascii=False))
+    _git(repo, "add", "baseline.json", "candidate.json")
+    _git(repo, "commit", "-qm", "incomplete predictions")
+    with pytest.raises(ValueError, match="case IDs do not match"):
+        score_ai_heldout_pair_from_committed_artifacts(
+            repo_root=repo,
+            freeze_record_path="freeze.json",
+            exposure_commit=exposure_commit,
+        )
+
+    baseline = _prediction_artifact(repo, exposure_commit, "baseline")
+    baseline["request_policy_sha256"] = "0" * 64
+    (repo / "baseline.json").write_text(json.dumps(baseline, ensure_ascii=False))
+    _git(repo, "add", "baseline.json")
+    _git(repo, "commit", "-qm", "wrong request policy")
+    with pytest.raises(ValueError, match="differs from frozen run policy"):
+        score_ai_heldout_pair_from_committed_artifacts(
+            repo_root=repo,
+            freeze_record_path="freeze.json",
+            exposure_commit=exposure_commit,
+        )
