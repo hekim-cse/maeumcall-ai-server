@@ -156,6 +156,7 @@ def _committed_input_repo(tmp_path: Path) -> tuple[Path, str]:
                 "stop": ["<|eot_id|>"],
                 "timeout_seconds": 180,
                 "cache_policy": "warm",
+                "pair_order": "alternating",
                 "retry_policy": "one_retry_after_contract_failure",
             }
         )
@@ -299,7 +300,7 @@ def test_paired_score_requires_exposure_commit_before_prediction_commit(tmp_path
     preflight = verify_ai_heldout_exposure_preflight(
         repo_root=repo, freeze_record_path="freeze.json"
     )
-    assert len(preflight.case_ids) == 16
+    assert len(preflight.exposure.case_ids) == 16
     with pytest.raises(ValueError, match="predictions must be committed after"):
         score_ai_heldout_pair_from_committed_artifacts(
             repo_root=repo,

@@ -172,6 +172,7 @@ class AIHeldoutRequestPolicy(BaseModel):
     stop: tuple[NonEmptyText, ...] = Field(min_length=1)
     timeout_seconds: Annotated[int, Field(ge=1)]
     cache_policy: Literal["cold", "warm", "mixed"]
+    pair_order: Literal["alternating"]
     retry_policy: Literal["one_retry_after_contract_failure"]
 
 
@@ -201,6 +202,16 @@ class AIHeldoutExposureRecord(BaseModel):
     attempt_policy: Literal["one_retry_after_contract_failure"]
     baseline_prediction_path: NonEmptyText
     candidate_prediction_path: NonEmptyText
+
+
+class VerifiedAIHeldoutPreflight(BaseModel):
+    """One verified snapshot returned before any model request."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    frozen: VerifiedAIHeldoutFreeze
+    exposure: AIHeldoutExposureRecord
+    exposure_commit: GitCommit
 
 
 class AIHeldoutPredictionArtifact(BaseModel):
@@ -405,7 +416,7 @@ def build_ai_heldout_exposure_record(
 
 def verify_ai_heldout_exposure_preflight(
     *, repo_root: Path, freeze_record_path: str
-) -> AIHeldoutExposureRecord:
+) -> VerifiedAIHeldoutPreflight:
     """Check committed exposure evidence before the first model request."""
     root = _verified_repo_root(repo_root)
     frozen = _verify_frozen_inputs(root, freeze_record_path, require_no_exposure=False)
@@ -416,7 +427,9 @@ def verify_ai_heldout_exposure_preflight(
         raise ValueError("exposure preflight must run at its committed HEAD")
     for relative in (exposure.baseline_prediction_path, exposure.candidate_prediction_path):
         _require_artifact_absent(root, relative, _checked_relative_file(root, relative))
-    return exposure
+    return VerifiedAIHeldoutPreflight(
+        frozen=frozen, exposure=exposure, exposure_commit=exposure_commit
+    )
 
 
 def score_ai_heldout_pair_from_committed_artifacts(
