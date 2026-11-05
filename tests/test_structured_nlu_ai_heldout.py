@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
 
-from evals.structured_nlu.ai_heldout import verify_ai_heldout_review
+from evals.structured_nlu.ai_heldout import (
+    build_ai_heldout_pre_exposure_freeze,
+    verify_ai_heldout_pre_exposure_freeze,
+    verify_ai_heldout_review,
+)
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 
 GOLD_DATASET = (
@@ -112,3 +117,84 @@ def test_review_gate_refuses_human_provenance_and_duplicate_inputs() -> None:
     dataset["cases"].append(copied)
     with pytest.raises(ValidationError, match="duplicate AI heldout model inputs"):
         verify_ai_heldout_review(json.dumps(dataset, ensure_ascii=False).encode(), ledger_bytes)
+
+
+def _git(repo: Path, *args: str) -> str:
+    return subprocess.run(
+        ("git", "-C", str(repo), *args),
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+
+
+def _committed_input_repo(tmp_path: Path) -> tuple[Path, str]:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q")
+    _git(repo, "config", "user.name", "Gate Test")
+    _git(repo, "config", "user.email", "gate-test@example.invalid")
+    dataset_bytes, ledger_bytes = _artifacts()
+    (repo / "dataset.json").write_bytes(dataset_bytes)
+    (repo / "review.json").write_bytes(ledger_bytes)
+    (repo / "protocol.md").write_text("Same cases and request settings for both models.\n")
+    _git(repo, "add", "dataset.json", "review.json", "protocol.md")
+    _git(repo, "commit", "-qm", "freeze inputs")
+    return repo, _git(repo, "rev-parse", "HEAD")
+
+
+def _write_record(repo: Path, input_commit: str) -> None:
+    record = build_ai_heldout_pre_exposure_freeze(
+        repo_root=repo,
+        input_git_revision=input_commit,
+        dataset_path="dataset.json",
+        review_ledger_path="review.json",
+        protocol_path="protocol.md",
+        exposure_record_path="exposure.json",
+    )
+    (repo / "freeze.json").write_text(record.model_dump_json(indent=2) + "\n")
+
+
+def test_pre_exposure_freeze_requires_committed_record_and_exact_input(tmp_path: Path) -> None:
+    repo, input_commit = _committed_input_repo(tmp_path)
+    _write_record(repo, input_commit)
+    with pytest.raises(ValueError, match="exactly one artifact"):
+        verify_ai_heldout_pre_exposure_freeze(repo_root=repo, record_path="freeze.json")
+
+    _git(repo, "add", "freeze.json")
+    _git(repo, "commit", "-qm", "freeze record")
+    verified = verify_ai_heldout_pre_exposure_freeze(repo_root=repo, record_path="freeze.json")
+    assert verified.record.input_git_revision == input_commit
+    assert len(verified.reviewed.scenario_counts) == 16
+
+    (repo / "dataset.json").write_bytes((repo / "dataset.json").read_bytes() + b"\n")
+    with pytest.raises(ValueError, match="differs from input Git commit"):
+        verify_ai_heldout_pre_exposure_freeze(repo_root=repo, record_path="freeze.json")
+
+
+def test_pre_exposure_freeze_rejects_missing_review_and_exposure(tmp_path: Path) -> None:
+    repo, input_commit = _committed_input_repo(tmp_path)
+    (repo / "review.json").unlink()
+    with pytest.raises(ValueError, match="regular file"):
+        _write_record(repo, input_commit)
+    _git(repo, "restore", "review.json")
+    _write_record(repo, input_commit)
+    _git(repo, "add", "freeze.json")
+    _git(repo, "commit", "-qm", "freeze record")
+    (repo / "exposure.json").write_text("{}\n")
+    with pytest.raises(ValueError, match="exposure record already exists"):
+        verify_ai_heldout_pre_exposure_freeze(repo_root=repo, record_path="freeze.json")
+
+
+def test_pre_exposure_freeze_rejects_changed_record_or_protocol(tmp_path: Path) -> None:
+    repo, input_commit = _committed_input_repo(tmp_path)
+    _write_record(repo, input_commit)
+    _git(repo, "add", "freeze.json")
+    _git(repo, "commit", "-qm", "freeze record")
+    (repo / "freeze.json").write_bytes((repo / "freeze.json").read_bytes() + b"\n")
+    with pytest.raises(ValueError, match="differs from the Git HEAD blob"):
+        verify_ai_heldout_pre_exposure_freeze(repo_root=repo, record_path="freeze.json")
+    _git(repo, "restore", "freeze.json")
+    (repo / "protocol.md").write_text("Changed request settings.\n")
+    with pytest.raises(ValueError, match="differs from input Git commit"):
+        verify_ai_heldout_pre_exposure_freeze(repo_root=repo, record_path="freeze.json")

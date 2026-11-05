@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import unicodedata
 from collections import Counter
 from datetime import datetime
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -30,6 +31,7 @@ from services.flow.common.state_contract import SCENARIO_STATE_VERSION
 
 Sha256 = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 CaseId = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9._-]{2,119}$")]
+GitCommit = Annotated[str, Field(pattern=r"^[0-9a-f]{40,64}$")]
 
 
 class AIHeldoutCase(BaseModel):
@@ -134,6 +136,31 @@ class ReviewedAIHeldout(BaseModel):
     scenario_counts: dict[str, int]
 
 
+class AIHeldoutFreezeRecord(BaseModel):
+    """Bind reviewed inputs and the comparison protocol to one Git snapshot."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    kind: Literal["ai_authored_heldout_pre_exposure_freeze_v1"]
+    input_git_revision: GitCommit
+    dataset_path: NonEmptyText
+    dataset_sha256: Sha256
+    review_ledger_path: NonEmptyText
+    review_ledger_sha256: Sha256
+    protocol_path: NonEmptyText
+    protocol_sha256: Sha256
+    exposure_record_path: NonEmptyText
+
+
+class VerifiedAIHeldoutFreeze(BaseModel):
+    """A committed freeze checked immediately before the first model call."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    record: AIHeldoutFreezeRecord
+    reviewed: ReviewedAIHeldout
+
+
 def verify_ai_heldout_review(dataset_bytes: bytes, review_ledger_bytes: bytes) -> ReviewedAIHeldout:
     """Reject draft, mismatched, or incomplete 16-scenario heldout inputs."""
     dataset = AIHeldoutDataset.model_validate_json(dataset_bytes)
@@ -162,6 +189,174 @@ def verify_ai_heldout_review(dataset_bytes: bytes, review_ledger_bytes: bytes) -
 def load_reviewed_ai_heldout(dataset_path: Path, review_ledger_path: Path) -> ReviewedAIHeldout:
     """Read each artifact once so review and execution share exact bytes."""
     return verify_ai_heldout_review(dataset_path.read_bytes(), review_ledger_path.read_bytes())
+
+
+def build_ai_heldout_pre_exposure_freeze(
+    *,
+    repo_root: Path,
+    input_git_revision: str,
+    dataset_path: str,
+    review_ledger_path: str,
+    protocol_path: str,
+    exposure_record_path: str,
+) -> AIHeldoutFreezeRecord:
+    """Create a proposed record from committed reviewed inputs, before exposure.
+
+    The caller must commit the returned record before verification or model use.
+    """
+    root = _verified_repo_root(repo_root)
+    commit = _resolve_commit(root, input_git_revision)
+    if commit != _resolve_commit(root, "HEAD"):
+        raise ValueError("freeze creation requires input_git_revision to be HEAD")
+    paths = _checked_artifact_paths(
+        root, dataset_path, review_ledger_path, protocol_path, exposure_record_path
+    )
+    _require_no_exposure(root, exposure_record_path, paths[3])
+    dataset_bytes = _matching_input_blob(root, commit, dataset_path, paths[0])
+    ledger_bytes = _matching_input_blob(root, commit, review_ledger_path, paths[1])
+    protocol_bytes = _matching_input_blob(root, commit, protocol_path, paths[2])
+    verify_ai_heldout_review(dataset_bytes, ledger_bytes)
+    if not protocol_bytes.strip():
+        raise ValueError("AI heldout comparison protocol must not be blank")
+    return AIHeldoutFreezeRecord(
+        kind="ai_authored_heldout_pre_exposure_freeze_v1",
+        input_git_revision=commit,
+        dataset_path=dataset_path,
+        dataset_sha256=_sha256(dataset_bytes),
+        review_ledger_path=review_ledger_path,
+        review_ledger_sha256=_sha256(ledger_bytes),
+        protocol_path=protocol_path,
+        protocol_sha256=_sha256(protocol_bytes),
+        exposure_record_path=exposure_record_path,
+    )
+
+
+def verify_ai_heldout_pre_exposure_freeze(
+    *, repo_root: Path, record_path: str
+) -> VerifiedAIHeldoutFreeze:
+    """Require a committed record and unchanged inputs before any model call."""
+    root = _verified_repo_root(repo_root)
+    record_file = _checked_relative_file(root, record_path)
+    head = _resolve_commit(root, "HEAD")
+    committed_record_bytes = _git_regular_blob(root, head, record_path)
+    if _read_regular_file(root, record_file) != committed_record_bytes:
+        raise ValueError("AI heldout freeze record differs from the Git HEAD blob")
+    record = AIHeldoutFreezeRecord.model_validate_json(committed_record_bytes)
+    commit = _resolve_commit(root, record.input_git_revision)
+    if commit != record.input_git_revision or commit == head:
+        raise ValueError("freeze input must be an earlier explicit Git commit")
+    if _git(root, "merge-base", "--is-ancestor", commit, head, check=False).returncode != 0:
+        raise ValueError("freeze input Git commit must be an ancestor of HEAD")
+    paths = _checked_artifact_paths(
+        root,
+        record.dataset_path,
+        record.review_ledger_path,
+        record.protocol_path,
+        record.exposure_record_path,
+    )
+    if record_path in {
+        record.dataset_path,
+        record.review_ledger_path,
+        record.protocol_path,
+        record.exposure_record_path,
+    }:
+        raise ValueError("freeze record path must differ from governed artifacts")
+    _require_no_exposure(root, record.exposure_record_path, paths[3])
+    dataset_bytes = _matching_input_blob(root, commit, record.dataset_path, paths[0])
+    ledger_bytes = _matching_input_blob(root, commit, record.review_ledger_path, paths[1])
+    protocol_bytes = _matching_input_blob(root, commit, record.protocol_path, paths[2])
+    if (
+        _sha256(dataset_bytes) != record.dataset_sha256
+        or _sha256(ledger_bytes) != record.review_ledger_sha256
+        or _sha256(protocol_bytes) != record.protocol_sha256
+    ):
+        raise ValueError("AI heldout freeze input hashes do not match committed artifacts")
+    if not protocol_bytes.strip():
+        raise ValueError("AI heldout comparison protocol must not be blank")
+    reviewed = verify_ai_heldout_review(dataset_bytes, ledger_bytes)
+    return VerifiedAIHeldoutFreeze(record=record, reviewed=reviewed)
+
+
+def _verified_repo_root(repo_root: Path) -> Path:
+    root = repo_root.resolve(strict=True)
+    if repo_root.absolute() != root:
+        raise ValueError("repo_root must be the canonical Git worktree root")
+    actual = Path(_git(root, "rev-parse", "--show-toplevel").stdout.decode().strip()).resolve()
+    if actual != root:
+        raise ValueError("repo_root must be the Git worktree root")
+    return root
+
+
+def _checked_artifact_paths(root: Path, *relative_paths: str) -> tuple[Path, ...]:
+    if len(set(relative_paths)) != len(relative_paths):
+        raise ValueError("AI heldout governed artifact paths must be distinct")
+    return tuple(_checked_relative_file(root, relative) for relative in relative_paths)
+
+
+def _checked_relative_file(root: Path, relative: str) -> Path:
+    if (
+        not relative
+        or "\\" in relative
+        or ":" in relative
+        or PurePosixPath(relative).is_absolute()
+        or any(part in {"", ".", ".."} for part in relative.split("/"))
+    ):
+        raise ValueError(f"invalid repository-relative artifact path: {relative}")
+    path = root / relative
+    for component in (root, *path.relative_to(root).parts):
+        # Do not follow a linked directory or file into another location.
+        if isinstance(component, Path):
+            current = component
+        else:
+            current = current / component
+        if current.is_symlink():
+            raise ValueError(f"artifact path must not contain symlinks: {relative}")
+    return path
+
+
+def _read_regular_file(root: Path, path: Path) -> bytes:
+    if not path.is_file() or path.is_symlink() or not path.is_relative_to(root):
+        raise ValueError(f"AI heldout artifact must be a regular file: {path}")
+    return path.read_bytes()
+
+
+def _matching_input_blob(root: Path, commit: str, relative: str, path: Path) -> bytes:
+    committed = _git_regular_blob(root, commit, relative)
+    if _read_regular_file(root, path) != committed:
+        raise ValueError(f"AI heldout artifact differs from input Git commit: {relative}")
+    return committed
+
+
+def _require_no_exposure(root: Path, relative: str, path: Path) -> None:
+    if path.exists() or path.is_symlink():
+        raise ValueError("AI heldout model exposure record already exists")
+    if _git(root, "ls-tree", "-r", "--name-only", "HEAD", "--", relative).stdout.strip():
+        raise ValueError("AI heldout model exposure record is already committed")
+
+
+def _git_regular_blob(root: Path, commit: str, relative: str) -> bytes:
+    metadata = _git(root, "ls-tree", commit, "--", relative).stdout.decode().splitlines()
+    if len(metadata) != 1:
+        raise ValueError(f"Git commit must contain exactly one artifact: {relative}")
+    mode, kind, _rest = metadata[0].split(maxsplit=2)
+    if mode not in {"100644", "100755"} or kind != "blob":
+        raise ValueError(f"Git artifact must be a regular file: {relative}")
+    return _git(root, "show", f"{commit}:{relative}").stdout
+
+
+def _resolve_commit(root: Path, revision: str) -> str:
+    return _git(root, "rev-parse", f"{revision}^{{commit}}").stdout.decode().strip()
+
+
+def _git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
+    result = subprocess.run(("git", "-C", str(root), *args), capture_output=True, check=False)
+    if check and result.returncode != 0:
+        raise ValueError(f"Git command failed: git {' '.join(args)}")
+    return result
+
+
+def _sha256(content: bytes) -> str:
+    return hashlib.sha256(content).hexdigest()
 
 
 def _normalize_nfc(value: object) -> object:
