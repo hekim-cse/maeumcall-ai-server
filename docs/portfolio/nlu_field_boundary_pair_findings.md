@@ -33,8 +33,10 @@
 저장했다. 발화와 모델 답변 전문은 저장하지 않았다. 실행 당시 스크립트의
 [원본 스냅샷](../../evals/structured_nlu/candidates/field-boundary-runner-v1.txt)
 SHA-256은 `8f88cd11515ef6c85712c4b9a4dfdfd03c7308f0bde9881a9ca484abf78159e4`다.
-[재실행용 스크립트](../../scripts/probe_gguf_field_boundary.py)는 같은 로직을
-Ruff 형식으로 정리했다.
+[재실행용 스크립트](../../scripts/probe_gguf_field_boundary.py)는 같은 사례와
+요청 설정을 사용하되, CodeRabbit 리뷰를 반영해 실행 중인 Docker 컨테이너의
+이미지·자원 설정과 읽기 전용으로 마운트한 모델 파일의 SHA-256을 실제로
+확인한 뒤 기록하도록 보강했다. 저장된 원래 관찰값은 재실행으로 바꾸지 않았다.
 F 발화 문서 SHA-256은 `a819c794ba9cc18bb39e722275be0724323268b5c6a7b933fe7cd1a175b9a4d1`,
 F 필드 초안은 `4920a9149195022089bc1e2da6e81f00aa3d580a68007e3ab6aee347e84bd0d1`,
 D 초안은 `c7151d8051a5fbc857e6246c8e8ea2706314d23ff096ec092d7dc08396948357`다.
