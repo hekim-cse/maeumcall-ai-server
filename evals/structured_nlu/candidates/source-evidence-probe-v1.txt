@@ -1,0 +1,230 @@
+"""Pair ordinary and source-span NLU output on AI-assisted development cases."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib
+import json
+import time
+import urllib.request
+from datetime import UTC, datetime
+from pathlib import Path
+from unittest.mock import patch
+
+from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
+from evals.structured_nlu.source_evidence import validate_source_evidence
+from llm.errors import AIResponseValidationError
+from scripts.action_field_dev_cases import DEFAULT_SOURCE
+from scripts.action_field_dev_cases import load_cases as load_dev_cases
+from scripts.fresh_scope_ai_cases import FIELD_DRAFT, SENTENCES
+from scripts.fresh_scope_ai_cases import load_cases as load_fresh_cases
+from scripts.probe_gguf_field_boundary import inspect_runtime
+from scripts.probe_gguf_structured_nlu import (
+    draft_mismatches,
+    run_case,
+    safe_failure_code,
+    safe_output_shape,
+)
+
+ROOT = Path(__file__).resolve().parents[1]
+CASE_IDS = ("F15", "F17", "F23", "F29", "D05")
+EVIDENCE_INSTRUCTION = (
+    "기존 JSON 객체에 field_evidence 객체를 추가하세요. 이번 턴에 null이 아닌 각 업무 "
+    "필드마다 발화 원문의 근거 위치를 하나씩 넣으세요. 값이 null인 필드에는 근거를 "
+    "넣지 마세요. 형식은 필드명: {start: 정수, end: 정수, quote: 문자열}입니다. "
+    "start는 발화의 0부터 시작하는 유니코드 문자 위치, end는 끝 다음 위치이며 "
+    "quote는 발화[start:end]와 정확히 같아야 합니다. 추출값과 근거가 없으면 "
+    "필드 값은 null로 두세요. field_evidence 밖의 기존 출력 형식은 유지하세요."
+)
+REQUEST_SETTINGS = {
+    "max_tokens": 180,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": ["<|eot_id|>"],
+}
+SOURCE_PATHS = (
+    "evals/structured_nlu/source_evidence.py",
+    "scripts/probe_gguf_source_evidence.py",
+    "scripts/probe_gguf_structured_nlu.py",
+    "scripts/probe_gguf_field_boundary.py",
+    "services/flow/service_workflow/structured.py",
+    "services/flow/reservation/study_room/llm_structured.py",
+    "services/flow/delivery/contracts.py",
+    "services/flow/cityhall/contracts.py",
+)
+
+
+def _sha256(path: Path) -> str:
+    """Hash one local input without copying its content into a report."""
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def run_evidence_case(case: dict, *, endpoint: str, timeout: int = 180) -> dict:
+    """Collect safe output shapes and span validity separately from NLU quality."""
+    contract = EVALUATION_CONTRACTS[case["scenario_key"]]
+    if contract.workflow_spec is not None:
+        module = importlib.import_module("services.flow.service_workflow.structured")
+
+        def analyze():
+            return module.analyze_service_workflow_message(
+                contract.workflow_spec,
+                conversation_state=case["conversation_state"],
+                current_fields={
+                    name: case["current_fields"].get(name) for name in contract.field_names
+                },
+                user_message=case["user_message"],
+            )
+
+    elif case["scenario_key"] == "예약:스터디룸 예약":
+        module = importlib.import_module("services.flow.reservation.study_room.llm_structured")
+
+        def analyze():
+            return module.analyze_study_room_reservation_user_message(
+                case["conversation_state"],
+                case["user_message"],
+                case["offered_alternative_times"],
+            )
+
+    else:
+        raise ValueError("evidence probe supports only these reviewed scenarios")
+
+    attempts: list[dict] = []
+
+    def completion(messages: list[dict[str, str]]) -> str:
+        augmented = [
+            {**messages[0], "content": messages[0]["content"] + "\n" + EVIDENCE_INSTRUCTION},
+            *messages[1:],
+        ]
+        payload = {"model": "kanana-1.5-2.1b-instruct-q5", "messages": augmented} | REQUEST_SETTINGS
+        request = urllib.request.Request(
+            endpoint,
+            data=json.dumps(payload, ensure_ascii=False).encode(),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        request_started = time.perf_counter()
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            body = json.load(response)
+        raw = body["choices"][0]["message"]["content"]
+        usage = body.get("usage", {})
+        attempt = {
+            "elapsed_seconds": round(time.perf_counter() - request_started, 3),
+            "prompt_tokens": usage.get("prompt_tokens"),
+            "cached_prompt_tokens": usage.get("prompt_tokens_details", {}).get("cached_tokens"),
+            "completion_tokens": usage.get("completion_tokens"),
+            "finish_reason": body["choices"][0].get("finish_reason"),
+            "output_shape": safe_output_shape(
+                raw,
+                field_names=contract.field_names,
+                actions=contract.user_actions,
+            ),
+        }
+        try:
+            parsed = json.loads(raw)
+            if not isinstance(parsed, dict):
+                raise ValueError("evidence_output_not_object")
+            fields = parsed.get("fields", parsed)
+            if not isinstance(fields, dict):
+                raise ValueError("evidence_fields_not_object")
+            validate_source_evidence(
+                case["user_message"],
+                {name: fields.get(name) for name in contract.field_names},
+                parsed.get("field_evidence"),
+            )
+            attempt["evidence_check"] = "valid"
+            parsed.pop("field_evidence", None)
+            raw = json.dumps(parsed, ensure_ascii=False)
+        except (json.JSONDecodeError, ValueError) as exc:
+            # Only fixed diagnostic codes and field names may leave this scope.
+            code = str(exc)
+            attempt["evidence_check"] = (
+                code if code.startswith("evidence_") else "evidence_json_invalid"
+            )
+        attempts.append(attempt)
+        return raw
+
+    started = time.perf_counter()
+    try:
+        with patch.object(module, "complete_hf_json", completion):
+            normalized = analyze()
+    except AIResponseValidationError as exc:
+        return {
+            "case_id": case["id"],
+            "contract_valid": False,
+            "failure_code": safe_failure_code(exc.__cause__),
+            "elapsed_seconds": round(time.perf_counter() - started, 3),
+            "attempts": attempts,
+        }
+    return {
+        "case_id": case["id"],
+        "contract_valid": True,
+        "draft_label_mismatch_fields": draft_mismatches(case, normalized),
+        "elapsed_seconds": round(time.perf_counter() - started, 3),
+        "attempts": attempts,
+    }
+
+
+def main() -> None:
+    """Run an ordered paired probe against one inspected localhost Docker server."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--container-name", required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--repetitions", type=int, default=2)
+    args = parser.parse_args()
+    if args.output.exists() or args.repetitions < 1:
+        parser.error("output must not exist and repetitions must be positive")
+    runtime = inspect_runtime(args.container_name)
+    cases = {case["id"]: case for case in [*load_fresh_cases(), *load_dev_cases()]}
+    observations = []
+    try:
+        for repetition in range(1, args.repetitions + 1):
+            order = CASE_IDS if repetition % 2 else tuple(reversed(CASE_IDS))
+            modes = ("baseline", "evidence") if repetition % 2 else ("evidence", "baseline")
+            for case_id in order:
+                for mode in modes:
+                    case = cases[case_id]
+                    result = (
+                        run_case(
+                            case,
+                            endpoint=runtime["endpoint"],
+                            model="kanana-1.5-2.1b-instruct-q5",
+                            timeout=180,
+                            capture_shape=True,
+                        )
+                        if mode == "baseline"
+                        else run_evidence_case(case, endpoint=runtime["endpoint"])
+                    )
+                    observations.append({"mode": mode, "repetition": repetition, **result})
+                    print(
+                        f"{len(observations)} {case_id} {mode} contract={result['contract_valid']}",
+                        flush=True,
+                    )
+    finally:
+        report = {
+            "kind": "exploratory_q5_source_evidence_pair_v1",
+            "not_official_quality_score": True,
+            "source_provenance": "AI-assisted previously exposed development cases",
+            "complete": len(observations) == len(CASE_IDS) * args.repetitions * 2,
+            "created_at_utc": datetime.now(UTC).isoformat(),
+            "case_ids": list(CASE_IDS),
+            "repetitions": args.repetitions,
+            "source_sha256": {name: _sha256(ROOT / name) for name in SOURCE_PATHS},
+            "case_source_sha256": {
+                "fresh_sentences": _sha256(SENTENCES),
+                "fresh_field_draft": _sha256(FIELD_DRAFT),
+                "development_draft": _sha256(DEFAULT_SOURCE),
+            },
+            "model_sha256": runtime["model_sha256"],
+            "server_image_digest": runtime["server_image_digest"],
+            "runtime": {key: value for key, value in runtime.items() if key != "endpoint"},
+            "request_settings": REQUEST_SETTINGS,
+            "evidence_contract": "exact_unicode_span_only_no_semantic_claim",
+            "observations": observations,
+        }
+        args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+
+
+if __name__ == "__main__":
+    main()
