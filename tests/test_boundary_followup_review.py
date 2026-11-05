@@ -69,6 +69,14 @@ def test_review_ledger_must_match_exact_input_bytes(tmp_path):
     [
         (0, {"field_draft": {"unknown_field": "value"}}, "unknown field"),
         (0, {"field_draft": {"issue_type": "   "}}, "blank or non-string field"),
+        (
+            0,
+            {
+                "field_draft": {"issue_type": "invalid_enum"},
+                "focus_accepted_values": ["invalid_enum"],
+            },
+            "prediction issue_type is not allowed",
+        ),
         (6, {"focus_accepted_values": ["2026-12-05"]}, "unique accepted values"),
         (9, {"focus_accepted_values": ["2026-12-04"]}, "requires null accepted values"),
     ],
