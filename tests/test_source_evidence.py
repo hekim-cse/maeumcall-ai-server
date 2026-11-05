@@ -62,8 +62,28 @@ def test_code_point_offset_after_non_bmp_character():
     )
 
 
+def test_whitespace_only_quote_is_rejected_even_when_span_matches():
+    with pytest.raises(ValueError, match="evidence_quote_mismatch:date"):
+        validate_source_evidence(
+            "내일  예약",
+            {"date": "내일"},
+            {"date": {"start": 2, "end": 4, "quote": "  "}},
+        )
+
+
 def test_legacy_contract_pass_is_not_evidence_contract_pass():
     assert not evidence_contract_passed(
         [{"evidence_check": "evidence_not_object"}], contract_valid=True
     )
     assert evidence_contract_passed([{"evidence_check": "valid"}], contract_valid=True)
+
+
+def test_evidence_contract_uses_final_attempt_only():
+    assert not evidence_contract_passed(
+        [{"evidence_check": "valid"}, {"evidence_check": "evidence_quote_mismatch"}],
+        contract_valid=True,
+    )
+    assert evidence_contract_passed(
+        [{"evidence_check": "evidence_quote_mismatch"}, {"evidence_check": "valid"}],
+        contract_valid=True,
+    )

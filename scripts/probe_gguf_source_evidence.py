@@ -133,14 +133,14 @@ def run_evidence_case(case: dict, *, endpoint: str, timeout: int = 180) -> dict:
             fields = parsed.get("fields", parsed)
             if not isinstance(fields, dict):
                 raise ValueError("evidence_fields_not_object")
+            evidence = parsed.pop("field_evidence", None)
+            raw = json.dumps(parsed, ensure_ascii=False)
             validate_source_evidence(
                 case["user_message"],
                 {name: fields.get(name) for name in contract.field_names},
-                parsed.get("field_evidence"),
+                evidence,
             )
             attempt["evidence_check"] = "valid"
-            parsed.pop("field_evidence", None)
-            raw = json.dumps(parsed, ensure_ascii=False)
         except (json.JSONDecodeError, ValueError) as exc:
             # Only fixed diagnostic codes and field names may leave this scope.
             code = str(exc)
