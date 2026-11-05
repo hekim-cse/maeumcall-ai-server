@@ -1,0 +1,14 @@
+{
+  "kind": "exploratory_semantic_support_claims_v1",
+  "provenance": "ai_assisted_unreviewed_previously_exposed_development_cases",
+  "not_official_test": true,
+  "review_boundary": "Only field meaning directions previously confirmed by the user; claim wording is an AI-authored diagnostic fixture",
+  "claims": [
+    {"id": "S01", "case_id": "F17", "field": "resolution_preference", "value": "redelivery", "quote": "같은 음료를 다시 받을 수 있을까요", "expected": "supported"},
+    {"id": "S02", "case_id": "D05", "field": "resolution_preference", "value": "refund", "quote": "환불 가능하나요", "expected": "insufficient"},
+    {"id": "S03", "case_id": "F23", "field": "issuance_channel", "value": "government24", "quote": "온라인으로", "expected": "insufficient"},
+    {"id": "S04", "case_id": "F29", "field": "date", "value": "평일", "quote": "평일", "expected": "insufficient"},
+    {"id": "S05", "case_id": "F23", "field": "document_type", "value": "register_copy", "quote": "주민등록등본", "expected": "supported"},
+    {"id": "S06", "case_id": "F29", "field": "start_time", "value": "오전 10시", "quote": "오전 10시", "expected": "supported"}
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "kind": "exploratory_q5_semantic_support_probe_v1",
+  "not_official_quality_score": true,
+  "complete": true,
+  "created_at_utc": "2026-11-05T09:57:33.279261+00:00",
+  "source_sha256": {
+    "evals/structured_nlu/semantic_support.py": "ac18d9098d18cf0476b0e40675486f80bbdf7b263c1b4e361868198f3c5d7c38",
+    "scripts/probe_gguf_semantic_support.py": "9008b865df3469798c9472eb7602cc88109505532de7c4f09936e91b4afe4fdc",
+    "scripts/probe_gguf_field_boundary.py": "7fea9d6c1430527bee36d45fe9557bceeb738a657fe405336ba0c0237006af89"
+  },
+  "claim_source_sha256": "99888f2dae7dcbaa731ef5e703ad68a495b0dff9b896aae220caba7f0e60a594",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runtime": {
+    "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+    "model_sha256_provenance": "sha256_of_inspected_read_only_mount_source",
+    "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+    "server_image_id": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+    "runtime": "local-docker-arm64-cpu",
+    "container_cpu_limit": 4.0,
+    "container_memory_bytes": 6442450944,
+    "server_threads": 4,
+    "server_parallel": 1,
+    "context_size": 4096
+  },
+  "request_settings": {
+    "max_tokens": 100,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ],
+    "response_format": {
+      "type": "json_object"
+    }
+  },
+  "observations": [
+    {
+      "claim_id": "S01",
+      "expected": "supported",
+      "quote_present": true,
+      "verdict": "supported",
+      "correct": true,
+      "elapsed_seconds": 1.534,
+      "prompt_tokens": 181,
+      "completion_tokens": 8,
+      "finish_reason": "stop"
+    },
+    {
+      "claim_id": "S02",
+      "expected": "insufficient",
+      "quote_present": true,
+      "verdict": "supported",
+      "correct": false,
+      "elapsed_seconds": 0.569,
+      "prompt_tokens": 168,
+      "completion_tokens": 8,
+      "finish_reason": "stop"
+    },
+    {
+      "claim_id": "S03",
+      "expected": "insufficient",
+      "quote_present": true,
+      "verdict": "supported",
+      "correct": false,
+      "elapsed_seconds": 0.7,
+      "prompt_tokens": 174,
+      "completion_tokens": 8,
+      "finish_reason": "stop"
+    },
+    {
+      "claim_id": "S04",
+      "expected": "insufficient",
+      "quote_present": true,
+      "verdict": "supported",
+      "correct": false,
+      "elapsed_seconds": 0.553,
+      "prompt_tokens": 167,
+      "completion_tokens": 8,
+      "finish_reason": "stop"
+    },
+    {
+      "claim_id": "S05",
+      "expected": "supported",
+      "quote_present": true,
+      "verdict": "supported",
+      "correct": true,
+      "elapsed_seconds": 0.613,
+      "prompt_tokens": 174,
+      "completion_tokens": 8,
+      "finish_reason": "stop"
+    },
+    {
+      "claim_id": "S06",
+      "expected": "supported",
+      "quote_present": true,
+      "verdict": "supported",
+      "correct": true,
+      "elapsed_seconds": 0.623,
+      "prompt_tokens": 174,
+      "completion_tokens": 8,
+      "finish_reason": "stop"
+    }
+  ]
+}
