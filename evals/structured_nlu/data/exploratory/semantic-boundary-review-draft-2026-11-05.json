@@ -1,0 +1,21 @@
+{
+  "kind": "ai_assisted_semantic_boundary_review_draft_v1",
+  "provenance": "ai_assisted_unreviewed",
+  "review_status": "user_accepted_for_exploration",
+  "model_exposure": "not_run",
+  "not_official_test": true,
+  "cases": [
+    {"id": "SB01", "scenario_key": "배달:환불/재배달 문의", "conversation_state": "collecting_refund_redelivery", "user_message": "도시락 대신 다른 음식이 왔어요. 이 주문은 환불해 주세요.", "action_draft": "provide_details", "field": "resolution_preference", "candidate_value": "refund", "quote": "환불해 주세요", "support_draft": "supported"},
+    {"id": "SB02", "scenario_key": "배달:환불/재배달 문의", "conversation_state": "collecting_refund_redelivery", "user_message": "도시락 대신 다른 음식이 왔어요. 이런 경우 환불 가능한 조건이 궁금합니다.", "action_draft": "provide_details", "field": "resolution_preference", "candidate_value": "refund", "quote": "환불 가능한 조건", "support_draft": "supported"},
+    {"id": "SB03", "scenario_key": "배달:환불/재배달 문의", "conversation_state": "collecting_refund_redelivery", "user_message": "케이크 상자가 젖어서 안쪽이 망가졌어요. 같은 케이크를 다시 보내 주실 수 있나요?", "action_draft": "provide_details", "field": "resolution_preference", "candidate_value": "redelivery", "quote": "다시 보내 주실 수 있나요", "support_draft": "supported"},
+    {"id": "SB04", "scenario_key": "배달:환불/재배달 문의", "conversation_state": "collecting_refund_redelivery", "user_message": "케이크 상자가 젖어서 안쪽이 망가졌어요. 재배달 가능한 기준만 알려주세요.", "action_draft": "provide_details", "field": "resolution_preference", "candidate_value": "redelivery", "quote": "재배달 가능한 기준", "support_draft": "supported"},
+    {"id": "SB05", "scenario_key": "시청:주민등록 등본 문의", "conversation_state": "collecting_certificate_inquiry", "user_message": "주민등록등본을 정부24에서 신청해서 집에서 인쇄하려는데 절차를 알려주세요.", "action_draft": "provide_details", "field": "issuance_channel", "candidate_value": "government24", "quote": "정부24에서", "support_draft": "supported"},
+    {"id": "SB06", "scenario_key": "시청:주민등록 등본 문의", "conversation_state": "collecting_certificate_inquiry", "user_message": "주민등록등본을 온라인으로 신청해서 집에서 인쇄하려는데 절차를 알려주세요.", "action_draft": "provide_details", "field": "issuance_channel", "candidate_value": "government24", "quote": "온라인으로", "support_draft": "supported"},
+    {"id": "SB07", "scenario_key": "예약:스터디룸 예약", "conversation_state": "greeting", "user_message": "다음 주 화요일 오전 10시에 스터디룸을 두 시간 예약하고 싶어요.", "action_draft": "continue_collecting", "field": "date", "candidate_value": "다음 주 화요일", "quote": "다음 주 화요일", "support_draft": "supported"},
+    {"id": "SB08", "scenario_key": "예약:스터디룸 예약", "conversation_state": "greeting", "user_message": "매주 화요일 오전 10시에 스터디룸을 두 시간 예약하고 싶어요.", "action_draft": "continue_collecting", "field": "date", "candidate_value": "매주 화요일", "quote": "매주 화요일", "support_draft": "supported"},
+    {"id": "SB09", "scenario_key": "배달:환불/재배달 문의", "conversation_state": "collecting_refund_redelivery", "user_message": "도시락 대신 다른 음식이 왔어요. 지금은 환불을 요청하지 않을게요. 이런 경우의 환불 규정만 알고 싶습니다.", "action_draft": "provide_details", "field": "resolution_preference", "candidate_value": "refund", "quote": "환불 규정", "support_draft": "insufficient"},
+    {"id": "SB10", "scenario_key": "배달:환불/재배달 문의", "conversation_state": "collecting_refund_redelivery", "user_message": "케이크 상자가 젖어서 안쪽이 망가졌어요. 재배달을 요청하는 건 아니고, 재배달 기준만 알고 싶습니다.", "action_draft": "provide_details", "field": "resolution_preference", "candidate_value": "redelivery", "quote": "재배달 기준", "support_draft": "insufficient"},
+    {"id": "SB11", "scenario_key": "시청:주민등록 등본 문의", "conversation_state": "collecting_certificate_inquiry", "user_message": "주민등록등본을 발급받으려는데 온라인과 방문 중 어느 방법을 쓸지 아직 정하지 못했어요. 두 방법의 차이를 알려주세요.", "action_draft": "provide_details", "field": "issuance_channel", "candidate_value": "government24", "quote": "온라인과 방문", "support_draft": "insufficient"},
+    {"id": "SB12", "scenario_key": "예약:스터디룸 예약", "conversation_state": "greeting", "user_message": "스터디룸을 오전 10시부터 두 시간 쓰고 싶어요. 날짜는 아직 정하지 못했습니다.", "action_draft": "continue_collecting", "field": "date", "candidate_value": "아직 정하지 못했습니다", "quote": "아직 정하지 못했습니다", "support_draft": "insufficient"}
+  ]
+}

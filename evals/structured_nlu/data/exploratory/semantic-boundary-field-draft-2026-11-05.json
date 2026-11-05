@@ -1,0 +1,21 @@
+{
+  "kind": "ai_assisted_semantic_boundary_field_draft_v1",
+  "provenance": "ai_assisted_unreviewed",
+  "review_status": "user_accepted_for_exploration",
+  "model_exposure": "not_run",
+  "not_official_test": true,
+  "cases": [
+    {"id": "SB01", "draft_fields": {"issue_type": "wrong_item", "issue_detail": "도시락 대신 다른 음식이 옴", "resolution_preference": "refund"}},
+    {"id": "SB02", "draft_fields": {"issue_type": "wrong_item", "issue_detail": "도시락 대신 다른 음식이 옴", "resolution_preference": "refund"}},
+    {"id": "SB03", "draft_fields": {"issue_type": "damaged_or_quality", "issue_detail": "케이크 상자가 젖어 안쪽이 망가짐", "resolution_preference": "redelivery"}},
+    {"id": "SB04", "draft_fields": {"issue_type": "damaged_or_quality", "issue_detail": "케이크 상자가 젖어 안쪽이 망가짐", "resolution_preference": "redelivery"}},
+    {"id": "SB05", "draft_fields": {"document_type": "register_copy", "issuance_channel": "government24", "inquiry_topic": "delivery"}},
+    {"id": "SB06", "draft_fields": {"document_type": "register_copy", "issuance_channel": "government24", "inquiry_topic": "delivery"}},
+    {"id": "SB07", "draft_fields": {"date": "다음 주 화요일", "start_time": "오전 10시", "duration": "두 시간"}},
+    {"id": "SB08", "draft_fields": {"date": "매주 화요일", "start_time": "오전 10시", "duration": "두 시간"}},
+    {"id": "SB09", "draft_fields": {"issue_type": "wrong_item", "issue_detail": "도시락 대신 다른 음식이 옴"}},
+    {"id": "SB10", "draft_fields": {"issue_type": "damaged_or_quality", "issue_detail": "케이크 상자가 젖어 안쪽이 망가짐"}},
+    {"id": "SB11", "draft_fields": {"document_type": "register_copy"}},
+    {"id": "SB12", "draft_fields": {"start_time": "오전 10시", "duration": "두 시간"}}
+  ]
+}
