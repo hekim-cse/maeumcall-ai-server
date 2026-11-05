@@ -36,9 +36,10 @@ def test_amendment_requires_source_fingerprint(tmp_path):
         load_amended_development_cases(path)
 
 
-def test_amendment_rejects_value_outside_contract(tmp_path):
+@pytest.mark.parametrize("invalid_value", ["not_an_option", "   "])
+def test_amendment_rejects_value_outside_contract(tmp_path, invalid_value):
     source = json.loads(AMENDMENTS.read_text())
-    source["amendments"][0]["new_value"] = "not_an_option"
+    source["amendments"][0]["new_value"] = invalid_value
     path = tmp_path / "amendments.json"
     path.write_text(json.dumps(source))
     with pytest.raises(ValueError, match="outside live field options"):

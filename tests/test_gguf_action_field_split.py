@@ -123,3 +123,50 @@ def test_split_probe_exhausts_invalid_action_retries_without_field_request(monke
     assert len(requests) == 2
     assert [attempt["stage"] for attempt in result["attempts"]] == ["action", "action"]
     assert case["user_message"] not in json.dumps(result, ensure_ascii=False)
+
+
+def test_split_probe_keeps_policy_on_original_turn_during_retry(monkeypatch):
+    case = next(case for case in load_draft_cases() if case["id"] == "H14")
+    requests = []
+
+    class FakeResponse:
+        def read(self):
+            return json.dumps(
+                {
+                    "choices": [
+                        {
+                            "message": {
+                                "content": json.dumps(
+                                    {"user_action": "invalid_action", "change_field": None}
+                                )
+                            },
+                            "finish_reason": "stop",
+                        }
+                    ],
+                    "usage": {"prompt_tokens": 10, "completion_tokens": 5},
+                }
+            ).encode()
+
+    def fake_urlopen(request, timeout):
+        requests.append(json.loads(request.data)["messages"])
+        return nullcontext(FakeResponse())
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    run_case(
+        case,
+        endpoint="http://127.0.0.1:18080/v1/chat/completions",
+        model="fake",
+        timeout=1,
+        constrain_workflow=True,
+        schema_format="json_object",
+        split_workflow=True,
+        extra_instruction="policy",
+    )
+    assert len(requests) == 2
+    first, retry = requests
+    assert first[1]["content"].endswith("\npolicy")
+    assert retry[1]["content"] == first[1]["content"]
+    assert retry[1]["content"].count("policy") == 1
+    assert retry[-1]["role"] == "user"
+    assert retry[-1]["content"].startswith("이전 출력은 JSON 계약 검증에 실패했습니다.")
+    assert "policy" not in retry[-1]["content"]
