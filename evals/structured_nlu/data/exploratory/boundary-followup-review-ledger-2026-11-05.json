@@ -1,0 +1,8 @@
+{
+  "kind": "boundary_followup_user_review_ledger_v1",
+  "reviewed_for": "exploratory_model_run_only",
+  "recorded_at_utc": "2026-11-05T12:00:39Z",
+  "draft_sha256": "5c5d92e5d1a6488986fd1ccd1cf413aefe8980436a29ba2c6070e851cc41cc1e",
+  "accepted_case_ids": ["BF01", "BF02", "BF03", "BF04", "BF05", "BF06", "BF07", "BF08", "BF09", "BF10"],
+  "review_note": "User accepted all BF01-BF10 sentences, action and full-field drafts, and BF07-BF09 date accepted values for exploratory model comparison only."
+}

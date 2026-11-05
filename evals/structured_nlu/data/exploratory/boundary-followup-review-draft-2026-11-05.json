@@ -1,0 +1,121 @@
+{
+  "kind": "ai_assisted_boundary_followup_review_draft_v1",
+  "provenance": "ai_assisted_unreviewed",
+  "review_status": "user_accepted_for_exploration",
+  "model_exposure": "not_run",
+  "not_official_test": true,
+  "reference_date": "2026-11-05",
+  "reference_timezone": "Asia/Seoul",
+  "cases": [
+    {
+      "id": "BF01",
+      "group": "workflow_field_presence",
+      "scenario_key": "배달:환불/재배달 문의",
+      "conversation_state": "collecting_refund_redelivery",
+      "user_message": "주문한 음료 두 개 중 하나가 빠져 왔어요.",
+      "action_draft": "provide_details",
+      "field_draft": {"issue_type": "missing_item", "issue_detail": "음료 두 개 중 하나가 빠져 옴"},
+      "focus_field": "issue_type",
+      "focus_accepted_values": ["missing_item"]
+    },
+    {
+      "id": "BF02",
+      "group": "workflow_field_presence",
+      "scenario_key": "배달:환불/재배달 문의",
+      "conversation_state": "collecting_refund_redelivery",
+      "user_message": "주문한 음료 두 개 중 하나가 빠졌는데, 이런 경우 어떻게 접수하나요?",
+      "action_draft": "provide_details",
+      "field_draft": {"issue_type": "missing_item", "issue_detail": "음료 두 개 중 하나가 빠져 옴"},
+      "focus_field": "issue_type",
+      "focus_accepted_values": ["missing_item"]
+    },
+    {
+      "id": "BF03",
+      "group": "workflow_field_presence",
+      "scenario_key": "배달:환불/재배달 문의",
+      "conversation_state": "collecting_refund_redelivery",
+      "user_message": "배달 문제로 문의드리려고요. 주문 내용을 확인하고 다시 말씀드릴게요.",
+      "action_draft": "unknown",
+      "field_draft": {},
+      "focus_field": "issue_type",
+      "focus_accepted_values": null
+    },
+    {
+      "id": "BF04",
+      "group": "workflow_field_presence",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "conversation_state": "collecting_certificate_inquiry",
+      "user_message": "주민등록초본을 발급받으려고요.",
+      "action_draft": "provide_details",
+      "field_draft": {"document_type": "individual_extract"},
+      "focus_field": "document_type",
+      "focus_accepted_values": ["individual_extract"]
+    },
+    {
+      "id": "BF05",
+      "group": "workflow_field_presence",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "conversation_state": "collecting_certificate_inquiry",
+      "user_message": "주민등록초본 발급 수수료를 알고 싶어요.",
+      "action_draft": "provide_details",
+      "field_draft": {"document_type": "individual_extract", "inquiry_topic": "fee"},
+      "focus_field": "document_type",
+      "focus_accepted_values": ["individual_extract"]
+    },
+    {
+      "id": "BF06",
+      "group": "workflow_field_presence",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "conversation_state": "collecting_certificate_inquiry",
+      "user_message": "서류 발급 문의인데 어떤 서류인지 확인한 뒤 다시 말씀드릴게요.",
+      "action_draft": "unknown",
+      "field_draft": {},
+      "focus_field": "document_type",
+      "focus_accepted_values": null
+    },
+    {
+      "id": "BF07",
+      "group": "date_normalization",
+      "scenario_key": "예약:스터디룸 예약",
+      "conversation_state": "greeting",
+      "user_message": "2026년 12월 4일 오후 3시부터 한 시간 스터디룸을 쓰고 싶어요.",
+      "action_draft": "continue_collecting",
+      "field_draft": {"date": "2026년 12월 4일", "start_time": "오후 3시", "duration": "한 시간"},
+      "focus_field": "date",
+      "focus_accepted_values": ["2026년 12월 4일", "2026-12-04"]
+    },
+    {
+      "id": "BF08",
+      "group": "date_normalization",
+      "scenario_key": "예약:스터디룸 예약",
+      "conversation_state": "greeting",
+      "user_message": "2026년 12월 첫째 주 금요일 오후 3시부터 한 시간 스터디룸을 쓰고 싶어요.",
+      "action_draft": "continue_collecting",
+      "field_draft": {"date": "2026년 12월 첫째 주 금요일", "start_time": "오후 3시", "duration": "한 시간"},
+      "focus_field": "date",
+      "focus_accepted_values": ["2026년 12월 첫째 주 금요일", "2026년 12월 4일", "2026-12-04"]
+    },
+    {
+      "id": "BF09",
+      "group": "date_normalization",
+      "scenario_key": "예약:스터디룸 예약",
+      "conversation_state": "greeting",
+      "user_message": "매달 첫째 주 금요일 오후 3시부터 한 시간씩 스터디룸을 쓰고 싶어요.",
+      "action_draft": "continue_collecting",
+      "field_draft": {"date": "매달 첫째 주 금요일", "start_time": "오후 3시", "duration": "한 시간"},
+      "focus_field": "date",
+      "focus_accepted_values": ["매달 첫째 주 금요일", "매월 첫째 주 금요일"]
+    },
+    {
+      "id": "BF10",
+      "group": "date_normalization",
+      "scenario_key": "예약:스터디룸 예약",
+      "conversation_state": "greeting",
+      "user_message": "날짜는 나중에 정하고, 오후 3시부터 한 시간 스터디룸을 쓰려고 합니다.",
+      "action_draft": "continue_collecting",
+      "field_draft": {"start_time": "오후 3시", "duration": "한 시간"},
+      "focus_field": "date",
+      "focus_accepted_values": null
+    }
+  ]
+}
