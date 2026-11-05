@@ -35,6 +35,22 @@ Sha256 = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 CaseId = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9._-]{2,119}$")]
 GitCommit = Annotated[str, Field(pattern=r"^[0-9a-f]{40,64}$")]
 
+_SCORING_SOURCE_ROOTS = (
+    "core",
+    "evals/structured_nlu",
+    "llm",
+    "schemas",
+    "services/flow",
+)
+_LOADED_SOURCE_ROOT = Path(__file__).resolve().parents[2]
+SCORING_SOURCES = tuple(
+    sorted(
+        str(path.relative_to(_LOADED_SOURCE_ROOT))
+        for relative_root in _SCORING_SOURCE_ROOTS
+        for path in (_LOADED_SOURCE_ROOT / relative_root).rglob("*.py")
+    )
+)
+
 
 class AIHeldoutCase(BaseModel):
     """One fictional, AI-authored case; never masquerade as human-authored."""
@@ -474,6 +490,7 @@ def score_ai_heldout_pair_from_committed_artifacts(
             for prediction in artifact.predictions
         ):
             raise ValueError(f"{role} prediction omitted the required validation retry")
+    _verify_scoring_sources(root, resolved_exposure_commit)
     cases = frozen.reviewed.dataset.cases
     baseline_scores = score_predictions(cases, baseline.predictions)
     candidate_scores = score_predictions(cases, candidate.predictions)
@@ -494,6 +511,25 @@ def score_ai_heldout_pair_from_committed_artifacts(
         baseline_scores=baseline_scores.to_dict(),
         candidate_scores=candidate_scores.to_dict(),
     )
+
+
+def _verify_scoring_sources(root: Path, exposure_commit: str) -> None:
+    """Refuse to re-score old predictions with a changed loaded scorer."""
+    committed_paths = {
+        path
+        for path in _git(root, "ls-tree", "-r", "--name-only", exposure_commit)
+        .stdout.decode()
+        .splitlines()
+        if path.endswith(".py")
+        and any(path.startswith(relative_root + "/") for relative_root in _SCORING_SOURCE_ROOTS)
+    }
+    if committed_paths != set(SCORING_SOURCES):
+        raise ValueError("scoring source file set differs from exposure commit")
+    for relative in SCORING_SOURCES:
+        loaded = (_LOADED_SOURCE_ROOT / relative).read_bytes()
+        committed = _git_regular_blob(root, exposure_commit, relative)
+        if loaded != committed:
+            raise ValueError(f"scoring source differs from exposure commit: {relative}")
 
 
 def _verify_exposure(
@@ -542,6 +578,18 @@ def _verify_exposure(
     freeze_commit = _resolve_commit(root, exposure.freeze_commit)
     if freeze_commit != exposure.freeze_commit or freeze_commit == commit:
         raise ValueError("exposure must reference an earlier explicit freeze commit")
+    if freeze_commit == frozen.record.input_git_revision or (
+        _git(
+            root,
+            "merge-base",
+            "--is-ancestor",
+            frozen.record.input_git_revision,
+            freeze_commit,
+            check=False,
+        ).returncode
+        != 0
+    ):
+        raise ValueError("freeze commit must descend from frozen input")
     if (
         _git(root, "merge-base", "--is-ancestor", freeze_commit, commit, check=False).returncode
         != 0

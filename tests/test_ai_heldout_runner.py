@@ -76,6 +76,7 @@ def test_runner_dispatch_covers_all_live_detailed_analyzers() -> None:
     assert set(runner.DIRECT_ANALYZERS) == direct
     assert len(direct) + len(workflow) == 16
     assert "scripts/probe_gguf_structured_nlu.py" in runner.PROMPT_SOURCES
+    assert "services/flow/service_workflow/__init__.py" in runner.PROMPT_SOURCES
 
 
 def test_live_direct_analyzer_records_invalid_then_valid_attempt() -> None:
@@ -135,6 +136,30 @@ def test_transport_failure_is_recorded_and_retried_without_raw_text() -> None:
     assert prediction.attempts[0].error_type == "URLError"
     assert prediction.final_output is not None
     assert "test transport failure" not in prediction.model_dump_json()
+
+
+def test_response_envelope_type_error_is_recorded_and_retried() -> None:
+    case = _case("교수님:면담 예약")
+    calls = 0
+
+    def completion(*_args):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise TypeError("malformed choices envelope")
+        return _gold_raw(case, nested=False)
+
+    prediction = runner._run_case(
+        case,
+        endpoint="http://127.0.0.1:18080/v1/chat/completions",
+        model_id="mock-model",
+        policy=_policy(),
+        completion_post=completion,
+    )
+    assert calls == 2
+    assert prediction.attempts[0].error_type == "TypeError"
+    assert prediction.final_output is not None
+    assert "malformed choices envelope" not in prediction.model_dump_json()
 
 
 def test_invalid_freeze_blocks_runner_before_http(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -344,6 +369,7 @@ def test_pair_runner_writes_only_normalized_predictions_in_alternating_order(
         assert "user_message" not in content
         assert "messages" not in content
         assert len(json.loads(content)["predictions"]) == 2
+        assert not output.with_name(output.name + ".partial.jsonl").exists()
 
 
 def test_pair_output_rolls_back_if_second_publish_fails(
@@ -366,3 +392,115 @@ def test_pair_output_rolls_back_if_second_publish_fails(
         runner._write_pair_artifacts(outputs, {"baseline": artifact, "candidate": artifact})
     assert all(not output.exists() for output in outputs)
     assert not list(tmp_path.glob("*.writing"))
+
+
+def _mock_pair_preflight(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, cases: tuple[AIHeldoutCase, ...]
+) -> tuple[AIHeldoutRequestPolicy, Path, Path]:
+    q4 = tmp_path / "q4.gguf"
+    q5 = tmp_path / "q5.gguf"
+    q4.write_bytes(b"model-q4")
+    q5.write_bytes(b"model-q5")
+    policy = _policy().model_copy(
+        update={
+            "runner_sha256": runner._file_sha256(Path(runner.__file__)),
+            "prompt_revision_sha256": runner.prompt_revision_sha256(),
+        }
+    )
+    exposure = SimpleNamespace(
+        baseline_model_sha256=runner._file_sha256(q4),
+        candidate_model_sha256=runner._file_sha256(q5),
+        baseline_prediction_path="baseline.json",
+        candidate_prediction_path="candidate.json",
+        request_policy_sha256="f" * 64,
+        attempt_policy=policy.retry_policy,
+    )
+    monkeypatch.setattr(
+        runner,
+        "verify_ai_heldout_exposure_preflight",
+        lambda **_kw: SimpleNamespace(
+            exposure=exposure,
+            frozen=SimpleNamespace(
+                request_policy=policy,
+                reviewed=SimpleNamespace(dataset=SimpleNamespace(cases=cases)),
+            ),
+            exposure_commit="0" * 40,
+        ),
+    )
+    return policy, q4, q5
+
+
+def _run_mock_pair(
+    tmp_path: Path,
+    policy: AIHeldoutRequestPolicy,
+    q4: Path,
+    q5: Path,
+    *,
+    candidate_endpoint: str = "http://127.0.0.1:18081/v1/chat/completions",
+):
+    return runner.run_pair(
+        repo_root=tmp_path,
+        freeze_record_path="freeze.json",
+        baseline_endpoint="http://127.0.0.1:18080/v1/chat/completions",
+        candidate_endpoint=candidate_endpoint,
+        baseline_model_id="q4",
+        baseline_model_path=q4,
+        candidate_model_id="q5",
+        candidate_model_path=q5,
+        observed_server_image_digest=policy.server_image_digest,
+        observed_cpu_count=policy.cpu_count,
+        observed_thread_count=policy.thread_count,
+        observed_context_size=policy.context_size,
+        observed_cache_policy=policy.cache_policy,
+    )
+
+
+def test_pair_runner_rejects_shared_server_before_model_call(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    policy, q4, q5 = _mock_pair_preflight(monkeypatch, tmp_path, cases=(_case("교수님:면담 예약"),))
+    monkeypatch.setattr(
+        runner, "_run_case", lambda *_args, **_kwargs: pytest.fail("model must not run")
+    )
+    with pytest.raises(ValueError, match="paired model endpoints must differ"):
+        _run_mock_pair(
+            tmp_path,
+            policy,
+            q4,
+            q5,
+            candidate_endpoint="http://localhost:18080/v1/chat/completions",
+        )
+
+
+def test_interrupted_pair_preserves_completed_case_in_partial_record(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    case = _case("교수님:면담 예약")
+    policy, q4, q5 = _mock_pair_preflight(monkeypatch, tmp_path, cases=(case,))
+
+    def finish_first_then_fail(_case, *, model_id: str, **_kwargs):
+        if model_id == "q5":
+            raise RuntimeError("simulated interruption")
+        output = NormalizedPrediction(
+            intent=case.labels.intent,
+            fields={
+                name: value.accepted_values[0] if value is not None else None
+                for name, value in case.labels.fields.items()
+            },
+            user_action=case.labels.user_action,
+            change_field=case.labels.change_field,
+        )
+        return CasePrediction(
+            case_id=case.id,
+            attempts=(EvaluationAttempt(contract_valid=True, latency_ms=1.0, output=output),),
+        )
+
+    monkeypatch.setattr(runner, "_run_case", finish_first_then_fail)
+    with pytest.raises(RuntimeError, match="simulated interruption"):
+        _run_mock_pair(tmp_path, policy, q4, q5)
+    baseline_partial = tmp_path / "baseline.json.partial.jsonl"
+    candidate_partial = tmp_path / "candidate.json.partial.jsonl"
+    assert len(baseline_partial.read_text().splitlines()) == 1
+    assert candidate_partial.read_text() == ""
+    assert not (tmp_path / "baseline.json").exists()
+    assert "user_message" not in baseline_partial.read_text()

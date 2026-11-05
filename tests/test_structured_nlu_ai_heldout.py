@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -11,6 +12,7 @@ import pytest
 from pydantic import ValidationError
 
 from evals.structured_nlu.ai_heldout import (
+    SCORING_SOURCES,
     build_ai_heldout_exposure_record,
     build_ai_heldout_pre_exposure_freeze,
     score_ai_heldout_pair_from_committed_artifacts,
@@ -161,7 +163,12 @@ def _committed_input_repo(tmp_path: Path) -> tuple[Path, str]:
             }
         )
     )
-    _git(repo, "add", "dataset.json", "review.json", "protocol.json")
+    source_root = Path(__file__).resolve().parents[1]
+    for relative in SCORING_SOURCES:
+        destination = repo / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source_root / relative, destination)
+    _git(repo, "add", ".")
     _git(repo, "commit", "-qm", "freeze inputs")
     return repo, _git(repo, "rev-parse", "HEAD")
 
@@ -352,3 +359,64 @@ def test_paired_score_rejects_missing_case_and_changed_policy(tmp_path: Path) ->
             freeze_record_path="freeze.json",
             exposure_commit=exposure_commit,
         )
+
+
+def test_paired_score_rejects_changed_scoring_source(tmp_path: Path) -> None:
+    repo, exposure_commit = _committed_exposure_repo(tmp_path)
+    scoring_file = repo / "evals/structured_nlu/metrics.py"
+    scoring_file.write_bytes(scoring_file.read_bytes() + b"\n# stale scoring source\n")
+    _git(repo, "add", "evals/structured_nlu/metrics.py")
+    _git(repo, "commit", "--amend", "--no-edit", "-q")
+    exposure_commit = _git(repo, "rev-parse", "HEAD")
+    for role in ("baseline", "candidate"):
+        (repo / f"{role}.json").write_text(
+            json.dumps(_prediction_artifact(repo, exposure_commit, role), ensure_ascii=False)
+        )
+    _git(repo, "add", "baseline.json", "candidate.json")
+    _git(repo, "commit", "-qm", "paired predictions")
+
+    with pytest.raises(ValueError, match="scoring source differs from exposure commit"):
+        score_ai_heldout_pair_from_committed_artifacts(
+            repo_root=repo,
+            freeze_record_path="freeze.json",
+            exposure_commit=exposure_commit,
+        )
+
+
+def test_exposure_rejects_input_merged_after_parallel_freeze(tmp_path: Path) -> None:
+    repo, input_commit = _committed_input_repo(tmp_path)
+    _git(repo, "checkout", "--orphan", "parallel-freeze")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-qm", "parallel root")
+    record = {
+        "kind": "ai_authored_heldout_pre_exposure_freeze_v1",
+        "input_git_revision": input_commit,
+        "dataset_path": "dataset.json",
+        "dataset_sha256": hashlib.sha256((repo / "dataset.json").read_bytes()).hexdigest(),
+        "review_ledger_path": "review.json",
+        "review_ledger_sha256": hashlib.sha256((repo / "review.json").read_bytes()).hexdigest(),
+        "protocol_path": "protocol.json",
+        "protocol_sha256": hashlib.sha256((repo / "protocol.json").read_bytes()).hexdigest(),
+        "exposure_record_path": "exposure.json",
+    }
+    (repo / "freeze.json").write_text(json.dumps(record))
+    _git(repo, "add", "freeze.json")
+    _git(repo, "commit", "-qm", "parallel freeze")
+    parallel_freeze = _git(repo, "rev-parse", "HEAD")
+    _git(
+        repo, "merge", "--allow-unrelated-histories", "--no-ff", "-m", "merge inputs", input_commit
+    )
+    exposure = build_ai_heldout_exposure_record(
+        repo_root=repo,
+        freeze_record_path="freeze.json",
+        baseline_model_sha256="a" * 64,
+        candidate_model_sha256="b" * 64,
+        baseline_prediction_path="baseline.json",
+        candidate_prediction_path="candidate.json",
+    ).model_copy(update={"freeze_commit": parallel_freeze})
+    (repo / "exposure.json").write_text(exposure.model_dump_json(indent=2) + "\n")
+    _git(repo, "add", "exposure.json")
+    _git(repo, "commit", "-qm", "exposure after unrelated merge")
+
+    with pytest.raises(ValueError, match="freeze commit must descend from frozen input"):
+        verify_ai_heldout_exposure_preflight(repo_root=repo, freeze_record_path="freeze.json")

@@ -20,6 +20,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections.abc import Callable
+from contextlib import ExitStack
 from pathlib import Path
 from unittest.mock import patch
 
@@ -36,7 +37,7 @@ from llm.structured_output import complete_validated_json
 from scripts.probe_gguf_structured_nlu import DIRECT_ANALYZERS
 
 ROOT = Path(__file__).resolve().parents[1]
-PROMPT_SOURCES = (
+_DECLARED_PROMPT_SOURCES = (
     "evals/structured_nlu/ai_heldout.py",
     "evals/structured_nlu/contracts.py",
     "evals/structured_nlu/metrics.py",
@@ -53,6 +54,12 @@ PROMPT_SOURCES = (
     "services/flow/cityhall/contracts.py",
     "scripts/probe_gguf_structured_nlu.py",
     *(f"{module.replace('.', '/')}.py" for module, _name, _alt in DIRECT_ANALYZERS.values()),
+)
+PROMPT_SOURCES = tuple(
+    sorted(
+        set(_DECLARED_PROMPT_SOURCES)
+        | {str(path.relative_to(ROOT)) for path in (ROOT / "services/flow").rglob("*.py")}
+    )
 )
 
 
@@ -196,6 +203,7 @@ def _run_case(
                 TimeoutError,
                 OSError,
                 ValueError,
+                TypeError,
                 KeyError,
                 IndexError,
             ) as error:
@@ -298,10 +306,24 @@ def run_pair(
         raise ValueError("model file hash differs from committed exposure record")
     baseline_endpoint = _loopback_endpoint(baseline_endpoint)
     candidate_endpoint = _loopback_endpoint(candidate_endpoint)
+    if (
+        urllib.parse.urlsplit(baseline_endpoint).port
+        == urllib.parse.urlsplit(candidate_endpoint).port
+    ):
+        raise ValueError("paired model endpoints must differ")
     if not baseline_model_id.strip() or not candidate_model_id.strip():
         raise ValueError("both model identifiers are required")
     exposure_commit = preflight.exposure_commit
     cases = preflight.frozen.reviewed.dataset.cases
+    outputs = (
+        root / exposure.baseline_prediction_path,
+        root / exposure.candidate_prediction_path,
+    )
+    partial_paths = tuple(output.with_name(output.name + ".partial.jsonl") for output in outputs)
+    for path in partial_paths:
+        if path.exists():
+            raise ValueError(f"partial run record already exists: {path}")
+        path.parent.mkdir(parents=True, exist_ok=True)
     observations: dict[str, AIHeldoutPredictionArtifact] = {}
     model_conditions = (
         (
@@ -318,14 +340,24 @@ def run_pair(
         ),
     )
     predictions_by_role: dict[str, list[CasePrediction]] = {"baseline": [], "candidate": []}
-    for index, case in enumerate(cases):
-        ordered_conditions = (
-            model_conditions if index % 2 == 0 else tuple(reversed(model_conditions))
-        )
-        for role, condition_endpoint, model_id, _model_sha in ordered_conditions:
-            predictions_by_role[role].append(
-                _run_case(case, endpoint=condition_endpoint, model_id=model_id, policy=policy)
+    with ExitStack() as stack:
+        partial_files = {
+            role: stack.enter_context(path.open("x", encoding="utf-8"))
+            for role, path in zip(("baseline", "candidate"), partial_paths, strict=True)
+        }
+        for index, case in enumerate(cases):
+            ordered_conditions = (
+                model_conditions if index % 2 == 0 else tuple(reversed(model_conditions))
             )
+            for role, condition_endpoint, model_id, _model_sha in ordered_conditions:
+                prediction = _run_case(
+                    case, endpoint=condition_endpoint, model_id=model_id, policy=policy
+                )
+                predictions_by_role[role].append(prediction)
+                record = partial_files[role]
+                record.write(prediction.model_dump_json() + "\n")
+                record.flush()
+                os.fsync(record.fileno())
     for role, _endpoint, _model_id, model_sha in model_conditions:
         observations[role] = AIHeldoutPredictionArtifact(
             kind="ai_authored_heldout_predictions_v1",
@@ -336,11 +368,9 @@ def run_pair(
             attempt_policy=exposure.attempt_policy,
             predictions=tuple(predictions_by_role[role]),
         )
-    outputs = (
-        root / exposure.baseline_prediction_path,
-        root / exposure.candidate_prediction_path,
-    )
     _write_pair_artifacts(outputs, observations)
+    for path in partial_paths:
+        path.unlink()
     return outputs
 
 
