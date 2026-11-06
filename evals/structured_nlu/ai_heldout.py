@@ -263,8 +263,13 @@ class AIHeldoutPairedScores(BaseModel):
     candidate_scores: dict
 
 
-def verify_ai_heldout_review(dataset_bytes: bytes, review_ledger_bytes: bytes) -> ReviewedAIHeldout:
-    """Reject draft, mismatched, or incomplete 16-scenario heldout inputs."""
+def verify_ai_heldout_review(
+    dataset_bytes: bytes,
+    review_ledger_bytes: bytes,
+    *,
+    expected_scenario_keys: frozenset[str] | None = None,
+) -> ReviewedAIHeldout:
+    """Reject drafts or mismatches; default to the full 16-scenario gate."""
     dataset = AIHeldoutDataset.model_validate_json(dataset_bytes)
     ledger = AIHeldoutReviewLedger.model_validate_json(review_ledger_bytes)
     digest = hashlib.sha256(dataset_bytes).hexdigest()
@@ -278,8 +283,15 @@ def verify_ai_heldout_review(dataset_bytes: bytes, review_ledger_bytes: bytes) -
     if ledger.accepted_case_ids != case_ids:
         raise ValueError("review ledger case IDs must exactly match the AI heldout dataset")
     counts = Counter(case.scenario_key for case in dataset.cases)
-    if set(counts) != set(EVALUATION_CONTRACTS):
-        raise ValueError("AI heldout evaluation requires cases from all 16 detailed scenarios")
+    expected = (
+        set(EVALUATION_CONTRACTS) if expected_scenario_keys is None else expected_scenario_keys
+    )
+    if not expected or not set(expected) <= set(EVALUATION_CONTRACTS):
+        raise ValueError("expected scenario keys must name registered detailed scenarios")
+    if set(counts) != set(expected):
+        if expected_scenario_keys is None:
+            raise ValueError("AI heldout evaluation requires cases from all 16 detailed scenarios")
+        raise ValueError("AI heldout evaluation scenarios differ from required scope")
     return ReviewedAIHeldout(
         dataset=dataset,
         dataset_sha256=digest,
@@ -288,9 +300,18 @@ def verify_ai_heldout_review(dataset_bytes: bytes, review_ledger_bytes: bytes) -
     )
 
 
-def load_reviewed_ai_heldout(dataset_path: Path, review_ledger_path: Path) -> ReviewedAIHeldout:
+def load_reviewed_ai_heldout(
+    dataset_path: Path,
+    review_ledger_path: Path,
+    *,
+    expected_scenario_keys: frozenset[str] | None = None,
+) -> ReviewedAIHeldout:
     """Read each artifact once so review and execution share exact bytes."""
-    return verify_ai_heldout_review(dataset_path.read_bytes(), review_ledger_path.read_bytes())
+    return verify_ai_heldout_review(
+        dataset_path.read_bytes(),
+        review_ledger_path.read_bytes(),
+        expected_scenario_keys=expected_scenario_keys,
+    )
 
 
 def build_ai_heldout_pre_exposure_freeze(

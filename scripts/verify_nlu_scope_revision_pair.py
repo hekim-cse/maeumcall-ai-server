@@ -12,6 +12,8 @@ from evals.structured_nlu.ai_heldout import load_reviewed_ai_heldout
 from evals.structured_nlu.metrics import score_predictions
 from evals.structured_nlu.schema import CasePrediction
 
+LEGACY_RESULT_CLAIM_SCOPE = "single_owner_reviewed_ai_authored_32_case_evaluation"
+
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -29,13 +31,34 @@ def _exact_mcnemar(gains: int, losses: int) -> float:
 
 
 def verify(dataset: Path, ledger: Path, protocol: Path, result: Path) -> dict:
-    reviewed = load_reviewed_ai_heldout(dataset, ledger)
     frozen = json.loads(protocol.read_text(encoding="utf-8"))
+    revision = frozen.get("protocol_revision")
+    if revision == 3:
+        if "scenario_keys" in frozen or "result_claim_scope" in frozen:
+            raise ValueError("revision 3 cannot declare a targeted scenario or result scope")
+        expected_scenarios = None
+        expected_claim_scope = LEGACY_RESULT_CLAIM_SCOPE
+    elif revision == 4:
+        keys = frozen.get("scenario_keys")
+        claim = frozen.get("result_claim_scope")
+        if not isinstance(keys, list) or not keys or len(keys) != len(set(keys)):
+            raise ValueError("revision 4 requires distinct scenario_keys")
+        if not isinstance(claim, str) or not claim.strip() or claim == LEGACY_RESULT_CLAIM_SCOPE:
+            raise ValueError("revision 4 requires an explicit targeted result_claim_scope")
+        expected_scenarios = frozenset(keys)
+        expected_claim_scope = claim
+    else:
+        raise ValueError("unsupported batch-restart protocol revision")
+    reviewed = load_reviewed_ai_heldout(
+        dataset,
+        ledger,
+        expected_scenario_keys=expected_scenarios,
+    )
     observed = json.loads(result.read_text(encoding="utf-8"))
-    if frozen["protocol_revision"] != 3:
-        raise ValueError("expected the documented batch-restart protocol revision")
     if observed["kind"] != "ai_authored_code_revision_pair_result_v1":
         raise ValueError("unexpected result kind")
+    if observed.get("claim_scope") != expected_claim_scope:
+        raise ValueError("result claim scope differs from frozen protocol")
     for key, expected in (
         ("protocol_sha256", _sha256(protocol)),
         ("dataset_sha256", reviewed.dataset_sha256),

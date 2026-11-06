@@ -1,0 +1,22 @@
+{
+  "accepted_case_ids": [
+    "nlu-review-followup-rf01",
+    "nlu-review-followup-rf02",
+    "nlu-review-followup-rf03",
+    "nlu-review-followup-rf04",
+    "nlu-review-followup-rf05",
+    "nlu-review-followup-rf06",
+    "nlu-review-followup-rf07",
+    "nlu-review-followup-rf08",
+    "nlu-review-followup-rf09",
+    "nlu-review-followup-rf10",
+    "nlu-review-followup-rf11",
+    "nlu-review-followup-rf12"
+  ],
+  "adjudicated_at": "2026-11-06T09:59:55.324123Z",
+  "adjudicator_id": "portfolio_owner",
+  "dataset_sha256": "726c7d4d73c93979c0de242be5223780e51e66c705ca8c2789ff77f8fa2b4d59",
+  "kind": "ai_authored_heldout_review_v1",
+  "rationale": "Owner revised RF08 and RF12, accepted all 12 AI-authored utterances and action directions, then separately accepted every action, non-null field, null field, and single accepted value on 2026-11-06. One owner adjudicated; no independent second reviewer.",
+  "reviewed_for": "ai_authored_heldout_accuracy"
+}
