@@ -17,16 +17,19 @@ from pathlib import Path
 
 
 def _sha256(path: Path) -> str:
+    """Hash the exact bytes used by the frozen run."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _git(root: Path, *args: str) -> str:
+    """Read a Git value from a specific checkout."""
     return subprocess.run(
         ("git", "-C", str(root), *args), check=True, capture_output=True, text=True
     ).stdout.strip()
 
 
 def _worker(args: argparse.Namespace) -> None:
+    """Run graph cases under one committed source revision."""
     # Import workflow and prompt sources from the requested revision. The probe
     # itself is a frozen, shared evaluation harness from the evaluation checkout.
     sys.path.insert(0, str(args.source_root.resolve()))
@@ -57,6 +60,10 @@ def _start_worker(
     endpoint: str,
     policy: Path,
 ) -> subprocess.Popen[str]:
+    """Start an isolated revision worker with absolute input paths."""
+    source_root = source_root.resolve()
+    probe_path = probe_path.resolve()
+    policy = policy.resolve()
     env = os.environ.copy()
     env["PYTHONPATH"] = str(source_root)
     return subprocess.Popen(
@@ -84,6 +91,7 @@ def _start_worker(
 
 
 def _call_worker(worker: subprocess.Popen[str], case) -> dict:
+    """Send one reviewed case and require its matching result."""
     assert worker.stdin is not None and worker.stdout is not None
     worker.stdin.write(case.model_dump_json() + "\n")
     worker.stdin.flush()
@@ -97,6 +105,7 @@ def _call_worker(worker: subprocess.Popen[str], case) -> dict:
 
 
 def _summarize(cases, results: list[dict]) -> dict:
+    """Count safety routes and model outcomes on separate fixed groups."""
     by_id = {result["case_id"]: result for result in results}
     if len(by_id) != len(cases) or set(by_id) != {case.id for case in cases}:
         raise ValueError("result IDs do not match the frozen dataset")
@@ -139,6 +148,7 @@ def _summarize(cases, results: list[dict]) -> dict:
 
 
 def _run(args: argparse.Namespace) -> None:
+    """Verify the freeze, alternate code revisions, and save bounded results."""
     from evals.structured_nlu.ai_heldout import load_reviewed_ai_heldout
     from scripts.run_ai_heldout_pair import _loopback_endpoint
     from scripts.run_nlu_scope_revision_pair import _restart_container, _verify_container
@@ -244,6 +254,7 @@ def _run(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
+    """Dispatch the frozen parent run or a revision worker."""
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="mode", required=True)
     worker = sub.add_parser("worker")

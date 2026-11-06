@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import time
-import urllib.error
 from collections.abc import Callable
 from unittest.mock import patch
 
@@ -41,16 +40,6 @@ def run_graph_case(
             outcome = {"latency_ms": 0.0, "raw": "", "output": None, "error_type": None}
             try:
                 outcome["raw"] = completion_post(endpoint, model_id, current_messages, policy)
-            except (
-                urllib.error.URLError,
-                TimeoutError,
-                OSError,
-                ValueError,
-                TypeError,
-                KeyError,
-                IndexError,
-            ) as error:
-                outcome["error_type"] = type(error).__name__
             finally:
                 outcome["latency_ms"] = max(0.0, (time.perf_counter() - started) * 1000)
                 attempts.append(outcome)

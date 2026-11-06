@@ -142,9 +142,6 @@ def _validate_analysis(
         conversation_state=conversation_state,
         allowed_by_state=spec.actions_by_state,
     )
-    if user_action == "provide_details" and all(value is None for value in fields.values()):
-        # No current-turn detail exists to justify the information-provision action.
-        user_action = "unknown"
     change_field = optional_string(parsed, "change_field")
     validate_service_workflow_turn_delta(
         spec,

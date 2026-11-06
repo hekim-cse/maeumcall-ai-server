@@ -1,6 +1,6 @@
 # SC01–SC20 행동·전체 필드 검수 초안
 
-**상태: AI 작성 라벨 초안을 사용자가 2026-11-06에 채택, 모델 미노출.** [문장과 의미 방향](nlu_safety_contract_fresh_review.md)도 별도로 채택했다. 이 검수는 사용자 한 명의 판단이며 독립적인 두 번째 검수자는 없다.
+**현재 상태: AI 작성 라벨을 사용자가 2026-11-06에 채택했고, [SC01–SC20 짝비교](nlu_safety_contract_graph_pair_run_log.md)에 사용돼 모델에 노출됐다.** [문장과 의미 방향](nlu_safety_contract_fresh_review.md)도 별도로 채택했다. 이 검수는 사용자 한 명의 판단이며 독립적인 두 번째 검수자는 없다. 아래 표는 실행 전 정답 기록이며 SC 사례는 새 평가에 재사용하지 않는다.
 
 모든 사례는 고객센터 A/S 접수의 `greeting` 상태다. 이전 수집 필드는 전부 공란이며, `intent=service_request`, `change_field=null`로 제안한다. 표에 쓰지 않은 필드는 **모두 `null`**이다. A/S 필드는 `product_type`, `model_name`, `symptom`, `occurred_at`, `safety_status`, `service_channel`, `preferred_schedule`의 일곱 개다. 비공란 문자열은 우선 한 가지 허용값으로 제안하며, 다른 허용 표현은 모델 실행 전 확정한다.
 

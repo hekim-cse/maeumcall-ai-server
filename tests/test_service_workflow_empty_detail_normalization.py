@@ -1,4 +1,4 @@
-"""Empty model detail actions should not exhaust retries or invent data."""
+"""Empty model detail actions must retry rather than pass as unknown."""
 
 import pytest
 
@@ -17,15 +17,15 @@ def _parsed(action: str, *, product_type: str | None = None) -> dict:
     }
 
 
-def test_empty_provide_details_becomes_unknown_without_fields() -> None:
-    result = _validate_analysis(
-        SERVICE_REQUEST_SPEC,
-        _parsed("provide_details"),
-        conversation_state="greeting",
-        current_fields={key: None for key in SERVICE_REQUEST_SPEC.field_keys},
-    )
-    assert result["user_action"] == "unknown"
-    assert all(value is None for value in result["fields"].values())
+@pytest.mark.parametrize("product_type", [None, "   "])
+def test_empty_provide_details_remains_invalid(product_type: str | None) -> None:
+    with pytest.raises(ValueError, match="requires at least one current-turn field"):
+        _validate_analysis(
+            SERVICE_REQUEST_SPEC,
+            _parsed("provide_details", product_type=product_type),
+            conversation_state="greeting",
+            current_fields={key: None for key in SERVICE_REQUEST_SPEC.field_keys},
+        )
 
 
 def test_real_detail_remains_provide_details() -> None:

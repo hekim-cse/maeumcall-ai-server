@@ -23,6 +23,7 @@ CASE_IDS = tuple(f"SC{number:02}" for number in range(1, 21))
 
 
 def _rows(path: Path) -> dict[str, list[str]]:
+    """Read one review table and require every SC case exactly once."""
     rows: dict[str, list[str]] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
         cells = [cell.strip() for cell in line.split("|")[1:-1]]
@@ -51,6 +52,7 @@ def _write_once(path: Path, data: bytes) -> None:
 
 
 def main() -> None:
+    """Validate owner-reviewed labels and write the dataset plus ledger once."""
     if OUTPUT.exists() or LEDGER.exists():
         raise ValueError("reviewed corpus or ledger already exists; never overwrite frozen inputs")
     utterances = _rows(REVIEW)

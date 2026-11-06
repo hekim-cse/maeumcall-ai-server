@@ -17,6 +17,7 @@ from services.flow.support.contracts import SERVICE_REQUEST_SPEC, SUPPORT_SERVIC
         "배터리가 부풀고 기기가 뜨겁습니다.",
         "배터리가 부풀었습니다.",
         "배터리가 부풀었다.",
+        "제 휴대폰 배터리가 부풀었다고 말씀드리는 거예요.",
         "기기가 뜨거워집니다.",
     ),
 )

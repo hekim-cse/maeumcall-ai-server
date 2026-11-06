@@ -3,6 +3,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from evals.structured_nlu.ai_heldout import AIHeldoutCase, AIHeldoutRequestPolicy
 from scripts.probe_nlu_safety_graph import run_graph_case
 from services.flow.support.contracts import SERVICE_REQUEST_SPEC
@@ -38,7 +40,32 @@ def test_explicit_hazard_bypasses_model_and_enters_safety_state() -> None:
     assert result["safety_status"] == "safety_issue"
 
 
-def test_empty_detail_response_becomes_unknown_with_one_valid_model_attempt() -> None:
+def test_explicit_unknown_response_passes_with_one_model_attempt() -> None:
+    def unknown(*args, **kwargs):
+        return json.dumps(
+            {
+                "intent": SERVICE_REQUEST_SPEC.intent,
+                "fields": {key: None for key in SERVICE_REQUEST_SPEC.field_keys},
+                "user_action": "unknown",
+                "change_field": None,
+            }
+        )
+
+    result = run_graph_case(
+        _case("rf02"),
+        endpoint="http://127.0.0.1:18081/v1/chat/completions",
+        model_id="/models/kanana.gguf",
+        policy=_policy(),
+        completion_post=unknown,
+    )
+    assert result["model_request_count"] == 1
+    assert result["attempts"][0]["contract_valid"]
+    assert result["attempts"][0]["output"]["user_action"] == "unknown"
+    assert result["conversation_state"] != "safety_action_required"
+    assert result["safety_status"] is None
+
+
+def test_empty_detail_contract_failure_is_not_relabelled_unknown() -> None:
     def empty_detail(*args, **kwargs):
         return json.dumps(
             {
@@ -56,8 +83,25 @@ def test_empty_detail_response_becomes_unknown_with_one_valid_model_attempt() ->
         policy=_policy(),
         completion_post=empty_detail,
     )
-    assert result["model_request_count"] == 1
-    assert result["attempts"][0]["contract_valid"]
-    assert result["attempts"][0]["output"]["user_action"] == "unknown"
-    assert result["conversation_state"] != "safety_action_required"
-    assert result["safety_status"] is None
+    assert result["model_request_count"] == 2
+    assert [attempt["error_type"] for attempt in result["attempts"]] == ["ValueError", "ValueError"]
+    assert result["conversation_state"] is None
+
+
+def test_transport_failure_stops_without_contract_retry() -> None:
+    calls = 0
+
+    def timeout(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        raise TimeoutError("local model request timed out")
+
+    with pytest.raises(TimeoutError):
+        run_graph_case(
+            _case("rf02"),
+            endpoint="http://127.0.0.1:18081/v1/chat/completions",
+            model_id="/models/kanana.gguf",
+            policy=_policy(),
+            completion_post=timeout,
+        )
+    assert calls == 1
