@@ -5,6 +5,7 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    SCOPE_BOUNDARY_GUIDANCE,
     ActionFieldRule,
     action_field_rules_json_for_state,
     allowed_actions_json_for_state,
@@ -107,7 +108,7 @@ def analyze_hospital_reservation_user_message(
     messages = [
         {
             "role": "system",
-            "content": _build_system_prompt(),
+            "content": _build_system_prompt() + SCOPE_BOUNDARY_GUIDANCE,
         },
         {
             "role": "user",

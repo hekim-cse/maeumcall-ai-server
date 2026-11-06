@@ -16,6 +16,15 @@ ValidatedOutput = TypeVar("ValidatedOutput")
 Completion = Callable[[list[dict[str, str]]], str]
 Validator = Callable[[dict[str, Any]], ValidatedOutput]
 
+SCOPE_BOUNDARY_GUIDANCE = (
+    "\n행동을 고르기 전에 발화의 주된 요청이 현재 전화 시뮬레이션의 업무를 "
+    "진행하는지 판단한다. 주된 요청이 다른 업무이거나 현재 업무에서 지원하지 "
+    "않는 정보 확인이면, 업무 관련 단어·날짜·장소가 언급돼도 user_action은 "
+    "unknown이고 모든 이번 턴 업무 필드는 null이다. 현재 업무를 진행하면서 "
+    "새 업무 정보를 제공했다면 질문형이어도 허용된 정보 제공 행동을 선택한다. "
+    "발화의 뜻이 분명하다는 사실만으로 업무 진행 행동을 선택하지 않는다."
+)
+
 
 class StructuredKeyError(ValueError):
     """An output object has missing or unexpected schema keys."""

@@ -5,6 +5,7 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    SCOPE_BOUNDARY_GUIDANCE,
     ActionFieldRule,
     action_field_rules_json_for_state,
     allowed_actions_json_for_state,
@@ -165,7 +166,8 @@ def analyze_restaurant_reservation_user_message(
         [
             {
                 "role": "system",
-                "content": "너는 사용자 발화를 JSON으로만 분석하는 분류기이다.",
+                "content": "너는 사용자 발화를 JSON으로만 분석하는 분류기이다. "
+                + SCOPE_BOUNDARY_GUIDANCE,
             },
             {
                 "role": "user",
