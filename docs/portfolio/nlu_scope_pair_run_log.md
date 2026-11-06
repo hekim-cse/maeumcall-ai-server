@@ -32,3 +32,13 @@ Docker Desktop 12GiB, 컨테이너 10GiB에서 동일한 32건을 처음부터
 유지한다. 각 배치 내에서는 수정 전/후 요청 순서를 번갈아 사용한다.
 이 재시작 규칙은 첫 노출 이후 확정됐으므로 최종 결과에는 운영상
 프로토콜 수정 이력을 함께 표시한다.
+
+## 세 번째 실행: 전체 완료
+
+`nlu-scope-code-pair-protocol.v3.json`을 커밋한 뒤 32개 사례의 수정 전후
+64회 요청을 모두 완료했다. 정해진 재시작 위치는 사례 8·16·24 뒤였고,
+모델 전송 오류는 없었다. 정규화된 예측과 설정 해시는
+`evals/structured_nlu/results/nlu-scope-code-pair-v3.json`에 있다.
+평가 후 Q5 컨테이너를 종료했고 Docker Desktop 메모리 설정을 원래
+8GiB로 복구한 뒤 엔진도 중지했다. 결과의 해석과 제한은
+[전후 비교 결과](nlu_scope_pair_findings.md)에 정리한다.

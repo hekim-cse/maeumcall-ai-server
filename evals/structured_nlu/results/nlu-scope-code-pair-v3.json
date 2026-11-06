@@ -1,0 +1,1634 @@
+{
+  "kind": "ai_authored_code_revision_pair_result_v1",
+  "claim_scope": "single_owner_reviewed_ai_authored_32_case_evaluation",
+  "protocol_sha256": "8a48ce9c29c8297c01676ad7106b68b04e49f775acf0f15ffd3ebeaba7e0d780",
+  "dataset_sha256": "dc7888dcd51dbd7529fd105433ed33560168db0755021a88b22980261f1d797c",
+  "baseline_revision": "64fd849a1779b6fdbc5466d67689f72fb0a8707f",
+  "candidate_revision": "f52d99191b5fe87333621b064ec563f65c468264",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "restarts_after_case": [
+    8,
+    16,
+    24
+  ],
+  "baseline_scores": {
+    "counts": {
+      "cases": 32,
+      "fully_correct_cases": 4,
+      "first_attempt_contract_passes": 20,
+      "final_contract_passes": 26,
+      "retried_cases": 12,
+      "intent_matches": 26,
+      "action_matches": 18,
+      "slot_true_positives": 41,
+      "slot_false_positives": 12,
+      "slot_false_negatives": 10,
+      "gold_present_slots": 51,
+      "gold_absent_slots": 76,
+      "exact_value_matches": 27,
+      "hallucinated_slots": 12,
+      "omitted_slots": 10,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.125,
+    "first_attempt_contract_success_rate": 0.625,
+    "final_contract_success_rate": 0.8125,
+    "retry_rate": 0.375,
+    "complete_failure_rate": 0.1875,
+    "intent_accuracy": 0.8125,
+    "user_action_accuracy": 0.5625,
+    "user_action_macro_f1": 0.6956228956228956,
+    "slot_presence_precision": 0.7735849056603774,
+    "slot_presence_recall": 0.803921568627451,
+    "slot_presence_f1": 0.7884615384615384,
+    "slot_exact_match_rate": 0.5294117647058824,
+    "hallucination_rate": 0.15789473684210525,
+    "omission_rate": 0.19607843137254902,
+    "change_field_accuracy": null
+  },
+  "candidate_scores": {
+    "counts": {
+      "cases": 32,
+      "fully_correct_cases": 9,
+      "first_attempt_contract_passes": 26,
+      "final_contract_passes": 28,
+      "retried_cases": 6,
+      "intent_matches": 28,
+      "action_matches": 23,
+      "slot_true_positives": 45,
+      "slot_false_positives": 15,
+      "slot_false_negatives": 6,
+      "gold_present_slots": 51,
+      "gold_absent_slots": 84,
+      "exact_value_matches": 29,
+      "hallucinated_slots": 15,
+      "omitted_slots": 6,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.28125,
+    "first_attempt_contract_success_rate": 0.8125,
+    "final_contract_success_rate": 0.875,
+    "retry_rate": 0.1875,
+    "complete_failure_rate": 0.125,
+    "intent_accuracy": 0.875,
+    "user_action_accuracy": 0.71875,
+    "user_action_macro_f1": 0.8489240228370664,
+    "slot_presence_precision": 0.75,
+    "slot_presence_recall": 0.8823529411764706,
+    "slot_presence_f1": 0.8108108108108107,
+    "slot_exact_match_rate": 0.5686274509803921,
+    "hallucination_rate": 0.17857142857142858,
+    "omission_rate": 0.11764705882352941,
+    "change_field_accuracy": null
+  },
+  "boundary_baseline_scores": {
+    "counts": {
+      "cases": 16,
+      "fully_correct_cases": 2,
+      "first_attempt_contract_passes": 7,
+      "final_contract_passes": 10,
+      "retried_cases": 9,
+      "intent_matches": 10,
+      "action_matches": 2,
+      "slot_true_positives": 0,
+      "slot_false_positives": 9,
+      "slot_false_negatives": 0,
+      "gold_present_slots": 0,
+      "gold_absent_slots": 51,
+      "exact_value_matches": 0,
+      "hallucinated_slots": 9,
+      "omitted_slots": 0,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.125,
+    "first_attempt_contract_success_rate": 0.4375,
+    "final_contract_success_rate": 0.625,
+    "retry_rate": 0.5625,
+    "complete_failure_rate": 0.375,
+    "intent_accuracy": 0.625,
+    "user_action_accuracy": 0.125,
+    "user_action_macro_f1": 0.2222222222222222,
+    "slot_presence_precision": 0.0,
+    "slot_presence_recall": 0.0,
+    "slot_presence_f1": 0.0,
+    "slot_exact_match_rate": 0.0,
+    "hallucination_rate": 0.17647058823529413,
+    "omission_rate": 0.0,
+    "change_field_accuracy": null
+  },
+  "boundary_candidate_scores": {
+    "counts": {
+      "cases": 16,
+      "fully_correct_cases": 7,
+      "first_attempt_contract_passes": 11,
+      "final_contract_passes": 12,
+      "retried_cases": 5,
+      "intent_matches": 12,
+      "action_matches": 7,
+      "slot_true_positives": 0,
+      "slot_false_positives": 9,
+      "slot_false_negatives": 0,
+      "gold_present_slots": 0,
+      "gold_absent_slots": 59,
+      "exact_value_matches": 0,
+      "hallucinated_slots": 9,
+      "omitted_slots": 0,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.4375,
+    "first_attempt_contract_success_rate": 0.6875,
+    "final_contract_success_rate": 0.75,
+    "retry_rate": 0.3125,
+    "complete_failure_rate": 0.25,
+    "intent_accuracy": 0.75,
+    "user_action_accuracy": 0.4375,
+    "user_action_macro_f1": 0.6086956521739131,
+    "slot_presence_precision": 0.0,
+    "slot_presence_recall": 0.0,
+    "slot_presence_f1": 0.0,
+    "slot_exact_match_rate": 0.0,
+    "hallucination_rate": 0.15254237288135594,
+    "omission_rate": 0.0,
+    "change_field_accuracy": null
+  },
+  "in_scope_baseline_scores": {
+    "counts": {
+      "cases": 16,
+      "fully_correct_cases": 2,
+      "first_attempt_contract_passes": 13,
+      "final_contract_passes": 16,
+      "retried_cases": 3,
+      "intent_matches": 16,
+      "action_matches": 16,
+      "slot_true_positives": 41,
+      "slot_false_positives": 3,
+      "slot_false_negatives": 10,
+      "gold_present_slots": 51,
+      "gold_absent_slots": 25,
+      "exact_value_matches": 27,
+      "hallucinated_slots": 3,
+      "omitted_slots": 10,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.125,
+    "first_attempt_contract_success_rate": 0.8125,
+    "final_contract_success_rate": 1.0,
+    "retry_rate": 0.1875,
+    "complete_failure_rate": 0.0,
+    "intent_accuracy": 1.0,
+    "user_action_accuracy": 1.0,
+    "user_action_macro_f1": 1.0,
+    "slot_presence_precision": 0.9318181818181818,
+    "slot_presence_recall": 0.803921568627451,
+    "slot_presence_f1": 0.8631578947368421,
+    "slot_exact_match_rate": 0.5294117647058824,
+    "hallucination_rate": 0.12,
+    "omission_rate": 0.19607843137254902,
+    "change_field_accuracy": null
+  },
+  "in_scope_candidate_scores": {
+    "counts": {
+      "cases": 16,
+      "fully_correct_cases": 2,
+      "first_attempt_contract_passes": 15,
+      "final_contract_passes": 16,
+      "retried_cases": 1,
+      "intent_matches": 16,
+      "action_matches": 16,
+      "slot_true_positives": 45,
+      "slot_false_positives": 6,
+      "slot_false_negatives": 6,
+      "gold_present_slots": 51,
+      "gold_absent_slots": 25,
+      "exact_value_matches": 29,
+      "hallucinated_slots": 6,
+      "omitted_slots": 6,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.125,
+    "first_attempt_contract_success_rate": 0.9375,
+    "final_contract_success_rate": 1.0,
+    "retry_rate": 0.0625,
+    "complete_failure_rate": 0.0,
+    "intent_accuracy": 1.0,
+    "user_action_accuracy": 1.0,
+    "user_action_macro_f1": 1.0,
+    "slot_presence_precision": 0.8823529411764706,
+    "slot_presence_recall": 0.8823529411764706,
+    "slot_presence_f1": 0.8823529411764706,
+    "slot_exact_match_rate": 0.5686274509803921,
+    "hallucination_rate": 0.24,
+    "omission_rate": 0.11764705882352941,
+    "change_field_accuracy": null
+  },
+  "predictions": {
+    "baseline": [
+      {
+        "case_id": "nlu-scope-ns01",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 27397.244,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": "전자기기",
+                "model_name": null,
+                "symptom": "물통을 채웠는데 아래쪽으로 물이 샘",
+                "occurred_at": null,
+                "safety_status": "safety_issue",
+                "service_channel": "parcel",
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns02",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 39657.929,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "교체용 가습기 물통만 따로 구매할 수 있나요?",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns03",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 51048.661,
+            "output": {
+              "intent": "plan_contract_consultation",
+              "fields": {
+                "inquiry_type": "plan_change",
+                "current_service": null,
+                "consultation_goal": null,
+                "consent_scope": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns04",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 31223.987,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 10158.004,
+            "output": {
+              "intent": "plan_contract_consultation",
+              "fields": {
+                "inquiry_type": "billing",
+                "current_service": null,
+                "consultation_goal": null,
+                "consent_scope": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns05",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 64502.152,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 12293.959,
+            "output": {
+              "intent": "network_call_issue",
+              "fields": {
+                "service_type": "wifi",
+                "symptom": "웹페이지가 열리지 않음",
+                "occurred_at": null,
+                "scope": "single_device",
+                "troubleshooting_done": null,
+                "next_action": "remote_check"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns06",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 39923.385,
+            "output": {
+              "intent": "network_call_issue",
+              "fields": {
+                "service_type": "wired_internet",
+                "symptom": "끊김",
+                "occurred_at": null,
+                "scope": "single_device",
+                "troubleshooting_done": null,
+                "next_action": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns07",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 28594.673,
+            "output": {
+              "intent": "absence_notice",
+              "fields": {
+                "class_name": null,
+                "absence_date": "이번 주 목요일",
+                "absence_reason": "대회 참가 일정과 겹쳐 참석하지 못합니다",
+                "user_name": null
+              },
+              "user_action": "provide_absence_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns08",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 14546.558,
+            "output": null,
+            "error_type": "StructuredKeyError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 4806.681,
+            "output": null,
+            "error_type": "StructuredKeyError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns09",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 23054.414,
+            "output": {
+              "intent": "assignment_inquiry",
+              "fields": {
+                "course_name": "컴퓨터비전",
+                "assignment_topic": "영상 파일 용량 제한",
+                "question": "영상 파일에 용량 제한이 있는지 확인 부탁드립니다.",
+                "user_name": null
+              },
+              "user_action": "provide_assignment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns10",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 17445.651,
+            "output": {
+              "intent": "assignment_inquiry",
+              "fields": {
+                "course_name": null,
+                "assignment_topic": "특강 참석 확인서",
+                "question": "다음 주 특강 참석 확인서를 발급받을 수 있을까요?",
+                "user_name": null
+              },
+              "user_action": "provide_assignment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns11",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 23386.698,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "교환학생 지원 계획 상의",
+                "date": "다음 주 화요일",
+                "time": "오후 4시",
+                "user_name": null
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns12",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 18566.33,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "학과 공용 프린터 사용 승인",
+                "date": null,
+                "time": null,
+                "user_name": null
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns13",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 42504.059,
+            "output": {
+              "intent": "delivery_delay_inquiry",
+              "fields": {
+                "order_number": "J-562",
+                "delay_detail": null,
+                "inquiry_goal": "estimated_arrival",
+                "delay_resolution": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns14",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 31551.992,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 11282.632,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns15",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 50453.697,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 9526.391,
+            "output": {
+              "intent": "delivery_order_change",
+              "fields": {
+                "order_number": "K-731",
+                "change_type": "menu_option",
+                "requested_change": "치즈 추가",
+                "unavailable_preference": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns16",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 33649.418,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 10270.637,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns17",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 55980.526,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 16377.749,
+            "output": {
+              "intent": "delivery_refund_redelivery",
+              "fields": {
+                "order_number": "R-864",
+                "issue_type": "wrong_item",
+                "issue_detail": "주문번호 R-864는 배달 완료로 표시되지만 음식을 찾지 못했습니다. 재배달을 요청합니다.",
+                "evidence_status": "unavailable",
+                "resolution_preference": "redelivery"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns18",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 34281.882,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 9566.688,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns19",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 37686.283,
+            "output": {
+              "intent": "bulky_waste_guidance",
+              "fields": {
+                "region": null,
+                "item_name": "2인용 소파",
+                "quantity": null,
+                "request_topic": "place_and_schedule"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns20",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 28586.674,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 11352.643,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns21",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 40100.933,
+            "output": {
+              "intent": "passport_guidance",
+              "fields": {
+                "application_type": null,
+                "applicant_type": null,
+                "inquiry_topic": "processing_time",
+                "application_channel": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns22",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 47895.494,
+            "output": {
+              "intent": "passport_guidance",
+              "fields": {
+                "application_type": null,
+                "applicant_type": null,
+                "inquiry_topic": "documents",
+                "application_channel": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns23",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 53612.422,
+            "output": {
+              "intent": "resident_certificate_guidance",
+              "fields": {
+                "document_type": null,
+                "applicant_relation": null,
+                "issuance_channel": null,
+                "inquiry_topic": "documents"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns24",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 28378.727,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 9486.227,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns25",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 32273.878,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": "다음 주 토요일",
+                "time": "오후 1시",
+                "service_type": "염색",
+                "designer": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns26",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 44683.082,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 8797.772,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": null,
+                "time": null,
+                "service_type": null,
+                "designer": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns27",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 28197.618,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "department": "이비인후과",
+                "date": "이번 주 금요일",
+                "time": "오후 5시",
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns28",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 7136.636,
+            "output": {
+              "intent": null,
+              "fields": {
+                "department": null,
+                "date": null,
+                "time": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns29",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 24763.018,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": "다음 주 목요일",
+                "start_time": "오후 4시",
+                "duration": "3시간",
+                "party_size": "5명",
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns30",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 24998.512,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": null,
+                "start_time": null,
+                "duration": null,
+                "party_size": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns31",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 24070.302,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": "다음 주 수요일",
+                "time": "오후 7시",
+                "party_size": "6명",
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns32",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 35487.096,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 6951.731,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": null,
+                "time": null,
+                "party_size": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "case_id": "nlu-scope-ns01",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 47625.688,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": "전자 제품",
+                "model_name": null,
+                "symptom": "물통을 채워도 아래쪽으로 물이 샘",
+                "occurred_at": null,
+                "safety_status": "safety_issue",
+                "service_channel": "parcel",
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns02",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 42251.597,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "교체용 가습기 물통만 따로 구매할 수 있나요?",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns03",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 50139.285,
+            "output": {
+              "intent": "plan_contract_consultation",
+              "fields": {
+                "inquiry_type": "plan_change",
+                "current_service": null,
+                "consultation_goal": null,
+                "consent_scope": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns04",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 29609.808,
+            "output": {
+              "intent": "plan_contract_consultation",
+              "fields": {
+                "inquiry_type": "billing",
+                "current_service": null,
+                "consultation_goal": null,
+                "consent_scope": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns05",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 61379.008,
+            "output": {
+              "intent": "network_call_issue",
+              "fields": {
+                "service_type": "wifi",
+                "symptom": "웹페이지가 열리지 않음",
+                "occurred_at": null,
+                "scope": "single_device",
+                "troubleshooting_done": null,
+                "next_action": "remote_check"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns06",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 38610.869,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 13432.472,
+            "output": {
+              "intent": "network_call_issue",
+              "fields": {
+                "service_type": "wired_internet",
+                "symptom": "끊김",
+                "occurred_at": null,
+                "scope": "single_device",
+                "troubleshooting_done": null,
+                "next_action": "guided_diagnosis"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns07",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 36083.364,
+            "output": {
+              "intent": "absence_notice",
+              "fields": {
+                "class_name": "통계학",
+                "absence_date": "이번 주 목요일",
+                "absence_reason": "대회 참가 일정과 겹쳐 참석하지 못합니다",
+                "user_name": null
+              },
+              "user_action": "provide_absence_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns08",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 15703.558,
+            "output": null,
+            "error_type": "StructuredKeyError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 6103.915,
+            "output": null,
+            "error_type": "StructuredKeyError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns09",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 27671.237,
+            "output": {
+              "intent": "assignment_inquiry",
+              "fields": {
+                "course_name": "컴퓨터비전",
+                "assignment_topic": "영상 파일 용량 제한",
+                "question": "영상 파일에 용량 제한이 있는지 확인 부탁드립니다.",
+                "user_name": null
+              },
+              "user_action": "provide_assignment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns10",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20049.461,
+            "output": {
+              "intent": "assignment_inquiry",
+              "fields": {
+                "course_name": null,
+                "assignment_topic": "특강 참석 확인서",
+                "question": "다음 주 특강 참석 확인서를 발급받을 수 있을까요?",
+                "user_name": null
+              },
+              "user_action": "provide_assignment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns11",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 29820.658,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "진로 상담",
+                "date": "다음 주 화요일",
+                "time": "오후 4시",
+                "user_name": "학생 이름"
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns12",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 18379.644,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 7164.854,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns13",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 59792.666,
+            "output": {
+              "intent": "delivery_delay_inquiry",
+              "fields": {
+                "order_number": "J-562",
+                "delay_detail": null,
+                "inquiry_goal": "estimated_arrival",
+                "delay_resolution": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns14",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 38679.511,
+            "output": {
+              "intent": "delivery_delay_inquiry",
+              "fields": {
+                "order_number": null,
+                "delay_detail": null,
+                "inquiry_goal": null,
+                "delay_resolution": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns15",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 50624.106,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 9215.644,
+            "output": {
+              "intent": "delivery_order_change",
+              "fields": {
+                "order_number": "K-731",
+                "change_type": "menu_option",
+                "requested_change": "치즈 추가 옵션",
+                "unavailable_preference": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns16",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 33009.167,
+            "output": {
+              "intent": "delivery_order_change",
+              "fields": {
+                "order_number": null,
+                "change_type": null,
+                "requested_change": null,
+                "unavailable_preference": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns17",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 59390.641,
+            "output": {
+              "intent": "delivery_refund_redelivery",
+              "fields": {
+                "order_number": "R-864",
+                "issue_type": "wrong_item",
+                "issue_detail": "주문한 음식을 찾지 못했습니다.",
+                "evidence_status": "unavailable",
+                "resolution_preference": "redelivery"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns18",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 33450.877,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 9978.89,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns19",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 46367.878,
+            "output": {
+              "intent": "bulky_waste_guidance",
+              "fields": {
+                "region": "창원 성산구",
+                "item_name": "2인용 소파",
+                "quantity": "1개",
+                "request_topic": "place_and_schedule"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns20",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 28274.646,
+            "output": {
+              "intent": "bulky_waste_guidance",
+              "fields": {
+                "region": null,
+                "item_name": null,
+                "quantity": null,
+                "request_topic": "application"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns21",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 47118.468,
+            "output": {
+              "intent": "passport_guidance",
+              "fields": {
+                "application_type": null,
+                "applicant_type": null,
+                "inquiry_topic": "processing_time",
+                "application_channel": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns22",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 32782.428,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 9067.936,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns23",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 58474.579,
+            "output": {
+              "intent": "resident_certificate_guidance",
+              "fields": {
+                "document_type": "register_copy",
+                "applicant_relation": null,
+                "issuance_channel": null,
+                "inquiry_topic": "documents"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns24",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 32867.407,
+            "output": {
+              "intent": "resident_certificate_guidance",
+              "fields": {
+                "document_type": null,
+                "applicant_relation": null,
+                "issuance_channel": null,
+                "inquiry_topic": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns25",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 42307.008,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": "다음 주 토요일",
+                "time": "오후 1시",
+                "service_type": "염색",
+                "designer": "가능한 디자너",
+                "user_name": "사용자",
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns26",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 34436.119,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": null,
+                "time": null,
+                "service_type": null,
+                "designer": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns27",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 15580.189,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "department": "이비인후과",
+                "date": "이번 주 금요일",
+                "time": "오후 5시",
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns28",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5093.208,
+            "output": {
+              "intent": null,
+              "fields": {
+                "department": null,
+                "date": null,
+                "time": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns29",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 27562.43,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": "다음 주 목요일",
+                "start_time": "오후 4시",
+                "duration": "3시간",
+                "party_size": "5명",
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns30",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20030.56,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": null,
+                "start_time": null,
+                "duration": null,
+                "party_size": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns31",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 25405.092,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": "다음 주 수요일",
+                "time": "오후 7시",
+                "party_size": "6명",
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "continue_collecting",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns32",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 17013.533,
+            "output": {
+              "intent": "reservation",
+              "fields": {
+                "date": null,
+                "time": null,
+                "party_size": null,
+                "user_name": null,
+                "selected_time": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      }
+    ]
+  }
+}
