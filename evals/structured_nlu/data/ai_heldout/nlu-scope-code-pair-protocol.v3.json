@@ -1,0 +1,28 @@
+{
+  "kind": "ai_authored_code_revision_pair_protocol_v1",
+  "protocol_revision": 3,
+  "revision_reason": "The first attempt OOMed at 6 GiB. The second was stopped after 51/64 requests as memory approached the 10 GiB limit. Restart the local server after every 8 complete paired cases while preserving model, source, data, and request settings.",
+  "previous_invalid_result_sha256": "648689aaa4713745abbdca69e98e30b2d3ce1947faed3d02cf1972403e65b2f4",
+  "claim_scope": "32 AI-authored utterances accepted by one owner, no independent second reviewer; full rerun after two invalid infrastructure attempts",
+  "declared_model_exposure_at_freeze": "partially_run_twice_infrastructure_invalid",
+  "baseline_revision": "64fd849a1779b6fdbc5466d67689f72fb0a8707f",
+  "candidate_revision": "f52d99191b5fe87333621b064ec563f65c468264",
+  "baseline_prompt_sha256": "02e1354e1fd7743856e18b04ba2bb413a5902ba124b997da4a18904fdec0cc34",
+  "candidate_prompt_sha256": "c02d2a8e50e7e602527d8bb0014e49fd83fd15bb7cf8c0592d1007d50399053a",
+  "dataset_sha256": "dc7888dcd51dbd7529fd105433ed33560168db0755021a88b22980261f1d797c",
+  "review_ledger_sha256": "3d9c966c30c569558c513caf69be4f7101044b9a7984ef6973fafa54d2e85e4a",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "request_policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "runner_sha256": "23a8961bc74b7b663350f275a03454ed3491c082e199f15134548a0ffe19b8df",
+  "case_count": 32,
+  "case_order": "NS01 through NS32",
+  "pair_order": "alternate baseline-first and candidate-first by case",
+  "attempt_policy": "one retry after contract failure",
+  "restart_every_cases": 8,
+  "runtime": {
+    "image_id": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+    "nano_cpus": 2000000000,
+    "memory_bytes": 10737418240,
+    "server_args": ["-m", "/models/kanana.gguf", "-c", "4096", "-t", "2", "-np", "1", "--host", "0.0.0.0", "--port", "8080"]
+  }
+}

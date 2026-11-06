@@ -78,6 +78,7 @@ class ServiceWorkflowSpec:
     cancelled_message: str
     closing_message: str
     ready_replies: tuple[str, ...]
+    scope_purpose: str | None = None
     branch_field: str | None = None
     ready_messages_by_branch: tuple[tuple[str, str], ...] = ()
     guards: tuple[GuardContract, ...] = ()
@@ -86,6 +87,8 @@ class ServiceWorkflowSpec:
         field_keys = self.field_keys
         if not self.category or not self.title or not self.graph_name or not self.intent:
             raise ValueError("workflow identity metadata must not be empty")
+        if self.scope_purpose is not None and not self.scope_purpose.strip():
+            raise ValueError("workflow scope purpose must not be blank")
         if not self.fields or len(field_keys) != len(set(field_keys)):
             raise ValueError(f"workflow fields must be non-empty and unique: {self.graph_name}")
         states = {

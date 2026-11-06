@@ -256,7 +256,14 @@ def test_client_state_rejects_unknown_nested_field():
     assert exc_info.value.code == "SCENARIO_STATE_INVALID"
 
 
-def test_service_request_stops_normal_flow_when_safety_issue_is_reported(monkeypatch):
+@pytest.mark.parametrize(
+    "user_message",
+    (
+        "배터리가 부풀고 기기가 뜨겁습니다.",
+        "교체용 부품을 사고 싶은데 기기에서 연기가 납니다.",
+    ),
+)
+def test_service_request_stops_normal_flow_when_safety_issue_is_reported(monkeypatch, user_message):
     values = {key: None for key in SERVICE_REQUEST_SPEC.field_keys}
     values["safety_status"] = "safety_issue"
     monkeypatch.setattr(
@@ -266,7 +273,7 @@ def test_service_request_stops_normal_flow_when_safety_issue_is_reported(monkeyp
 
     result = SUPPORT_SERVICE_REQUEST_CONTRACT.graph.invoke(
         {
-            "user_message": "배터리가 부풀고 기기가 뜨겁습니다.",
+            "user_message": user_message,
             "conversation_state": "greeting",
             "intent": SERVICE_REQUEST_SPEC.intent,
             "fields": {key: None for key in SERVICE_REQUEST_SPEC.field_keys},

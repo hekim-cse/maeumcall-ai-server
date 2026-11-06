@@ -5,6 +5,7 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    SCOPE_BOUNDARY_GUIDANCE,
     ActionFieldRule,
     action_field_rules_json_for_state,
     allowed_actions_json_for_state,
@@ -110,6 +111,7 @@ def analyze_hair_salon_reservation_user_message(
                 "content": (
                     "너는 미용실 예약 통화 시뮬레이션 서버의 정보 추출기이다. "
                     "반드시 JSON 객체만 반환한다. 설명 문장, markdown, 코드블록은 출력하지 않는다."
+                    "\n현재 지원 목적: 미용실 시술 예약을 진행하는 것." + SCOPE_BOUNDARY_GUIDANCE
                 ),
             },
             {"role": "user", "content": prompt},

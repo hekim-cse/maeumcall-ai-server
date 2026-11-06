@@ -1,0 +1,55 @@
+{
+  "kind": "post_review_development_probe_v1",
+  "claim_scope": "diagnostic_only_exposed_or_ai_draft_not_official_accuracy",
+  "source_revision": "e69e2254394bae56ecbecc357aca3c9dd5f83b2f",
+  "source_prompt_sha256": "2ac93ab4122f50001429730351037b949d0e2c1cab4be2f6d728c8bbd67c18cc",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "request_policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "predictions": {
+    "appointment_ns11_exposed": {
+      "case_id": "nlu-scope-ns11",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 18275.808,
+          "output": {
+            "intent": "appointment_booking",
+            "fields": {
+              "appointment_purpose": "교환학생 지원 계획 상의",
+              "date": "다음 주 화요일",
+              "time": "오후 4시",
+              "user_name": null
+            },
+            "user_action": "provide_appointment_info",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    },
+    "mixed_safety_ai_draft": {
+      "case_id": "review-followup-safety-01",
+      "attempts": [
+        {
+          "contract_valid": true,
+          "latency_ms": 32319.411,
+          "output": {
+            "intent": "service_request",
+            "fields": {
+              "product_type": null,
+              "model_name": null,
+              "symptom": "배터리 부풀음, 기기에서 연기",
+              "occurred_at": null,
+              "safety_status": "safety_issue",
+              "service_channel": null,
+              "preferred_schedule": null
+            },
+            "user_action": "provide_details",
+            "change_field": null
+          },
+          "error_type": null
+        }
+      ]
+    }
+  }
+}

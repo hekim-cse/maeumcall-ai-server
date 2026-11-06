@@ -4,6 +4,7 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
+    SCOPE_BOUNDARY_GUIDANCE,
     ActionFieldRule,
     action_field_rules_json_for_state,
     allowed_actions_json_for_state,
@@ -94,6 +95,8 @@ def analyze_professor_absence_user_message(
                 "content": (
                     "너는 전화 시뮬레이션 서버의 대화 상태 분석기이다. "
                     "반드시 JSON 객체만 출력한다. 설명 문장, markdown, 코드블록은 출력하지 않는다."
+                    "\n현재 지원 목적: 학생의 결석 사실과 사유를 교수님께 전달하는 것."
+                    + SCOPE_BOUNDARY_GUIDANCE
                 ),
             },
             {"role": "user", "content": prompt},
