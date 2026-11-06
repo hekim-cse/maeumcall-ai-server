@@ -4,6 +4,7 @@ from collections.abc import Callable
 from typing import Any
 
 from services.flow.service_workflow.contracts import ServiceWorkflowSpec
+from services.flow.service_workflow.safety import has_explicit_safety_issue
 from services.flow.service_workflow.state import ServiceWorkflowState
 from services.flow.service_workflow.structured import analyze_service_workflow_message
 
@@ -13,6 +14,20 @@ Node = Callable[[ServiceWorkflowState], dict[str, Any]]
 def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
     def extract(state: ServiceWorkflowState) -> dict[str, Any]:
         current_fields = _normalized_fields(spec, state.get("fields"))
+        if any(
+            guard.field_key == "safety_status" and guard.value == "safety_issue"
+            for guard in spec.guards
+        ) and has_explicit_safety_issue(state.get("user_message") or ""):
+            return {
+                "intent": spec.intent,
+                "fields": current_fields | {"safety_status": "safety_issue"},
+                "user_action": "unknown",
+                "change_field": None,
+                "last_ai_message": state.get("last_ai_message"),
+                "history": state.get("history") or [],
+                "recommended_replies": [],
+                "should_end_call": False,
+            }
         analyzed = analyze_service_workflow_message(
             spec,
             conversation_state=state.get("conversation_state") or "greeting",
