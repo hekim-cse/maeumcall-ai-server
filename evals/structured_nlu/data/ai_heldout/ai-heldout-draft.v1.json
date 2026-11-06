@@ -1,0 +1,1143 @@
+{
+  "cases": [
+    {
+      "conversation_group_id": "ai-heldout-ah01",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-heldout-ah01",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전자레인지"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "작동 버튼을 누르면 차단기가 내려감"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "전자레인지 작동 버튼을 누르면 차단기가 내려갑니다. 안전 점검을 요청하고 싶어요."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah02",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-heldout-ah02",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "intent": "service_request",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "공기청정기 수리를 신청하기 전에 무상보증 기간을 확인하는 방법부터 알려주실 수 있나요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah03",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "consent_scope": null,
+        "consultation_goal": null,
+        "current_service": null,
+        "inquiry_type": null
+      },
+      "id": "ai-heldout-ah03",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "consent_scope": null,
+          "consultation_goal": {
+            "accepted_values": [
+              "이번 달 요금이 지난달보다 1만 원 더 청구된 이유 확인"
+            ]
+          },
+          "current_service": null,
+          "inquiry_type": {
+            "accepted_values": [
+              "billing"
+            ]
+          }
+        },
+        "intent": "plan_contract_consultation",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "지난달보다 이번 달 휴대전화 요금이 1만 원 더 청구됐습니다. 왜 달라졌는지 확인하고 싶습니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah04",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "consent_scope": null,
+        "consultation_goal": null,
+        "current_service": null,
+        "inquiry_type": null
+      },
+      "id": "ai-heldout-ah04",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "consent_scope": null,
+          "consultation_goal": null,
+          "current_service": null,
+          "inquiry_type": null
+        },
+        "intent": "plan_contract_consultation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "가족 명의 회선을 제 명의로 옮기는 절차가 궁금합니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah05",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "next_action": null,
+        "occurred_at": null,
+        "scope": null,
+        "service_type": null,
+        "symptom": null,
+        "troubleshooting_done": null
+      },
+      "id": "ai-heldout-ah05",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "next_action": null,
+          "occurred_at": {
+            "accepted_values": [
+              "오늘 오후"
+            ]
+          },
+          "scope": null,
+          "service_type": {
+            "accepted_values": [
+              "voice_call"
+            ]
+          },
+          "symptom": {
+            "accepted_values": [
+              "상대방 목소리는 들리지만 내 목소리가 전달되지 않음"
+            ]
+          },
+          "troubleshooting_done": null
+        },
+        "intent": "network_call_issue",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "오늘 오후부터 휴대전화로 전화를 걸면 상대방 목소리는 들리는데 제 목소리가 전달되지 않습니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah06",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "next_action": null,
+        "occurred_at": null,
+        "scope": null,
+        "service_type": null,
+        "symptom": null,
+        "troubleshooting_done": null
+      },
+      "id": "ai-heldout-ah06",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "intent": "network_call_issue",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "공유기 관리자 비밀번호를 어디서 바꾸는지 알고 싶어요."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah07",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah07",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "absence_date": {
+            "accepted_values": [
+              "금요일"
+            ]
+          },
+          "absence_reason": {
+            "accepted_values": [
+              "교통사고로 이동이 어려움"
+            ]
+          },
+          "class_name": {
+            "accepted_values": [
+              "실험 수업"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "absence_notice",
+        "user_action": "provide_absence_info"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "교수님:결석 사유 전달",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "금요일 실험 수업에 교통사고로 이동이 어려워 결석할 예정입니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah08",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah08",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "absence_date": null,
+          "absence_reason": null,
+          "class_name": null,
+          "user_name": null
+        },
+        "intent": "absence_notice",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "교수님:결석 사유 전달",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "저번 주에 공지해 주신 내용이 헷갈려서 여쭤봅니다. 다음 주 수업이 온라인으로 진행되는지 확인하고 싶습니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah09",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah09",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "assignment_topic": {
+            "accepted_values": [
+              "이번 보고서"
+            ]
+          },
+          "course_name": null,
+          "question": {
+            "accepted_values": [
+              "참고문헌이 본문 분량에 포함되는지"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "assignment_inquiry",
+        "user_action": "provide_assignment_info"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "교수님:과제 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "이번 보고서의 참고문헌은 본문 분량에 포함되나요? 제출 전에 기준을 확인하고 싶습니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah10",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah10",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "assignment_topic": null,
+          "course_name": null,
+          "question": null,
+          "user_name": null
+        },
+        "intent": "assignment_inquiry",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "교수님:과제 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "학과 세미나 신청 링크를 어디서 찾을 수 있는지 여쭤봐도 될까요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah11",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah11",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "appointment_purpose": {
+            "accepted_values": [
+              "진로 상담"
+            ]
+          },
+          "date": {
+            "accepted_values": [
+              "이번 주 금요일"
+            ]
+          },
+          "time": {
+            "accepted_values": [
+              "오전"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "appointment_booking",
+        "user_action": "provide_appointment_info"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "교수님:면담 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "진로 상담을 받고 싶습니다. 이번 주 금요일 오전에 잠깐 찾아뵐 수 있을까요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah12",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah12",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "appointment_purpose": null,
+          "date": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "appointment_booking",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "교수님:면담 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "면담 신청 전에 교수님 연구실에서 학부생 연구 참여를 받는지 먼저 여쭤보고 싶습니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah13",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "delay_detail": null,
+        "delay_resolution": null,
+        "inquiry_goal": null,
+        "order_number": null
+      },
+      "id": "ai-heldout-ah13",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "delay_detail": {
+            "accepted_values": [
+              "음식점에서 나온 뒤 한참 동안 이동 기록이 없음"
+            ]
+          },
+          "delay_resolution": null,
+          "inquiry_goal": {
+            "accepted_values": [
+              "delay_reason"
+            ]
+          },
+          "order_number": null
+        },
+        "intent": "delivery_delay_inquiry",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:배달 지연 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "배달앱에는 음식점에서 나왔다고 뜨는데 한참 동안 이동 기록이 없습니다. 늦어지는 이유를 확인해 주세요."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah14",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "delay_detail": null,
+        "delay_resolution": null,
+        "inquiry_goal": null,
+        "order_number": null
+      },
+      "id": "ai-heldout-ah14",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": null
+        },
+        "intent": "delivery_delay_inquiry",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:배달 지연 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "지금 주문은 도착했습니다. 다음 주문에서 배달 알림 소리를 끄는 방법을 알려주세요."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah15",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "change_type": null,
+        "order_number": null,
+        "requested_change": null,
+        "unavailable_preference": null
+      },
+      "id": "ai-heldout-ah15",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "change_type": {
+            "accepted_values": [
+              "delivery_address"
+            ]
+          },
+          "order_number": {
+            "accepted_values": [
+              "V-208"
+            ]
+          },
+          "requested_change": {
+            "accepted_values": [
+              "회사 후문"
+            ]
+          },
+          "unavailable_preference": null
+        },
+        "intent": "delivery_order_change",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:주문 변경",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "주문번호 V-208의 배달 주소를 회사 로비에서 회사 후문으로 바꾸고 싶습니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah16",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "change_type": null,
+        "order_number": null,
+        "requested_change": null,
+        "unavailable_preference": null
+      },
+      "id": "ai-heldout-ah16",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "change_type": null,
+          "order_number": null,
+          "requested_change": null,
+          "unavailable_preference": null
+        },
+        "intent": "delivery_order_change",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:주문 변경",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "배달 봉투에 붙은 스티커를 떼고 분리배출해야 하나요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah17",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "evidence_status": null,
+        "issue_detail": null,
+        "issue_type": null,
+        "order_number": null,
+        "resolution_preference": null
+      },
+      "id": "ai-heldout-ah17",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "evidence_status": {
+            "accepted_values": [
+              "available"
+            ]
+          },
+          "issue_detail": {
+            "accepted_values": [
+              "우유 유통기한이 지남"
+            ]
+          },
+          "issue_type": {
+            "accepted_values": [
+              "damaged_or_quality"
+            ]
+          },
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "intent": "delivery_refund_redelivery",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:환불/재배달 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "배송된 우유의 유통기한이 어제까지였습니다. 사진은 찍어뒀는데 어떻게 처리하면 될까요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah18",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "evidence_status": null,
+        "issue_detail": null,
+        "issue_type": null,
+        "order_number": null,
+        "resolution_preference": null
+      },
+      "id": "ai-heldout-ah18",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "intent": "delivery_refund_redelivery",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "배달:환불/재배달 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "음식은 문제없이 잘 받았습니다. 다만 일회용 용기 반납이 가능한지 궁금합니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah19",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "item_name": null,
+        "quantity": null,
+        "region": null,
+        "request_topic": null
+      },
+      "id": "ai-heldout-ah19",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "item_name": null,
+          "quantity": null,
+          "region": null,
+          "request_topic": {
+            "accepted_values": [
+              "collection_status"
+            ]
+          }
+        },
+        "intent": "bulky_waste_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:대형폐기물 배출",
+      "split": "test",
+      "tags": [
+        "single_field"
+      ],
+      "user_message": "지난주 신고한 대형폐기물이 아직 수거되지 않았습니다. 접수 상태를 확인하려면 어떻게 해야 하나요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah20",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "item_name": null,
+        "quantity": null,
+        "region": null,
+        "request_topic": null
+      },
+      "id": "ai-heldout-ah20",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "item_name": null,
+          "quantity": null,
+          "region": null,
+          "request_topic": null
+        },
+        "intent": "bulky_waste_guidance",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:대형폐기물 배출",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "폐형광등을 어디에 가져가야 하는지 문의드립니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah21",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_type": null,
+        "application_channel": null,
+        "application_type": null,
+        "inquiry_topic": null
+      },
+      "id": "ai-heldout-ah21",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": {
+            "accepted_values": [
+              "reissue"
+            ]
+          },
+          "inquiry_topic": {
+            "accepted_values": [
+              "documents"
+            ]
+          }
+        },
+        "intent": "passport_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:여권 발급 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "여권이 다음 달에 만료되는데 재발급하려면 기존 여권을 지참해야 하나요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah22",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_type": null,
+        "application_channel": null,
+        "application_type": null,
+        "inquiry_topic": null
+      },
+      "id": "ai-heldout-ah22",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": null
+        },
+        "intent": "passport_guidance",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:여권 발급 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "해외에서 여권을 분실했을 때 대사관에 어떻게 신고하나요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah23",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_relation": null,
+        "document_type": null,
+        "inquiry_topic": null,
+        "issuance_channel": null
+      },
+      "id": "ai-heldout-ah23",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_relation": {
+            "accepted_values": [
+              "self"
+            ]
+          },
+          "document_type": {
+            "accepted_values": [
+              "register_copy"
+            ]
+          },
+          "inquiry_topic": {
+            "accepted_values": [
+              "documents"
+            ]
+          },
+          "issuance_channel": {
+            "accepted_values": [
+              "in_person"
+            ]
+          }
+        },
+        "intent": "resident_certificate_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "제 주민등록등본을 주민센터에서 발급받을 때 신분증이 필요한가요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah24",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_relation": null,
+        "document_type": null,
+        "inquiry_topic": null,
+        "issuance_channel": null
+      },
+      "id": "ai-heldout-ah24",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_relation": null,
+          "document_type": null,
+          "inquiry_topic": null,
+          "issuance_channel": null
+        },
+        "intent": "resident_certificate_guidance",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "가족관계증명서를 발급받으려면 어디로 가야 하나요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah25",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah25",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "화요일"
+            ]
+          },
+          "designer": null,
+          "selected_time": null,
+          "service_type": {
+            "accepted_values": [
+              "앞머리 커트"
+            ]
+          },
+          "time": {
+            "accepted_values": [
+              "저녁 6시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:미용실 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "화요일 저녁 6시에 앞머리 커트를 예약할 수 있을까요?"
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah26",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah26",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "designer": null,
+          "selected_time": null,
+          "service_type": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:미용실 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "예약하기 전에 염색 후 며칠 지나야 펌을 할 수 있는지 상담만 받고 싶어요."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah27",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah27",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "다음 주 수요일"
+            ]
+          },
+          "department": {
+            "accepted_values": [
+              "피부과"
+            ]
+          },
+          "selected_time": null,
+          "time": {
+            "accepted_values": [
+              "오전"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:병원 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "다음 주 수요일 오전에 피부과 진료를 예약하고 싶습니다. 초진입니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah28",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah28",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "department": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": null,
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:병원 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "진료 예약 전에 제 증상이 응급실에 가야 할 정도인지 먼저 상담받고 싶습니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah29",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah29",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "금요일"
+            ]
+          },
+          "duration": {
+            "accepted_values": [
+              "두 시간"
+            ]
+          },
+          "party_size": {
+            "accepted_values": [
+              "세 명"
+            ]
+          },
+          "selected_time": null,
+          "start_time": {
+            "accepted_values": [
+              "저녁 7시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:스터디룸 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "금요일 저녁 7시부터 세 명이 화상회의 가능한 방을 두 시간 예약하고 싶어요."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah30",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah30",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "duration": null,
+          "party_size": null,
+          "selected_time": null,
+          "start_time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:스터디룸 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "저번에 예약한 방에 화이트보드가 있는지 확인하고 싶습니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah31",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah31",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "금요일"
+            ]
+          },
+          "party_size": {
+            "accepted_values": [
+              "두 명"
+            ]
+          },
+          "selected_time": null,
+          "time": {
+            "accepted_values": [
+              "밤 8시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:식당 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "금요일 밤 8시에 두 명이 조용한 자리에서 식사할 수 있게 예약 부탁드립니다."
+    },
+    {
+      "conversation_group_id": "ai-heldout-ah32",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "ai-heldout-ah32",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "party_size": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "draft",
+      "scenario_key": "예약:식당 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "예약 전에 아이와 함께 먹을 수 있는 맵지 않은 메뉴가 있는지 알려주실 수 있나요?"
+    }
+  ],
+  "dataset_version": 1,
+  "declared_model_exposure": "not_run",
+  "kind": "ai_authored_heldout_dataset_v1",
+  "state_contract_version": 2
+}

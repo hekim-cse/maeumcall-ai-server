@@ -1,0 +1,11 @@
+{
+  "kind": "ai_authored_heldout_pre_exposure_freeze_v1",
+  "input_git_revision": "eef0ded8afe0c9a87938399dd9838c09ac75d86d",
+  "dataset_path": "evals/structured_nlu/data/ai_heldout/ai-heldout-reviewed.v1.json",
+  "dataset_sha256": "95e186513532e7ad08ed0d8be4435eafd12c301d6ade6692ec4af6e554fb9cc9",
+  "review_ledger_path": "evals/structured_nlu/data/ai_heldout/ai-heldout-review-ledger.v1.json",
+  "review_ledger_sha256": "f239d44cd901fdf39468d6597bf4dfd82b2a419495426f784e5f0477569aac72",
+  "protocol_path": "evals/structured_nlu/data/ai_heldout/q4-q5-request-policy.v1.json",
+  "protocol_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "exposure_record_path": "evals/structured_nlu/data/ai_heldout/ai-heldout-exposure.v1.json"
+}

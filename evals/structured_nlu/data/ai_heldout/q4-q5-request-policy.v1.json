@@ -1,0 +1,17 @@
+{
+  "kind": "ai_authored_heldout_request_policy_v1",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runner_sha256": "82004e1e023e4b5d23b6834589ad51757aae002cac7b1ae87cc3a30a206eb857",
+  "prompt_revision_sha256": "b2288fbfbec63e3ae9f07ae86c41712ebaf660119989e8d1b04589e5d74f89ec",
+  "cpu_count": 2,
+  "thread_count": 2,
+  "context_size": 4096,
+  "max_tokens": 180,
+  "temperature": 0,
+  "repeat_penalty": 1.05,
+  "stop": ["<|eot_id|>"],
+  "timeout_seconds": 180,
+  "cache_policy": "mixed",
+  "pair_order": "alternating",
+  "retry_policy": "one_retry_after_contract_failure"
+}
