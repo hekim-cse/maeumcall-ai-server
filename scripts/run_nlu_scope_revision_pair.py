@@ -28,6 +28,31 @@ def _git(root: Path, *args: str) -> str:
     ).stdout.strip()
 
 
+def _verify_container(name: str, protocol: dict, model_path: Path) -> None:
+    observed = json.loads(
+        subprocess.run(
+            ("docker", "inspect", name), check=True, capture_output=True, text=True
+        ).stdout
+    )[0]
+    host = observed["HostConfig"]
+    runtime = protocol["runtime"]
+    if not observed["State"]["Running"] or observed["Image"] != runtime["image_id"]:
+        raise ValueError("local model server or image differs from protocol")
+    if host["NanoCpus"] != runtime["nano_cpus"] or host["Memory"] != runtime["memory_bytes"]:
+        raise ValueError("CPU or memory limit differs from protocol")
+    if host["PortBindings"] != {"8080/tcp": [{"HostIp": "127.0.0.1", "HostPort": "18081"}]}:
+        raise ValueError("model server is not bound to expected loopback port")
+    if observed["Config"]["Cmd"] != runtime["server_args"]:
+        raise ValueError("model server arguments differ from protocol")
+    if not any(
+        mount["Source"] == str(model_path.resolve())
+        and mount["Destination"] == "/models/kanana.gguf"
+        and not mount["RW"]
+        for mount in observed["Mounts"]
+    ):
+        raise ValueError("Q5 model file must be mounted read-only")
+
+
 def _worker(args: argparse.Namespace) -> None:
     # Source root must take precedence over this runner's checkout.
     source_root = str(args.source_root.resolve())
@@ -109,6 +134,7 @@ def _run(args: argparse.Namespace) -> None:
         raise ValueError("model differs from frozen protocol")
     if _sha256(args.policy) != protocol["request_policy_sha256"]:
         raise ValueError("request settings differ from frozen protocol")
+    _verify_container(args.container_name, protocol, args.model_path)
     reviewed = load_reviewed_ai_heldout(args.dataset, args.ledger)
     if reviewed.dataset_sha256 != protocol["dataset_sha256"]:
         raise ValueError("dataset differs from frozen protocol")
@@ -122,6 +148,8 @@ def _run(args: argparse.Namespace) -> None:
     ):
         raise ValueError("protocol bytes differ from committed version")
     endpoint = _loopback_endpoint(args.endpoint)
+    if endpoint != "http://127.0.0.1:18081/v1/chat/completions":
+        raise ValueError("endpoint differs from verified local container")
     workers = {
         "baseline": _start_worker(args.baseline_root, endpoint, args.policy),
         "candidate": _start_worker(root, endpoint, args.policy),
@@ -223,6 +251,7 @@ def main() -> None:
     run.add_argument("--baseline-root", type=Path, required=True)
     run.add_argument("--endpoint", required=True)
     run.add_argument("--model-path", type=Path, required=True)
+    run.add_argument("--container-name", required=True)
     run.add_argument("--policy", type=Path, required=True)
     run.add_argument("--dataset", type=Path, required=True)
     run.add_argument("--ledger", type=Path, required=True)
