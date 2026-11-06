@@ -1,0 +1,760 @@
+{
+  "kind": "ai_authored_code_revision_pair_result_v1",
+  "claim_scope": "single_owner_reviewed_ai_authored_12_case_review_followup",
+  "protocol_sha256": "d807fb7a08b58a06f2dc32df73cd86e892e90074f4c16a232470d8310825d119",
+  "dataset_sha256": "726c7d4d73c93979c0de242be5223780e51e66c705ca8c2789ff77f8fa2b4d59",
+  "baseline_revision": "f52d99191b5fe87333621b064ec563f65c468264",
+  "candidate_revision": "ae91656b5502c0bf01fcc56f16b8cfaa1ec2b253",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "restarts_after_case": [
+    6
+  ],
+  "baseline_scores": {
+    "counts": {
+      "cases": 12,
+      "fully_correct_cases": 1,
+      "first_attempt_contract_passes": 12,
+      "final_contract_passes": 12,
+      "retried_cases": 0,
+      "intent_matches": 12,
+      "action_matches": 10,
+      "slot_true_positives": 17,
+      "slot_false_positives": 8,
+      "slot_false_negatives": 5,
+      "gold_present_slots": 22,
+      "gold_absent_slots": 44,
+      "exact_value_matches": 8,
+      "hallucinated_slots": 8,
+      "omitted_slots": 5,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.08333333333333333,
+    "first_attempt_contract_success_rate": 1.0,
+    "final_contract_success_rate": 1.0,
+    "retry_rate": 0.0,
+    "complete_failure_rate": 0.0,
+    "intent_accuracy": 1.0,
+    "user_action_accuracy": 0.8333333333333334,
+    "user_action_macro_f1": 0.7666666666666666,
+    "slot_presence_precision": 0.68,
+    "slot_presence_recall": 0.7727272727272727,
+    "slot_presence_f1": 0.7234042553191491,
+    "slot_exact_match_rate": 0.36363636363636365,
+    "hallucination_rate": 0.18181818181818182,
+    "omission_rate": 0.22727272727272727,
+    "change_field_accuracy": null
+  },
+  "candidate_scores": {
+    "counts": {
+      "cases": 12,
+      "fully_correct_cases": 2,
+      "first_attempt_contract_passes": 10,
+      "final_contract_passes": 10,
+      "retried_cases": 2,
+      "intent_matches": 10,
+      "action_matches": 10,
+      "slot_true_positives": 17,
+      "slot_false_positives": 6,
+      "slot_false_negatives": 5,
+      "gold_present_slots": 22,
+      "gold_absent_slots": 30,
+      "exact_value_matches": 11,
+      "hallucinated_slots": 6,
+      "omitted_slots": 5,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.16666666666666666,
+    "first_attempt_contract_success_rate": 0.8333333333333334,
+    "final_contract_success_rate": 0.8333333333333334,
+    "retry_rate": 0.16666666666666666,
+    "complete_failure_rate": 0.16666666666666666,
+    "intent_accuracy": 0.8333333333333334,
+    "user_action_accuracy": 0.8333333333333334,
+    "user_action_macro_f1": 0.8333333333333334,
+    "slot_presence_precision": 0.7391304347826086,
+    "slot_presence_recall": 0.7727272727272727,
+    "slot_presence_f1": 0.7555555555555555,
+    "slot_exact_match_rate": 0.5,
+    "hallucination_rate": 0.2,
+    "omission_rate": 0.22727272727272727,
+    "change_field_accuracy": null
+  },
+  "boundary_baseline_scores": {
+    "counts": {
+      "cases": 3,
+      "fully_correct_cases": 1,
+      "first_attempt_contract_passes": 3,
+      "final_contract_passes": 3,
+      "retried_cases": 0,
+      "intent_matches": 3,
+      "action_matches": 1,
+      "slot_true_positives": 0,
+      "slot_false_positives": 2,
+      "slot_false_negatives": 0,
+      "gold_present_slots": 0,
+      "gold_absent_slots": 18,
+      "exact_value_matches": 0,
+      "hallucinated_slots": 2,
+      "omitted_slots": 0,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.3333333333333333,
+    "first_attempt_contract_success_rate": 1.0,
+    "final_contract_success_rate": 1.0,
+    "retry_rate": 0.0,
+    "complete_failure_rate": 0.0,
+    "intent_accuracy": 1.0,
+    "user_action_accuracy": 0.3333333333333333,
+    "user_action_macro_f1": 0.5,
+    "slot_presence_precision": 0.0,
+    "slot_presence_recall": 0.0,
+    "slot_presence_f1": 0.0,
+    "slot_exact_match_rate": 0.0,
+    "hallucination_rate": 0.1111111111111111,
+    "omission_rate": 0.0,
+    "change_field_accuracy": null
+  },
+  "boundary_candidate_scores": {
+    "counts": {
+      "cases": 3,
+      "fully_correct_cases": 1,
+      "first_attempt_contract_passes": 1,
+      "final_contract_passes": 1,
+      "retried_cases": 2,
+      "intent_matches": 1,
+      "action_matches": 1,
+      "slot_true_positives": 0,
+      "slot_false_positives": 0,
+      "slot_false_negatives": 0,
+      "gold_present_slots": 0,
+      "gold_absent_slots": 4,
+      "exact_value_matches": 0,
+      "hallucinated_slots": 0,
+      "omitted_slots": 0,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.3333333333333333,
+    "first_attempt_contract_success_rate": 0.3333333333333333,
+    "final_contract_success_rate": 0.3333333333333333,
+    "retry_rate": 0.6666666666666666,
+    "complete_failure_rate": 0.6666666666666666,
+    "intent_accuracy": 0.3333333333333333,
+    "user_action_accuracy": 0.3333333333333333,
+    "user_action_macro_f1": 0.5,
+    "slot_presence_precision": 0.0,
+    "slot_presence_recall": 0.0,
+    "slot_presence_f1": 0.0,
+    "slot_exact_match_rate": 0.0,
+    "hallucination_rate": 0.0,
+    "omission_rate": 0.0,
+    "change_field_accuracy": null
+  },
+  "in_scope_baseline_scores": {
+    "counts": {
+      "cases": 9,
+      "fully_correct_cases": 0,
+      "first_attempt_contract_passes": 9,
+      "final_contract_passes": 9,
+      "retried_cases": 0,
+      "intent_matches": 9,
+      "action_matches": 9,
+      "slot_true_positives": 17,
+      "slot_false_positives": 6,
+      "slot_false_negatives": 5,
+      "gold_present_slots": 22,
+      "gold_absent_slots": 26,
+      "exact_value_matches": 8,
+      "hallucinated_slots": 6,
+      "omitted_slots": 5,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.0,
+    "first_attempt_contract_success_rate": 1.0,
+    "final_contract_success_rate": 1.0,
+    "retry_rate": 0.0,
+    "complete_failure_rate": 0.0,
+    "intent_accuracy": 1.0,
+    "user_action_accuracy": 1.0,
+    "user_action_macro_f1": 1.0,
+    "slot_presence_precision": 0.7391304347826086,
+    "slot_presence_recall": 0.7727272727272727,
+    "slot_presence_f1": 0.7555555555555555,
+    "slot_exact_match_rate": 0.36363636363636365,
+    "hallucination_rate": 0.23076923076923078,
+    "omission_rate": 0.22727272727272727,
+    "change_field_accuracy": null
+  },
+  "in_scope_candidate_scores": {
+    "counts": {
+      "cases": 9,
+      "fully_correct_cases": 1,
+      "first_attempt_contract_passes": 9,
+      "final_contract_passes": 9,
+      "retried_cases": 0,
+      "intent_matches": 9,
+      "action_matches": 9,
+      "slot_true_positives": 17,
+      "slot_false_positives": 6,
+      "slot_false_negatives": 5,
+      "gold_present_slots": 22,
+      "gold_absent_slots": 26,
+      "exact_value_matches": 11,
+      "hallucinated_slots": 6,
+      "omitted_slots": 5,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.1111111111111111,
+    "first_attempt_contract_success_rate": 1.0,
+    "final_contract_success_rate": 1.0,
+    "retry_rate": 0.0,
+    "complete_failure_rate": 0.0,
+    "intent_accuracy": 1.0,
+    "user_action_accuracy": 1.0,
+    "user_action_macro_f1": 1.0,
+    "slot_presence_precision": 0.7391304347826086,
+    "slot_presence_recall": 0.7727272727272727,
+    "slot_presence_f1": 0.7555555555555555,
+    "slot_exact_match_rate": 0.5,
+    "hallucination_rate": 0.23076923076923078,
+    "omission_rate": 0.22727272727272727,
+    "change_field_accuracy": null
+  },
+  "predictions": {
+    "baseline": [
+      {
+        "case_id": "nlu-review-followup-rf01",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 30847.294,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "배터리가 부풀어 올라 충전할 때 뜨거워집니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf02",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 19632.456,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "배터리 교체 필요",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf03",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20215.49,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "충전 단자에서 타는 냄새",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf04",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20006.702,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "연기가 남",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": "visit",
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf05",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20416.628,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "선풍기 회전 버튼이 눌리지 않음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf06",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20489.35,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "제습기에 맞는 연장 호스 규격을 알려주실 수 있나요?",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf07",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 15395.215,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "연구 주제 상의",
+                "date": "이번 주 금요일",
+                "time": "오전 11시",
+                "user_name": "학생 이름"
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf08",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 10165.551,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "진로 상담",
+                "date": "다음 주 월요일",
+                "time": "오후 2시",
+                "user_name": "박서연"
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf09",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 9552.249,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "진로 상담",
+                "date": "오늘",
+                "time": "오후 3시",
+                "user_name": "학생 이름"
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf10",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 8819.395,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": null,
+                "date": null,
+                "time": null,
+                "user_name": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf11",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 9245.728,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": null,
+                "date": "next week thursday",
+                "time": "10:00",
+                "user_name": null
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf12",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 9690.698,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "진로 상담",
+                "date": "오늘",
+                "time": "오후 3시",
+                "user_name": "이도현"
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "case_id": "nlu-review-followup-rf01",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 30424.869,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "배터리가 부풀어 올라 충전할 때 뜨거워집니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf02",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 19732.984,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 6158.331,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf03",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20836.529,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "타는 냄새",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf04",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20517.58,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "연기",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": "visit",
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf05",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21253.934,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "선풍기 회전 버튼이 눌리지 않음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf06",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 20172.706,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 6094.967,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf07",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 14907.717,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "연구 주제 상의",
+                "date": "이번 주 금요일",
+                "time": "오전 11시",
+                "user_name": null
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf08",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 11400.232,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "졸업 작품 방향 상담",
+                "date": "다음 주 월요일",
+                "time": "오후 2시",
+                "user_name": "박서연"
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf09",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 10680.779,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "실습 과목 선택 상의",
+                "date": "이번 주 수요일",
+                "time": "오후 3시",
+                "user_name": "학생 이름"
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf10",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 9600.555,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": null,
+                "date": null,
+                "time": null,
+                "user_name": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf11",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 10233.383,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "상담",
+                "date": "다음 주 목요일",
+                "time": "오전 10시",
+                "user_name": null
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-review-followup-rf12",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 10720.907,
+            "output": {
+              "intent": "appointment_booking",
+              "fields": {
+                "appointment_purpose": "수강 계획 상의",
+                "date": "이번 주 수요일",
+                "time": "오후 3시",
+                "user_name": "이도현"
+              },
+              "user_action": "provide_appointment_info",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      }
+    ]
+  }
+}
