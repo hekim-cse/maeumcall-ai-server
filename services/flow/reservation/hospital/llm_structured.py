@@ -108,7 +108,11 @@ def analyze_hospital_reservation_user_message(
     messages = [
         {
             "role": "system",
-            "content": _build_system_prompt() + SCOPE_BOUNDARY_GUIDANCE,
+            "content": (
+                _build_system_prompt()
+                + "\n현재 지원 목적: 병원 진료 예약을 진행하는 것."
+                + SCOPE_BOUNDARY_GUIDANCE
+            ),
         },
         {
             "role": "user",

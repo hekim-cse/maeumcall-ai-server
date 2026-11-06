@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from evals.structured_nlu.ai_heldout import AIHeldoutCase, AIHeldoutRequestPolicy
+from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
 from llm.structured_output import SCOPE_BOUNDARY_GUIDANCE
 from scripts.run_ai_heldout_pair import _run_case
 
@@ -40,3 +41,13 @@ def test_scope_boundary_instruction_reaches_each_live_analyzer(case: AIHeldoutCa
 
     assert observed_messages
     assert all(SCOPE_BOUNDARY_GUIDANCE in messages[0]["content"] for messages in observed_messages)
+    assert all("현재 지원 목적:" in messages[0]["content"] for messages in observed_messages)
+
+
+def test_shared_workflows_declare_their_supported_purpose() -> None:
+    specs = (
+        contract.workflow_spec
+        for contract in EVALUATION_CONTRACTS.values()
+        if contract.workflow_spec is not None
+    )
+    assert all(spec.scope_purpose and spec.scope_purpose.strip() for spec in specs)

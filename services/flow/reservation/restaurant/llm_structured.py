@@ -167,7 +167,7 @@ def analyze_restaurant_reservation_user_message(
             {
                 "role": "system",
                 "content": "너는 사용자 발화를 JSON으로만 분석하는 분류기이다. "
-                + SCOPE_BOUNDARY_GUIDANCE,
+                "\n현재 지원 목적: 식당 좌석을 예약하는 것." + SCOPE_BOUNDARY_GUIDANCE,
             },
             {
                 "role": "user",

@@ -1,0 +1,1170 @@
+{
+  "cases": [
+    {
+      "conversation_group_id": "nlu-scope-ns01",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-scope-ns01",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "가습기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": {
+            "accepted_values": [
+              "parcel"
+            ]
+          },
+          "symptom": {
+            "accepted_values": [
+              "물통을 채우면 아래쪽으로 물이 샘"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "가습기 물통을 채우면 아래쪽으로 물이 샙니다. 택배로 점검 접수하고 싶습니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns02",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-scope-ns02",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "intent": "service_request",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "교체용 가습기 물통만 따로 구매할 수 있나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns03",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "consent_scope": null,
+        "consultation_goal": null,
+        "current_service": null,
+        "inquiry_type": null
+      },
+      "id": "nlu-scope-ns03",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "consent_scope": null,
+          "consultation_goal": {
+            "accepted_values": [
+              "통화 제공량이 적은 요금제로 변경 후 월 요금 확인"
+            ]
+          },
+          "current_service": null,
+          "inquiry_type": {
+            "accepted_values": [
+              "plan_change"
+            ]
+          }
+        },
+        "intent": "plan_contract_consultation",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "이번 달부터 통화량이 줄어서 통화 제공량이 적은 요금제로 바꾸고 싶습니다. 변경 후 월 요금을 알아볼 수 있을까요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns04",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "consent_scope": null,
+        "consultation_goal": null,
+        "current_service": null,
+        "inquiry_type": null
+      },
+      "id": "nlu-scope-ns04",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "consent_scope": null,
+          "consultation_goal": null,
+          "current_service": null,
+          "inquiry_type": null
+        },
+        "intent": "plan_contract_consultation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:요금/약정 상담",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "휴대전화 번호 끝자리를 바꾸려면 어디에서 신청하나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns05",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "next_action": null,
+        "occurred_at": null,
+        "scope": null,
+        "service_type": null,
+        "symptom": null,
+        "troubleshooting_done": null
+      },
+      "id": "nlu-scope-ns05",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "next_action": {
+            "accepted_values": [
+              "remote_check"
+            ]
+          },
+          "occurred_at": null,
+          "scope": {
+            "accepted_values": [
+              "multiple_devices"
+            ]
+          },
+          "service_type": {
+            "accepted_values": [
+              "wifi"
+            ]
+          },
+          "symptom": {
+            "accepted_values": [
+              "와이파이에 연결되지만 웹페이지가 열리지 않음"
+            ]
+          },
+          "troubleshooting_done": null
+        },
+        "intent": "network_call_issue",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "노트북과 태블릿이 같은 와이파이에 연결되지만 둘 다 웹페이지가 열리지 않습니다. 원격 점검을 요청합니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns06",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "next_action": null,
+        "occurred_at": null,
+        "scope": null,
+        "service_type": null,
+        "symptom": null,
+        "troubleshooting_done": null
+      },
+      "id": "nlu-scope-ns06",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "next_action": null,
+          "occurred_at": null,
+          "scope": null,
+          "service_type": null,
+          "symptom": null,
+          "troubleshooting_done": null
+        },
+        "intent": "network_call_issue",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:인터넷/통화 문제 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "집 인터넷 설치 기사님의 방문 시간을 변경하고 싶습니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns07",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns07",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "absence_date": {
+            "accepted_values": [
+              "이번 주 목요일"
+            ]
+          },
+          "absence_reason": {
+            "accepted_values": [
+              "대회 참가 일정과 겹침"
+            ]
+          },
+          "class_name": {
+            "accepted_values": [
+              "통계학 수업"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "absence_notice",
+        "user_action": "provide_absence_info"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "교수님:결석 사유 전달",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "교수님, 이번 주 목요일 통계학 수업은 대회 참가 일정과 겹쳐 참석하지 못합니다. 미리 말씀드립니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns08",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns08",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "absence_date": null,
+          "absence_reason": null,
+          "class_name": null,
+          "user_name": null
+        },
+        "intent": "absence_notice",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "교수님:결석 사유 전달",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "교수님, 이번 학기 성적 이의신청 기간이 언제인지 여쭤봐도 될까요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns09",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns09",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "assignment_topic": {
+            "accepted_values": [
+              "영상 파일"
+            ]
+          },
+          "course_name": {
+            "accepted_values": [
+              "컴퓨터비전"
+            ]
+          },
+          "question": {
+            "accepted_values": [
+              "영상 파일에 용량 제한이 있는지"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "assignment_inquiry",
+        "user_action": "provide_assignment_info"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "교수님:과제 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "교수님, 컴퓨터비전 과제의 영상 파일에 용량 제한이 있는지 확인 부탁드립니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns10",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns10",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "assignment_topic": null,
+          "course_name": null,
+          "question": null,
+          "user_name": null
+        },
+        "intent": "assignment_inquiry",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "교수님:과제 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "교수님, 다음 주 특강 참석 확인서를 발급받을 수 있을까요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns11",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns11",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "appointment_purpose": {
+            "accepted_values": [
+              "교환학생 지원 계획 상의"
+            ]
+          },
+          "date": {
+            "accepted_values": [
+              "다음 주 화요일"
+            ]
+          },
+          "time": {
+            "accepted_values": [
+              "오후 4시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "appointment_booking",
+        "user_action": "provide_appointment_info"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "교수님:면담 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "교수님, 교환학생 지원 계획을 상의하고 싶어 다음 주 화요일 오후 4시에 면담 가능하신지 문의드립니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns12",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns12",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "appointment_purpose": null,
+          "date": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "appointment_booking",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "교수님:면담 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "교수님, 학과 공용 프린터 사용 승인은 어디서 받는지 여쭤봐도 될까요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns13",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "delay_detail": null,
+        "delay_resolution": null,
+        "inquiry_goal": null,
+        "order_number": null
+      },
+      "id": "nlu-scope-ns13",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "delay_detail": {
+            "accepted_values": [
+              "예상 도착 시각이 지났지만 아직 배차 전"
+            ]
+          },
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": {
+            "accepted_values": [
+              "J-562"
+            ]
+          }
+        },
+        "intent": "delivery_delay_inquiry",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "배달:배달 지연 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "주문번호 J-562의 예상 도착 시각이 지났는데 배달앱에는 아직 배차 전으로 표시됩니다. 언제 출발하나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns14",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "delay_detail": null,
+        "delay_resolution": null,
+        "inquiry_goal": null,
+        "order_number": null
+      },
+      "id": "nlu-scope-ns14",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "delay_detail": null,
+          "delay_resolution": null,
+          "inquiry_goal": null,
+          "order_number": null
+        },
+        "intent": "delivery_delay_inquiry",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "배달:배달 지연 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "배달이 끝난 주문의 기사님 평가를 수정할 수 있나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns15",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "change_type": null,
+        "order_number": null,
+        "requested_change": null,
+        "unavailable_preference": null
+      },
+      "id": "nlu-scope-ns15",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "change_type": {
+            "accepted_values": [
+              "menu_option"
+            ]
+          },
+          "order_number": {
+            "accepted_values": [
+              "K-731"
+            ]
+          },
+          "requested_change": {
+            "accepted_values": [
+              "치즈 추가 옵션"
+            ]
+          },
+          "unavailable_preference": null
+        },
+        "intent": "delivery_order_change",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "배달:주문 변경",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "주문번호 K-731의 떡볶이 기본 토핑을 치즈 추가 옵션으로 바꿔 주세요."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns16",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "change_type": null,
+        "order_number": null,
+        "requested_change": null,
+        "unavailable_preference": null
+      },
+      "id": "nlu-scope-ns16",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "change_type": null,
+          "order_number": null,
+          "requested_change": null,
+          "unavailable_preference": null
+        },
+        "intent": "delivery_order_change",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "배달:주문 변경",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "이 주문의 조리 시작 시각을 확인할 수 있나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns17",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "evidence_status": null,
+        "issue_detail": null,
+        "issue_type": null,
+        "order_number": null,
+        "resolution_preference": null
+      },
+      "id": "nlu-scope-ns17",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "evidence_status": null,
+          "issue_detail": {
+            "accepted_values": [
+              "배달 완료로 표시되지만 음식을 찾지 못함"
+            ]
+          },
+          "issue_type": {
+            "accepted_values": [
+              "not_received"
+            ]
+          },
+          "order_number": {
+            "accepted_values": [
+              "R-864"
+            ]
+          },
+          "resolution_preference": {
+            "accepted_values": [
+              "redelivery"
+            ]
+          }
+        },
+        "intent": "delivery_refund_redelivery",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "배달:환불/재배달 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "주문번호 R-864는 배달 완료로 표시되지만 음식을 찾지 못했습니다. 재배달을 요청합니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns18",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "evidence_status": null,
+        "issue_detail": null,
+        "issue_type": null,
+        "order_number": null,
+        "resolution_preference": null
+      },
+      "id": "nlu-scope-ns18",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "evidence_status": null,
+          "issue_detail": null,
+          "issue_type": null,
+          "order_number": null,
+          "resolution_preference": null
+        },
+        "intent": "delivery_refund_redelivery",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "배달:환불/재배달 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "배달 음식의 영양성분표를 볼 수 있는 곳이 있나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns19",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "item_name": null,
+        "quantity": null,
+        "region": null,
+        "request_topic": null
+      },
+      "id": "nlu-scope-ns19",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "item_name": {
+            "accepted_values": [
+              "2인용 소파"
+            ]
+          },
+          "quantity": {
+            "accepted_values": [
+              "한 개"
+            ]
+          },
+          "region": {
+            "accepted_values": [
+              "창원 성산구"
+            ]
+          },
+          "request_topic": {
+            "accepted_values": [
+              "place_and_schedule"
+            ]
+          }
+        },
+        "intent": "bulky_waste_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "시청:대형폐기물 배출",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "창원 성산구에서 2인용 소파 한 개를 버리려고 합니다. 배출일은 어디서 지정하나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns20",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "item_name": null,
+        "quantity": null,
+        "region": null,
+        "request_topic": null
+      },
+      "id": "nlu-scope-ns20",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "item_name": null,
+          "quantity": null,
+          "region": null,
+          "request_topic": null
+        },
+        "intent": "bulky_waste_guidance",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "시청:대형폐기물 배출",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "헌 옷 방문 수거 서비스를 신청할 수 있나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns21",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_type": null,
+        "application_channel": null,
+        "application_type": null,
+        "inquiry_topic": null
+      },
+      "id": "nlu-scope-ns21",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_type": {
+            "accepted_values": [
+              "adult_self"
+            ]
+          },
+          "application_channel": null,
+          "application_type": {
+            "accepted_values": [
+              "first_issue"
+            ]
+          },
+          "inquiry_topic": {
+            "accepted_values": [
+              "processing_time"
+            ]
+          }
+        },
+        "intent": "passport_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "시청:여권 발급 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "처음 여권을 신청하는 성인입니다. 신청부터 수령까지 처리 기간이 얼마나 걸리나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns22",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_type": null,
+        "application_channel": null,
+        "application_type": null,
+        "inquiry_topic": null
+      },
+      "id": "nlu-scope-ns22",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_type": null,
+          "application_channel": null,
+          "application_type": null,
+          "inquiry_topic": null
+        },
+        "intent": "passport_guidance",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "시청:여권 발급 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "국제운전면허증 발급을 여권 창구에서도 할 수 있나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns23",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_relation": null,
+        "document_type": null,
+        "inquiry_topic": null,
+        "issuance_channel": null
+      },
+      "id": "nlu-scope-ns23",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_relation": {
+            "accepted_values": [
+              "self"
+            ]
+          },
+          "document_type": {
+            "accepted_values": [
+              "register_copy"
+            ]
+          },
+          "inquiry_topic": {
+            "accepted_values": [
+              "documents"
+            ]
+          },
+          "issuance_channel": {
+            "accepted_values": [
+              "kiosk"
+            ]
+          }
+        },
+        "intent": "resident_certificate_guidance",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "제 주민등록등본을 무인발급기에서 출력하려고 합니다. 준비물이 무엇인지 알고 싶습니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns24",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "applicant_relation": null,
+        "document_type": null,
+        "inquiry_topic": null,
+        "issuance_channel": null
+      },
+      "id": "nlu-scope-ns24",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "applicant_relation": null,
+          "document_type": null,
+          "inquiry_topic": null,
+          "issuance_channel": null
+        },
+        "intent": "resident_certificate_guidance",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "시청:주민등록 등본 문의",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "건축물대장을 인터넷에서 발급받으려면 어디서 신청하나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns25",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns25",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "다음 주 토요일"
+            ]
+          },
+          "designer": null,
+          "selected_time": null,
+          "service_type": {
+            "accepted_values": [
+              "뿌리 염색"
+            ]
+          },
+          "time": {
+            "accepted_values": [
+              "오후 1시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "예약:미용실 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "다음 주 토요일 오후 1시에 뿌리 염색 예약 가능할까요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns26",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns26",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "designer": null,
+          "selected_time": null,
+          "service_type": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "예약:미용실 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "시술에 사용한 제품의 성분표를 볼 수 있나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns27",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns27",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "이번 주 금요일"
+            ]
+          },
+          "department": {
+            "accepted_values": [
+              "이비인후과"
+            ]
+          },
+          "selected_time": null,
+          "time": {
+            "accepted_values": [
+              "오후 5시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "예약:병원 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "이번 주 금요일 오후 5시에 이비인후과 진료를 예약하고 싶습니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns28",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns28",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "department": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": null,
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "예약:병원 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "검사 결과지를 이메일로 받을 수 있는지 궁금합니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns29",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns29",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "다음 주 목요일"
+            ]
+          },
+          "duration": {
+            "accepted_values": [
+              "세 시간"
+            ]
+          },
+          "party_size": {
+            "accepted_values": [
+              "다섯 명"
+            ]
+          },
+          "selected_time": null,
+          "start_time": {
+            "accepted_values": [
+              "오후 4시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "예약:스터디룸 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "다음 주 목요일 오후 4시부터 세 시간 동안 다섯 명이 이용할 스터디룸을 예약하고 싶습니다."
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns30",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns30",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "duration": null,
+          "party_size": null,
+          "selected_time": null,
+          "start_time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "예약:스터디룸 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "스터디룸 이용 중 고장 난 냉방기를 신고하려면 어디로 연락해야 하나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns31",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns31",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": {
+            "accepted_values": [
+              "다음 주 수요일"
+            ]
+          },
+          "party_size": {
+            "accepted_values": [
+              "여섯 명"
+            ]
+          },
+          "selected_time": null,
+          "time": {
+            "accepted_values": [
+              "오후 7시"
+            ]
+          },
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "continue_collecting"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "예약:식당 예약",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "다음 주 수요일 오후 7시에 여섯 명이 식사할 자리를 예약할 수 있나요?"
+    },
+    {
+      "conversation_group_id": "nlu-scope-ns32",
+      "conversation_state": "greeting",
+      "current_fields": {},
+      "id": "nlu-scope-ns32",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "date": null,
+          "party_size": null,
+          "selected_time": null,
+          "time": null,
+          "user_name": null
+        },
+        "intent": "reservation",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "예약:식당 예약",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "식당에서 판매하는 밀키트의 배송 가능 지역이 궁금합니다."
+    }
+  ],
+  "dataset_version": 1,
+  "declared_model_exposure": "not_run",
+  "kind": "ai_authored_heldout_dataset_v1",
+  "state_contract_version": 2
+}

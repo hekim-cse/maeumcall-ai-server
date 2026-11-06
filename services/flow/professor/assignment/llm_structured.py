@@ -81,6 +81,7 @@ def analyze_professor_assignment_user_message(
                 "content": (
                     "너는 전화 시뮬레이션 서버의 대화 상태 분석기이다. "
                     "반드시 JSON 객체만 출력한다. 설명 문장, markdown, 코드블록은 출력하지 않는다."
+                    "\n현재 지원 목적: 수업 과제의 내용, 제출 또는 수행 방법을 문의하는 것."
                     + SCOPE_BOUNDARY_GUIDANCE
                 ),
             },

@@ -93,6 +93,7 @@ def analyze_service_workflow_message(
                 "content": (
                     "너는 전화 시뮬레이션 서버의 엄격한 업무 상태 분석기이다. "
                     "사용자가 말하지 않은 사실을 추론하지 않고 JSON 객체만 출력한다."
+                    + f"\n현재 지원 목적: {spec.scope_purpose or spec.title}."
                     + SCOPE_BOUNDARY_GUIDANCE
                 ),
             },
