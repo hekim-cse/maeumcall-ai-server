@@ -1,0 +1,26 @@
+{
+  "kind": "ai_authored_safety_graph_pair_protocol_v1",
+  "claim_scope": "20 AI-authored A/S greeting utterances accepted by one owner; exploratory paired graph comparison, not overall service accuracy",
+  "declared_model_exposure_at_freeze": "not_run",
+  "baseline_revision": "ae91656b5502c0bf01fcc56f16b8cfaa1ec2b253",
+  "candidate_revision": "9eacb92f482e09796c6eca15624ff16c3280a00e",
+  "baseline_prompt_sha256": "2ac93ab4122f50001429730351037b949d0e2c1cab4be2f6d728c8bbd67c18cc",
+  "candidate_prompt_sha256": "9641f2f040f13710b98b71ca6e3825e77ce5ecebd834dddf80eaa55430d37e06",
+  "dataset_sha256": "3f0fa6ceec96bc62a7e416ab2a1151ac42aa110b4480e1249dd018b53265a353",
+  "review_ledger_sha256": "1b44045902091794ac4979d52fd251a3143730501a664ae978da59c9ffdd02eb",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "request_policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "runner_sha256": "0d580381e0e7e9e7782130e929e8e4d3c49990b572a9856eff0f2a5f542a7034",
+  "probe_sha256": "3772aa7a91947d2e90fafa314d020f7c80fe1b760945eeccdf5de93abbf2bf40",
+  "case_count": 20,
+  "case_order": "SC01 through SC20",
+  "pair_order": "alternate baseline-first and candidate-first by case",
+  "attempt_policy": "one retry after contract failure; zero model requests on graph safety bypass",
+  "restart_every_cases": 5,
+  "runtime": {
+    "image_id": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+    "nano_cpus": 2000000000,
+    "memory_bytes": 6442450944,
+    "server_args": ["-m", "/models/kanana.gguf", "-c", "4096", "-t", "2", "-np", "1", "--host", "0.0.0.0", "--port", "8080"]
+  }
+}
