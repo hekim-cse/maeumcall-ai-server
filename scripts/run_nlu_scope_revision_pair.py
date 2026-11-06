@@ -12,6 +12,8 @@ import json
 import os
 import subprocess
 import sys
+import time
+import urllib.request
 from pathlib import Path
 
 
@@ -51,6 +53,22 @@ def _verify_container(name: str, protocol: dict, model_path: Path) -> None:
         for mount in observed["Mounts"]
     ):
         raise ValueError("Q5 model file must be mounted read-only")
+
+
+def _restart_container(name: str, protocol: dict, model_path: Path) -> None:
+    """Reset growing llama.cpp memory only between complete paired cases."""
+    subprocess.run(("docker", "restart", name), check=True, capture_output=True, text=True)
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    for _ in range(120):
+        try:
+            with opener.open("http://127.0.0.1:18081/health", timeout=2) as response:
+                if json.load(response) == {"status": "ok"}:
+                    _verify_container(name, protocol, model_path)
+                    return
+        except (OSError, ValueError):
+            pass
+        time.sleep(1)
+    raise TimeoutError("local Q5 server did not recover after the scheduled restart")
 
 
 def _worker(args: argparse.Namespace) -> None:
@@ -164,6 +182,7 @@ def _run(args: argparse.Namespace) -> None:
             }:
                 raise ValueError(f"{role} prompt sources differ from frozen protocol")
         predictions: dict[str, list[CasePrediction]] = {"baseline": [], "candidate": []}
+        restarts_after_case: list[int] = []
         partial = args.output.with_suffix(".partial.jsonl")
         with partial.open("x", encoding="utf-8") as file:
             for index, case in enumerate(reviewed.dataset.cases):
@@ -184,6 +203,14 @@ def _run(args: argparse.Namespace) -> None:
                     )
                     file.flush()
                     os.fsync(file.fileno())
+                batch_size = protocol.get("restart_every_cases")
+                if (
+                    batch_size
+                    and (index + 1) % batch_size == 0
+                    and index + 1 < len(reviewed.dataset.cases)
+                ):
+                    _restart_container(args.container_name, protocol, args.model_path)
+                    restarts_after_case.append(index + 1)
 
         def slice_score(role: str, *, boundary: bool) -> dict:
             selected = tuple(
@@ -205,6 +232,7 @@ def _run(args: argparse.Namespace) -> None:
             "baseline_revision": protocol["baseline_revision"],
             "candidate_revision": protocol["candidate_revision"],
             "model_sha256": protocol["model_sha256"],
+            "restarts_after_case": restarts_after_case,
             "baseline_scores": score_predictions(
                 reviewed.dataset.cases, tuple(predictions["baseline"])
             ).to_dict(),
