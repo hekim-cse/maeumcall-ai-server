@@ -77,6 +77,11 @@ def verify(dataset: Path, ledger: Path, protocol: Path, result: Path) -> dict:
             raise ValueError(f"{role} includes a transport or unexpected error")
         if any(len(prediction.attempts) > 2 for prediction in parsed):
             raise ValueError("request exceeded the one-retry policy")
+        if any(
+            len(prediction.attempts) == 1 and not prediction.attempts[0].contract_valid
+            for prediction in parsed
+        ):
+            raise ValueError("a failed first contract attempt was not retried")
         predictions[role] = parsed
         if score_predictions(cases, parsed).to_dict() != observed[f"{role}_scores"]:
             raise ValueError(f"{role} score is not reproducible")

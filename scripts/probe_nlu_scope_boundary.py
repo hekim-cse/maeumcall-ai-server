@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 import subprocess
+import urllib.parse
 from pathlib import Path
 
 from evals.structured_nlu.ai_heldout import (
@@ -43,7 +44,35 @@ def _score_slice(cases, predictions, *, boundary: bool) -> dict:
     return score_predictions(selected, selected_predictions).to_dict()
 
 
-def run(*, endpoint: str, model_path: Path, output: Path) -> dict:
+def _verify_served_model(
+    *, container_name: str, endpoint: str, model_path: Path, policy: AIHeldoutRequestPolicy
+) -> None:
+    """Bind the local file hash to the actual loopback Docker server mount."""
+    observed = json.loads(
+        subprocess.run(
+            ("docker", "inspect", container_name),
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
+    )[0]
+    port = str(urllib.parse.urlsplit(endpoint).port)
+    if not observed["State"]["Running"] or observed["Image"] != policy.server_image_digest:
+        raise ValueError("development server image or running state differs from policy")
+    if observed["HostConfig"]["PortBindings"].get("8080/tcp") != [
+        {"HostIp": "127.0.0.1", "HostPort": port}
+    ]:
+        raise ValueError("development server is not bound to the selected loopback port")
+    if not any(
+        mount["Source"] == str(model_path.resolve())
+        and mount["Destination"] == "/models/kanana.gguf"
+        and not mount["RW"]
+        for mount in observed["Mounts"]
+    ):
+        raise ValueError("development server is not serving the checked model file")
+
+
+def run(*, endpoint: str, model_path: Path, container_name: str, output: Path) -> dict:
     """Keep each completed case if a development run is interrupted."""
     endpoint = _loopback_endpoint(endpoint)
     if output.exists():
@@ -61,6 +90,9 @@ def run(*, endpoint: str, model_path: Path, output: Path) -> dict:
     model_sha = _sha256(model_path)
     if model_sha != baseline.model_sha256:
         raise ValueError("development model differs from the saved Q5 baseline")
+    _verify_served_model(
+        container_name=container_name, endpoint=endpoint, model_path=model_path, policy=policy
+    )
     revision = subprocess.run(
         ("git", "-C", str(ROOT), "rev-parse", "HEAD"),
         check=True,
@@ -109,9 +141,15 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--endpoint", required=True)
     parser.add_argument("--model-path", type=Path, required=True)
+    parser.add_argument("--container-name", required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    report = run(endpoint=args.endpoint, model_path=args.model_path, output=args.output)
+    report = run(
+        endpoint=args.endpoint,
+        model_path=args.model_path,
+        container_name=args.container_name,
+        output=args.output,
+    )
     print(
         "development exact matches:",
         report["baseline_scores"]["counts"]["fully_correct_cases"],

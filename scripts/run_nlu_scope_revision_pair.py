@@ -105,13 +105,13 @@ def _start_worker(source_root: Path, endpoint: str, policy: Path) -> subprocess.
             "--endpoint",
             endpoint,
             "--policy",
-            str(policy),
+            str(policy.resolve()),
         ),
         cwd=source_root,
         env=env,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stderr=None,
         text=True,
         bufsize=1,
     )
@@ -139,13 +139,16 @@ def _run(args: argparse.Namespace) -> None:
         raise ValueError("unexpected protocol kind")
     if args.output.exists() or args.output.with_suffix(".partial.jsonl").exists():
         raise ValueError("result or partial result already exists")
-    _git(root, "merge-base", "--is-ancestor", protocol["candidate_revision"], "HEAD")
+    if _git(args.candidate_root, "rev-parse", "HEAD") != protocol["candidate_revision"]:
+        raise ValueError("candidate worker must run from the frozen candidate commit")
     if _git(args.baseline_root, "rev-parse", "HEAD") != protocol["baseline_revision"]:
         raise ValueError("baseline revision differs from frozen protocol")
     if _git(root, "status", "--porcelain", "--untracked-files=no"):
         raise ValueError("candidate tracked sources must be clean")
     if _git(args.baseline_root, "status", "--porcelain"):
         raise ValueError("baseline worktree must be clean")
+    if _git(args.candidate_root, "status", "--porcelain"):
+        raise ValueError("candidate worktree must be clean")
     if _sha256(Path(__file__)) != protocol["runner_sha256"]:
         raise ValueError("runner differs from frozen protocol")
     if _sha256(args.model_path) != protocol["model_sha256"]:
@@ -170,7 +173,7 @@ def _run(args: argparse.Namespace) -> None:
         raise ValueError("endpoint differs from verified local container")
     workers = {
         "baseline": _start_worker(args.baseline_root, endpoint, args.policy),
-        "candidate": _start_worker(root, endpoint, args.policy),
+        "candidate": _start_worker(args.candidate_root, endpoint, args.policy),
     }
     try:
         for role, worker in workers.items():
@@ -277,6 +280,7 @@ def main() -> None:
     worker.add_argument("--policy", type=Path, required=True)
     run = sub.add_parser("run")
     run.add_argument("--baseline-root", type=Path, required=True)
+    run.add_argument("--candidate-root", type=Path, required=True)
     run.add_argument("--endpoint", required=True)
     run.add_argument("--model-path", type=Path, required=True)
     run.add_argument("--container-name", required=True)

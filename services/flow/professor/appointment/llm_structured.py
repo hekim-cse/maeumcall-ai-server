@@ -148,10 +148,10 @@ def build_professor_appointment_analysis_prompt(
 }}
 
 필드 기준:
-- appointment_purpose: 면담 목적. 예: 진로 상담, 과제, 수업, 상담
+- appointment_purpose: 사용자가 말한 면담 목적을 그대로 보존. 예시에 맞추려고 일반적인 목적이나 다른 주제로 바꾸지 않음
 - date: 희망 날짜. 예: 오늘, 내일, 이번 주 수요일, 다음 주 월요일
 - time: 희망 시간. 예: 오후 3시, 오전 10시
-- user_name: 학생 이름. 이름이 없으면 null
+- user_name: 사용자가 명시적으로 말한 학생 이름만 기록. 이름이 없으면 null이며 '학생 이름' 같은 자리표시자를 만들지 않음
 - user_action:
   - collecting_appointment_info 상태 또는 greeting 상태:
     - 면담 예약 정보를 말하면 "provide_appointment_info"
