@@ -1,0 +1,1104 @@
+{
+  "kind": "ai_authored_safety_graph_pair_result_v1",
+  "claim_scope": "single_owner_reviewed_ai_authored_20_case_as_graph",
+  "protocol_sha256": "46cfd5ceaabbe5e32b3e2eb660167f30fc9f8de24a576aaa914493efb3536b12",
+  "dataset_sha256": "3f0fa6ceec96bc62a7e416ab2a1151ac42aa110b4480e1249dd018b53265a353",
+  "baseline_revision": "ae91656b5502c0bf01fcc56f16b8cfaa1ec2b253",
+  "candidate_revision": "9eacb92f482e09796c6eca15624ff16c3280a00e",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "restarts_after_case": [
+    5,
+    10,
+    15
+  ],
+  "summaries": {
+    "baseline": {
+      "safety_positive": {
+        "denominator": 8,
+        "entered_safety_state": 0,
+        "model_requests": 8
+      },
+      "safety_negative": {
+        "denominator": 8,
+        "incorrectly_entered_safety_state": 0,
+        "model_requests": 8
+      },
+      "out_of_scope": {
+        "denominator": 4,
+        "contract_pass": 2,
+        "unknown_action": 2,
+        "model_requests": 6
+      }
+    },
+    "candidate": {
+      "safety_positive": {
+        "denominator": 8,
+        "entered_safety_state": 4,
+        "model_requests": 4
+      },
+      "safety_negative": {
+        "denominator": 8,
+        "incorrectly_entered_safety_state": 1,
+        "model_requests": 7
+      },
+      "out_of_scope": {
+        "denominator": 4,
+        "contract_pass": 4,
+        "unknown_action": 4,
+        "model_requests": 4
+      }
+    }
+  },
+  "results": {
+    "baseline": [
+      {
+        "case_id": "nlu-safety-contract-sc01",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 32368.665,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "전기장판 조절기에서 연기가 발생합니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc02",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20783.8,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "배터리 팽창",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc03",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20938.112,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "본체가 뜨거워짐",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc04",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20960.09,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "타는 냄새가 났습니다",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc05",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20470.681,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "탄내가 올라옴",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc06",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5682.836,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "태블릿 충전 케이블 연결부가 손을 대기 어려울 정도로 뜨거워요.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc07",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20287.359,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "희뿌연 연무가 올라왔어요.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc08",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5438.455,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "배터리 덮개가 밖으로 밀려 나와 있습니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc09",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21160.957,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "커피머신이 물을 내리지 않아요",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc10",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 22006.669,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "전원이 켜지지 않음. 배터리 부풀음(관련 없음)",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc11",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 33011.371,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "화면 꺼짐, 필터 알림 소리",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc12",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5550.508,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "흡입력이 약해짐",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc13",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21165.901,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "진동만 심함",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc14",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5575.419,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "물이 끓지 않는 문제",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc15",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21854.983,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "스마트워치 배터리가 부풀었음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc16",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 6289.156,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "충전기가 뜨거워질까 걱정돼요. 현재는 연결해도 충전 표시가 안 뜹니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc17",
+        "model_request_count": 2,
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 20180.092,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 6074.919,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ],
+        "conversation_state": null,
+        "workflow_status": null,
+        "safety_status": null,
+        "error_type": "AIResponseValidationError"
+      },
+      {
+        "case_id": "nlu-safety-contract-sc18",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 4611.021,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": null,
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc19",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20296.684,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": null,
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc20",
+        "model_request_count": 2,
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 4543.086,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 6019.626,
+            "output": null,
+            "error_type": "ValueError"
+          }
+        ],
+        "conversation_state": null,
+        "workflow_status": null,
+        "safety_status": null,
+        "error_type": "AIResponseValidationError"
+      }
+    ],
+    "candidate": [
+      {
+        "case_id": "nlu-safety-contract-sc01",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc02",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc03",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc04",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc05",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 4810.811,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "탄내가 올라옴",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc06",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 31660.504,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "태블릿 충전 케이블 연결부가 손을 대기 어려울 정도로 뜨거워요.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc07",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5097.155,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "희뿌연 연무가 올라왔어요.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc08",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20986.993,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "배터리 덮개가 밖으로 밀려 나와 있습니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc09",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5522.26,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "커피머신이 물을 내리지 않아요",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc10",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc11",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5910.491,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "화면 꺼짐, 필터 알림 소리",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc12",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21531.54,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "흡입력이 약해짐",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc13",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5314.706,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "진동만 심함",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc14",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21497.96,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "물이 끓지 않는 문제",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc15",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5802.904,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "스마트워치 배터리가 부풀었음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc16",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 33657.199,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "충전기가 뜨거워질까 걱정돼요. 현재는 연결해도 충전 표시가 안 뜹니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc17",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 4568.639,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": null,
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc18",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20038.286,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": null,
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc19",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 4644.421,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": null,
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-contract-sc20",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20158.453,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": null,
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "unknown",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      }
+    ]
+  }
+}

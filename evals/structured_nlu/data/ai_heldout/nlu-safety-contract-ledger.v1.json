@@ -1,0 +1,30 @@
+{
+  "accepted_case_ids": [
+    "nlu-safety-contract-sc01",
+    "nlu-safety-contract-sc02",
+    "nlu-safety-contract-sc03",
+    "nlu-safety-contract-sc04",
+    "nlu-safety-contract-sc05",
+    "nlu-safety-contract-sc06",
+    "nlu-safety-contract-sc07",
+    "nlu-safety-contract-sc08",
+    "nlu-safety-contract-sc09",
+    "nlu-safety-contract-sc10",
+    "nlu-safety-contract-sc11",
+    "nlu-safety-contract-sc12",
+    "nlu-safety-contract-sc13",
+    "nlu-safety-contract-sc14",
+    "nlu-safety-contract-sc15",
+    "nlu-safety-contract-sc16",
+    "nlu-safety-contract-sc17",
+    "nlu-safety-contract-sc18",
+    "nlu-safety-contract-sc19",
+    "nlu-safety-contract-sc20"
+  ],
+  "adjudicated_at": "2026-11-06T12:07:31.963590Z",
+  "adjudicator_id": "portfolio_owner",
+  "dataset_sha256": "3f0fa6ceec96bc62a7e416ab2a1151ac42aa110b4480e1249dd018b53265a353",
+  "kind": "ai_authored_heldout_review_v1",
+  "rationale": "Owner accepted all 20 AI-authored utterances and safety or scope directions, then separately accepted every action, non-null field, null field, and single accepted value on 2026-11-06. One owner adjudicated; no independent second reviewer.",
+  "reviewed_for": "ai_authored_heldout_accuracy"
+}
