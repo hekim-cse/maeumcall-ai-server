@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
-from datetime import UTC, datetime
+import tempfile
+from datetime import datetime
 from pathlib import Path
 
 from evals.structured_nlu.ai_heldout import AIHeldoutDataset, AIHeldoutReviewLedger
@@ -17,6 +19,7 @@ TEMPLATE = ROOT / "evals/structured_nlu/data/ai_heldout/nlu-scope-reviewed.v2.js
 OUTPUT = ROOT / "evals/structured_nlu/data/ai_heldout/nlu-review-followup-reviewed.v1.json"
 LEDGER = ROOT / "evals/structured_nlu/data/ai_heldout/nlu-review-followup-ledger.v1.json"
 CASE_IDS = tuple(f"RF{number:02}" for number in range(1, 13))
+ADJUDICATED_AT = datetime.fromisoformat("2026-11-06T09:59:55.324123+00:00")
 SCENARIOS = {
     "A/S 접수": ("고객센터:a/s 접수", "NS01"),
     "교수님 면담 예약": ("교수님:면담 예약", "NS11"),
@@ -36,9 +39,24 @@ def _rows(path: Path) -> dict[str, list[str]]:
     return rows
 
 
+def _write_once(path: Path, data: bytes) -> None:
+    """Publish complete bytes without replacing an existing frozen artifact."""
+    with tempfile.NamedTemporaryFile(
+        dir=path.parent, prefix=f".{path.name}.", delete=False
+    ) as temp:
+        temp.write(data)
+        temp.flush()
+        os.fsync(temp.fileno())
+        temp_path = Path(temp.name)
+    try:
+        os.link(temp_path, path)
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
 def main() -> None:
-    if OUTPUT.exists() or LEDGER.exists():
-        raise ValueError("reviewed corpus or ledger exists; never overwrite frozen inputs")
+    if OUTPUT.exists() and LEDGER.exists():
+        raise ValueError("reviewed corpus and ledger exist; never overwrite frozen inputs")
     utterances = _rows(REVIEW)
     labels = _rows(FIELDS)
     template = json.loads(TEMPLATE.read_text(encoding="utf-8"))
@@ -108,7 +126,7 @@ def main() -> None:
             "dataset_sha256": digest,
             "accepted_case_ids": sorted(case.id for case in dataset.cases),
             "adjudicator_id": "portfolio_owner",
-            "adjudicated_at": datetime.now(UTC).isoformat(),
+            "adjudicated_at": ADJUDICATED_AT.isoformat(),
             "rationale": (
                 "Owner revised RF08 and RF12, accepted all 12 AI-authored utterances "
                 "and action directions, then separately accepted every action, "
@@ -121,8 +139,13 @@ def main() -> None:
         json.dumps(ledger.model_dump(mode="json"), ensure_ascii=False, indent=2, sort_keys=True)
         + "\n"
     ).encode("utf-8")
-    OUTPUT.write_bytes(dataset_bytes)
-    LEDGER.write_bytes(ledger_bytes)
+    for path, expected in ((OUTPUT, dataset_bytes), (LEDGER, ledger_bytes)):
+        if path.exists() and path.read_bytes() != expected:
+            raise ValueError(f"partial artifact differs from reviewed inputs: {path}")
+    if not OUTPUT.exists():
+        _write_once(OUTPUT, dataset_bytes)
+    if not LEDGER.exists():
+        _write_once(LEDGER, ledger_bytes)
     print(f"validated {len(dataset.cases)} cases; dataset sha256 {digest}")
 
 

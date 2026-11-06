@@ -14,10 +14,21 @@ Node = Callable[[ServiceWorkflowState], dict[str, Any]]
 def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
     def extract(state: ServiceWorkflowState) -> dict[str, Any]:
         current_fields = _normalized_fields(spec, state.get("fields"))
-        if any(
-            guard.field_key == "safety_status" and guard.value == "safety_issue"
-            for guard in spec.guards
-        ) and has_explicit_safety_issue(state.get("user_message") or ""):
+        current_state = state.get("conversation_state") or "greeting"
+        if (
+            current_state
+            in {
+                "greeting",
+                spec.collecting_state,
+                spec.confirming_state,
+                spec.ready_state,
+            }
+            and any(
+                guard.field_key == "safety_status" and guard.value == "safety_issue"
+                for guard in spec.guards
+            )
+            and has_explicit_safety_issue(state.get("user_message") or "")
+        ):
             return {
                 "intent": spec.intent,
                 "fields": current_fields | {"safety_status": "safety_issue"},
@@ -30,7 +41,7 @@ def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
             }
         analyzed = analyze_service_workflow_message(
             spec,
-            conversation_state=state.get("conversation_state") or "greeting",
+            conversation_state=current_state,
             current_fields=current_fields,
             user_message=state.get("user_message") or "",
         )

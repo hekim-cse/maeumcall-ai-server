@@ -21,6 +21,27 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+LEGACY_RESULT_CLAIM_SCOPE = "single_owner_reviewed_ai_authored_32_case_evaluation"
+
+
+def _protocol_scope(protocol: dict) -> tuple[frozenset[str] | None, str]:
+    """Require explicit targeted claims without weakening revision 3's full gate."""
+    revision = protocol.get("protocol_revision")
+    if revision == 3:
+        if "scenario_keys" in protocol or "result_claim_scope" in protocol:
+            raise ValueError("revision 3 cannot declare a targeted scenario or result scope")
+        return None, LEGACY_RESULT_CLAIM_SCOPE
+    if revision != 4:
+        raise ValueError("unsupported code-revision pair protocol")
+    keys = protocol.get("scenario_keys")
+    claim = protocol.get("result_claim_scope")
+    if not isinstance(keys, list) or not keys or len(keys) != len(set(keys)):
+        raise ValueError("revision 4 requires distinct scenario_keys")
+    if not isinstance(claim, str) or not claim.strip() or claim == LEGACY_RESULT_CLAIM_SCOPE:
+        raise ValueError("revision 4 requires an explicit targeted result_claim_scope")
+    return frozenset(keys), claim
+
+
 def _git(root: Path, *args: str) -> str:
     return subprocess.run(
         ("git", "-C", str(root), *args),
@@ -137,6 +158,7 @@ def _run(args: argparse.Namespace) -> None:
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
     if protocol["kind"] != "ai_authored_code_revision_pair_protocol_v1":
         raise ValueError("unexpected protocol kind")
+    expected_scenarios, result_claim_scope = _protocol_scope(protocol)
     if args.output.exists() or args.output.with_suffix(".partial.jsonl").exists():
         raise ValueError("result or partial result already exists")
     if _git(args.candidate_root, "rev-parse", "HEAD") != protocol["candidate_revision"]:
@@ -156,13 +178,10 @@ def _run(args: argparse.Namespace) -> None:
     if _sha256(args.policy) != protocol["request_policy_sha256"]:
         raise ValueError("request settings differ from frozen protocol")
     _verify_container(args.container_name, protocol, args.model_path)
-    scenario_keys = protocol.get("scenario_keys")
-    if protocol["protocol_revision"] == 4 and not scenario_keys:
-        raise ValueError("targeted protocol must declare scenario keys")
     reviewed = load_reviewed_ai_heldout(
         args.dataset,
         args.ledger,
-        expected_scenario_keys=frozenset(scenario_keys) if scenario_keys else None,
+        expected_scenario_keys=expected_scenarios,
     )
     if len(reviewed.dataset.cases) != protocol["case_count"]:
         raise ValueError("case count differs from frozen protocol")
@@ -238,9 +257,7 @@ def _run(args: argparse.Namespace) -> None:
 
         result = {
             "kind": "ai_authored_code_revision_pair_result_v1",
-            "claim_scope": protocol.get(
-                "result_claim_scope", "single_owner_reviewed_ai_authored_32_case_evaluation"
-            ),
+            "claim_scope": result_claim_scope,
             "protocol_sha256": _sha256(args.protocol),
             "dataset_sha256": reviewed.dataset_sha256,
             "baseline_revision": protocol["baseline_revision"],
