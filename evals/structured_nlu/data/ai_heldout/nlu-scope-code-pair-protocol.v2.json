@@ -1,0 +1,27 @@
+{
+  "kind": "ai_authored_code_revision_pair_protocol_v1",
+  "protocol_revision": 2,
+  "revision_reason": "First attempt OOM at 6 GiB; only container memory changes to 10 GiB after Docker Desktop was temporarily raised from 8 GiB to 12 GiB",
+  "previous_invalid_result_sha256": "a87a74289f7a74a6a9d061a2d084c0e72319905d38a18937e1c54de242feddde",
+  "claim_scope": "32 AI-authored utterances accepted by one owner, no independent second reviewer; full rerun after invalid OOM attempt",
+  "declared_model_exposure_at_freeze": "partially_run_invalid_oom",
+  "baseline_revision": "64fd849a1779b6fdbc5466d67689f72fb0a8707f",
+  "candidate_revision": "f52d99191b5fe87333621b064ec563f65c468264",
+  "baseline_prompt_sha256": "02e1354e1fd7743856e18b04ba2bb413a5902ba124b997da4a18904fdec0cc34",
+  "candidate_prompt_sha256": "c02d2a8e50e7e602527d8bb0014e49fd83fd15bb7cf8c0592d1007d50399053a",
+  "dataset_sha256": "dc7888dcd51dbd7529fd105433ed33560168db0755021a88b22980261f1d797c",
+  "review_ledger_sha256": "3d9c966c30c569558c513caf69be4f7101044b9a7984ef6973fafa54d2e85e4a",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "request_policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "runner_sha256": "0b5a08018930bd28e73d93ec7284cc2596019e1b0b67c3e7f633500f08e807e7",
+  "case_count": 32,
+  "case_order": "NS01 through NS32",
+  "pair_order": "alternate baseline-first and candidate-first by case",
+  "attempt_policy": "one retry after contract failure",
+  "runtime": {
+    "image_id": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+    "nano_cpus": 2000000000,
+    "memory_bytes": 10737418240,
+    "server_args": ["-m", "/models/kanana.gguf", "-c", "4096", "-t", "2", "-np", "1", "--host", "0.0.0.0", "--port", "8080"]
+  }
+}

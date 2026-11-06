@@ -1,0 +1,1381 @@
+{
+  "kind": "ai_authored_code_revision_pair_result_v1",
+  "claim_scope": "single_owner_reviewed_ai_authored_32_case_evaluation",
+  "protocol_sha256": "f9a5b2365cbcc00689e74375940b2ff417c1155621e3e3a793ef391595ec2ddb",
+  "dataset_sha256": "dc7888dcd51dbd7529fd105433ed33560168db0755021a88b22980261f1d797c",
+  "baseline_revision": "64fd849a1779b6fdbc5466d67689f72fb0a8707f",
+  "candidate_revision": "f52d99191b5fe87333621b064ec563f65c468264",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "baseline_scores": {
+    "counts": {
+      "cases": 32,
+      "fully_correct_cases": 0,
+      "first_attempt_contract_passes": 3,
+      "final_contract_passes": 5,
+      "retried_cases": 29,
+      "intent_matches": 5,
+      "action_matches": 3,
+      "slot_true_positives": 8,
+      "slot_false_positives": 3,
+      "slot_false_negatives": 1,
+      "gold_present_slots": 9,
+      "gold_absent_slots": 19,
+      "exact_value_matches": 4,
+      "hallucinated_slots": 3,
+      "omitted_slots": 1,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.0,
+    "first_attempt_contract_success_rate": 0.09375,
+    "final_contract_success_rate": 0.15625,
+    "retry_rate": 0.90625,
+    "complete_failure_rate": 0.84375,
+    "intent_accuracy": 0.15625,
+    "user_action_accuracy": 0.09375,
+    "user_action_macro_f1": 0.07142857142857142,
+    "slot_presence_precision": 0.7272727272727273,
+    "slot_presence_recall": 0.8888888888888888,
+    "slot_presence_f1": 0.7999999999999999,
+    "slot_exact_match_rate": 0.4444444444444444,
+    "hallucination_rate": 0.15789473684210525,
+    "omission_rate": 0.1111111111111111,
+    "change_field_accuracy": null
+  },
+  "candidate_scores": {
+    "counts": {
+      "cases": 32,
+      "fully_correct_cases": 0,
+      "first_attempt_contract_passes": 4,
+      "final_contract_passes": 4,
+      "retried_cases": 28,
+      "intent_matches": 4,
+      "action_matches": 2,
+      "slot_true_positives": 4,
+      "slot_false_positives": 3,
+      "slot_false_negatives": 1,
+      "gold_present_slots": 5,
+      "gold_absent_slots": 17,
+      "exact_value_matches": 2,
+      "hallucinated_slots": 3,
+      "omitted_slots": 1,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.0,
+    "first_attempt_contract_success_rate": 0.125,
+    "final_contract_success_rate": 0.125,
+    "retry_rate": 0.875,
+    "complete_failure_rate": 0.875,
+    "intent_accuracy": 0.125,
+    "user_action_accuracy": 0.0625,
+    "user_action_macro_f1": 0.05128205128205127,
+    "slot_presence_precision": 0.5714285714285714,
+    "slot_presence_recall": 0.8,
+    "slot_presence_f1": 0.6666666666666666,
+    "slot_exact_match_rate": 0.4,
+    "hallucination_rate": 0.17647058823529413,
+    "omission_rate": 0.2,
+    "change_field_accuracy": null
+  },
+  "boundary_baseline_scores": {
+    "counts": {
+      "cases": 16,
+      "fully_correct_cases": 0,
+      "first_attempt_contract_passes": 1,
+      "final_contract_passes": 2,
+      "retried_cases": 15,
+      "intent_matches": 2,
+      "action_matches": 0,
+      "slot_true_positives": 0,
+      "slot_false_positives": 2,
+      "slot_false_negatives": 0,
+      "gold_present_slots": 0,
+      "gold_absent_slots": 11,
+      "exact_value_matches": 0,
+      "hallucinated_slots": 2,
+      "omitted_slots": 0,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.0,
+    "first_attempt_contract_success_rate": 0.0625,
+    "final_contract_success_rate": 0.125,
+    "retry_rate": 0.9375,
+    "complete_failure_rate": 0.875,
+    "intent_accuracy": 0.125,
+    "user_action_accuracy": 0.0,
+    "user_action_macro_f1": 0.0,
+    "slot_presence_precision": 0.0,
+    "slot_presence_recall": 0.0,
+    "slot_presence_f1": 0.0,
+    "slot_exact_match_rate": 0.0,
+    "hallucination_rate": 0.18181818181818182,
+    "omission_rate": 0.0,
+    "change_field_accuracy": null
+  },
+  "boundary_candidate_scores": {
+    "counts": {
+      "cases": 16,
+      "fully_correct_cases": 0,
+      "first_attempt_contract_passes": 2,
+      "final_contract_passes": 2,
+      "retried_cases": 14,
+      "intent_matches": 2,
+      "action_matches": 0,
+      "slot_true_positives": 0,
+      "slot_false_positives": 2,
+      "slot_false_negatives": 0,
+      "gold_present_slots": 0,
+      "gold_absent_slots": 11,
+      "exact_value_matches": 0,
+      "hallucinated_slots": 2,
+      "omitted_slots": 0,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.0,
+    "first_attempt_contract_success_rate": 0.125,
+    "final_contract_success_rate": 0.125,
+    "retry_rate": 0.875,
+    "complete_failure_rate": 0.875,
+    "intent_accuracy": 0.125,
+    "user_action_accuracy": 0.0,
+    "user_action_macro_f1": 0.0,
+    "slot_presence_precision": 0.0,
+    "slot_presence_recall": 0.0,
+    "slot_presence_f1": 0.0,
+    "slot_exact_match_rate": 0.0,
+    "hallucination_rate": 0.18181818181818182,
+    "omission_rate": 0.0,
+    "change_field_accuracy": null
+  },
+  "in_scope_baseline_scores": {
+    "counts": {
+      "cases": 16,
+      "fully_correct_cases": 0,
+      "first_attempt_contract_passes": 2,
+      "final_contract_passes": 3,
+      "retried_cases": 14,
+      "intent_matches": 3,
+      "action_matches": 3,
+      "slot_true_positives": 8,
+      "slot_false_positives": 1,
+      "slot_false_negatives": 1,
+      "gold_present_slots": 9,
+      "gold_absent_slots": 8,
+      "exact_value_matches": 4,
+      "hallucinated_slots": 1,
+      "omitted_slots": 1,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.0,
+    "first_attempt_contract_success_rate": 0.125,
+    "final_contract_success_rate": 0.1875,
+    "retry_rate": 0.875,
+    "complete_failure_rate": 0.8125,
+    "intent_accuracy": 0.1875,
+    "user_action_accuracy": 0.1875,
+    "user_action_macro_f1": 0.1,
+    "slot_presence_precision": 0.8888888888888888,
+    "slot_presence_recall": 0.8888888888888888,
+    "slot_presence_f1": 0.8888888888888888,
+    "slot_exact_match_rate": 0.4444444444444444,
+    "hallucination_rate": 0.125,
+    "omission_rate": 0.1111111111111111,
+    "change_field_accuracy": null
+  },
+  "in_scope_candidate_scores": {
+    "counts": {
+      "cases": 16,
+      "fully_correct_cases": 0,
+      "first_attempt_contract_passes": 2,
+      "final_contract_passes": 2,
+      "retried_cases": 14,
+      "intent_matches": 2,
+      "action_matches": 2,
+      "slot_true_positives": 4,
+      "slot_false_positives": 1,
+      "slot_false_negatives": 1,
+      "gold_present_slots": 5,
+      "gold_absent_slots": 6,
+      "exact_value_matches": 2,
+      "hallucinated_slots": 1,
+      "omitted_slots": 1,
+      "applicable_change_fields": 0,
+      "change_field_matches": 0
+    },
+    "case_exact_match_rate": 0.0,
+    "first_attempt_contract_success_rate": 0.125,
+    "final_contract_success_rate": 0.125,
+    "retry_rate": 0.875,
+    "complete_failure_rate": 0.875,
+    "intent_accuracy": 0.125,
+    "user_action_accuracy": 0.125,
+    "user_action_macro_f1": 0.07272727272727272,
+    "slot_presence_precision": 0.8,
+    "slot_presence_recall": 0.8,
+    "slot_presence_f1": 0.8000000000000002,
+    "slot_exact_match_rate": 0.4,
+    "hallucination_rate": 0.16666666666666666,
+    "omission_rate": 0.2,
+    "change_field_accuracy": null
+  },
+  "predictions": {
+    "baseline": [
+      {
+        "case_id": "nlu-scope-ns01",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 27743.737,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": "전자기기",
+                "model_name": null,
+                "symptom": "물통을 채웠는데 아래쪽으로 물이 샘",
+                "occurred_at": null,
+                "safety_status": "safety_issue",
+                "service_channel": "parcel",
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns02",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20085.201,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "교체용 가습기 물통만 따로 구매할 수 있나요?",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns03",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 22952.858,
+            "output": {
+              "intent": "plan_contract_consultation",
+              "fields": {
+                "inquiry_type": "plan_change",
+                "current_service": null,
+                "consultation_goal": null,
+                "consent_scope": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns04",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 25674.782,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 14477.485,
+            "output": {
+              "intent": "plan_contract_consultation",
+              "fields": {
+                "inquiry_type": "billing",
+                "current_service": null,
+                "consultation_goal": null,
+                "consent_scope": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns05",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 38471.343,
+            "output": null,
+            "error_type": "ValueError"
+          },
+          {
+            "contract_valid": true,
+            "latency_ms": 17433.874,
+            "output": {
+              "intent": "network_call_issue",
+              "fields": {
+                "service_type": "wifi",
+                "symptom": "웹페이지가 열리지 않음",
+                "occurred_at": null,
+                "scope": "single_device",
+                "troubleshooting_done": null,
+                "next_action": "remote_check"
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns06",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.769,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.851,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns07",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.514,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.477,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns08",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.821,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.402,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns09",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.498,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.406,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns10",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.432,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.387,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns11",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.357,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.402,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns12",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.414,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.394,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns13",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.368,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.424,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns14",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.986,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.86,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns15",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.367,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.34,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns16",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.783,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.316,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns17",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.378,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.103,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns18",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.461,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.897,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns19",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.729,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.13,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns20",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.343,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.442,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns21",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.519,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.162,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns22",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.356,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.323,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns23",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.504,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.048,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns24",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.307,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.307,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns25",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.337,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.581,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns26",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.277,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.279,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns27",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.298,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.28,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns28",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.703,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.341,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns29",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.326,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.335,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns30",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.811,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.991,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns31",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.397,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.326,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns32",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 1.241,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.32,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      }
+    ],
+    "candidate": [
+      {
+        "case_id": "nlu-scope-ns01",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21459.827,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": "전자 제품",
+                "model_name": null,
+                "symptom": "물통을 채워도 아래쪽으로 물이 샘",
+                "occurred_at": null,
+                "safety_status": "safety_issue",
+                "service_channel": "parcel",
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns02",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20713.936,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "교체용 가습기 물통만 따로 구매할 수 있나요?",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns03",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 17632.964,
+            "output": {
+              "intent": "plan_contract_consultation",
+              "fields": {
+                "inquiry_type": "plan_change",
+                "current_service": null,
+                "consultation_goal": null,
+                "consent_scope": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns04",
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 24702.621,
+            "output": {
+              "intent": "plan_contract_consultation",
+              "fields": {
+                "inquiry_type": "billing",
+                "current_service": null,
+                "consultation_goal": null,
+                "consent_scope": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns05",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 102.816,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.432,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns06",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.603,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.533,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns07",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 1.46,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.475,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns08",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.43,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.462,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns09",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.391,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.379,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns10",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 1.095,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.402,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns11",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.32,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.433,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns12",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.928,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.88,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns13",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.6,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.99,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns14",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.786,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.864,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns15",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.363,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.345,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns16",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.656,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.142,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns17",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.546,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.359,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns18",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.326,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.361,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns19",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.415,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.325,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns20",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.384,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.122,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns21",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.54,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.047,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns22",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.802,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.288,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns23",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.325,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.342,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns24",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.322,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.334,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns25",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.328,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.382,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns26",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.888,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.082,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns27",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.294,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.301,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns28",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.308,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.263,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns29",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.317,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.339,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns30",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.327,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 1.328,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns31",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.338,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.306,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      },
+      {
+        "case_id": "nlu-scope-ns32",
+        "attempts": [
+          {
+            "contract_valid": false,
+            "latency_ms": 0.299,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          },
+          {
+            "contract_valid": false,
+            "latency_ms": 0.308,
+            "output": null,
+            "error_type": "RemoteDisconnected"
+          }
+        ]
+      }
+    ]
+  }
+}
