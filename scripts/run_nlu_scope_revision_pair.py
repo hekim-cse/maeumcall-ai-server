@@ -156,7 +156,16 @@ def _run(args: argparse.Namespace) -> None:
     if _sha256(args.policy) != protocol["request_policy_sha256"]:
         raise ValueError("request settings differ from frozen protocol")
     _verify_container(args.container_name, protocol, args.model_path)
-    reviewed = load_reviewed_ai_heldout(args.dataset, args.ledger)
+    scenario_keys = protocol.get("scenario_keys")
+    if protocol["protocol_revision"] == 4 and not scenario_keys:
+        raise ValueError("targeted protocol must declare scenario keys")
+    reviewed = load_reviewed_ai_heldout(
+        args.dataset,
+        args.ledger,
+        expected_scenario_keys=frozenset(scenario_keys) if scenario_keys else None,
+    )
+    if len(reviewed.dataset.cases) != protocol["case_count"]:
+        raise ValueError("case count differs from frozen protocol")
     if reviewed.dataset_sha256 != protocol["dataset_sha256"]:
         raise ValueError("dataset differs from frozen protocol")
     if _sha256(args.ledger) != protocol["review_ledger_sha256"]:
@@ -229,7 +238,9 @@ def _run(args: argparse.Namespace) -> None:
 
         result = {
             "kind": "ai_authored_code_revision_pair_result_v1",
-            "claim_scope": "single_owner_reviewed_ai_authored_32_case_evaluation",
+            "claim_scope": protocol.get(
+                "result_claim_scope", "single_owner_reviewed_ai_authored_32_case_evaluation"
+            ),
             "protocol_sha256": _sha256(args.protocol),
             "dataset_sha256": reviewed.dataset_sha256,
             "baseline_revision": protocol["baseline_revision"],

@@ -29,13 +29,22 @@ def _exact_mcnemar(gains: int, losses: int) -> float:
 
 
 def verify(dataset: Path, ledger: Path, protocol: Path, result: Path) -> dict:
-    reviewed = load_reviewed_ai_heldout(dataset, ledger)
     frozen = json.loads(protocol.read_text(encoding="utf-8"))
+    scenario_keys = frozen.get("scenario_keys")
+    if frozen["protocol_revision"] == 4 and not scenario_keys:
+        raise ValueError("targeted protocol must declare scenario keys")
+    reviewed = load_reviewed_ai_heldout(
+        dataset,
+        ledger,
+        expected_scenario_keys=frozenset(scenario_keys) if scenario_keys else None,
+    )
     observed = json.loads(result.read_text(encoding="utf-8"))
-    if frozen["protocol_revision"] != 3:
-        raise ValueError("expected the documented batch-restart protocol revision")
+    if frozen["protocol_revision"] not in (3, 4):
+        raise ValueError("unsupported batch-restart protocol revision")
     if observed["kind"] != "ai_authored_code_revision_pair_result_v1":
         raise ValueError("unexpected result kind")
+    if frozen["protocol_revision"] == 4 and observed["claim_scope"] != frozen["result_claim_scope"]:
+        raise ValueError("result claim scope differs from frozen protocol")
     for key, expected in (
         ("protocol_sha256", _sha256(protocol)),
         ("dataset_sha256", reviewed.dataset_sha256),

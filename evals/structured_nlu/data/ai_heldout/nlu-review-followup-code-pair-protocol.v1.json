@@ -1,0 +1,29 @@
+{
+  "kind": "ai_authored_code_revision_pair_protocol_v1",
+  "protocol_revision": 4,
+  "revision_reason": "New owner-reviewed RF01–RF12 cases isolate the post-review safety and appointment prompt changes. Restart after six complete pairs to bound local server memory.",
+  "claim_scope": "12 AI-authored utterances accepted by one owner across A/S and professor appointment greeting states; no independent second reviewer",
+  "result_claim_scope": "single_owner_reviewed_ai_authored_12_case_review_followup",
+  "declared_model_exposure_at_freeze": "not_run",
+  "baseline_revision": "f52d99191b5fe87333621b064ec563f65c468264",
+  "candidate_revision": "ae91656b5502c0bf01fcc56f16b8cfaa1ec2b253",
+  "baseline_prompt_sha256": "c02d2a8e50e7e602527d8bb0014e49fd83fd15bb7cf8c0592d1007d50399053a",
+  "candidate_prompt_sha256": "2ac93ab4122f50001429730351037b949d0e2c1cab4be2f6d728c8bbd67c18cc",
+  "dataset_sha256": "726c7d4d73c93979c0de242be5223780e51e66c705ca8c2789ff77f8fa2b4d59",
+  "review_ledger_sha256": "3b0c6b3094bde9d6a3e4b241739251c74f81e6917dc53e3723d1daf55da74341",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "request_policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "runner_sha256": "8911e2ab6ceea0fdc2a297a81d5e91c9f63a93b2a1546a626b6b7f4726de7b06",
+  "case_count": 12,
+  "scenario_keys": ["고객센터:a/s 접수", "교수님:면담 예약"],
+  "case_order": "RF01 through RF12",
+  "pair_order": "alternate baseline-first and candidate-first by case",
+  "attempt_policy": "one retry after contract failure",
+  "restart_every_cases": 6,
+  "runtime": {
+    "image_id": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+    "nano_cpus": 2000000000,
+    "memory_bytes": 10737418240,
+    "server_args": ["-m", "/models/kanana.gguf", "-c", "4096", "-t", "2", "-np", "1", "--host", "0.0.0.0", "--port", "8080"]
+  }
+}
