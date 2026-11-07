@@ -1,0 +1,264 @@
+{
+  "kind": "as_safety_evidence_exposed_development_probe_v1",
+  "claim_scope": "already_exposed_ai_authored_32_case_diagnostic_only",
+  "dataset_sha256": "67d3c23f197d80d30784d0829cbb62b606f9a4f72bcf5fa5e9ea419f191fe706",
+  "prompt_sha256": "98d1acd23a677ac27450790e00306c0e7ef05742ce46a69358c0cbd4ac7831f2",
+  "rows": [
+    {
+      "case_id": "nlu-safety-confirmation-cf01",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 4769.938
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf02",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2991.694
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf03",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1770.436
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf04",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1865.859
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf05",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1798.863
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf06",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1971.611
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf07",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2121.627
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf08",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1834.063
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf09",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1899.178
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf10",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1489.518
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf11",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2093.145
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf12",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1908.83
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf13",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1445.411
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf14",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2418.858
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf15",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2472.836
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf16",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1704.315
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf17",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1455.5
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf18",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2481.068
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf19",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2214.094
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf20",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1593.846
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf21",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 5201.24
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf22",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2121.317
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf23",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 5234.257
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf24",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2080.648
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf25",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1522.821
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf26",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2524.126
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf27",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1859.209
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf28",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 5319.66
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf29",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1958.428
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf30",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2654.227
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf31",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 1368.472
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf32",
+      "target": null,
+      "assertion": null,
+      "route": null,
+      "error_type": "JSONDecodeError",
+      "latency_ms": 2725.776
+    }
+  ]
+}
