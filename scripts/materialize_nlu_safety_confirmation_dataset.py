@@ -20,6 +20,33 @@ DATASET = ROOT / "evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-r
 LEDGER = ROOT / "evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-ledger.v1.json"
 GOALS = ROOT / "evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-goals.v1.json"
 IDS = tuple(f"CF{number:02}" for number in range(1, 33))
+EXPECTED_DIRECTIONS = (
+    ("현재 A/S 대상의 실제 위험",) * 12
+    + (
+        "현상은 있으나 위험 여부 미확정",
+        "현상은 있으나 위험 여부 미확정",
+        "현상은 있으나 위험 여부 미확정",
+        "냄새의 출처 미확정",
+        "현상은 있으나 위험 여부 미확정",
+        "냄새의 출처 미확정",
+        "현상은 있으나 위험 여부 미확정",
+        "현상은 있으나 위험 여부 미확정",
+    )
+    + (
+        "현재 위험 진술 없음",
+        "다른 제품의 위험 경험",
+        "가정형 위험 질문",
+        "다른 출처의 냄새",
+        "온라인 자료의 위험 묘사",
+        "원래 형태의 묘사",
+        "후기의 위험 묘사",
+        "가정형 위험 질문",
+        "화면 표시의 비유",
+        "다른 출처의 냄새",
+        "명시적 위험 부정",
+        "그을음이 아닌 외관 자국",
+    )
+)
 
 
 def _rows(path: Path) -> dict[str, list[str]]:
@@ -72,23 +99,20 @@ def main() -> None:
         expected_action = "provide_details" if any(fields.values()) else "unknown"
         if action != expected_action:
             raise ValueError(f"action and fields disagree: {case_id}")
+        if utterance[2] != EXPECTED_DIRECTIONS[number - 1]:
+            raise ValueError(f"direction differs: {case_id}")
         if number <= 12:
-            expected_direction = "현재 A/S 대상의 실제 위험"
             expected_state = "safety_action_required"
             if fields["safety_status"] != {"accepted_values": ["safety_issue"]}:
                 raise ValueError(f"confirmed risk label differs: {case_id}")
         elif number <= 20:
-            expected_direction = None
             expected_state = "confirming_safety_status"
             if fields["safety_status"] is not None:
                 raise ValueError(f"ambiguous risk must have null safety label: {case_id}")
         else:
-            expected_direction = None
             expected_state = "collecting_service_request"
             if fields["safety_status"] == {"accepted_values": ["safety_issue"]}:
                 raise ValueError(f"negative risk label differs: {case_id}")
-        if expected_direction is not None and utterance[2] != expected_direction:
-            raise ValueError(f"direction differs: {case_id}")
         declared_state = label[3].strip("`")
         if declared_state != ("일반 A/S 경로" if number > 20 else expected_state):
             raise ValueError(f"graph goal differs: {case_id}")

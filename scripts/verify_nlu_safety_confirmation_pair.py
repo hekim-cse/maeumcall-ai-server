@@ -23,7 +23,13 @@ def verify(result_path: Path, dataset_path: Path, goals_path: Path, protocol_pat
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
     goals = json.loads(goals_path.read_text(encoding="utf-8"))
     dataset = AIHeldoutDataset.model_validate_json(dataset_path.read_bytes())
-    if set(result) != {
+    version = result.get("kind")
+    if version not in {
+        "ai_authored_safety_confirmation_pair_result_v1",
+        "ai_authored_safety_confirmation_pair_result_v2",
+    }:
+        raise ValueError("unexpected result kind")
+    expected_keys = {
         "kind",
         "claim_scope",
         "protocol_sha256",
@@ -35,12 +41,20 @@ def verify(result_path: Path, dataset_path: Path, goals_path: Path, protocol_pat
         "restarts_after_case",
         "summaries",
         "results",
-    }:
+    }
+    if version.endswith("v2"):
+        expected_keys.add("execution_order")
+    if set(result) != expected_keys:
         raise ValueError("unexpected result keys")
-    if result["kind"] != "ai_authored_safety_confirmation_pair_result_v1":
-        raise ValueError("unexpected result kind")
-    if result["claim_scope"] != "single_owner_reviewed_ai_authored_32_case_as_safety_stress":
+    expected_scope = (
+        "same_32_case_replay_after_v1_exposure_for_order_provenance"
+        if version.endswith("v2")
+        else "single_owner_reviewed_ai_authored_32_case_as_safety_stress"
+    )
+    if result["claim_scope"] != expected_scope:
         raise ValueError("unexpected claim scope")
+    if protocol.get("kind") != f"ai_authored_safety_confirmation_pair_protocol_{version[-2:]}":
+        raise ValueError("protocol and result versions differ")
     if result["protocol_sha256"] != _sha256(protocol_path):
         raise ValueError("protocol hash differs")
     for path, key in (
@@ -63,6 +77,14 @@ def verify(result_path: Path, dataset_path: Path, goals_path: Path, protocol_pat
     expected_ids = [f"nlu-safety-confirmation-cf{number:02}" for number in range(1, 33)]
     if [case.id for case in cases] != expected_ids:
         raise ValueError("dataset IDs or order differ")
+    if version.endswith("v2"):
+        expected_order = [
+            {"case_id": case_id, "role": role}
+            for index, case_id in enumerate(expected_ids)
+            for role in (("baseline", "candidate") if index % 2 == 0 else ("candidate", "baseline"))
+        ]
+        if result["execution_order"] != expected_order:
+            raise ValueError("execution order differs from alternating protocol")
     if (
         set(goals) != {"kind", "dataset_sha256", "goals"}
         or goals["kind"] != "ai_authored_safety_confirmation_goals_v1"
@@ -186,11 +208,22 @@ def _verify_row(case, row: dict, role: str) -> None:
         raise ValueError("extraction retry order differs")
     if row["error_type"] is None:
         state = row["conversation_state"]
+        if row["attempts"] and row["attempts"][-1]["output"] is not None:
+            extracted_safety = row["attempts"][-1]["output"]["fields"]["safety_status"]
+            if extracted_safety == "safety_issue" and (
+                state != "safety_action_required" or row["safety_status"] != "safety_issue"
+            ):
+                raise ValueError("extracted safety issue did not reach direct safety state")
         if state == "safety_action_required":
             if row["workflow_status"] != "blocked" or row["safety_status"] != "safety_issue":
                 raise ValueError("direct safety state differs")
         elif state == "confirming_safety_status":
-            if role != "candidate" or row["focus_request_count"] == 0 or row["model_request_count"]:
+            if (
+                role != "candidate"
+                or row["focus_request_count"] == 0
+                or row["model_request_count"]
+                or row["focus_attempts"][-1]["decision"] is False
+            ):
                 raise ValueError("confirmation provenance differs")
             if row["workflow_status"] != "blocked" or row["safety_status"] is not None:
                 raise ValueError("confirmation state differs")

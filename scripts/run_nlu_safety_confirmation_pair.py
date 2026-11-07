@@ -53,7 +53,7 @@ def run(args: argparse.Namespace) -> None:
     """Verify every frozen input before alternating the two graph revisions."""
     root = Path(__file__).resolve().parents[1]
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
-    if protocol.get("kind") != "ai_authored_safety_confirmation_pair_protocol_v1":
+    if protocol.get("kind") != "ai_authored_safety_confirmation_pair_protocol_v2":
         raise ValueError("unexpected confirmation protocol kind")
     if args.output.exists() or args.output.with_suffix(".partial.jsonl").exists():
         raise ValueError("result or partial result already exists")
@@ -118,6 +118,7 @@ def run(args: argparse.Namespace) -> None:
             if ready != {"ready": True, "prompt_sha256": protocol[f"{role}_prompt_sha256"]}:
                 raise ValueError(f"{role} prompt sources differ from protocol")
         results: dict[str, list[dict]] = {"baseline": [], "candidate": []}
+        execution_order: list[dict[str, str]] = []
         restarts_after_case: list[int] = []
         partial = args.output.with_suffix(".partial.jsonl")
         with partial.open("x", encoding="utf-8") as file:
@@ -126,6 +127,7 @@ def run(args: argparse.Namespace) -> None:
                 for role in order:
                     result = _call_worker(workers[role], case)
                     results[role].append(result)
+                    execution_order.append({"case_id": case.id, "role": role})
                     file.write(
                         json.dumps({"role": role, "result": result}, ensure_ascii=False) + "\n"
                     )
@@ -136,14 +138,15 @@ def run(args: argparse.Namespace) -> None:
                     _restart_container(args.container_name, protocol, args.model_path)
                     restarts_after_case.append(index + 1)
         result = {
-            "kind": "ai_authored_safety_confirmation_pair_result_v1",
-            "claim_scope": "single_owner_reviewed_ai_authored_32_case_as_safety_stress",
+            "kind": "ai_authored_safety_confirmation_pair_result_v2",
+            "claim_scope": "same_32_case_replay_after_v1_exposure_for_order_provenance",
             "protocol_sha256": _sha256(args.protocol),
             "dataset_sha256": reviewed.dataset_sha256,
             "graph_goals_sha256": _sha256(args.goals),
             "baseline_revision": protocol["baseline_revision"],
             "candidate_revision": protocol["candidate_revision"],
             "model_sha256": protocol["model_sha256"],
+            "execution_order": execution_order,
             "restarts_after_case": restarts_after_case,
             "summaries": {role: summarize(cases, values) for role, values in results.items()},
             "results": results,

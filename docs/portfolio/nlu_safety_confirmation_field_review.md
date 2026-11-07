@@ -1,6 +1,6 @@
 # CF01–CF32 행동·전체 필드 검수 초안
 
-**현재 상태: AI 작성 행동·전체 필드·공란·기대 상태 초안을 사용자가 탐색용으로 채택했다. 모델에 실행하지 않았다.** [발화 문장·안전 방향](nlu_safety_confirmation_fresh_review.md)도 별도로 채택됐다. 모든 사례는 A/S 접수의 `greeting`에서 시작하며 이전 필드는 모두 공란이다. `intent=service_request`, `change_field=null`이다. 표에 없는 일곱 업무 필드는 모두 `null`이다. 비공란 값은 한 가지 허용 정규화 값으로 제안한다.
+**현재 상태: 아래 표는 모델 실행 전에 사용자가 채택한 검수 기록이다. CF01–CF32는 이후 [짝비교](nlu_safety_confirmation_pair_findings.md)에 사용돼 모델에 노출됐다. 새 성능 평가에 재사용하지 않는다.** [발화 문장·안전 방향](nlu_safety_confirmation_fresh_review.md)도 별도로 채택됐다. 모든 사례는 A/S 접수의 `greeting`에서 시작하며 이전 필드는 모두 공란이다. `intent=service_request`, `change_field=null`이다. 표에 없는 일곱 업무 필드는 모두 `null`이다. 비공란 값은 한 가지 허용 정규화 값으로 제안한다.
 
 `user_action`이 `unknown`인 사례에는 업무 필드 값을 넣지 않는다. `provide_details`는 현재 A/S 대상에 대한 실제 정보를 말한 경우에만 제안한다. 안전 방향과 그래프 기대 상태는 별도다. 현재 제품의 실제 위험이면 즉시 보호 상태가 목표이고, 위험 여부가 불확실하면 확인 상태가 목표다.
 

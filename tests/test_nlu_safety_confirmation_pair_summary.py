@@ -26,11 +26,17 @@ def test_confirmation_summary_counts_states_and_both_model_calls() -> None:
                 "graph_latency_ms": float(index + 1),
             }
         )
+    rows[1]["focus_request_count"] = 2
+    rows[20]["model_request_count"] = 2
+    rows[31]["conversation_state"] = None
+    rows[31]["model_request_count"] = 2
+    rows[31]["error_type"] = "AIResponseValidationError"
     summary = summarize(cases, rows)
     assert summary["confirmed_hazard"]["denominator"] == 12
     assert summary["confirmed_hazard"]["direct_safety"] == 1
     assert summary["confirmed_hazard"]["safety_confirmation"] == 11
     assert summary["ambiguous_hazard"]["safety_confirmation"] == 8
-    assert summary["no_current_hazard"]["normal_collection"] == 12
-    assert summary["no_current_hazard"]["extraction_requests"] == 12
-    assert summary["confirmed_hazard"]["focus_requests"] == 11
+    assert summary["no_current_hazard"]["normal_collection"] == 11
+    assert summary["no_current_hazard"]["extraction_requests"] == 14
+    assert summary["no_current_hazard"]["graph_errors"] == 1
+    assert summary["confirmed_hazard"]["focus_requests"] == 12
