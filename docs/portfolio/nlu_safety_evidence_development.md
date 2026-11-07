@@ -12,6 +12,8 @@
 
 커밋 `5b8bb34`의 프로브를 같은 로컬 Q5에 CF01–CF32 각 한 번씩 실행했다. [진단 결과](../../evals/structured_nlu/data/ai_heldout/nlu-safety-evidence-exposed-development.v1.json)는 **32/32건 JSON 파싱 실패**였다. 임시 확인한 한 응답은 값 이름을 적었으나 JSON 객체가 아닌 줄 단위 텍스트였다. 이 경우 대상·태도 판단의 정확도를 계산할 수 없다. 모델 서버가 지원하는 JSON Schema 제약 출력을 다음 개발 후보로 확인한다.
 
+[llama.cpp 서버 문서](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md)는 Chat Completions의 `response_format`으로 JSON 객체와 스키마 제약을 지원한다. 같은 사례 한 건을 시험했을 때 `json_schema` 형식은 기존 줄 단위 응답을 바꾸지 못했으나, `json_object`와 스키마 조합은 JSON 객체를 반환했다. 이 응답의 근거 문구는 원문을 어미까지 정확히 복사하지 않아 출처 검증에서 거부됐다. 따라서 형식 강제와 근거 정확성을 별개로 측정한다.
+
 ## 후속 검증 조건
 
 서비스에 연결할 후보가 정해지면 먼저 코드와 요청 설정을 고정한다. 이후 AI 작성 새 발화의 문장·행동·전체 필드·기대 상태를 사용자 검수로 확정하고, 모델 호출 전에 입력과 프로토콜을 커밋한다. 직접 위험 대응, 불확실성 확인, 비위험 일반 진행, 모델 오류, 추가 요청과 지연을 별도 분모로 보고한다.

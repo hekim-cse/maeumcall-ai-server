@@ -10,10 +10,11 @@ import argparse
 import hashlib
 import json
 import time
+import urllib.request
 from pathlib import Path
 
 from evals.structured_nlu.ai_heldout import AIHeldoutDataset, AIHeldoutRequestPolicy
-from scripts.run_ai_heldout_pair import _loopback_endpoint, _post_completion
+from scripts.run_ai_heldout_pair import _loopback_endpoint, _NoRedirect
 
 PROMPT = (
     "A/S 접수 발화에서 현재 문의하는 제품의 안전 위험 근거만 추출한다. "
@@ -25,6 +26,47 @@ PROMPT = (
     '{"evidence": string 또는 null, "target": "current"|"other"|"unknown"|"none", '
     '"assertion": "observed"|"uncertain"|"negated_or_hypothetical"|"none"}'
 )
+EVIDENCE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "evidence": {"type": ["string", "null"]},
+        "target": {"enum": ["current", "other", "unknown", "none"]},
+        "assertion": {"enum": ["observed", "uncertain", "negated_or_hypothetical", "none"]},
+    },
+    "required": ["evidence", "target", "assertion"],
+    "additionalProperties": False,
+}
+
+
+def post_constrained_completion(
+    endpoint: str,
+    model_id: str,
+    messages: list[dict[str, str]],
+    policy: AIHeldoutRequestPolicy,
+) -> str:
+    """Use llama.cpp's documented JSON Schema constrained chat output."""
+    payload = {
+        "model": model_id,
+        "messages": messages,
+        "max_tokens": policy.max_tokens,
+        "temperature": policy.temperature,
+        "repeat_penalty": policy.repeat_penalty,
+        "stop": list(policy.stop),
+        "response_format": {"type": "json_object", "schema": EVIDENCE_SCHEMA},
+    }
+    request = urllib.request.Request(
+        endpoint,
+        data=json.dumps(payload, ensure_ascii=False).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
+    with opener.open(request, timeout=policy.timeout_seconds) as response:
+        body = json.load(response)
+    raw = body["choices"][0]["message"]["content"]
+    if not isinstance(raw, str):
+        raise ValueError("model completion must be text")
+    return raw
 
 
 def validate_evidence(raw: str, utterance: str) -> dict[str, str | None]:
@@ -79,7 +121,7 @@ def run(args: argparse.Namespace) -> None:
         decision = None
         error_type = None
         try:
-            raw = _post_completion(
+            raw = post_constrained_completion(
                 endpoint,
                 args.model_id,
                 [
@@ -102,10 +144,13 @@ def run(args: argparse.Namespace) -> None:
             }
         )
     result = {
-        "kind": "as_safety_evidence_exposed_development_probe_v1",
+        "kind": "as_safety_evidence_exposed_development_probe_v2",
         "claim_scope": "already_exposed_ai_authored_32_case_diagnostic_only",
         "dataset_sha256": hashlib.sha256(args.dataset.read_bytes()).hexdigest(),
         "prompt_sha256": hashlib.sha256(PROMPT.encode()).hexdigest(),
+        "response_schema_sha256": hashlib.sha256(
+            json.dumps(EVIDENCE_SCHEMA, sort_keys=True).encode()
+        ).hexdigest(),
         "rows": rows,
     }
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
