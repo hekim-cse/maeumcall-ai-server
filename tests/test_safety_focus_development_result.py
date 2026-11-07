@@ -8,7 +8,9 @@ from pathlib import Path
 def test_safety_focus_result_counts_and_keeps_no_raw_text() -> None:
     """Recount diagnostic outcomes without treating them as heldout accuracy."""
     result = json.loads(
-        Path("evals/structured_nlu/results/nlu-safety-focus-exposed-development-v1.json").read_text()
+        Path(
+            "evals/structured_nlu/results/nlu-safety-focus-exposed-development-v1.json"
+        ).read_text()
     )
     dataset = Path("evals/structured_nlu/data/ai_heldout/nlu-safety-postfreeze-reviewed.v1.json")
     assert result["dataset_sha256"] == hashlib.sha256(dataset.read_bytes()).hexdigest()
@@ -18,9 +20,8 @@ def test_safety_focus_result_counts_and_keeps_no_raw_text() -> None:
         f"nlu-safety-postfreeze-pf{i:02}" for i in range(1, 17)
     ]
     assert all(
-        set(row) == {
-            "case_id", "expected_safety", "current_safety_issue", "latency_ms", "error_type"
-        }
+        set(row)
+        == {"case_id", "expected_safety", "current_safety_issue", "latency_ms", "error_type"}
         for row in rows
     )
     assert sum(row["current_safety_issue"] is True for row in rows[:8]) == 8
