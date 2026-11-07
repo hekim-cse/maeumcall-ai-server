@@ -1,0 +1,26 @@
+{
+  "accepted_case_ids": [
+    "nlu-safety-postfreeze-pf01",
+    "nlu-safety-postfreeze-pf02",
+    "nlu-safety-postfreeze-pf03",
+    "nlu-safety-postfreeze-pf04",
+    "nlu-safety-postfreeze-pf05",
+    "nlu-safety-postfreeze-pf06",
+    "nlu-safety-postfreeze-pf07",
+    "nlu-safety-postfreeze-pf08",
+    "nlu-safety-postfreeze-pf09",
+    "nlu-safety-postfreeze-pf10",
+    "nlu-safety-postfreeze-pf11",
+    "nlu-safety-postfreeze-pf12",
+    "nlu-safety-postfreeze-pf13",
+    "nlu-safety-postfreeze-pf14",
+    "nlu-safety-postfreeze-pf15",
+    "nlu-safety-postfreeze-pf16"
+  ],
+  "adjudicated_at": "2026-11-07T10:04:57.554387Z",
+  "adjudicator_id": "portfolio_owner",
+  "dataset_sha256": "8730b8b9b984a4dd586de3f6d69d87ac9294a20c36b280f15a798f127874502f",
+  "kind": "ai_authored_heldout_review_v1",
+  "rationale": "Owner accepted PF01–PF16 AI-authored utterances and safety directions, then separately accepted every action, field value, null field, and graph goal on 2026-11-07. One owner adjudicated; no independent second reviewer.",
+  "reviewed_for": "ai_authored_heldout_accuracy"
+}
