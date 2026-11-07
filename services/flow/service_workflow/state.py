@@ -17,5 +17,3 @@ class ServiceWorkflowState(TypedDict, total=False):
     history: list[dict[str, str]]
     recommended_replies: list[str]
     should_end_call: bool
-    safety_confirmation_needed: bool
-    safety_confirmation_answer: str | None

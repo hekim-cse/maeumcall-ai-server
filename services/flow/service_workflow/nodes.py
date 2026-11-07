@@ -4,13 +4,7 @@ from collections.abc import Callable
 from typing import Any
 
 from services.flow.service_workflow.contracts import ServiceWorkflowSpec
-from services.flow.service_workflow.safety import (
-    SAFETY_CONFIRMATION_STATE,
-    classify_safety_concern,
-    has_explicit_safety_issue,
-    has_safety_concern,
-    safety_confirmation_reply,
-)
+from services.flow.service_workflow.safety import has_explicit_safety_issue
 from services.flow.service_workflow.state import ServiceWorkflowState
 from services.flow.service_workflow.structured import analyze_service_workflow_message
 
@@ -21,32 +15,6 @@ def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
     def extract(state: ServiceWorkflowState) -> dict[str, Any]:
         current_fields = _normalized_fields(spec, state.get("fields"))
         current_state = state.get("conversation_state") or "greeting"
-        if current_state == SAFETY_CONFIRMATION_STATE:
-            message = state.get("user_message") or ""
-            reply = (
-                "confirmed"
-                if has_explicit_safety_issue(message)
-                else safety_confirmation_reply(message)
-            )
-            action = {
-                "closing": "go_closing",
-            }.get(reply, "unknown")
-            safety_value = {
-                "confirmed": "safety_issue",
-                "denied": "no_safety_issue",
-            }.get(reply)
-            return {
-                "intent": spec.intent,
-                "fields": current_fields | {"safety_status": safety_value},
-                "user_action": action,
-                "change_field": None,
-                "last_ai_message": state.get("last_ai_message"),
-                "history": state.get("history") or [],
-                "recommended_replies": [],
-                "should_end_call": False,
-                "safety_confirmation_needed": False,
-                "safety_confirmation_answer": reply,
-            }
         if (
             current_state
             in {
@@ -70,27 +38,6 @@ def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
                 "history": state.get("history") or [],
                 "recommended_replies": [],
                 "should_end_call": False,
-                "safety_confirmation_needed": False,
-                "safety_confirmation_answer": None,
-            }
-        if (
-            current_state
-            in {"greeting", spec.collecting_state, spec.confirming_state, spec.ready_state}
-            and any(guard.field_key == "safety_status" for guard in spec.guards)
-            and has_safety_concern(state.get("user_message") or "")
-            and classify_safety_concern(state.get("user_message") or "") is not False
-        ):
-            return {
-                "intent": spec.intent,
-                "fields": current_fields | {"safety_status": None},
-                "user_action": "unknown",
-                "change_field": None,
-                "last_ai_message": state.get("last_ai_message"),
-                "history": state.get("history") or [],
-                "recommended_replies": [],
-                "should_end_call": False,
-                "safety_confirmation_needed": True,
-                "safety_confirmation_answer": None,
             }
         analyzed = analyze_service_workflow_message(
             spec,
@@ -102,6 +49,7 @@ def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
         for key, value in analyzed["fields"].items():
             if value is not None:
                 next_fields[key] = value
+
         change_field = analyzed["change_field"]
         if analyzed["user_action"] == "change_detail" and change_field is not None:
             if analyzed["fields"][change_field] is None:
@@ -116,8 +64,6 @@ def build_extract_node(spec: ServiceWorkflowSpec) -> Node:
             "history": state.get("history") or [],
             "recommended_replies": [],
             "should_end_call": False,
-            "safety_confirmation_needed": False,
-            "safety_confirmation_answer": None,
         }
 
     return extract
@@ -157,36 +103,6 @@ def build_decide_node(spec: ServiceWorkflowSpec) -> Node:
                 "should_end_call": False,
             }
 
-        if current_state == SAFETY_CONFIRMATION_STATE:
-            if user_action == "go_closing":
-                return {
-                    "conversation_state": "closing",
-                    "missing_fields": missing_fields,
-                    "should_end_call": False,
-                }
-            if state.get("safety_confirmation_answer") == "confirmed":
-                return {
-                    "conversation_state": "safety_action_required",
-                    "workflow_status": "blocked",
-                    "missing_fields": missing_fields,
-                    "should_end_call": False,
-                }
-            if state.get("safety_confirmation_answer") == "denied":
-                return {
-                    "conversation_state": spec.collecting_state
-                    if missing_fields
-                    else spec.confirming_state,
-                    "workflow_status": "in_progress",
-                    "missing_fields": missing_fields,
-                    "should_end_call": False,
-                }
-            return {
-                "conversation_state": SAFETY_CONFIRMATION_STATE,
-                "workflow_status": "blocked",
-                "missing_fields": missing_fields,
-                "should_end_call": False,
-            }
-
         current_guard = spec.guard_for_state(current_state)
         if current_guard is not None:
             if user_action == "go_closing":
@@ -222,19 +138,6 @@ def build_decide_node(spec: ServiceWorkflowSpec) -> Node:
         if matching_guard is not None:
             return {
                 "conversation_state": matching_guard.state,
-                "workflow_status": "blocked",
-                "missing_fields": missing_fields,
-                "should_end_call": False,
-            }
-
-        if state.get("safety_confirmation_needed") is True and current_state in {
-            "greeting",
-            spec.collecting_state,
-            spec.confirming_state,
-            spec.ready_state,
-        }:
-            return {
-                "conversation_state": SAFETY_CONFIRMATION_STATE,
                 "workflow_status": "blocked",
                 "missing_fields": missing_fields,
                 "should_end_call": False,
@@ -307,12 +210,6 @@ def build_response_node(spec: ServiceWorkflowSpec) -> Node:
         if conversation_state == spec.collecting_state:
             missing_key = missing_fields[0] if missing_fields else spec.field_keys[0]
             message = _field(spec, missing_key).question
-        elif conversation_state == SAFETY_CONFIRMATION_STATE:
-            message = (
-                "안전 이상 여부를 먼저 확인하겠습니다. 현재 A/S를 요청하신 제품에서 "
-                "연기, 불꽃, 배터리 팽창, 심한 발열 같은 현상이 실제로 발생했나요? "
-                "확인 전에는 일반 접수를 진행하지 않겠습니다."
-            )
         elif conversation_state == spec.confirming_state:
             summary = _field_summary(spec, fields)
             message = f"{spec.confirmation_prefix} {summary}. 맞습니까?"
@@ -343,12 +240,6 @@ def build_replies_node(spec: ServiceWorkflowSpec) -> Node:
         if conversation_state == spec.collecting_state:
             missing_key = missing_fields[0] if missing_fields else spec.field_keys[0]
             replies = list(_field(spec, missing_key).replies)
-        elif conversation_state == SAFETY_CONFIRMATION_STATE:
-            replies = [
-                "네, 실제로 그렇습니다.",
-                "아니요, 그런 증상은 없습니다.",
-                "통화를 마칠게요.",
-            ]
         elif conversation_state == spec.confirming_state:
             replies = ["네, 맞습니다.", "수정할 내용이 있습니다.", "진행을 취소하겠습니다."]
         elif conversation_state == spec.ready_state:
