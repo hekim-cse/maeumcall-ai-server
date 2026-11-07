@@ -1,0 +1,328 @@
+{
+  "kind": "as_safety_clause_index_exposed_development_probe_v1",
+  "claim_scope": "already_exposed_ai_authored_32_case_diagnostic_only",
+  "dataset_sha256": "67d3c23f197d80d30784d0829cbb62b606f9a4f72bcf5fa5e9ea419f191fe706",
+  "prompt_sha256": "81c07883bb4bdc9be5714162ea061c34ce1785e9acd13489a008c832f7a67921",
+  "rows": [
+    {
+      "case_id": "nlu-safety-confirmation-cf01",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 4972.075
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf02",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1342.285
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf03",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1283.744
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf04",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1193.057
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf05",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "observed",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1281.768
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf06",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1250.244
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf07",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1284.415
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf08",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "observed",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1224.589
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf09",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1297.103
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf10",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1283.073
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf11",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1254.793
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf12",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1193.784
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf13",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "uncertain",
+      "route": "confirming_safety_status",
+      "error_type": null,
+      "latency_ms": 1282.444
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf14",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1315.927
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf15",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "uncertain",
+      "route": "confirming_safety_status",
+      "error_type": null,
+      "latency_ms": 1347.178
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf16",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "observed",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1412.715
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf17",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "uncertain",
+      "route": "confirming_safety_status",
+      "error_type": null,
+      "latency_ms": 1366.915
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf18",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "observed",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1380.383
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf19",
+      "clause_count": 1,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "uncertain",
+      "route": "confirming_safety_status",
+      "error_type": null,
+      "latency_ms": 1296.529
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf20",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1327.398
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf21",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1335.679
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf22",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "observed",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1352.974
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf23",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1732.765
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf24",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "observed",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1376.024
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf25",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "observed",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1345.65
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf26",
+      "clause_count": 2,
+      "evidence_index": 2,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1345.905
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf27",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "negated_or_hypothetical",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1619.113
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf28",
+      "clause_count": 2,
+      "evidence_index": 2,
+      "target": "current",
+      "assertion": "uncertain",
+      "route": "confirming_safety_status",
+      "error_type": null,
+      "latency_ms": 1378.642
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf29",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1409.36
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf30",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "other",
+      "assertion": "observed",
+      "route": "collecting_service_request",
+      "error_type": null,
+      "latency_ms": 1410.641
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf31",
+      "clause_count": 2,
+      "evidence_index": 1,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1228.209
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf32",
+      "clause_count": 2,
+      "evidence_index": 2,
+      "target": "current",
+      "assertion": "observed",
+      "route": "safety_action_required",
+      "error_type": null,
+      "latency_ms": 1410.896
+    }
+  ]
+}

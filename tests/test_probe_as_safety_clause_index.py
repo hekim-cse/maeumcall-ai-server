@@ -1,7 +1,13 @@
 """Clause IDs bind model evidence to source text without copied phrases."""
 
+import hashlib
+import json
+from collections import Counter
+from pathlib import Path
+
 import pytest
 
+from evals.structured_nlu.ai_heldout import AIHeldoutDataset
 from scripts.probe_as_safety_clause_index import (
     evidence_schema,
     split_clauses,
@@ -38,3 +44,48 @@ def test_source_clause_ids_preserve_other_product_context() -> None:
 def test_invalid_or_contradictory_clause_id_is_rejected(raw: str) -> None:
     with pytest.raises(ValueError):
         validate_indexed_evidence(raw, 2)
+
+
+def test_exposed_development_results_have_fixed_order_and_bounded_fields() -> None:
+    root = Path("evals/structured_nlu/data/ai_heldout")
+    dataset_path = root / "nlu-safety-confirmation-reviewed.v1.json"
+    dataset = AIHeldoutDataset.model_validate_json(dataset_path.read_bytes())
+    expected_ids = [case.id for case in dataset.cases]
+    digest = hashlib.sha256(dataset_path.read_bytes()).hexdigest()
+    results = [
+        json.loads((root / name).read_text(encoding="utf-8"))
+        for name in (
+            "nlu-safety-evidence-exposed-development.v1.json",
+            "nlu-safety-evidence-exposed-development.v2.json",
+            "nlu-safety-clause-index-exposed-development.v1.json",
+        )
+    ]
+    for result in results:
+        assert result["claim_scope"] == "already_exposed_ai_authored_32_case_diagnostic_only"
+        assert result["dataset_sha256"] == digest
+        assert [row["case_id"] for row in result["rows"]] == expected_ids
+        assert all("user_message" not in row and "raw" not in row for row in result["rows"])
+    assert Counter(row["error_type"] for row in results[0]["rows"]) == {"JSONDecodeError": 32}
+    assert sum(row["route"] is not None for row in results[1]["rows"]) == 10
+    indexed = results[2]["rows"]
+    assert all(row["error_type"] is None for row in indexed)
+    assert [
+        Counter(row["route"] for row in indexed[start:stop])
+        for start, stop in ((0, 12), (12, 20), (20, 32))
+    ] == [
+        Counter({"safety_action_required": 10, "collecting_service_request": 2}),
+        Counter(
+            {
+                "safety_action_required": 2,
+                "confirming_safety_status": 4,
+                "collecting_service_request": 2,
+            }
+        ),
+        Counter(
+            {
+                "safety_action_required": 6,
+                "confirming_safety_status": 1,
+                "collecting_service_request": 5,
+            }
+        ),
+    ]
