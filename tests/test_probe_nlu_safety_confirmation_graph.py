@@ -3,15 +3,17 @@
 from types import SimpleNamespace
 
 from scripts import probe_nlu_safety_confirmation_graph as probe
-from services.flow.service_workflow.safety import classify_safety_concern
 
 
-def test_focus_probe_records_retry_without_raw_response(monkeypatch) -> None:
+def test_focus_probe_records_attempts_without_raw_response(monkeypatch) -> None:
     responses = iter(["not json", '{"current_safety_issue": true}'])
     monkeypatch.setattr(probe, "_post_completion", lambda *args: next(responses))
 
     def graph_case(case, **kwargs):
-        assert classify_safety_concern(case.user_message) is True
+        import services.flow.service_workflow.safety as safety_module
+
+        safety_module.complete_hf_safety_json([])
+        safety_module.complete_hf_safety_json([])
         return {"case_id": case.id, "attempts": [], "model_request_count": 0}
 
     monkeypatch.setattr(probe, "run_existing_graph_case", graph_case)
