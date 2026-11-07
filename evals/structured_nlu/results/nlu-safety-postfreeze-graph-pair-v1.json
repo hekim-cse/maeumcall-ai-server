@@ -1,0 +1,902 @@
+{
+  "kind": "ai_authored_safety_postfreeze_pair_result_v1",
+  "claim_scope": "single_owner_reviewed_ai_authored_16_case_as_safety_stress",
+  "protocol_sha256": "6a9becc55bbbe24ef601c12c1eaf3f6b146deb03283235d645e37d0720283d7c",
+  "dataset_sha256": "8730b8b9b984a4dd586de3f6d69d87ac9294a20c36b280f15a798f127874502f",
+  "baseline_revision": "58595dedf93550fe4fe4252d050ee0d9b3291567",
+  "candidate_revision": "24cbf8095aab5be1a38e5c498f6f68994cf2d9bc",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "restarts_after_case": [
+    4,
+    8,
+    12
+  ],
+  "summaries": {
+    "baseline": {
+      "safety_positive": {
+        "denominator": 8,
+        "entered_safety_state": 2,
+        "model_requests": 6,
+        "zero_request_bypasses": 2,
+        "graph_errors": 0
+      },
+      "safety_negative": {
+        "denominator": 8,
+        "incorrectly_entered_safety_state": 0,
+        "model_requests": 8,
+        "zero_request_bypasses": 0,
+        "graph_errors": 0
+      }
+    },
+    "candidate": {
+      "safety_positive": {
+        "denominator": 8,
+        "entered_safety_state": 2,
+        "model_requests": 6,
+        "zero_request_bypasses": 2,
+        "graph_errors": 0
+      },
+      "safety_negative": {
+        "denominator": 8,
+        "incorrectly_entered_safety_state": 0,
+        "model_requests": 8,
+        "zero_request_bypasses": 0,
+        "graph_errors": 0
+      }
+    }
+  },
+  "results": {
+    "baseline": [
+      {
+        "case_id": "nlu-safety-postfreeze-pf01",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 33048.617,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "희뿌연 연기가 새어 나왔어요. 전원은 뽑았습니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf02",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf03",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21826.801,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "배터리 케이스가 안쪽에서 밀리는 듯 벌어졌습니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf04",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5373.562,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "타닥 소리와 함께 작은 불꽃이 보였습니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf05",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 31700.27,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "고무 타는 듯한 냄새",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf06",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf07",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21704.827,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "휴대폰 뒷면이 볼록하게 튀어나오고 화면 가장자리가 들떴어요.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf08",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5747.063,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "태블릿 전원 케이블 피복이 녹아 안쪽 선이 드러남",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf09",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 31366.468,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "화면만 꺼짐",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf10",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5074.224,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "충전할 때 뜨겁다",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf11",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20777.533,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "흡입력만 약해짐",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf12",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5039.073,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "물이 나오지 않음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf13",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 32643.37,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "고무 타는 냄새는 옆에 둔 난방기에서 납니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf14",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5322.228,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "온도 버튼이 눌리지 않음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf15",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21999.528,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "휴대폰 화면이 들뜬 건 보호필름 때문입니다. 기기에서는 통화 소리만 작게 들려요.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf16",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5358.975,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "태블릿 전원 케이블 피복이 녹았음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      }
+    ],
+    "candidate": [
+      {
+        "case_id": "nlu-safety-postfreeze-pf01",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5346.46,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "희뿌연 연기가 새어 나왔어요",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf02",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf03",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5883.312,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "무선 청소기 배터리 케이스가 안쪽에서 밀리는 듯 벌어졌습니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf04",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21084.99,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "타닥 소리와 함께 작은 불꽃이 보였습니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf05",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5183.914,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "고무 타는 듯한 냄새",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf06",
+        "model_request_count": 0,
+        "attempts": [],
+        "conversation_state": "safety_action_required",
+        "workflow_status": "blocked",
+        "safety_status": "safety_issue",
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf07",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 6044.644,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "휴대폰 뒷면이 볼록하게 튀어나오고 화면 가장자리가 들떴어요.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf08",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21815.073,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "태블릿 전원 케이블 피복이 녹아 안쪽 선이 드러남",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf09",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 4976.239,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "화면만 꺼짐",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf10",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20556.464,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "충전할 때 뜨겁다",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf11",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5088.296,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "흡입력만 약해짐",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf12",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20519.603,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "물이 나오지 않음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf13",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 5772.346,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "고무 타는 냄새는 옆에 둔 난방기에서 납니다.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf14",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 20990.41,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "온도 버튼이 눌리지 않음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf15",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 6360.267,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "휴대폰 화면이 들뜬 건 보호필름 때문입니다. 기기에서는 통화 소리만 작게 들려요.",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      },
+      {
+        "case_id": "nlu-safety-postfreeze-pf16",
+        "model_request_count": 1,
+        "attempts": [
+          {
+            "contract_valid": true,
+            "latency_ms": 21168.623,
+            "output": {
+              "intent": "service_request",
+              "fields": {
+                "product_type": null,
+                "model_name": null,
+                "symptom": "태블릿 전원 케이블 피복이 녹았음",
+                "occurred_at": null,
+                "safety_status": null,
+                "service_channel": null,
+                "preferred_schedule": null
+              },
+              "user_action": "provide_details",
+              "change_field": null
+            },
+            "error_type": null
+          }
+        ],
+        "conversation_state": "collecting_service_request",
+        "workflow_status": "in_progress",
+        "safety_status": null,
+        "error_type": null
+      }
+    ]
+  }
+}
