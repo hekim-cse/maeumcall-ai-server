@@ -1,0 +1,776 @@
+{
+  "cases": [
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf01",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf01",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "공기청정기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "전원선 이음새에서 희뿌연 연기가 새어 나옴"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "공기청정기 전원선 이음새에서 희뿌연 연기가 새어 나왔어요. 전원은 뽑았습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf02",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf02",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전동 칫솔"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 중 본체가 손에 쥐기 어려울 정도로 뜨거움"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "전동 칫솔 본체가 충전하는 동안 손에 쥐기 어려울 정도로 뜨겁습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf03",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf03",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "무선 청소기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "배터리 케이스가 안쪽에서 밀리는 듯 벌어짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "무선 청소기 배터리 케이스가 안쪽에서 밀리는 듯 벌어졌습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf04",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf04",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "정수기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "어댑터 연결 시 타닥 소리와 함께 작은 불꽃이 보임"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "정수기 어댑터를 꽂자 타닥 소리와 함께 작은 불꽃이 보였습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf05",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf05",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "헤어드라이어"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "손잡이에서 고무 타는 듯한 냄새가 계속 남"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "헤어드라이어 손잡이에서 고무 타는 듯한 냄새가 계속 나요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf06",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf06",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전기찜질기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 단자에서 연기가 남"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "전기찜질기 충전 단자에서 연기가 났습니다. 지금은 전원을 껐어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf07",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf07",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "휴대폰"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "뒷면이 볼록하게 튀어나오고 화면 가장자리가 들뜸"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "휴대폰 뒷면이 볼록하게 튀어나오고 화면 가장자리가 들떴어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf08",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf08",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "태블릿"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "전원 케이블 피복이 녹아 안쪽 선이 드러남"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "태블릿 전원 케이블 피복이 녹아 안쪽 선이 드러났습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf09",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf09",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "공기청정기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "no_safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "화면이 꺼짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "공기청정기에서 연기가 새어 나오냐고요? 아니요, 화면만 꺼집니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf10",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf10",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전동 칫솔"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전이 되지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "다른 사람의 전동 칫솔은 충전할 때 뜨겁다는데 제 것은 충전이 안 됩니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf11",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf11",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "청소기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "흡입력이 약해짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "배터리 케이스가 벌어졌다는 후기를 봤습니다. 제 청소기는 흡입력만 약해졌어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf12",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf12",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "정수기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "물이 나오지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "정수기 어댑터에서 불꽃이 보이면 위험한가요? 지금은 물이 나오지 않는 문제만 있습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf13",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf13",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "헤어드라이어"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "바람 세기가 약함"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "고무 타는 냄새는 옆에 둔 난방기에서 납니다. 헤어드라이어는 바람 세기가 약해요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf14",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf14",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전기찜질기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "no_safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "온도 버튼이 눌리지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "전기찜질기에서 연기는 나지 않았습니다. 온도 버튼이 눌리지 않아요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf15",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf15",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "휴대폰"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "통화 소리가 작게 들림"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "휴대폰 화면이 들뜬 건 보호필름 때문입니다. 기기에서는 통화 소리만 작게 들려요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-postfreeze-pf16",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-postfreeze-pf16",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "태블릿"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 속도가 느림"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "태블릿 전원 케이블 피복이 녹았는지 확인하는 방법이 궁금해요. 지금은 충전 속도만 느립니다."
+    }
+  ],
+  "dataset_version": 1,
+  "declared_model_exposure": "not_run",
+  "kind": "ai_authored_heldout_dataset_v1",
+  "state_contract_version": 2
+}
