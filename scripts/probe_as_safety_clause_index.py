@@ -9,8 +9,12 @@ import re
 import time
 from pathlib import Path
 
-from evals.structured_nlu.ai_heldout import AIHeldoutDataset, AIHeldoutRequestPolicy
-from scripts.probe_as_safety_evidence import post_constrained_completion, route_evidence
+from evals.structured_nlu.ai_heldout import AIHeldoutRequestPolicy
+from scripts.probe_as_safety_evidence import (
+    load_reviewed_cf_dataset,
+    post_constrained_completion,
+    route_evidence,
+)
 from scripts.run_ai_heldout_pair import _loopback_endpoint
 
 PROMPT = (
@@ -76,7 +80,7 @@ def run(args: argparse.Namespace) -> None:
         raise ValueError("unexpected local endpoint")
     if args.output.exists():
         raise ValueError("development result already exists")
-    dataset = AIHeldoutDataset.model_validate_json(args.dataset.read_bytes())
+    dataset, dataset_digest = load_reviewed_cf_dataset(args.dataset)
     cases = dataset.cases
     if len(cases) != 32 or [case.id[-4:] for case in cases] != [
         f"cf{number:02}" for number in range(1, 33)
@@ -120,7 +124,7 @@ def run(args: argparse.Namespace) -> None:
     result = {
         "kind": "as_safety_clause_index_exposed_development_probe_v1",
         "claim_scope": "already_exposed_ai_authored_32_case_diagnostic_only",
-        "dataset_sha256": hashlib.sha256(args.dataset.read_bytes()).hexdigest(),
+        "dataset_sha256": dataset_digest,
         "prompt_sha256": hashlib.sha256(PROMPT.encode()).hexdigest(),
         "rows": rows,
     }

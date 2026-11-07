@@ -36,6 +36,16 @@ EVIDENCE_SCHEMA = {
     "required": ["evidence", "target", "assertion"],
     "additionalProperties": False,
 }
+REVIEWED_CF_DATASET_SHA256 = "67d3c23f197d80d30784d0829cbb62b606f9a4f72bcf5fa5e9ea419f191fe706"
+
+
+def load_reviewed_cf_dataset(path: Path) -> tuple[AIHeldoutDataset, str]:
+    """Pin the previously reviewed, already exposed CF corpus before any model call."""
+    data = path.read_bytes()
+    digest = hashlib.sha256(data).hexdigest()
+    if digest != REVIEWED_CF_DATASET_SHA256:
+        raise ValueError("reviewed CF dataset SHA-256 differs")
+    return AIHeldoutDataset.model_validate_json(data), digest
 
 
 def post_constrained_completion(
@@ -65,7 +75,10 @@ def post_constrained_completion(
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
     with opener.open(request, timeout=policy.timeout_seconds) as response:
         body = json.load(response)
-    raw = body["choices"][0]["message"]["content"]
+    try:
+        raw = body["choices"][0]["message"]["content"]
+    except IndexError as error:
+        raise ValueError("model completion choices are empty") from error
     if not isinstance(raw, str):
         raise ValueError("model completion must be text")
     return raw
@@ -109,7 +122,7 @@ def run(args: argparse.Namespace) -> None:
         raise ValueError("unexpected local endpoint")
     if args.output.exists():
         raise ValueError("development result already exists")
-    dataset = AIHeldoutDataset.model_validate_json(args.dataset.read_bytes())
+    dataset, dataset_digest = load_reviewed_cf_dataset(args.dataset)
     cases = dataset.cases
     if len(cases) != 32 or [case.id[-4:] for case in cases] != [
         f"cf{number:02}" for number in range(1, 33)
@@ -148,7 +161,7 @@ def run(args: argparse.Namespace) -> None:
     result = {
         "kind": "as_safety_evidence_exposed_development_probe_v2",
         "claim_scope": "already_exposed_ai_authored_32_case_diagnostic_only",
-        "dataset_sha256": hashlib.sha256(args.dataset.read_bytes()).hexdigest(),
+        "dataset_sha256": dataset_digest,
         "prompt_sha256": hashlib.sha256(PROMPT.encode()).hexdigest(),
         "response_schema_sha256": hashlib.sha256(
             json.dumps(EVIDENCE_SCHEMA, sort_keys=True).encode()
