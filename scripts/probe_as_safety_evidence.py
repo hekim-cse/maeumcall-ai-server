@@ -43,6 +43,8 @@ def post_constrained_completion(
     model_id: str,
     messages: list[dict[str, str]],
     policy: AIHeldoutRequestPolicy,
+    *,
+    schema: dict | None = None,
 ) -> str:
     """Use llama.cpp's documented JSON Schema constrained chat output."""
     payload = {
@@ -52,7 +54,7 @@ def post_constrained_completion(
         "temperature": policy.temperature,
         "repeat_penalty": policy.repeat_penalty,
         "stop": list(policy.stop),
-        "response_format": {"type": "json_object", "schema": EVIDENCE_SCHEMA},
+        "response_format": {"type": "json_object", "schema": schema or EVIDENCE_SCHEMA},
     }
     request = urllib.request.Request(
         endpoint,
