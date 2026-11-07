@@ -102,6 +102,17 @@ def run(args: argparse.Namespace) -> None:
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
     if protocol.get("kind") != "as_safety_exposed_quantization_pair_protocol_v1":
         raise ValueError("unexpected development protocol")
+    if protocol.get("claim_scope") != CLAIM_SCOPE or protocol.get("image_digest") != IMAGE:
+        raise ValueError("development claim or model image differs")
+    if protocol.get("local_runtime") != {
+        "host_ports": {"q4": 18081, "q5": 18082},
+        "cpu_per_container": 2,
+        "memory_bytes_per_container": 4 * 1024**3,
+        "context_tokens": 4096,
+        "threads": 2,
+        "parallel_slots": 1,
+    } or protocol.get("request_override") != {"max_tokens": 100}:
+        raise ValueError("development runtime or request override differs")
     if subprocess.run(
         ("git", "status", "--porcelain", "--untracked-files=no"),
         cwd=ROOT,
