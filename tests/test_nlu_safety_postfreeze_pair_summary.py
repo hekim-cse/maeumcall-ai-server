@@ -31,3 +31,6 @@ def test_postfreeze_summary_keeps_fixed_positive_and_negative_denominators() -> 
     }
     assert result["safety_negative"]["denominator"] == 8
     assert result["safety_negative"]["incorrectly_entered_safety_state"] == 0
+    rows[8]["conversation_state"] = "safety_action_required"
+    rows[8]["model_request_count"] = 0
+    assert summarize(cases, rows)["safety_negative"]["incorrectly_entered_safety_state"] == 1

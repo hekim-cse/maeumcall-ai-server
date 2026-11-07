@@ -21,7 +21,7 @@ def test_frozen_postfreeze_result_recalculates() -> None:
     assert summary["candidate"]["safety_negative"]["incorrectly_entered_safety_state"] == 0
 
 
-@pytest.mark.parametrize("tampering", ["count", "raw", "contract"])
+@pytest.mark.parametrize("tampering", ["count", "raw", "contract", "roles", "retry"])
 def test_altered_result_is_rejected(tmp_path: Path, tampering: str) -> None:
     """The verifier checks output meaning and forbids unbounded model text."""
     payload = json.loads(RESULT.read_text())
@@ -29,6 +29,26 @@ def test_altered_result_is_rejected(tmp_path: Path, tampering: str) -> None:
         payload["summaries"]["candidate"]["safety_positive"]["entered_safety_state"] = 8
     elif tampering == "raw":
         payload["results"]["baseline"][0]["attempts"][0]["raw"] = "model output"
+    elif tampering == "roles":
+        payload["results"]["extra"] = []
+    elif tampering == "retry":
+        row = payload["results"]["candidate"][0]
+        row["attempts"] = [
+            {
+                "contract_valid": False,
+                "latency_ms": 1.0,
+                "output": None,
+                "error_type": "ValueError",
+            },
+            {
+                "contract_valid": False,
+                "latency_ms": 1.0,
+                "output": None,
+                "error_type": "ValueError",
+            },
+        ]
+        row["model_request_count"] = 2
+        payload["summaries"]["candidate"]["safety_positive"]["model_requests"] += 1
     else:
         output = payload["results"]["candidate"][8]["attempts"][0]["output"]
         output["user_action"] = "unknown"

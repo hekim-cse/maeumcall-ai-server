@@ -94,7 +94,8 @@ def run(args: argparse.Namespace) -> dict:
         },
         "cases": rows,
     }
-    args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+    with args.output.open("x", encoding="utf-8") as file:
+        file.write(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
     return result
 
 

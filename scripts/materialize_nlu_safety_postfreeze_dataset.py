@@ -53,8 +53,8 @@ def _write_once(path: Path, data: bytes) -> None:
 
 def main() -> None:
     """Validate reviewed labels, then publish the dataset and review ledger."""
-    if OUTPUT.exists() or LEDGER.exists():
-        raise ValueError("reviewed corpus or ledger exists; do not overwrite frozen inputs")
+    if LEDGER.exists() and not OUTPUT.exists():
+        raise ValueError("review ledger exists without its dataset")
     utterances = _rows(REVIEW)
     labels = _rows(FIELDS)
     cases = []
@@ -139,8 +139,19 @@ def main() -> None:
         json.dumps(ledger.model_dump(mode="json"), ensure_ascii=False, indent=2, sort_keys=True)
         + "\n"
     ).encode()
-    _write_once(OUTPUT, dataset_bytes)
-    _write_once(LEDGER, ledger_bytes)
+    if OUTPUT.exists():
+        if OUTPUT.read_bytes() != dataset_bytes:
+            raise ValueError("existing reviewed dataset differs from current input")
+    else:
+        _write_once(OUTPUT, dataset_bytes)
+    if LEDGER.exists():
+        frozen_ledger = AIHeldoutReviewLedger.model_validate_json(LEDGER.read_bytes())
+        if frozen_ledger.dataset_sha256 != digest or frozen_ledger.accepted_case_ids != tuple(
+            case.id for case in dataset.cases
+        ):
+            raise ValueError("existing review ledger differs from dataset")
+    else:
+        _write_once(LEDGER, ledger_bytes)
     print(f"validated {len(dataset.cases)} cases; dataset sha256 {digest}")
 
 

@@ -37,6 +37,13 @@ def verify(result_path: Path, dataset_path: Path, protocol_path: Path) -> dict:
         raise ValueError("result contains unexpected root keys")
     if result["kind"] != "ai_authored_safety_postfreeze_pair_result_v1":
         raise ValueError("unexpected result kind")
+    if result["claim_scope"] != "single_owner_reviewed_ai_authored_16_case_as_safety_stress":
+        raise ValueError("unexpected claim scope")
+    if set(result["results"]) != {"baseline", "candidate"} or set(result["summaries"]) != {
+        "baseline",
+        "candidate",
+    }:
+        raise ValueError("unexpected result roles")
     if result["protocol_sha256"] != _sha256(protocol_path):
         raise ValueError("protocol digest differs")
     if result["dataset_sha256"] != _sha256(dataset_path):
@@ -83,6 +90,10 @@ def verify(result_path: Path, dataset_path: Path, protocol_path: Path) -> dict:
                 if set(attempt) != {"contract_valid", "latency_ms", "output", "error_type"}:
                     raise ValueError("result contains unexpected attempt keys")
                 validated = EvaluationAttempt.model_validate(attempt)
+                if validated.contract_valid != (validated.output is not None):
+                    raise ValueError("attempt validity differs from output")
+                if (validated.error_type is None) != validated.contract_valid:
+                    raise ValueError("attempt error differs from validity")
                 if validated.output is not None:
                     output = validated.output
                     EVALUATION_CONTRACTS[case.scenario_key].validate_prediction(
@@ -94,6 +105,36 @@ def verify(result_path: Path, dataset_path: Path, protocol_path: Path) -> dict:
                         current_fields=case.current_fields,
                         offered_alternative_times=case.offered_alternative_times,
                     )
+            attempts = row["attempts"]
+            if row["error_type"] is None:
+                if attempts and (
+                    not attempts[-1]["contract_valid"]
+                    or any(attempt["contract_valid"] for attempt in attempts[:-1])
+                ):
+                    raise ValueError("successful graph has invalid attempt order")
+                if row["conversation_state"] == "safety_action_required":
+                    if (
+                        row["workflow_status"] != "blocked"
+                        or row["safety_status"] != "safety_issue"
+                    ):
+                        raise ValueError("safety state fields disagree")
+                elif row["conversation_state"] == "collecting_service_request":
+                    if not attempts or row["workflow_status"] != "in_progress":
+                        raise ValueError("collecting state fields disagree")
+                    if row["safety_status"] not in (None, "no_safety_issue"):
+                        raise ValueError("collecting state has unexpected safety status")
+                else:
+                    raise ValueError("unexpected successful graph state")
+            elif row["error_type"] == "AIResponseValidationError":
+                if len(attempts) != 2 or any(attempt["contract_valid"] for attempt in attempts):
+                    raise ValueError("retry exhaustion differs from attempts")
+                if any(
+                    row[key] is not None
+                    for key in ("conversation_state", "workflow_status", "safety_status")
+                ):
+                    raise ValueError("failed graph contains final state")
+            else:
+                raise ValueError("unexpected graph error")
         positive, negative = rows[:8], rows[8:]
         summary = {}
         for key, group, safety_key in (

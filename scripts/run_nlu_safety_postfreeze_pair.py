@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 from pathlib import Path
 
 from evals.structured_nlu.ai_heldout import load_reviewed_ai_heldout
@@ -89,11 +90,13 @@ def run(args: argparse.Namespace) -> None:
     if endpoint != "http://127.0.0.1:18081/v1/chat/completions":
         raise ValueError("unexpected endpoint")
     _verify_container(args.container_name, protocol, args.model_path)
-    workers = {
-        "baseline": _start_worker(args.baseline_root, probe_path, endpoint, args.policy),
-        "candidate": _start_worker(args.candidate_root, probe_path, endpoint, args.policy),
-    }
+    workers = {}
     try:
+        for role, source_root in (
+            ("baseline", args.baseline_root),
+            ("candidate", args.candidate_root),
+        ):
+            workers[role] = _start_worker(source_root, probe_path, endpoint, args.policy)
         for role, worker in workers.items():
             assert worker.stdout is not None
             ready = json.loads(worker.stdout.readline())
@@ -134,11 +137,24 @@ def run(args: argparse.Namespace) -> None:
         print(json.dumps(result["summaries"], ensure_ascii=False))
     finally:
         for worker in workers.values():
-            if worker.stdin:
-                worker.stdin.close()
-            if worker.poll() is None:
-                worker.terminate()
-            worker.wait(timeout=10)
+            try:
+                if worker.stdin:
+                    worker.stdin.close()
+                if worker.poll() is None:
+                    worker.terminate()
+                try:
+                    worker.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    worker.kill()
+                    worker.wait()
+            except (OSError, subprocess.SubprocessError):
+                # Preserve the evaluation error and continue cleaning peers.
+                try:
+                    if worker.poll() is None:
+                        worker.kill()
+                    worker.wait()
+                except (OSError, subprocess.SubprocessError):
+                    pass
 
 
 def main() -> None:
