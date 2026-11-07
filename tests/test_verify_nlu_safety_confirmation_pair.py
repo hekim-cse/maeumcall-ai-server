@@ -16,6 +16,8 @@ RESULT = ROOT / "nlu-safety-confirmation-graph-pair-result.v1.json"
 DATASET = ROOT / "nlu-safety-confirmation-reviewed.v1.json"
 GOALS = ROOT / "nlu-safety-confirmation-goals.v1.json"
 PROTOCOL = ROOT / "nlu-safety-confirmation-graph-pair-protocol.v1.json"
+REPLAY = ROOT / "nlu-safety-confirmation-graph-pair-replay-result.v2.json"
+REPLAY_PROTOCOL = ROOT / "nlu-safety-confirmation-graph-pair-replay-protocol.v2.json"
 
 
 def _row() -> dict:
@@ -111,3 +113,17 @@ def test_replay_result_requires_actual_alternating_order(tmp_path: Path) -> None
     result_path.write_text(json.dumps(result), encoding="utf-8")
     with pytest.raises(ValueError, match="execution order"):
         verify(result_path, DATASET, GOALS, protocol_path)
+
+
+def test_committed_replay_preserves_all_graph_states_and_retry_trace() -> None:
+    original = json.loads(RESULT.read_text(encoding="utf-8"))
+    replay = json.loads(REPLAY.read_text(encoding="utf-8"))
+    verify(REPLAY, DATASET, GOALS, REPLAY_PROTOCOL)
+    assert len(replay["execution_order"]) == 64
+    for role in ("baseline", "candidate"):
+        assert [row["conversation_state"] for row in replay["results"][role]] == [
+            row["conversation_state"] for row in original["results"][role]
+        ]
+    cf21 = replay["results"]["candidate"][20]
+    assert cf21["conversation_state"] == "confirming_safety_status"
+    assert [attempt["decision"] for attempt in cf21["focus_attempts"]] == [None, True]

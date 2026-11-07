@@ -4,7 +4,8 @@
 
 - 입력: 소유자 한 명이 문장·행동·전체 필드를 검수한 AI 작성 CF01–CF32. 실제 위험 12건, 위험 여부가 모호한 발화 8건, 현재 제품의 위험 진술이 없는 발화 12건이다. 공식 전체 정확도 표본이 아니라 이 기능의 탐색 스트레스 테스트다.
 - 비교: 기존 그래프 `5843eb0`과 안전 확인 상태 후보 `8f47c94`. 같은 Kanana Q5 GGUF, 요청 정책, CPU 2개·메모리 6GiB 로컬 서버를 사용했다. 입력 1건마다 실행 순서를 교대하고 8건마다 서버를 재시작했다.
-- 문장·정답·코드·모델·프로토콜은 모델 실행 전에 고정했다. [프로토콜](../../evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-graph-pair-protocol.v1.json), [결과](../../evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-graph-pair-result.v1.json)를 보존했다. 독립 검증기가 입력 해시, 순서, 출력 형식, 집계값을 재계산해 통과했다.
+- 문장·정답·코드·모델·프로토콜은 모델 실행 전에 고정했다. [프로토콜](../../evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-graph-pair-protocol.v1.json), [결과](../../evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-graph-pair-result.v1.json)를 보존했다. 독립 검증기가 입력 해시, 역할별 사례 순서, 출력 형식, 집계값을 재계산해 통과했다.
+- 첫 결과는 역할별 사례 순서를 보존했지만 실제 교차 호출 순서를 결과 파일에 남기지 않았다. 이 한계를 보완해 같은 사례를 다시 실행한 [재현 프로토콜](../../evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-graph-pair-replay-protocol.v2.json)과 [재현 결과](../../evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-graph-pair-replay-result.v2.json)에는 64회 호출 순서를 기록했다. 재현 결과도 독립 검증을 통과했고, 각 역할의 32건 최종 상태는 첫 실행과 모두 같았다. 재현 사례는 이미 모델에 노출됐으므로 별도의 미노출 평가로 취급하지 않는다.
 
 ## 관찰 결과
 
