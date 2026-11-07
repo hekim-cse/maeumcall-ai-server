@@ -1,0 +1,25 @@
+{
+  "kind": "as_safety_exposed_quantization_pair_protocol_v1",
+  "claim_scope": "already_exposed_ai_authored_cf_development_quantization_pair_only",
+  "dataset_sha256": "67d3c23f197d80d30784d0829cbb62b606f9a4f72bcf5fa5e9ea419f191fe706",
+  "policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "runner_sha256": "502d681a43631f0e181d87c76f96ddc4756348616c172639d6eab38adce30b05",
+  "verifier_sha256": "371bdbcfe9df73cb257c7e8ee59417c42a6cd23e323116f01c0b3e4d748b9e21",
+  "indexed_probe_sha256": "87579cb1ee8d0b236de5a13e81c84ce74823e756987d1407bd19d0709c52f62b",
+  "evidence_probe_sha256": "9d90f208bdebcc6381eb990f9738b2f378b63fe26e84e0c64b532a423046704b",
+  "q4_model_sha256": "62a63f912a0708d9a522f974997b5bbd4927e01d739b07fe4c55c1f545241561",
+  "q5_model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "local_runtime": {
+    "host_ports": {"q4": 18081, "q5": 18082},
+    "cpu_per_container": 2,
+    "memory_bytes_per_container": 4294967296,
+    "context_tokens": 4096,
+    "threads": 2,
+    "parallel_slots": 1
+  },
+  "request_override": {"max_tokens": 100},
+  "case_order": "CF01-CF32; Q4-first on odd cases, Q5-first on even cases",
+  "expected_groups": {"confirmed_hazard": 12, "ambiguous_hazard": 8, "no_current_hazard": 12},
+  "not_for": "new heldout accuracy, production safety claim, or service graph latency comparison"
+}
