@@ -1,0 +1,131 @@
+{
+  "kind": "safety_focus_exposed_development_probe_v1",
+  "claim_scope": "already_exposed_ai_authored_pf_development_only",
+  "dataset_sha256": "8730b8b9b984a4dd586de3f6d69d87ac9294a20c36b280f15a798f127874502f",
+  "request_policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "probe_sha256": "a7d06348024a2fa79212abe5ab7316779ab027cd882d6997d77d729cbd38c556",
+  "max_tokens": 48,
+  "summary": {
+    "positive_correct": 8,
+    "positive_denominator": 8,
+    "negative_correct": 4,
+    "negative_denominator": 8,
+    "invalid_responses": 3,
+    "median_latency_ms": 793.972
+  },
+  "cases": [
+    {
+      "case_id": "nlu-safety-postfreeze-pf01",
+      "expected_safety": true,
+      "current_safety_issue": true,
+      "latency_ms": 2655.107,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf02",
+      "expected_safety": true,
+      "current_safety_issue": true,
+      "latency_ms": 791.626,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf03",
+      "expected_safety": true,
+      "current_safety_issue": true,
+      "latency_ms": 722.675,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf04",
+      "expected_safety": true,
+      "current_safety_issue": true,
+      "latency_ms": 796.319,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf05",
+      "expected_safety": true,
+      "current_safety_issue": true,
+      "latency_ms": 724.955,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf06",
+      "expected_safety": true,
+      "current_safety_issue": true,
+      "latency_ms": 817.39,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf07",
+      "expected_safety": true,
+      "current_safety_issue": true,
+      "latency_ms": 787.929,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf08",
+      "expected_safety": true,
+      "current_safety_issue": true,
+      "latency_ms": 773.802,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf09",
+      "expected_safety": false,
+      "current_safety_issue": false,
+      "latency_ms": 825.314,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf10",
+      "expected_safety": false,
+      "current_safety_issue": null,
+      "latency_ms": 543.756,
+      "error_type": "ValueError"
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf11",
+      "expected_safety": false,
+      "current_safety_issue": null,
+      "latency_ms": 569.008,
+      "error_type": "ValueError"
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf12",
+      "expected_safety": false,
+      "current_safety_issue": true,
+      "latency_ms": 830.378,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf13",
+      "expected_safety": false,
+      "current_safety_issue": false,
+      "latency_ms": 836.137,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf14",
+      "expected_safety": false,
+      "current_safety_issue": false,
+      "latency_ms": 791.209,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf15",
+      "expected_safety": false,
+      "current_safety_issue": false,
+      "latency_ms": 802.268,
+      "error_type": null
+    },
+    {
+      "case_id": "nlu-safety-postfreeze-pf16",
+      "expected_safety": false,
+      "current_safety_issue": null,
+      "latency_ms": 2357.021,
+      "error_type": "JSONDecodeError"
+    }
+  ]
+}
