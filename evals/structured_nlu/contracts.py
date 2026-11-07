@@ -69,6 +69,7 @@ from services.flow.service_workflow.contracts import (
     ServiceWorkflowSpec,
     validate_service_workflow_context,
 )
+from services.flow.service_workflow.safety import SAFETY_CONFIRMATION_STATE
 from services.flow.service_workflow.structured_contract import (
     build_service_workflow_turn_contract,
     validate_service_workflow_turn_delta,
@@ -274,7 +275,13 @@ def _objective_tags_for_actions(
 
 
 def _workflow_contract(spec: ServiceWorkflowSpec) -> EvaluationContract:
-    actions_by_state = spec.actions_by_state
+    # The safety confirmation turn is deterministic and never sent to the NLU
+    # extractor. Keep the frozen model benchmark scoped to model-served states.
+    actions_by_state = {
+        state: actions
+        for state, actions in spec.actions_by_state.items()
+        if state != SAFETY_CONFIRMATION_STATE
+    }
     declared_actions = frozenset().union(*actions_by_state.values())
     if declared_actions != spec.user_actions:
         raise RuntimeError(f"workflow state action contract is incomplete: {spec.graph_name}")

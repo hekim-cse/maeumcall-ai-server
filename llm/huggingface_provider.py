@@ -227,3 +227,12 @@ def complete_hf_json(messages: list[dict[str, str]]) -> str:
         max_new_tokens=180,
         repetition_penalty=1.05,
     )
+
+
+def complete_hf_safety_json(messages: list[dict[str, str]]) -> str:
+    """Generate one short safety decision for an uncertain A/S utterance."""
+    return _complete_hf_messages(
+        messages,
+        max_new_tokens=48,
+        repetition_penalty=1.05,
+    )

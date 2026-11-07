@@ -7,6 +7,7 @@ from services.flow.common.state_contract import (
     DetailedGraphContract,
     ScenarioStateContractError,
 )
+from services.flow.service_workflow.safety import SAFETY_CONFIRMATION_STATE
 
 WORKFLOW_STATUSES = frozenset({"in_progress", "ready", "completed", "cancelled", "blocked"})
 MAX_WORKFLOW_FIELD_LENGTH = 1_000
@@ -146,7 +147,8 @@ class ServiceWorkflowSpec:
             if (
                 guard.state in guard_states
                 or guard.state in states
-                or guard.state in {"greeting", "closing", "cancelled", "END"}
+                or guard.state
+                in {"greeting", "closing", "cancelled", "END", SAFETY_CONFIRMATION_STATE}
             ):
                 raise ValueError(f"workflow guard state must be unique: {self.graph_name}")
             guard_states.add(guard.state)
@@ -168,6 +170,11 @@ class ServiceWorkflowSpec:
                 "closing",
                 "END",
                 *(guard.state for guard in self.guards),
+                *(
+                    (SAFETY_CONFIRMATION_STATE,)
+                    if any(guard.field_key == "safety_status" for guard in self.guards)
+                    else ()
+                ),
             }
         )
 
@@ -201,6 +208,11 @@ class ServiceWorkflowSpec:
                 guard.state: frozenset({"change_detail", "go_closing", "unknown"})
                 for guard in self.guards
             },
+            **(
+                {SAFETY_CONFIRMATION_STATE: frozenset({"go_closing", "unknown"})}
+                if any(guard.field_key == "safety_status" for guard in self.guards)
+                else {}
+            ),
         }
 
     @property
@@ -309,6 +321,7 @@ def validate_service_workflow_state(spec: ServiceWorkflowSpec, state: dict[str, 
             spec.completed_state: "completed",
             "cancelled": "cancelled",
             **{guard.state: "blocked" for guard in spec.guards},
+            SAFETY_CONFIRMATION_STATE: "blocked",
         }
         expected_status = expected_statuses.get(conversation_state, "in_progress")
         if workflow_status != expected_status:
@@ -356,6 +369,8 @@ def validate_service_workflow_context(
         raise ValueError("the current state requires complete fields")
 
     matching_guard = spec.matching_guard(fields)
+    if conversation_state == SAFETY_CONFIRMATION_STATE and fields.get("safety_status") is not None:
+        raise ValueError("pending safety confirmation requires an unknown safety status")
     terminal_states = {"cancelled", "closing", "END"}
     if matching_guard is not None and conversation_state not in {
         matching_guard.state,
