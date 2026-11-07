@@ -1,0 +1,134 @@
+{
+  "dataset_sha256": "67d3c23f197d80d30784d0829cbb62b606f9a4f72bcf5fa5e9ea419f191fe706",
+  "goals": [
+    {
+      "case_id": "nlu-safety-confirmation-cf01",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf02",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf03",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf04",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf05",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf06",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf07",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf08",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf09",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf10",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf11",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf12",
+      "expected_state": "safety_action_required"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf13",
+      "expected_state": "confirming_safety_status"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf14",
+      "expected_state": "confirming_safety_status"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf15",
+      "expected_state": "confirming_safety_status"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf16",
+      "expected_state": "confirming_safety_status"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf17",
+      "expected_state": "confirming_safety_status"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf18",
+      "expected_state": "confirming_safety_status"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf19",
+      "expected_state": "confirming_safety_status"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf20",
+      "expected_state": "confirming_safety_status"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf21",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf22",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf23",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf24",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf25",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf26",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf27",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf28",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf29",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf30",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf31",
+      "expected_state": "collecting_service_request"
+    },
+    {
+      "case_id": "nlu-safety-confirmation-cf32",
+      "expected_state": "collecting_service_request"
+    }
+  ],
+  "kind": "ai_authored_safety_confirmation_goals_v1"
+}

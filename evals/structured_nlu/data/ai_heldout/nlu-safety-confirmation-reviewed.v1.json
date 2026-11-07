@@ -1,0 +1,1501 @@
+{
+  "cases": [
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf01",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf01",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "휴대용 선풍기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 포트 안쪽에서 작은 불꽃이 여러 번 튐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "휴대용 선풍기를 충전하던 중 포트 안쪽에서 작은 불꽃이 여러 번 튀었어요. 케이블은 뽑았습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf02",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf02",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "노트북"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "하판 가운데가 솟아오르고 트랙패드가 잘 눌리지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "노트북 하판 가운데가 솟아올라 책상에 평평하게 놓이지 않고 트랙패드도 잘 눌리지 않아요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf03",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf03",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "에어프라이어"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "사용 중 플라스틱이 타는 듯한 냄새가 계속 남"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "에어프라이어를 켜자 플라스틱이 타는 듯한 냄새가 계속 나서 전원을 껐습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf04",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf04",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전동 공구 배터리"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "액체가 새고 손끝이 찌릿함"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "전동 공구 배터리에서 액체가 새어 나오고 손끝이 찌릿합니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf05",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf05",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "커피 머신"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "전원 연결 시 어댑터 쪽에서 희미한 연무가 올라옴"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "커피 머신 전원 플러그를 꽂았더니 어댑터 쪽에서 희미한 연무가 올라왔어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf06",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf06",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전동 킥보드"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 중 배터리 부분이 손을 대기 어려울 만큼 뜨거워짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "전동 킥보드를 충전하다가 배터리 부분이 손을 대기 어려울 만큼 뜨거워졌습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf07",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf07",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "건조기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "전원 케이블 연결부가 검게 그을리고 플라스틱이 조금 녹음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "건조기 뒤편 전원 케이블 연결부가 검게 그을렸고 플라스틱도 조금 녹았습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf08",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf08",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "모니터"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "어댑터에서 타닥거리는 소리와 고무 타는 냄새가 남"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "모니터 어댑터에서 타닥거리는 소리와 함께 고무 타는 냄새가 납니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf09",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf09",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "게임기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "전원선 피복이 갈라져 내부 금속선이 보임"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "게임기 전원선의 피복이 갈라져 안쪽 금속선이 보입니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf10",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf10",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "휴대용 히터"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "사용 중 본체 틈에서 연기가 피어오름"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "휴대용 히터를 켠 지 얼마 안 돼 본체 틈에서 연기가 피어올랐습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf11",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf11",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전동 칫솔"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 중 손잡이 아래가 잡기 힘들 만큼 뜨거워짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "전동 칫솔을 충전하면 손잡이 아랫부분이 잡고 있기 힘들 만큼 뜨거워져요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf12",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf12",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "보조배터리"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "한쪽 면이 볼록하게 변형돼 케이스가 닫히지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "safety"
+      ],
+      "user_message": "보조배터리 한쪽 면이 볼록하게 변형돼 케이스가 닫히지 않습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf13",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf13",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "가습기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "뒤쪽에서 흰 것이 잠깐 나옴"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "ambiguous"
+      ],
+      "user_message": "가습기 뒤쪽에서 흰 것이 잠깐 나왔는데 연기인지 수증기인지 잘 모르겠어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf14",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf14",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "무선 청소기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "배터리 덮개가 들뜬 것처럼 보임"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "ambiguous"
+      ],
+      "user_message": "무선 청소기 배터리 덮개가 조금 들뜬 것처럼 보입니다. 원래 이런 모양인지 모르겠어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf15",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf15",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "휴대폰"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 시 평소보다 따뜻하게 느껴짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "ambiguous"
+      ],
+      "user_message": "휴대폰을 충전하면 평소보다 따뜻한 느낌인데 위험할 만큼 뜨거운지는 판단하기 어렵습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf16",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf16",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전기장판"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "single_field",
+        "ambiguous"
+      ],
+      "user_message": "전기장판 근처에서 탄내 같은 냄새를 잠깐 맡았어요. 옆에 켜 둔 향초에서 난 냄새일 수도 있습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf17",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf17",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "노트북"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 포트에서 작은 빛을 봄"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "ambiguous"
+      ],
+      "user_message": "노트북 충전 포트 안에서 작은 빛이 보였는데 불꽃인지 표시등 빛인지 모르겠어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf18",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf18",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "선풍기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "single_field",
+        "ambiguous"
+      ],
+      "user_message": "선풍기 모터 쪽에서 매캐한 냄새가 나는 것 같기도 합니다. 방에서 맡은 다른 냄새인지 확신이 없어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf19",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf19",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전자레인지"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "문 옆에 검은 자국이 생김"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "ambiguous"
+      ],
+      "user_message": "전자레인지 문 옆에 검은 자국이 생겼는데 그을음인지 음식물이 묻은 것인지 모르겠어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf20",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf20",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "태블릿"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전선 겉면이 벗겨진 듯함"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "ambiguous"
+      ],
+      "user_message": "태블릿 충전선 겉면이 벗겨진 듯합니다. 안쪽 선이 보이는지는 아직 확인하지 못했어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf21",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf21",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "intent": "service_request",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "배터리 팽창을 확인하는 방법을 알고 싶어요. 제 제품은 지금 부풀어 보이지 않습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf22",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf22",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "믹서기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "속도 버튼이 눌리지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "negation"
+      ],
+      "user_message": "친구의 믹서기에서는 연기가 났다고 들었어요. 제 믹서기는 속도 버튼이 눌리지 않습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf23",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf23",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "intent": "service_request",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "전기장판에서 불꽃이 튀면 어떤 조치를 해야 하나요? 현재 제 것은 온도 조절만 잘 안 됩니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf24",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf24",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "공기청정기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "화면이 꺼짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "negation"
+      ],
+      "user_message": "방에 둔 방향제에서 타는 냄새가 나요. A/S를 문의하는 공기청정기는 화면만 꺼집니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf25",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf25",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "태블릿"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전 속도가 느림"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "negation"
+      ],
+      "user_message": "케이블 피복이 녹은 사진을 인터넷에서 봤습니다. 제 태블릿은 충전 속도만 느립니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf26",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf26",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "모니터"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "화면이 깜빡임"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "negation"
+      ],
+      "user_message": "모니터 뒷면의 볼록한 부분은 제품 안내 사진에도 보입니다. 화면 깜빡임 때문에 연락드렸어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf27",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf27",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "충전기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "no_safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전이 간헐적으로 끊김"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "negation"
+      ],
+      "user_message": "충전기가 뜨겁다는 후기를 보고 걱정됐어요. 제 충전기는 차갑지만 충전이 간헐적으로 끊깁니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf28",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf28",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": null
+        },
+        "intent": "service_request",
+        "user_action": "unknown"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "hard_negative"
+      ],
+      "user_message": "배터리 케이스가 벌어진 경우 수리비를 미리 알 수 있나요? 제 무선 청소기는 스위치가 작동하지 않습니다."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf29",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf29",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "게임기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "no_safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "화면에 불꽃 모양 아이콘이 표시되고 화면이 멈춤"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "negation"
+      ],
+      "user_message": "게임기 화면에 불꽃 모양 아이콘이 표시되고 화면이 멈춥니다. 본체에서 불꽃이 나온 적은 없어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf30",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf30",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "헤어드라이어"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "바람 세기가 약해짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "negation"
+      ],
+      "user_message": "헤어드라이어 옆에 둔 스타일링 제품에서 냄새가 납니다. 드라이어는 바람 세기가 약해졌어요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf31",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf31",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "노트북"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "no_safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "팬 소음이 커짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field",
+        "negation"
+      ],
+      "user_message": "노트북 팬 소음이 커졌습니다. 배터리 팽창이나 발열은 보이지 않아요."
+    },
+    {
+      "conversation_group_id": "nlu-safety-confirmation-cf32",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "nlu-safety-confirmation-cf32",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": null,
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "전원 버튼이 반응하지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "single_field",
+        "negation"
+      ],
+      "user_message": "본체의 검은 얼룩은 스티커를 뗀 자국입니다. 전원 버튼이 반응하지 않아 문의드려요."
+    }
+  ],
+  "dataset_version": 1,
+  "declared_model_exposure": "not_run",
+  "kind": "ai_authored_heldout_dataset_v1",
+  "state_contract_version": 2
+}
