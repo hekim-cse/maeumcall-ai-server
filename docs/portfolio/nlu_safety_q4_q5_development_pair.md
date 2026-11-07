@@ -6,6 +6,8 @@
 
 모델 파일·데이터셋·요청 정책·실행기와 검증기의 SHA-256, 컨테이너 이미지·메모리·CPU·포트와 호출 순서를 [프로토콜](../../evals/structured_nlu/data/ai_heldout/as-safety-exposed-q4-q5-development-pair-protocol.v1.json)에 모델 호출 전에 커밋했다. 같은 llama.cpp 이미지에서 Q4와 Q5를 각각 4GiB·CPU 2개 한도의 로컬 서버로 실행했다. 한 사례마다 두 모델의 호출 순서를 교대했고, 결과에는 발화·모델 응답 전문을 저장하지 않았다. [결과](../../evals/structured_nlu/data/ai_heldout/as-safety-exposed-q4-q5-development-pair-result.v1.json)의 64회 호출 순서, 사례별 근거 번호, 경로, 실패, 구간별 집계는 별도 검증기로 재계산했다. AWS는 사용하지 않았다.
 
+CodeRabbit 검토 후 검증기가 성공·실패 행 모두의 비유한 지연 값(`Infinity`·`NaN`)을 거부하도록 보강했다. 모델 호출 전 프로토콜에 기록된 검증기 해시는 당시 버전 `371bdbc...`의 이력이며, 보강된 현재 검증기 해시는 `e190f015e6aa47505e80c5a7cbd797714a2596cb6f36d482ee8907475a81a401`이다. 원본 프로토콜·64회 모델 호출·결과 파일은 수정하지 않았고, 보강된 검증기로 같은 결과를 다시 검증했다.
+
 ## 관찰 결과
 
 | 검수 구간 | 목표 방향 | Q4 | Q5 |

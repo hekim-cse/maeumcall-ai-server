@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import statistics
 from pathlib import Path
 
@@ -109,6 +110,7 @@ def verify(dataset_path: Path, protocol_path: Path, result_path: Path) -> None:
             if (
                 row["clause_count"] != count
                 or type(row["latency_ms"]) not in (int, float)
+                or not math.isfinite(row["latency_ms"])
                 or row["latency_ms"] < 0
             ):
                 raise ValueError("source clause or latency differs")
