@@ -233,15 +233,18 @@ def test_frozen_result_passes_postrun_audit() -> None:
     )
 
 
-@pytest.mark.parametrize("change", ["source_hash", "blank_message", "long_message"])
+@pytest.mark.parametrize(
+    "change",
+    [*SOURCES, "blank_message", "long_message"],
+)
 def test_postrun_audit_rejects_invalid_lineage_or_input(tmp_path: Path, change: str) -> None:
     dataset, protocol, result = _fixture(tmp_path)
     frozen = json.loads(protocol.read_text())
     frozen.update(
         {key: hashlib.sha256(path.read_bytes()).hexdigest() for key, path in SOURCES.items()}
     )
-    if change == "source_hash":
-        frozen["gate_sha256"] = "0" * 64
+    if change in SOURCES:
+        frozen[change] = "0" * 64
     else:
         payload = json.loads(dataset.read_text())
         payload["cases"][0]["user_message"] = "   " if change == "blank_message" else "가" * 1001
@@ -252,5 +255,8 @@ def test_postrun_audit_rejects_invalid_lineage_or_input(tmp_path: Path, change: 
     saved["protocol_sha256"] = hashlib.sha256(protocol.read_bytes()).hexdigest()
     saved["dataset_sha256"] = hashlib.sha256(dataset.read_bytes()).hexdigest()
     result.write_text(json.dumps(saved))
-    with pytest.raises(ValueError):
+    expected_error = (
+        "frozen source differs" if change in SOURCES else "reviewed message is empty or too long"
+    )
+    with pytest.raises(ValueError, match=expected_error):
         audit(dataset, protocol, result)
