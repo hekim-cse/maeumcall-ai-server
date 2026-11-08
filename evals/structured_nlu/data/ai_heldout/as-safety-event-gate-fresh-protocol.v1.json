@@ -1,0 +1,32 @@
+{
+  "kind": "as_safety_event_gate_fresh_protocol_v1",
+  "claim_scope": "ai_authored_owner_reviewed_targeted_exploration",
+  "candidate_revision": "0d16c5b",
+  "reviewed_input_revision": "e23798b",
+  "dataset_sha256": "a4b378ba8b6e27db359d075a78c80bd3c2b8be9f0cb77501b391504d62da6e4e",
+  "policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "runner_sha256": "6a35d835714ae933696cf728864d9d7d82703f03149892a80a7a05248d83366e",
+  "verifier_sha256": "7df501a0e92e7d751e8cb7d1f3ff15b650d0f49d13eac7667e0b939e3de9b41c",
+  "gate_sha256": "d2e6c3a84b09a4edaebf6a06a60ca6021d79b456db8b6ff4206859c3f13d92b6",
+  "indexed_probe_sha256": "87579cb1ee8d0b236de5a13e81c84ce74823e756987d1407bd19d0709c52f62b",
+  "evidence_probe_sha256": "9d90f208bdebcc6381eb990f9738b2f378b63fe26e84e0c64b532a423046704b",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "local_runtime": {
+    "host_port": 18081,
+    "cpu_count": 2,
+    "memory_bytes": 4294967296,
+    "context_tokens": 4096,
+    "threads": 2,
+    "parallel_slots": 1
+  },
+  "max_tokens": 100,
+  "case_order": "EG01-EG32",
+  "expected_group_sizes": {
+    "confirmed_hazard": 8,
+    "ambiguous_hazard": 8,
+    "other_source": 8,
+    "nonoccurring_hazard": 8
+  },
+  "not_for": "official full accuracy or deployed service graph performance"
+}
