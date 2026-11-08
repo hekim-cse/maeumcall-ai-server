@@ -166,7 +166,7 @@ def test_frozen_eg_result_recalculates_and_preserves_failure_counts() -> None:
 
 @pytest.mark.parametrize(
     "change",
-    ["unreviewed", "duplicate_id", "unknown_route", "extra_case_field"],
+    ["unreviewed", "duplicate_id", "unknown_route", "extra_case_field", "blank_message"],
 )
 def test_reviewed_dataset_rejects_invalid_inputs(tmp_path: Path, change: str) -> None:
     dataset, _, _ = _fixture(tmp_path)
@@ -177,6 +177,8 @@ def test_reviewed_dataset_rejects_invalid_inputs(tmp_path: Path, change: str) ->
         payload["cases"][1]["id"] = "EG01"
     elif change == "unknown_route":
         payload["cases"][0]["expected_route"] = "unknown"
+    elif change == "blank_message":
+        payload["cases"][0]["user_message"] = "   "
     else:
         payload["cases"][0]["raw_model_response"] = "should not exist"
     dataset.write_text(json.dumps(payload, ensure_ascii=False))
@@ -186,7 +188,16 @@ def test_reviewed_dataset_rejects_invalid_inputs(tmp_path: Path, change: str) ->
 
 @pytest.mark.parametrize(
     "change",
-    ["raw_text", "bad_index", "bad_route", "bad_summary", "infinite_latency", "bad_digest"],
+    [
+        "raw_text",
+        "bad_index",
+        "bad_route",
+        "bad_target",
+        "bad_assertion",
+        "bad_summary",
+        "infinite_latency",
+        "bad_digest",
+    ],
 )
 def test_fresh_verifier_rejects_mutated_artifact(tmp_path: Path, change: str) -> None:
     dataset, protocol, result_path = _fixture(tmp_path)
@@ -197,6 +208,10 @@ def test_fresh_verifier_rejects_mutated_artifact(tmp_path: Path, change: str) ->
         result["rows"][0]["evidence_index"] = 999
     elif change == "bad_route":
         result["rows"][0]["gate_route"] = "safety_action_required"
+    elif change == "bad_target":
+        result["rows"][0]["target"] = "invalid"
+    elif change == "bad_assertion":
+        result["rows"][0]["assertion"] = "invalid"
     elif change == "bad_summary":
         result["summary"]["confirmed_hazard"]["gate_direct"] += 1
     elif change == "infinite_latency":
