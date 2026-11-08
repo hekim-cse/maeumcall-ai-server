@@ -131,6 +131,22 @@ def run(args: argparse.Namespace) -> None:
         raise ValueError("unexpected protocol kind")
     if protocol.get("claim_scope") != "ai_authored_owner_reviewed_targeted_exploration":
         raise ValueError("unexpected claim scope")
+    if protocol.get("local_runtime") != {
+        "host_port": 18081,
+        "cpu_count": 2,
+        "memory_bytes": 4 * 1024**3,
+        "context_tokens": 4096,
+        "threads": 2,
+        "parallel_slots": 1,
+    }:
+        raise ValueError("local runtime differs from protocol")
+    if protocol.get("expected_group_sizes") != {
+        "confirmed_hazard": 8,
+        "ambiguous_hazard": 8,
+        "other_source": 8,
+        "nonoccurring_hazard": 8,
+    }:
+        raise ValueError("reviewed group sizes differ")
     if subprocess.run(
         ("git", "status", "--porcelain", "--untracked-files=no"),
         cwd=ROOT,
