@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.audit_as_safety_event_gate_fresh import SOURCES, audit
 from scripts.run_as_safety_event_gate_fresh import load_reviewed_cases, summarize
 from scripts.verify_as_safety_event_gate_fresh import verify
 
@@ -205,3 +206,36 @@ def test_fresh_verifier_rejects_mutated_artifact(tmp_path: Path, change: str) ->
     result_path.write_text(json.dumps(result, ensure_ascii=False))
     with pytest.raises(ValueError):
         verify(dataset, protocol, result_path)
+
+
+def test_frozen_result_passes_postrun_audit() -> None:
+    root = Path(__file__).resolve().parents[1]
+    folder = root / "evals/structured_nlu/data/ai_heldout"
+    audit(
+        folder / "as-safety-event-gate-fresh-reviewed.v1.json",
+        folder / "as-safety-event-gate-fresh-protocol.v1.json",
+        folder / "as-safety-event-gate-fresh-result.v1.json",
+    )
+
+
+@pytest.mark.parametrize("change", ["source_hash", "blank_message", "long_message"])
+def test_postrun_audit_rejects_invalid_lineage_or_input(tmp_path: Path, change: str) -> None:
+    dataset, protocol, result = _fixture(tmp_path)
+    frozen = json.loads(protocol.read_text())
+    frozen.update(
+        {key: hashlib.sha256(path.read_bytes()).hexdigest() for key, path in SOURCES.items()}
+    )
+    if change == "source_hash":
+        frozen["gate_sha256"] = "0" * 64
+    else:
+        payload = json.loads(dataset.read_text())
+        payload["cases"][0]["user_message"] = "   " if change == "blank_message" else "가" * 1001
+        dataset.write_text(json.dumps(payload, ensure_ascii=False))
+        frozen["dataset_sha256"] = hashlib.sha256(dataset.read_bytes()).hexdigest()
+    protocol.write_text(json.dumps(frozen))
+    saved = json.loads(result.read_text())
+    saved["protocol_sha256"] = hashlib.sha256(protocol.read_bytes()).hexdigest()
+    saved["dataset_sha256"] = hashlib.sha256(dataset.read_bytes()).hexdigest()
+    result.write_text(json.dumps(saved))
+    with pytest.raises(ValueError):
+        audit(dataset, protocol, result)
