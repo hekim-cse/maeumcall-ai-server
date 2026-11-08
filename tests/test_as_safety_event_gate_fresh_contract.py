@@ -112,6 +112,57 @@ def test_owner_accepted_eg_input_matches_review_document() -> None:
     assert cases == from_document
 
 
+def test_frozen_eg_result_recalculates_and_preserves_failure_counts() -> None:
+    root = Path("evals/structured_nlu/data/ai_heldout")
+    result_path = root / "as-safety-event-gate-fresh-result.v1.json"
+    verify(
+        root / "as-safety-event-gate-fresh-reviewed.v1.json",
+        root / "as-safety-event-gate-fresh-protocol.v1.json",
+        result_path,
+    )
+    result = json.loads(result_path.read_text())
+    assert [row["case_id"] for row in result["rows"] if row["error_type"] is not None] == [
+        "EG26",
+        "EG27",
+        "EG31",
+        "EG32",
+    ]
+    assert result["summary"] == {
+        "confirmed_hazard": {
+            "denominator": 8,
+            "model_direct": 8,
+            "gate_direct": 3,
+            "gate_confirmation": 5,
+            "gate_normal": 0,
+            "errors": 0,
+        },
+        "ambiguous_hazard": {
+            "denominator": 8,
+            "model_direct": 0,
+            "gate_direct": 0,
+            "gate_confirmation": 7,
+            "gate_normal": 1,
+            "errors": 0,
+        },
+        "other_source": {
+            "denominator": 8,
+            "model_direct": 2,
+            "gate_direct": 0,
+            "gate_confirmation": 2,
+            "gate_normal": 6,
+            "errors": 0,
+        },
+        "nonoccurring_hazard": {
+            "denominator": 8,
+            "model_direct": 3,
+            "gate_direct": 0,
+            "gate_confirmation": 3,
+            "gate_normal": 1,
+            "errors": 4,
+        },
+    }
+
+
 @pytest.mark.parametrize(
     "change",
     ["unreviewed", "duplicate_id", "unknown_route", "extra_case_field"],
