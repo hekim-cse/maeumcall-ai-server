@@ -3,6 +3,7 @@
 import copy
 import hashlib
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -84,6 +85,31 @@ def test_reviewed_dataset_and_result_contract_accept_consistent_artifact(tmp_pat
     assert len(cases) == 32
     assert digest == hashlib.sha256(dataset.read_bytes()).hexdigest()
     verify(dataset, protocol, result)
+
+
+def test_owner_accepted_eg_input_matches_review_document() -> None:
+    reviewed = Path(
+        "evals/structured_nlu/data/ai_heldout/as-safety-event-gate-fresh-reviewed.v1.json"
+    )
+    cases, _ = load_reviewed_cases(reviewed)
+    document = Path("docs/portfolio/nlu_safety_event_gate_fresh_review.md").read_text()
+    assert "EG01–EG32 전체를 탐색용으로 채택" in document
+    pattern = re.compile(r"^\| (EG\d{2}) \| (.*?) \| (.*?) \| (.*?) \|$")
+    route_names = {
+        "즉시 대응": "safety_action_required",
+        "안전 확인": "confirming_safety_status",
+        "일반 수집": "collecting_service_request",
+    }
+    from_document = [
+        {
+            "id": match.group(1),
+            "user_message": match.group(2),
+            "expected_route": route_names[match.group(4)],
+        }
+        for line in document.splitlines()
+        if (match := pattern.match(line))
+    ]
+    assert cases == from_document
 
 
 @pytest.mark.parametrize(
