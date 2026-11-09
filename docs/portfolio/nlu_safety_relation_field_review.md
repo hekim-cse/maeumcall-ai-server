@@ -1,6 +1,6 @@
 # RE01–RE16 제품·위험 관계 필드 검토 초안
 
-[문장과 기대 경로](nlu_safety_relation_fresh_review.md)는 사용자가 2026-11-09에 탐색용으로 채택했다. 이 표는 **아직 검수받지 않은** 모델 출력 정답 초안이다. `product_index`는 접수 대상 제품을 식별하는 문장, `hazard_index`는 위험 사건이 언급된 문장이다. 두 번호는 원문 문장 순서다. `target_relation`과 `event_status`의 값은 [고정된 후보 계약](../../scripts/probe_as_safety_relation.py)을 따른다.
+[문장과 기대 경로](nlu_safety_relation_fresh_review.md)는 사용자가 2026-11-09에 탐색용으로 채택했다. 이 표의 제품·위험 근거 번호와 관계·발생 상태도 사용자가 같은 날 **탐색용 정답으로 채택**했다. `product_index`는 접수 대상 제품을 식별하는 문장, `hazard_index`는 위험 사건이 언급된 문장이다. 두 번호는 원문 문장 순서다. `target_relation`과 `event_status`의 값은 [고정된 후보 계약](../../scripts/probe_as_safety_relation.py)을 따른다.
 
 | ID | product_index | hazard_index | target_relation | event_status | 판단 근거 |
 | --- | ---: | ---: | --- | --- | --- |
@@ -23,4 +23,4 @@
 
 검수할 때 특히 **RE07**의 `product_index=1`은 접수 제품을 식별하는 근거일 뿐 위험의 출처를 확정하지 않는다는 점, **RE10**의 전언을 `uncertain`으로 둔 점, **RE12**의 설명서 사례를 `other + nonoccurring`으로 둔 점, **RE13**의 두 근거가 모두 첫 문장인 점을 확인해야 한다. 요청 후속 조치의 불확실성은 위험 사건의 불확실성과 구분한다.
 
-검수 전에는 이 표를 정답으로 확정하거나 모델에 실행하지 않는다. 확정 후에도 AI 작성·1인 검수 표적 탐색으로만 사용한다.
+이 표는 AI 작성·1인 검수 표적 탐색에만 사용한다. 모델 실행 전에는 입력·요청 정책·검증기 해시를 별도로 고정한다.
