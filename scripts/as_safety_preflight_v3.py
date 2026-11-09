@@ -13,13 +13,15 @@ EXECUTOR_SOURCE = Path(__file__).with_name("as_safety_pair_executor_v3.py")
 VERIFIER_SOURCE = Path(__file__).with_name("verify_as_safety_pair_journal_v3.py")
 SHAPE_VERIFIER_SOURCE = Path(__file__).with_name("verify_as_safety_pair_journal_v2.py")
 ERROR_AUDIT_SOURCE = Path(__file__).with_name("audit_as_safety_pair_errors.py")
+IMPORTED_EXECUTOR_SHA256 = hashlib.sha256(EXECUTOR_SOURCE.read_bytes()).hexdigest()
 
 
 def verify_frozen_sources(
     protocol_path: Path, additional_sources: dict[str, Path] | None = None
-) -> None:
+) -> str:
     """Reject missing, malformed, or changed digests before creating a journal."""
-    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    protocol_bytes = protocol_path.read_bytes()
+    protocol = json.loads(protocol_bytes)
     source_paths = {
         "executor_sha256": EXECUTOR_SOURCE,
         "verifier_sha256": VERIFIER_SOURCE,
@@ -41,6 +43,9 @@ def verify_frozen_sources(
             raise ValueError(f"missing or invalid {key}")
         if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
             raise ValueError(f"frozen {key} differs")
+    if IMPORTED_EXECUTOR_SHA256 != protocol["executor_sha256"]:
+        raise ValueError("imported executor differs from frozen source")
+    return hashlib.sha256(protocol_bytes).hexdigest()
 
 
 def run_frozen_pair(
@@ -51,15 +56,17 @@ def run_frozen_pair(
     journal: Path,
     request: Callable[[str, str], Completion],
     validate: Callable[[str, str, str], dict],
+    decision_schema: Callable[[str, str], dict],
     route: Callable[[str, dict], str],
 ) -> None:
     """Bind frozen-source validation to execution before the first model call."""
-    verify_frozen_sources(protocol_path, additional_sources)
+    protocol_sha256 = verify_frozen_sources(protocol_path, additional_sources)
     run_pair_journal(
         cases=cases,
         journal=journal,
-        protocol_sha256=hashlib.sha256(protocol_path.read_bytes()).hexdigest(),
+        protocol_sha256=protocol_sha256,
         request=request,
         validate=validate,
+        decision_schema=decision_schema,
         route=route,
     )
