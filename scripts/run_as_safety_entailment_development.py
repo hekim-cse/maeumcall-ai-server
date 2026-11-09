@@ -42,6 +42,11 @@ def run(args: argparse.Namespace) -> None:
         raise ValueError("unexpected claim scope")
     if protocol.get("max_tokens") != 100 or protocol.get("endpoint") != ENDPOINT:
         raise ValueError("request settings differ")
+    if (
+        protocol.get("pair_order") != "alternating"
+        or protocol.get("retry_policy") != "no_retry_manual_audit_on_interruption"
+    ):
+        raise ValueError("pair execution settings differ")
     if subprocess.run(
         ("git", "status", "--porcelain", "--untracked-files=no"),
         cwd=ROOT,
