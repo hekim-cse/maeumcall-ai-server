@@ -36,7 +36,10 @@ def verify(dataset_path: Path, protocol_path: Path, journal_path: Path) -> dict:
         raise ValueError("dataset provenance differs")
     for path, key in (
         (dataset_path, "dataset_sha256"),
-        (ROOT / "evals/structured_nlu/data/ai_heldout/q4-q5-request-policy.v1.json", "policy_sha256"),
+        (
+            ROOT / "evals/structured_nlu/data/ai_heldout/q4-q5-request-policy.v1.json",
+            "policy_sha256",
+        ),
         (ROOT / "scripts/run_as_safety_entailment_development.py", "runner_sha256"),
         (ROOT / "scripts/as_safety_pair_executor_v2.py", "executor_sha256"),
         (ROOT / "scripts/as_safety_completion_v2.py", "completion_sha256"),

@@ -72,7 +72,9 @@ def test_request_preserves_schema_and_token_limit(monkeypatch):
     monkeypatch.setattr(
         as_safety_completion_v2.urllib.request,
         "build_opener",
-        lambda *args: FakeOpener(b'{"choices":[{"message":{"content":"{}"},"finish_reason":"stop"}]}', captured),
+        lambda *args: FakeOpener(
+            b'{"choices":[{"message":{"content":"{}"},"finish_reason":"stop"}]}', captured
+        ),
     )
     request_policy = policy().model_copy(update={"max_tokens": 73})
     schema = {"type": "object", "properties": {"flag": {"type": "boolean"}}}
