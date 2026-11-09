@@ -1,0 +1,449 @@
+{
+  "kind": "as_safety_relation_pair_result_v1",
+  "claim_scope": "ai_authored_owner_reviewed_targeted_exploration",
+  "protocol_sha256": "3dc2e8ef73fe1a52cbd5cd2df85332c9e9a424c31eb7252d517c71f06a785e6f",
+  "dataset_sha256": "b601d000ee4a8b8ffee114179099283f1d75f9226514cfd31467f99993f158cd",
+  "summary": {
+    "confirmed_hazard": {
+      "denominator": 4,
+      "baseline_direct": 3,
+      "baseline_confirm": 0,
+      "baseline_normal": 1,
+      "baseline_errors": 0,
+      "relation_direct": 4,
+      "relation_confirm": 0,
+      "relation_normal": 0,
+      "relation_errors": 0
+    },
+    "ambiguous_hazard": {
+      "denominator": 4,
+      "baseline_direct": 1,
+      "baseline_confirm": 2,
+      "baseline_normal": 1,
+      "baseline_errors": 0,
+      "relation_direct": 2,
+      "relation_confirm": 1,
+      "relation_normal": 1,
+      "relation_errors": 0
+    },
+    "other_source": {
+      "denominator": 4,
+      "baseline_direct": 1,
+      "baseline_confirm": 0,
+      "baseline_normal": 3,
+      "baseline_errors": 0,
+      "relation_direct": 3,
+      "relation_confirm": 0,
+      "relation_normal": 1,
+      "relation_errors": 0
+    },
+    "nonoccurring_hazard": {
+      "denominator": 4,
+      "baseline_direct": 3,
+      "baseline_confirm": 0,
+      "baseline_normal": 1,
+      "baseline_errors": 0,
+      "relation_direct": 1,
+      "relation_confirm": 0,
+      "relation_normal": 2,
+      "relation_errors": 1
+    }
+  },
+  "rows": [
+    {
+      "case_id": "RE01",
+      "order": [
+        "baseline",
+        "relation"
+      ],
+      "clause_count": 2,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "current",
+        "assertion": "observed"
+      },
+      "baseline_route": "safety_action_required",
+      "baseline_error": null,
+      "baseline_latency_ms": 5159.476,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 6374.715
+    },
+    {
+      "case_id": "RE02",
+      "order": [
+        "relation",
+        "baseline"
+      ],
+      "clause_count": 2,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2220.994,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "other",
+        "assertion": "observed"
+      },
+      "baseline_route": "collecting_service_request",
+      "baseline_error": null,
+      "baseline_latency_ms": 1419.869
+    },
+    {
+      "case_id": "RE03",
+      "order": [
+        "baseline",
+        "relation"
+      ],
+      "clause_count": 2,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "current",
+        "assertion": "observed"
+      },
+      "baseline_route": "safety_action_required",
+      "baseline_error": null,
+      "baseline_latency_ms": 1357.125,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2162.007
+    },
+    {
+      "case_id": "RE04",
+      "order": [
+        "relation",
+        "baseline"
+      ],
+      "clause_count": 2,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2216.236,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "current",
+        "assertion": "observed"
+      },
+      "baseline_route": "safety_action_required",
+      "baseline_error": null,
+      "baseline_latency_ms": 1426.96
+    },
+    {
+      "case_id": "RE05",
+      "order": [
+        "baseline",
+        "relation"
+      ],
+      "clause_count": 2,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "current",
+        "assertion": "uncertain"
+      },
+      "baseline_route": "confirming_safety_status",
+      "baseline_error": null,
+      "baseline_latency_ms": 1545.655,
+      "relation_decision": {
+        "product_index": 2,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2346.383
+    },
+    {
+      "case_id": "RE06",
+      "order": [
+        "relation",
+        "baseline"
+      ],
+      "clause_count": 2,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "uncertain"
+      },
+      "relation_route": "collecting_service_request",
+      "relation_error": null,
+      "relation_latency_ms": 2348.52,
+      "baseline_decision": {
+        "evidence_index": 1,
+        "target": "current",
+        "assertion": "observed"
+      },
+      "baseline_route": "safety_action_required",
+      "baseline_error": null,
+      "baseline_latency_ms": 1536.533
+    },
+    {
+      "case_id": "RE07",
+      "order": [
+        "baseline",
+        "relation"
+      ],
+      "clause_count": 2,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "other",
+        "assertion": "observed"
+      },
+      "baseline_route": "collecting_service_request",
+      "baseline_error": null,
+      "baseline_latency_ms": 1521.544,
+      "relation_decision": {
+        "product_index": 2,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2328.362
+    },
+    {
+      "case_id": "RE08",
+      "order": [
+        "relation",
+        "baseline"
+      ],
+      "clause_count": 2,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "uncertain"
+      },
+      "relation_route": "confirming_safety_status",
+      "relation_error": null,
+      "relation_latency_ms": 2233.459,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "current",
+        "assertion": "uncertain"
+      },
+      "baseline_route": "confirming_safety_status",
+      "baseline_error": null,
+      "baseline_latency_ms": 1418.182
+    },
+    {
+      "case_id": "RE09",
+      "order": [
+        "baseline",
+        "relation"
+      ],
+      "clause_count": 2,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "other",
+        "assertion": "observed"
+      },
+      "baseline_route": "collecting_service_request",
+      "baseline_error": null,
+      "baseline_latency_ms": 1364.742,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2165.374
+    },
+    {
+      "case_id": "RE10",
+      "order": [
+        "relation",
+        "baseline"
+      ],
+      "clause_count": 2,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "nonoccurring"
+      },
+      "relation_route": "collecting_service_request",
+      "relation_error": null,
+      "relation_latency_ms": 2231.338,
+      "baseline_decision": {
+        "evidence_index": 1,
+        "target": "current",
+        "assertion": "observed"
+      },
+      "baseline_route": "safety_action_required",
+      "baseline_error": null,
+      "baseline_latency_ms": 1323.012
+    },
+    {
+      "case_id": "RE11",
+      "order": [
+        "baseline",
+        "relation"
+      ],
+      "clause_count": 2,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "other",
+        "assertion": "observed"
+      },
+      "baseline_route": "collecting_service_request",
+      "baseline_error": null,
+      "baseline_latency_ms": 1364.503,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2195.753
+    },
+    {
+      "case_id": "RE12",
+      "order": [
+        "relation",
+        "baseline"
+      ],
+      "clause_count": 2,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2251.671,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "other",
+        "assertion": "observed"
+      },
+      "baseline_route": "collecting_service_request",
+      "baseline_error": null,
+      "baseline_latency_ms": 1409.648
+    },
+    {
+      "case_id": "RE13",
+      "order": [
+        "baseline",
+        "relation"
+      ],
+      "clause_count": 2,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "current",
+        "assertion": "observed"
+      },
+      "baseline_route": "safety_action_required",
+      "baseline_error": null,
+      "baseline_latency_ms": 1284.264,
+      "relation_decision": null,
+      "relation_route": null,
+      "relation_error": "ValueError",
+      "relation_latency_ms": 2144.708
+    },
+    {
+      "case_id": "RE14",
+      "order": [
+        "relation",
+        "baseline"
+      ],
+      "clause_count": 2,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "nonoccurring"
+      },
+      "relation_route": "collecting_service_request",
+      "relation_error": null,
+      "relation_latency_ms": 2317.236,
+      "baseline_decision": {
+        "evidence_index": 1,
+        "target": "current",
+        "assertion": "observed"
+      },
+      "baseline_route": "safety_action_required",
+      "baseline_error": null,
+      "baseline_latency_ms": 1462.646
+    },
+    {
+      "case_id": "RE15",
+      "order": [
+        "baseline",
+        "relation"
+      ],
+      "clause_count": 2,
+      "baseline_decision": {
+        "evidence_index": 2,
+        "target": "other",
+        "assertion": "uncertain"
+      },
+      "baseline_route": "collecting_service_request",
+      "baseline_error": null,
+      "baseline_latency_ms": 1769.168,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "nonoccurring"
+      },
+      "relation_route": "collecting_service_request",
+      "relation_error": null,
+      "relation_latency_ms": 2235.589
+    },
+    {
+      "case_id": "RE16",
+      "order": [
+        "relation",
+        "baseline"
+      ],
+      "clause_count": 2,
+      "relation_decision": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "relation_route": "safety_action_required",
+      "relation_error": null,
+      "relation_latency_ms": 2120.626,
+      "baseline_decision": {
+        "evidence_index": 1,
+        "target": "current",
+        "assertion": "observed"
+      },
+      "baseline_route": "safety_action_required",
+      "baseline_error": null,
+      "baseline_latency_ms": 1318.311
+    }
+  ]
+}
