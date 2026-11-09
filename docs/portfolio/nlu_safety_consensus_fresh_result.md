@@ -4,7 +4,7 @@
 
 사용자가 2026-11-09에 V01–V16의 문장·기대 경로와 제품·위험 근거 및 전체 필드를 탐색용으로 검수했다. 입력은 [검수본](../../evals/structured_nlu/data/ai_heldout/as-safety-relation-v2-fresh-reviewed.v1.json)에 고정했다. AI 작성·1인 검수 발화이므로 **표적 탐색 평가**이며 공식 전체 정확도나 배포 성능이 아니다. 앞선 RE 사례는 합의 규칙을 정하는 개발용으로만 사용했고 이번 분모에 넣지 않았다.
 
-합의 규칙·비교 실행기·독립 검증기·Q5 모델·요청 정책·입력 해시를 첫 V 호출 전에 [프로토콜](../../evals/structured_nlu/data/ai_heldout/as-safety-consensus-fresh-protocol.v1.json)로 커밋했다. 같은 로컬 Q5 모델을 CPU 2개, 메모리 4 GiB 조건으로 실행했다. 기준선과 관계 후보를 사례마다 번갈아 호출했고, 오류가 나도 재시도하지 않았다. [원자료](../../evals/structured_nlu/data/ai_heldout/as-safety-consensus-fresh-result.v1.jsonl)의 SHA-256은 `1a41cf1831b936528aff199c79a0fa87fe22bf80a348556ddb8c537627fd684e`다. 16건·32호출의 시작과 종료 65줄을 보존했고 발화·응답 전문은 저장하지 않았다. 별도 [검증기](../../scripts/verify_as_safety_consensus_fresh.py)가 순서, 고정 소스 해시, 제한된 판단값, 경로, 집계를 다시 계산해 통과했다.
+합의 규칙·비교 실행기·독립 검증기·Q5 모델·요청 정책·입력 해시를 첫 V 호출 전에 [프로토콜](../../evals/structured_nlu/data/ai_heldout/as-safety-consensus-fresh-protocol.v1.json)로 커밋했다. 같은 로컬 Q5 모델을 CPU 2개, 메모리 4 GiB 조건으로 실행했다. 기준선과 관계 후보를 사례마다 번갈아 호출했고, 오류가 나도 재시도하지 않았다. [원자료](../../evals/structured_nlu/data/ai_heldout/as-safety-consensus-fresh-result.v1.jsonl)의 SHA-256은 `1a41cf1831b936528aff199c79a0fa87fe22bf80a348556ddb8c537627fd684e`다. 16건·32호출의 시작과 종료 65줄을 보존했고 발화·응답 전문은 저장하지 않았다. 별도 [검증기](../../scripts/verify_as_safety_consensus_fresh.py)가 순서, 제한된 판단값, 경로, 집계를 다시 계산해 통과했다. 코드 리뷰 후 검증기에 실행기·응답 처리기·라우터의 고정 해시와 전체 검수 정답 확인을 추가하고 같은 원자료를 다시 검증했다. 실행 당시 검증기 해시는 프로토콜에 남아 있으며 모델·입력·실행기·결과는 수정하지 않았다.
 
 ## 결과
 

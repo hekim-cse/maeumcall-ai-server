@@ -10,6 +10,7 @@ from pathlib import Path
 
 from scripts.as_safety_consensus_v1 import CONFIRM, DIRECT, NORMAL, consensus_route
 from scripts.probe_as_safety_clause_index import split_clauses, validate_indexed_evidence
+from scripts.probe_as_safety_entailment_v2 import route_entailment, validate_entailment
 from scripts.probe_as_safety_evidence import route_evidence
 from scripts.probe_as_safety_relation import route_relation, validate_relation
 from scripts.verify_as_safety_pair_journal_v2 import verify_journal
@@ -35,9 +36,18 @@ def verify(dataset_path: Path, protocol_path: Path, journal_path: Path) -> dict:
         raise ValueError("reviewed provenance differs")
     for path, key in (
         (dataset_path, "dataset_sha256"),
+        (
+            ROOT / "evals/structured_nlu/data/ai_heldout/q4-q5-request-policy.v1.json",
+            "policy_sha256",
+        ),
+        (ROOT / "scripts/run_as_safety_consensus_fresh.py", "runner_sha256"),
+        (ROOT / "scripts/as_safety_pair_executor_v2.py", "executor_sha256"),
+        (ROOT / "scripts/as_safety_completion_v2.py", "completion_sha256"),
+        (ROOT / "scripts/verify_as_safety_pair_journal_v2.py", "journal_verifier_sha256"),
         (ROOT / "scripts/probe_as_safety_clause_index.py", "baseline_sha256"),
         (ROOT / "scripts/probe_as_safety_evidence.py", "baseline_route_sha256"),
         (ROOT / "scripts/probe_as_safety_relation.py", "relation_sha256"),
+        (ROOT / "scripts/probe_as_safety_entailment_v2.py", "gold_contract_sha256"),
         (ROOT / "scripts/as_safety_consensus_v1.py", "consensus_sha256"),
     ):
         if sha256(path) != protocol.get(key):
@@ -57,7 +67,11 @@ def verify(dataset_path: Path, protocol_path: Path, journal_path: Path) -> dict:
         if count != 2:
             raise ValueError("reviewed sentence count differs")
         gold = validate_relation(json.dumps(case["expected_relation"]), count)
-        if route_relation(gold) != case["expected_route"]:
+        entailment_gold = validate_entailment(json.dumps(case["expected_entailment"]), count)
+        if (
+            route_relation(gold) != case["expected_route"]
+            or route_entailment(entailment_gold) != case["expected_route"]
+        ):
             raise ValueError("reviewed gold route differs")
         pair = {arm: ends[(case["id"], arm)] for arm in ("baseline", "candidate")}
         for arm, row in pair.items():
