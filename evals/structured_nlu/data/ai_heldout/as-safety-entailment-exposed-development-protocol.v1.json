@@ -1,0 +1,21 @@
+{
+  "kind": "as_safety_entailment_exposed_development_v1",
+  "claim_scope": "already_exposed_ai_authored_development_only",
+  "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
+  "pair_order": "alternating",
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "max_tokens": 100,
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "runner_sha256": "189ee9dce64f813bd9a0d02f1fc5744d9055b9043f7d47d60a7d858add152be7",
+  "executor_sha256": "b0c846ba1480100f1a6715c86c6492c88f13871c75ec29c678816f095d5b043a",
+  "completion_sha256": "a0310fd48f11eb9e0e624d57225f07b8b09ba89c5cfd7aba999befa36e08582e",
+  "verifier_sha256": "f58adbda4974e7bdc89084e0fd921b94e74fecf24d63d3c9f4620e4be775c109",
+  "candidate_sha256": "df9325ca93f03ac530c382cf199439900fe2177f7aa7c4f670d15f61d7991965",
+  "baseline_sha256": "87579cb1ee8d0b236de5a13e81c84ce74823e756987d1407bd19d0709c52f62b",
+  "baseline_route_sha256": "9d90f208bdebcc6381eb990f9738b2f378b63fe26e84e0c64b532a423046704b",
+  "container_check_sha256": "6a35d835714ae933696cf728864d9d7d82703f03149892a80a7a05248d83366e",
+  "reviewed_loader_sha256": "f9fa857480b30247c6bee417e509c3e71a9a29453d18687ae44fdec20ac33266",
+  "dataset_sha256": "b601d000ee4a8b8ffee114179099283f1d75f9226514cfd31467f99993f158cd",
+  "policy_sha256": "874e01d15f3185a11846f4d84c837d56dd23d2db3e2bf23da6843d1d71724133",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d"
+}
