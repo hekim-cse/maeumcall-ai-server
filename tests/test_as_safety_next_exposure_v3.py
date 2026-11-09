@@ -53,17 +53,8 @@ def test_http_protocol_error_is_recorded_and_second_arm_continues(tmp_path, fail
 
 
 def test_verifier_digest_mismatch_stops_before_model_request(tmp_path, monkeypatch):
-    executor = as_safety_preflight_v3.EXECUTOR_SOURCE
-    verifier = as_safety_preflight_v3.VERIFIER_SOURCE
     protocol = tmp_path / "protocol.json"
-    protocol.write_text(
-        json.dumps(
-            {
-                "executor_sha256": hashlib.sha256(executor.read_bytes()).hexdigest(),
-                "verifier_sha256": hashlib.sha256(verifier.read_bytes()).hexdigest(),
-            }
-        )
-    )
+    protocol.write_text(json.dumps(frozen_source_hashes()))
     verify_frozen_sources(protocol)
     model_calls = []
 
@@ -100,15 +91,9 @@ def test_verifier_digest_mismatch_stops_before_model_request(tmp_path, monkeypat
 
 def test_missing_verifier_digest_is_rejected(tmp_path):
     protocol = tmp_path / "protocol.json"
-    protocol.write_text(
-        json.dumps(
-            {
-                "executor_sha256": hashlib.sha256(
-                    as_safety_preflight_v3.EXECUTOR_SOURCE.read_bytes()
-                ).hexdigest()
-            }
-        )
-    )
+    hashes = frozen_source_hashes()
+    del hashes["verifier_sha256"]
+    protocol.write_text(json.dumps(hashes))
     with pytest.raises(ValueError, match="missing or invalid verifier_sha256"):
         verify_frozen_sources(protocol)
 
@@ -118,6 +103,26 @@ def test_mandatory_source_path_cannot_be_substituted(tmp_path):
     protocol.write_text("{}")
     with pytest.raises(ValueError, match="cannot be overridden"):
         verify_frozen_sources(protocol, {"verifier_sha256": tmp_path / "other.py"})
+
+
+def frozen_source_hashes():
+    paths = {
+        "executor_sha256": as_safety_preflight_v3.EXECUTOR_SOURCE,
+        "verifier_sha256": as_safety_preflight_v3.VERIFIER_SOURCE,
+        "preflight_sha256": as_safety_preflight_v3.Path(as_safety_preflight_v3.__file__),
+        "journal_shape_sha256": as_safety_preflight_v3.SHAPE_VERIFIER_SOURCE,
+        "error_audit_sha256": as_safety_preflight_v3.ERROR_AUDIT_SOURCE,
+    }
+    return {key: hashlib.sha256(path.read_bytes()).hexdigest() for key, path in paths.items()}
+
+
+def test_verifier_dependency_digest_is_required(tmp_path):
+    protocol = tmp_path / "protocol.json"
+    hashes = frozen_source_hashes()
+    del hashes["error_audit_sha256"]
+    protocol.write_text(json.dumps(hashes))
+    with pytest.raises(ValueError, match="missing or invalid error_audit_sha256"):
+        verify_frozen_sources(protocol)
 
 
 @pytest.mark.parametrize(

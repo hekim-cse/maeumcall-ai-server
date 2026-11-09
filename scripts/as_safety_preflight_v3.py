@@ -11,6 +11,8 @@ from scripts.as_safety_pair_executor_v3 import Completion, run_pair_journal
 
 EXECUTOR_SOURCE = Path(__file__).with_name("as_safety_pair_executor_v3.py")
 VERIFIER_SOURCE = Path(__file__).with_name("verify_as_safety_pair_journal_v3.py")
+SHAPE_VERIFIER_SOURCE = Path(__file__).with_name("verify_as_safety_pair_journal_v2.py")
+ERROR_AUDIT_SOURCE = Path(__file__).with_name("audit_as_safety_pair_errors.py")
 
 
 def verify_frozen_sources(
@@ -21,6 +23,9 @@ def verify_frozen_sources(
     source_paths = {
         "executor_sha256": EXECUTOR_SOURCE,
         "verifier_sha256": VERIFIER_SOURCE,
+        "preflight_sha256": Path(__file__),
+        "journal_shape_sha256": SHAPE_VERIFIER_SOURCE,
+        "error_audit_sha256": ERROR_AUDIT_SOURCE,
     }
     if additional_sources:
         if source_paths.keys() & additional_sources.keys():
