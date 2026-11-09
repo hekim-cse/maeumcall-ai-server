@@ -64,6 +64,8 @@ def run(args: argparse.Namespace) -> None:
         (ROOT / "scripts/probe_as_safety_entailment_v2.py", "candidate_sha256"),
         (ROOT / "scripts/probe_as_safety_clause_index.py", "baseline_sha256"),
         (ROOT / "scripts/probe_as_safety_evidence.py", "baseline_route_sha256"),
+        (ROOT / "scripts/run_as_safety_event_gate_fresh.py", "container_check_sha256"),
+        (ROOT / "scripts/run_as_safety_relation_pair.py", "reviewed_loader_sha256"),
         (args.dataset, "dataset_sha256"),
         (args.policy, "policy_sha256"),
         (args.model_path, "model_sha256"),
