@@ -1,0 +1,265 @@
+{
+  "kind": "as_safety_relation_v2_ai_reviewed_v1",
+  "provenance": "ai_authored",
+  "review_status": "owner_approved_for_exploration",
+  "reviewed_date": "2026-11-09",
+  "model_exposure_at_freeze": "none",
+  "cases": [
+    {
+      "id": "V01",
+      "user_message": "수리를 맡길 공기청정기 옆에 가습기가 있습니다. 공기청정기의 전원선에서 연기가 났습니다.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 2,
+        "claim": "entailed",
+        "reason": "same_product_observed"
+      }
+    },
+    {
+      "id": "V02",
+      "user_message": "수리를 맡길 공기청정기 옆에 가습기가 있습니다. 가습기의 전원선에서 연기가 났습니다.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 2,
+        "claim": "contradicted",
+        "reason": "other_source"
+      }
+    },
+    {
+      "id": "V03",
+      "user_message": "접수하려는 전기포트와 토스터를 같은 선반에 두었습니다. 전기포트의 전원선 연결부에서 불꽃이 튀었습니다.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 2,
+        "claim": "entailed",
+        "reason": "same_product_observed"
+      }
+    },
+    {
+      "id": "V04",
+      "user_message": "접수하려는 전기포트와 토스터를 같은 선반에 두었습니다. 토스터의 전원선 연결부에서 불꽃이 튀었습니다.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 2,
+        "claim": "contradicted",
+        "reason": "other_source"
+      }
+    },
+    {
+      "id": "V05",
+      "user_message": "수리 맡길 제습기 전원을 켜자 본체에서 연기가 났습니다. 이 제습기를 수리할 수 있는지도 궁금합니다.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "entailed",
+        "reason": "same_product_observed"
+      }
+    },
+    {
+      "id": "V06",
+      "user_message": "수리 맡길 제습기는 물통 센서가 작동하지 않습니다. 함께 쓰는 선풍기 본체에서 연기가 났고, 제습기도 수리할 수 있는지 궁금합니다.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 2,
+        "claim": "contradicted",
+        "reason": "other_source"
+      }
+    },
+    {
+      "id": "V07",
+      "user_message": "맡기려는 믹서기를 작동시키자 바닥에서 불꽃이 튀었습니다. 수리가 가능한지 알려주세요.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "entailed",
+        "reason": "same_product_observed"
+      }
+    },
+    {
+      "id": "V08",
+      "user_message": "맡기려는 믹서기는 속도 조절 버튼이 고장 났습니다. 옆 전기레인지 바닥에서 불꽃이 튀었고, 믹서기도 수리가 가능한지 알려주세요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 2,
+        "claim": "contradicted",
+        "reason": "other_source"
+      }
+    },
+    {
+      "id": "V09",
+      "user_message": "접수하려는 세탁기 근처에서 탄 냄새가 납니다. 세탁기에서 나는 건지 옆 건조기에서 나는 건지 모르겠습니다.",
+      "expected_route": "confirming_safety_status",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "unknown",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "uncertain",
+        "reason": "uncertain"
+      }
+    },
+    {
+      "id": "V10",
+      "user_message": "접수하려는 세탁기에서 탄 냄새가 납니다. 작동 중에 세탁기 전원부가 뜨거워지는 것도 확인했습니다.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "entailed",
+        "reason": "same_product_observed"
+      }
+    },
+    {
+      "id": "V11",
+      "user_message": "수리를 맡길 청소기의 안내문에 배터리가 부풀 수 있다고 적혀 있습니다. 제 청소기 배터리는 아직 평평한 상태입니다.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "other",
+        "event_status": "nonoccurring"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "contradicted",
+        "reason": "nonoccurring"
+      }
+    },
+    {
+      "id": "V12",
+      "user_message": "수리를 맡길 청소기의 배터리가 부풀어 케이스 틈이 벌어졌습니다. 오늘 처음 확인했습니다.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "entailed",
+        "reason": "same_product_observed"
+      }
+    },
+    {
+      "id": "V13",
+      "user_message": "맡기려는 헤어드라이어에서 불꽃은 보이지 않았습니다. 바람 세기만 전보다 약해졌습니다.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "nonoccurring"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "contradicted",
+        "reason": "nonoccurring"
+      }
+    },
+    {
+      "id": "V14",
+      "user_message": "맡기려는 헤어드라이어에서 불꽃이 보였습니다. 바람 세기도 전보다 약해졌습니다.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "entailed",
+        "reason": "same_product_observed"
+      }
+    },
+    {
+      "id": "V15",
+      "user_message": "접수하려는 전기장판이 아직 과열된 적은 없습니다. 과열되면 바로 전원을 꺼야 하는지 궁금합니다.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "nonoccurring"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "contradicted",
+        "reason": "nonoccurring"
+      }
+    },
+    {
+      "id": "V16",
+      "user_message": "접수하려는 전기장판이 오늘 과열돼 손을 대기 어려웠습니다. 지금 전원을 꺼야 하는지 궁금합니다.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "expected_entailment": {
+        "hazard_index": 1,
+        "claim": "entailed",
+        "reason": "same_product_observed"
+      }
+    }
+  ]
+}
