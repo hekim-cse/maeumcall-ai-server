@@ -98,6 +98,15 @@ def run(args: argparse.Namespace) -> None:
         raise ValueError("pair execution settings differ")
     if protocol.get("max_tokens") != 140 or protocol.get("endpoint") != ENDPOINT:
         raise ValueError("request settings differ")
+    if protocol.get("case_order") != "V01-V16" or protocol.get("local_runtime") != {
+        "host_port": 18081,
+        "cpu_count": 2,
+        "memory_bytes": 4 * 1024**3,
+        "context_tokens": 4096,
+        "threads": 2,
+        "parallel_slots": 1,
+    }:
+        raise ValueError("runtime or case order differs")
     if subprocess.run(
         ("git", "status", "--porcelain", "--untracked-files=no"),
         cwd=ROOT,
