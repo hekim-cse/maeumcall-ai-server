@@ -19,7 +19,7 @@ def run_with(path, request, cases=None, validate=None, route=None):
         journal=path,
         protocol_sha256="a" * 64,
         request=request,
-        validate=validate or (lambda arm, content: {"decision": content}),
+        validate=validate or (lambda arm, content, message: {"decision": content}),
         route=route or (lambda arm, decision: "confirming_safety_status"),
     )
 
@@ -70,7 +70,7 @@ def test_truncated_response_records_error_and_continues_without_retry(tmp_path):
 
 
 def test_contract_and_route_errors_are_distinct(tmp_path):
-    def validate(arm, content):
+    def validate(arm, content, message):
         if arm == "baseline":
             raise ValueError("raw model content must not be logged")
         return {"bounded": True}

@@ -35,7 +35,7 @@ def run_pair_journal(
     journal: Path,
     protocol_sha256: str,
     request: Callable[[str, str], Completion],
-    validate: Callable[[str, str], dict],
+    validate: Callable[[str, str, str], dict],
     route: Callable[[str, dict], str],
 ) -> None:
     """Create a fresh exposure log; an existing log always needs manual audit.
@@ -83,7 +83,7 @@ def run_pair_journal(
                     error_stage, error_type = "response", type(error).__name__
                 else:
                     try:
-                        decision = validate(arm, completion.content)
+                        decision = validate(arm, completion.content, message)
                     except ERRORS as error:
                         error_stage, error_type = "contract", type(error).__name__
                     else:
