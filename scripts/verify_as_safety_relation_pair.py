@@ -5,9 +5,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 
-from scripts.probe_as_safety_clause_index import validate_indexed_evidence
+from scripts.probe_as_safety_clause_index import split_clauses, validate_indexed_evidence
 from scripts.probe_as_safety_evidence import route_evidence
 from scripts.probe_as_safety_relation import route_relation, validate_relation
 
@@ -28,6 +29,14 @@ def verify(dataset_path: Path, protocol_path: Path, result_path: Path) -> dict:
         raise ValueError("dataset is not approved")
     if protocol.get("dataset_sha256") != sha256(dataset_path):
         raise ValueError("protocol dataset hash differs")
+    root = Path(__file__).resolve().parents[1]
+    for relative, key in (
+        ("scripts/probe_as_safety_clause_index.py", "baseline_sha256"),
+        ("scripts/probe_as_safety_relation.py", "relation_sha256"),
+        ("scripts/probe_as_safety_evidence.py", "evidence_probe_sha256"),
+    ):
+        if sha256(root / relative) != protocol.get(key):
+            raise ValueError(f"frozen source {key} differs")
     if result.get("protocol_sha256") != sha256(protocol_path):
         raise ValueError("result protocol hash differs")
     if result.get("dataset_sha256") != sha256(dataset_path):
@@ -52,6 +61,12 @@ def verify(dataset_path: Path, protocol_path: Path, result_path: Path) -> dict:
     for index, (case, row) in enumerate(zip(cases, rows, strict=True)):
         if case["id"] != f"RE{index + 1:02}" or row.get("case_id") != case["id"]:
             raise ValueError("case order differs")
+        clauses = split_clauses(case["user_message"])
+        if len(clauses) != 2:
+            raise ValueError("reviewed clause count differs")
+        gold = validate_relation(json.dumps(case["expected_relation"]), len(clauses))
+        if route_relation(gold) != case["expected_route"]:
+            raise ValueError("reviewed relation and route differ")
         if set(row) != {
             "case_id",
             "order",
@@ -74,7 +89,7 @@ def verify(dataset_path: Path, protocol_path: Path, result_path: Path) -> dict:
                 row[f"{arm}_{field}"] for field in ("decision", "route", "error")
             )
             latency = row[f"{arm}_latency_ms"]
-            if type(latency) not in (int, float) or latency < 0:
+            if type(latency) not in (int, float) or not math.isfinite(latency) or latency < 0:
                 raise ValueError("invalid latency")
             if decision is None:
                 if route is not None or not isinstance(error, str) or len(error) > 80:
