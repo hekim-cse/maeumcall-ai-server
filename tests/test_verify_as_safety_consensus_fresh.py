@@ -59,3 +59,21 @@ def test_changed_entailment_gold_is_rejected_even_with_updated_hashes(tmp_path):
     changed_journal.write_text("\n".join(json.dumps(event) for event in events) + "\n")
     with pytest.raises(ValueError, match="reviewed gold route differs"):
         verify(changed_dataset, changed_protocol, changed_journal)
+
+
+@pytest.mark.parametrize(
+    ("stage", "decision", "finish_reason", "message"),
+    [
+        ("route", {"some": "decision"}, "stop", "retains decision"),
+        ("contract", None, "length", "postresponse error finish reason differs"),
+        ("response", None, "stop", "response error finish reason differs"),
+    ],
+)
+def test_error_metadata_tamper_is_rejected(tmp_path, stage, decision, finish_reason, message):
+    events = [json.loads(line) for line in JOURNAL.read_text().splitlines()]
+    failed = next(event for event in events if event.get("error_stage") == "contract")
+    failed.update(error_stage=stage, decision=decision, finish_reason=finish_reason)
+    changed = tmp_path / "journal.jsonl"
+    changed.write_text("\n".join(json.dumps(event) for event in events) + "\n")
+    with pytest.raises(ValueError, match=message):
+        verify(DATASET, PROTOCOL, changed)

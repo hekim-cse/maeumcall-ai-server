@@ -27,12 +27,15 @@ class FakeResponse:
 
 
 class FakeOpener:
-    def __init__(self, body):
+    def __init__(self, body, captured=None):
         self.body = body
+        self.captured = captured
 
     def open(self, request, timeout):
         assert request.full_url == "http://127.0.0.1:18081/v1/chat/completions"
         assert timeout > 0
+        if self.captured is not None:
+            self.captured.update(json.loads(request.data))
         return FakeResponse(self.body)
 
 
@@ -62,6 +65,26 @@ def test_finish_reason_is_retained(monkeypatch):
     completion = call(monkeypatch, body)
     assert completion.content == "{}"
     assert completion.finish_reason == "length"
+
+
+def test_request_preserves_schema_and_token_limit(monkeypatch):
+    captured = {}
+    monkeypatch.setattr(
+        as_safety_completion_v2.urllib.request,
+        "build_opener",
+        lambda *args: FakeOpener(b'{"choices":[{"message":{"content":"{}"},"finish_reason":"stop"}]}', captured),
+    )
+    request_policy = policy().model_copy(update={"max_tokens": 73})
+    schema = {"type": "object", "properties": {"flag": {"type": "boolean"}}}
+    as_safety_completion_v2.post_completion(
+        "http://127.0.0.1:18081/v1/chat/completions",
+        "/models/test.gguf",
+        [{"role": "user", "content": "private"}],
+        request_policy,
+        schema,
+    )
+    assert captured["max_tokens"] == 73
+    assert captured["response_format"] == {"type": "json_object", "schema": schema}
 
 
 def test_truncated_body_propagates_for_executor_to_record(monkeypatch):

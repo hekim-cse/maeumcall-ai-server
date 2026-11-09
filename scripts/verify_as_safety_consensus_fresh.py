@@ -9,6 +9,7 @@ import statistics
 from pathlib import Path
 
 from scripts.as_safety_consensus_v1 import CONFIRM, DIRECT, NORMAL, consensus_route
+from scripts.audit_as_safety_pair_errors import audit_error_semantics
 from scripts.probe_as_safety_clause_index import split_clauses, validate_indexed_evidence
 from scripts.probe_as_safety_entailment_v2 import route_entailment, validate_entailment
 from scripts.probe_as_safety_evidence import route_evidence
@@ -59,6 +60,7 @@ def verify(dataset_path: Path, protocol_path: Path, journal_path: Path) -> dict:
         raise ValueError("case order differs")
     verify_journal(journal_path, [case["id"] for case in cases], sha256(protocol_path))
     events = [json.loads(line) for line in journal_path.read_text().splitlines()]
+    audit_error_semantics(events)
     ends = {(event["case_id"], event["arm"]): event for event in events if event["event"] == "end"}
     per_case = []
     for case in cases:

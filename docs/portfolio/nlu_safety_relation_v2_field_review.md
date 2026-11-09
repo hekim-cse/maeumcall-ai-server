@@ -1,6 +1,6 @@
 # V01–V16 제품·위험 관계 전체 필드 검토 초안
 
-[문장·기대 경로](nlu_safety_relation_v2_fresh_review.md)는 사용자가 2026-11-09에 탐색용으로 채택했다. 이 표의 **근거 번호·관계·발생·함의 정답도 같은 날 탐색용으로 채택**했다. `product_index`와 `hazard_index`는 원문 문장 번호다. `target_relation`은 접수 제품과 위험의 관계, `event_status`는 위험의 실제 발생 여부다. 새 [함의 후보 계약](../../scripts/probe_as_safety_entailment_v2.py)의 `claim`/`reason`도 함께 검수했다. V 사례는 아직 모델에 보내지 않았다. 먼저 노출된 RE 사례의 [함의 후보 개발 점검](nlu_safety_entailment_exposed_development_result.md)에서 후보를 미채택했으므로, 이 표의 검수만으로 모델을 실행하지 않는다.
+[문장·기대 경로](nlu_safety_relation_v2_fresh_review.md)는 사용자가 2026-11-09에 탐색용으로 채택했다. 이 표의 **근거 번호·관계·발생·함의 정답도 같은 날 탐색용으로 채택**했다. `product_index`와 `hazard_index`는 원문 문장 번호다. `target_relation`은 접수 제품과 위험의 관계, `event_status`는 위험의 실제 발생 여부다. 새 [함의 후보 계약](../../scripts/probe_as_safety_entailment_v2.py)의 `claim`/`reason`도 함께 검수했다. 검수 당시 V 사례는 모델에 보내지 않았다. 이후 [새 V 평가](nlu_safety_consensus_fresh_result.md)에 사용했으며 함의 후보 자체는 실행하지 않았다.
 
 | ID | 제품 근거 | 위험 근거 | 관계 | 발생 | 함의 주장 | 이유 | 기대 경로 |
 | --- | ---: | ---: | --- | --- | --- | --- | --- |

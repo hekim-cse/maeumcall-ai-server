@@ -15,6 +15,8 @@ from scripts.as_safety_consensus_v1 import CONFIRM, DIRECT, NORMAL, consensus_ro
         (NORMAL, DIRECT, CONFIRM),
         (DIRECT, None, CONFIRM),
         (NORMAL, None, CONFIRM),
+        (None, DIRECT, CONFIRM),
+        (None, NORMAL, CONFIRM),
         (None, None, CONFIRM),
     ],
 )
