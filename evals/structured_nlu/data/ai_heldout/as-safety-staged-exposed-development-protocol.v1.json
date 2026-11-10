@@ -1,0 +1,31 @@
+{
+  "kind": "as_safety_staged_exposed_development_v1",
+  "claim_scope": "already_exposed_ai_authored_development_only",
+  "case_order": "RE01-RE16,V01-V16",
+  "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
+  "pair_order": "alternating",
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "max_tokens": 180,
+  "local_runtime": {
+    "host_port": 18081,
+    "cpu_count": 2,
+    "memory_bytes": 4294967296,
+    "context_tokens": 4096,
+    "threads": 2,
+    "parallel_slots": 1
+  },
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "model_repo_revision": "f2f883a35e6183c00fcb70e22a010ce7745ea0b4",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "runner_sha256": "c9e153e44b42a974bd34fcd62556da72605010bdc4695a1fe0185be46cca4eba",
+  "candidate_sha256": "a39f208f7953bfca10f59dd4524171f06f125c845a2c592687e1780609a7708c",
+  "baseline_sha256": "87579cb1ee8d0b236de5a13e81c84ce74823e756987d1407bd19d0709c52f62b",
+  "baseline_route_sha256": "9d90f208bdebcc6381eb990f9738b2f378b63fe26e84e0c64b532a423046704b",
+  "completion_sha256": "a0310fd48f11eb9e0e624d57225f07b8b09ba89c5cfd7aba999befa36e08582e",
+  "container_check_sha256": "6a35d835714ae933696cf728864d9d7d82703f03149892a80a7a05248d83366e",
+  "case_loader_sha256": "453739fcba09848bc47be4927e9e8774f8dca6915a1aa3fae1ca7bceb4e75f8e",
+  "result_verifier_sha256": "ebab0cdbfc6813fafbe34190cb21d5aed190f42a8855a79cd12971d20fbaf208",
+  "re_dataset_sha256": "b601d000ee4a8b8ffee114179099283f1d75f9226514cfd31467f99993f158cd",
+  "v_dataset_sha256": "cf07b01f1107d3fc15b232ff85692188d2a807fc425865768163f4d4fb12bf5e",
+  "policy_sha256": "60e724d77abeba29591938e0fdb54e07a73f123762a76b7e43b4c2b6913b4f52"
+}
