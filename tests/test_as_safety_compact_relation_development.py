@@ -7,11 +7,12 @@ import pytest
 
 from scripts.as_safety_preflight_v3 import verify_frozen_sources
 from scripts.run_as_safety_compact_relation_development import load_exposed_cases, load_policy
-from scripts.verify_as_safety_compact_relation_development import verify_candidate_decision
+from scripts.verify_as_safety_compact_relation_development import verify, verify_candidate_decision
 
 DATA = Path("evals/structured_nlu/data/ai_heldout")
 POLICY = DATA / "as-safety-grounded-development-request.v1.json"
 PROTOCOL = DATA / "as-safety-compact-relation-exposed-development-protocol.v1.json"
+JOURNAL = DATA / "as-safety-compact-relation-exposed-development-result.v1.jsonl"
 MESSAGE = "제 공기청정기에서 연기가 났습니다. 전원을 껐습니다."
 
 
@@ -76,6 +77,10 @@ def test_verifier_allows_later_source_evidence():
         {"source_index": 3},
         {"event_index": True},
         {"event_status": "none"},
+        {"event_status": "observing"},
+        {"source_relation": "same"},
+        {"source_relation": ""},
+        {"extra_field": "unexpected"},
     ],
 )
 def test_verifier_rejects_inconsistent_or_unbounded_evidence(changes):
@@ -119,3 +124,49 @@ def test_frozen_preflight_rejects_changed_runner_digest(tmp_path):
             altered,
             {"runner_sha256": Path("scripts/run_as_safety_compact_relation_development.py")},
         )
+
+
+def test_result_verifier_rejects_route_tampering(tmp_path):
+    """A stored route must agree with the independently recomputed decision."""
+    events = [json.loads(line) for line in JOURNAL.read_text(encoding="utf-8").splitlines()]
+    record = next(
+        row
+        for row in events
+        if row.get("event") == "end"
+        and row.get("arm") == "candidate"
+        and row.get("decision") is not None
+    )
+    record["route"] = next(
+        route
+        for route in (
+            "safety_action_required",
+            "confirming_safety_status",
+            "collecting_service_request",
+        )
+        if route != record["route"]
+    )
+    altered = tmp_path / "changed-journal.jsonl"
+    altered.write_text(
+        "\n".join(json.dumps(row, ensure_ascii=False) for row in events) + "\n", encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="saved route differs"):
+        verify(PROTOCOL, altered)
+
+
+def test_result_verifier_rejects_frozen_source_digest_tampering(tmp_path):
+    """A protocol with an altered candidate hash cannot authenticate a journal."""
+    protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
+    protocol["compact_relation_sha256"] = "0" * 64
+    altered = tmp_path / "changed-protocol.json"
+    altered.write_text(json.dumps(protocol), encoding="utf-8")
+    with pytest.raises(ValueError, match="frozen compact_relation_sha256 differs"):
+        verify(altered, JOURNAL)
+
+
+def test_result_verifier_rejects_incomplete_exposure_journal(tmp_path):
+    """A missing final call cannot silently shrink the denominator."""
+    lines = JOURNAL.read_text(encoding="utf-8").splitlines()
+    altered = tmp_path / "partial-journal.jsonl"
+    altered.write_text("\n".join(lines[:-1]) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="incomplete or duplicate calls"):
+        verify(PROTOCOL, altered)
