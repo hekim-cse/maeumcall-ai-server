@@ -1,0 +1,10 @@
+{
+  "kind": "as_safety_grounded_development_request_v1",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "max_tokens": 180,
+  "temperature": 0,
+  "repeat_penalty": 1.05,
+  "stop": ["<|eot_id|>"],
+  "timeout_seconds": 180,
+  "retry_policy": "no_retry_manual_audit_on_interruption"
+}
