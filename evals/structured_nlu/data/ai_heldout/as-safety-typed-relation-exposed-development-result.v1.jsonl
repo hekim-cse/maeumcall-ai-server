@@ -1,0 +1,129 @@
+{"event": "header", "protocol_sha256": "d85966be91bfba2b8236f09481a0d433f3759ee49abf7396048c369c62b10136"}
+{"event": "begin", "case_id": "RE01", "arm": "baseline"}
+{"event": "end", "case_id": "RE01", "arm": "baseline", "decision": {"evidence_index": 2, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 5166.873}
+{"event": "begin", "case_id": "RE01", "arm": "candidate"}
+{"event": "end", "case_id": "RE01", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 8462.053}
+{"event": "begin", "case_id": "RE02", "arm": "candidate"}
+{"event": "end", "case_id": "RE02", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2830.467}
+{"event": "begin", "case_id": "RE02", "arm": "baseline"}
+{"event": "end", "case_id": "RE02", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1453.803}
+{"event": "begin", "case_id": "RE03", "arm": "baseline"}
+{"event": "end", "case_id": "RE03", "arm": "baseline", "decision": {"evidence_index": 2, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1356.676}
+{"event": "begin", "case_id": "RE03", "arm": "candidate"}
+{"event": "end", "case_id": "RE03", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2808.32}
+{"event": "begin", "case_id": "RE04", "arm": "candidate"}
+{"event": "end", "case_id": "RE04", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2826.363}
+{"event": "begin", "case_id": "RE04", "arm": "baseline"}
+{"event": "end", "case_id": "RE04", "arm": "baseline", "decision": {"evidence_index": 2, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1421.484}
+{"event": "begin", "case_id": "RE05", "arm": "baseline"}
+{"event": "end", "case_id": "RE05", "arm": "baseline", "decision": {"evidence_index": 2, "target": "current", "assertion": "uncertain"}, "route": "confirming_safety_status", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1535.72}
+{"event": "begin", "case_id": "RE05", "arm": "candidate"}
+{"event": "end", "case_id": "RE05", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3855.966}
+{"event": "begin", "case_id": "RE06", "arm": "candidate"}
+{"event": "end", "case_id": "RE06", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3385.158}
+{"event": "begin", "case_id": "RE06", "arm": "baseline"}
+{"event": "end", "case_id": "RE06", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1589.954}
+{"event": "begin", "case_id": "RE07", "arm": "baseline"}
+{"event": "end", "case_id": "RE07", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1513.081}
+{"event": "begin", "case_id": "RE07", "arm": "candidate"}
+{"event": "end", "case_id": "RE07", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2956.515}
+{"event": "begin", "case_id": "RE08", "arm": "candidate"}
+{"event": "end", "case_id": "RE08", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2806.807}
+{"event": "begin", "case_id": "RE08", "arm": "baseline"}
+{"event": "end", "case_id": "RE08", "arm": "baseline", "decision": {"evidence_index": 2, "target": "current", "assertion": "uncertain"}, "route": "confirming_safety_status", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1431.567}
+{"event": "begin", "case_id": "RE09", "arm": "baseline"}
+{"event": "end", "case_id": "RE09", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1448.409}
+{"event": "begin", "case_id": "RE09", "arm": "candidate"}
+{"event": "end", "case_id": "RE09", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2783.18}
+{"event": "begin", "case_id": "RE10", "arm": "candidate"}
+{"event": "end", "case_id": "RE10", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2982.051}
+{"event": "begin", "case_id": "RE10", "arm": "baseline"}
+{"event": "end", "case_id": "RE10", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1519.121}
+{"event": "begin", "case_id": "RE11", "arm": "baseline"}
+{"event": "end", "case_id": "RE11", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1395.994}
+{"event": "begin", "case_id": "RE11", "arm": "candidate"}
+{"event": "end", "case_id": "RE11", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3166.911}
+{"event": "begin", "case_id": "RE12", "arm": "candidate"}
+{"event": "end", "case_id": "RE12", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3521.811}
+{"event": "begin", "case_id": "RE12", "arm": "baseline"}
+{"event": "end", "case_id": "RE12", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1450.973}
+{"event": "begin", "case_id": "RE13", "arm": "baseline"}
+{"event": "end", "case_id": "RE13", "arm": "baseline", "decision": {"evidence_index": 2, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1311.853}
+{"event": "begin", "case_id": "RE13", "arm": "candidate"}
+{"event": "end", "case_id": "RE13", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2938.322}
+{"event": "begin", "case_id": "RE14", "arm": "candidate"}
+{"event": "end", "case_id": "RE14", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3148.564}
+{"event": "begin", "case_id": "RE14", "arm": "baseline"}
+{"event": "end", "case_id": "RE14", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1499.073}
+{"event": "begin", "case_id": "RE15", "arm": "baseline"}
+{"event": "end", "case_id": "RE15", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "uncertain"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1796.493}
+{"event": "begin", "case_id": "RE15", "arm": "candidate"}
+{"event": "end", "case_id": "RE15", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3035.634}
+{"event": "begin", "case_id": "RE16", "arm": "candidate"}
+{"event": "end", "case_id": "RE16", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2760.671}
+{"event": "begin", "case_id": "RE16", "arm": "baseline"}
+{"event": "end", "case_id": "RE16", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1338.211}
+{"event": "begin", "case_id": "V01", "arm": "baseline"}
+{"event": "end", "case_id": "V01", "arm": "baseline", "decision": {"evidence_index": 2, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1302.011}
+{"event": "begin", "case_id": "V01", "arm": "candidate"}
+{"event": "end", "case_id": "V01", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2866.764}
+{"event": "begin", "case_id": "V02", "arm": "candidate"}
+{"event": "end", "case_id": "V02", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2492.013}
+{"event": "begin", "case_id": "V02", "arm": "baseline"}
+{"event": "end", "case_id": "V02", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1021.777}
+{"event": "begin", "case_id": "V03", "arm": "baseline"}
+{"event": "end", "case_id": "V03", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1447.321}
+{"event": "begin", "case_id": "V03", "arm": "candidate"}
+{"event": "end", "case_id": "V03", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3046.88}
+{"event": "begin", "case_id": "V04", "arm": "candidate"}
+{"event": "end", "case_id": "V04", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2710.233}
+{"event": "begin", "case_id": "V04", "arm": "baseline"}
+{"event": "end", "case_id": "V04", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1104.77}
+{"event": "begin", "case_id": "V05", "arm": "baseline"}
+{"event": "end", "case_id": "V05", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1341.111}
+{"event": "begin", "case_id": "V05", "arm": "candidate"}
+{"event": "end", "case_id": "V05", "arm": "candidate", "decision": {"product_index": 1, "event_index": 1, "source_index": 1, "occurrence_index": 1, "source_relation": "current_product", "event_status": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 3062.327}
+{"event": "begin", "case_id": "V06", "arm": "candidate"}
+{"event": "end", "case_id": "V06", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3071.934}
+{"event": "begin", "case_id": "V06", "arm": "baseline"}
+{"event": "end", "case_id": "V06", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1455.393}
+{"event": "begin", "case_id": "V07", "arm": "baseline"}
+{"event": "end", "case_id": "V07", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1364.523}
+{"event": "begin", "case_id": "V07", "arm": "candidate"}
+{"event": "end", "case_id": "V07", "arm": "candidate", "decision": {"product_index": 1, "event_index": 1, "source_index": 1, "occurrence_index": 1, "source_relation": "current_product", "event_status": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 3119.35}
+{"event": "begin", "case_id": "V08", "arm": "candidate"}
+{"event": "end", "case_id": "V08", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 3148.221}
+{"event": "begin", "case_id": "V08", "arm": "baseline"}
+{"event": "end", "case_id": "V08", "arm": "baseline", "decision": {"evidence_index": 2, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1511.952}
+{"event": "begin", "case_id": "V09", "arm": "baseline"}
+{"event": "end", "case_id": "V09", "arm": "baseline", "decision": {"evidence_index": 1, "target": "other", "assertion": "observed"}, "route": "collecting_service_request", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1376.733}
+{"event": "begin", "case_id": "V09", "arm": "candidate"}
+{"event": "end", "case_id": "V09", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2985.433}
+{"event": "begin", "case_id": "V10", "arm": "candidate"}
+{"event": "end", "case_id": "V10", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2624.908}
+{"event": "begin", "case_id": "V10", "arm": "baseline"}
+{"event": "end", "case_id": "V10", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1247.857}
+{"event": "begin", "case_id": "V11", "arm": "baseline"}
+{"event": "end", "case_id": "V11", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1397.811}
+{"event": "begin", "case_id": "V11", "arm": "candidate"}
+{"event": "end", "case_id": "V11", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2873.256}
+{"event": "begin", "case_id": "V12", "arm": "candidate"}
+{"event": "end", "case_id": "V12", "arm": "candidate", "decision": {"product_index": 1, "event_index": 2, "source_index": 2, "occurrence_index": 2, "source_relation": "current_product", "event_status": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 2886.859}
+{"event": "begin", "case_id": "V12", "arm": "baseline"}
+{"event": "end", "case_id": "V12", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1218.354}
+{"event": "begin", "case_id": "V13", "arm": "baseline"}
+{"event": "end", "case_id": "V13", "arm": "baseline", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 1272.114}
+{"event": "begin", "case_id": "V13", "arm": "candidate"}
+{"event": "end", "case_id": "V13", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2962.058}
+{"event": "begin", "case_id": "V14", "arm": "candidate"}
+{"event": "end", "case_id": "V14", "arm": "candidate", "decision": {"product_index": 1, "event_index": 1, "source_index": 1, "occurrence_index": 1, "source_relation": "current_product", "event_status": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 2790.441}
+{"event": "begin", "case_id": "V14", "arm": "baseline"}
+{"event": "end", "case_id": "V14", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1096.152}
+{"event": "begin", "case_id": "V15", "arm": "baseline"}
+{"event": "end", "case_id": "V15", "arm": "baseline", "decision": {"evidence_index": 2, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1384.794}
+{"event": "begin", "case_id": "V15", "arm": "candidate"}
+{"event": "end", "case_id": "V15", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2987.259}
+{"event": "begin", "case_id": "V16", "arm": "candidate"}
+{"event": "end", "case_id": "V16", "arm": "candidate", "decision": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "finish_reason": "stop", "latency_ms": 2738.879}
+{"event": "begin", "case_id": "V16", "arm": "baseline"}
+{"event": "end", "case_id": "V16", "arm": "baseline", "decision": {"evidence_index": 1, "target": "current", "assertion": "observed"}, "route": "safety_action_required", "error_stage": null, "error_type": null, "finish_reason": "stop", "latency_ms": 1205.153}
