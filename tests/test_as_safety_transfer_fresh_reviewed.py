@@ -11,6 +11,7 @@ from scripts.probe_as_safety_relation import route_relation, validate_relation
 
 DATA = Path("evals/structured_nlu/data/ai_heldout")
 TX = DATA / "as-safety-transfer-fresh-reviewed.v1.json"
+REVIEW = Path("docs/portfolio/nlu_safety_transfer_fresh_review.md")
 PREVIOUS = (
     DATA / "as-safety-relation-fresh-reviewed.v1.json",
     DATA / "as-safety-relation-v2-fresh-reviewed.v1.json",
@@ -41,6 +42,14 @@ EXPECTED = {
 def validate_tx_case(case: dict) -> None:
     if set(case) != {"id", "user_message", "expected_route", "expected_relation"}:
         raise ValueError("TX fields differ")
+    reviewed_messages = {
+        columns[1].strip(): columns[2].strip()
+        for line in REVIEW.read_text(encoding="utf-8").splitlines()
+        if line.startswith("| TX")
+        for columns in [line.split("|")]
+    }
+    if case["user_message"] != reviewed_messages.get(case["id"]):
+        raise ValueError(f"{case['id']}: utterance differs from reviewed record")
     clauses = split_clauses(case["user_message"])
     if len(clauses) != 2:
         raise ValueError(f"{case['id']}: TX must have two source clauses, got {clauses}")
@@ -93,6 +102,10 @@ def test_reviewed_tx_contract_and_prior_exposure_boundary():
     ("change", "value"),
     [
         (("user_message",), " "),
+        (
+            ("user_message",),
+            "A/S 접수하려는 전자키보드는 건반 두 개가 눌리지 않습니다. 오늘 그 전자키보드에서 연기가 피어올랐습니다.",
+        ),
         (("expected_route",), DIRECT),
         (("expected_relation", "unknown_field"), "value"),
         (("expected_relation", "product_index"), 3),
