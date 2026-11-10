@@ -1,0 +1,30 @@
+{
+  "kind": "as_safety_typed_relation_diagnostic_v1",
+  "claim_scope": "already_exposed_ai_authored_diagnostic_replicate_only",
+  "case_order": "RE01-RE16,V01-V16",
+  "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "max_tokens": 180,
+  "local_runtime": {
+    "host_port": 18081,
+    "cpu_count": 2,
+    "memory_bytes": 4294967296,
+    "context_tokens": 4096,
+    "threads": 2,
+    "parallel_slots": 1
+  },
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "model_repo_revision": "f2f883a35e6183c00fcb70e22a010ce7745ea0b4",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "runner_sha256": "f43d57abb46c2f0084be15be528cef5b3751b9ca0dc17b9a5249ffbef47e406c",
+  "classifier_sha256": "18c14135d32b49588319872bef60ea684ac5ddf9755b2731f159af0d5208b0a4",
+  "candidate_sha256": "f58262ba266592f9275e132531a3bce62bedc888a8a75f86a02910b098823ca7",
+  "frozen_adapter_sha256": "7603f81de0841a9310724d8657fc04e647abc9c9b8c0e3b3cec297303c763534",
+  "completion_sha256": "a0310fd48f11eb9e0e624d57225f07b8b09ba89c5cfd7aba999befa36e08582e",
+  "container_check_sha256": "6a35d835714ae933696cf728864d9d7d82703f03149892a80a7a05248d83366e",
+  "result_verifier_sha256": "1bb47dd57bf28844b995a67642efcd5058b9b58450d0ba04919db858b6a5b6d3",
+  "re_dataset_sha256": "b601d000ee4a8b8ffee114179099283f1d75f9226514cfd31467f99993f158cd",
+  "v_dataset_sha256": "cf07b01f1107d3fc15b232ff85692188d2a807fc425865768163f4d4fb12bf5e",
+  "policy_sha256": "60e724d77abeba29591938e0fdb54e07a73f123762a76b7e43b4c2b6913b4f52",
+  "prior_journal_sha256": "4b611c27c1138f8f7346d3632a8fa56cdb425b7b1193d4ab7f4ea100e22b861a"
+}
