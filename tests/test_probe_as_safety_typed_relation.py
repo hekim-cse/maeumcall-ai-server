@@ -49,9 +49,7 @@ def response(
         (response("current_product", "uncertain"), CONFIRM),
         (response("current_part", "nonoccurring"), NORMAL),
         (
-            response(
-                "none", "none", product=None, event=None, source=None, occurrence=None
-            ),
+            response("none", "none", product=None, event=None, source=None, occurrence=None),
             NORMAL,
         ),
     ],
@@ -61,10 +59,7 @@ def test_typed_relation_routes(raw: str, expected: str) -> None:
     assert route_typed_relation(decision) == expected
     schema = typed_relation_journal_schema(2)
     assert set(decision) == set(schema["required"])
-    assert all(
-        value in schema["properties"][field]["enum"]
-        for field, value in decision.items()
-    )
+    assert all(value in schema["properties"][field]["enum"] for field, value in decision.items())
 
 
 @pytest.mark.parametrize(
