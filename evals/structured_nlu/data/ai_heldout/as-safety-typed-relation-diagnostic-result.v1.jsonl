@@ -1,0 +1,65 @@
+{"event": "header", "protocol_sha256": "21f5c95b8f9130a9620a59d95697774c6a092eed25126918e2fcb7506443a344"}
+{"event": "begin", "case_id": "RE01"}
+{"event": "end", "case_id": "RE01", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 8657.299}
+{"event": "begin", "case_id": "RE02"}
+{"event": "end", "case_id": "RE02", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2844.117}
+{"event": "begin", "case_id": "RE03"}
+{"event": "end", "case_id": "RE03", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2822.524}
+{"event": "begin", "case_id": "RE04"}
+{"event": "end", "case_id": "RE04", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2892.348}
+{"event": "begin", "case_id": "RE05"}
+{"event": "end", "case_id": "RE05", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 4036.994}
+{"event": "begin", "case_id": "RE06"}
+{"event": "end", "case_id": "RE06", "decision": null, "route": null, "reason_code": "missing_target", "finish_reason": "stop", "latency_ms": 3262.396}
+{"event": "begin", "case_id": "RE07"}
+{"event": "end", "case_id": "RE07", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3021.317}
+{"event": "begin", "case_id": "RE08"}
+{"event": "end", "case_id": "RE08", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2885.29}
+{"event": "begin", "case_id": "RE09"}
+{"event": "end", "case_id": "RE09", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2824.626}
+{"event": "begin", "case_id": "RE10"}
+{"event": "end", "case_id": "RE10", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2958.831}
+{"event": "begin", "case_id": "RE11"}
+{"event": "end", "case_id": "RE11", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2977.937}
+{"event": "begin", "case_id": "RE12"}
+{"event": "end", "case_id": "RE12", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3044.211}
+{"event": "begin", "case_id": "RE13"}
+{"event": "end", "case_id": "RE13", "decision": null, "route": null, "reason_code": "missing_target", "finish_reason": "stop", "latency_ms": 2883.835}
+{"event": "begin", "case_id": "RE14"}
+{"event": "end", "case_id": "RE14", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3117.97}
+{"event": "begin", "case_id": "RE15"}
+{"event": "end", "case_id": "RE15", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3050.067}
+{"event": "begin", "case_id": "RE16"}
+{"event": "end", "case_id": "RE16", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2734.006}
+{"event": "begin", "case_id": "V01"}
+{"event": "end", "case_id": "V01", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2740.617}
+{"event": "begin", "case_id": "V02"}
+{"event": "end", "case_id": "V02", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2462.795}
+{"event": "begin", "case_id": "V03"}
+{"event": "end", "case_id": "V03", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3111.514}
+{"event": "begin", "case_id": "V04"}
+{"event": "end", "case_id": "V04", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2726.747}
+{"event": "begin", "case_id": "V05"}
+{"event": "end", "case_id": "V05", "decision": {"product_index": 1, "event_index": 1, "source_index": 1, "occurrence_index": 1, "source_relation": "current_product", "event_status": "observed"}, "route": "safety_action_required", "reason_code": null, "finish_reason": "stop", "latency_ms": 3074.055}
+{"event": "begin", "case_id": "V06"}
+{"event": "end", "case_id": "V06", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3125.414}
+{"event": "begin", "case_id": "V07"}
+{"event": "end", "case_id": "V07", "decision": {"product_index": 1, "event_index": 1, "source_index": 1, "occurrence_index": 1, "source_relation": "current_product", "event_status": "observed"}, "route": "safety_action_required", "reason_code": null, "finish_reason": "stop", "latency_ms": 3046.307}
+{"event": "begin", "case_id": "V08"}
+{"event": "end", "case_id": "V08", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3142.317}
+{"event": "begin", "case_id": "V09"}
+{"event": "end", "case_id": "V09", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3083.172}
+{"event": "begin", "case_id": "V10"}
+{"event": "end", "case_id": "V10", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2685.964}
+{"event": "begin", "case_id": "V11"}
+{"event": "end", "case_id": "V11", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2875.156}
+{"event": "begin", "case_id": "V12"}
+{"event": "end", "case_id": "V12", "decision": {"product_index": 1, "event_index": 2, "source_index": 2, "occurrence_index": 2, "source_relation": "current_product", "event_status": "observed"}, "route": "safety_action_required", "reason_code": null, "finish_reason": "stop", "latency_ms": 2894.678}
+{"event": "begin", "case_id": "V13"}
+{"event": "end", "case_id": "V13", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2998.9}
+{"event": "begin", "case_id": "V14"}
+{"event": "end", "case_id": "V14", "decision": {"product_index": 1, "event_index": 1, "source_index": 1, "occurrence_index": 1, "source_relation": "current_product", "event_status": "observed"}, "route": "safety_action_required", "reason_code": null, "finish_reason": "stop", "latency_ms": 2848.272}
+{"event": "begin", "case_id": "V15"}
+{"event": "end", "case_id": "V15", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 3002.032}
+{"event": "begin", "case_id": "V16"}
+{"event": "end", "case_id": "V16", "decision": null, "route": null, "reason_code": "missing_event_or_occurrence", "finish_reason": "stop", "latency_ms": 2625.016}
