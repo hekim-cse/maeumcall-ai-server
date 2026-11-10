@@ -58,8 +58,13 @@ def test_staged_routes(event_decision: dict, source_decision: dict | None, expec
         {"event_index": None, "event_status": "observed"},
         {"event_index": 1, "event_status": "none"},
         {"event_index": True, "event_status": "observed"},
+        {"event_index": 0, "event_status": "observed"},
+        {"event_index": -1, "event_status": "observed"},
+        {"event_index": 1.0, "event_status": "observed"},
+        {"event_index": "1", "event_status": "observed"},
         {"event_index": 3, "event_status": "observed"},
         {"event_index": 1, "event_status": " "},
+        {"event_index": 1, "event_status": "happened"},
         {"event_index": 1, "event_status": "observed", "raw": "text"},
         [],
         None,
@@ -78,6 +83,7 @@ def test_invalid_event_fails(payload) -> None:
         {"product_index": True, "source_index": 1, "source_relation": "current_product"},
         {"product_index": 1, "source_index": None, "source_relation": "current_product"},
         {"product_index": 1, "source_index": 3, "source_relation": "current_product"},
+        {"product_index": 1, "source_index": True, "source_relation": "current_product"},
         {"product_index": 1, "source_index": 1, "source_relation": " "},
         {"product_index": 1, "source_index": 1, "source_relation": 1},
         {
@@ -104,3 +110,31 @@ def test_stage_boundary_and_schemas() -> None:
         combine_stages(event(), None)
     assert source_schema(2)["properties"]["product_index"]["enum"] == [1, 2]
     assert event_schema(2)["properties"]["event_index"]["enum"] == [None, 1, 2]
+
+
+@pytest.mark.parametrize(
+    "malformed_event",
+    [
+        {"event_index": 1},
+        {"event_index": 1, "event_status": "observed", "raw": "text"},
+        None,
+    ],
+)
+def test_combine_rejects_malformed_event_structure(malformed_event) -> None:
+    """The stage boundary must not accept an incomplete event decision."""
+    with pytest.raises(ValueError, match="event decision fields differ"):
+        combine_stages(malformed_event, source())
+
+
+@pytest.mark.parametrize(
+    "malformed_decision",
+    [
+        {},
+        {"event_index": 1, "event_status": "observed"},
+        None,
+    ],
+)
+def test_route_rejects_malformed_combined_structure(malformed_decision) -> None:
+    """No route may be scored from a missing or non-object decision."""
+    with pytest.raises(ValueError, match="staged decision fields differ"):
+        route_staged(malformed_decision)
