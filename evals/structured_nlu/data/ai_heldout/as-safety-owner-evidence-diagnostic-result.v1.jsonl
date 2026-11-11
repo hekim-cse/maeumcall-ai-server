@@ -1,0 +1,49 @@
+{"event": "header", "protocol_sha256": "854d1c4484e8d33853ca236dc785fec1a584d5b1c697388276c30ddaff4be260"}
+{"event": "begin", "case_id": "RE01"}
+{"event": "end", "case_id": "RE01", "source_clause_index": 2, "source_start": 9, "source_end": 38, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 11540.195}
+{"event": "begin", "case_id": "RE02"}
+{"event": "end", "case_id": "RE02", "source_clause_index": 2, "source_start": 4, "source_end": 20, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9553.529}
+{"event": "begin", "case_id": "RE03"}
+{"event": "end", "case_id": "RE03", "source_clause_index": 1, "source_start": 2, "source_end": 7, "link_kind": "same_entity", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8820.423}
+{"event": "begin", "case_id": "RE04"}
+{"event": "end", "case_id": "RE04", "source_clause_index": 1, "source_start": 14, "source_end": 25, "link_kind": "same_entity", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9244.692}
+{"event": "begin", "case_id": "RE05"}
+{"event": "end", "case_id": "RE05", "source_clause_index": 1, "source_start": 6, "source_end": 12, "link_kind": "same_entity", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9458.929}
+{"event": "begin", "case_id": "RE06"}
+{"event": "end", "case_id": "RE06", "source_clause_index": 1, "source_start": 2, "source_end": 9, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9527.167}
+{"event": "begin", "case_id": "RE07"}
+{"event": "end", "case_id": "RE07", "source_clause_index": 2, "source_start": 0, "source_end": 47, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 10272.354}
+{"event": "begin", "case_id": "RE08"}
+{"event": "end", "case_id": "RE08", "source_clause_index": 2, "source_start": 0, "source_end": 40, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9871.318}
+{"event": "begin", "case_id": "RE09"}
+{"event": "end", "case_id": "RE09", "source_clause_index": 2, "source_start": 0, "source_end": 12, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 10187.926}
+{"event": "begin", "case_id": "RE10"}
+{"event": "end", "case_id": "RE10", "source_clause_index": 2, "source_start": 0, "source_end": 12, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8615.124}
+{"event": "begin", "case_id": "RE11"}
+{"event": "end", "case_id": "RE11", "source_clause_index": 2, "source_start": 0, "source_end": 5, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8678.331}
+{"event": "begin", "case_id": "V01"}
+{"event": "end", "case_id": "V01", "source_clause_index": 2, "source_start": 0, "source_end": 10, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8525.301}
+{"event": "begin", "case_id": "V02"}
+{"event": "end", "case_id": "V02", "source_clause_index": 2, "source_start": 0, "source_end": 8, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8112.534}
+{"event": "begin", "case_id": "V03"}
+{"event": "end", "case_id": "V03", "source_clause_index": 2, "source_start": 0, "source_end": 13, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9257.699}
+{"event": "begin", "case_id": "V04"}
+{"event": "end", "case_id": "V04", "source_clause_index": 2, "source_start": 0, "source_end": 12, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8523.09}
+{"event": "begin", "case_id": "V05"}
+{"event": "end", "case_id": "V05", "source_clause_index": 1, "source_start": 0, "source_end": 31, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9306.865}
+{"event": "begin", "case_id": "V06"}
+{"event": "end", "case_id": "V06", "source_clause_index": 2, "source_start": 0, "source_end": 21, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9638.976}
+{"event": "begin", "case_id": "V07"}
+{"event": "end", "case_id": "V07", "source_clause_index": 1, "source_start": 5, "source_end": 31, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9602.77}
+{"event": "begin", "case_id": "V08"}
+{"event": "end", "case_id": "V08", "source_clause_index": 2, "source_start": 2, "source_end": 20, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9702.014}
+{"event": "begin", "case_id": "V09"}
+{"event": "end", "case_id": "V09", "source_clause_index": 1, "source_start": 0, "source_end": 25, "link_kind": "explicit_other", "source_relation": "other", "route": "collecting_service_request", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9028.234}
+{"event": "begin", "case_id": "V10"}
+{"event": "end", "case_id": "V10", "source_clause_index": 1, "source_start": 6, "source_end": 9, "link_kind": "same_entity", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8247.861}
+{"event": "begin", "case_id": "V12"}
+{"event": "end", "case_id": "V12", "source_clause_index": 1, "source_start": 7, "source_end": 15, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8686.832}
+{"event": "begin", "case_id": "V14"}
+{"event": "end", "case_id": "V14", "source_clause_index": 1, "source_start": 5, "source_end": 23, "link_kind": "part_or_anaphora", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_type": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8670.694}
+{"event": "begin", "case_id": "V16"}
+{"event": "end", "case_id": "V16", "source_clause_index": null, "source_start": null, "source_end": null, "link_kind": null, "source_relation": null, "route": null, "error_stage": "contract", "error_type": "ValueError", "http_status": null, "finish_reason": "stop", "latency_ms": 8826.113}
