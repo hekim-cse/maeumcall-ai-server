@@ -26,7 +26,7 @@ SOURCES = {
     "owner_loader_sha256": ROOT / "scripts/run_as_safety_owner_evidence_diagnostic.py",
     "oracle_candidate_sha256": ROOT / "scripts/probe_as_safety_oracle_relation.py",
     "completion_sha256": ROOT / "scripts/as_safety_completion_v2.py",
-    "policy_loader_sha256": ROOT / "scripts/run_as_safety_compact_relation_development.py",
+    "policy_loader_sha256": ROOT / "scripts/run_as_safety_grounded_entity_link_diagnostic.py",
     "completion_type_sha256": ROOT / "scripts/as_safety_pair_executor_v2.py",
     "endpoint_guard_sha256": ROOT / "scripts/run_ai_heldout_pair.py",
     "request_policy_type_sha256": ROOT / "evals/structured_nlu/ai_heldout.py",
@@ -36,7 +36,7 @@ SOURCES = {
     "v_dataset_sha256": DATA / "as-safety-relation-v2-fresh-reviewed.v1.json",
     "spans_sha256": DATA / "as-safety-oracle-relation-spans-reviewed.v1.json",
     "owner_labels_sha256": DATA / "as-safety-owner-evidence-reviewed.v1.json",
-    "policy_sha256": DATA / "as-safety-grounded-development-request.v1.json",
+    "policy_sha256": DATA / "as-safety-grounded-entity-link-request.v1.json",
 }
 END_FIELDS = {
     "event",
@@ -395,7 +395,7 @@ def verify(protocol_path: Path, journal_path: Path) -> dict:
         or protocol.get("endpoint") != "http://127.0.0.1:18081/v1/chat/completions"
         or protocol.get("server_image_digest")
         != "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35"
-        or protocol.get("max_tokens") != 180
+        or protocol.get("max_tokens") != 320
         or protocol.get("local_runtime")
         != {
             "host_port": 18081,
@@ -409,6 +409,23 @@ def verify(protocol_path: Path, journal_path: Path) -> dict:
         or not re.fullmatch(r"[0-9a-f]{64}", protocol["model_sha256"])
     ):
         raise ValueError("entity link protocol differs")
+    policy = _json(SOURCES["policy_sha256"].read_text(encoding="utf-8"))
+    if policy != {
+        "kind": "as_safety_grounded_entity_link_request_v1",
+        "server_image_digest": protocol["server_image_digest"],
+        "max_tokens": 320,
+        "temperature": 0,
+        "repeat_penalty": 1.05,
+        "stop": ["<|eot_id|>"],
+        "timeout_seconds": 180,
+        "retry_policy": "no_retry_manual_audit_on_interruption",
+    } or (
+        type(policy["max_tokens"]) is not int
+        or type(policy["temperature"]) is not int
+        or type(policy["repeat_penalty"]) is not float
+        or type(policy["timeout_seconds"]) is not int
+    ):
+        raise ValueError("grounded request policy differs")
     for key, path in SOURCES.items():
         if digest(path) != protocol.get(key):
             raise ValueError(f"frozen {key} differs")

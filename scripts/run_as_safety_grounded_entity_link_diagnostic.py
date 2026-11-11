@@ -26,7 +26,7 @@ from scripts.probe_as_safety_grounded_entity_link_v1 import (
     validate_grounded_entity_link,
 )
 from scripts.probe_as_safety_oracle_relation import route_with_reviewed_event
-from scripts.run_as_safety_compact_relation_development import ENDPOINT, load_policy
+from scripts.run_as_safety_compact_relation_development import ENDPOINT, RequestSettings
 from scripts.run_as_safety_event_gate_fresh import IMAGE, verify_container
 from scripts.run_as_safety_oracle_relation_diagnostic import load_active_cases
 from scripts.run_as_safety_owner_evidence_diagnostic import load_reviewed_owner_labels
@@ -48,7 +48,7 @@ SOURCE_PATHS = {
     "owner_loader_sha256": ROOT / "scripts/run_as_safety_owner_evidence_diagnostic.py",
     "oracle_candidate_sha256": ROOT / "scripts/probe_as_safety_oracle_relation.py",
     "completion_sha256": ROOT / "scripts/as_safety_completion_v2.py",
-    "policy_loader_sha256": ROOT / "scripts/run_as_safety_compact_relation_development.py",
+    "policy_loader_sha256": ROOT / "scripts/run_as_safety_grounded_entity_link_diagnostic.py",
     "completion_type_sha256": ROOT / "scripts/as_safety_pair_executor_v2.py",
     "endpoint_guard_sha256": ROOT / "scripts/run_ai_heldout_pair.py",
     "request_policy_type_sha256": ROOT / "evals/structured_nlu/ai_heldout.py",
@@ -58,7 +58,7 @@ SOURCE_PATHS = {
     "v_dataset_sha256": DATA / "as-safety-relation-v2-fresh-reviewed.v1.json",
     "spans_sha256": DATA / "as-safety-oracle-relation-spans-reviewed.v1.json",
     "owner_labels_sha256": DATA / "as-safety-owner-evidence-reviewed.v1.json",
-    "policy_sha256": DATA / "as-safety-grounded-development-request.v1.json",
+    "policy_sha256": DATA / "as-safety-grounded-entity-link-request.v1.json",
 }
 
 
@@ -85,6 +85,35 @@ def digest(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             hasher.update(chunk)
     return hasher.hexdigest()
+
+
+def load_grounded_policy(path: Path) -> RequestSettings:
+    """Require the isolated 320-token request policy for source quotes."""
+    payload = _json(path.read_bytes())
+    if payload != {
+        "kind": "as_safety_grounded_entity_link_request_v1",
+        "server_image_digest": IMAGE,
+        "max_tokens": 320,
+        "temperature": 0,
+        "repeat_penalty": 1.05,
+        "stop": ["<|eot_id|>"],
+        "timeout_seconds": 180,
+        "retry_policy": "no_retry_manual_audit_on_interruption",
+    } or (
+        type(payload["max_tokens"]) is not int
+        or type(payload["temperature"]) is not int
+        or type(payload["repeat_penalty"]) is not float
+        or type(payload["timeout_seconds"]) is not int
+    ):
+        raise ValueError("grounded entity link request policy differs")
+    return RequestSettings(
+        max_tokens=payload["max_tokens"],
+        temperature=payload["temperature"],
+        repeat_penalty=payload["repeat_penalty"],
+        stop=tuple(payload["stop"]),
+        timeout_seconds=payload["timeout_seconds"],
+        server_image_digest=payload["server_image_digest"],
+    )
 
 
 def load_gold_owner_cases(
@@ -147,7 +176,7 @@ def validate_protocol(
         or protocol.get("retry_policy") != "no_retry_manual_audit_on_interruption"
         or protocol.get("endpoint") != ENDPOINT
         or protocol.get("server_image_digest") != IMAGE
-        or protocol.get("max_tokens") != 180
+        or protocol.get("max_tokens") != 320
         or protocol.get("local_runtime")
         != {
             "host_port": 18081,
@@ -308,7 +337,7 @@ def run(args: argparse.Namespace) -> None:
     protocol_sha256 = validate_protocol(
         args.protocol, args.model_path, args.policy, args.spans, args.owner_labels
     )
-    policy = load_policy(args.policy)
+    policy = load_grounded_policy(args.policy)
     verify_container(args.container_name, args.model_path)
     with args.output.open("x", encoding="utf-8") as stream:
         _append(stream, {"event": "header", "protocol_sha256": protocol_sha256})

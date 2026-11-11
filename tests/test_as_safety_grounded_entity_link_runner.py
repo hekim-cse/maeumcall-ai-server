@@ -110,6 +110,20 @@ def test_failure_rows_never_persist_raw_text_or_evidence(monkeypatch, response, 
     assert MESSAGE not in json.dumps(row, ensure_ascii=False)
 
 
+def test_isolated_request_policy_allows_320_tokens_and_rejects_old_limit(tmp_path):
+    policy_path = runner.SOURCE_PATHS["policy_sha256"]
+    policy = runner.load_grounded_policy(policy_path)
+    assert policy.max_tokens == 320
+    assert policy.timeout_seconds == 180
+    assert runner.SOURCE_PATHS["policy_loader_sha256"] == runner.SOURCE_PATHS["runner_sha256"]
+    old_limit = json.loads(policy_path.read_text(encoding="utf-8"))
+    old_limit["max_tokens"] = 180
+    changed_path = tmp_path / "old-limit.json"
+    changed_path.write_text(json.dumps(old_limit), encoding="utf-8")
+    with pytest.raises(ValueError, match="request policy differs"):
+        runner.load_grounded_policy(changed_path)
+
+
 def test_protocol_must_be_committed_before_model_or_container_call(monkeypatch, tmp_path):
     """A matching local protocol still cannot authorize an uncommitted run."""
     source = tmp_path / "input.txt"
@@ -124,7 +138,7 @@ def test_protocol_must_be_committed_before_model_or_container_call(monkeypatch, 
         "case_order": runner.CASE_ORDER,
         "endpoint": runner.ENDPOINT,
         "retry_policy": "no_retry_manual_audit_on_interruption",
-        "max_tokens": 180,
+        "max_tokens": 320,
         "local_runtime": {
             "host_port": 18081,
             "cpu_count": 2,

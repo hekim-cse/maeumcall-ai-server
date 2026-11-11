@@ -24,7 +24,7 @@ def _protocol() -> dict:
         "case_order": "RE01-RE06,RE08-RE11,V01-V08,V10,V12,V14,V16",
         "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
         "retry_policy": "no_retry_manual_audit_on_interruption",
-        "max_tokens": 180,
+        "max_tokens": 320,
         "local_runtime": {
             "host_port": 18081,
             "cpu_count": 2,
@@ -172,6 +172,30 @@ def test_source_hash_mismatch_rejected(tmp_path):
     protocol["candidate_sha256"] = "0" * 64
     protocol_path.write_text(json.dumps(protocol), encoding="utf-8")
     with pytest.raises(ValueError, match="frozen candidate"):
+        verifier.verify(protocol_path, journal_path)
+
+
+def test_protocol_and_policy_must_use_isolated_320_token_setting(tmp_path, monkeypatch):
+    protocol_path, journal_path, _ = _journal(tmp_path)
+    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    protocol["max_tokens"] = 180
+    raw = json.dumps(protocol).encode()
+    protocol_path.write_bytes(raw)
+    journal_lines = journal_path.read_text(encoding="utf-8").splitlines()
+    journal_lines[0] = json.dumps(
+        {"event": "header", "protocol_sha256": hashlib.sha256(raw).hexdigest()}
+    )
+    journal_path.write_text("\n".join(journal_lines) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="protocol differs"):
+        verifier.verify(protocol_path, journal_path)
+
+    policy_path = tmp_path / "wrong-policy.json"
+    policy = json.loads(verifier.SOURCES["policy_sha256"].read_text(encoding="utf-8"))
+    policy["max_tokens"] = 180
+    policy_path.write_text(json.dumps(policy), encoding="utf-8")
+    monkeypatch.setitem(verifier.SOURCES, "policy_sha256", policy_path)
+    protocol_path, journal_path, _ = _journal(tmp_path)
+    with pytest.raises(ValueError, match="request policy differs"):
         verifier.verify(protocol_path, journal_path)
 
 
