@@ -10,8 +10,11 @@ from types import SimpleNamespace
 
 import pytest
 
+from scripts import audit_as_safety_gold_owner_link_journal as postrun_audit
 from scripts import run_as_safety_gold_owner_link_diagnostic as runner
 from scripts import verify_as_safety_gold_owner_link_diagnostic as verifier
+
+ORIGINAL_REQUIRE_COMMITTED = verifier._require_committed
 
 
 @pytest.fixture(autouse=True)
@@ -119,6 +122,31 @@ def test_one_call_exposes_owner_anchor_but_not_relation_or_link_kind(monkeypatch
     assert case["user_message"] not in json.dumps(row, ensure_ascii=False)
     assert owner["mention"] not in json.dumps(row, ensure_ascii=False)
     verifier._check_end(row, verifier._reviewed_cases()[0])
+
+
+def test_one_call_routes_other_to_service_request(monkeypatch):
+    """Check the real runner route without a synthesized verifier journal."""
+    case, span, owner = _inputs()[0]
+    monkeypatch.setattr(
+        runner,
+        "post_completion",
+        lambda *_args: SimpleNamespace(content='{"source_relation":"other"}', finish_reason="stop"),
+    )
+    row = runner._call(case, span, owner, object())
+    assert row["source_relation"] == "other"
+    assert row["route"] == "collecting_service_request"
+
+
+def test_commit_check_rejects_working_file_mismatch(monkeypatch):
+    """Exercise the commit guard that synthetic journal tests bypass."""
+    monkeypatch.setattr(verifier, "_require_committed", ORIGINAL_REQUIRE_COMMITTED)
+    monkeypatch.setattr(
+        verifier.subprocess, "run", lambda *_args, **_kwargs: SimpleNamespace(stdout=b"wrong")
+    )
+    with pytest.raises(ValueError, match="not committed"):
+        verifier._require_committed(
+            verifier.ROOT / "scripts/verify_as_safety_gold_owner_link_diagnostic.py"
+        )
 
 
 @pytest.mark.parametrize(
@@ -242,3 +270,34 @@ def test_runner_rejects_invalid_protocol_before_model_call(tmp_path, mutated):
     path.write_text(mutated, encoding="utf-8")
     with pytest.raises(ValueError):
         runner.validate_protocol(path, path, path, path, path)
+
+
+def test_postrun_audit_accepts_original_and_rejects_exception_finish_reason(tmp_path):
+    """Preserve the frozen run and reject a review-discovered journal mutation."""
+    data = verifier.DATA
+    protocol = data / "as-safety-gold-owner-link-diagnostic-protocol.v1.json"
+    original = data / "as-safety-gold-owner-link-diagnostic-journal.v1.jsonl"
+    assert postrun_audit.audit(protocol, original)["relation_correct"] == 16
+    lines = original.read_text(encoding="utf-8").splitlines()
+    row = json.loads(lines[2])
+    row.update(
+        {
+            "source_relation": None,
+            "route": None,
+            "error_stage": "response",
+            "error_code": "transport_error",
+            "finish_reason": "stop",
+        }
+    )
+    lines[2] = json.dumps(row)
+    mutated = tmp_path / "mutated.jsonl"
+    mutated.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="response exception has finish reason"):
+        postrun_audit.audit(protocol, mutated)
+
+
+def test_postrun_audit_rejects_blank_mentions():
+    """Reject review annotations made only of whitespace."""
+    assert not postrun_audit._nonblank(" \t")
+    assert not postrun_audit._nonblank(None)
+    assert postrun_audit._nonblank("커피머신 물통")
