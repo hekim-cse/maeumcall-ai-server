@@ -29,6 +29,15 @@ from scripts.probe_as_safety_source_link_v1 import EVIDENCE_KINDS, RELATIONS, li
             "target_possesses_owner",
         ),
         (
+            "수리할 다른 노트북에서 연기가 났습니다.",
+            "수리할 다른 노트북",
+            1,
+            "다른 노트북",
+            1,
+            "current",
+            "same_anchored_entity",
+        ),
+        (
             "수리할 노트북은 켜지지 않습니다. 다른 노트북에서 연기가 났습니다.",
             "노트북",
             1,

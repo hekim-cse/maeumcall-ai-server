@@ -86,7 +86,14 @@ def link_source(
         target_clause_index == owner_clause_index
         and target_start <= owner_start
         and owner_start + len(owner_mention) <= target_start + len(target_mention)
-        and (owner_mention == target_mention or (head is not None and owner_mention == head))
+        and (
+            owner_mention == target_mention
+            or (
+                head is not None
+                and owner_mention.endswith(head)
+                and target_mention.endswith(owner_mention)
+            )
+        )
     ):
         return {"source_relation": "current", "evidence_kind": "same_anchored_entity"}
     if target_clause_index != owner_clause_index and owner_mention in target_mention:
