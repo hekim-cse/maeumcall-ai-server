@@ -1,0 +1,45 @@
+{"event": "header", "protocol_sha256": "ceeb8f24584b3409bc1c8c1691ff305be08ae6af153191153d2f0227cdb05c85"}
+{"event": "begin", "case_id": "RE01"}
+{"event": "end", "case_id": "RE01", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6956.615}
+{"event": "begin", "case_id": "RE02"}
+{"event": "end", "case_id": "RE02", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6064.589}
+{"event": "begin", "case_id": "RE03"}
+{"event": "end", "case_id": "RE03", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5851.344}
+{"event": "begin", "case_id": "RE04"}
+{"event": "end", "case_id": "RE04", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5961.108}
+{"event": "begin", "case_id": "RE05"}
+{"event": "end", "case_id": "RE05", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "uncertain", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6426.017}
+{"event": "begin", "case_id": "RE06"}
+{"event": "end", "case_id": "RE06", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6384.228}
+{"event": "begin", "case_id": "RE08"}
+{"event": "end", "case_id": "RE08", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5913.918}
+{"event": "begin", "case_id": "RE09"}
+{"event": "end", "case_id": "RE09", "entity_link": "distinct_item", "same_or_part_answer": "no", "distinct_item_answer": "yes", "source_relation": "other", "route": "collecting_service_request", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5826.081}
+{"event": "begin", "case_id": "RE10"}
+{"event": "end", "case_id": "RE10", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5719.067}
+{"event": "begin", "case_id": "RE11"}
+{"event": "end", "case_id": "RE11", "entity_link": "distinct_item", "same_or_part_answer": "no", "distinct_item_answer": "yes", "source_relation": "other", "route": "collecting_service_request", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5734.82}
+{"event": "begin", "case_id": "V01"}
+{"event": "end", "case_id": "V01", "entity_link": "distinct_item", "same_or_part_answer": "no", "distinct_item_answer": "yes", "source_relation": "other", "route": "collecting_service_request", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5687.044}
+{"event": "begin", "case_id": "V02"}
+{"event": "end", "case_id": "V02", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5312.692}
+{"event": "begin", "case_id": "V03"}
+{"event": "end", "case_id": "V03", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7388.737}
+{"event": "begin", "case_id": "V04"}
+{"event": "end", "case_id": "V04", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5698.126}
+{"event": "begin", "case_id": "V05"}
+{"event": "end", "case_id": "V05", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5799.758}
+{"event": "begin", "case_id": "V06"}
+{"event": "end", "case_id": "V06", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6247.68}
+{"event": "begin", "case_id": "V07"}
+{"event": "end", "case_id": "V07", "entity_link": "same_or_part", "same_or_part_answer": "yes", "distinct_item_answer": "no", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5929.771}
+{"event": "begin", "case_id": "V08"}
+{"event": "end", "case_id": "V08", "entity_link": "distinct_item", "same_or_part_answer": "no", "distinct_item_answer": "yes", "source_relation": "other", "route": "collecting_service_request", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6227.432}
+{"event": "begin", "case_id": "V10"}
+{"event": "end", "case_id": "V10", "entity_link": "same_or_part", "same_or_part_answer": "yes", "distinct_item_answer": "no", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5754.007}
+{"event": "begin", "case_id": "V12"}
+{"event": "end", "case_id": "V12", "entity_link": "same_or_part", "same_or_part_answer": "yes", "distinct_item_answer": "no", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5927.482}
+{"event": "begin", "case_id": "V14"}
+{"event": "end", "case_id": "V14", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "uncertain", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5752.883}
+{"event": "begin", "case_id": "V16"}
+{"event": "end", "case_id": "V16", "entity_link": "unresolved", "same_or_part_answer": "uncertain", "distinct_item_answer": "yes", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5804.812}
