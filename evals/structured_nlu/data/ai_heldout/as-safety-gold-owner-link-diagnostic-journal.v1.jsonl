@@ -1,0 +1,45 @@
+{"event": "header", "protocol_sha256": "a2494350296425c6fb4d903a3c79bbbdc5a135b70240cc44575bf04bdd2a616b"}
+{"event": "begin", "case_id": "RE01"}
+{"event": "end", "case_id": "RE01", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8266.98}
+{"event": "begin", "case_id": "RE02"}
+{"event": "end", "case_id": "RE02", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6826.89}
+{"event": "begin", "case_id": "RE03"}
+{"event": "end", "case_id": "RE03", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6563.57}
+{"event": "begin", "case_id": "RE04"}
+{"event": "end", "case_id": "RE04", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6821.753}
+{"event": "begin", "case_id": "RE05"}
+{"event": "end", "case_id": "RE05", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7453.16}
+{"event": "begin", "case_id": "RE06"}
+{"event": "end", "case_id": "RE06", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7438.417}
+{"event": "begin", "case_id": "RE08"}
+{"event": "end", "case_id": "RE08", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6862.128}
+{"event": "begin", "case_id": "RE09"}
+{"event": "end", "case_id": "RE09", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6644.798}
+{"event": "begin", "case_id": "RE10"}
+{"event": "end", "case_id": "RE10", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6457.668}
+{"event": "begin", "case_id": "RE11"}
+{"event": "end", "case_id": "RE11", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6696.297}
+{"event": "begin", "case_id": "V01"}
+{"event": "end", "case_id": "V01", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7732.252}
+{"event": "begin", "case_id": "V02"}
+{"event": "end", "case_id": "V02", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6036.702}
+{"event": "begin", "case_id": "V03"}
+{"event": "end", "case_id": "V03", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6967.214}
+{"event": "begin", "case_id": "V04"}
+{"event": "end", "case_id": "V04", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6460.125}
+{"event": "begin", "case_id": "V05"}
+{"event": "end", "case_id": "V05", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6617.775}
+{"event": "begin", "case_id": "V06"}
+{"event": "end", "case_id": "V06", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7149.914}
+{"event": "begin", "case_id": "V07"}
+{"event": "end", "case_id": "V07", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6911.405}
+{"event": "begin", "case_id": "V08"}
+{"event": "end", "case_id": "V08", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7424.703}
+{"event": "begin", "case_id": "V10"}
+{"event": "end", "case_id": "V10", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6583.222}
+{"event": "begin", "case_id": "V12"}
+{"event": "end", "case_id": "V12", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6845.766}
+{"event": "begin", "case_id": "V14"}
+{"event": "end", "case_id": "V14", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6327.429}
+{"event": "begin", "case_id": "V16"}
+{"event": "end", "case_id": "V16", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6619.776}
