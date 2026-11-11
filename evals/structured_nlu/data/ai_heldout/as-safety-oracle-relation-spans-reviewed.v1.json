@@ -1,0 +1,130 @@
+{
+  "kind": "as_safety_oracle_relation_spans_reviewed_v1",
+  "cases": [
+    {
+      "id": "RE01",
+      "target_mention": "수리 맡길 믹서기",
+      "hazard_event_mention": "오늘 작동시키자 바닥 틈에서 번쩍이는 빛과 함께 '딱' 소리가 났어요"
+    },
+    {
+      "id": "RE02",
+      "target_mention": "공기순환기",
+      "hazard_event_mention": "그 제품의 콘센트 쪽 플라스틱이 녹아내렸습니다"
+    },
+    {
+      "id": "RE03",
+      "target_mention": "전동 칫솔",
+      "hazard_event_mention": "손잡이를 잡았을 때 전기가 찌릿하게 느껴졌어요"
+    },
+    {
+      "id": "RE04",
+      "target_mention": "소형 냉장고",
+      "hazard_event_mention": "전원을 끈 뒤에도 뒤쪽에서 하얀 연무가 계속 나옵니다"
+    },
+    {
+      "id": "RE05",
+      "target_mention": "무선 스피커",
+      "hazard_event_mention": "표면이 평소보다 뜨거운 것 같은데 제 착각인지 모르겠어요"
+    },
+    {
+      "id": "RE06",
+      "target_mention": "커피머신",
+      "hazard_event_mention": "액체가 새는 건지 세척할 때 흘린 물인지 구분이 안 됩니다"
+    },
+    {
+      "id": "RE07",
+      "target_mention": "모니터",
+      "hazard_event_mention": "근처에서 탄 냄새가 나는 것 같은데 멀티탭과 모니터 중 어디서 나는지는 모르겠습니다"
+    },
+    {
+      "id": "RE08",
+      "target_mention": "헤어드라이어",
+      "hazard_event_mention": "내부에서 희미한 빛이 보였는데 불꽃인지 표시등 반사인지 확실하지 않아요"
+    },
+    {
+      "id": "RE09",
+      "target_mention": "TV",
+      "hazard_event_mention": "멀티탭에서는 어제 연기가 났습니다"
+    },
+    {
+      "id": "RE10",
+      "target_mention": "게임패드",
+      "hazard_event_mention": "친구가 쓰는 같은 모델은 배터리가 터졌다고 들었어요"
+    },
+    {
+      "id": "RE11",
+      "target_mention": "세탁기",
+      "hazard_event_mention": "욕실 전등에서 타는 냄새가 나서 전등만 껐습니다"
+    },
+    {
+      "id": "V01",
+      "target_mention": "공기청정기",
+      "hazard_event_mention": "공기청정기의 전원선에서 연기가 났습니다"
+    },
+    {
+      "id": "V02",
+      "target_mention": "공기청정기",
+      "hazard_event_mention": "가습기의 전원선에서 연기가 났습니다"
+    },
+    {
+      "id": "V03",
+      "target_mention": "전기포트",
+      "hazard_event_mention": "전기포트의 전원선 연결부에서 불꽃이 튀었습니다"
+    },
+    {
+      "id": "V04",
+      "target_mention": "토스터",
+      "hazard_event_mention": "토스터의 전원선 연결부에서 불꽃이 튀었습니다",
+      "reviewed_interpretation": {
+        "version": "v2_target_review",
+        "target_relation": "current",
+        "expected_route": "safety_action_required"
+      }
+    },
+    {
+      "id": "V05",
+      "target_mention": "제습기",
+      "hazard_event_mention": "수리 맡길 제습기 전원을 켜자 본체에서 연기가 났습니다"
+    },
+    {
+      "id": "V06",
+      "target_mention": "제습기",
+      "hazard_event_mention": "선풍기 본체에서 연기가 났고"
+    },
+    {
+      "id": "V07",
+      "target_mention": "믹서기",
+      "hazard_event_mention": "맡기려는 믹서기를 작동시키자 바닥에서 불꽃이 튀었습니다"
+    },
+    {
+      "id": "V08",
+      "target_mention": "믹서기",
+      "hazard_event_mention": "전기레인지 바닥에서 불꽃이 튀었고"
+    },
+    {
+      "id": "V09",
+      "target_mention": "세탁기",
+      "hazard_event_mention": "접수하려는 세탁기 근처에서 탄 냄새가 납니다"
+    },
+    {
+      "id": "V10",
+      "target_mention": "세탁기",
+      "hazard_event_mention": "접수하려는 세탁기에서 탄 냄새가 납니다"
+    },
+    {
+      "id": "V12",
+      "target_mention": "청소기",
+      "hazard_event_mention": "청소기의 배터리가 부풀어 케이스 틈이 벌어졌습니다"
+    },
+    {
+      "id": "V14",
+      "target_mention": "헤어드라이어",
+      "hazard_event_mention": "헤어드라이어에서 불꽃이 보였습니다"
+    },
+    {
+      "id": "V16",
+      "target_mention": "전기장판",
+      "hazard_event_mention": "전기장판이 오늘 과열돼 손을 대기 어려웠습니다"
+    }
+  ]
+}
