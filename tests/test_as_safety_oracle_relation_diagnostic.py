@@ -159,14 +159,18 @@ def test_failed_oracle_call_records_no_response_body(
 ):
     path, _cases, _spans = _reviewed_spans(tmp_path)
     case, span = runner.load_active_cases(path)[0]
+    calls = 0
 
     def fake_post(*_args):
+        nonlocal calls
+        calls += 1
         if isinstance(response, Exception):
             raise response
         return response
 
     monkeypatch.setattr(runner, "post_completion", fake_post)
     row = runner._call(case, span, object())
+    assert calls == 1
     assert row["source_relation"] is None and row["route"] is None
     assert row["error_stage"] == expected_stage
     assert row["error_type"] == expected_type

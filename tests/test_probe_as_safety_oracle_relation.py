@@ -70,6 +70,8 @@ def test_invalid_reviewed_inputs_rejected(kwargs: dict) -> None:
     ("target_mention", "hazard_event_mention"),
     [
         ("", "연기가 났습니다"),
+        (" ", "연기가 났습니다"),
+        ("접수 제품", " "),
         ("다른 제품", "연기가 났습니다"),
         ("접수 제품", "없는 위험"),
     ],
