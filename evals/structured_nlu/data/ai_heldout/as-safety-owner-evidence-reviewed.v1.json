@@ -1,0 +1,31 @@
+{
+  "kind": "as_safety_owner_evidence_reviewed_v1",
+  "provenance": "ai_authored",
+  "review_status": "owner_approved_for_exploration",
+  "cases": [
+    {"id": "RE01", "accepted_owner_spans": [{"clause_index": 2, "mention": "바닥 틈"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "RE02", "accepted_owner_spans": [{"clause_index": 2, "mention": "그 제품의 콘센트 쪽 플라스틱"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "RE03", "accepted_owner_spans": [{"clause_index": 2, "mention": "손잡이"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "RE04", "accepted_owner_spans": [{"clause_index": 2, "mention": "뒤쪽"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "RE05", "accepted_owner_spans": [{"clause_index": 2, "mention": "표면"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "RE06", "accepted_owner_spans": [{"clause_index": 1, "mention": "커피머신 물통"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "RE07", "accepted_owner_spans": [], "accepted_link_kinds": ["unresolved"]},
+    {"id": "RE08", "accepted_owner_spans": [{"clause_index": 2, "mention": "내부"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "RE09", "accepted_owner_spans": [{"clause_index": 2, "mention": "오래된 멀티탭"}], "accepted_link_kinds": ["explicit_other"]},
+    {"id": "RE10", "accepted_owner_spans": [{"clause_index": 2, "mention": "친구가 쓰는 같은 모델"}], "accepted_link_kinds": ["explicit_other"]},
+    {"id": "RE11", "accepted_owner_spans": [{"clause_index": 2, "mention": "욕실 전등"}], "accepted_link_kinds": ["explicit_other"]},
+    {"id": "V01", "accepted_owner_spans": [{"clause_index": 2, "mention": "공기청정기의 전원선"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "V02", "accepted_owner_spans": [{"clause_index": 2, "mention": "가습기의 전원선"}], "accepted_link_kinds": ["explicit_other"]},
+    {"id": "V03", "accepted_owner_spans": [{"clause_index": 2, "mention": "전기포트의 전원선 연결부"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "V04", "accepted_owner_spans": [{"clause_index": 2, "mention": "토스터의 전원선 연결부"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "V05", "accepted_owner_spans": [{"clause_index": 1, "mention": "본체"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "V06", "accepted_owner_spans": [{"clause_index": 2, "mention": "선풍기 본체"}], "accepted_link_kinds": ["explicit_other"]},
+    {"id": "V07", "accepted_owner_spans": [{"clause_index": 1, "mention": "믹서기"}], "accepted_link_kinds": ["same_entity"]},
+    {"id": "V08", "accepted_owner_spans": [{"clause_index": 2, "mention": "전기레인지 바닥"}], "accepted_link_kinds": ["explicit_other"]},
+    {"id": "V09", "accepted_owner_spans": [], "accepted_link_kinds": ["unresolved"]},
+    {"id": "V10", "accepted_owner_spans": [{"clause_index": 1, "mention": "세탁기"}], "accepted_link_kinds": ["same_entity"]},
+    {"id": "V12", "accepted_owner_spans": [{"clause_index": 1, "mention": "청소기의 배터리"}], "accepted_link_kinds": ["part_or_anaphora"]},
+    {"id": "V14", "accepted_owner_spans": [{"clause_index": 1, "mention": "헤어드라이어"}], "accepted_link_kinds": ["same_entity"]},
+    {"id": "V16", "accepted_owner_spans": [{"clause_index": 1, "mention": "전기장판"}], "accepted_link_kinds": ["same_entity"]}
+  ]
+}
