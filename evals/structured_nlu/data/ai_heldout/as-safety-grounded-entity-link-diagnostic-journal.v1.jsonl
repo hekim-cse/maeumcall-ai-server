@@ -1,0 +1,45 @@
+{"event": "header", "protocol_sha256": "dcd8e989352768f667960c083ef47760c5985393f93947d6132342c2ceddd929"}
+{"event": "begin", "case_id": "RE01"}
+{"event": "end", "case_id": "RE01", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9135.638}
+{"event": "begin", "case_id": "RE02"}
+{"event": "end", "case_id": "RE02", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8410.216}
+{"event": "begin", "case_id": "RE03"}
+{"event": "end", "case_id": "RE03", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8176.974}
+{"event": "begin", "case_id": "RE04"}
+{"event": "end", "case_id": "RE04", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8194.543}
+{"event": "begin", "case_id": "RE05"}
+{"event": "end", "case_id": "RE05", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8603.526}
+{"event": "begin", "case_id": "RE06"}
+{"event": "end", "case_id": "RE06", "entity_link": "same_or_part", "evidence_spans": [{"clause_index": 1, "start": 0, "end": 29, "quote_sha256": "0e1bc1d6a45c7c8d95a3175da272852a87bbdeeba2dabe55c05915f22518b349"}], "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8945.337}
+{"event": "begin", "case_id": "RE08"}
+{"event": "end", "case_id": "RE08", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8152.696}
+{"event": "begin", "case_id": "RE09"}
+{"event": "end", "case_id": "RE09", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8026.504}
+{"event": "begin", "case_id": "RE10"}
+{"event": "end", "case_id": "RE10", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7745.369}
+{"event": "begin", "case_id": "RE11"}
+{"event": "end", "case_id": "RE11", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7743.448}
+{"event": "begin", "case_id": "V01"}
+{"event": "end", "case_id": "V01", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7871.418}
+{"event": "begin", "case_id": "V02"}
+{"event": "end", "case_id": "V02", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7605.686}
+{"event": "begin", "case_id": "V03"}
+{"event": "end", "case_id": "V03", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8457.715}
+{"event": "begin", "case_id": "V04"}
+{"event": "end", "case_id": "V04", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7819.76}
+{"event": "begin", "case_id": "V05"}
+{"event": "end", "case_id": "V05", "entity_link": "same_or_part", "evidence_spans": [{"clause_index": 1, "start": 0, "end": 31, "quote_sha256": "a8a88a3008395cbf18703f4d29d4e2cc4b75c059c2958d942928f0b53042b606"}], "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8112.85}
+{"event": "begin", "case_id": "V06"}
+{"event": "end", "case_id": "V06", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8431.726}
+{"event": "begin", "case_id": "V07"}
+{"event": "end", "case_id": "V07", "entity_link": "same_or_part", "evidence_spans": [{"clause_index": 1, "start": 0, "end": 31, "quote_sha256": "b73dad3aac26a467322215dc36e69cee4815a7ed2d0c3e17b920c4561281460a"}], "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8456.951}
+{"event": "begin", "case_id": "V08"}
+{"event": "end", "case_id": "V08", "entity_link": "unresolved", "evidence_spans": [], "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 9115.426}
+{"event": "begin", "case_id": "V10"}
+{"event": "end", "case_id": "V10", "entity_link": "same_or_part", "evidence_spans": [{"clause_index": 1, "start": 0, "end": 22, "quote_sha256": "09548a5a257fc7b21657d420c751509df5174d59d8115ac4e8dedd404da3ad97"}], "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7679.882}
+{"event": "begin", "case_id": "V12"}
+{"event": "end", "case_id": "V12", "entity_link": "same_or_part", "evidence_spans": [{"clause_index": 1, "start": 0, "end": 35, "quote_sha256": "e0ce302e789f8bf71497f7e008cf7d2a4dbfed5442a9e914a72c01d9bd1f0f2a"}], "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8136.658}
+{"event": "begin", "case_id": "V14"}
+{"event": "end", "case_id": "V14", "entity_link": "same_or_part", "evidence_spans": [{"clause_index": 1, "start": 0, "end": 24, "quote_sha256": "21ea7db7bfe28d884b0ee5643e37e0edda6f2cf838caa7da296e313e6f07a18a"}], "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 7650.425}
+{"event": "begin", "case_id": "V16"}
+{"event": "end", "case_id": "V16", "entity_link": "same_or_part", "evidence_spans": [{"clause_index": 1, "start": 0, "end": 32, "quote_sha256": "683a8305b74fc38871ad405faca5165e17c65a59021b2ea6a416f8b212eaadc3"}], "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 8201.004}
