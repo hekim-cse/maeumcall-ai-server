@@ -1,0 +1,417 @@
+{
+  "kind": "as_safety_source_boundary_ai_reviewed_v1",
+  "provenance": "ai_authored",
+  "review_status": "owner_approved_for_exploration",
+  "reviewed_date": "2026-11-12",
+  "model_exposure_at_freeze": "none",
+  "cases": [
+    {
+      "id": "GB01",
+      "user_message": "현관 스마트 도어락의 잠금 버튼이 잘 안 눌려서 접수하려고 합니다. 오늘 도어락 배터리 덮개가 손을 대기 어려울 만큼 뜨거워졌어요.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "현관 스마트 도어락",
+        "hazard_event_mention": "뜨거워졌어요",
+        "owner_clause_index": 2,
+        "owner_mention": "도어락 배터리 덮개"
+      }
+    },
+    {
+      "id": "GB02",
+      "user_message": "현관 스마트 도어락의 잠금 버튼이 잘 안 눌려서 접수하려고 합니다. 오늘 옆 디지털 초인종의 배터리 덮개가 손을 대기 어려울 만큼 뜨거워졌어요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "현관 스마트 도어락",
+        "hazard_event_mention": "뜨거워졌어요",
+        "owner_clause_index": 2,
+        "owner_mention": "디지털 초인종의 배터리 덮개"
+      }
+    },
+    {
+      "id": "GB03",
+      "user_message": "프린터의 용지 공급 기능을 수리받고 싶습니다. 방금 프린터 전원 코드에서 연기가 났어요.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "프린터",
+        "hazard_event_mention": "연기가 났어요",
+        "owner_clause_index": 2,
+        "owner_mention": "프린터 전원 코드"
+      }
+    },
+    {
+      "id": "GB04",
+      "user_message": "프린터의 용지 공급 기능을 수리받고 싶습니다. 방금 책상 스탠드 전원 코드에서 연기가 났어요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "프린터",
+        "hazard_event_mention": "연기가 났어요",
+        "owner_clause_index": 2,
+        "owner_mention": "책상 스탠드 전원 코드"
+      }
+    },
+    {
+      "id": "GB05",
+      "user_message": "캠핑용 전기랜턴의 밝기 조절 다이얼이 고장 나 문의합니다. 오늘 제 전기랜턴 충전 단자에서 연기가 났어요.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "캠핑용 전기랜턴",
+        "hazard_event_mention": "연기가 났어요",
+        "owner_clause_index": 2,
+        "owner_mention": "제 전기랜턴 충전 단자"
+      }
+    },
+    {
+      "id": "GB06",
+      "user_message": "캠핑용 전기랜턴의 밝기 조절 다이얼이 고장 나 문의합니다. 오늘 동행인이 가져온 전기랜턴 충전 단자에서 연기가 났어요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "캠핑용 전기랜턴",
+        "hazard_event_mention": "연기가 났어요",
+        "owner_clause_index": 2,
+        "owner_mention": "동행인이 가져온 전기랜턴 충전 단자"
+      }
+    },
+    {
+      "id": "GB07",
+      "user_message": "전동 높이 조절 책상의 상승 버튼이 작동하지 않아 접수합니다. 오늘 책상 모터에서 타는 냄새가 났어요.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "전동 높이 조절 책상",
+        "hazard_event_mention": "타는 냄새가 났어요",
+        "owner_clause_index": 2,
+        "owner_mention": "책상 모터"
+      }
+    },
+    {
+      "id": "GB08",
+      "user_message": "전동 높이 조절 책상의 상승 버튼이 작동하지 않아 접수합니다. 오늘 책상 아래 발 마사지기 모터에서 타는 냄새가 났어요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "전동 높이 조절 책상",
+        "hazard_event_mention": "타는 냄새가 났어요",
+        "owner_clause_index": 2,
+        "owner_mention": "발 마사지기 모터"
+      }
+    },
+    {
+      "id": "GB09",
+      "user_message": "가정용 NAS가 자꾸 꺼져서 접수하려고 합니다. NAS의 전원 어댑터에서 타는 냄새가 났어요.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "가정용 NAS",
+        "hazard_event_mention": "타는 냄새가 났어요",
+        "owner_clause_index": 2,
+        "owner_mention": "NAS의 전원 어댑터"
+      }
+    },
+    {
+      "id": "GB10",
+      "user_message": "가정용 NAS가 자꾸 꺼져서 접수하려고 합니다. 탁상시계의 전원 어댑터에서 타는 냄새가 났어요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "가정용 NAS",
+        "hazard_event_mention": "타는 냄새가 났어요",
+        "owner_clause_index": 2,
+        "owner_mention": "탁상시계의 전원 어댑터"
+      }
+    },
+    {
+      "id": "GB11",
+      "user_message": "오늘 탁상용 공기살균기에서 연기가 났습니다. 제가 접수하려는 제품은 탁상용 공기살균기이고, 필터 잠금 장치도 고장 났습니다.",
+      "expected_route": "safety_action_required",
+      "expected_relation": {
+        "product_index": 2,
+        "hazard_index": 1,
+        "target_relation": "current",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "탁상용 공기살균기",
+        "hazard_event_mention": "연기가 났습니다",
+        "owner_clause_index": 1,
+        "owner_mention": "탁상용 공기살균기"
+      }
+    },
+    {
+      "id": "GB12",
+      "user_message": "오늘 충전식 독서등에서 연기가 났습니다. 제가 접수하려는 제품은 탁상용 공기살균기이고, 필터 잠금 장치도 고장 났습니다.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 2,
+        "hazard_index": 1,
+        "target_relation": "other",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "탁상용 공기살균기",
+        "hazard_event_mention": "연기가 났습니다",
+        "owner_clause_index": 1,
+        "owner_mention": "충전식 독서등"
+      }
+    },
+    {
+      "id": "GB13",
+      "user_message": "전자피아노 건반 수리를 문의합니다. 연습실에 탄 냄새가 퍼졌는데 피아노 쪽인지 벽 안쪽 배선인지 확인하지 못했습니다.",
+      "expected_route": "confirming_safety_status",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "unknown",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "전자피아노",
+        "hazard_event_mention": "탄 냄새가 퍼졌는데",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB14",
+      "user_message": "블루투스 마이크의 전원이 자꾸 끊깁니다. 무대 쪽에서 연기가 보였는데 마이크 충전기와 스피커 중 어디에서 난 건지는 확인하지 못했습니다.",
+      "expected_route": "confirming_safety_status",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "unknown",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "블루투스 마이크",
+        "hazard_event_mention": "연기가 보였는데",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB15",
+      "user_message": "자동 급식기가 밤새 꺼져 있어서 문의합니다. 주변에서 열이 느껴지는데 급식기 본체가 뜨거운 건지 콘센트가 뜨거운 건지 아직 모르겠어요.",
+      "expected_route": "confirming_safety_status",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "unknown",
+        "event_status": "uncertain"
+      },
+      "reviewed_spans": {
+        "target_mention": "자동 급식기",
+        "hazard_event_mention": "열이 느껴지는데",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB16",
+      "user_message": "디지털 액자 화면이 흔들려서 접수하려고 합니다. 벽 쪽에서 연기가 난 것 같은데 액자 뒤쪽인지 조명 배선인지 알 수 없어요.",
+      "expected_route": "confirming_safety_status",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "unknown",
+        "event_status": "uncertain"
+      },
+      "reviewed_spans": {
+        "target_mention": "디지털 액자",
+        "hazard_event_mention": "연기가 난 것 같은데",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB17",
+      "user_message": "휴대용 라디오의 채널 버튼이 고장 났습니다. 여행 가방에서 타는 냄새가 나서 물건을 모두 꺼냈지만 어느 물건에서 난 건지 모르겠습니다.",
+      "expected_route": "confirming_safety_status",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "unknown",
+        "event_status": "observed"
+      },
+      "reviewed_spans": {
+        "target_mention": "휴대용 라디오",
+        "hazard_event_mention": "타는 냄새가 나서",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB18",
+      "user_message": "전동 연필깎이의 날이 움직이지 않습니다. 함께 있던 사람이 책상에서 작은 불꽃을 봤다고 했는데 어느 물건에서 나온 건지는 확인하지 못했습니다.",
+      "expected_route": "confirming_safety_status",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "unknown",
+        "event_status": "uncertain"
+      },
+      "reviewed_spans": {
+        "target_mention": "전동 연필깎이",
+        "hazard_event_mention": "작은 불꽃을 봤다고 했는데",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB19",
+      "user_message": "수리 맡길 전자 체중계의 숫자가 흐리게 보입니다. 설명서에 배터리가 과열될 때 사용을 중단하라는 안내가 있어서 절차를 함께 물어보고 싶어요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "nonoccurring"
+      },
+      "reviewed_spans": {
+        "target_mention": "전자 체중계",
+        "hazard_event_mention": "배터리가 과열될 때",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB20",
+      "user_message": "제 무선 이어버드 한쪽 소리가 작아졌습니다. 충전 케이스가 뜨거워질 경우 어떻게 해야 하는지도 알고 싶어요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "current",
+        "event_status": "nonoccurring"
+      },
+      "reviewed_spans": {
+        "target_mention": "무선 이어버드",
+        "hazard_event_mention": "충전 케이스가 뜨거워질 경우",
+        "owner_clause_index": 2,
+        "owner_mention": "충전 케이스"
+      }
+    },
+    {
+      "id": "GB21",
+      "user_message": "탁상용 선풍기 회전 버튼이 고장 났어요. 전원 버튼 옆 붉은 경고등이 켜지면 어떤 뜻인지 알고 싶습니다. 지금은 켜져 있지 않습니다.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": null,
+        "hazard_index": null,
+        "target_relation": "none",
+        "event_status": "none"
+      },
+      "reviewed_spans": {
+        "target_mention": null,
+        "hazard_event_mention": null,
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB22",
+      "user_message": "전기면도기의 충전 표시등이 켜지지 않습니다. 친구가 온라인에서 본 배터리 폭발 영상 때문에 걱정돼서 사용 주의사항도 듣고 싶어요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "nonoccurring"
+      },
+      "reviewed_spans": {
+        "target_mention": "전기면도기",
+        "hazard_event_mention": "배터리 폭발 영상",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB23",
+      "user_message": "무선 게임 컨트롤러의 방향 버튼이 고장 났습니다. 판매 페이지에 과열 시 전원을 분리하라는 문구가 있는데 접수할 때도 참고해야 할까요?",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": 1,
+        "hazard_index": 2,
+        "target_relation": "other",
+        "event_status": "nonoccurring"
+      },
+      "reviewed_spans": {
+        "target_mention": "무선 게임 컨트롤러",
+        "hazard_event_mention": "과열 시",
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    },
+    {
+      "id": "GB24",
+      "user_message": "수리할 카메라의 줌 버튼이 걸립니다. 수리 접수 전에 배터리 안전 점검을 따로 받아야 하는지도 궁금해요.",
+      "expected_route": "collecting_service_request",
+      "expected_relation": {
+        "product_index": null,
+        "hazard_index": null,
+        "target_relation": "none",
+        "event_status": "none"
+      },
+      "reviewed_spans": {
+        "target_mention": null,
+        "hazard_event_mention": null,
+        "owner_clause_index": null,
+        "owner_mention": null
+      }
+    }
+  ]
+}
