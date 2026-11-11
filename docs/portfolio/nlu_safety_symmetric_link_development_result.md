@@ -4,9 +4,11 @@
 
 [사전 계획](nlu_safety_symmetric_link_development_plan.md)에 따라 **이미 모델에 노출된 AI 작성·사용자 검수 RE/V 22건**에서 단일 호출 대칭 질문을 개발용으로 시험했다. 접수 대상과 위험 주체의 검수 구절·문장 번호는 입력 오라클이다. 관계 정답과 위험 발생 상태는 모델에 제공하지 않았다. GB01–GB24는 열거나 실행하지 않았다. 새 데이터의 성능, 실서비스 성능, 공식 전체 정확도 개선율로 해석하지 않는다.
 
-첫 호출 전에 후보·실행기·검증기·입력 5개·프로젝트 내부 코드 의존성 69개를 프로토콜에 해시로 고정하고 커밋 `6c077c2`에 남겼다. [프로토콜](../../evals/structured_nlu/data/ai_heldout/as-safety-symmetric-link-development-protocol.v1.json) SHA-256은 `ceeb8f24584b3409bc1c8c1691ff305be08ae6af153191153d2f0227cdb05c85`다. 이전과 같은 Kanana Q5 GGUF, llama.cpp 이미지, 로컬 2 CPU·4 GiB·4096 context·2 thread·동시 처리 1개, 최대 생성 320토큰, 온도 0, 재시도 없음을 사용했다. 프롬프트와 출력 계약이 이전 실험과 달라 **점수 차이를 인과적 개선·악화율로 계산하지 않는다.**
+첫 호출 전에 후보·실행기·검증기·입력 5개와 `scripts`·`services`·`evals` 패키지의 정적 import 경로 69개를 프로토콜에 해시로 고정하고 커밋 `6c077c2`에 남겼다. [프로토콜](../../evals/structured_nlu/data/ai_heldout/as-safety-symmetric-link-development-protocol.v1.json) SHA-256은 `ceeb8f24584b3409bc1c8c1691ff305be08ae6af153191153d2f0227cdb05c85`다. 이전과 같은 Kanana Q5 GGUF, llama.cpp 이미지, 로컬 2 CPU·4 GiB·4096 context·2 thread·동시 처리 1개, 최대 생성 320토큰, 온도 0, 재시도 없음을 사용했다. 프롬프트와 출력 계약이 이전 실험과 달라 **점수 차이를 인과적 개선·악화율로 계산하지 않는다.**
 
-[저널](../../evals/structured_nlu/data/ai_heldout/as-safety-symmetric-link-development-journal.v1.jsonl)은 시작·종료 45행이며 SHA-256은 `d7d9ece643603c644cc3a9419b234f04cb3e7306330cf9ed7259993d62d8dee7`이다. 원문·프롬프트·모델 응답 본문 없이 두 유한 응답과 최종 판단, 오류·시간을 기록했다. [독립 검증기](../../scripts/verify_as_safety_symmetric_link_development.py)가 프로토콜의 입력·소스 해시와 커밋, 22건 순서, 두 응답에서 최종 관계로의 전이, 경로와 집계를 재계산해 통과했다. 응답 원문을 보관하지 않아 실제 모델 출력과 저널의 두 응답을 사후 독립 대조할 수 없다는 한계가 있다.
+[저널](../../evals/structured_nlu/data/ai_heldout/as-safety-symmetric-link-development-journal.v1.jsonl)은 시작·종료 45행이며 SHA-256은 `d7d9ece643603c644cc3a9419b234f04cb3e7306330cf9ed7259993d62d8dee7`이다. 원문·프롬프트·모델 응답 본문 없이 두 유한 응답과 최종 판단, 오류·시간을 기록했다. [독립 검증기](../../scripts/verify_as_safety_symmetric_link_development.py)가 **프로토콜에 열거된** 입력·소스 해시와 커밋, 22건 순서, 두 응답에서 최종 관계로의 전이, 경로와 집계를 재계산해 통과했다. 응답 원문을 보관하지 않아 실제 모델 출력과 저널의 두 응답을 사후 독립 대조할 수 없다는 한계가 있다.
+
+CodeRabbit 검토에서 해시 목록 생성기의 `LOCAL_PACKAGES`에 `llm`·`core`가 없어 실제 정적 import 경로 7개가 프로토콜에서 빠진 점을 확인했다. 누락 경로는 `core/__init__.py`, `core/config.py`, `core/observability.py`, `llm/__init__.py`, `llm/errors.py`, `llm/huggingface_provider.py`, `llm/structured_output.py`다. 실행 후 감사에서 두 패키지까지 포함한 경로 집합은 76개였고, 누락된 7개 파일은 실행 전 커밋 `6c077c2`부터 이번 결과 커밋 `d50935c`까지 변경되지 않았다(`git diff --name-only 6c077c2..d50935c -- llm core` 결과 공란). 이는 **프로토콜 봉인 범위의 결함**이다. 이미 끝난 실행의 프로토콜이나 검증기를 고쳐 소급 적용하지 않는다. 다음 실행 전에는 두 패키지를 포함한 새 프로토콜을 커밋해야 한다. 원시 모델 응답을 저장하지 않은 한계도 그대로 남는다.
 
 ## 관찰 결과
 

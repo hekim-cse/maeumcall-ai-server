@@ -71,3 +71,21 @@ def test_invalid_response_does_not_create_relation(monkeypatch):
     assert row["same_or_part_answer"] is row["distinct_item_answer"] is None
     assert row["entity_link"] is row["source_relation"] is row["route"] is None
     assert (row["error_stage"], row["error_code"]) == ("contract", "invalid_json")
+
+
+def test_timeout_records_one_transport_failure_without_answers_or_retry(monkeypatch):
+    calls = 0
+
+    def timed_out_post(*_args):
+        nonlocal calls
+        calls += 1
+        raise TimeoutError("private transport detail")
+
+    monkeypatch.setattr(runner, "post_completion", timed_out_post)
+    row = runner._call(CASE, SPAN, OWNER, object())
+    assert calls == 1
+    assert (row["error_stage"], row["error_code"]) == ("response", "transport_error")
+    assert row["same_or_part_answer"] is row["distinct_item_answer"] is None
+    assert row["entity_link"] is row["source_relation"] is row["route"] is None
+    assert row["finish_reason"] is row["http_status"] is None
+    assert "private transport detail" not in json.dumps(row, ensure_ascii=False)

@@ -10,6 +10,20 @@ import pytest
 
 from scripts import verify_as_safety_symmetric_link_development as verifier
 
+RELATION_BY_LINK = {
+    "same_or_part": "current",
+    "distinct_item": "other",
+    "unresolved": "unknown",
+}
+ROUTE_BY_RELATION_AND_EVENT = {
+    ("current", "observed"): "safety_action_required",
+    ("current", "uncertain"): "confirming_safety_status",
+    ("other", "observed"): "collecting_service_request",
+    ("other", "uncertain"): "collecting_service_request",
+    ("unknown", "observed"): "confirming_safety_status",
+    ("unknown", "uncertain"): "confirming_safety_status",
+}
+
 
 @pytest.fixture(autouse=True)
 def _allow_synthetic_protocol(monkeypatch):
@@ -61,7 +75,7 @@ def _journal(tmp_path, predictions: dict[str, tuple[str, str]] | None = None):
             if answers == ("no", "yes")
             else "unresolved"
         )
-        relation = verifier.LINK_RELATION[link]
+        relation = RELATION_BY_LINK[link]
         rows.extend(
             [
                 {"event": "begin", "case_id": case["id"]},
@@ -72,7 +86,7 @@ def _journal(tmp_path, predictions: dict[str, tuple[str, str]] | None = None):
                     "distinct_item_answer": answers[1],
                     "entity_link": link,
                     "source_relation": relation,
-                    "route": verifier._route(relation, case["event_status"]),
+                    "route": ROUTE_BY_RELATION_AND_EVENT[(relation, case["event_status"])],
                     "error_stage": None,
                     "error_code": None,
                     "http_status": None,
@@ -84,6 +98,10 @@ def _journal(tmp_path, predictions: dict[str, tuple[str, str]] | None = None):
     journal_path = tmp_path / "journal.jsonl"
     journal_path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
     return protocol_path, journal_path, rows
+
+
+def _write_journal(journal_path, rows):
+    journal_path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
 
 
 def test_manifest_covers_static_imports_missing_from_previous_protocol():
@@ -129,6 +147,76 @@ def test_symmetric_answer_transition(tmp_path, answers, expected):
     protocol_path, journal_path, _ = _journal(tmp_path, {"RE01": answers})
     result = verifier.verify(protocol_path, journal_path)
     assert result["per_case"][0]["predicted_entity_link"] == expected
+
+
+@pytest.mark.parametrize(
+    ("case_id", "answers", "expected_route"),
+    [
+        ("RE01", ("yes", "no"), "safety_action_required"),
+        ("RE06", ("yes", "no"), "confirming_safety_status"),
+        ("RE09", ("no", "yes"), "collecting_service_request"),
+        ("RE10", ("no", "yes"), "collecting_service_request"),
+        ("RE01", ("no", "no"), "confirming_safety_status"),
+        ("RE05", ("no", "no"), "confirming_safety_status"),
+    ],
+)
+def test_route_mapping_uses_independent_expected_values(tmp_path, case_id, answers, expected_route):
+    protocol_path, journal_path, _ = _journal(tmp_path, {case_id: answers})
+    result = verifier.verify(protocol_path, journal_path)
+    case = next(row for row in result["per_case"] if row["id"] == case_id)
+    assert case["predicted_route"] == expected_route
+
+
+@pytest.mark.parametrize("field", ["same_or_part_answer", "distinct_item_answer"])
+@pytest.mark.parametrize("answer", [" yes", "yes ", " "])
+def test_answer_whitespace_is_rejected(tmp_path, field, answer):
+    protocol_path, journal_path, rows = _journal(tmp_path)
+    rows[2][field] = answer
+    _write_journal(journal_path, rows)
+    with pytest.raises(ValueError, match="nonfinite symmetric answer"):
+        verifier.verify(protocol_path, journal_path)
+
+
+def test_valid_error_row_increases_errors_and_blocks_gate(tmp_path):
+    protocol_path, journal_path, rows = _journal(tmp_path)
+    rows[2].update(
+        {
+            "same_or_part_answer": None,
+            "distinct_item_answer": None,
+            "entity_link": None,
+            "source_relation": None,
+            "route": None,
+            "error_stage": "response",
+            "error_code": "transport_error",
+            "finish_reason": None,
+        }
+    )
+    _write_journal(journal_path, rows)
+    result = verifier.verify(protocol_path, journal_path)
+    assert result["summary"]["all"]["denominator"] == 22
+    assert result["summary"]["all"]["errors"] == 1
+    assert result["development_thresholds"]["met"] is False
+
+
+def test_retry_after_failed_case_with_same_id_is_rejected(tmp_path):
+    protocol_path, journal_path, rows = _journal(tmp_path)
+    rows[2].update(
+        {
+            "same_or_part_answer": None,
+            "distinct_item_answer": None,
+            "entity_link": None,
+            "source_relation": None,
+            "route": None,
+            "error_stage": "response",
+            "error_code": "transport_error",
+            "finish_reason": None,
+        }
+    )
+    rows[3]["case_id"] = "RE01"
+    rows[4]["case_id"] = "RE01"
+    _write_journal(journal_path, rows)
+    with pytest.raises(ValueError, match="journal call order differs"):
+        verifier.verify(protocol_path, journal_path)
 
 
 @pytest.mark.parametrize(
