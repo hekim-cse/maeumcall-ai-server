@@ -1,0 +1,45 @@
+{"event": "header", "protocol_sha256": "e03e6e7b06f90190d27361f5bf158d75c56a62ac58f806c8abeed7f9ba928fc5"}
+{"event": "begin", "case_id": "RE01"}
+{"event": "end", "case_id": "RE01", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5961.148}
+{"event": "begin", "case_id": "RE02"}
+{"event": "end", "case_id": "RE02", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5288.18}
+{"event": "begin", "case_id": "RE03"}
+{"event": "end", "case_id": "RE03", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4902.91}
+{"event": "begin", "case_id": "RE04"}
+{"event": "end", "case_id": "RE04", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5014.564}
+{"event": "begin", "case_id": "RE05"}
+{"event": "end", "case_id": "RE05", "entity_link": "same_or_part", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5531.232}
+{"event": "begin", "case_id": "RE06"}
+{"event": "end", "case_id": "RE06", "entity_link": "same_or_part", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5498.839}
+{"event": "begin", "case_id": "RE08"}
+{"event": "end", "case_id": "RE08", "entity_link": "same_or_part", "source_relation": "current", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4867.556}
+{"event": "begin", "case_id": "RE09"}
+{"event": "end", "case_id": "RE09", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4852.111}
+{"event": "begin", "case_id": "RE10"}
+{"event": "end", "case_id": "RE10", "entity_link": "distinct_item", "source_relation": "other", "route": "collecting_service_request", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4684.05}
+{"event": "begin", "case_id": "RE11"}
+{"event": "end", "case_id": "RE11", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5185.657}
+{"event": "begin", "case_id": "V01"}
+{"event": "end", "case_id": "V01", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4927.245}
+{"event": "begin", "case_id": "V02"}
+{"event": "end", "case_id": "V02", "entity_link": "unresolved", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4405.349}
+{"event": "begin", "case_id": "V03"}
+{"event": "end", "case_id": "V03", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5217.45}
+{"event": "begin", "case_id": "V04"}
+{"event": "end", "case_id": "V04", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4755.85}
+{"event": "begin", "case_id": "V05"}
+{"event": "end", "case_id": "V05", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 6515.389}
+{"event": "begin", "case_id": "V06"}
+{"event": "end", "case_id": "V06", "entity_link": "unresolved", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5483.262}
+{"event": "begin", "case_id": "V07"}
+{"event": "end", "case_id": "V07", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5024.429}
+{"event": "begin", "case_id": "V08"}
+{"event": "end", "case_id": "V08", "entity_link": "unresolved", "source_relation": "unknown", "route": "confirming_safety_status", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 5634.197}
+{"event": "begin", "case_id": "V10"}
+{"event": "end", "case_id": "V10", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4901.896}
+{"event": "begin", "case_id": "V12"}
+{"event": "end", "case_id": "V12", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4937.356}
+{"event": "begin", "case_id": "V14"}
+{"event": "end", "case_id": "V14", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4678.048}
+{"event": "begin", "case_id": "V16"}
+{"event": "end", "case_id": "V16", "entity_link": "same_or_part", "source_relation": "current", "route": "safety_action_required", "error_stage": null, "error_code": null, "http_status": null, "finish_reason": "stop", "latency_ms": 4835.609}
