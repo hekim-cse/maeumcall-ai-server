@@ -1,0 +1,893 @@
+{
+  "claim_scope": "already_exposed_ai_authored_a_only_development_only",
+  "historical_comparison_allowed": false,
+  "raw_model_output_independently_reproducible": false,
+  "quoted_relationship_semantics_independently_verified": false,
+  "stage1_subject_owner_semantic_accuracy_measured": false,
+  "latency_nearest_rank_ms": {
+    "total": {
+      "denominator": 22,
+      "p50": 10559.144,
+      "p95": 18636.857
+    },
+    "stage1": {
+      "denominator": 22,
+      "p50": 10558.984,
+      "p95": 13566.697
+    },
+    "stage2_called": {
+      "denominator": 3,
+      "p50": 5069.936,
+      "p95": 5228.365
+    }
+  },
+  "summary": {
+    "all": {
+      "denominator": 22,
+      "relation_correct": 2,
+      "route_correct": 5,
+      "errors": 19,
+      "stage1_errors": 19,
+      "stage2_errors": 0,
+      "stage2_skipped": 19,
+      "calls": 25,
+      "stage1_status_counts": {
+        "validated": 3,
+        "contract_error": 19
+      },
+      "stage2_status_counts": {
+        "validated": 3,
+        "skipped": 19
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 19
+      },
+      "stage1_event_present": 3,
+      "stage1_subject_present": 3,
+      "stage1_owner_present": 3,
+      "unknown_outputs": 19,
+      "gold_relation_counts": {
+        "current": 16,
+        "other": 6
+      },
+      "predicted_relation_counts": {
+        "current": 3,
+        "unknown": 19
+      }
+    },
+    "stage2_called": {
+      "denominator": 3,
+      "relation_correct": 2,
+      "route_correct": 2,
+      "errors": 0,
+      "stage1_errors": 0,
+      "stage2_errors": 0,
+      "stage2_skipped": 0,
+      "calls": 6,
+      "stage1_status_counts": {
+        "validated": 3
+      },
+      "stage2_status_counts": {
+        "validated": 3
+      },
+      "stage2_skip_reason_counts": {},
+      "stage1_event_present": 3,
+      "stage1_subject_present": 3,
+      "stage1_owner_present": 3,
+      "unknown_outputs": 0,
+      "gold_relation_counts": {
+        "current": 2,
+        "other": 1
+      },
+      "predicted_relation_counts": {
+        "current": 3
+      }
+    },
+    "RE": {
+      "denominator": 10,
+      "relation_correct": 2,
+      "route_correct": 5,
+      "errors": 7,
+      "stage1_errors": 7,
+      "stage2_errors": 0,
+      "stage2_skipped": 7,
+      "calls": 13,
+      "stage1_status_counts": {
+        "validated": 3,
+        "contract_error": 7
+      },
+      "stage2_status_counts": {
+        "validated": 3,
+        "skipped": 7
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 7
+      },
+      "stage1_event_present": 3,
+      "stage1_subject_present": 3,
+      "stage1_owner_present": 3,
+      "unknown_outputs": 7,
+      "gold_relation_counts": {
+        "current": 7,
+        "other": 3
+      },
+      "predicted_relation_counts": {
+        "current": 3,
+        "unknown": 7
+      }
+    },
+    "V": {
+      "denominator": 12,
+      "relation_correct": 0,
+      "route_correct": 0,
+      "errors": 12,
+      "stage1_errors": 12,
+      "stage2_errors": 0,
+      "stage2_skipped": 12,
+      "calls": 12,
+      "stage1_status_counts": {
+        "contract_error": 12
+      },
+      "stage2_status_counts": {
+        "skipped": 12
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 12
+      },
+      "stage1_event_present": 0,
+      "stage1_subject_present": 0,
+      "stage1_owner_present": 0,
+      "unknown_outputs": 12,
+      "gold_relation_counts": {
+        "current": 9,
+        "other": 3
+      },
+      "predicted_relation_counts": {
+        "unknown": 12
+      }
+    },
+    "observed": {
+      "denominator": 18,
+      "relation_correct": 2,
+      "route_correct": 2,
+      "errors": 16,
+      "stage1_errors": 16,
+      "stage2_errors": 0,
+      "stage2_skipped": 16,
+      "calls": 20,
+      "stage1_status_counts": {
+        "validated": 2,
+        "contract_error": 16
+      },
+      "stage2_status_counts": {
+        "validated": 2,
+        "skipped": 16
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 16
+      },
+      "stage1_event_present": 2,
+      "stage1_subject_present": 2,
+      "stage1_owner_present": 2,
+      "unknown_outputs": 16,
+      "gold_relation_counts": {
+        "current": 13,
+        "other": 5
+      },
+      "predicted_relation_counts": {
+        "current": 2,
+        "unknown": 16
+      }
+    },
+    "uncertain": {
+      "denominator": 4,
+      "relation_correct": 0,
+      "route_correct": 3,
+      "errors": 3,
+      "stage1_errors": 3,
+      "stage2_errors": 0,
+      "stage2_skipped": 3,
+      "calls": 5,
+      "stage1_status_counts": {
+        "contract_error": 3,
+        "validated": 1
+      },
+      "stage2_status_counts": {
+        "skipped": 3,
+        "validated": 1
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 3
+      },
+      "stage1_event_present": 1,
+      "stage1_subject_present": 1,
+      "stage1_owner_present": 1,
+      "unknown_outputs": 3,
+      "gold_relation_counts": {
+        "current": 3,
+        "other": 1
+      },
+      "predicted_relation_counts": {
+        "unknown": 3,
+        "current": 1
+      }
+    },
+    "current_observed": {
+      "denominator": 13,
+      "relation_correct": 2,
+      "route_correct": 2,
+      "errors": 11,
+      "stage1_errors": 11,
+      "stage2_errors": 0,
+      "stage2_skipped": 11,
+      "calls": 15,
+      "stage1_status_counts": {
+        "validated": 2,
+        "contract_error": 11
+      },
+      "stage2_status_counts": {
+        "validated": 2,
+        "skipped": 11
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 11
+      },
+      "stage1_event_present": 2,
+      "stage1_subject_present": 2,
+      "stage1_owner_present": 2,
+      "unknown_outputs": 11,
+      "gold_relation_counts": {
+        "current": 13
+      },
+      "predicted_relation_counts": {
+        "current": 2,
+        "unknown": 11
+      }
+    },
+    "sensitivity_excluding_V03_V04": {
+      "denominator": 20,
+      "relation_correct": 2,
+      "route_correct": 5,
+      "errors": 17,
+      "stage1_errors": 17,
+      "stage2_errors": 0,
+      "stage2_skipped": 17,
+      "calls": 23,
+      "stage1_status_counts": {
+        "validated": 3,
+        "contract_error": 17
+      },
+      "stage2_status_counts": {
+        "validated": 3,
+        "skipped": 17
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 17
+      },
+      "stage1_event_present": 3,
+      "stage1_subject_present": 3,
+      "stage1_owner_present": 3,
+      "unknown_outputs": 17,
+      "gold_relation_counts": {
+        "current": 14,
+        "other": 6
+      },
+      "predicted_relation_counts": {
+        "current": 3,
+        "unknown": 17
+      }
+    },
+    "sensitivity_excluding_RE06": {
+      "denominator": 21,
+      "relation_correct": 2,
+      "route_correct": 4,
+      "errors": 18,
+      "stage1_errors": 18,
+      "stage2_errors": 0,
+      "stage2_skipped": 18,
+      "calls": 24,
+      "stage1_status_counts": {
+        "validated": 3,
+        "contract_error": 18
+      },
+      "stage2_status_counts": {
+        "validated": 3,
+        "skipped": 18
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 18
+      },
+      "stage1_event_present": 3,
+      "stage1_subject_present": 3,
+      "stage1_owner_present": 3,
+      "unknown_outputs": 18,
+      "gold_relation_counts": {
+        "current": 15,
+        "other": 6
+      },
+      "predicted_relation_counts": {
+        "current": 3,
+        "unknown": 18
+      }
+    }
+  },
+  "by_gold_relation": {
+    "current": {
+      "denominator": 16,
+      "relation_correct": 2,
+      "route_correct": 5,
+      "errors": 14,
+      "stage1_errors": 14,
+      "stage2_errors": 0,
+      "stage2_skipped": 14,
+      "calls": 18,
+      "stage1_status_counts": {
+        "validated": 2,
+        "contract_error": 14
+      },
+      "stage2_status_counts": {
+        "validated": 2,
+        "skipped": 14
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 14
+      },
+      "stage1_event_present": 2,
+      "stage1_subject_present": 2,
+      "stage1_owner_present": 2,
+      "unknown_outputs": 14,
+      "gold_relation_counts": {
+        "current": 16
+      },
+      "predicted_relation_counts": {
+        "current": 2,
+        "unknown": 14
+      }
+    },
+    "other": {
+      "denominator": 6,
+      "relation_correct": 0,
+      "route_correct": 0,
+      "errors": 5,
+      "stage1_errors": 5,
+      "stage2_errors": 0,
+      "stage2_skipped": 5,
+      "calls": 7,
+      "stage1_status_counts": {
+        "contract_error": 5,
+        "validated": 1
+      },
+      "stage2_status_counts": {
+        "skipped": 5,
+        "validated": 1
+      },
+      "stage2_skip_reason_counts": {
+        "stage1_invalid": 5
+      },
+      "stage1_event_present": 1,
+      "stage1_subject_present": 1,
+      "stage1_owner_present": 1,
+      "unknown_outputs": 5,
+      "gold_relation_counts": {
+        "other": 6
+      },
+      "predicted_relation_counts": {
+        "unknown": 5,
+        "current": 1
+      }
+    }
+  },
+  "contrast_pairs": [
+    {
+      "case_ids": [
+        "V01",
+        "V02"
+      ],
+      "predicted_relations": [
+        "unknown",
+        "unknown"
+      ],
+      "prediction_flipped": false,
+      "expected_flip_recovered": false,
+      "errors": 2
+    },
+    {
+      "case_ids": [
+        "V05",
+        "V06"
+      ],
+      "predicted_relations": [
+        "unknown",
+        "unknown"
+      ],
+      "prediction_flipped": false,
+      "expected_flip_recovered": false,
+      "errors": 2
+    },
+    {
+      "case_ids": [
+        "V07",
+        "V08"
+      ],
+      "predicted_relations": [
+        "unknown",
+        "unknown"
+      ],
+      "prediction_flipped": false,
+      "expected_flip_recovered": false,
+      "errors": 2
+    }
+  ],
+  "development_thresholds": {
+    "current_min_correct": 15,
+    "current_observed_min_correct": 13,
+    "other_min_correct": 6,
+    "max_errors": 0,
+    "contrast_min_recovered": 3,
+    "met": false
+  },
+  "per_case": [
+    {
+      "id": "RE01",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "current",
+      "predicted_route": "safety_action_required",
+      "stage1_status": "validated",
+      "stage2_status": "validated",
+      "stage1_error": false,
+      "stage2_error": false,
+      "stage2_skipped": false,
+      "stage2_skip_reason": null,
+      "calls": 2,
+      "stage1_event_present": true,
+      "stage1_subject_present": true,
+      "stage1_owner_present": true,
+      "total_latency_ms": 19208.74,
+      "stage1_latency_ms": 13980.023,
+      "stage2_latency_ms": 5228.365
+    },
+    {
+      "id": "RE02",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "current",
+      "predicted_route": "safety_action_required",
+      "stage1_status": "validated",
+      "stage2_status": "validated",
+      "stage1_error": false,
+      "stage2_error": false,
+      "stage2_skipped": false,
+      "stage2_skip_reason": null,
+      "calls": 2,
+      "stage1_event_present": true,
+      "stage1_subject_present": true,
+      "stage1_owner_present": true,
+      "total_latency_ms": 18636.857,
+      "stage1_latency_ms": 13566.697,
+      "stage2_latency_ms": 5069.936
+    },
+    {
+      "id": "RE03",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10945.581,
+      "stage1_latency_ms": 10945.434,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "RE04",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10501.379,
+      "stage1_latency_ms": 10501.195,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "RE05",
+      "gold_relation": "current",
+      "gold_route": "confirming_safety_status",
+      "event_status": "uncertain",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10559.144,
+      "stage1_latency_ms": 10558.984,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "RE06",
+      "gold_relation": "current",
+      "gold_route": "confirming_safety_status",
+      "event_status": "uncertain",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 12202.422,
+      "stage1_latency_ms": 12202.314,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "RE08",
+      "gold_relation": "current",
+      "gold_route": "confirming_safety_status",
+      "event_status": "uncertain",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10445.654,
+      "stage1_latency_ms": 10445.566,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "RE09",
+      "gold_relation": "other",
+      "gold_route": "collecting_service_request",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 12826.835,
+      "stage1_latency_ms": 12826.726,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "RE10",
+      "gold_relation": "other",
+      "gold_route": "collecting_service_request",
+      "event_status": "uncertain",
+      "predicted_relation": "current",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "validated",
+      "stage2_status": "validated",
+      "stage1_error": false,
+      "stage2_error": false,
+      "stage2_skipped": false,
+      "stage2_skip_reason": null,
+      "calls": 2,
+      "stage1_event_present": true,
+      "stage1_subject_present": true,
+      "stage1_owner_present": true,
+      "total_latency_ms": 16274.984,
+      "stage1_latency_ms": 11695.714,
+      "stage2_latency_ms": 4579.067
+    },
+    {
+      "id": "RE11",
+      "gold_relation": "other",
+      "gold_route": "collecting_service_request",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10659.14,
+      "stage1_latency_ms": 10659.057,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V01",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10028.779,
+      "stage1_latency_ms": 10028.727,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V02",
+      "gold_relation": "other",
+      "gold_route": "collecting_service_request",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 9595.549,
+      "stage1_latency_ms": 9595.451,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V03",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10381.703,
+      "stage1_latency_ms": 10381.573,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V04",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10034.387,
+      "stage1_latency_ms": 10034.279,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V05",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10263.091,
+      "stage1_latency_ms": 10262.962,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V06",
+      "gold_relation": "other",
+      "gold_route": "collecting_service_request",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10500.478,
+      "stage1_latency_ms": 10500.353,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V07",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 11523.892,
+      "stage1_latency_ms": 11523.712,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V08",
+      "gold_relation": "other",
+      "gold_route": "collecting_service_request",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10807.509,
+      "stage1_latency_ms": 10807.367,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V10",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 11709.747,
+      "stage1_latency_ms": 11709.693,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V12",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 11360.954,
+      "stage1_latency_ms": 11360.871,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V14",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 9886.358,
+      "stage1_latency_ms": 9886.21,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "V16",
+      "gold_relation": "current",
+      "gold_route": "safety_action_required",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "stage1_status": "contract_error",
+      "stage2_status": "skipped",
+      "stage1_error": true,
+      "stage2_error": false,
+      "stage2_skipped": true,
+      "stage2_skip_reason": "stage1_invalid",
+      "calls": 1,
+      "stage1_event_present": false,
+      "stage1_subject_present": false,
+      "stage1_owner_present": false,
+      "total_latency_ms": 10074.698,
+      "stage1_latency_ms": 10074.53,
+      "stage2_latency_ms": null
+    }
+  ]
+}
