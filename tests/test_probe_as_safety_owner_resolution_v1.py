@@ -213,15 +213,23 @@ def test_invalid_or_inconsistent_stage1_evidence_is_rejected(changes):
 @pytest.mark.parametrize(
     "raw",
     [
-        '{"event_span":null,"event_span":null}',
         '{"event_span":NaN}',
         "[1,2]",
         "{",
     ],
 )
-def test_stage1_duplicate_nonfinite_or_malformed_json_is_rejected(raw):
+def test_stage1_nonfinite_or_malformed_json_is_rejected(raw):
     with pytest.raises((ValueError, json.JSONDecodeError)):
         validate_stage1(raw, MESSAGE, **TARGET)
+
+
+def test_stage1_duplicate_key_is_rejected_before_other_validation():
+    valid = _stage1()
+    duplicate = valid.replace('"event_span":', '"event_span": null, "event_span":', 1)
+    assert json.loads(duplicate) == json.loads(valid)
+    assert validate_stage1(valid, MESSAGE, **TARGET)["event_span"] is not None
+    with pytest.raises(ValueError, match="duplicate owner-resolution JSON key"):
+        validate_stage1(duplicate, MESSAGE, **TARGET)
 
 
 @pytest.mark.parametrize(

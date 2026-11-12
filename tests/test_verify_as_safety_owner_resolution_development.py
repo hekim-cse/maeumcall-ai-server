@@ -74,12 +74,12 @@ def _journal(tmp_path):
                         "called": True,
                         "status": "validated",
                         "spans": {
-                            "event_span": span,
-                            "subject_span": span,
-                            "owner_span": span,
+                            "event_span": span.copy(),
+                            "subject_span": span.copy(),
+                            "owner_span": span.copy(),
                         },
                         "owner_kind": "explicit",
-                        "cue_spans": [span],
+                        "cue_spans": [span.copy()],
                         "distinct_cue_index": 0,
                         "finish_reason": "stop",
                         "latency_ms": 2.0,
@@ -200,6 +200,24 @@ def test_other_requires_explicit_distinct_cue(tmp_path):
     result = verifier.verify(protocol_path, journal_path)
     assert result["by_gold_relation"]["other"]["relation_correct"] == 5
     assert result["development_thresholds"]["met"] is False
+
+
+@pytest.mark.parametrize("span_name", ["event_span", "subject_span", "owner_span", "cue_span"])
+def test_each_synthetic_span_is_independent_and_hash_checked(tmp_path, span_name):
+    protocol_path, journal_path, rows = _journal(tmp_path)
+    stage1 = rows[2]["stage1"]
+    spans = {**stage1["spans"], "cue_span": stage1["cue_spans"][0]}
+    assert len({id(span) for span in spans.values()}) == 4
+    original_hashes = {name: span["quote_sha256"] for name, span in spans.items()}
+    spans[span_name]["quote_sha256"] = "0" * 64
+    assert all(
+        span["quote_sha256"] == original_hashes[name]
+        for name, span in spans.items()
+        if name != span_name
+    )
+    _write_journal(journal_path, rows)
+    with pytest.raises(ValueError, match="source quote anchor differs"):
+        verifier.verify(protocol_path, journal_path)
 
 
 @pytest.mark.parametrize("mutation", ["offset", "hash", "missing_core_hash", "route", "retry"])

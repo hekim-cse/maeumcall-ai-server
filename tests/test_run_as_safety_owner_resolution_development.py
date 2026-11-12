@@ -65,3 +65,31 @@ def test_stage_one_contract_error_skips_second_call():
     assert row["stage1"]["status"] == "contract_error"
     assert row["stage2"]["skip_reason"] == "stage1_invalid"
     assert row["source_relation"] == "unknown"
+
+
+def test_stage_one_transport_error_does_not_retry_or_call_stage_two():
+    with patch(
+        "scripts.run_as_safety_owner_resolution_development.post_completion",
+        side_effect=OSError("offline"),
+    ) as mock:
+        row = _call(CASE, SPAN, {}, None)
+    assert mock.call_count == 1
+    assert row["stage1"]["status"] == "response_error"
+    assert row["stage2"]["status"] == "skipped"
+    assert row["stage2"]["skip_reason"] == "stage1_invalid"
+    assert row["source_relation"] == "unknown"
+    assert row["route"] == "confirming_safety_status"
+
+
+def test_stage_two_transport_error_does_not_retry():
+    with patch(
+        "scripts.run_as_safety_owner_resolution_development.post_completion",
+        side_effect=[_response(_stage1()), OSError("offline")],
+    ) as mock:
+        row = _call(CASE, SPAN, {}, None)
+    assert mock.call_count == 2
+    assert row["stage1"]["status"] == "validated"
+    assert row["stage2"]["status"] == "response_error"
+    assert row["stage2"]["error"] == "response_error"
+    assert row["source_relation"] == "unknown"
+    assert row["route"] == "confirming_safety_status"
