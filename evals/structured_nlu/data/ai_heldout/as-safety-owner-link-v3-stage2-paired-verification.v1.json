@@ -1,0 +1,319 @@
+{
+  "claim_scope": "already_exposed_ai_authored_conditional_stage2_development_only",
+  "total_cases": 22,
+  "baseline_stage1_valid": 20,
+  "baseline_stage1_failures": 2,
+  "raw_baseline_stage1_verified": true,
+  "raw_candidate_stage2_verified": true,
+  "same_20_case_baseline": {
+    "denominator": 20,
+    "relation_correct": 6,
+    "current": {
+      "correct": 0,
+      "denominator": 14
+    },
+    "observed_current": {
+      "correct": 0,
+      "denominator": 12
+    },
+    "other": {
+      "correct": 6,
+      "denominator": 6
+    },
+    "contrast_pairs": {
+      "recovered": 0,
+      "denominator": 3
+    },
+    "errors": 3
+  },
+  "same_20_case_candidate": {
+    "denominator": 20,
+    "relation_correct": 15,
+    "current": {
+      "correct": 13,
+      "denominator": 14
+    },
+    "observed_current": {
+      "correct": 11,
+      "denominator": 12
+    },
+    "other": {
+      "correct": 2,
+      "denominator": 6
+    },
+    "contrast_pairs": {
+      "recovered": 2,
+      "denominator": 3
+    },
+    "errors": 0
+  },
+  "conditional_stage2_gate_passed": false,
+  "full_22_case_safety_gate_possible": false,
+  "historical_improvement_or_official_accuracy_allowed": false,
+  "per_case": [
+    {
+      "id": "RE01",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": false,
+      "baseline_relation": "unknown",
+      "candidate_relation": "unknown",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": null,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "RE02",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "part_of",
+      "stage2_latency_ms": 9757.354
+    },
+    {
+      "id": "RE03",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8606.031
+    },
+    {
+      "id": "RE04",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "other",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "distinct",
+      "stage2_latency_ms": 8771.04
+    },
+    {
+      "id": "RE05",
+      "gold_relation": "current",
+      "event_status": "uncertain",
+      "eligible": false,
+      "baseline_relation": "unknown",
+      "candidate_relation": "unknown",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": null,
+      "stage2_latency_ms": null
+    },
+    {
+      "id": "RE06",
+      "gold_relation": "current",
+      "event_status": "uncertain",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "part_of",
+      "stage2_latency_ms": 9630.145
+    },
+    {
+      "id": "RE08",
+      "gold_relation": "current",
+      "event_status": "uncertain",
+      "eligible": true,
+      "baseline_relation": "unknown",
+      "candidate_relation": "current",
+      "baseline_error": true,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8454.907
+    },
+    {
+      "id": "RE09",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8330.706
+    },
+    {
+      "id": "RE10",
+      "gold_relation": "other",
+      "event_status": "uncertain",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8245.627
+    },
+    {
+      "id": "RE11",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8114.745
+    },
+    {
+      "id": "V01",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "unknown",
+      "candidate_relation": "current",
+      "baseline_error": true,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8242.471
+    },
+    {
+      "id": "V02",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "other",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "distinct",
+      "stage2_latency_ms": 9466.535
+    },
+    {
+      "id": "V03",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8833.744
+    },
+    {
+      "id": "V04",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8449.877
+    },
+    {
+      "id": "V05",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "unknown",
+      "candidate_relation": "current",
+      "baseline_error": true,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8467.37
+    },
+    {
+      "id": "V06",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "other",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "distinct",
+      "stage2_latency_ms": 9913.807
+    },
+    {
+      "id": "V07",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8646.905
+    },
+    {
+      "id": "V08",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 9220.788
+    },
+    {
+      "id": "V10",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8385.722
+    },
+    {
+      "id": "V12",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8656.275
+    },
+    {
+      "id": "V14",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8379.992
+    },
+    {
+      "id": "V16",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "eligible": true,
+      "baseline_relation": "other",
+      "candidate_relation": "current",
+      "baseline_error": false,
+      "candidate_error": false,
+      "model_link": "same",
+      "stage2_latency_ms": 8581.94
+    }
+  ]
+}
