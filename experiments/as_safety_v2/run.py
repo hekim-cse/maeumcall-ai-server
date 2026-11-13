@@ -105,6 +105,7 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
         "request_policy",
         "local_runtime",
         "retry_policy",
+        "private_output",
     }:
         raise ValueError("protocol fields differ")
     commit = protocol["frozen_code_commit"]
@@ -115,6 +116,7 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
         or protocol["server_image_digest"] != IMAGE
         or protocol["local_runtime"] != RUNTIME
         or protocol["retry_policy"] != "no_retry_manual_audit_on_interruption"
+        or protocol["private_output"] != "outside_repository_mode_0700_files_0600"
         or not isinstance(protocol["model_sha256"], str)
         or digest_file(model_path) != protocol["model_sha256"]
     ):
@@ -358,6 +360,8 @@ def run(args: argparse.Namespace) -> None:
     if args.private_dir.resolve().is_relative_to(ROOT):
         raise ValueError("private raw output must stay outside repository")
     args.private_dir.mkdir(mode=0o700, parents=False)
+    if args.private_dir.stat().st_mode & 0o077:
+        raise ValueError("private output permissions differ")
     policy = RequestPolicy()
     with args.output.open("x", encoding="utf-8") as stream:
         _append(stream, {"event": "header", "protocol_sha256": protocol_sha})

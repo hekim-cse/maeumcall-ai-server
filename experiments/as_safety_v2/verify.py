@@ -40,6 +40,7 @@ def verify(protocol_path: Path, journal_path: Path, *, private_dir: Path | None 
             "request_policy",
             "local_runtime",
             "retry_policy",
+            "private_output",
             "frozen_code_commit",
         }
         or (
@@ -47,6 +48,7 @@ def verify(protocol_path: Path, journal_path: Path, *, private_dir: Path | None 
             or protocol["claim_scope"] != "already_exposed_ai_authored_a_only_development_only"
             or protocol["case_order"] != CASE_ORDER
             or protocol["retry_policy"] != "no_retry_manual_audit_on_interruption"
+            or protocol["private_output"] != "outside_repository_mode_0700_files_0600"
             or protocol["server_image_digest"]
             != "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35"
             or protocol["local_runtime"]
