@@ -141,6 +141,34 @@ def test_raw_contract_does_not_accept_missing_owner_or_duplicate_key():
     assert duplicate.value.code == "duplicate_key"
 
 
+@pytest.mark.parametrize(
+    ("raw", "code", "field"),
+    [
+        (
+            '{"owner_to_target":"invalid","hazard_owner_span":{"clause_index":2,"quote":"토스터"}}',
+            "link_invalid",
+            "owner_to_target",
+        ),
+        (
+            '{"owner_to_target":"distinct","hazard_owner_span":{"clause_index":2,"quote":"토스터"},"extra":true}',
+            "fields_invalid",
+            "stage2",
+        ),
+        (
+            '{"owner_to_target":"distinct","hazard_owner_span":{"clause_index":2,"quote":" "}}',
+            "quote_blank",
+            "hazard_owner_span",
+        ),
+    ],
+)
+def test_independent_raw_contract_rejects_invalid_enum_extra_field_and_blank_quote(
+    raw, code, field
+):
+    with pytest.raises(source.ContractError) as caught:
+        audit._raw_stage2(raw, _case()["clauses"])
+    assert (caught.value.code, caught.value.field) == (code, field)
+
+
 def test_source_manifest_must_cover_both_packages(monkeypatch):
     paths = {
         "experiments/as_safety_v2/run.py",

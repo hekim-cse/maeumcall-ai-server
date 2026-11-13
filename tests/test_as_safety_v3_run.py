@@ -41,9 +41,10 @@ def _case() -> tuple[dict, dict]:
 def _protocol(root: Path, input_bytes: bytes, source_bytes: bytes) -> tuple[Path, Path]:
     input_path = root / "input.json"
     input_path.write_bytes(input_bytes)
-    source_path = root / "experiments/as_safety_v3/run.py"
-    source_path.parent.mkdir(parents=True)
-    source_path.write_bytes(source_bytes)
+    for relative in runner.REQUIRED_V3_SOURCES:
+        source_path = root / relative
+        source_path.parent.mkdir(parents=True, exist_ok=True)
+        source_path.write_bytes(source_bytes)
     model_path = root / "model.gguf"
     model_path.write_bytes(b"model")
     payload = {
@@ -52,7 +53,9 @@ def _protocol(root: Path, input_bytes: bytes, source_bytes: bytes) -> tuple[Path
         "case_order": runner.CASE_ORDER,
         "frozen_code_commit": "a" * 40,
         "input_hashes": {"input": runner.digest(input_bytes)},
-        "source_manifest": {"experiments/as_safety_v3/run.py": runner.digest(source_bytes)},
+        "source_manifest": {
+            relative: runner.digest(source_bytes) for relative in runner.REQUIRED_V3_SOURCES
+        },
         "model_sha256": runner.MODEL_SHA,
         "server_image_digest": runner.IMAGE,
         "request_policy": runner.REQUEST,
@@ -71,10 +74,9 @@ def test_protocol_preflight_rejects_input_source_and_checkout_drift(tmp_path, mo
     monkeypatch.setattr(runner, "ROOT", root)
     monkeypatch.setattr(runner, "INPUTS", {"input": root / "input.json"})
     monkeypatch.setattr(runner, "digest_file", lambda _: runner.MODEL_SHA)
-    monkeypatch.setattr(runner, "_source_paths", lambda _: {"experiments/as_safety_v3/run.py"})
-    committed = {
-        "input.json": b"input",
-        "experiments/as_safety_v3/run.py": b"source",
+    monkeypatch.setattr(runner, "_source_paths", lambda _: set(runner.REQUIRED_V3_SOURCES))
+    committed = {"input.json": b"input"} | {
+        relative: b"source" for relative in runner.REQUIRED_V3_SOURCES
     }
     monkeypatch.setattr(runner, "_committed", lambda _, path: committed[path])
     monkeypatch.setattr(
@@ -100,6 +102,18 @@ def test_protocol_preflight_rejects_input_source_and_checkout_drift(tmp_path, mo
         lambda *args: protocol_path.read_bytes() if args[0] == "show" else b"dirty",
     )
     with pytest.raises(ValueError, match="tracked checkout differs"):
+        runner.load_protocol(protocol_path, model_path)
+
+
+def test_protocol_rejects_old_commit_without_required_v3_source(tmp_path, monkeypatch):
+    protocol_path, model_path = _protocol(tmp_path, b"input", b"source")
+    monkeypatch.setattr(runner, "ROOT", tmp_path)
+    monkeypatch.setattr(runner, "INPUTS", {"input": tmp_path / "input.json"})
+    monkeypatch.setattr(runner, "digest_file", lambda _: runner.MODEL_SHA)
+    monkeypatch.setattr(runner, "_committed", lambda *_: b"input")
+    missing = runner.REQUIRED_V3_SOURCES - {"experiments/as_safety_v3/verify.py"}
+    monkeypatch.setattr(runner, "_source_paths", lambda _: missing)
+    with pytest.raises(ValueError, match="required v3 source missing"):
         runner.load_protocol(protocol_path, model_path)
 
 
@@ -145,6 +159,59 @@ def test_call_case_keeps_errors_and_skips_without_retry(tmp_path, monkeypatch):
     assert skipped["stage2"]["status"] == "skipped"
     assert skipped["stage2"]["skip_reason"] == "baseline_stage1_invalid"
     assert calls == 1
+
+
+@pytest.mark.parametrize(
+    ("payload", "expected_code", "expected_field"),
+    [
+        (
+            {
+                "owner_to_target": "invented",
+                "hazard_owner_span": {"clause_index": 1, "quote": "전기포트"},
+            },
+            "link_invalid",
+            "owner_to_target",
+        ),
+        (
+            {
+                "owner_to_target": "same",
+                "hazard_owner_span": {"clause_index": 1, "quote": "전기포트"},
+                "extra": "ignored",
+            },
+            "fields_invalid",
+            "stage2",
+        ),
+        (
+            {
+                "owner_to_target": "same",
+                "hazard_owner_span": {"clause_index": 1, "quote": " 전기포트"},
+            },
+            "quote_blank",
+            "hazard_owner_span",
+        ),
+    ],
+)
+def test_call_case_records_contract_errors_without_retry(
+    tmp_path, monkeypatch, payload, expected_code, expected_field
+):
+    case, stage1 = _case()
+    raw = json.dumps(payload, ensure_ascii=False)
+    calls = []
+
+    def complete(*_args, **_kwargs):
+        calls.append(True)
+        return Completion(raw, "stop")
+
+    monkeypatch.setattr(runner, "post_json_completion", complete)
+    result = runner.call_case(case, {"status": "validated"}, stage1, RequestPolicy(), tmp_path)
+    stage2 = result["stage2"]
+    assert len(calls) == 1
+    assert stage2["status"] == "contract_error"
+    assert (stage2["error_code"], stage2["error_field"]) == (expected_code, expected_field)
+    assert stage2["raw_sha256"] == runner.digest(raw.encode("utf-8"))
+    assert stage2["raw_bytes"] == len(raw.encode("utf-8"))
+    assert result["source_relation"] == "unknown"
+    assert (tmp_path / "RE01-stage2.json.txt").read_text(encoding="utf-8") == raw
 
 
 def test_baseline_replay_rejects_private_raw_mismatch(tmp_path, monkeypatch):

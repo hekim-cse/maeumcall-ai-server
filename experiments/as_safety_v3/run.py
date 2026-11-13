@@ -85,6 +85,14 @@ PROTOCOL_FIELDS = {
     "retry_policy",
     "private_output",
 }
+REQUIRED_V3_SOURCES = frozenset(
+    {
+        "experiments/as_safety_v3/__init__.py",
+        "experiments/as_safety_v3/relation.py",
+        "experiments/as_safety_v3/run.py",
+        "experiments/as_safety_v3/verify.py",
+    }
+)
 SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
 
@@ -154,7 +162,10 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
         if digest(frozen) != expected or frozen != input_path.read_bytes():
             raise ValueError(f"frozen input differs: {key}")
     manifest = protocol["source_manifest"]
-    if type(manifest) is not dict or set(manifest) != _source_paths(commit):
+    frozen_sources = _source_paths(commit)
+    if not REQUIRED_V3_SOURCES <= frozen_sources:
+        raise ValueError("required v3 source missing from frozen commit")
+    if type(manifest) is not dict or set(manifest) != frozen_sources:
         raise ValueError("source manifest differs")
     for relative, expected in manifest.items():
         if type(expected) is not str or not SHA_RE.fullmatch(expected):
