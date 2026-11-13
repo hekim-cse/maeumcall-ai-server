@@ -14,6 +14,7 @@ from experiments.as_safety_v2.verify_sources import (
     CASE_ORDER,
     COMMIT_RE,
     INPUTS,
+    ROOT,
     SHA_RE,
     _cases,
     _git_bytes,
@@ -21,6 +22,13 @@ from experiments.as_safety_v2.verify_sources import (
     _package_sources,
     digest,
 )
+
+
+def _check_current_sources(manifest: dict[str, str], *, root: Path = ROOT) -> None:
+    """Reject a replay using executable bytes outside the frozen source set."""
+    for relative, expected in manifest.items():
+        if digest((root / relative).read_bytes()) != expected:
+            raise ValueError(f"executing source differs: {relative}")
 
 
 def verify(protocol_path: Path, journal_path: Path, *, private_dir: Path | None = None) -> dict:
@@ -83,6 +91,7 @@ def verify(protocol_path: Path, journal_path: Path, *, private_dir: Path | None 
     for name, expected in protocol["source_manifest"].items():
         if expected != digest(_git_bytes(commit, name)):
             raise ValueError(f"frozen source digest differs: {name}")
+    _check_current_sources(protocol["source_manifest"])
     if type(protocol["input_hashes"]) is not dict or set(protocol["input_hashes"]) != set(INPUTS):
         raise ValueError("frozen input hash fields differ")
     inputs = {key: _git_bytes(commit, path) for key, path in INPUTS.items()}
@@ -105,8 +114,7 @@ def verify(protocol_path: Path, journal_path: Path, *, private_dir: Path | None 
         "claim_scope": protocol["claim_scope"],
         "historical_comparison_allowed": False,
         "raw_artifacts_verified": private_dir is not None,
-        "executing_verifier_matches_frozen": digest(Path(__file__).read_bytes())
-        == protocol["source_manifest"]["experiments/as_safety_v2/verify.py"],
+        "executing_verifier_matches_frozen": True,
         "exact_reference_match_is_semantic_accuracy": False,
         "summary": summarize(results),
         "per_case": results,

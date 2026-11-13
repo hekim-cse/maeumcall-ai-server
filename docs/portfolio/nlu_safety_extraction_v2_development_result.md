@@ -25,4 +25,6 @@
 
 [45행 공개 저널](../../evals/structured_nlu/data/ai_heldout/as-safety-extraction-v2-development-journal.v1.jsonl)은 SHA-256 `7b0df96f4a08899bf119ad1e405ae7dc850f7c5362bc3917f3775c9f3740b495`다. [독립 검증 결과](../../evals/structured_nlu/data/ai_heldout/as-safety-extraction-v2-development-verification.v1.json)는 SHA-256 `90baebcd1480437e67815d522d64c255edca365d73f426f64cc2b9ae8359875f`다. 검증기는 고정 커밋의 코드·입력, 분모·순서·상태 전이·원문 구간, 비공개 원시 응답 파일의 해시와 실제 판단을 재확인했고 `raw_artifacts_verified=true`, `executing_verifier_matches_frozen=true`를 반환했다. 원시 응답은 저장소 밖 소유자 전용 폴더에 보관하고 공개하지 않았다.
 
+후속 구조 감사에서 위 결과의 `executing_verifier_matches_frozen` 플래그가 검증기 진입점 한 파일만 확인하고 보조 검증기 두 파일은 직접 확인하지 않는 한계를 발견했다. 결과 생성 당시 세 검증기 파일이 고정 커밋과 같았음을 별도 Git 대조로 확인했다. 후속 코드에서는 실행 중인 전체 실험 패키지 파일을 고정 manifest와 대조하고 불일치하면 중단하도록 고쳤다. 이 수정 후에는 이 과거 결과를 당시 고정 커밋의 별도 작업 트리에서 재검증해야 한다. 저장된 저널과 기존 점수는 바꾸지 않았다.
+
 이 후보는 실서비스에 연결하지 않는다. 현재 안전 가드는 유지하고, 새 방법을 만들더라도 E/B/C 의미와 별개 제품 함의 검증을 먼저 개선한 뒤 새 개발 사례에서 재확인해야 한다. 이 22건은 이미 노출된 개발 표본이므로 이전 실험 대비 개선율이나 공식 전체 정확도로 제시하지 않는다.

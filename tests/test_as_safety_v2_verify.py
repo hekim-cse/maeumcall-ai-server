@@ -185,3 +185,14 @@ def test_current_reviewed_inputs_reconstruct_22_cases():
     cases = source._cases(frozen)
     assert tuple(case["id"] for case in cases) == source.CASE_IDS
     assert sum(case["relation"] == "current" for case in cases) == 16
+
+
+def test_all_executing_sources_must_match_frozen_manifest(tmp_path):
+    source_file = tmp_path / "experiments/as_safety_v2/verify_journal.py"
+    source_file.parent.mkdir(parents=True)
+    source_file.write_bytes(b"frozen")
+    manifest = {"experiments/as_safety_v2/verify_journal.py": source.digest(b"frozen")}
+    audit._check_current_sources(manifest, root=tmp_path)
+    source_file.write_bytes(b"modified")
+    with pytest.raises(ValueError, match="executing source differs"):
+        audit._check_current_sources(manifest, root=tmp_path)
