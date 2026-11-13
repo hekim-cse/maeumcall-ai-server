@@ -1,0 +1,544 @@
+{
+  "kind": "as_safety_extraction_v2_development_labels_v1",
+  "provenance": "ai_authored_already_exposed",
+  "review_status": "derived_from_user_approved_development_annotations",
+  "source_sha256": {
+    "spans": "01016261bb8c83e22f50204f2f37c64f9f87cb13f6c88ecd4c377a71e6bbfc1e",
+    "subject": "785b2cab6c4cf4cc3ed545676ed27f1b39ce09c24ff0465e963f298aecb15f56",
+    "owner_review": "e08b5ceaded0534cc2c68a7e1094aa1cfc34d0311676db5749f86fbcfc78f0fa"
+  },
+  "cases": [
+    {
+      "id": "RE01",
+      "utterance_sha256": "1d7223501d41da2ce86ebbc6f37ac3f16f3886d20017d34363c97b3b05d2c912",
+      "target": {
+        "clause_index": 1,
+        "quote": "수리 맡길 믹서기"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "오늘 작동시키자 바닥 틈에서 번쩍이는 빛과 함께 '딱' 소리가 났어요"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "바닥 틈"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "수리 맡길 믹서기"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE02",
+      "utterance_sha256": "7498eb18f20a82af208d6acc71cafd07be80a3c2095342e1dadf5b505f8c88d0",
+      "target": {
+        "clause_index": 1,
+        "quote": "공기순환기"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "그 제품의 콘센트 쪽 플라스틱이 녹아내렸습니다"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "그 제품의 콘센트 쪽 플라스틱"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "그 제품"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": {
+        "clause_index": 1,
+        "quote": "공기순환기"
+      },
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE03",
+      "utterance_sha256": "98f8673a80f52f2aeef98bf5b00584d4c8bccd3bf4a40c26ef43b60f1b9fb194",
+      "target": {
+        "clause_index": 1,
+        "quote": "전동 칫솔"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "손잡이를 잡았을 때 전기가 찌릿하게 느껴졌어요"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "손잡이"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "전동 칫솔"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE04",
+      "utterance_sha256": "132e20b0d741b24053c83627beff71f01cd963aba8128a3e98c9ffc56bf3d8dc",
+      "target": {
+        "clause_index": 1,
+        "quote": "소형 냉장고"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "전원을 끈 뒤에도 뒤쪽에서 하얀 연무가 계속 나옵니다"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "뒤쪽"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "소형 냉장고"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE05",
+      "utterance_sha256": "f9fc623babeb7709100ba2014fc00f68a23e4937a6d5c7a46426cd2e1f3da4be",
+      "target": {
+        "clause_index": 1,
+        "quote": "무선 스피커"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "표면이 평소보다 뜨거운 것 같은데 제 착각인지 모르겠어요"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "표면"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "무선 스피커"
+      },
+      "relation": "current",
+      "event_status": "uncertain",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE06",
+      "utterance_sha256": "696957ea59ac3fee57b33e72ce193a4cd00253c40c8bed659f978497e3a85f62",
+      "target": {
+        "clause_index": 1,
+        "quote": "커피머신"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "액체가 새는 건지 세척할 때 흘린 물인지 구분이 안 됩니다"
+      },
+      "subject_reference": {
+        "clause_index": 1,
+        "quote": "커피머신 물통"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "커피머신"
+      },
+      "relation": "current",
+      "event_status": "uncertain",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE08",
+      "utterance_sha256": "a700e3b2fd5f6215a6f4bdfc3ba176e8a5be62969acc868a4801c3b11706e52c",
+      "target": {
+        "clause_index": 1,
+        "quote": "헤어드라이어"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "내부에서 희미한 빛이 보였는데 불꽃인지 표시등 반사인지 확실하지 않아요"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "내부"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "헤어드라이어"
+      },
+      "relation": "current",
+      "event_status": "uncertain",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE09",
+      "utterance_sha256": "355b447349e1e495a32179a7b5d94dded70819e82719cc803084503f5a873d0c",
+      "target": {
+        "clause_index": 1,
+        "quote": "TV"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "멀티탭에서는 어제 연기가 났습니다"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "오래된 멀티탭"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "오래된 멀티탭"
+      },
+      "relation": "other",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE10",
+      "utterance_sha256": "1c90091cfe6d32060adc5d2405fe9634adcb611c04b61dc1674cb7c6c65ce4e3",
+      "target": {
+        "clause_index": 1,
+        "quote": "게임패드"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "친구가 쓰는 같은 모델은 배터리가 터졌다고 들었어요"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "친구가 쓰는 같은 모델"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "친구가 쓰는 같은 모델"
+      },
+      "relation": "other",
+      "event_status": "uncertain",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "RE11",
+      "utterance_sha256": "491420d7c83d4fa35c76fcc04890b1019142241af60bbc1115fc46645c89f24b",
+      "target": {
+        "clause_index": 1,
+        "quote": "세탁기"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "욕실 전등에서 타는 냄새가 나서 전등만 껐습니다"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "욕실 전등"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "욕실 전등"
+      },
+      "relation": "other",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V01",
+      "utterance_sha256": "b351c2b4ca505d45a5393fe0e9ff683d513ffc27b8f6d7afea17227079e718b5",
+      "target": {
+        "clause_index": 1,
+        "quote": "공기청정기"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "공기청정기의 전원선에서 연기가 났습니다"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "공기청정기의 전원선"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "공기청정기"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V02",
+      "utterance_sha256": "2ac7aa52dd1a30d3335d710a7bde7064710adccb3ede4852010c3576e5731d86",
+      "target": {
+        "clause_index": 1,
+        "quote": "공기청정기"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "가습기의 전원선에서 연기가 났습니다"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "가습기의 전원선"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "가습기"
+      },
+      "relation": "other",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V03",
+      "utterance_sha256": "b6d6cf015b89a2801aa34f08a8125fb8af8aa9bdb4becf4e1d4699160439541f",
+      "target": {
+        "clause_index": 1,
+        "quote": "전기포트"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "전기포트의 전원선 연결부에서 불꽃이 튀었습니다"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "전기포트의 전원선 연결부"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "전기포트"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V04",
+      "utterance_sha256": "1f310c017524e5199114fc384458967a6004e0865f7a72ecff1f74d61f1aaffd",
+      "target": {
+        "clause_index": 1,
+        "quote": "토스터"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "토스터의 전원선 연결부에서 불꽃이 튀었습니다"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "토스터의 전원선 연결부"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "토스터"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V05",
+      "utterance_sha256": "703913028d6b20d85e782d2c7971585e03448ce6190684f168db0ea445f017a3",
+      "target": {
+        "clause_index": 1,
+        "quote": "제습기"
+      },
+      "event_reference": {
+        "clause_index": 1,
+        "quote": "수리 맡길 제습기 전원을 켜자 본체에서 연기가 났습니다"
+      },
+      "subject_reference": {
+        "clause_index": 1,
+        "quote": "본체"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "제습기"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V06",
+      "utterance_sha256": "51976a9a0d529c1f7adb3d10980234c82ada6bd6859daa221f2e0c4a2e3819c1",
+      "target": {
+        "clause_index": 1,
+        "quote": "제습기"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "선풍기 본체에서 연기가 났고"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "선풍기 본체"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "선풍기"
+      },
+      "relation": "other",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V07",
+      "utterance_sha256": "28a4bb6aa61e55bf136bceeb74c3d0958d5d2c1e7a31f75347483cd01d85f87c",
+      "target": {
+        "clause_index": 1,
+        "quote": "믹서기"
+      },
+      "event_reference": {
+        "clause_index": 1,
+        "quote": "맡기려는 믹서기를 작동시키자 바닥에서 불꽃이 튀었습니다"
+      },
+      "subject_reference": {
+        "clause_index": 1,
+        "quote": "바닥"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "믹서기"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": "믹서기 바닥"
+    },
+    {
+      "id": "V08",
+      "utterance_sha256": "20853ee9d8a548fd831f34bf19d896844e2d32aea3d225b8fd028c6b2c6ecf10",
+      "target": {
+        "clause_index": 1,
+        "quote": "믹서기"
+      },
+      "event_reference": {
+        "clause_index": 2,
+        "quote": "전기레인지 바닥에서 불꽃이 튀었고"
+      },
+      "subject_reference": {
+        "clause_index": 2,
+        "quote": "전기레인지 바닥"
+      },
+      "owner_reference": {
+        "clause_index": 2,
+        "quote": "전기레인지"
+      },
+      "relation": "other",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V10",
+      "utterance_sha256": "5cbe21d85eb8a5df2699eb95fbd198400d272636d4e422759ab1339cf15ded38",
+      "target": {
+        "clause_index": 1,
+        "quote": "세탁기"
+      },
+      "event_reference": {
+        "clause_index": 1,
+        "quote": "접수하려는 세탁기에서 탄 냄새가 납니다"
+      },
+      "subject_reference": {
+        "clause_index": 1,
+        "quote": "세탁기"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "세탁기"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V12",
+      "utterance_sha256": "b5c827754f8725d367592a851319c99bf0fcfbab2c8fffac6932fe4f4c78b6b4",
+      "target": {
+        "clause_index": 1,
+        "quote": "청소기"
+      },
+      "event_reference": {
+        "clause_index": 1,
+        "quote": "청소기의 배터리가 부풀어 케이스 틈이 벌어졌습니다"
+      },
+      "subject_reference": {
+        "clause_index": 1,
+        "quote": "청소기의 배터리"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "청소기"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V14",
+      "utterance_sha256": "b242670a82cc32c124a01a6ee784f6efbb84ca6832fb0ef48c9ad77663db74c6",
+      "target": {
+        "clause_index": 1,
+        "quote": "헤어드라이어"
+      },
+      "event_reference": {
+        "clause_index": 1,
+        "quote": "헤어드라이어에서 불꽃이 보였습니다"
+      },
+      "subject_reference": {
+        "clause_index": 1,
+        "quote": "헤어드라이어"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "헤어드라이어"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    },
+    {
+      "id": "V16",
+      "utterance_sha256": "590d4febc69fd540097be2468585b45bf7d1b6fd09e3fc2664787b0b5005fb14",
+      "target": {
+        "clause_index": 1,
+        "quote": "전기장판"
+      },
+      "event_reference": {
+        "clause_index": 1,
+        "quote": "전기장판이 오늘 과열돼 손을 대기 어려웠습니다"
+      },
+      "subject_reference": {
+        "clause_index": 1,
+        "quote": "전기장판"
+      },
+      "owner_reference": {
+        "clause_index": 1,
+        "quote": "전기장판"
+      },
+      "relation": "current",
+      "event_status": "observed",
+      "owner_referent": null,
+      "subject_interpretation": null
+    }
+  ],
+  "interpretation_note": "V07 subject quote is 바닥, resolved owner is 믹서기; RE02 owner quote 그 제품 refers to 공기순환기. Reference spans are not exhaustive semantic acceptance sets."
+}
