@@ -1,0 +1,118 @@
+{
+  "kind": "as_safety_extraction_v2_probe_v1",
+  "claim_scope": "already_exposed_ai_authored_development_probe_only",
+  "case_order": [
+    "RE03",
+    "RE06",
+    "RE09",
+    "V01",
+    "V04",
+    "V07"
+  ],
+  "request_order": [
+    {
+      "case_id": "RE03",
+      "method": "quote"
+    },
+    {
+      "case_id": "RE03",
+      "method": "ids"
+    },
+    {
+      "case_id": "RE06",
+      "method": "ids"
+    },
+    {
+      "case_id": "RE06",
+      "method": "quote"
+    },
+    {
+      "case_id": "RE09",
+      "method": "quote"
+    },
+    {
+      "case_id": "RE09",
+      "method": "ids"
+    },
+    {
+      "case_id": "V01",
+      "method": "ids"
+    },
+    {
+      "case_id": "V01",
+      "method": "quote"
+    },
+    {
+      "case_id": "V04",
+      "method": "quote"
+    },
+    {
+      "case_id": "V04",
+      "method": "ids"
+    },
+    {
+      "case_id": "V07",
+      "method": "ids"
+    },
+    {
+      "case_id": "V07",
+      "method": "quote"
+    }
+  ],
+  "frozen_code_commit": "c0ef14aa25787fc3730b5d38257aaf382e668c99",
+  "input_hashes": {
+    "re_dataset": "b601d000ee4a8b8ffee114179099283f1d75f9226514cfd31467f99993f158cd",
+    "v_dataset": "cf07b01f1107d3fc15b232ff85692188d2a807fc425865768163f4d4fb12bf5e",
+    "labels": "b23fc5b2d2c23fd9a1802324a4efe679b302beca48a8f0c0a62b3b6a10745d8f",
+    "spans": "01016261bb8c83e22f50204f2f37c64f9f87cb13f6c88ecd4c377a71e6bbfc1e",
+    "subject": "785b2cab6c4cf4cc3ed545676ed27f1b39ce09c24ff0465e963f298aecb15f56",
+    "owner_review": "e08b5ceaded0534cc2c68a7e1094aa1cfc34d0311676db5749f86fbcfc78f0fa"
+  },
+  "source_manifest": {
+    "experiments/as_safety_v2/__init__.py": "64615758ef05e46666f27c576b8a2d81f5b71115c51a3eee757eb2c0e3102072",
+    "experiments/as_safety_v2/candidate_ids.py": "84de2e8b3280ea7fb560abc69d1a4621fd1c37bc147174a556b11be021a203e9",
+    "experiments/as_safety_v2/cases.py": "2581e91a81a38e77407fccd027ab083739c70a8a2d288d099084ace6432ffa67",
+    "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
+    "experiments/as_safety_v2/json_contract.py": "0d2c9a2981dcb20b65673a3107a1165cfde21304e5eeee787dbafbbcc65f2c05",
+    "experiments/as_safety_v2/probe.py": "f9dae34a72ed0431136570c5107c24733f0b81547866231ca6bbc57786bdf6cc",
+    "experiments/as_safety_v2/quotes.py": "580d7816523c40cdda89850afde042bf5f29a28805e984a1cac643ed0a2a2f88",
+    "experiments/as_safety_v2/relation.py": "d3bc2b5c607e58be6ebdccdea19763a4d4f81d5c976c1d427e4e66cbfd5be058",
+    "experiments/as_safety_v2/run.py": "f9f5cb299ee08326dfb9519517fe0fe6a6dc14d487181f60dd836910463430c0",
+    "experiments/as_safety_v2/transport.py": "82eea15506afb1f06ec05a9233a094ec870e4156da7e9b76f5022157ec824f99",
+    "experiments/as_safety_v2/verify.py": "51fbdbb2e3623fa29a9644ceb92122d352305ff17cc1e89bad8644dcce297524",
+    "experiments/as_safety_v2/verify_journal.py": "c5a294d90185684a3db2db1e92210392d656d401458ae87e7f0656e23f893fbc",
+    "experiments/as_safety_v2/verify_sources.py": "bcd9f394104a6cda6b5f49eac4b087da70e41a6c5f412ff19fb60a04f3f9a752"
+  },
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "request_policy": {
+    "max_tokens": 320,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ],
+    "timeout_seconds": 180,
+    "seed": 0
+  },
+  "local_runtime": {
+    "host_port": 18081,
+    "cpu_count": 2,
+    "memory_bytes": 4294967296,
+    "context_tokens": 4096,
+    "threads": 2,
+    "parallel_slots": 1
+  },
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "candidate_generation": {
+    "max_window_tokens": 5,
+    "max_candidates": 192
+  },
+  "selection_criteria": [
+    "contract_pass",
+    "ebc_reference_hits",
+    "candidate_recall",
+    "latency_ms"
+  ],
+  "private_output": "outside_repository_mode_0700_files_0600"
+}
