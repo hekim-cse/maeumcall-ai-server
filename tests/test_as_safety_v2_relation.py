@@ -104,6 +104,11 @@ def test_missing_stage_one_evidence_forces_stage_two_skip(missing):
     [
         ('{"source_relation":"other"}', "fields_invalid", "stage2"),
         (
+            '{"source_relation":"current","distinct_evidence_span":null,"extra":1}',
+            "fields_invalid",
+            "stage2",
+        ),
+        (
             '{"source_relation":"different","distinct_evidence_span":null}',
             "relation_invalid",
             "source_relation",
@@ -116,6 +121,11 @@ def test_missing_stage_one_evidence_forces_stage_two_skip(missing):
         (
             '{"source_relation":"other","distinct_evidence_span":{"clause_index":2,"quote":"원문"}}',
             "quote_unanchored",
+            "distinct_evidence_span",
+        ),
+        (
+            '{"source_relation":"other","distinct_evidence_span":{"clause_index":2,"quote":"   "}}',
+            "quote_blank",
             "distinct_evidence_span",
         ),
         (

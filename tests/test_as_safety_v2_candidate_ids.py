@@ -6,6 +6,7 @@ import json
 import pytest
 
 from experiments.as_safety_v2.candidate_ids import (
+    _trim_edges,
     generate_candidates,
     measure_candidate_coverage,
     stage1_id_messages,
@@ -16,6 +17,22 @@ from experiments.as_safety_v2.json_contract import ValidationError
 
 MESSAGE = "접수할 노트북이 켜지지 않습니다. 친구 태블릿의 충전기에서 연기가 났습니다."
 TARGET = {"product_index": 1, "target_mention": "노트북"}
+
+
+def test_unicode_whitespace_and_punctuation_edges_preserve_inner_nbsp():
+    clause = "\u00a0“태블릿\u00a0충전기”\u00a0"
+    start, end = _trim_edges(clause, 0, len(clause))
+    assert clause[start:end] == "태블릿\u00a0충전기"
+
+
+def test_generated_candidates_have_no_unicode_whitespace_edges():
+    message = "접수할\u00a0노트북에서\u00a0연기가 났습니다."
+    generated = generate_candidates(message).generated
+    assert any("\u00a0" in candidate.quote for candidate in generated)
+    assert all(
+        not candidate.quote[0].isspace() and not candidate.quote[-1].isspace()
+        for candidate in generated
+    )
 
 
 def _id_for(candidate_set, quote, clause_index):

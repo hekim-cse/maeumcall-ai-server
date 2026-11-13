@@ -20,7 +20,7 @@ def _unique_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
     result: dict[str, object] = {}
     for key, value in pairs:
         if key in result:
-            raise ValidationError("duplicate_key", key)
+            raise ValidationError("duplicate_key", "$")
         result[key] = value
     return result
 

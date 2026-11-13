@@ -119,3 +119,13 @@ def test_target_must_be_anchored_before_prompt_or_validation(product_index, targ
             product_index=product_index,
             target_mention=target_mention,
         )
+
+
+def test_blank_target_is_rejected_before_prompt_or_validation():
+    message = "내 노트북이 고장났습니다."
+    with pytest.raises(ValidationError) as caught:
+        stage1_messages(message, product_index=1, target_mention=" ")
+    assert (caught.value.code, caught.value.field) == ("target_unanchored", "target_mention")
+    with pytest.raises(ValidationError) as caught:
+        validate_stage1("{}", message, product_index=1, target_mention=" ")
+    assert (caught.value.code, caught.value.field) == ("target_unanchored", "target_mention")

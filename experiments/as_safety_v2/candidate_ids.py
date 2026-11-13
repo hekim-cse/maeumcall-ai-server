@@ -65,6 +65,15 @@ def _source_hash(user_message: str) -> str:
     return hashlib.sha256(user_message.encode("utf-8")).hexdigest()
 
 
+def _trim_edges(clause: str, start: int, end: int) -> tuple[int, int]:
+    """Trim boundary punctuation and all Unicode whitespace, preserving the interior."""
+    while start < end and (clause[start].isspace() or clause[start] in _EDGE_PUNCTUATION):
+        start += 1
+    while start < end and (clause[end - 1].isspace() or clause[end - 1] in _EDGE_PUNCTUATION):
+        end -= 1
+    return start, end
+
+
 def _check_source(user_message: str, candidate_set: CandidateSet) -> tuple[str, ...]:
     clauses = split_clauses(user_message)
     if type(candidate_set) is not CandidateSet or candidate_set.source_sha256 != _source_hash(
@@ -98,10 +107,7 @@ def generate_candidates(
             for first in range(len(clause_tokens) - width + 1):
                 start = clause_tokens[first].start()
                 end = clause_tokens[first + width - 1].end()
-                while start < end and clause[start] in _EDGE_PUNCTUATION:
-                    start += 1
-                while start < end and clause[end - 1] in _EDGE_PUNCTUATION:
-                    end -= 1
+                start, end = _trim_edges(clause, start, end)
                 if start == end:
                     continue
                 bare_end = end

@@ -8,6 +8,7 @@ import pytest
 
 from experiments.as_safety_v2.json_contract import ValidationError, parse_model_json
 from experiments.as_safety_v2.quotes import anchor_span, split_clauses
+from experiments.as_safety_v2.verify_sources import ContractError, _json
 
 
 def test_clause_ids_preserve_original_unicode_text():
@@ -56,7 +57,20 @@ def test_duplicate_key_is_rejected_inside_nested_object():
     raw = '{"owner_span":{"clause_index":1,"quote":"TV","quote":"원문"}}'
     with pytest.raises(ValidationError) as caught:
         parse_model_json(raw)
-    assert (caught.value.code, caught.value.field) == ("duplicate_key", "quote")
+    assert (caught.value.code, caught.value.field) == ("duplicate_key", "$")
+
+
+@pytest.mark.parametrize("key", ["", "x" * 65])
+@pytest.mark.parametrize(
+    ("parse", "error_type"),
+    [(parse_model_json, ValidationError), (_json, ContractError)],
+)
+def test_duplicate_key_never_enters_error_field(key, parse, error_type):
+    raw = '{"' + key + '":1,"' + key + '":2}'
+    with pytest.raises(error_type) as caught:
+        parse(raw)
+    assert (caught.value.code, caught.value.field) == ("duplicate_key", "$")
+    assert str(caught.value) == "duplicate_key: $"
 
 
 @pytest.mark.parametrize(

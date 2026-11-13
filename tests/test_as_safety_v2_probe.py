@@ -159,6 +159,14 @@ def test_runner_writes_twelve_begin_end_pairs(tmp_path, monkeypatch):
 def test_protocol_refuses_uncommitted_protocol(tmp_path, monkeypatch):
     model = tmp_path / "model.gguf"
     model.write_bytes(b"model")
+    source_relative = "experiments/as_safety_v2/probe.py"
+    source_file = tmp_path / source_relative
+    source_file.parent.mkdir(parents=True)
+    source_file.write_bytes(b"frozen source")
+    input_file = tmp_path / "input.json"
+    input_file.write_bytes(b"frozen input")
+    monkeypatch.setattr(probe, "ROOT", tmp_path)
+    monkeypatch.setattr(probe, "INPUTS", {"fixture": input_file})
     protocol = {field: None for field in probe.PROTOCOL_FIELDS}
     protocol.update(
         {
@@ -167,8 +175,8 @@ def test_protocol_refuses_uncommitted_protocol(tmp_path, monkeypatch):
             "case_order": list(probe.CASE_IDS),
             "request_order": list(probe.ORDER),
             "frozen_code_commit": "a" * 40,
-            "input_hashes": {key: "x" for key in probe.INPUTS},
-            "source_manifest": {"experiments/as_safety_v2/probe.py": "x"},
+            "input_hashes": {"fixture": probe.digest(input_file.read_bytes())},
+            "source_manifest": {source_relative: probe.digest(source_file.read_bytes())},
             "model_sha256": probe.digest_file(model),
             "server_image_digest": probe.IMAGE,
             "request_policy": probe.POLICY,
@@ -182,8 +190,22 @@ def test_protocol_refuses_uncommitted_protocol(tmp_path, monkeypatch):
     path = tmp_path / "protocol.json"
     path.write_text(json.dumps(protocol))
     monkeypatch.setattr(probe, "_source_paths", lambda commit: set(protocol["source_manifest"]))
-    with pytest.raises(ValueError, match="package tree"):
+    monkeypatch.setattr(
+        probe,
+        "_committed",
+        lambda commit, relative: (tmp_path / relative).read_bytes(),
+    )
+    git_calls = []
+
+    def fake_git(*args):
+        git_calls.append(args)
+        assert args == ("show", "HEAD:protocol.json")
+        return b"different committed protocol"
+
+    monkeypatch.setattr(probe, "_git", fake_git)
+    with pytest.raises(ValueError, match="^probe protocol must be committed$"):
         probe.load_probe_protocol(path, model)
+    assert git_calls == [("show", "HEAD:protocol.json")]
 
 
 def test_private_output_must_be_outside_repository(tmp_path):

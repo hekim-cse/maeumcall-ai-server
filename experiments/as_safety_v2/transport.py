@@ -145,6 +145,11 @@ def post_json_completion(
         raise TransportError("response_fields_invalid")
     content = choice["message"].get("content")
     finish = choice.get("finish_reason")
-    if type(content) is not str or not content.strip() or finish not in {"stop", "length"}:
+    if (
+        type(content) is not str
+        or not content.strip()
+        or type(finish) is not str
+        or finish not in {"stop", "length"}
+    ):
         raise TransportError("response_fields_invalid")
     return Completion(content=content, finish_reason=finish)

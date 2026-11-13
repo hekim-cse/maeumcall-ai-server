@@ -73,7 +73,7 @@ def _unique(pairs: list[tuple[str, object]]) -> dict:
     result = {}
     for key, value in pairs:
         if key in result:
-            raise ContractError("duplicate_key", key)
+            raise ContractError("duplicate_key", "$")
         result[key] = value
     return result
 

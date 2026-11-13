@@ -32,13 +32,29 @@ def test_loads_only_approved_development_references():
     assert by_id["V07"]["subject_interpretation"] == "믹서기 바닥"
 
 
-@pytest.mark.parametrize("mutation", ["utterance_hash", "owner_quote", "case_order"])
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "utterance_hash",
+        "owner_quote",
+        "case_order",
+        "relation_enum",
+        "extra_field",
+        "blank_owner_quote",
+    ],
+)
 def test_rejects_mutated_development_reference(tmp_path: Path, mutation: str):
     labels = json.loads(PATHS["labels_path"].read_text(encoding="utf-8"))
     if mutation == "utterance_hash":
         labels["cases"][0]["utterance_sha256"] = "0" * 64
     elif mutation == "owner_quote":
         labels["cases"][0]["owner_reference"]["quote"] = "없는 물건"
+    elif mutation == "relation_enum":
+        labels["cases"][0]["relation"] = "invalid"
+    elif mutation == "extra_field":
+        labels["cases"][0]["unexpected"] = "value"
+    elif mutation == "blank_owner_quote":
+        labels["cases"][0]["owner_reference"]["quote"] = "   "
     else:
         labels["cases"][0], labels["cases"][1] = labels["cases"][1], labels["cases"][0]
     tampered = tmp_path / "labels.json"

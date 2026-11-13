@@ -51,7 +51,7 @@ class FakeOpener:
         return self.response
 
 
-def _reply(content: str = '{"owner_span":null}', finish: str = "stop") -> bytes:
+def _reply(content: str = '{"owner_span":null}', finish: object = "stop") -> bytes:
     return json.dumps(
         {"choices": [{"message": {"content": content}, "finish_reason": finish}]}
     ).encode()
@@ -111,6 +111,8 @@ def test_oversized_request_is_rejected_before_network(monkeypatch):
         (FakeResponse(b"{"), "invalid_response_json"),
         (FakeResponse(_reply(content="")), "response_fields_invalid"),
         (FakeResponse(_reply(finish="tool_calls")), "response_fields_invalid"),
+        (FakeResponse(_reply(finish=[])), "response_fields_invalid"),
+        (FakeResponse(_reply(finish={})), "response_fields_invalid"),
         (FakeResponse(_reply(), status=201), "http_status"),
         (FakeResponse(b"x" * (MAX_RESPONSE_BYTES + 1)), "response_too_large"),
         (TimeoutError("secret body"), "timeout"),
