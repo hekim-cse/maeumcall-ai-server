@@ -1,0 +1,569 @@
+{
+  "claim_scope": "already_exposed_ai_authored_a_only_development_only",
+  "historical_comparison_allowed": false,
+  "raw_artifacts_verified": true,
+  "executing_verifier_matches_frozen": true,
+  "exact_reference_match_is_semantic_accuracy": false,
+  "summary": {
+    "all": {
+      "denominator": 22,
+      "relation_correct": 6,
+      "route_correct": 8,
+      "errors": 5,
+      "stage1_contract_pass": 20,
+      "stage2_called": 20,
+      "calls": 42,
+      "exact_reference_matches": {
+        "event": 0,
+        "subject": 4,
+        "owner": 5
+      }
+    },
+    "current": {
+      "denominator": 16,
+      "relation_correct": 0,
+      "route_correct": 2,
+      "errors": 5,
+      "stage1_contract_pass": 14,
+      "stage2_called": 14,
+      "calls": 30,
+      "exact_reference_matches": {
+        "event": 0,
+        "subject": 3,
+        "owner": 5
+      }
+    },
+    "other": {
+      "denominator": 6,
+      "relation_correct": 6,
+      "route_correct": 6,
+      "errors": 0,
+      "stage1_contract_pass": 6,
+      "stage2_called": 6,
+      "calls": 12,
+      "exact_reference_matches": {
+        "event": 0,
+        "subject": 1,
+        "owner": 0
+      }
+    },
+    "current_observed": {
+      "denominator": 13,
+      "relation_correct": 0,
+      "route_correct": 0,
+      "errors": 3,
+      "stage1_contract_pass": 12,
+      "stage2_called": 12,
+      "calls": 25,
+      "exact_reference_matches": {
+        "event": 0,
+        "subject": 3,
+        "owner": 5
+      }
+    },
+    "stage2_called": {
+      "denominator": 20,
+      "relation_correct": 6,
+      "route_correct": 7,
+      "errors": 3,
+      "stage1_contract_pass": 20,
+      "stage2_called": 20,
+      "calls": 40,
+      "exact_reference_matches": {
+        "event": 0,
+        "subject": 4,
+        "owner": 5
+      }
+    },
+    "contrast_pairs": [
+      {
+        "case_ids": [
+          "V01",
+          "V02"
+        ],
+        "recovered": false
+      },
+      {
+        "case_ids": [
+          "V05",
+          "V06"
+        ],
+        "recovered": false
+      },
+      {
+        "case_ids": [
+          "V07",
+          "V08"
+        ],
+        "recovered": false
+      }
+    ],
+    "development_gate": {
+      "current_min_correct": 15,
+      "current_observed_min_correct": 13,
+      "other_min_correct": 6,
+      "max_errors": 0,
+      "contrast_min_recovered": 3,
+      "met": false
+    },
+    "latency_nearest_rank_ms": {
+      "total": {
+        "denominator": 22,
+        "p50": 17308.699,
+        "p95": 36698.553
+      },
+      "stage1": {
+        "denominator": 22,
+        "p50": 10286.975,
+        "p95": 22810.722
+      },
+      "stage2_called": {
+        "denominator": 20,
+        "p50": 7534.681,
+        "p95": 13577.26
+      }
+    }
+  },
+  "per_case": [
+    {
+      "id": "RE01",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "gold_route": "safety_action_required",
+      "error": true,
+      "stage1_valid": false,
+      "stage2_called": false,
+      "calls": 1,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 10397.602,
+      "stage2_latency_ms": null,
+      "total_latency_ms": 10397.718
+    },
+    {
+      "id": "RE02",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 9806.729,
+      "stage2_latency_ms": 7586.102,
+      "total_latency_ms": 17393.129
+    },
+    {
+      "id": "RE03",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 5201.91,
+      "stage2_latency_ms": 7764.672,
+      "total_latency_ms": 12966.784
+    },
+    {
+      "id": "RE04",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 11099.872,
+      "stage2_latency_ms": 7949.763,
+      "total_latency_ms": 19049.897
+    },
+    {
+      "id": "RE05",
+      "gold_relation": "current",
+      "event_status": "uncertain",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "gold_route": "confirming_safety_status",
+      "error": true,
+      "stage1_valid": false,
+      "stage2_called": false,
+      "calls": 1,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 10928.937,
+      "stage2_latency_ms": null,
+      "total_latency_ms": 10929.117
+    },
+    {
+      "id": "RE06",
+      "gold_relation": "current",
+      "event_status": "uncertain",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "confirming_safety_status",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 5484.511,
+      "stage2_latency_ms": 8490.126,
+      "total_latency_ms": 13974.969
+    },
+    {
+      "id": "RE08",
+      "gold_relation": "current",
+      "event_status": "uncertain",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "gold_route": "confirming_safety_status",
+      "error": true,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 11250.243,
+      "stage2_latency_ms": 8092.591,
+      "total_latency_ms": 19343.139
+    },
+    {
+      "id": "RE09",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "collecting_service_request",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 3774.092,
+      "stage2_latency_ms": 7440.999,
+      "total_latency_ms": 11215.446
+    },
+    {
+      "id": "RE10",
+      "gold_relation": "other",
+      "event_status": "uncertain",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "collecting_service_request",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 10498.348,
+      "stage2_latency_ms": 7384.813,
+      "total_latency_ms": 17883.485
+    },
+    {
+      "id": "RE11",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "collecting_service_request",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 9742.552,
+      "stage2_latency_ms": 6891.04,
+      "total_latency_ms": 16633.916
+    },
+    {
+      "id": "V01",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "gold_route": "safety_action_required",
+      "error": true,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 4326.892,
+      "stage2_latency_ms": 7202.588,
+      "total_latency_ms": 11529.824
+    },
+    {
+      "id": "V02",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "collecting_service_request",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 10078.85,
+      "stage2_latency_ms": 6978.711,
+      "total_latency_ms": 17057.98
+    },
+    {
+      "id": "V03",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 10830.961,
+      "stage2_latency_ms": 7534.681,
+      "total_latency_ms": 18366.073
+    },
+    {
+      "id": "V04",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 4395.909,
+      "stage2_latency_ms": 7524.991,
+      "total_latency_ms": 11921.36
+    },
+    {
+      "id": "V05",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "unknown",
+      "predicted_route": "confirming_safety_status",
+      "gold_route": "safety_action_required",
+      "error": true,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": true
+      },
+      "stage1_latency_ms": 10226.591,
+      "stage2_latency_ms": 7081.745,
+      "total_latency_ms": 17308.699
+    },
+    {
+      "id": "V06",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "collecting_service_request",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": true,
+        "owner": false
+      },
+      "stage1_latency_ms": 12460.832,
+      "stage2_latency_ms": 8868.053,
+      "total_latency_ms": 21329.351
+    },
+    {
+      "id": "V07",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": true
+      },
+      "stage1_latency_ms": 4306.614,
+      "stage2_latency_ms": 6984.904,
+      "total_latency_ms": 11291.898
+    },
+    {
+      "id": "V08",
+      "gold_relation": "other",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "collecting_service_request",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": false
+      },
+      "stage1_latency_ms": 11086.773,
+      "stage2_latency_ms": 7964.564,
+      "total_latency_ms": 19051.775
+    },
+    {
+      "id": "V10",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": true,
+        "owner": true
+      },
+      "stage1_latency_ms": 10528.246,
+      "stage2_latency_ms": 7505.726,
+      "total_latency_ms": 18034.445
+    },
+    {
+      "id": "V12",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": false,
+        "owner": true
+      },
+      "stage1_latency_ms": 10286.975,
+      "stage2_latency_ms": 11282.307,
+      "total_latency_ms": 21569.775
+    },
+    {
+      "id": "V14",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": true,
+        "owner": false
+      },
+      "stage1_latency_ms": 24065.854,
+      "stage2_latency_ms": 13577.26,
+      "total_latency_ms": 37643.458
+    },
+    {
+      "id": "V16",
+      "gold_relation": "current",
+      "event_status": "observed",
+      "predicted_relation": "other",
+      "predicted_route": "collecting_service_request",
+      "gold_route": "safety_action_required",
+      "error": false,
+      "stage1_valid": true,
+      "stage2_called": true,
+      "calls": 2,
+      "reference_matches": {
+        "event": false,
+        "subject": true,
+        "owner": true
+      },
+      "stage1_latency_ms": 22810.722,
+      "stage2_latency_ms": 13887.462,
+      "total_latency_ms": 36698.553
+    }
+  ]
+}
