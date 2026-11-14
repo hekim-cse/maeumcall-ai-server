@@ -1,0 +1,78 @@
+{
+  "kind": "as_safety_oracle_event_v1_exploration_v1",
+  "claim_scope": "already_exposed_ai_authored_oracle_event_conditional_development_only",
+  "case_order": [
+    "ES01",
+    "ES02",
+    "ES03",
+    "ES04",
+    "ES05",
+    "ES06",
+    "ES07",
+    "ES08",
+    "ES09",
+    "ES10",
+    "ES11",
+    "ES12",
+    "ES13",
+    "ES14",
+    "ES15",
+    "ES16",
+    "ES17",
+    "ES18",
+    "ES19",
+    "ES20"
+  ],
+  "frozen_code_commit": "a375b6967c5c4d73553412c8e8e0faf0030988d9",
+  "input_hashes": {
+    "dataset": "49e4e960d901c037c7d10de6899aaeade3c71809060772571f0c8f58409d52f7",
+    "review": "399a4f2d8739ab4899adeba9a62cc1f388fcd3802ef7a5147350c2de55b1d8bb",
+    "field_review": "fc572a55337143bf15fb2a26d78009812b06404c0de7f8a9a3f0201857adb558",
+    "method": "29c0c941aa2ee133b00ff5245a4b809ca9bb49e9ba5df0758a7b1979d1ff5ec8"
+  },
+  "source_manifest": {
+    "experiments/as_safety_oracle_event_v1/__init__.py": "f1666c248a7112aaf008e1f16dd60351eeee91395bb1359bb6f8a6b510d5282e",
+    "experiments/as_safety_oracle_event_v1/run.py": "fa1b4120c4b7e91df87d9088842a0ab9656c635b82d09f5f71d0cd67e8d89dbe",
+    "experiments/as_safety_oracle_event_v1/verify.py": "2786f2c399395f290052bbd862fa14517d7cb8ef5842142de27861f6c99a205a",
+    "experiments/as_safety_v2/__init__.py": "64615758ef05e46666f27c576b8a2d81f5b71115c51a3eee757eb2c0e3102072",
+    "experiments/as_safety_v2/candidate_ids.py": "eb24e7599d61c90ee3a663ff348e20f963db423f0eb39023db7d05ab45bf9802",
+    "experiments/as_safety_v2/cases.py": "2581e91a81a38e77407fccd027ab083739c70a8a2d288d099084ace6432ffa67",
+    "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
+    "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
+    "experiments/as_safety_v2/probe.py": "f9dae34a72ed0431136570c5107c24733f0b81547866231ca6bbc57786bdf6cc",
+    "experiments/as_safety_v2/quotes.py": "580d7816523c40cdda89850afde042bf5f29a28805e984a1cac643ed0a2a2f88",
+    "experiments/as_safety_v2/relation.py": "d3bc2b5c607e58be6ebdccdea19763a4d4f81d5c976c1d427e4e66cbfd5be058",
+    "experiments/as_safety_v2/run.py": "6350f94e760f777d3f6a82e6dd257fd53c068cc45bbe146238ffb06c30f92be8",
+    "experiments/as_safety_v2/transport.py": "ccbaab8dae80b78275c6b1af29ce16c5dd3d88933a3db41c6f3b99717d1c8384",
+    "experiments/as_safety_v2/verify.py": "c4bcad9d305845a6fd177a517488bd613fd542ca3dcb1ad99c0dfca0905e41ff",
+    "experiments/as_safety_v2/verify_journal.py": "c5a294d90185684a3db2db1e92210392d656d401458ae87e7f0656e23f893fbc",
+    "experiments/as_safety_v2/verify_sources.py": "c9e296b58d77cdb9c1455105596336e525e498dd108cf70035b69fc9432c11df",
+    "experiments/as_safety_v4/__init__.py": "b5b18d83d34a41acf5c6188af5c7d03da4ff23ab33ac52ac6463d3794cf177f3",
+    "experiments/as_safety_v4/cases.py": "02e0c686c3bddb7593364067916fb6c49b6ca44d5420b85fd810a4053436a4aa",
+    "experiments/as_safety_v4/contract.py": "b7039e6a0562ddb808acf596ab575fc617feb3a8f467dd53e0cd5e44db153613",
+    "experiments/as_safety_v4/run.py": "5ff01016ced5c1fe1028e81cc1533f224fcb7abca6e84e0ba56a4f14e89ac9cb",
+    "experiments/as_safety_v4/verify.py": "21df5ea2758f36f1b2983d7d7e87bff55be5902f5db0e5e1a7504be4e8c473e6"
+  },
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "request_policy": {
+    "max_tokens": 320,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ],
+    "timeout_seconds": 180,
+    "seed": 0
+  },
+  "local_runtime": {
+    "host_port": 18081,
+    "cpu_count": 2,
+    "memory_bytes": 4294967296,
+    "context_tokens": 4096,
+    "threads": 2,
+    "parallel_slots": 1
+  },
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "private_output": "outside_repository_mode_0700_files_0600"
+}
