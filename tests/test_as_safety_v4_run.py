@@ -150,6 +150,44 @@ def test_stage2_transport_error_does_not_hide_confirmed_current_hazard(tmp_path)
     assert not (tmp_path / "ES01-stage2-2.json.txt").exists()
 
 
+@pytest.mark.parametrize(
+    ("stage2_payload", "error_code", "error_field"),
+    [
+        (_owner("탁상 조명", "same"), "relation_invalid", "owner_to_target"),
+        ({**_owner("탁상 조명", "other"), "unexpected": True}, "fields_invalid", "stage2"),
+        (
+            {"hazard_owner_span": {"clause_index": 2, "quote": "   "}, "owner_to_target": "other"},
+            "quote_blank",
+            "hazard_owner_span",
+        ),
+    ],
+)
+def test_stage2_contract_error_confirms_without_retry(
+    tmp_path, stage2_payload: dict, error_code: str, error_field: str
+) -> None:
+    replies = iter(
+        [
+            _completion({"events": [_event("연기가 났고")], "overflow": False}),
+            _completion(stage2_payload),
+        ]
+    )
+    calls = 0
+
+    def fake(messages, schema, *, policy):
+        nonlocal calls
+        calls += 1
+        return next(replies)
+
+    result = runner.call_case(CASE, RequestPolicy(), tmp_path, completion_call=fake)
+    assert calls == result["request_count"] == 2
+    assert result["stage1"]["status"] == "validated"
+    assert result["stage2"][0]["status"] == "contract_error"
+    assert result["stage2"][0]["error_code"] == error_code
+    assert result["stage2"][0]["error_field"] == error_field
+    assert result["stage2"][0]["called"] is True
+    assert result["route"] == "confirming_safety_status"
+
+
 def test_nonoccurring_event_skips_owner_call(tmp_path) -> None:
     def fake(messages, schema, *, policy):
         return _completion(

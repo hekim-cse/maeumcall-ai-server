@@ -45,6 +45,18 @@ def test_reviewed_dataset_loads_without_model_calls() -> None:
             ),
             "event spans overlap",
         ),
+        (
+            lambda data: data["cases"][0]["events"][0].update(occurrence="maybe"),
+            "event occurrence differs",
+        ),
+        (
+            lambda data: data["cases"][0]["events"][0].update(unexpected="value"),
+            "event fields differ",
+        ),
+        (
+            lambda data: data["cases"][0]["events"][0]["event_span"].update(quote="   "),
+            "quote_blank: event_span",
+        ),
         (lambda data: data["source_sha256"].update(fields="0" * 64), "review provenance"),
     ],
 )

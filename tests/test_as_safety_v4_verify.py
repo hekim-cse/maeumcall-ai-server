@@ -247,6 +247,97 @@ def test_replay_recomputes_contract_error_code(tmp_path: Path) -> None:
         verify.audit_end(row, CASE, directory)
 
 
+@pytest.mark.parametrize(
+    ("stage", "payload", "code", "field"),
+    [
+        (
+            "stage1",
+            {
+                "events": [
+                    {
+                        "event_span": {"clause_index": 2, "quote": "불꽃이 났습니다"},
+                        "occurrence": "maybe",
+                    }
+                ],
+                "overflow": False,
+            },
+            "occurrence_invalid",
+            "events[0]",
+        ),
+        (
+            "stage1",
+            {
+                "events": [
+                    {
+                        "event_span": {"clause_index": 2, "quote": "   "},
+                        "occurrence": "observed",
+                    }
+                ],
+                "overflow": False,
+            },
+            "quote_blank",
+            "events[0].event_span",
+        ),
+        (
+            "stage2",
+            {
+                "hazard_owner_span": {"clause_index": 2, "quote": "토스터"},
+                "owner_to_target": "other",
+                "unexpected": True,
+            },
+            "fields_invalid",
+            "stage2",
+        ),
+        (
+            "stage2",
+            {
+                "hazard_owner_span": {"clause_index": 2, "quote": "   "},
+                "owner_to_target": "other",
+            },
+            "quote_blank",
+            "hazard_owner_span",
+        ),
+    ],
+)
+def test_replay_recomputes_raw_contract_errors(
+    tmp_path: Path, stage: str, payload: dict, code: str, field: str
+) -> None:
+    directory = tmp_path / "private"
+    directory.mkdir(mode=0o700)
+    row = _row(directory)
+    if stage == "stage1":
+        stage_row = row["stage1"]
+        raw_name = "ES01-stage1.json.txt"
+        (directory / "ES01-stage2-1.json.txt").unlink()
+        row["stage2"] = []
+        row["request_count"] = 1
+        row["model_call_latency_sum_ms"] = stage_row["request_latency_ms"]
+        stage_row["events"] = None
+        stage_row["overflow"] = None
+    else:
+        stage_row = row["stage2"][0]
+        raw_name = "ES01-stage2-1.json.txt"
+        stage_row["owner_to_target"] = None
+        stage_row["hazard_owner_span"] = None
+    sha, size = _raw(directory, raw_name, payload)
+    stage_row.update(
+        status="contract_error",
+        error_code=code,
+        error_field=field,
+        raw_sha256=sha,
+        raw_bytes=size,
+    )
+    row["route"] = "confirming_safety_status"
+
+    audited = verify.audit_end(row, CASE, directory)
+    assert audited["route"] == "confirming_safety_status"
+    assert (audited["stage1_valid"] if stage == "stage1" else audited["stage2_valid"]) == 0
+
+    stage_row["error_field"] = "wrong_field"
+    with pytest.raises(ValueError, match="contract error differs"):
+        verify.audit_end(row, CASE, directory)
+
+
 @pytest.mark.parametrize("raw", [b"", b"  \n"])
 def test_replay_rejects_blank_private_response(tmp_path: Path, raw: bytes) -> None:
     directory = tmp_path / "private"

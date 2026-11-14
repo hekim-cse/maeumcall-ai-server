@@ -64,6 +64,28 @@ def test_stage1_rejects_unverifiable_or_inconsistent_output(raw: str, code: str)
     assert error.value.code == code
 
 
+@pytest.mark.parametrize(
+    ("raw", "code", "field"),
+    [
+        (
+            json.dumps({"events": [_event(2, "불꽃")], "overflow": False, "extra": True}),
+            "fields_invalid",
+            "stage1",
+        ),
+        (_raw([_event(2, "불꽃") | {"extra": True}]), "event_fields_invalid", "events[0]"),
+        (_raw([_event(2, "   ")]), "quote_blank", "events[0].event_span"),
+        (_raw([_event(2, " 불꽃")]), "quote_blank", "events[0].event_span"),
+        (_raw([_event(2, "불꽃 ")]), "quote_blank", "events[0].event_span"),
+    ],
+)
+def test_stage1_rejects_extra_fields_and_blank_or_padded_quotes(
+    raw: str, code: str, field: str
+) -> None:
+    with pytest.raises(ValidationError) as error:
+        contract.validate_stage1(raw, MESSAGE, **TARGET)
+    assert (error.value.code, error.value.field) == (code, field)
+
+
 def test_stage1_overflow_keeps_three_and_forces_confirmation() -> None:
     message = "전기포트에서 연기가 났습니다. 선이 뜨거웠습니다. 불꽃이 튀었습니다. 냄새도 났습니다."
     result = contract.validate_stage1(
@@ -130,6 +152,30 @@ def test_stage2_rejects_invalid_relation_or_quote(raw: str, code: str) -> None:
     with pytest.raises(ValidationError) as error:
         contract.validate_stage2(raw, MESSAGE, event, **TARGET)
     assert error.value.code == code
+
+
+@pytest.mark.parametrize(
+    ("owner_quote", "extra", "code", "field"),
+    [
+        ("토스터", True, "fields_invalid", "stage2"),
+        ("   ", False, "quote_blank", "hazard_owner_span"),
+        (" 토스터", False, "quote_blank", "hazard_owner_span"),
+        ("토스터 ", False, "quote_blank", "hazard_owner_span"),
+    ],
+)
+def test_stage2_rejects_extra_fields_and_blank_or_padded_owner_quotes(
+    owner_quote: str, extra: bool, code: str, field: str
+) -> None:
+    event = _stage1([_event(2, "불꽃이 났습니다")])["events"][0]
+    response = {
+        "hazard_owner_span": {"clause_index": 2, "quote": owner_quote},
+        "owner_to_target": "other",
+    }
+    if extra:
+        response["extra"] = True
+    with pytest.raises(ValidationError) as error:
+        contract.validate_stage2(json.dumps(response, ensure_ascii=False), MESSAGE, event, **TARGET)
+    assert (error.value.code, error.value.field) == (code, field)
 
 
 def test_stage2_rejects_tampered_event_and_nonoccurring_call() -> None:
