@@ -131,6 +131,53 @@ def test_contract_error_fails_closed_without_retry(tmp_path) -> None:
     assert row["stage2"][0]["error_field"] == "owner_to_target"
 
 
+@pytest.mark.parametrize(
+    ("payload", "error_code", "error_field"),
+    [
+        (
+            {
+                "hazard_owner_span": {"clause_index": 2, "quote": "탁상 조명"},
+                "owner_to_target": "other",
+                "extra": "unexpected",
+            },
+            "fields_invalid",
+            "stage2",
+        ),
+        (
+            {
+                "hazard_owner_span": {"clause_index": 2, "quote": "   "},
+                "owner_to_target": "other",
+            },
+            "quote_blank",
+            "hazard_owner_span",
+        ),
+    ],
+)
+def test_malformed_owner_response_confirms_once_without_retry(
+    tmp_path, payload: dict, error_code: str, error_field: str
+) -> None:
+    case = {**CASE, "events": CASE["events"][:1], "expected_route": "collecting_service_request"}
+    calls = 0
+
+    def fake(messages, schema, *, policy):
+        nonlocal calls
+        calls += 1
+        return Completion(json.dumps(payload, ensure_ascii=False), "stop")
+
+    row = runner.call_case(case, RequestPolicy(), tmp_path, completion_call=fake)
+    assert calls == row["request_count"] == 1
+    assert row["route"] == "confirming_safety_status"
+    assert len(row["stage2"]) == 1
+    stage = row["stage2"][0]
+    assert stage["called"] is True
+    assert stage["status"] == "contract_error"
+    assert stage["error_code"] == error_code
+    assert stage["error_field"] == error_field
+    assert stage["owner_to_target"] is None
+    assert stage["hazard_owner_span"] is None
+    assert (tmp_path / "ES01-stage2-1.json.txt").exists()
+
+
 def test_nonoccurring_event_is_skipped(tmp_path) -> None:
     case = {
         **CASE,

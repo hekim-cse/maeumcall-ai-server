@@ -12,7 +12,7 @@ import pytest
 
 from experiments.as_safety_oracle_event_v1 import run as candidate
 from experiments.as_safety_oracle_event_v1 import verify
-from experiments.as_safety_v2.transport import Completion, RequestPolicy
+from experiments.as_safety_v2.transport import Completion, RequestPolicy, TransportError
 from experiments.as_safety_v4.cases import load_cases
 
 MESSAGE = "접수할 전기포트가 고장났습니다. 토스터에서 불꽃이 났습니다. 열은 나지 않았습니다."
@@ -165,6 +165,57 @@ def test_rejects_empty_or_replaced_raw_even_with_rehashed_metadata(tmp_path: Pat
     row["stage2"][0]["raw_sha256"] = hashlib.sha256(b" \n").hexdigest()
     with pytest.raises(ValueError, match="private raw content blank"):
         verify.audit_end(row, CASE, private)
+
+
+def test_transport_error_replays_without_private_raw(tmp_path: Path) -> None:
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+    calls = 0
+
+    def fail(_messages, _schema, *, policy):
+        nonlocal calls
+        assert isinstance(policy, RequestPolicy)
+        calls += 1
+        raise TransportError("network_error")
+
+    row = candidate.call_case(CASE, RequestPolicy(), private, completion_call=fail)
+    assert calls == 1
+    assert row["stage2"][0]["status"] == "response_error"
+    assert row["stage2"][0]["error_code"] == "network_error"
+    assert row["stage2"][0]["raw_sha256"] is None
+    assert list(private.iterdir()) == []
+    audited = verify.audit_end(row, CASE, private)
+    assert audited["route"] == "confirming_safety_status"
+    summary = verify.summarize([audited], [CASE])
+    assert summary["stage2_errors"] == 1
+    assert summary["request_count"] == 1
+
+
+def test_length_finish_replays_with_private_raw(tmp_path: Path) -> None:
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+    calls = 0
+
+    def truncated(_messages, _schema, *, policy):
+        nonlocal calls
+        assert isinstance(policy, RequestPolicy)
+        calls += 1
+        return Completion(
+            content='{"hazard_owner_span":null,"owner_to_target":"unknown"}',
+            finish_reason="length",
+        )
+
+    row = candidate.call_case(CASE, RequestPolicy(), private, completion_call=truncated)
+    assert calls == 1
+    assert row["stage2"][0]["status"] == "response_error"
+    assert row["stage2"][0]["error_code"] == "finish_length"
+    assert row["stage2"][0]["raw_sha256"] is not None
+    assert [path.name for path in private.iterdir()] == ["ES01-stage2-1.json.txt"]
+    audited = verify.audit_end(row, CASE, private)
+    assert audited["route"] == "confirming_safety_status"
+    summary = verify.summarize([audited], [CASE])
+    assert summary["stage2_errors"] == 1
+    assert summary["request_count"] == 1
 
 
 def test_summary_rejects_case_order_and_tampered_public_totals(tmp_path: Path) -> None:
