@@ -52,27 +52,57 @@ POLICY = {
     "seed": 0,
 }
 PROTOCOL_KEYS = {
-    "kind", "claim_scope", "case_order", "frozen_code_commit", "input_hashes",
-    "source_manifest", "model_sha256", "server_image_digest", "request_policy",
-    "local_runtime", "retry_policy", "private_output",
+    "kind",
+    "claim_scope",
+    "case_order",
+    "frozen_code_commit",
+    "input_hashes",
+    "source_manifest",
+    "model_sha256",
+    "server_image_digest",
+    "request_policy",
+    "local_runtime",
+    "retry_policy",
+    "private_output",
 }
 BASE_KEYS = {
-    "called", "status", "skip_reason", "error_code", "error_field",
-    "finish_reason", "latency_ms", "request_latency_ms", "raw_sha256", "raw_bytes",
+    "called",
+    "status",
+    "skip_reason",
+    "error_code",
+    "error_field",
+    "finish_reason",
+    "latency_ms",
+    "request_latency_ms",
+    "raw_sha256",
+    "raw_bytes",
 }
 STAGE1_KEYS = BASE_KEYS | {"events", "overflow"}
 STAGE2_KEYS = BASE_KEYS | {"event_index", "owner_to_target", "hazard_owner_span"}
 END_KEYS = {
-    "event", "case_id", "stage1", "stage2", "route", "request_count",
-    "model_call_latency_sum_ms", "elapsed_ms",
+    "event",
+    "case_id",
+    "stage1",
+    "stage2",
+    "route",
+    "request_count",
+    "model_call_latency_sum_ms",
+    "elapsed_ms",
 }
 SPAN_KEYS = {"clause_index", "start", "end", "quote_sha256"}
 OCCURRENCES = {"observed", "uncertain", "nonoccurring"}
 RELATIONS = {"current", "other", "unknown"}
 ROUTES = {"safety_action_required", "confirming_safety_status", "collecting_service_request"}
 TRANSPORT_ERRORS = {
-    "redirect", "request_too_large", "response_too_large", "http_status", "http_error",
-    "network_error", "timeout", "invalid_response_json", "response_fields_invalid",
+    "redirect",
+    "request_too_large",
+    "response_too_large",
+    "http_status",
+    "http_error",
+    "network_error",
+    "timeout",
+    "invalid_response_json",
+    "response_fields_invalid",
 }
 SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
@@ -107,8 +137,10 @@ def _sources(commit: str) -> set[str]:
         names = _git("ls-tree", "-r", "--name-only", commit, "--", prefix)
         result.update(name for name in names.decode().splitlines() if name.endswith(".py"))
     required = {
-        "experiments/as_safety_v4/__init__.py", "experiments/as_safety_v4/cases.py",
-        "experiments/as_safety_v4/contract.py", "experiments/as_safety_v4/run.py",
+        "experiments/as_safety_v4/__init__.py",
+        "experiments/as_safety_v4/cases.py",
+        "experiments/as_safety_v4/contract.py",
+        "experiments/as_safety_v4/run.py",
         "experiments/as_safety_v4/verify.py",
     }
     if not required <= result:
@@ -123,11 +155,15 @@ def check_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
         raise ValueError("protocol fields differ")
     commit = protocol["frozen_code_commit"]
     if (
-        type(commit) is not str or not COMMIT_RE.fullmatch(commit)
-        or protocol["kind"] != KIND or protocol["claim_scope"] != SCOPE
+        type(commit) is not str
+        or not COMMIT_RE.fullmatch(commit)
+        or protocol["kind"] != KIND
+        or protocol["claim_scope"] != SCOPE
         or protocol["case_order"] != list(CASE_ORDER)
-        or protocol["server_image_digest"] != IMAGE or protocol["model_sha256"] != MODEL_SHA
-        or protocol["request_policy"] != POLICY or protocol["local_runtime"] != RUNTIME
+        or protocol["server_image_digest"] != IMAGE
+        or protocol["model_sha256"] != MODEL_SHA
+        or protocol["request_policy"] != POLICY
+        or protocol["local_runtime"] != RUNTIME
         or protocol["retry_policy"] != "no_retry_manual_audit_on_interruption"
         or protocol["private_output"] != "outside_repository_mode_0700_files_0600"
     ):
@@ -140,8 +176,10 @@ def check_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
     for relative, expected in manifest.items():
         frozen = _frozen(commit, relative)
         if (
-            type(expected) is not str or not SHA_RE.fullmatch(expected)
-            or _digest(frozen) != expected or (ROOT / relative).read_bytes() != frozen
+            type(expected) is not str
+            or not SHA_RE.fullmatch(expected)
+            or _digest(frozen) != expected
+            or (ROOT / relative).read_bytes() != frozen
         ):
             raise ValueError(f"source manifest differs: {relative}")
     hashes = protocol["input_hashes"]
@@ -151,8 +189,10 @@ def check_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
         frozen = _frozen(commit, source.relative_to(ROOT).as_posix())
         expected = hashes[key]
         if (
-            type(expected) is not str or not SHA_RE.fullmatch(expected)
-            or _digest(frozen) != expected or source.read_bytes() != frozen
+            type(expected) is not str
+            or not SHA_RE.fullmatch(expected)
+            or _digest(frozen) != expected
+            or source.read_bytes() != frozen
         ):
             raise ValueError(f"input manifest differs: {key}")
     relative = path.resolve().relative_to(ROOT).as_posix()
@@ -205,7 +245,9 @@ def _raw_stage2(raw: str, message: str) -> dict:
     relation = data["owner_to_target"]
     if type(relation) is not str or relation not in RELATIONS:
         raise ValidationError("relation_invalid", "owner_to_target")
-    owner = anchor_span(data["hazard_owner_span"], split_clauses(message), field="hazard_owner_span")
+    owner = anchor_span(
+        data["hazard_owner_span"], split_clauses(message), field="hazard_owner_span"
+    )
     if relation != "unknown" and owner is None:
         raise ValidationError("owner_required", "hazard_owner_span")
     return {"owner_to_target": relation, "hazard_owner_span": owner}
@@ -222,9 +264,12 @@ def _read_raw(stage: dict, path: Path) -> str | None:
             raise ValueError("unexpected private raw response")
         return None
     if (
-        type(sha) is not str or not SHA_RE.fullmatch(sha)
-        or type(size) is not int or not 0 < size <= 1_000_000
-        or not path.is_file() or stat.S_IMODE(path.stat().st_mode) != 0o600
+        type(sha) is not str
+        or not SHA_RE.fullmatch(sha)
+        or type(size) is not int
+        or not 0 < size <= 1_000_000
+        or not path.is_file()
+        or stat.S_IMODE(path.stat().st_mode) != 0o600
     ):
         raise ValueError("private raw metadata differs")
     raw = path.read_bytes()
@@ -243,10 +288,21 @@ def _check_common(stage: dict, *, called: bool, skip_reason: str | None) -> None
     if stage["called"] is not called or stage["skip_reason"] != skip_reason:
         raise ValueError("stage call transition differs")
     if not called:
-        if any(stage[key] is not None for key in (
-            "error_code", "error_field", "finish_reason", "latency_ms",
-            "request_latency_ms", "raw_sha256", "raw_bytes"
-        )) or stage["status"] != "skipped":
+        if (
+            any(
+                stage[key] is not None
+                for key in (
+                    "error_code",
+                    "error_field",
+                    "finish_reason",
+                    "latency_ms",
+                    "request_latency_ms",
+                    "raw_sha256",
+                    "raw_bytes",
+                )
+            )
+            or stage["status"] != "skipped"
+        ):
             raise ValueError("skipped stage metadata differs")
         return
     if (
@@ -267,15 +323,19 @@ def _check_common(stage: dict, *, called: bool, skip_reason: str | None) -> None
 def _replay_stage(stage: dict, raw: str | None, *, message: str, first: bool) -> dict | None:
     if stage["finish_reason"] is None:
         if (
-            raw is not None or stage["status"] != "response_error"
-            or stage["error_code"] not in TRANSPORT_ERRORS or stage["error_field"] is not None
+            raw is not None
+            or stage["status"] != "response_error"
+            or stage["error_code"] not in TRANSPORT_ERRORS
+            or stage["error_field"] is not None
         ):
             raise ValueError("transport result differs")
         return None
     if stage["finish_reason"] == "length":
         if (
-            raw is None or stage["status"] != "response_error"
-            or stage["error_code"] != "finish_length" or stage["error_field"] is not None
+            raw is None
+            or stage["status"] != "response_error"
+            or stage["error_code"] != "finish_length"
+            or stage["error_field"] is not None
         ):
             raise ValueError("truncated response result differs")
         return None
@@ -286,12 +346,14 @@ def _replay_stage(stage: dict, raw: str | None, *, message: str, first: bool) ->
     except ValidationError as error:
         if (
             stage["status"] != "contract_error"
-            or stage["error_code"] != error.code or stage["error_field"] != error.field
+            or stage["error_code"] != error.code
+            or stage["error_field"] != error.field
         ):
             raise ValueError("contract error differs") from None
         return None
     if (
-        stage["status"] != "validated" or stage["error_code"] is not None
+        stage["status"] != "validated"
+        or stage["error_code"] is not None
         or stage["error_field"] is not None
     ):
         raise ValueError("validated response metadata differs")
@@ -304,12 +366,18 @@ def _route(events: list[dict], relations: list[str | None], *, overflow: bool, f
         for event, relation in zip(events, relations, strict=True)
     ):
         return "safety_action_required"
-    if failed or overflow or any(
-        (event["occurrence"] != "nonoccurring")
-        and (relation == "unknown" or relation is None or (
-            event["occurrence"] == "uncertain" and relation == "current"
-        ))
-        for event, relation in zip(events, relations, strict=True)
+    if (
+        failed
+        or overflow
+        or any(
+            (event["occurrence"] != "nonoccurring")
+            and (
+                relation == "unknown"
+                or relation is None
+                or (event["occurrence"] == "uncertain" and relation == "current")
+            )
+            for event, relation in zip(events, relations, strict=True)
+        )
     ):
         return "confirming_safety_status"
     return "collecting_service_request"
@@ -363,30 +431,42 @@ def audit_end(row: dict, case: dict, private_dir: Path) -> dict:
             failed = True
             relations.append(None)
         else:
-            if (
-                stage["owner_to_target"] != result["owner_to_target"]
-                or stage["hazard_owner_span"] != _public_span(result["hazard_owner_span"])
-            ):
+            if stage["owner_to_target"] != result["owner_to_target"] or stage[
+                "hazard_owner_span"
+            ] != _public_span(result["hazard_owner_span"]):
                 raise ValueError("Stage2 public decision differs")
             relations.append(result["owner_to_target"])
-    route = _route(events, relations, overflow=overflow, failed=failed) if parsed_first else "confirming_safety_status"
+    route = (
+        _route(events, relations, overflow=overflow, failed=failed)
+        if parsed_first
+        else "confirming_safety_status"
+    )
     calls = 1 + sum(stage["called"] for stage in stages)
-    call_sum = round(first["request_latency_ms"] + sum(
-        stage["request_latency_ms"] or 0 for stage in stages
-    ), 3)
-    total_stage_ms = round(first["latency_ms"] + sum(stage["latency_ms"] or 0 for stage in stages), 3)
+    call_sum = round(
+        first["request_latency_ms"] + sum(stage["request_latency_ms"] or 0 for stage in stages), 3
+    )
+    total_stage_ms = round(
+        first["latency_ms"] + sum(stage["latency_ms"] or 0 for stage in stages), 3
+    )
     if (
-        row["route"] != route or type(row["request_count"]) is not int
-        or row["request_count"] != calls or not _duration(row["elapsed_ms"])
+        row["route"] != route
+        or type(row["request_count"]) is not int
+        or row["request_count"] != calls
+        or not _duration(row["elapsed_ms"])
         or row["model_call_latency_sum_ms"] != call_sum
         or row["elapsed_ms"] + 0.01 < total_stage_ms
     ):
         raise ValueError("journal route or call metrics differ")
     return {
-        "case_id": case["id"], "route": route, "stage1_valid": parsed_first is not None,
+        "case_id": case["id"],
+        "route": route,
+        "stage1_valid": parsed_first is not None,
         "stage2_valid": sum(stage["status"] == "validated" for stage in stages),
-        "request_count": calls, "events": events, "relations": relations,
-        "stage1_status": first["status"], "stage1_overflow": overflow,
+        "request_count": calls,
+        "events": events,
+        "relations": relations,
+        "stage1_status": first["status"],
+        "stage1_overflow": overflow,
         "stage2_statuses": [stage["status"] for stage in stages],
         "stage2_called": [stage["called"] for stage in stages],
         "elapsed_ms": row["elapsed_ms"],
@@ -395,7 +475,8 @@ def audit_end(row: dict, case: dict, private_dir: Path) -> dict:
 
 def _private_dir(path: Path) -> None:
     if (
-        path.resolve().is_relative_to(ROOT) or not path.is_dir()
+        path.resolve().is_relative_to(ROOT)
+        or not path.is_dir()
         or stat.S_IMODE(path.stat().st_mode) != 0o700
     ):
         raise ValueError("private raw directory boundary differs")
@@ -421,8 +502,12 @@ def summarize(audited: list[dict], cases: list[dict]) -> dict:
         predicted_events += len(predicted)
         clauses = split_clauses(case["user_message"])
         references = [
-            {"event_span": _public_span(anchor_span(item["event_span"], clauses, field="event_span")),
-             "occurrence": item["occurrence"]}
+            {
+                "event_span": _public_span(
+                    anchor_span(item["event_span"], clauses, field="event_span")
+                ),
+                "occurrence": item["occurrence"],
+            }
             for item in gold
         ]
         occurrence_correct += sum(item in references for item in predicted)
@@ -438,7 +523,10 @@ def summarize(audited: list[dict], cases: list[dict]) -> dict:
         expected = case["expected_route"]
         if expected == "safety_action_required" and result["route"] != expected:
             missed_direct += 1
-        if expected == "collecting_service_request" and result["route"] == "confirming_safety_status":
+        if (
+            expected == "collecting_service_request"
+            and result["route"] == "confirming_safety_status"
+        ):
             unnecessary_confirm += 1
         if expected == "collecting_service_request" and any(
             event["occurrence"] == "observed" and event["owner_to_target"] == "other"
@@ -477,7 +565,8 @@ def summarize(audited: list[dict], cases: list[dict]) -> dict:
         "stage2_valid": sum(item["stage2_valid"] for item in audited),
         "case_elapsed_p50_ms": round(statistics.median(elapsed), 3) if elapsed else None,
         "case_elapsed_p95_ms": round(elapsed[math.ceil(len(elapsed) * 0.95) - 1], 3)
-        if elapsed else None,
+        if elapsed
+        else None,
     }
 
 
@@ -485,7 +574,9 @@ def verify(protocol_path: Path, journal_path: Path, private_dir: Path, *, model_
     protocol, protocol_sha = check_protocol(protocol_path, model_path)
     _private_dir(private_dir)
     cases = load_cases(DATASET)
-    rows = [parse_model_json(line) for line in journal_path.read_text(encoding="utf-8").splitlines()]
+    rows = [
+        parse_model_json(line) for line in journal_path.read_text(encoding="utf-8").splitlines()
+    ]
     if len(rows) != 2 + 2 * len(cases):
         raise ValueError("journal row count differs")
     if rows[0] != {"event": "header", "protocol_sha256": protocol_sha}:
@@ -512,7 +603,9 @@ def verify(protocol_path: Path, journal_path: Path, private_dir: Path, *, model_
     if rows[-1] != computed:
         raise ValueError("journal summary differs")
     return {
-        "kind": KIND, "claim_scope": SCOPE, "protocol_sha256": protocol_sha,
+        "kind": KIND,
+        "claim_scope": SCOPE,
+        "protocol_sha256": protocol_sha,
         "journal_sha256": _digest(journal_path.read_bytes()),
         **{key: value for key, value in computed.items() if key != "event"},
         "model_sha256": protocol["model_sha256"],
@@ -526,7 +619,12 @@ def main() -> None:
     parser.add_argument("--private-dir", required=True, type=Path)
     parser.add_argument("--model-path", required=True, type=Path)
     args = parser.parse_args()
-    print(json.dumps(verify(args.protocol, args.journal, args.private_dir, model_path=args.model_path), sort_keys=True))
+    print(
+        json.dumps(
+            verify(args.protocol, args.journal, args.private_dir, model_path=args.model_path),
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

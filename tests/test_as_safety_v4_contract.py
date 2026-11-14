@@ -45,13 +45,17 @@ def test_stage1_extracts_later_other_product_hazard_without_normal_fault() -> No
         ('{"events":[],"overflow":false,"events":[]}', "duplicate_key"),
         (_raw([_event(2, "접수할")]), "quote_unanchored"),
         (_raw([_event(2, "불꽃"), _event(2, "불꽃")]), "event_order_invalid"),
-        (_raw([_event(2, "토스터에서 불꽃이"), _event(2, "불꽃이 났습니다")]),
-         "event_order_invalid"),
+        (
+            _raw([_event(2, "토스터에서 불꽃이"), _event(2, "불꽃이 났습니다")]),
+            "event_order_invalid",
+        ),
         (_raw([_event(2, "불꽃"), _event(1, "작동하지")]), "event_order_invalid"),
         (_raw([_event(2, "불꽃")], overflow=True), "overflow_invalid"),
         (_raw([_event(2, "불꽃", "maybe")]), "occurrence_invalid"),
-        (_raw([_event(2, "불꽃"), _event(2, "났습니다"), _event(2, "토스터")]),
-         "event_order_invalid"),
+        (
+            _raw([_event(2, "불꽃"), _event(2, "났습니다"), _event(2, "토스터")]),
+            "event_order_invalid",
+        ),
     ],
 )
 def test_stage1_rejects_unverifiable_or_inconsistent_output(raw: str, code: str) -> None:
@@ -63,19 +67,25 @@ def test_stage1_rejects_unverifiable_or_inconsistent_output(raw: str, code: str)
 def test_stage1_overflow_keeps_three_and_forces_confirmation() -> None:
     message = "전기포트에서 연기가 났습니다. 선이 뜨거웠습니다. 불꽃이 튀었습니다. 냄새도 났습니다."
     result = contract.validate_stage1(
-        _raw([
-            _event(1, "연기가 났습니다"),
-            _event(2, "선이 뜨거웠습니다"),
-            _event(3, "불꽃이 튀었습니다"),
-        ], overflow=True),
+        _raw(
+            [
+                _event(1, "연기가 났습니다"),
+                _event(2, "선이 뜨거웠습니다"),
+                _event(3, "불꽃이 튀었습니다"),
+            ],
+            overflow=True,
+        ),
         message,
         product_index=1,
         target_mention="전기포트",
     )
     assert len(result["events"]) == 3
-    assert contract.route_for_events(
-        result["events"], ["other", "other", "other"], overflow=result["overflow"]
-    ) == "confirming_safety_status"
+    assert (
+        contract.route_for_events(
+            result["events"], ["other", "other", "other"], overflow=result["overflow"]
+        )
+        == "confirming_safety_status"
+    )
 
 
 def test_stage2_anchors_owner_and_keeps_other_product_normal() -> None:
@@ -84,13 +94,14 @@ def test_stage2_anchors_owner_and_keeps_other_product_normal() -> None:
     assert "불꽃이 났습니다" in prompt[1]["content"]
     assert "subject_span" not in prompt[1]["content"]
     assert "owner_kind" not in prompt[1]["content"]
-    assert contract.stage2_schema(MESSAGE)["required"] == [
-        "hazard_owner_span", "owner_to_target"
-    ]
-    raw = json.dumps({
-        "hazard_owner_span": {"clause_index": 2, "quote": "토스터"},
-        "owner_to_target": "other",
-    }, ensure_ascii=False)
+    assert contract.stage2_schema(MESSAGE)["required"] == ["hazard_owner_span", "owner_to_target"]
+    raw = json.dumps(
+        {
+            "hazard_owner_span": {"clause_index": 2, "quote": "토스터"},
+            "owner_to_target": "other",
+        },
+        ensure_ascii=False,
+    )
     result = contract.validate_stage2(raw, MESSAGE, event, **TARGET)
     assert result["owner_to_target"] == "other"
     assert result["hazard_owner_span"]["quote"] == "토스터"
@@ -102,11 +113,15 @@ def test_stage2_anchors_owner_and_keeps_other_product_normal() -> None:
 @pytest.mark.parametrize(
     ("raw", "code"),
     [
-        ('{"owner_to_target":"current","owner_to_target":"other",'
-         '"hazard_owner_span":null}', "duplicate_key"),
+        (
+            '{"owner_to_target":"current","owner_to_target":"other","hazard_owner_span":null}',
+            "duplicate_key",
+        ),
         ('{"owner_to_target":"current","hazard_owner_span":null}', "owner_required"),
-        ('{"owner_to_target":"other","hazard_owner_span":'
-         '{"clause_index":1,"quote":"토스터"}}', "quote_unanchored"),
+        (
+            '{"owner_to_target":"other","hazard_owner_span":{"clause_index":1,"quote":"토스터"}}',
+            "quote_unanchored",
+        ),
         ('{"owner_to_target":"same","hazard_owner_span":null}', "relation_invalid"),
     ],
 )
@@ -134,12 +149,9 @@ def test_stage2_rejects_tampered_event_and_nonoccurring_call() -> None:
     [
         ([], [], False, False, "collecting_service_request"),
         (["observed"], ["current"], False, False, "safety_action_required"),
-        (["observed", "observed"], ["other", "current"], False, False,
-         "safety_action_required"),
-        (["observed", "observed"], ["current", "unknown"], False, False,
-         "safety_action_required"),
-        (["observed", "observed"], ["current", None], False, True,
-         "safety_action_required"),
+        (["observed", "observed"], ["other", "current"], False, False, "safety_action_required"),
+        (["observed", "observed"], ["current", "unknown"], False, False, "safety_action_required"),
+        (["observed", "observed"], ["current", None], False, True, "safety_action_required"),
         (["observed"], ["other"], False, False, "collecting_service_request"),
         (["uncertain"], ["current"], False, False, "confirming_safety_status"),
         (["observed"], ["unknown"], False, False, "confirming_safety_status"),
@@ -150,13 +162,16 @@ def test_stage2_rejects_tampered_event_and_nonoccurring_call() -> None:
     ],
 )
 def test_route_precedence(
-    events: list[str], relations: list[str | None], overflow: bool, failed: bool,
+    events: list[str],
+    relations: list[str | None],
+    overflow: bool,
+    failed: bool,
     expected: str,
 ) -> None:
     observed = [{"occurrence": occurrence} for occurrence in events]
-    assert contract.route_for_events(
-        observed, relations, overflow=overflow, failed=failed
-    ) == expected
+    assert (
+        contract.route_for_events(observed, relations, overflow=overflow, failed=failed) == expected
+    )
 
 
 def test_route_rejects_unreported_missing_decision() -> None:

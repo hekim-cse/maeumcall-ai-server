@@ -43,14 +43,18 @@ def _owner(quote: str, relation: str) -> dict:
 
 
 def test_two_events_keep_current_hazard_immediate_and_raw_private(tmp_path) -> None:
-    replies = iter([
-        _completion({
-            "events": [_event("연기가 났고"), _event("불꽃이 튀었습니다")],
-            "overflow": False,
-        }),
-        _completion(_owner("탁상 조명", "other")),
-        _completion(_owner("로봇청소기 전원선", "current")),
-    ])
+    replies = iter(
+        [
+            _completion(
+                {
+                    "events": [_event("연기가 났고"), _event("불꽃이 튀었습니다")],
+                    "overflow": False,
+                }
+            ),
+            _completion(_owner("탁상 조명", "other")),
+            _completion(_owner("로봇청소기 전원선", "current")),
+        ]
+    )
     requests = []
 
     def fake(messages, schema, *, policy):
@@ -64,17 +68,25 @@ def test_two_events_keep_current_hazard_immediate_and_raw_private(tmp_path) -> N
     assert result["stage1"]["status"] == "validated"
     assert "quote" not in result["stage1"]["events"][0]["event_span"]
     assert "must never enter a prompt" not in json.dumps(requests, ensure_ascii=False, default=str)
-    assert "탁상 조명" not in requests[2][0][1]["content"].split("위험 사건 후보:")[1].split("발생 판단 후보:")[0]
+    assert (
+        "탁상 조명"
+        not in requests[2][0][1]["content"].split("위험 사건 후보:")[1].split("발생 판단 후보:")[0]
+    )
     for path in tmp_path.iterdir():
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
     assert sorted(path.name for path in tmp_path.iterdir()) == [
-        "ES01-stage1.json.txt", "ES01-stage2-1.json.txt", "ES01-stage2-2.json.txt"
+        "ES01-stage1.json.txt",
+        "ES01-stage2-1.json.txt",
+        "ES01-stage2-2.json.txt",
     ]
     assert "불꽃이 튀었습니다" not in json.dumps(result, ensure_ascii=False)
-    gold = dict(CASE, events=[
-        {**_event("연기가 났고"), **_owner("탁상 조명", "other")},
-        {**_event("불꽃이 튀었습니다"), **_owner("로봇청소기 전원선", "current")},
-    ])
+    gold = dict(
+        CASE,
+        events=[
+            {**_event("연기가 났고"), **_owner("탁상 조명", "other")},
+            {**_event("불꽃이 튀었습니다"), **_owner("로봇청소기 전원선", "current")},
+        ],
+    )
     summary = runner.summarize([result], [gold])
     assert summary["stage1_exact_event_cases"] == 1
     assert summary["actionable_gold_on_exact_event_cases"] == 2
@@ -110,13 +122,17 @@ def test_stage1_contract_error_fails_closed_without_stage2(tmp_path) -> None:
 
 
 def test_stage2_transport_error_does_not_hide_confirmed_current_hazard(tmp_path) -> None:
-    replies = iter([
-        _completion({
-            "events": [_event("연기가 났고"), _event("불꽃이 튀었습니다")],
-            "overflow": False,
-        }),
-        _completion(_owner("로봇청소기 전원선", "current")),
-    ])
+    replies = iter(
+        [
+            _completion(
+                {
+                    "events": [_event("연기가 났고"), _event("불꽃이 튀었습니다")],
+                    "overflow": False,
+                }
+            ),
+            _completion(_owner("로봇청소기 전원선", "current")),
+        ]
+    )
     calls = 0
 
     def fake(messages, schema, *, policy):
@@ -136,10 +152,12 @@ def test_stage2_transport_error_does_not_hide_confirmed_current_hazard(tmp_path)
 
 def test_nonoccurring_event_skips_owner_call(tmp_path) -> None:
     def fake(messages, schema, *, policy):
-        return _completion({
-            "events": [_event("연기가 났고", "nonoccurring")],
-            "overflow": False,
-        })
+        return _completion(
+            {
+                "events": [_event("연기가 났고", "nonoccurring")],
+                "overflow": False,
+            }
+        )
 
     result = runner.call_case(CASE, RequestPolicy(), tmp_path, completion_call=fake)
     assert result["route"] == "collecting_service_request"
@@ -178,18 +196,18 @@ def test_private_file_mode_is_exact_even_with_restrictive_umask(tmp_path) -> Non
     path = tmp_path / "raw.json.txt"
     previous = runner.os.umask(0o777)
     try:
-        runner._raw(path, '{}')
+        runner._raw(path, "{}")
     finally:
         runner.os.umask(previous)
     assert stat.S_IMODE(path.stat().st_mode) == 0o600
 
 
-def test_private_directory_mode_is_exact_even_with_restrictive_umask(
-    tmp_path, monkeypatch
-) -> None:
-    monkeypatch.setattr(runner, "load_protocol", lambda protocol, model: (
-        {"request_policy": runner.REQUEST}, "a" * 64
-    ))
+def test_private_directory_mode_is_exact_even_with_restrictive_umask(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(
+        runner,
+        "load_protocol",
+        lambda protocol, model: ({"request_policy": runner.REQUEST}, "a" * 64),
+    )
     monkeypatch.setattr(runner, "load_cases", lambda dataset: [])
     monkeypatch.setattr(runner, "verify_container", lambda name, model: None)
     monkeypatch.setattr(runner, "CASE_ORDER", ())
@@ -255,9 +273,9 @@ def _frozen_protocol_fixture(tmp_path: Path, monkeypatch) -> tuple[Path, Path, d
 def test_preflight_rejects_missing_required_verifier_source(tmp_path, monkeypatch) -> None:
     path, model, _ = _frozen_protocol_fixture(tmp_path, monkeypatch)
     monkeypatch.setattr(
-        runner, "_source_paths", lambda commit: runner.REQUIRED_V4_SOURCES - {
-            "experiments/as_safety_v4/verify.py"
-        }
+        runner,
+        "_source_paths",
+        lambda commit: runner.REQUIRED_V4_SOURCES - {"experiments/as_safety_v4/verify.py"},
     )
     with pytest.raises(ValueError, match="required v4 source missing"):
         runner.load_protocol(path, model)
@@ -293,18 +311,21 @@ def test_container_preflight_rejects_wrong_port_or_mount(
             "PortBindings": {"8080/tcp": [{"HostIp": "127.0.0.1", "HostPort": "18081"}]},
         },
         "Config": {"Cmd": runner.SERVER_ARGS},
-        "Mounts": [{
-            "Source": str(model.resolve()),
-            "Destination": "/models/kanana.gguf",
-            "RW": False,
-        }],
+        "Mounts": [
+            {
+                "Source": str(model.resolve()),
+                "Destination": "/models/kanana.gguf",
+                "RW": False,
+            }
+        ],
     }
     if invalid_field == "port":
         observed["HostConfig"]["PortBindings"]["8080/tcp"][0]["HostPort"] = "18082"
     else:
         observed["Mounts"][0]["RW"] = True
     monkeypatch.setattr(
-        runner.subprocess, "run",
+        runner.subprocess,
+        "run",
         lambda *args, **kwargs: SimpleNamespace(stdout=json.dumps([observed])),
     )
     with pytest.raises(ValueError, match="model (server port|mount) differs"):

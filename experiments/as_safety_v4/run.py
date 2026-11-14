@@ -61,8 +61,18 @@ RUNTIME = {
     "parallel_slots": 1,
 }
 SERVER_ARGS = [
-    "-m", "/models/kanana.gguf", "-c", "4096", "-t", "2", "-np", "1",
-    "--host", "0.0.0.0", "--port", "8080",
+    "-m",
+    "/models/kanana.gguf",
+    "-c",
+    "4096",
+    "-t",
+    "2",
+    "-np",
+    "1",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8080",
 ]
 REQUEST = {
     "max_tokens": 320,
@@ -73,17 +83,28 @@ REQUEST = {
     "seed": 0,
 }
 PROTOCOL_FIELDS = {
-    "kind", "claim_scope", "case_order", "frozen_code_commit", "input_hashes",
-    "source_manifest", "model_sha256", "server_image_digest", "request_policy",
-    "local_runtime", "retry_policy", "private_output",
+    "kind",
+    "claim_scope",
+    "case_order",
+    "frozen_code_commit",
+    "input_hashes",
+    "source_manifest",
+    "model_sha256",
+    "server_image_digest",
+    "request_policy",
+    "local_runtime",
+    "retry_policy",
+    "private_output",
 }
-REQUIRED_V4_SOURCES = frozenset({
-    "experiments/as_safety_v4/__init__.py",
-    "experiments/as_safety_v4/cases.py",
-    "experiments/as_safety_v4/contract.py",
-    "experiments/as_safety_v4/run.py",
-    "experiments/as_safety_v4/verify.py",
-})
+REQUIRED_V4_SOURCES = frozenset(
+    {
+        "experiments/as_safety_v4/__init__.py",
+        "experiments/as_safety_v4/cases.py",
+        "experiments/as_safety_v4/contract.py",
+        "experiments/as_safety_v4/run.py",
+        "experiments/as_safety_v4/verify.py",
+    }
+)
 SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
 CompletionCall = Callable[..., Completion]
@@ -175,9 +196,11 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
 
 
 def verify_container(name: str, model_path: Path) -> None:
-    observed = json.loads(subprocess.run(
-        ("docker", "inspect", name), check=True, capture_output=True, text=True
-    ).stdout)[0]
+    observed = json.loads(
+        subprocess.run(
+            ("docker", "inspect", name), check=True, capture_output=True, text=True
+        ).stdout
+    )[0]
     host = observed["HostConfig"]
     if not observed["State"]["Running"] or observed["Image"] != IMAGE:
         raise ValueError("model server image differs")
@@ -294,10 +317,14 @@ def call_case(
             first.update(status="contract_error", error_code=error.code, error_field=error.field)
         else:
             first["status"] = "validated"
-    first["events"] = None if validated is None else [
-        {"event_span": _public_span(item["event_span"]), "occurrence": item["occurrence"]}
-        for item in validated["events"]
-    ]
+    first["events"] = (
+        None
+        if validated is None
+        else [
+            {"event_span": _public_span(item["event_span"]), "occurrence": item["occurrence"]}
+            for item in validated["events"]
+        ]
+    )
     first["overflow"] = None if validated is None else validated["overflow"]
     stages: list[dict] = []
     relations: list[str | None] = []
@@ -322,7 +349,9 @@ def call_case(
                 try:
                     decision = validate_stage2(raw, message, event, **args)
                 except ValidationError as error:
-                    stage.update(status="contract_error", error_code=error.code, error_field=error.field)
+                    stage.update(
+                        status="contract_error", error_code=error.code, error_field=error.field
+                    )
                 else:
                     stage.update(
                         status="validated",
@@ -334,8 +363,11 @@ def call_case(
             stages.append(stage)
             relations.append(stage["owner_to_target"])
     route = (
-        route_for_events(validated["events"], relations, overflow=validated["overflow"], failed=failed)
-        if validated is not None else "confirming_safety_status"
+        route_for_events(
+            validated["events"], relations, overflow=validated["overflow"], failed=failed
+        )
+        if validated is not None
+        else "confirming_safety_status"
     )
     return {
         "event": "end",
@@ -344,9 +376,10 @@ def call_case(
         "stage2": stages,
         "route": route,
         "request_count": int(first["called"]) + sum(int(stage["called"]) for stage in stages),
-        "model_call_latency_sum_ms": round(first["request_latency_ms"] + sum(
-            stage["request_latency_ms"] or 0 for stage in stages
-        ), 3),
+        "model_call_latency_sum_ms": round(
+            first["request_latency_ms"] + sum(stage["request_latency_ms"] or 0 for stage in stages),
+            3,
+        ),
         "elapsed_ms": round((time.perf_counter() - case_started) * 1000, 3),
     }
 
@@ -377,9 +410,9 @@ def summarize(rows: list[dict], cases: list[dict]) -> dict:
         clauses = split_clauses(case["user_message"])
         references = [
             {
-                "event_span": _public_span(anchor_span(
-                    event["event_span"], clauses, field="event_span"
-                )),
+                "event_span": _public_span(
+                    anchor_span(event["event_span"], clauses, field="event_span")
+                ),
                 "occurrence": event["occurrence"],
             }
             for event in gold
@@ -420,8 +453,7 @@ def summarize(rows: list[dict], cases: list[dict]) -> dict:
         "actionable_gold_on_exact_event_cases": actionable_gold_on_exact_event_cases,
         "relation_correct_on_exact_event_cases": relation_correct,
         "route_correct": sum(
-            row["route"] == case["expected_route"]
-            for row, case in zip(rows, cases, strict=True)
+            row["route"] == case["expected_route"] for row, case in zip(rows, cases, strict=True)
         ),
         "other_observed_cases": other_observed_cases,
         "false_direct_other": false_direct_other,
@@ -431,7 +463,8 @@ def summarize(rows: list[dict], cases: list[dict]) -> dict:
         "stage1_errors": sum(row["stage1"]["status"] != "validated" for row in rows),
         "stage2_errors": sum(
             stage["called"] and stage["status"] != "validated"
-            for row in rows for stage in row["stage2"]
+            for row in rows
+            for stage in row["stage2"]
         ),
         "request_count": sum(row["request_count"] for row in rows),
         "stage1_valid": sum(row["stage1"]["status"] == "validated" for row in rows),
@@ -443,7 +476,9 @@ def summarize(rows: list[dict], cases: list[dict]) -> dict:
     }
 
 
-def run(args: argparse.Namespace, *, completion_call: CompletionCall = post_json_completion) -> None:
+def run(
+    args: argparse.Namespace, *, completion_call: CompletionCall = post_json_completion
+) -> None:
     if args.output.exists() or args.private_dir.exists():
         raise FileExistsError("existing output requires manual audit; never overwrite")
     protocol, protocol_sha = load_protocol(args.protocol, args.model_path)

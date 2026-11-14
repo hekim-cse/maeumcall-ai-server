@@ -29,12 +29,22 @@ def test_reviewed_dataset_loads_without_model_calls() -> None:
     [
         (lambda data: data["cases"].reverse(), "case ID order"),
         (lambda data: data["cases"][0].update(user_message="수정된 발화"), "utterance hash"),
-        (lambda data: data["cases"][0]["events"][0].update(owner_to_target="other"),
-         "reviewed route"),
-        (lambda data: data["cases"][8]["events"][0]["hazard_owner_span"].update(
-            quote="탁상 조명"), "reviewed values"),
-        (lambda data: data["cases"][5]["events"][1]["event_span"].update(
-            quote="다른 기기의 충전기에서 불꽃이 튀었고"), "event spans overlap"),
+        (
+            lambda data: data["cases"][0]["events"][0].update(owner_to_target="other"),
+            "reviewed route",
+        ),
+        (
+            lambda data: data["cases"][8]["events"][0]["hazard_owner_span"].update(
+                quote="탁상 조명"
+            ),
+            "reviewed values",
+        ),
+        (
+            lambda data: data["cases"][5]["events"][1]["event_span"].update(
+                quote="다른 기기의 충전기에서 불꽃이 튀었고"
+            ),
+            "event spans overlap",
+        ),
         (lambda data: data["source_sha256"].update(fields="0" * 64), "review provenance"),
     ],
 )

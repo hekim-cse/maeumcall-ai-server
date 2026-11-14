@@ -151,7 +151,11 @@ def _checked_event(event: dict, clauses: tuple[str, ...]) -> dict:
         raise ValidationError("occurrence_invalid", "event")
     span = event["event_span"]
     if type(span) is not dict or set(span) != {
-        "clause_index", "quote", "start", "end", "quote_sha256"
+        "clause_index",
+        "quote",
+        "start",
+        "end",
+        "quote_sha256",
     }:
         raise ValidationError("event_span_invalid", "event_span")
     anchored = anchor_span(

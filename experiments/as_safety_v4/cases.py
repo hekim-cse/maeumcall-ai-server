@@ -20,7 +20,13 @@ ROUTES = {
     "일반 접수": "collecting_service_request",
 }
 CASE_FIELDS = {
-    "id", "user_message", "utterance_sha256", "target", "events", "expected_route", "overflow"
+    "id",
+    "user_message",
+    "utterance_sha256",
+    "target",
+    "events",
+    "expected_route",
+    "overflow",
 }
 EVENT_FIELDS = {"event_span", "occurrence", "hazard_owner_span", "owner_to_target"}
 SPAN_FIELDS = {"clause_index", "quote"}
@@ -71,7 +77,8 @@ def _source_rows() -> dict[str, dict]:
             if not owner_match:
                 raise ValueError(f"owner review row differs: {case_id}")
             event["hazard_owner_span"] = {
-                "clause_index": int(owner_match[1]), "quote": owner_match[2]
+                "clause_index": int(owner_match[1]),
+                "quote": owner_match[2],
             }
             event["owner_to_target"] = owner_match[3]
         if case_id not in utterances:
@@ -87,7 +94,10 @@ def _source_rows() -> dict[str, dict]:
                 "expected_route": ROUTES[route_text],
                 "overflow": False,
             }
-        if cases[case_id]["target"] != target or cases[case_id]["expected_route"] != ROUTES[route_text]:
+        if (
+            cases[case_id]["target"] != target
+            or cases[case_id]["expected_route"] != ROUTES[route_text]
+        ):
             raise ValueError(f"field review target or route differs: {case_id}")
         cases[case_id]["events"].append(event)
     if tuple(cases) != CASE_IDS or sum(len(case["events"]) for case in cases.values()) != 22:
@@ -132,7 +142,11 @@ def _validate_case(case: dict) -> None:
         occurrence = event["occurrence"]
         relation = event["owner_to_target"]
         owner = event["hazard_owner_span"]
-        if type(occurrence) is not str or occurrence not in {"observed", "uncertain", "nonoccurring"}:
+        if type(occurrence) is not str or occurrence not in {
+            "observed",
+            "uncertain",
+            "nonoccurring",
+        }:
             raise ValueError("event occurrence differs")
         if occurrence == "nonoccurring":
             if owner is not None or relation is not None:
@@ -155,7 +169,12 @@ def load_cases(path: Path) -> list[dict]:
     """Reject review drift, data tampering and ill-formed event references."""
     payload = json.loads(path.read_text(encoding="utf-8"))
     if type(payload) is not dict or set(payload) != {
-        "kind", "provenance", "review_status", "review_date", "source_sha256", "cases"
+        "kind",
+        "provenance",
+        "review_status",
+        "review_date",
+        "source_sha256",
+        "cases",
     }:
         raise ValueError("dataset fields differ")
     if (
@@ -163,14 +182,18 @@ def load_cases(path: Path) -> list[dict]:
         or payload["provenance"] != "ai_authored_user_reviewed_exploration"
         or payload["review_status"] != "owner_approved_for_exploratory_evaluation"
         or payload["review_date"] != "2026-11-15"
-        or payload["source_sha256"] != {
+        or payload["source_sha256"]
+        != {
             "utterances": _sha256(REVIEW.read_bytes()),
             "fields": _sha256(FIELD_REVIEW.read_bytes()),
         }
     ):
         raise ValueError("review provenance differs")
     cases = payload["cases"]
-    if type(cases) is not list or tuple(case.get("id") for case in cases if type(case) is dict) != CASE_IDS:
+    if (
+        type(cases) is not list
+        or tuple(case.get("id") for case in cases if type(case) is dict) != CASE_IDS
+    ):
         raise ValueError("case ID order differs")
     source = _source_rows()
     if len(cases) != len(source):
