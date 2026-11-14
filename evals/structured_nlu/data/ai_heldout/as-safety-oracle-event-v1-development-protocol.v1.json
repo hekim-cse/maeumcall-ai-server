@@ -23,7 +23,7 @@
     "ES19",
     "ES20"
   ],
-  "frozen_code_commit": "a375b6967c5c4d73553412c8e8e0faf0030988d9",
+  "frozen_code_commit": "e0d38f075719c40338c9500e7a036d3b2b4bd5b0",
   "input_hashes": {
     "dataset": "49e4e960d901c037c7d10de6899aaeade3c71809060772571f0c8f58409d52f7",
     "review": "399a4f2d8739ab4899adeba9a62cc1f388fcd3802ef7a5147350c2de55b1d8bb",
@@ -32,7 +32,7 @@
   },
   "source_manifest": {
     "experiments/as_safety_oracle_event_v1/__init__.py": "f1666c248a7112aaf008e1f16dd60351eeee91395bb1359bb6f8a6b510d5282e",
-    "experiments/as_safety_oracle_event_v1/run.py": "fa1b4120c4b7e91df87d9088842a0ab9656c635b82d09f5f71d0cd67e8d89dbe",
+    "experiments/as_safety_oracle_event_v1/run.py": "fe473cef9ce30d90961f5eea5e5a14c5b68a6116da02b9da833ef91823dc4f08",
     "experiments/as_safety_oracle_event_v1/verify.py": "2786f2c399395f290052bbd862fa14517d7cb8ef5842142de27861f6c99a205a",
     "experiments/as_safety_v2/__init__.py": "64615758ef05e46666f27c576b8a2d81f5b71115c51a3eee757eb2c0e3102072",
     "experiments/as_safety_v2/candidate_ids.py": "eb24e7599d61c90ee3a663ff348e20f963db423f0eb39023db7d05ab45bf9802",
