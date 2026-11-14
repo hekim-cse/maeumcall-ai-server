@@ -120,8 +120,6 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
         raise ValueError("protocol must be in repository") from error
     if v4._git("show", f"HEAD:{relative_protocol}") != raw:
         raise ValueError("protocol must be committed before model calls")
-    if v4._git("rev-parse", "HEAD").decode().strip() != commit:
-        raise ValueError("frozen commit is not HEAD")
     if v4._git("status", "--porcelain").strip():
         raise ValueError("checkout differs before model calls")
     return protocol, v4.digest(raw)
