@@ -5,7 +5,6 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    SCOPE_BOUNDARY_GUIDANCE,
     ActionFieldRule,
     action_field_rules_json_for_state,
     allowed_actions_json_for_state,
@@ -14,6 +13,7 @@ from llm.structured_output import (
     build_state_action_contract,
     complete_validated_json,
     optional_string,
+    render_scope_contract,
     require_exact_keys,
     validate_action_field_delta,
 )
@@ -118,7 +118,14 @@ def analyze_study_room_reservation_user_message(
                 "content": (
                     "너는 전화 시뮬레이션 서버의 대화 상태 분석기이다. "
                     "반드시 JSON 객체만 출력한다. 설명 문장, markdown, 코드블록은 출력하지 않는다."
-                    "\n현재 지원 목적: 스터디룸 이용 시간을 예약하는 것." + SCOPE_BOUNDARY_GUIDANCE
+                    + render_scope_contract(
+                        purpose="스터디룸 이용 시간을 예약하는 것",
+                        supported=(
+                            "스터디룸 예약을 시작하거나 진행 중 날짜·시간·이용 기간 등 "
+                            "일부 조건을 제공·변경하고 가능한 이용 시간을 묻는 요청"
+                        ),
+                        outside="예약 없이 시설 비품·운영 정책만 확인하는 요청",
+                    )
                 ),
             },
             {"role": "user", "content": prompt},

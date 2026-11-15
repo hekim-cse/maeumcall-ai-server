@@ -5,7 +5,6 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    SCOPE_BOUNDARY_GUIDANCE,
     ActionFieldRule,
     action_field_rules_json_for_state,
     allowed_actions_json_for_state,
@@ -14,6 +13,7 @@ from llm.structured_output import (
     build_state_action_contract,
     complete_validated_json,
     optional_string,
+    render_scope_contract,
     require_exact_keys,
     validate_action_field_delta,
 )
@@ -110,8 +110,14 @@ def analyze_hospital_reservation_user_message(
             "role": "system",
             "content": (
                 _build_system_prompt()
-                + "\n현재 지원 목적: 병원 진료 예약을 진행하는 것."
-                + SCOPE_BOUNDARY_GUIDANCE
+                + render_scope_contract(
+                    purpose="병원 진료 예약을 진행하는 것",
+                    supported=(
+                        "진료 예약을 시작하거나 진행 중 진료과·날짜·시간 등 "
+                        "일부 조건을 제공·변경하고 가능한 진료 시간을 묻는 요청"
+                    ),
+                    outside="예약 없이 증상에 관한 의학적 판단만 묻는 요청",
+                )
             ),
         },
         {

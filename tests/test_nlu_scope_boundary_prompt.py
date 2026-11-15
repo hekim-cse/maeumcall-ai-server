@@ -9,7 +9,7 @@ import pytest
 
 from evals.structured_nlu.ai_heldout import AIHeldoutCase, AIHeldoutRequestPolicy
 from evals.structured_nlu.contracts import EVALUATION_CONTRACTS
-from llm.structured_output import SCOPE_BOUNDARY_GUIDANCE
+from llm.structured_output import SCOPE_BOUNDARY_GUIDANCE, render_scope_contract
 from scripts.run_ai_heldout_pair import _run_case
 from services.flow.professor.appointment.llm_structured import (
     build_professor_appointment_analysis_prompt,
@@ -62,6 +62,8 @@ def test_scope_boundary_instruction_reaches_each_live_analyzer(case: AIHeldoutCa
 
     assert observed_messages
     assert all(SCOPE_BOUNDARY_GUIDANCE in messages[0]["content"] for messages in observed_messages)
+    assert all("지원하는 주된 요청:" in messages[0]["content"] for messages in observed_messages)
+    assert all("지원 범위 밖의 주된 요청:" in messages[0]["content"] for messages in observed_messages)
     assert all(
         f"현재 지원 목적: {EXPECTED_PURPOSES[case.scenario_key]}" in messages[0]["content"]
         for messages in observed_messages
@@ -78,7 +80,30 @@ def test_shared_workflows_declare_their_supported_purpose() -> None:
         for contract in EVALUATION_CONTRACTS.values()
         if contract.workflow_spec is not None
     )
-    assert all(spec.scope_purpose and spec.scope_purpose.strip() for spec in specs)
+    assert all(
+        spec.scope_purpose and spec.scope_supported.strip() and spec.scope_outside.strip()
+        for spec in specs
+    )
+
+
+def test_scope_contract_describes_request_semantics_and_keeps_safety_priority() -> None:
+    guidance = render_scope_contract(
+        purpose="제품 고장 접수",
+        supported="현재 제품의 고장 증상과 수리 접수",
+        outside="제품 이용 정책에 관한 일반 문의",
+    )
+    assert "지원하는 주된 요청: 현재 제품의 고장 증상과 수리 접수" in guidance
+    assert "지원 범위 밖의 주된 요청: 제품 이용 정책에 관한 일반 문의" in guidance
+    assert "단어 목록이 아니라 요청의 목적" in guidance
+    assert "안전 처리를 우선한다" in guidance
+
+
+@pytest.mark.parametrize("missing", ["purpose", "supported", "outside"])
+def test_scope_contract_rejects_missing_boundary(missing: str) -> None:
+    contract = {"purpose": "상담", "supported": "진행 중인 업무", "outside": "다른 업무"}
+    contract[missing] = " "
+    with pytest.raises(ValueError, match="must not be blank"):
+        render_scope_contract(**contract)
 
 
 def test_appointment_prompt_preserves_explicit_purpose_and_missing_name() -> None:

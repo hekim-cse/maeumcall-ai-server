@@ -5,11 +5,11 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    SCOPE_BOUNDARY_GUIDANCE,
     allowed_actions_json_for_state,
     allowed_string_for_state,
     complete_validated_json,
     optional_string,
+    render_scope_contract,
     require_exact_keys,
 )
 from services.flow.service_workflow.contracts import (
@@ -93,8 +93,11 @@ def analyze_service_workflow_message(
                 "content": (
                     "너는 전화 시뮬레이션 서버의 엄격한 업무 상태 분석기이다. "
                     "사용자가 말하지 않은 사실을 추론하지 않고 JSON 객체만 출력한다."
-                    + f"\n현재 지원 목적: {spec.scope_purpose or spec.title}."
-                    + SCOPE_BOUNDARY_GUIDANCE
+                    + render_scope_contract(
+                        purpose=spec.scope_purpose or spec.title,
+                        supported=spec.scope_supported,
+                        outside=spec.scope_outside,
+                    )
                 ),
             },
             {"role": "user", "content": prompt},

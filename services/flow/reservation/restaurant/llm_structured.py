@@ -5,7 +5,6 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    SCOPE_BOUNDARY_GUIDANCE,
     ActionFieldRule,
     action_field_rules_json_for_state,
     allowed_actions_json_for_state,
@@ -14,6 +13,7 @@ from llm.structured_output import (
     build_state_action_contract,
     complete_validated_json,
     optional_string,
+    render_scope_contract,
     require_exact_keys,
     validate_action_field_delta,
 )
@@ -167,7 +167,14 @@ def analyze_restaurant_reservation_user_message(
             {
                 "role": "system",
                 "content": "너는 사용자 발화를 JSON으로만 분석하는 분류기이다. "
-                "\n현재 지원 목적: 식당 좌석을 예약하는 것." + SCOPE_BOUNDARY_GUIDANCE,
+                + render_scope_contract(
+                    purpose="식당 좌석을 예약하는 것",
+                    supported=(
+                        "좌석 예약을 시작하거나 진행 중 날짜·시간·인원 등 "
+                        "일부 조건을 제공·변경하고 가능한 예약 시간을 묻는 요청"
+                    ),
+                    outside="예약 없이 메뉴·재료·배달 정보만 문의하는 요청",
+                ),
             },
             {
                 "role": "user",
