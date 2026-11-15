@@ -782,8 +782,52 @@ def test_metrics_count_prediction_fields_outside_the_live_contract_as_contract_f
     assert scores.final_contract_success_rate == 0.0
     assert scores.complete_failure_rate == 1.0
     assert scores.case_exact_match_rate == 0.0
-    assert scores.counts.gold_present_slots == 0
+    assert scores.counts.gold_present_slots == 1
+    assert scores.counts.slot_false_negatives == 1
+    assert scores.counts.omitted_slots == 1
     assert scores.counts.gold_absent_slots == 0
+
+
+def test_metrics_count_gold_slots_on_contract_failure_without_changing_case_exact_match():
+    cases = (
+        _case(
+            case_id="appointment.valid-for-denominator",
+            message="내일 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=("내일",))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+        ),
+        _case(
+            case_id="appointment.invalid-for-denominator",
+            message="모레 면담 가능할까요?",
+            fields=_appointment_fields(date=ExpectedField(accepted_values=("모레",))),
+            action="provide_appointment_info",
+            tags=("single_field",),
+        ),
+    )
+    predictions = (
+        _prediction(
+            cases[0].id,
+            fields={"appointment_purpose": None, "date": "내일", "time": None, "user_name": None},
+            action="provide_appointment_info",
+        ),
+        _prediction(
+            cases[1].id,
+            fields={"date": "모레"},
+            action="provide_appointment_info",
+        ),
+    )
+
+    scores = score_predictions(cases, predictions)
+
+    assert scores.counts.fully_correct_cases == 1
+    assert scores.case_exact_match_rate == 0.5
+    assert scores.counts.gold_present_slots == 2
+    assert scores.counts.slot_true_positives == 1
+    assert scores.counts.slot_false_negatives == 1
+    assert scores.counts.omitted_slots == 1
+    assert scores.slot_presence_recall == 0.5
+    assert scores.omission_rate == 0.5
 
 
 def test_metrics_count_action_from_wrong_state_as_contract_failure():
@@ -1858,4 +1902,6 @@ def test_metrics_count_workflow_option_outside_live_contract_as_contract_failure
 
     assert scores.first_attempt_contract_success_rate == 0.0
     assert scores.final_contract_success_rate == 0.0
-    assert scores.counts.gold_present_slots == 0
+    assert scores.counts.gold_present_slots == 1
+    assert scores.counts.slot_false_negatives == 1
+    assert scores.counts.omitted_slots == 1
