@@ -54,6 +54,7 @@ def test_prompt_shows_oracle_event_and_target_but_no_reviewed_relation_or_route(
     assert schema["properties"]["target_edge_kind"]["enum"] == [
         "coreference",
         "distinct",
+        "located_at",
         "part_of",
         "same_entity",
         "unresolved",
@@ -72,6 +73,12 @@ def test_current_edge_and_attachment_are_separately_anchored():
     )
     assert decision["route"] == "safety_action_required"
     assert decision["error_code"] is None
+
+
+def test_location_edge_is_current_without_calling_a_spatial_region_a_component():
+    payload = {**CURRENT, "target_edge_kind": "located_at"}
+    assert _validate(payload)["effective_relation"] == "current"
+    assert route_for("observed", "current") == "safety_action_required"
 
 
 def test_distinct_edge_routes_to_general_service_and_uncertain_current_to_confirmation():
