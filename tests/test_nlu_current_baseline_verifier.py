@@ -16,9 +16,28 @@ from experiments.nlu_current_baseline_v1 import run as baseline_runner
 from experiments.nlu_current_baseline_v1 import verify as auditor
 
 
+def _boundary(phase: str, completed: int, restart_generation: int) -> dict:
+    return {
+        "event": "server_boundary",
+        "phase": phase,
+        "completed_cases": completed,
+        "running": True,
+        "oom_killed": False,
+        "exit_code": 0,
+        "restart_count": 0,
+        "memory_usage": "1GiB / 10GiB",
+        "healthy": True,
+        "started_at": f"2026-11-16T00:00:0{restart_generation}Z",
+        "container_id": "a" * 64,
+        "docker_host_memory_bytes": auditor.RUNTIME["docker_host_min_memory_bytes"],
+    }
+
+
 @pytest.fixture
 def complete_result(tmp_path, monkeypatch):
     reviewed = load_reviewed_ai_heldout(auditor.DATASET, auditor.LEDGER)
+    raw = b"{}"
+    raw_sha = hashlib.sha256(raw).hexdigest()
     predictions = tuple(
         CasePrediction(
             case_id=case.id,
@@ -27,13 +46,13 @@ def complete_result(tmp_path, monkeypatch):
                     contract_valid=False,
                     latency_ms=1.0,
                     output=None,
-                    error_type="ValueError",
+                    error_type="StructuredKeyError",
                 ),
                 EvaluationAttempt(
                     contract_valid=False,
                     latency_ms=1.0,
                     output=None,
-                    error_type="ValueError",
+                    error_type="StructuredKeyError",
                 ),
             ),
         )
@@ -45,9 +64,18 @@ def complete_result(tmp_path, monkeypatch):
         "predictions": [item.model_dump(mode="json") for item in predictions],
         "summary": score_predictions(reviewed.dataset.cases, predictions).to_dict(),
     }
-    rows = [{"event": "header", "protocol_sha256": "a" * 64}]
-    for prediction in result["predictions"]:
+    private_dir = tmp_path / "raw"
+    private_dir.mkdir(mode=0o700)
+    rows = [
+        {"event": "header", "protocol_sha256": "a" * 64},
+        _boundary("initial", 0, 0),
+    ]
+    for case_number, prediction in enumerate(result["predictions"], start=1):
         rows.append({"event": "begin", "case_id": prediction["case_id"]})
+        for ordinal in (1, 2):
+            path = private_dir / f"{prediction['case_id']}-attempt{ordinal}.txt"
+            path.write_bytes(raw)
+            path.chmod(0o600)
         rows.append(
             {
                 "event": "end",
@@ -56,15 +84,19 @@ def complete_result(tmp_path, monkeypatch):
                 "raw_attempts": [
                     {
                         "attempt": ordinal,
-                        "status": "transport_error",
-                        "raw_sha256": None,
-                        "raw_bytes": None,
-                        "error_type": "ValueError",
+                        "status": "received",
+                        "raw_sha256": raw_sha,
+                        "raw_bytes": len(raw),
+                        "error_type": None,
                     }
                     for ordinal in (1, 2)
                 ],
             }
         )
+        if case_number in (8, 16, 24):
+            rows.append(_boundary("before_restart", case_number, case_number // 8 - 1))
+            rows.append(_boundary("after_restart", case_number, case_number // 8))
+    rows.append(_boundary("final", 32, 3))
     rows.append({"event": "summary", "summary": result["summary"]})
     journal = tmp_path / "journal.jsonl"
     journal.write_text(
@@ -76,8 +108,6 @@ def complete_result(tmp_path, monkeypatch):
         "check_protocol",
         lambda _protocol, _model: ({"request_policy": auditor.REQUEST}, "a" * 64),
     )
-    private_dir = tmp_path / "raw"
-    private_dir.mkdir(mode=0o700)
     path = tmp_path / "result.json"
 
     def write(value):
@@ -101,6 +131,38 @@ def test_complete_artifact_replays_all_32_cases(complete_result, tmp_path):
     assert replay["claim_scope"] == auditor.SCOPE
 
 
+def test_completed_result_with_one_missing_completion_is_rejected(complete_result, tmp_path):
+    result, write, journal, private_dir = complete_result
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    first = result["predictions"][0]
+    first["attempts"][0]["error_type"] = "ValueError"
+    rows[3]["prediction"] = first
+    rows[3]["raw_attempts"][0] = {
+        "attempt": 1,
+        "status": "transport_error",
+        "raw_sha256": None,
+        "raw_bytes": None,
+        "error_type": "ValueError",
+    }
+    (private_dir / f"{first['case_id']}-attempt1.txt").unlink()
+    reviewed = load_reviewed_ai_heldout(auditor.DATASET, auditor.LEDGER)
+    predictions = tuple(CasePrediction.model_validate(item) for item in result["predictions"])
+    result["summary"] = score_predictions(reviewed.dataset.cases, predictions).to_dict()
+    rows[-1]["summary"] = result["summary"]
+    journal.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+    )
+    result["journal_sha256"] = hashlib.sha256(journal.read_bytes()).hexdigest()
+    with pytest.raises(ValueError, match="completion reception errors make result non-publishable"):
+        auditor.verify(
+            tmp_path / "protocol.json",
+            write(result),
+            journal,
+            private_dir,
+            tmp_path / "model.gguf",
+        )
+
+
 def test_private_raw_replays_and_modified_bytes_are_rejected(complete_result, tmp_path):
     result, write, journal, private_dir = complete_result
     reviewed = load_reviewed_ai_heldout(auditor.DATASET, auditor.LEDGER)
@@ -118,13 +180,13 @@ def test_private_raw_replays_and_modified_bytes_are_rejected(complete_result, tm
     all_predictions = tuple(CasePrediction.model_validate(item) for item in result["predictions"])
     result["summary"] = score_predictions(reviewed.dataset.cases, all_predictions).to_dict()
     rows = [json.loads(line) for line in journal.read_text().splitlines()]
-    rows[2]["prediction"] = result["predictions"][0]
-    rows[2]["raw_attempts"] = []
+    rows[3]["prediction"] = result["predictions"][0]
+    rows[3]["raw_attempts"] = []
     for ordinal in (1, 2):
         path = private_dir / f"{case.id}-attempt{ordinal}.txt"
         path.write_bytes(raw)
         path.chmod(0o600)
-        rows[2]["raw_attempts"].append(
+        rows[3]["raw_attempts"].append(
             {
                 "attempt": ordinal,
                 "status": "received",
@@ -156,7 +218,7 @@ def test_private_raw_replays_and_modified_bytes_are_rejected(complete_result, tm
         )
     (private_dir / f"{case.id}-attempt1.txt").write_bytes(raw)
     result["predictions"][0]["attempts"][0]["error_type"] = "ForgedError"
-    rows[2]["prediction"] = result["predictions"][0]
+    rows[3]["prediction"] = result["predictions"][0]
     journal.write_text(
         "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
     )
@@ -214,6 +276,56 @@ def test_journal_tampering_is_rejected(complete_result, tmp_path, tamper):
     journal.write_text(
         "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
     )
+    with pytest.raises(ValueError):
+        auditor.verify(
+            tmp_path / "protocol.json",
+            write(result),
+            journal,
+            private_dir,
+            tmp_path / "model.gguf",
+        )
+
+
+@pytest.mark.parametrize(
+    "tamper",
+    (
+        "missing_restart",
+        "oom",
+        "unhealthy",
+        "low_host_memory",
+        "no_restart",
+        "changed_container",
+        "stale_final",
+    ),
+)
+def test_server_boundary_tampering_is_rejected(complete_result, tmp_path, tamper):
+    result, write, journal, private_dir = complete_result
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    boundary = next(
+        index
+        for index, row in enumerate(rows)
+        if row.get("phase") == "after_restart" and row.get("completed_cases") == 8
+    )
+    if tamper == "missing_restart":
+        rows.pop(boundary)
+    elif tamper == "oom":
+        rows[boundary]["oom_killed"] = True
+    elif tamper == "unhealthy":
+        rows[boundary]["healthy"] = False
+    elif tamper == "low_host_memory":
+        rows[boundary]["docker_host_memory_bytes"] = (
+            auditor.RUNTIME["docker_host_min_memory_bytes"] - 1
+        )
+    elif tamper == "no_restart":
+        rows[boundary]["started_at"] = rows[boundary - 1]["started_at"]
+    elif tamper == "changed_container":
+        rows[boundary]["container_id"] = "b" * 64
+    else:
+        rows[-2]["started_at"] = rows[1]["started_at"]
+    journal.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+    )
+    result["journal_sha256"] = hashlib.sha256(journal.read_bytes()).hexdigest()
     with pytest.raises(ValueError):
         auditor.verify(
             tmp_path / "protocol.json",

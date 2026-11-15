@@ -13,7 +13,9 @@ import os
 import re
 import stat
 import subprocess
+import time
 import urllib.error
+import urllib.request
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -33,7 +35,13 @@ RESULT_KIND = "nlu_current_baseline_v1_result"
 SCOPE = "exposed_ai_authored_user_adjudicated_development_only"
 MODEL_SHA = v4.MODEL_SHA
 IMAGE = v4.IMAGE
-RUNTIME = v4.RUNTIME
+RUNTIME = {
+    **v4.RUNTIME,
+    "memory_bytes": 10 * 1024**3,
+    "restart_interval_cases": 8,
+    "docker_desktop_target_memory_bytes": 12 * 1024**3,
+    "docker_host_min_memory_bytes": 23 * 1024**3 // 2,
+}
 REQUEST = {
     "max_tokens": 180,
     "temperature": 0,
@@ -77,6 +85,14 @@ COMPLETION_ERRORS = (
     KeyError,
     IndexError,
 )
+
+
+class CompletionFailure(RuntimeError):
+    """A completion request failed; no score may be published for this run."""
+
+    def __init__(self, error_type: str) -> None:
+        self.error_type = error_type
+        super().__init__(f"model completion failed: {error_type}; journal requires manual audit")
 
 
 def _sha(raw: bytes) -> str:
@@ -189,6 +205,118 @@ def _save_raw(path: Path, raw: str) -> tuple[str, int]:
     return _sha(encoded), len(encoded)
 
 
+def _inspect_container(name: str) -> dict:
+    return json.loads(
+        subprocess.run(
+            ("docker", "inspect", name),
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=20,
+        ).stdout
+    )[0]
+
+
+def verify_container(name: str, model_path: Path, runtime: dict) -> dict:
+    """Check the running server against the frozen protocol, including its memory limit."""
+    observed = _inspect_container(name)
+    host = observed["HostConfig"]
+    if not observed["State"]["Running"] or observed["Image"] != IMAGE:
+        raise ValueError("model server is stopped or image differs")
+    if host["NanoCpus"] != runtime["cpu_count"] * 1_000_000_000:
+        raise ValueError("model server CPU bound differs")
+    if host["Memory"] != runtime["memory_bytes"]:
+        raise ValueError("model server memory bound differs")
+    if host["PortBindings"] != {
+        "8080/tcp": [{"HostIp": "127.0.0.1", "HostPort": str(runtime["host_port"])}]
+    }:
+        raise ValueError("model server port differs")
+    if observed["Config"]["Cmd"] != v4.SERVER_ARGS:
+        raise ValueError("model server arguments differ")
+    if not any(
+        mount["Source"] == str(model_path.resolve())
+        and mount["Destination"] == "/models/kanana.gguf"
+        and not mount["RW"]
+        for mount in observed["Mounts"]
+    ):
+        raise ValueError("model mount differs")
+    if observed["State"]["OOMKilled"]:
+        raise ValueError("model server was OOM killed")
+    return observed
+
+
+def _health(endpoint: str, *, deadline_seconds: int = 120) -> bool:
+    url = endpoint.rsplit("/v1/", 1)[0] + "/health"
+    deadline = time.monotonic() + deadline_seconds
+    while True:
+        try:
+            with urllib.request.urlopen(url, timeout=3) as response:
+                if response.status == 200:
+                    return True
+        except (urllib.error.URLError, TimeoutError, OSError):
+            pass
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(1)
+
+
+def _server_boundary(
+    stream, name: str, model_path: Path, protocol: dict, *, phase: str, completed_cases: int
+) -> dict:
+    observed = _inspect_container(name)
+    state = observed["State"]
+    container_id = observed["Id"]
+    started_at = state["StartedAt"]
+    if re.fullmatch(r"[0-9a-f]{64}", container_id) is None or len(started_at) > 64:
+        raise ValueError("model server identity differs")
+    docker_host_memory_bytes = int(
+        subprocess.run(
+            ("docker", "info", "--format", "{{.MemTotal}}"),
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=20,
+        ).stdout.strip()
+    )
+    running = bool(state["Running"])
+    memory_usage = None
+    if running:
+        memory_usage = subprocess.run(
+            ("docker", "stats", "--no-stream", "--format", "{{.MemUsage}}", name),
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=20,
+        ).stdout.strip()
+        if (
+            len(memory_usage) > 64
+            or re.fullmatch(r"[0-9.]+[KMGT]?i?B / [0-9.]+[KMGT]?i?B", memory_usage) is None
+        ):
+            raise ValueError("model server memory sample differs")
+    healthy = running and _health(protocol["request_policy"]["endpoint"])
+    boundary = {
+        "event": "server_boundary",
+        "phase": phase,
+        "completed_cases": completed_cases,
+        "running": running,
+        "oom_killed": bool(state["OOMKilled"]),
+        "exit_code": int(state["ExitCode"]),
+        "restart_count": int(observed["RestartCount"]),
+        "container_id": container_id,
+        "started_at": started_at,
+        "docker_host_memory_bytes": docker_host_memory_bytes,
+        "memory_usage": memory_usage,
+        "healthy": healthy,
+    }
+    _append(stream, boundary)
+    if not healthy:
+        raise ValueError("model server health failed at boundary")
+    if docker_host_memory_bytes < protocol["local_runtime"]["docker_host_min_memory_bytes"]:
+        raise ValueError("Docker host memory is below frozen minimum")
+    verify_container(name, model_path, protocol["local_runtime"])
+    return boundary
+
+
 def run(
     *,
     protocol_path: Path,
@@ -206,14 +334,17 @@ def run(
     if private_dir.resolve().is_relative_to(ROOT):
         raise ValueError("private raw directory must be outside repository")
     protocol, protocol_sha = load_protocol(protocol_path, model_path)
-    v4.verify_container(container_name, model_path)
+    verify_container(container_name, model_path, protocol["local_runtime"])
     cases = _reviewed().dataset.cases
     policy = SimpleNamespace(**protocol["request_policy"])
     predictions = []
     _private_output_dir(private_dir)
     with journal.open("x", encoding="utf-8") as stream:
         _append(stream, {"event": "header", "protocol_sha256": protocol_sha})
-        for case in cases:
+        _server_boundary(
+            stream, container_name, model_path, protocol, phase="initial", completed_cases=0
+        )
+        for case_index, case in enumerate(cases, start=1):
             _append(stream, {"event": "begin", "case_id": case.id})
             raw_attempts = []
 
@@ -244,7 +375,7 @@ def run(
                             "error_type": error_type,
                         }
                     )
-                    raise
+                    raise CompletionFailure(error_type) from None
                 sha, size = _save_raw(private_dir / f"{_case_id}-attempt{attempt}.txt", raw)
                 _raw_attempts.append(
                     {
@@ -257,13 +388,28 @@ def run(
                 )
                 return raw
 
-            prediction = _run_case(
-                case,
-                endpoint=policy.endpoint,
-                model_id=policy.model_id,
-                policy=policy,
-                completion_post=completion_post,
-            )
+            try:
+                prediction = _run_case(
+                    case,
+                    endpoint=policy.endpoint,
+                    model_id=policy.model_id,
+                    policy=policy,
+                    completion_post=completion_post,
+                )
+            except CompletionFailure as error:
+                _append(
+                    stream,
+                    {
+                        "event": "end",
+                        "case_id": case.id,
+                        "status": "completion_error",
+                        "error_type": error.error_type,
+                        "raw_attempts": raw_attempts,
+                    },
+                )
+                raise
+            if any(attempt["status"] == "transport_error" for attempt in raw_attempts):
+                raise ValueError("completion error cannot produce a scored prediction")
             if len(raw_attempts) != len(prediction.attempts):
                 raise ValueError("raw attempt count differs from live validator")
             _append(
@@ -276,8 +422,41 @@ def run(
                 },
             )
             predictions.append(prediction)
+            restart_interval = protocol["local_runtime"]["restart_interval_cases"]
+            if case_index % restart_interval == 0 and case_index < len(cases):
+                before_restart = _server_boundary(
+                    stream,
+                    container_name,
+                    model_path,
+                    protocol,
+                    phase="before_restart",
+                    completed_cases=case_index,
+                )
+                subprocess.run(
+                    ("docker", "restart", "--time", "10", container_name),
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=150,
+                )
+                after_restart = _server_boundary(
+                    stream,
+                    container_name,
+                    model_path,
+                    protocol,
+                    phase="after_restart",
+                    completed_cases=case_index,
+                )
+                if (
+                    before_restart["container_id"] != after_restart["container_id"]
+                    or before_restart["started_at"] == after_restart["started_at"]
+                ):
+                    raise ValueError("model server restart identity differs")
         if tuple(prediction.case_id for prediction in predictions) != tuple(protocol["case_order"]):
             raise ValueError("prediction case order differs")
+        _server_boundary(
+            stream, container_name, model_path, protocol, phase="final", completed_cases=len(cases)
+        )
         summary = score_predictions(cases, tuple(predictions)).to_dict()
         _append(stream, {"event": "summary", "summary": summary})
     result = {

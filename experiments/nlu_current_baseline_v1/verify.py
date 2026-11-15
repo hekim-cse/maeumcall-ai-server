@@ -48,10 +48,13 @@ REQUEST = {
 RUNTIME = {
     "host_port": 18081,
     "cpu_count": 2,
-    "memory_bytes": 4 * 1024**3,
+    "memory_bytes": 10 * 1024**3,
     "context_tokens": 4096,
     "threads": 2,
     "parallel_slots": 1,
+    "restart_interval_cases": 8,
+    "docker_desktop_target_memory_bytes": 12 * 1024**3,
+    "docker_host_min_memory_bytes": 23 * 1024**3 // 2,
 }
 PROTOCOL_FIELDS = {
     "kind",
@@ -276,6 +279,58 @@ def _replay_raw_attempts(
     return observed_names
 
 
+def _check_server_boundary(row: object, phase: str, completed_cases: int) -> None:
+    if type(row) is not dict or set(row) != {
+        "event",
+        "phase",
+        "completed_cases",
+        "running",
+        "oom_killed",
+        "exit_code",
+        "restart_count",
+        "memory_usage",
+        "healthy",
+        "started_at",
+        "container_id",
+        "docker_host_memory_bytes",
+    }:
+        raise ValueError("server boundary fields differ")
+    if (
+        row["event"] != "server_boundary"
+        or row["phase"] != phase
+        or type(row["completed_cases"]) is not int
+        or row["completed_cases"] != completed_cases
+    ):
+        raise ValueError("server boundary order differs")
+    if (
+        row["running"] is not True
+        or row["oom_killed"] is not False
+        or row["healthy"] is not True
+        or type(row["exit_code"]) is not int
+        or row["exit_code"] != 0
+        or type(row["restart_count"]) is not int
+        or row["restart_count"] < 0
+        or type(row["docker_host_memory_bytes"]) is not int
+        or row["docker_host_memory_bytes"] < RUNTIME["docker_host_min_memory_bytes"]
+    ):
+        raise ValueError("server boundary unhealthy or OOM")
+    if (
+        type(row["container_id"]) is not str
+        or re.fullmatch(r"[0-9a-f]{64}", row["container_id"]) is None
+        or type(row["started_at"]) is not str
+        or len(row["started_at"]) > 64
+        or re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z", row["started_at"]) is None
+    ):
+        raise ValueError("server boundary identity differs")
+    usage = row["memory_usage"]
+    if (
+        type(usage) is not str
+        or len(usage) > 64
+        or re.fullmatch(r"[0-9.]+[KMGT]?i?B / [0-9.]+[KMGT]?i?B", usage) is None
+    ):
+        raise ValueError("server boundary memory sample differs")
+
+
 def _check_journal(
     path: Path,
     *,
@@ -290,17 +345,24 @@ def _check_journal(
     if not raw.endswith(b"\n"):
         raise ValueError("journal incomplete")
     rows = [_strict_json(line) for line in raw.splitlines()]
-    if len(rows) != 2 + 2 * len(CASE_ORDER):
+    restart_interval = RUNTIME["restart_interval_cases"]
+    restart_points = tuple(range(restart_interval, len(CASE_ORDER), restart_interval))
+    if len(rows) != 4 + 2 * len(CASE_ORDER) + 2 * len(restart_points):
         raise ValueError("journal call count differs")
     if rows[0] != {"event": "header", "protocol_sha256": protocol_sha}:
         raise ValueError("journal header differs")
+    _check_server_boundary(rows[1], "initial", 0)
+    container_id = rows[1]["container_id"]
+    started_at = rows[1]["started_at"]
+    cursor = 2
     raw_names: set[str] = set()
+    completion_errors = 0
     for index, (case_id, prediction, case) in enumerate(
         zip(CASE_ORDER, predictions, cases, strict=True)
     ):
-        if rows[1 + 2 * index] != {"event": "begin", "case_id": case_id}:
+        if rows[cursor] != {"event": "begin", "case_id": case_id}:
             raise ValueError("journal call order differs")
-        end = rows[2 + 2 * index]
+        end = rows[cursor + 1]
         if type(end) is not dict or set(end) != {"event", "case_id", "prediction", "raw_attempts"}:
             raise ValueError("journal end fields differ")
         if (
@@ -312,10 +374,34 @@ def _check_journal(
         raw_names.update(
             _replay_raw_attempts(case, prediction, end["raw_attempts"], private_dir, request)
         )
-    if rows[-1] != {"event": "summary", "summary": summary}:
+        completion_errors += sum(
+            item["status"] == "transport_error" for item in end["raw_attempts"]
+        )
+        cursor += 2
+        completed_cases = index + 1
+        if completed_cases in restart_points:
+            _check_server_boundary(rows[cursor], "before_restart", completed_cases)
+            _check_server_boundary(rows[cursor + 1], "after_restart", completed_cases)
+            before, after = rows[cursor], rows[cursor + 1]
+            if (
+                before["container_id"] != container_id
+                or after["container_id"] != container_id
+                or before["started_at"] != started_at
+                or after["started_at"] == started_at
+            ):
+                raise ValueError("server planned restart evidence differs")
+            started_at = after["started_at"]
+            cursor += 2
+    _check_server_boundary(rows[cursor], "final", len(CASE_ORDER))
+    if rows[cursor]["container_id"] != container_id or rows[cursor]["started_at"] != started_at:
+        raise ValueError("final server identity differs")
+    cursor += 1
+    if rows[cursor] != {"event": "summary", "summary": summary}:
         raise ValueError("journal summary differs")
     if {item.name for item in private_dir.iterdir()} != raw_names:
         raise ValueError("private raw file inventory differs")
+    if completion_errors:
+        raise ValueError("completion reception errors make result non-publishable")
     return _sha(raw)
 
 

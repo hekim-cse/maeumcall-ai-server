@@ -4,11 +4,32 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
 from evals.structured_nlu.schema import CasePrediction, EvaluationAttempt
 from experiments.nlu_current_baseline_v1 import run as runner
+
+
+def _fake_server(monkeypatch) -> None:
+    monkeypatch.setattr(runner, "verify_container", lambda *_args: None)
+    generation = 0
+
+    def boundary(stream, _name, _model, _protocol, *, phase, completed_cases):
+        nonlocal generation
+        if phase == "after_restart":
+            generation += 1
+        row = {"event": "server_boundary", "phase": phase, "completed_cases": completed_cases}
+        runner._append(stream, row)
+        return {**row, "container_id": "a" * 64, "started_at": str(generation)}
+
+    monkeypatch.setattr(
+        runner,
+        "_server_boundary",
+        boundary,
+    )
+    monkeypatch.setattr(runner.subprocess, "run", lambda *_args, **_kwargs: None)
 
 
 def test_reviewed_input_is_exposed_balanced_development() -> None:
@@ -19,6 +40,10 @@ def test_reviewed_input_is_exposed_balanced_development() -> None:
         f"ai-heldout-ah{i:02}" for i in range(1, 33)
     ]
     assert runner.SCOPE.endswith("development_only")
+    assert runner.RUNTIME["memory_bytes"] == 10 * 1024**3
+    assert runner.RUNTIME["docker_desktop_target_memory_bytes"] == 12 * 1024**3
+    assert runner.RUNTIME["docker_host_min_memory_bytes"] == 23 * 1024**3 // 2
+    assert runner.RUNTIME["restart_interval_cases"] == 8
 
 
 def test_protocol_binds_current_sources_and_reviewed_inputs(monkeypatch, tmp_path: Path) -> None:
@@ -80,10 +105,11 @@ def test_result_contains_only_normalized_predictions(monkeypatch, tmp_path: Path
     reviewed = runner._reviewed()
     protocol = {
         "request_policy": runner.REQUEST,
+        "local_runtime": runner.RUNTIME,
         "case_order": [case.id for case in reviewed.dataset.cases],
     }
     monkeypatch.setattr(runner, "load_protocol", lambda *_args: (protocol, "f" * 64))
-    monkeypatch.setattr(runner.v4, "verify_container", lambda *_args: None)
+    _fake_server(monkeypatch)
     monkeypatch.setattr(runner, "_post_completion", lambda *_args: "{}")
     calls = []
 
@@ -118,11 +144,12 @@ def test_result_contains_only_normalized_predictions(monkeypatch, tmp_path: Path
     assert "prompt" not in saved
     assert "raw" not in saved
     rows = [json.loads(line) for line in journal.read_text(encoding="utf-8").splitlines()]
-    assert len(rows) == 66
+    assert len(rows) == 74
     assert rows[0] == {"event": "header", "protocol_sha256": "f" * 64}
+    assert rows[1] == {"event": "server_boundary", "phase": "initial", "completed_cases": 0}
     assert rows[-1] == {"event": "summary", "summary": result["summary"]}
     assert result["journal_sha256"] == runner._file_sha(journal)
-    assert rows[2]["raw_attempts"] == [
+    assert rows[3]["raw_attempts"] == [
         {
             "attempt": 1,
             "status": "received",
@@ -140,10 +167,11 @@ def test_interrupted_journal_blocks_reexecution(monkeypatch, tmp_path: Path) -> 
     reviewed = runner._reviewed()
     protocol = {
         "request_policy": runner.REQUEST,
+        "local_runtime": runner.RUNTIME,
         "case_order": [case.id for case in reviewed.dataset.cases],
     }
     monkeypatch.setattr(runner, "load_protocol", lambda *_args: (protocol, "f" * 64))
-    monkeypatch.setattr(runner.v4, "verify_container", lambda *_args: None)
+    _fake_server(monkeypatch)
     calls = 0
 
     def interrupted(_case, **_kwargs):
@@ -169,6 +197,7 @@ def test_interrupted_journal_blocks_reexecution(monkeypatch, tmp_path: Path) -> 
     assert private_dir.is_dir()
     assert [json.loads(line)["event"] for line in journal.read_text().splitlines()] == [
         "header",
+        "server_boundary",
         "begin",
     ]
     with pytest.raises(FileExistsError):
@@ -187,38 +216,42 @@ def test_transport_failure_has_bounded_status_without_raw_file(monkeypatch, tmp_
     reviewed = runner._reviewed()
     protocol = {
         "request_policy": runner.REQUEST,
+        "local_runtime": runner.RUNTIME,
         "case_order": [case.id for case in reviewed.dataset.cases],
     }
     monkeypatch.setattr(runner, "load_protocol", lambda *_args: (protocol, "f" * 64))
-    monkeypatch.setattr(runner.v4, "verify_container", lambda *_args: None)
+    _fake_server(monkeypatch)
     monkeypatch.setattr(
         runner, "_post_completion", lambda *_args: (_ for _ in ()).throw(OSError("secret"))
     )
 
+    calls = 0
+
     def fake_case(case, *, endpoint, model_id, policy, completion_post):
-        try:
-            completion_post(endpoint, model_id, [], policy)
-        except OSError:
-            pass
-        return CasePrediction(
-            case_id=case.id,
-            attempts=(EvaluationAttempt(contract_valid=False, latency_ms=1, error_type="OSError"),),
-        )
+        nonlocal calls
+        calls += 1
+        completion_post(endpoint, model_id, [], policy)
+        pytest.fail("completion failure must escape before prediction")
 
     monkeypatch.setattr(runner, "_run_case", fake_case)
     output = tmp_path / "result.json"
     journal = tmp_path / "journal.jsonl"
     private_dir = tmp_path / "raw"
-    runner.run(
-        protocol_path=tmp_path / "protocol.json",
-        model_path=tmp_path / "model.gguf",
-        output=output,
-        journal=journal,
-        private_dir=private_dir,
-        container_name="local-test",
-    )
+    with pytest.raises(runner.CompletionFailure, match="model completion failed: OSError"):
+        runner.run(
+            protocol_path=tmp_path / "protocol.json",
+            model_path=tmp_path / "model.gguf",
+            output=output,
+            journal=journal,
+            private_dir=private_dir,
+            container_name="local-test",
+        )
     rows = [json.loads(line) for line in journal.read_text().splitlines()]
-    assert rows[2]["raw_attempts"] == [
+    assert calls == 1
+    assert not output.exists()
+    assert [row["event"] for row in rows] == ["header", "server_boundary", "begin", "end"]
+    assert rows[3]["status"] == "completion_error"
+    assert rows[3]["raw_attempts"] == [
         {
             "attempt": 1,
             "status": "transport_error",
@@ -229,3 +262,144 @@ def test_transport_failure_has_bounded_status_without_raw_file(monkeypatch, tmp_
     ]
     assert list(private_dir.iterdir()) == []
     assert "secret" not in journal.read_text()
+
+
+def test_live_analyzer_does_not_retry_transport_failure(monkeypatch, tmp_path: Path) -> None:
+    reviewed = runner._reviewed()
+    protocol = {
+        "request_policy": runner.REQUEST,
+        "local_runtime": runner.RUNTIME,
+        "case_order": [case.id for case in reviewed.dataset.cases],
+    }
+    monkeypatch.setattr(runner, "load_protocol", lambda *_args: (protocol, "f" * 64))
+    _fake_server(monkeypatch)
+    calls = 0
+
+    def disconnect(*_args):
+        nonlocal calls
+        calls += 1
+        raise ConnectionResetError("response content must not leak")
+
+    monkeypatch.setattr(runner, "_post_completion", disconnect)
+    output = tmp_path / "result.json"
+    journal = tmp_path / "journal.jsonl"
+    with pytest.raises(runner.CompletionFailure, match="ConnectionResetError"):
+        runner.run(
+            protocol_path=tmp_path / "protocol.json",
+            model_path=tmp_path / "model.gguf",
+            output=output,
+            journal=journal,
+            private_dir=tmp_path / "raw",
+            container_name="local-test",
+        )
+    assert calls == 1
+    assert not output.exists()
+    assert "response content" not in journal.read_text()
+
+
+def test_final_server_failure_prevents_summary_and_result(monkeypatch, tmp_path: Path) -> None:
+    reviewed = runner._reviewed()
+    protocol = {
+        "request_policy": runner.REQUEST,
+        "local_runtime": runner.RUNTIME,
+        "case_order": [case.id for case in reviewed.dataset.cases],
+    }
+    monkeypatch.setattr(runner, "load_protocol", lambda *_args: (protocol, "f" * 64))
+    _fake_server(monkeypatch)
+    original_boundary = runner._server_boundary
+
+    def boundary(stream, name, model, selected_protocol, *, phase, completed_cases):
+        recorded = original_boundary(
+            stream, name, model, selected_protocol, phase=phase, completed_cases=completed_cases
+        )
+        if phase == "final":
+            raise ValueError("model server health failed at boundary")
+        return recorded
+
+    monkeypatch.setattr(runner, "_server_boundary", boundary)
+    monkeypatch.setattr(runner, "_post_completion", lambda *_args: "{}")
+
+    def fake_case(case, *, endpoint, model_id, policy, completion_post):
+        completion_post(endpoint, model_id, [], policy)
+        return CasePrediction(
+            case_id=case.id,
+            attempts=(
+                EvaluationAttempt(contract_valid=False, latency_ms=1, error_type="ValueError"),
+            ),
+        )
+
+    monkeypatch.setattr(runner, "_run_case", fake_case)
+    output = tmp_path / "result.json"
+    journal = tmp_path / "journal.jsonl"
+    with pytest.raises(ValueError, match="health failed"):
+        runner.run(
+            protocol_path=tmp_path / "protocol.json",
+            model_path=tmp_path / "model.gguf",
+            output=output,
+            journal=journal,
+            private_dir=tmp_path / "raw",
+            container_name="local-test",
+        )
+    assert not output.exists()
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    assert rows[-1] == {"event": "server_boundary", "phase": "final", "completed_cases": 32}
+    assert [row["phase"] for row in rows if row["event"] == "server_boundary"] == [
+        "initial",
+        "before_restart",
+        "after_restart",
+        "before_restart",
+        "after_restart",
+        "before_restart",
+        "after_restart",
+        "final",
+    ]
+    assert not any(row["event"] == "summary" for row in rows)
+
+
+def test_oom_boundary_records_failure_before_stopping(monkeypatch, tmp_path: Path) -> None:
+    observed = {
+        "Id": "a" * 64,
+        "State": {
+            "Running": False,
+            "OOMKilled": True,
+            "ExitCode": 137,
+            "StartedAt": "2026-11-16T00:00:00Z",
+        },
+        "RestartCount": 1,
+    }
+    monkeypatch.setattr(runner, "_inspect_container", lambda _name: observed)
+    monkeypatch.setattr(
+        runner.subprocess,
+        "run",
+        lambda *_args, **_kwargs: SimpleNamespace(stdout=str(12 * 1024**3)),
+    )
+    monkeypatch.setattr(
+        runner,
+        "verify_container",
+        lambda *_args: pytest.fail("stopped container must not be verified as healthy"),
+    )
+    journal = tmp_path / "journal.jsonl"
+    with journal.open("x", encoding="utf-8") as stream:
+        with pytest.raises(ValueError, match="health failed"):
+            runner._server_boundary(
+                stream,
+                "local-test",
+                tmp_path / "model.gguf",
+                {"request_policy": runner.REQUEST, "local_runtime": runner.RUNTIME},
+                phase="final",
+                completed_cases=32,
+            )
+    assert json.loads(journal.read_text()) == {
+        "event": "server_boundary",
+        "phase": "final",
+        "completed_cases": 32,
+        "running": False,
+        "oom_killed": True,
+        "exit_code": 137,
+        "restart_count": 1,
+        "container_id": "a" * 64,
+        "started_at": "2026-11-16T00:00:00Z",
+        "docker_host_memory_bytes": 12 * 1024**3,
+        "memory_usage": None,
+        "healthy": False,
+    }
