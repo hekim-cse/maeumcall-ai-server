@@ -123,6 +123,48 @@ def test_first_contract_error_does_not_hide_later_span_error():
     assert result["repair_contract_status"] == "quote_unanchored"
 
 
+@pytest.mark.parametrize(
+    ("change", "expected_error", "expected_anchor"),
+    [
+        ({"event_subject_kind": "not_a_kind"}, "attachment_kind_invalid", "anchored"),
+        ({"target_edge_kind": "not_an_edge"}, "edge_kind_invalid", "anchored"),
+        (
+            {"subject_span": {**SUBJECT, "unknown": "field"}},
+            "quote_fields_invalid",
+            "quote_fields_invalid",
+        ),
+        ({"subject_span": {"clause_index": 2, "quote": ""}}, "quote_blank", "quote_blank"),
+        ({"subject_span": {"clause_index": 2, "quote": " "}}, "quote_blank", "quote_blank"),
+        (
+            {"subject_span": {"clause_index": 2, "quote": " 옆 충전기"}},
+            "quote_blank",
+            "quote_blank",
+        ),
+        (
+            {"subject_span": {"clause_index": 2, "quote": "옆 충전기 "}},
+            "quote_blank",
+            "quote_blank",
+        ),
+    ],
+)
+def test_malformed_graph_fields_keep_finite_independent_error_codes(
+    change, expected_error, expected_anchor
+):
+    result = audit_response(json.dumps({**GRAPH, **change}), _case(), _event(), _label())
+    assert result["anchor_status"]["subject_span"] == expected_anchor
+    assert result["repair_fields"] == []
+    assert result["repair_contract_status"] == expected_error
+    assert result["repair_relation_correct"] is False
+    if "target_edge_kind" in change:
+        assert result["kind_projection"] is None
+
+
+def test_unknown_top_level_graph_field_is_rejected():
+    raw = json.dumps({**GRAPH, "unknown": "field"})
+    with pytest.raises(ValueError, match="raw graph shape differs"):
+        audit_response(raw, _case(), _event(), _label())
+
+
 def test_journal_tamper_fails_before_private_raw_access(tmp_path):
     data = Path("evals/structured_nlu/data/ai_heldout")
     journal = tmp_path / "journal.jsonl"
@@ -160,6 +202,13 @@ def test_frozen_private_raw_offline_audit_if_present():
     assert result["summary"]["raw_subject_exact_nonnull"] == 0
     assert result["summary"]["raw_subject_null_correct"] == 0
     assert all(ord(char) < 128 for char in json.dumps(result["events"], ensure_ascii=False))
+    committed = json.loads(
+        Path(
+            "evals/structured_nlu/data/ai_heldout/as-safety-evidence-graph-v1-posthoc-error-audit.v1.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert result["events"] == committed["events"]
+    assert result["summary"] == committed["summary"]
 
 
 def test_committed_posthoc_report_is_sanitized_and_internally_consistent():
