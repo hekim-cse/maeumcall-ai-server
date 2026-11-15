@@ -5,6 +5,7 @@ import inspect
 
 import pytest
 
+from experiments.as_safety_v2.json_contract import ValidationError
 from experiments.as_safety_v2.quotes import split_clauses
 from experiments.as_safety_v2.source_lattice import (
     generate_source_lattice,
@@ -80,3 +81,10 @@ def test_generator_has_no_reviewed_label_input_and_validates_limits():
     ):
         with pytest.raises(ValueError):
             generate_source_lattice("제품에서 연기가 났어요.", **kwargs)
+
+
+@pytest.mark.parametrize("message", ["", " \t\n "])
+def test_blank_source_is_rejected(message):
+    with pytest.raises(ValidationError) as caught:
+        generate_source_lattice(message)
+    assert (caught.value.code, caught.value.field) == ("source_text_invalid", "user_message")

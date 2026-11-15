@@ -139,6 +139,19 @@ def test_distinct_cue_citing_only_target_cannot_send_observed_hazard_to_general_
     assert decision["route"] == "confirming_safety_status"
 
 
+def test_distinct_cue_must_include_entire_subject_not_a_single_character():
+    false_other = {
+        **CURRENT,
+        "target_edge_kind": "distinct",
+        "target_edge_evidence_span": {"clause_index": 2, "quote": "선"},
+    }
+    decision = decide_with_contract_fallback(
+        json.dumps(false_other, ensure_ascii=False), MESSAGE, EVENT, "observed", **TARGET
+    )
+    assert decision["error_code"] == "distinct_subject_unlinked"
+    assert decision["route"] == "confirming_safety_status"
+
+
 def test_multi_event_aggregation_prioritizes_current_hazard_over_other_product():
     message = (
         "접수할 프린터가 고장 났습니다. 옆 라디오 충전기에서 불꽃이 튀었어요. "
@@ -244,6 +257,22 @@ def test_oracle_event_must_be_source_anchored_and_observed_or_uncertain():
         _validate(CURRENT, event={"clause_index": 2, "quote": "불꽃이 났어요"})
     with pytest.raises(ValidationError, match="occurrence_invalid"):
         _validate(CURRENT, occurrence="nonoccurring")
+
+
+@pytest.mark.parametrize(
+    "field", ["subject_span", "event_subject_evidence_span", "target_edge_evidence_span"]
+)
+@pytest.mark.parametrize("quote", ["", " ", "\t"])
+def test_blank_response_quotes_fail_closed(field, quote):
+    payload = {**CURRENT, field: {"clause_index": 2, "quote": quote}}
+    with pytest.raises(ValidationError) as caught:
+        _validate(payload)
+    assert (caught.value.code, caught.value.field) == ("quote_blank", field)
+    decision = decide_with_contract_fallback(
+        json.dumps(payload, ensure_ascii=False), MESSAGE, EVENT, "observed", **TARGET
+    )
+    assert decision["error_code"] == "quote_blank"
+    assert decision["route"] == "confirming_safety_status"
 
 
 def test_duplicate_json_fields_and_duplicate_quotes_fail_without_echoing_raw():

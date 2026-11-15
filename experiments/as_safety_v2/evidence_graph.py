@@ -188,10 +188,12 @@ def validate_evidence_graph(
             raise ValidationError("edge_consistency_invalid", "target_edge_evidence_span")
     elif not subject_present or spans["target_edge_evidence_span"] is None:
         raise ValidationError("edge_consistency_invalid", "target_edge_kind")
-    elif edge == "distinct" and not _overlaps(
-        spans["target_edge_evidence_span"], spans["subject_span"]
+    elif edge == "distinct" and not (
+        spans["target_edge_evidence_span"]["clause_index"] == spans["subject_span"]["clause_index"]
+        and spans["target_edge_evidence_span"]["start"] <= spans["subject_span"]["start"]
+        and spans["subject_span"]["end"] <= spans["target_edge_evidence_span"]["end"]
     ):
-        # The cue must at least refer to B. This does not prove that B and A
+        # The cue must cite all of B. This does not prove that B and A
         # are semantically distinct; reviewed edge scoring remains necessary.
         raise ValidationError("distinct_subject_unlinked", "target_edge_evidence_span")
     relation = (
