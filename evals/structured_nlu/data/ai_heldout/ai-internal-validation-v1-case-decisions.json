@@ -1,0 +1,262 @@
+{
+  "dataset_sha256": "860e1f5ddf04af30e07f9b6fcb94038d83a390c7784d60bf25fd6f05d0dc966b",
+  "decisions": [
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-01",
+      "case_sha256": "f6e637004225e51531b1ea95b2481199e1451081095668446b05ed312038bf6c",
+      "decision": "accepted",
+      "rationale": "고객센터:a/s 접수: user_action=provide_details, product_type=로봇청소기, symptom=충전대 접촉이 끊겨 충전이 중단됨와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-02",
+      "case_sha256": "ac94ae2d6330aa0b9d8a710dc49493a1a6d9ee883c64e7d807a673ac58f57fa0",
+      "decision": "accepted",
+      "rationale": "수리 접수나 증상 정보가 아니라 결제 후 현금영수증 발급 방법을 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-03",
+      "case_sha256": "0ec2dee723e7917ce409d9b8a7e7d3368e4dece51b56ba1be8d9da2b95291528",
+      "decision": "accepted",
+      "rationale": "고객센터:요금/약정 상담: user_action=provide_details, consultation_goal=휴대전화 약정 종료일 확인, inquiry_type=contract_expiry와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-04",
+      "case_sha256": "e65b6805bba9d02983d324da0f06c59428c19fee688a45876a320e492fd6e5f7",
+      "decision": "accepted",
+      "rationale": "기존 요금·약정 상담 정보가 아니라 신규 회선 개통 서류를 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-05",
+      "case_sha256": "2ef8376fa6c84811f9c0aa34286298d7b03ecf0a9cc8288d1efddeb25f06c027",
+      "decision": "accepted",
+      "rationale": "고객센터:인터넷/통화 문제 문의: user_action=provide_details, scope=specific_location, service_type=mobile_data, symptom=모바일 데이터 연결 표시가 있지만 지도 앱과 웹페이지가 열리지 않음와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-06",
+      "case_sha256": "afb117ae89e0844b8217a787324c128167c832c25619454209e1261a0961ef81",
+      "decision": "accepted",
+      "rationale": "네트워크 장애 정보가 아니라 휴대전화 사진 전송 방법을 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-07",
+      "case_sha256": "9535971e5cea9d9f4870bbe4b180b67db5560c494e20f6b55f8ff1065dc5e14f",
+      "decision": "accepted",
+      "rationale": "교수님:결석 사유 전달: user_action=provide_absence_info, absence_date=다음 주 화요일, absence_reason=가족 행사, class_name=세미나 수업와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-08",
+      "case_sha256": "cc55b82c1a27a0be6e746cbd7da0e394ebe9af00b9f2c900439a64a9da3f7316",
+      "decision": "accepted",
+      "rationale": "결석 사실이나 사유 전달이 아니라 지난 학기 녹화 영상 다운로드를 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-09",
+      "case_sha256": "2ef2b87b804dfbc909c437b4c140a332ef50637e4cd6a380af9b339976996417",
+      "decision": "accepted",
+      "rationale": "교수님:과제 문의: user_action=provide_assignment_info, assignment_topic=이번 발표 과제, question=표지 양식 지정 여부와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-10",
+      "case_sha256": "c512402166451a30a90fdd15dea3173f717ce29903aed9ccef4e83fac79085d8",
+      "decision": "accepted",
+      "rationale": "수업 과제가 아니라 교내 장학금 신청서 제출처를 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-11",
+      "case_sha256": "567105660b2cfce3468b3e51e2ede23805e8a19361faafb05b0717769913a727",
+      "decision": "accepted",
+      "rationale": "교수님:면담 예약: user_action=provide_appointment_info, appointment_purpose=졸업 작품에 사용할 센서 선택 상담, date=목요일, time=오후 4시와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-12",
+      "case_sha256": "ebd70d28952b7a21362b139030c72354201f6995c597cc3d44d5b8b8914a64bb",
+      "decision": "accepted",
+      "rationale": "면담 시각·목적 제시가 아니라 추천서 요청 준비 자료를 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-13",
+      "case_sha256": "ea02d4391a3c68acb460c3a47fa84f1d7520751181443015505fafcbcc05e038",
+      "decision": "accepted",
+      "rationale": "배달:배달 지연 문의: user_action=provide_details, delay_detail=배달 기사님 위치가 30분째 같은 곳으로 표시됨, inquiry_goal=estimated_arrival와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-14",
+      "case_sha256": "3e2b7ea6e2f740741c1e8ef96233f8f23235411ca6fe5574b660cf0e5ea95af2",
+      "decision": "accepted",
+      "rationale": "현재 배달 지연이 아니라 선물 쿠폰 등록 방법을 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-15",
+      "case_sha256": "def7514c95d88d03ca062c4b8b33fa217b2dbe80d2d3af7ca1c8414722ef603b",
+      "decision": "accepted",
+      "rationale": "배달:주문 변경: user_action=provide_details, change_type=menu_option, order_number=C-517, requested_change=떡볶이 맵기를 순한맛으로 변경와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-16",
+      "case_sha256": "cdfd80ce977e7a80b18d213ff5e95244c54d98959520cddd0d4d0efae897a74d",
+      "decision": "accepted",
+      "rationale": "현재 주문 변경이 아니라 적립 포인트 사용 시점을 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-17",
+      "case_sha256": "33eac4088acaf91c1988a3f544bc83a5473613dcf9166d24aebdda6d3162f78d",
+      "decision": "accepted",
+      "rationale": "배달:환불/재배달 문의: user_action=provide_details, issue_detail=음료 컵 뚜껑이 열려 내용물이 흘렀음, issue_type=damaged_or_quality, resolution_preference=redelivery와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-18",
+      "case_sha256": "93b1e15a99bfb40d31004f8ae8679e4fba41334b9f897ffae7562e1e5b13f4b6",
+      "decision": "accepted",
+      "rationale": "잘못 온 음식이나 환불·재배달이 아니라 주문 전 원재료 정보를 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-19",
+      "case_sha256": "a984b6cab4ec717f51f76c229ac3660aa901139854f476a057e1577b3dac95d1",
+      "decision": "accepted",
+      "rationale": "시청:대형폐기물 배출: user_action=provide_details, item_name=책상, quantity=한 개, request_topic=place_and_schedule와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-20",
+      "case_sha256": "45cf4092542c92b6cf581a6a121d45d94356e2e413c16d7af227532c9a4b23b9",
+      "decision": "accepted",
+      "rationale": "대형폐기물 배출이 아니라 헌 옷 수거함 위치를 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-21",
+      "case_sha256": "6a3851d3fd19a404b919ca36d0cccc0fe53596eff21106bc55e1d8ab81177f1c",
+      "decision": "accepted",
+      "rationale": "시청:여권 발급 문의: user_action=provide_details, application_type=first_issue, inquiry_topic=fee와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-22",
+      "case_sha256": "f18e7e071e5f12970914e899ee7880e3ea7a415f42f911902ca7df1052041bef",
+      "decision": "accepted",
+      "rationale": "여권 발급이 아니라 국제운전면허증 신청 방법을 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-23",
+      "case_sha256": "5bff7702b1e594e9247fa37392e1df0125d671be4878337cfad47bfff12e7402",
+      "decision": "accepted",
+      "rationale": "시청:주민등록 등본 문의: user_action=provide_details, applicant_relation=self, document_type=individual_extract, inquiry_topic=fee, issuance_channel=kiosk와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-24",
+      "case_sha256": "3869f854cebd80ad082423df4d151b70bcb66cddce723ac294a6a8dc86a85afe",
+      "decision": "accepted",
+      "rationale": "주민등록 등·초본이 아니라 혼인관계증명서 발급을 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-25",
+      "case_sha256": "956ac737edc166a70688e869c6786b9d1029f20ed26769f56c2b0915d25726d8",
+      "decision": "accepted",
+      "rationale": "예약:미용실 예약: user_action=continue_collecting, date=토요일, service_type=일반 커트, time=오후 3시와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-26",
+      "case_sha256": "74097baef493900f018f8498906756ca9baf79a5c6d840c19cb4a726dc65f9e5",
+      "decision": "accepted",
+      "rationale": "미용실 예약이 아니라 얼굴형에 맞는 스타일 추천을 요청한다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-27",
+      "case_sha256": "b7694cc08824850d84d093b02dabc775aec59de05760cee82d69500cdd048f00",
+      "decision": "accepted",
+      "rationale": "예약:병원 예약: user_action=continue_collecting, date=다음 주 월요일, department=정형외과, time=오후와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-28",
+      "case_sha256": "c7794c6f71d260fc2173a6a9bc9f07b081653e28a1ca185c6155e64f317a582a",
+      "decision": "accepted",
+      "rationale": "새 진료 예약이 아니라 이전 진료의 처방전 재발급을 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-29",
+      "case_sha256": "ff056d0df3540e5604d9fcf3ede8d1b5d2895bea527608942301d72845c3aed2",
+      "decision": "accepted",
+      "rationale": "예약:스터디룸 예약: user_action=continue_collecting, date=일요일, duration=세 시간, party_size=두 명, start_time=오후 1시와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-30",
+      "case_sha256": "1d7941462ec3a983676deb3aa59723ff10d1c326f1d9371fa5e971b4979aa15f",
+      "decision": "accepted",
+      "rationale": "스터디룸 예약이 아니라 프린터 용지 구매 가능 여부를 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-31",
+      "case_sha256": "37e2fb1f4d8ff1fa1a2dfb0459241fb85ed860aa8632cb7c555488aa62fa0086",
+      "decision": "accepted",
+      "rationale": "예약:식당 예약: user_action=continue_collecting, date=일요일, party_size=네 명, time=낮 12시와 나머지 필드 공란을 채택했다. 이 문구는 AI가 채택된 판단을 사례별로 요약했다."
+    },
+    {
+      "adjudicated_at": "2026-11-16T07:28:57+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-val-v01-32",
+      "case_sha256": "270929b862991680a9e97e4f70c06d2ac48feaf16d2084dd11ce275d96c17ed3",
+      "decision": "accepted",
+      "rationale": "식당 예약이 아니라 매장 주문 음식의 배달 가능 여부를 묻는다. 사용자가 이 범위 밖 해석과 user_action=unknown, 전체 필드 공란 초안을 채택했다. 이 사례별 이유 문구는 AI가 작성했다."
+    }
+  ],
+  "kind": "ai_reviewed_internal_case_decisions_v1"
+}
