@@ -1,0 +1,128 @@
+{
+  "kind": "as_safety_relation_oracle_order_v1_development_v1",
+  "protocol_sha256": "eec2b728466c3f3e132dbe493d39ed82cc2c00f0d81204bda532dc1d0e298991",
+  "journal_sha256": "5da313cc52c3b1bd3742e80575b7e78d1871649c74f0058735d6fba645663f3f",
+  "private_raw_count": 36,
+  "summary": {
+    "cases": 17,
+    "events": 18,
+    "requests": 36,
+    "claim_scope": "exposed_ai_authored_owner_oracle_relation_order_development_only",
+    "arms": {
+      "forward": {
+        "relation_correct": 11,
+        "category_denominators": {
+          "observed_current": 8,
+          "uncertain_current": 1,
+          "observed_other": 9
+        },
+        "category_correct": {
+          "observed_current": 8,
+          "uncertain_current": 1,
+          "observed_other": 2
+        },
+        "status_counts": {
+          "validated": 18
+        },
+        "output_distribution": {
+          "current": 16,
+          "other": 2,
+          "unknown": 0
+        },
+        "contract_errors": 0,
+        "response_errors": 0,
+        "route_correct": 11,
+        "route_predictions": {
+          "ES01": "safety_action_required",
+          "ES02": "safety_action_required",
+          "ES03": "safety_action_required",
+          "ES04": "safety_action_required",
+          "ES05": "safety_action_required",
+          "ES06": "safety_action_required",
+          "ES07": "safety_action_required",
+          "ES08": "safety_action_required",
+          "ES09": "safety_action_required",
+          "ES10": "safety_action_required",
+          "ES11": "safety_action_required",
+          "ES12": "collecting_service_request",
+          "ES13": "safety_action_required",
+          "ES14": "safety_action_required",
+          "ES15": "collecting_service_request",
+          "ES16": "safety_action_required",
+          "ES18": "confirming_safety_status"
+        },
+        "es06_route": "safety_action_required",
+        "contrast_pairs_correct": 0,
+        "contrast_pairs": {
+          "ES01/ES09": false,
+          "ES02/ES11": false
+        },
+        "missed_direct_current": 0,
+        "false_direct_other": 6,
+        "request_latency_p50_ms": 2447.182,
+        "request_latency_p95_ms": 4310.06
+      },
+      "reverse": {
+        "relation_correct": 13,
+        "category_denominators": {
+          "observed_current": 8,
+          "uncertain_current": 1,
+          "observed_other": 9
+        },
+        "category_correct": {
+          "observed_current": 4,
+          "uncertain_current": 0,
+          "observed_other": 9
+        },
+        "status_counts": {
+          "validated": 18
+        },
+        "output_distribution": {
+          "current": 4,
+          "other": 14,
+          "unknown": 0
+        },
+        "contract_errors": 0,
+        "response_errors": 0,
+        "route_correct": 12,
+        "route_predictions": {
+          "ES01": "safety_action_required",
+          "ES02": "collecting_service_request",
+          "ES03": "collecting_service_request",
+          "ES04": "safety_action_required",
+          "ES05": "safety_action_required",
+          "ES06": "safety_action_required",
+          "ES07": "collecting_service_request",
+          "ES08": "collecting_service_request",
+          "ES09": "collecting_service_request",
+          "ES10": "collecting_service_request",
+          "ES11": "collecting_service_request",
+          "ES12": "collecting_service_request",
+          "ES13": "collecting_service_request",
+          "ES14": "collecting_service_request",
+          "ES15": "collecting_service_request",
+          "ES16": "collecting_service_request",
+          "ES18": "collecting_service_request"
+        },
+        "es06_route": "safety_action_required",
+        "contrast_pairs_correct": 1,
+        "contrast_pairs": {
+          "ES01/ES09": true,
+          "ES02/ES11": false
+        },
+        "missed_direct_current": 4,
+        "false_direct_other": 0,
+        "request_latency_p50_ms": 2695.796,
+        "request_latency_p95_ms": 3796.601
+      }
+    },
+    "paired": {
+      "both_correct": 6,
+      "both_wrong": 0,
+      "forward_correct_reverse_wrong": 5,
+      "forward_wrong_reverse_correct": 7,
+      "arm_prediction_agreement": 6
+    },
+    "gate_met": false
+  }
+}
