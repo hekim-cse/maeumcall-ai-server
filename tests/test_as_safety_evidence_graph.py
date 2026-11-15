@@ -14,13 +14,18 @@ from experiments.as_safety_v2.evidence_graph import (
 )
 from experiments.as_safety_v2.json_contract import ValidationError
 
-MESSAGE = "접수할 전기포트가 고장 났습니다. 전기포트 전원선에서 연기가 났어요. 옆집 토스터도 고장입니다."
+MESSAGE = (
+    "접수할 전기포트가 고장 났습니다. 전기포트 전원선에서 연기가 났어요. 옆집 토스터도 고장입니다."
+)
 EVENT = {"clause_index": 2, "quote": "연기가 났어요"}
 TARGET = {"product_index": 1, "target_mention": "전기포트"}
 CURRENT = {
     "subject_span": {"clause_index": 2, "quote": "전기포트 전원선"},
     "event_subject_kind": "subject",
-    "event_subject_evidence_span": {"clause_index": 2, "quote": "전기포트 전원선에서 연기가 났어요"},
+    "event_subject_evidence_span": {
+        "clause_index": 2,
+        "quote": "전기포트 전원선에서 연기가 났어요",
+    },
     "target_edge_kind": "part_of",
     "target_edge_evidence_span": {"clause_index": 2, "quote": "전기포트 전원선"},
 }
@@ -74,7 +79,10 @@ def test_distinct_edge_routes_to_general_service_and_uncertain_current_to_confir
     other = {
         **CURRENT,
         "subject_span": {"clause_index": 2, "quote": "옆집 토스터"},
-        "event_subject_evidence_span": {"clause_index": 2, "quote": "옆집 토스터에서 연기가 났어요"},
+        "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "옆집 토스터에서 연기가 났어요",
+        },
         "target_edge_kind": "distinct",
         "target_edge_evidence_span": {"clause_index": 2, "quote": "옆집 토스터"},
     }
@@ -140,7 +148,10 @@ def test_multi_event_aggregation_prioritizes_current_hazard_over_other_product()
     other = {
         "subject_span": {"clause_index": 2, "quote": "옆 라디오 충전기"},
         "event_subject_kind": "subject",
-        "event_subject_evidence_span": {"clause_index": 2, "quote": "옆 라디오 충전기에서 불꽃이 튀었어요"},
+        "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "옆 라디오 충전기에서 불꽃이 튀었어요",
+        },
         "target_edge_kind": "distinct",
         "target_edge_evidence_span": {"clause_index": 2, "quote": "옆 라디오 충전기"},
     }

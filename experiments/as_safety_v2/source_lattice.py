@@ -101,7 +101,9 @@ def generate_source_lattice(
     generated: list[SourceCandidate] = []
     seen: set[tuple[int, int, int]] = set()
     for width in range(1, max_window_tokens + 1):
-        for clause_index, (clause, clause_tokens) in enumerate(zip(clauses, tokens, strict=True), 1):
+        for clause_index, (clause, clause_tokens) in enumerate(
+            zip(clauses, tokens, strict=True), 1
+        ):
             for first in range(len(clause_tokens) - width + 1):
                 start, end = _trim(
                     clause,

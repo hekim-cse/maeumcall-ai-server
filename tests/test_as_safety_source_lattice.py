@@ -47,18 +47,24 @@ def test_bounded_selection_reports_truncation_separately_from_generation():
     bounded = generate_source_lattice(message, max_candidates=1)
     target = _matches(full, "등받이 뒤")[0]
     assert bounded.truncated
-    assert source_candidate_status(
-        bounded,
-        clause_index=target.clause_index,
-        start=target.start,
-        end=target.end,
-    ) == "truncated"
-    assert source_candidate_status(
-        full,
-        clause_index=target.clause_index,
-        start=target.start,
-        end=target.end,
-    ) == "selected"
+    assert (
+        source_candidate_status(
+            bounded,
+            clause_index=target.clause_index,
+            start=target.start,
+            end=target.end,
+        )
+        == "truncated"
+    )
+    assert (
+        source_candidate_status(
+            full,
+            clause_index=target.clause_index,
+            start=target.start,
+            end=target.end,
+        )
+        == "selected"
+    )
     assert source_candidate_status(bounded, clause_index=2, start=999, end=1000) == "not_generated"
 
 
