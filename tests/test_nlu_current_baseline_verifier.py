@@ -131,6 +131,154 @@ def test_complete_artifact_replays_all_32_cases(complete_result, tmp_path):
     assert replay["claim_scope"] == auditor.SCOPE
 
 
+def _valid_unknown_raw(case) -> str:
+    return json.dumps(
+        {
+            "intent": "service_request",
+            "user_action": "unknown",
+            "change_field": None,
+            "fields": {name: None for name in case.labels.fields},
+        },
+        ensure_ascii=False,
+    )
+
+
+def test_valid_contract_raw_replays_to_one_exact_case(complete_result, tmp_path):
+    result, write, journal, private_dir = complete_result
+    reviewed = load_reviewed_ai_heldout(auditor.DATASET, auditor.LEDGER)
+    case = reviewed.dataset.cases[1]
+    assert case.id == "ai-heldout-ah02"
+    assert case.labels.user_action == "unknown"
+    raw = _valid_unknown_raw(case).encode("utf-8")
+    prediction = auditor._run_case(
+        case,
+        endpoint=auditor.REQUEST["endpoint"],
+        model_id=auditor.REQUEST["model_id"],
+        policy=SimpleNamespace(**auditor.REQUEST),
+        completion_post=lambda *_args: raw.decode("utf-8"),
+    )
+    assert len(prediction.attempts) == 1
+    assert prediction.attempts[0].contract_valid is True
+    assert prediction.attempts[0].output.model_dump(mode="json") == {
+        "intent": "service_request",
+        "user_action": "unknown",
+        "change_field": None,
+        "fields": {name: None for name in case.labels.fields},
+    }
+
+    result["predictions"][1] = prediction.model_dump(mode="json")
+    all_predictions = tuple(CasePrediction.model_validate(item) for item in result["predictions"])
+    result["summary"] = score_predictions(reviewed.dataset.cases, all_predictions).to_dict()
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    end = next(row for row in rows if row.get("event") == "end" and row.get("case_id") == case.id)
+    end["prediction"] = result["predictions"][1]
+    end["raw_attempts"] = [
+        {
+            "attempt": 1,
+            "status": "received",
+            "raw_sha256": hashlib.sha256(raw).hexdigest(),
+            "raw_bytes": len(raw),
+            "error_type": None,
+        }
+    ]
+    first = private_dir / f"{case.id}-attempt1.txt"
+    first.write_bytes(raw)
+    first.chmod(0o600)
+    (private_dir / f"{case.id}-attempt2.txt").unlink()
+    rows[-1]["summary"] = result["summary"]
+    journal.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+    )
+    result["journal_sha256"] = hashlib.sha256(journal.read_bytes()).hexdigest()
+
+    replay = auditor.verify(
+        tmp_path / "protocol.json",
+        write(result),
+        journal,
+        private_dir,
+        tmp_path / "model.gguf",
+    )
+    assert replay["summary"]["counts"]["fully_correct_cases"] == 1
+    assert replay["summary"]["counts"]["final_contract_passes"] == 1
+
+
+@pytest.mark.parametrize(
+    ("first_raw", "second_raw", "expected_errors", "final_valid"),
+    [
+        (
+            {"user_action": "invalid_action"},
+            None,
+            ("ValueError", None),
+            True,
+        ),
+        (
+            {"user_action": "invalid_action"},
+            {"fields_extra": "unexpected"},
+            ("ValueError", "StructuredKeyError"),
+            False,
+        ),
+    ],
+)
+def test_live_analyzer_retry_contract_outcomes(first_raw, second_raw, expected_errors, final_valid):
+    reviewed = load_reviewed_ai_heldout(auditor.DATASET, auditor.LEDGER)
+    case = reviewed.dataset.cases[1]
+    valid = json.loads(_valid_unknown_raw(case))
+
+    def payload(change):
+        value = copy.deepcopy(valid)
+        if change is None:
+            return json.dumps(value, ensure_ascii=False)
+        if "fields_extra" in change:
+            value["fields"][change["fields_extra"]] = "x"
+        else:
+            value.update(change)
+        return json.dumps(value, ensure_ascii=False)
+
+    responses = iter((payload(first_raw), payload(second_raw)))
+    prediction = auditor._run_case(
+        case,
+        endpoint=auditor.REQUEST["endpoint"],
+        model_id=auditor.REQUEST["model_id"],
+        policy=SimpleNamespace(**auditor.REQUEST),
+        completion_post=lambda *_args: next(responses),
+    )
+    assert len(prediction.attempts) == 2
+    assert tuple(attempt.error_type for attempt in prediction.attempts) == expected_errors
+    assert prediction.attempts[0].contract_valid is False
+    assert prediction.attempts[-1].contract_valid is final_valid
+    assert (prediction.final_output is not None) is final_valid
+
+
+def test_live_analyzer_normalizes_blank_field_to_null():
+    reviewed = load_reviewed_ai_heldout(auditor.DATASET, auditor.LEDGER)
+    case = reviewed.dataset.cases[0]
+    fields = {
+        name: None if expected is None else expected.accepted_values[0]
+        for name, expected in case.labels.fields.items()
+    }
+    fields["symptom"] = " "
+    raw = json.dumps(
+        {
+            "intent": case.labels.intent,
+            "user_action": case.labels.user_action,
+            "change_field": case.labels.change_field,
+            "fields": fields,
+        },
+        ensure_ascii=False,
+    )
+    prediction = auditor._run_case(
+        case,
+        endpoint=auditor.REQUEST["endpoint"],
+        model_id=auditor.REQUEST["model_id"],
+        policy=SimpleNamespace(**auditor.REQUEST),
+        completion_post=lambda *_args: raw,
+    )
+    assert len(prediction.attempts) == 1
+    assert prediction.attempts[0].contract_valid is True
+    assert prediction.final_output.fields["symptom"] is None
+    assert prediction.final_output.fields["product_type"] == fields["product_type"]
+
+
 def test_completed_result_with_one_missing_completion_is_rejected(complete_result, tmp_path):
     result, write, journal, private_dir = complete_result
     rows = [json.loads(line) for line in journal.read_text().splitlines()]

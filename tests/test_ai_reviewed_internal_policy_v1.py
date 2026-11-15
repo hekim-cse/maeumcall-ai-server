@@ -220,6 +220,8 @@ def test_changed_case_requires_new_case_fingerprint_even_with_new_dataset_sha():
     [
         ("adjudicated_at", "2026-11-16T00:00:00", "timezone"),
         ("rationale", " ", "string_too_short"),
+        ("decision", "rejected", "literal_error"),
+        ("unexpected_field", "value", "extra_forbidden"),
     ],
 )
 def test_case_decisions_require_time_and_reason(field, value, message):

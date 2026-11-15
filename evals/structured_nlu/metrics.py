@@ -209,6 +209,12 @@ def score_predictions(
                     if predicted_present:
                         slot_fp += 1
                         hallucinated += 1
+        else:
+            for expected in case.labels.fields.values():
+                if expected is not None:
+                    gold_present += 1
+                    slot_fn += 1
+                    omitted += 1
 
         if gold_action == "change_detail":
             applicable_change_fields += 1

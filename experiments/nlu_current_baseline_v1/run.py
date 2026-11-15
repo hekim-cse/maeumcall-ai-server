@@ -245,6 +245,12 @@ def verify_container(name: str, model_path: Path, runtime: dict) -> dict:
     return observed
 
 
+def _identity(observed: dict) -> tuple[str, str]:
+    if "container_id" in observed:
+        return observed["container_id"], observed["started_at"]
+    return observed["Id"], observed["State"]["StartedAt"]
+
+
 def _health(endpoint: str, *, deadline_seconds: int = 120) -> bool:
     url = endpoint.rsplit("/v1/", 1)[0] + "/health"
     deadline = time.monotonic() + deadline_seconds
@@ -313,7 +319,9 @@ def _server_boundary(
         raise ValueError("model server health failed at boundary")
     if docker_host_memory_bytes < protocol["local_runtime"]["docker_host_min_memory_bytes"]:
         raise ValueError("Docker host memory is below frozen minimum")
-    verify_container(name, model_path, protocol["local_runtime"])
+    verified = verify_container(name, model_path, protocol["local_runtime"])
+    if _identity(verified) != _identity(boundary):
+        raise ValueError("model server changed while checking boundary")
     return boundary
 
 
@@ -334,16 +342,19 @@ def run(
     if private_dir.resolve().is_relative_to(ROOT):
         raise ValueError("private raw directory must be outside repository")
     protocol, protocol_sha = load_protocol(protocol_path, model_path)
-    verify_container(container_name, model_path, protocol["local_runtime"])
+    initial_container = verify_container(container_name, model_path, protocol["local_runtime"])
     cases = _reviewed().dataset.cases
     policy = SimpleNamespace(**protocol["request_policy"])
     predictions = []
     _private_output_dir(private_dir)
     with journal.open("x", encoding="utf-8") as stream:
         _append(stream, {"event": "header", "protocol_sha256": protocol_sha})
-        _server_boundary(
+        initial_boundary = _server_boundary(
             stream, container_name, model_path, protocol, phase="initial", completed_cases=0
         )
+        if _identity(initial_container) != _identity(initial_boundary):
+            raise ValueError("model server changed before initial boundary")
+        expected_identity = _identity(initial_boundary)
         for case_index, case in enumerate(cases, start=1):
             _append(stream, {"event": "begin", "case_id": case.id})
             raw_attempts = []
@@ -432,6 +443,8 @@ def run(
                     phase="before_restart",
                     completed_cases=case_index,
                 )
+                if _identity(before_restart) != expected_identity:
+                    raise ValueError("model server restarted outside planned boundary")
                 subprocess.run(
                     ("docker", "restart", "--time", "10", container_name),
                     check=True,
@@ -452,11 +465,14 @@ def run(
                     or before_restart["started_at"] == after_restart["started_at"]
                 ):
                     raise ValueError("model server restart identity differs")
+                expected_identity = _identity(after_restart)
         if tuple(prediction.case_id for prediction in predictions) != tuple(protocol["case_order"]):
             raise ValueError("prediction case order differs")
-        _server_boundary(
+        final_boundary = _server_boundary(
             stream, container_name, model_path, protocol, phase="final", completed_cases=len(cases)
         )
+        if _identity(final_boundary) != expected_identity:
+            raise ValueError("model server restarted outside planned boundary")
         summary = score_predictions(cases, tuple(predictions)).to_dict()
         _append(stream, {"event": "summary", "summary": summary})
     result = {

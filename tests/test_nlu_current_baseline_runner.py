@@ -13,8 +13,12 @@ from experiments.nlu_current_baseline_v1 import run as runner
 
 
 def _fake_server(monkeypatch) -> None:
-    monkeypatch.setattr(runner, "verify_container", lambda *_args: None)
     generation = 0
+
+    def verified(*_args):
+        return {"Id": "a" * 64, "State": {"StartedAt": str(generation)}}
+
+    monkeypatch.setattr(runner, "verify_container", verified)
 
     def boundary(stream, _name, _model, _protocol, *, phase, completed_cases):
         nonlocal generation
@@ -30,6 +34,14 @@ def _fake_server(monkeypatch) -> None:
         boundary,
     )
     monkeypatch.setattr(runner.subprocess, "run", lambda *_args, **_kwargs: None)
+
+
+def _failed_prediction(case, *, endpoint, model_id, policy, completion_post):
+    completion_post(endpoint, model_id, [], policy)
+    return CasePrediction(
+        case_id=case.id,
+        attempts=(EvaluationAttempt(contract_valid=False, latency_ms=1, error_type="ValueError"),),
+    )
 
 
 def test_reviewed_input_is_exposed_balanced_development() -> None:
@@ -403,3 +415,125 @@ def test_oom_boundary_records_failure_before_stopping(monkeypatch, tmp_path: Pat
         "memory_usage": None,
         "healthy": False,
     }
+
+
+def test_initial_container_change_prevents_first_model_call(monkeypatch, tmp_path: Path) -> None:
+    protocol = {
+        "request_policy": runner.REQUEST,
+        "local_runtime": runner.RUNTIME,
+        "case_order": [case.id for case in runner._reviewed().dataset.cases],
+    }
+    monkeypatch.setattr(runner, "load_protocol", lambda *_args: (protocol, "f" * 64))
+    _fake_server(monkeypatch)
+    original_boundary = runner._server_boundary
+
+    def changed_boundary(stream, name, model, selected_protocol, *, phase, completed_cases):
+        row = original_boundary(
+            stream, name, model, selected_protocol, phase=phase, completed_cases=completed_cases
+        )
+        return {**row, "started_at": "unexpected"}
+
+    monkeypatch.setattr(runner, "_server_boundary", changed_boundary)
+    monkeypatch.setattr(runner, "_run_case", lambda *_args, **_kwargs: pytest.fail("no call"))
+    output = tmp_path / "result.json"
+    journal = tmp_path / "journal.jsonl"
+    with pytest.raises(ValueError, match="changed before initial boundary"):
+        runner.run(
+            protocol_path=tmp_path / "protocol.json",
+            model_path=tmp_path / "model.gguf",
+            output=output,
+            journal=journal,
+            private_dir=tmp_path / "raw",
+            container_name="local-test",
+        )
+    assert not output.exists()
+    assert [json.loads(line)["event"] for line in journal.read_text().splitlines()] == [
+        "header",
+        "server_boundary",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("changed_phase", "changed_after_cases"),
+    [("before_restart", 16), ("final", 32)],
+)
+def test_unplanned_restart_prevents_result(
+    monkeypatch, tmp_path: Path, changed_phase: str, changed_after_cases: int
+) -> None:
+    protocol = {
+        "request_policy": runner.REQUEST,
+        "local_runtime": runner.RUNTIME,
+        "case_order": [case.id for case in runner._reviewed().dataset.cases],
+    }
+    monkeypatch.setattr(runner, "load_protocol", lambda *_args: (protocol, "f" * 64))
+    _fake_server(monkeypatch)
+    original_boundary = runner._server_boundary
+
+    def changed_boundary(stream, name, model, selected_protocol, *, phase, completed_cases):
+        row = original_boundary(
+            stream, name, model, selected_protocol, phase=phase, completed_cases=completed_cases
+        )
+        if phase == changed_phase and completed_cases == changed_after_cases:
+            return {**row, "started_at": "unexpected"}
+        return row
+
+    monkeypatch.setattr(runner, "_server_boundary", changed_boundary)
+    monkeypatch.setattr(runner, "_post_completion", lambda *_args: "{}")
+    monkeypatch.setattr(runner, "_run_case", _failed_prediction)
+    output = tmp_path / "result.json"
+    journal = tmp_path / "journal.jsonl"
+    with pytest.raises(ValueError, match="restarted outside planned boundary"):
+        runner.run(
+            protocol_path=tmp_path / "protocol.json",
+            model_path=tmp_path / "model.gguf",
+            output=output,
+            journal=journal,
+            private_dir=tmp_path / "raw",
+            container_name="local-test",
+        )
+    assert not output.exists()
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    assert sum(row["event"] == "end" for row in rows) == changed_after_cases
+    assert rows[-1]["event"] == "server_boundary"
+    assert not any(row["event"] == "summary" for row in rows)
+
+
+def test_boundary_rejects_container_change_between_inspections(monkeypatch, tmp_path: Path) -> None:
+    observed = {
+        "Id": "a" * 64,
+        "State": {
+            "Running": True,
+            "OOMKilled": False,
+            "ExitCode": 0,
+            "StartedAt": "2026-11-16T00:00:00Z",
+        },
+        "RestartCount": 0,
+    }
+    monkeypatch.setattr(runner, "_inspect_container", lambda _name: observed)
+
+    def docker_command(args, **_kwargs):
+        if args[1] == "info":
+            return SimpleNamespace(stdout=str(12 * 1024**3))
+        return SimpleNamespace(stdout="1GiB / 10GiB")
+
+    monkeypatch.setattr(runner.subprocess, "run", docker_command)
+    monkeypatch.setattr(runner, "_health", lambda _endpoint: True)
+    monkeypatch.setattr(
+        runner,
+        "verify_container",
+        lambda *_args: {**observed, "Id": "b" * 64},
+    )
+    journal = tmp_path / "journal.jsonl"
+    with journal.open("x", encoding="utf-8") as stream:
+        with pytest.raises(ValueError, match="changed while checking boundary"):
+            runner._server_boundary(
+                stream,
+                "local-test",
+                tmp_path / "model.gguf",
+                {"request_policy": runner.REQUEST, "local_runtime": runner.RUNTIME},
+                phase="final",
+                completed_cases=32,
+            )
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    assert len(rows) == 1
+    assert rows[0]["event"] == "server_boundary"
