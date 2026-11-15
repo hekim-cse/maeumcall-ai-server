@@ -44,10 +44,21 @@ REQUEST = {
     "seed": 0,
 }
 PROTOCOL_KEYS = {
-    "kind", "claim_scope", "case_order", "event_order", "arm_order",
-    "frozen_code_commit", "input_hashes", "source_manifest", "model_sha256",
-    "server_image_digest", "request_policy", "local_runtime", "retry_policy",
-    "private_output", "route_policy",
+    "kind",
+    "claim_scope",
+    "case_order",
+    "event_order",
+    "arm_order",
+    "frozen_code_commit",
+    "input_hashes",
+    "source_manifest",
+    "model_sha256",
+    "server_image_digest",
+    "request_policy",
+    "local_runtime",
+    "retry_policy",
+    "private_output",
+    "route_policy",
 }
 INPUTS = {
     "dataset": DATASET,
@@ -62,7 +73,11 @@ ROUTE_POLICY = {
     "uncertain_current": "confirming_safety_status",
     "observed_other": "collecting_service_request",
     "unknown_or_failed": "confirming_safety_status",
-    "priority": ["safety_action_required", "confirming_safety_status", "collecting_service_request"],
+    "priority": [
+        "safety_action_required",
+        "confirming_safety_status",
+        "collecting_service_request",
+    ],
     "multi_event_example": "ES06: observed current takes priority over other or failed event",
 }
 CASE_ORDER = tuple(f"ES{i:02}" for i in range(1, 21))
@@ -79,9 +94,17 @@ REQUIRED_SOURCES = {
     "experiments/as_safety_relation_oracle_order_v1/verify.py",
 }
 STAGE_KEYS = {
-    "called", "status", "skip_reason", "error_code", "error_field",
-    "finish_reason", "latency_ms", "request_latency_ms", "raw_sha256",
-    "raw_bytes", "relation",
+    "called",
+    "status",
+    "skip_reason",
+    "error_code",
+    "error_field",
+    "finish_reason",
+    "latency_ms",
+    "request_latency_ms",
+    "raw_sha256",
+    "raw_bytes",
+    "relation",
 }
 SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
@@ -90,8 +113,14 @@ RELATIONS = {"current", "other", "unknown"}
 ARMS = ("forward", "reverse")
 ROUTES = {"safety_action_required", "confirming_safety_status", "collecting_service_request"}
 TRANSPORT_ERRORS = {
-    "redirect", "request_too_large", "response_too_large", "http_status",
-    "http_error", "network_error", "timeout", "invalid_response_json",
+    "redirect",
+    "request_too_large",
+    "response_too_large",
+    "http_status",
+    "http_error",
+    "network_error",
+    "timeout",
+    "invalid_response_json",
     "response_fields_invalid",
 }
 
@@ -181,9 +210,12 @@ def _read_raw(stage: dict, path: Path) -> str | None:
             raise ValueError("unexpected private raw response")
         return None
     if (
-        type(sha) is not str or not SHA_RE.fullmatch(sha)
-        or type(size) is not int or not 0 < size <= 1_000_000
-        or path.is_symlink() or not path.is_file()
+        type(sha) is not str
+        or not SHA_RE.fullmatch(sha)
+        or type(size) is not int
+        or not 0 < size <= 1_000_000
+        or path.is_symlink()
+        or not path.is_file()
         or stat.S_IMODE(path.stat().st_mode) != 0o600
     ):
         raise ValueError("private raw metadata differs")
@@ -207,8 +239,10 @@ def _route(events: list[dict], relations: list[str | None], *, failed: bool) -> 
         return "safety_action_required"
     if failed or any(
         event["occurrence"] != "nonoccurring"
-        and (relation in (None, "unknown") or
-             (event["occurrence"] == "uncertain" and relation == "current"))
+        and (
+            relation in (None, "unknown")
+            or (event["occurrence"] == "uncertain" and relation == "current")
+        )
         for event, relation in zip(events, relations, strict=True)
     ):
         return "confirming_safety_status"
@@ -262,12 +296,17 @@ def check_protocol(path: Path, model_path: Path, cases: list[dict]) -> tuple[dic
         for index, (key, _, _, _) in enumerate(selected)
     ]
     if (
-        type(commit) is not str or not COMMIT_RE.fullmatch(commit)
-        or protocol["kind"] != KIND or protocol["claim_scope"] != SCOPE
+        type(commit) is not str
+        or not COMMIT_RE.fullmatch(commit)
+        or protocol["kind"] != KIND
+        or protocol["claim_scope"] != SCOPE
         or protocol["case_order"] != list(dict.fromkeys(case_id for _, case_id, _, _ in selected))
-        or protocol["event_order"] != event_order or protocol["arm_order"] != arm_order
-        or protocol["model_sha256"] != MODEL_SHA or protocol["server_image_digest"] != IMAGE
-        or protocol["request_policy"] != REQUEST or protocol["local_runtime"] != RUNTIME
+        or protocol["event_order"] != event_order
+        or protocol["arm_order"] != arm_order
+        or protocol["model_sha256"] != MODEL_SHA
+        or protocol["server_image_digest"] != IMAGE
+        or protocol["request_policy"] != REQUEST
+        or protocol["local_runtime"] != RUNTIME
         or protocol["retry_policy"] != "no_retry_manual_audit_on_interruption"
         or protocol["private_output"] != "outside_repository_mode_0700_files_0600"
         or protocol["route_policy"] != ROUTE_POLICY
@@ -281,8 +320,10 @@ def check_protocol(path: Path, model_path: Path, cases: list[dict]) -> tuple[dic
     for relative, expected in manifest.items():
         frozen = _frozen(commit, relative)
         if (
-            type(expected) is not str or not SHA_RE.fullmatch(expected)
-            or _sha(frozen) != expected or (ROOT / relative).read_bytes() != frozen
+            type(expected) is not str
+            or not SHA_RE.fullmatch(expected)
+            or _sha(frozen) != expected
+            or (ROOT / relative).read_bytes() != frozen
         ):
             raise ValueError(f"source manifest differs: {relative}")
     hashes = protocol["input_hashes"]
@@ -292,8 +333,10 @@ def check_protocol(path: Path, model_path: Path, cases: list[dict]) -> tuple[dic
         frozen = _frozen(commit, source.relative_to(ROOT).as_posix())
         expected = hashes[key]
         if (
-            type(expected) is not str or not SHA_RE.fullmatch(expected)
-            or _sha(frozen) != expected or source.read_bytes() != frozen
+            type(expected) is not str
+            or not SHA_RE.fullmatch(expected)
+            or _sha(frozen) != expected
+            or source.read_bytes() != frozen
         ):
             raise ValueError(f"input manifest differs: {key}")
     try:
@@ -310,7 +353,8 @@ def audit_stage(stage: dict, path: Path) -> dict:
     if type(stage) is not dict or set(stage) != STAGE_KEYS:
         raise ValueError("stage fields differ")
     if (
-        stage["called"] is not True or stage["skip_reason"] is not None
+        stage["called"] is not True
+        or stage["skip_reason"] is not None
         or stage["status"] not in {"validated", "contract_error", "response_error"}
         or not _duration(stage["latency_ms"])
         or not _duration(stage["request_latency_ms"])
@@ -326,20 +370,32 @@ def audit_stage(stage: dict, path: Path) -> dict:
     finish = stage["finish_reason"]
     if finish is None:
         if (
-            raw is not None or stage["status"] != "response_error"
-            or code not in TRANSPORT_ERRORS or field is not None
+            raw is not None
+            or stage["status"] != "response_error"
+            or code not in TRANSPORT_ERRORS
+            or field is not None
             or stage["relation"] is not None
         ):
             raise ValueError("transport result differs")
-        return {"status": "response_error", "relation": None, "request_latency_ms": stage["request_latency_ms"]}
+        return {
+            "status": "response_error",
+            "relation": None,
+            "request_latency_ms": stage["request_latency_ms"],
+        }
     if finish == "length":
         if (
-            raw is None or stage["status"] != "response_error"
-            or code != "finish_length" or field is not None
+            raw is None
+            or stage["status"] != "response_error"
+            or code != "finish_length"
+            or field is not None
             or stage["relation"] is not None
         ):
             raise ValueError("truncated response result differs")
-        return {"status": "response_error", "relation": None, "request_latency_ms": stage["request_latency_ms"]}
+        return {
+            "status": "response_error",
+            "relation": None,
+            "request_latency_ms": stage["request_latency_ms"],
+        }
     if finish != "stop" or raw is None:
         raise ValueError("response finish differs")
     try:
@@ -351,13 +407,23 @@ def audit_stage(stage: dict, path: Path) -> dict:
             or stage["relation"] is not None
         ):
             raise ValueError("contract result differs") from None
-        return {"status": "contract_error", "relation": None, "request_latency_ms": stage["request_latency_ms"]}
+        return {
+            "status": "contract_error",
+            "relation": None,
+            "request_latency_ms": stage["request_latency_ms"],
+        }
     if (
-        stage["status"] != "validated" or code is not None or field is not None
+        stage["status"] != "validated"
+        or code is not None
+        or field is not None
         or stage["relation"] != relation
     ):
         raise ValueError("validated relation differs")
-    return {"status": "validated", "relation": relation, "request_latency_ms": stage["request_latency_ms"]}
+    return {
+        "status": "validated",
+        "relation": relation,
+        "request_latency_ms": stage["request_latency_ms"],
+    }
 
 
 def _routes(audited: dict[tuple[str, str], dict], cases: list[dict], arm: str) -> dict[str, str]:
@@ -392,7 +458,14 @@ def summarize(audited: dict[tuple[str, str], dict], cases: list[dict]) -> dict:
     expected = {(key, arm) for key, _, _, _ in selected for arm in ARMS}
     if set(audited) != expected:
         raise ValueError("event/arm denominator differs")
-    result = {"event": "summary", "cases": 17, "events": 18, "requests": 36, "claim_scope": SCOPE, "arms": {}}
+    result = {
+        "event": "summary",
+        "cases": 17,
+        "events": 18,
+        "requests": 36,
+        "claim_scope": SCOPE,
+        "arms": {},
+    }
     correct_by_arm = {}
     for arm in ARMS:
         category_correct = dict.fromkeys(CATEGORIES, 0)
@@ -416,12 +489,17 @@ def summarize(audited: dict[tuple[str, str], dict], cases: list[dict]) -> dict:
                 routes[case_id] == case_map[case_id]["expected_route"]
                 and all(correct[key] for key, _, item, _ in selected if item["id"] == case_id)
                 for case_id in (first, second)
-            ) for first, second in CONTRAST_PAIRS
+            )
+            for first, second in CONTRAST_PAIRS
         }
         latencies = sorted(audited[(key, arm)]["request_latency_ms"] for key, _, _, _ in selected)
         result["arms"][arm] = {
             "relation_correct": sum(correct.values()),
-            "category_denominators": {"observed_current": 8, "uncertain_current": 1, "observed_other": 9},
+            "category_denominators": {
+                "observed_current": 8,
+                "uncertain_current": 1,
+                "observed_other": 9,
+            },
             "category_correct": category_correct,
             "status_counts": dict(sorted(status_counts.items())),
             "output_distribution": outputs,
@@ -434,14 +512,16 @@ def summarize(audited: dict[tuple[str, str], dict], cases: list[dict]) -> dict:
             "contrast_pairs": pair_detail,
             "missed_direct_current": sum(
                 case_map[key]["expected_route"] == "safety_action_required"
-                and route != "safety_action_required" for key, route in routes.items()
+                and route != "safety_action_required"
+                for key, route in routes.items()
             ),
             "false_direct_other": sum(
                 case_map[key]["expected_route"] == "collecting_service_request"
-                and route == "safety_action_required" for key, route in routes.items()
+                and route == "safety_action_required"
+                for key, route in routes.items()
             ),
             "request_latency_p50_ms": round(statistics.median(latencies), 3),
-            "request_latency_p95_ms": round(latencies[math.ceil(len(latencies) * .95) - 1], 3),
+            "request_latency_p95_ms": round(latencies[math.ceil(len(latencies) * 0.95) - 1], 3),
         }
         correct_by_arm[arm] = correct
     forward, reverse = correct_by_arm["forward"], correct_by_arm["reverse"]
@@ -457,14 +537,17 @@ def summarize(audited: dict[tuple[str, str], dict], cases: list[dict]) -> dict:
             for key in forward
         ),
     }
-    result["gate_met"] = all(
-        arm_summary["category_correct"] == arm_summary["category_denominators"]
-        and arm_summary["route_correct"] == 17
-        and arm_summary["contrast_pairs_correct"] == 2
-        and arm_summary["contract_errors"] == 0
-        and arm_summary["response_errors"] == 0
-        for arm_summary in result["arms"].values()
-    ) and result["paired"]["arm_prediction_agreement"] == 18
+    result["gate_met"] = (
+        all(
+            arm_summary["category_correct"] == arm_summary["category_denominators"]
+            and arm_summary["route_correct"] == 17
+            and arm_summary["contrast_pairs_correct"] == 2
+            and arm_summary["contract_errors"] == 0
+            and arm_summary["response_errors"] == 0
+            for arm_summary in result["arms"].values()
+        )
+        and result["paired"]["arm_prediction_agreement"] == 18
+    )
     return result
 
 
@@ -518,10 +601,13 @@ def main() -> None:
     parser.add_argument("--private-dir", required=True, type=Path)
     parser.add_argument("--model-path", required=True, type=Path)
     args = parser.parse_args()
-    print(json.dumps(
-        verify(args.protocol, args.journal, args.private_dir, model_path=args.model_path),
-        ensure_ascii=False, indent=2,
-    ))
+    print(
+        json.dumps(
+            verify(args.protocol, args.journal, args.private_dir, model_path=args.model_path),
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

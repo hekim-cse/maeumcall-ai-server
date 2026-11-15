@@ -60,7 +60,10 @@ def test_route_replay_preserves_safety_precedence():
     assert auditor._route(events, ["current", None], failed=True) == "safety_action_required"
     assert auditor._route(events, ["other", None], failed=True) == "confirming_safety_status"
     assert auditor._route(events, ["other", "other"], failed=False) == "collecting_service_request"
-    assert auditor._route([{"occurrence": "uncertain"}], ["current"], failed=False) == "confirming_safety_status"
+    assert (
+        auditor._route([{"occurrence": "uncertain"}], ["current"], failed=False)
+        == "confirming_safety_status"
+    )
 
 
 @pytest.fixture
@@ -89,22 +92,36 @@ def complete_journal(tmp_path, monkeypatch):
             path.write_bytes(raw)
             os.chmod(path, 0o600)
             stage = {
-                "called": True, "status": "validated", "skip_reason": None,
-                "error_code": None, "error_field": None, "finish_reason": "stop",
-                "latency_ms": 3.0, "request_latency_ms": 2.0,
-                "raw_sha256": hashlib.sha256(raw).hexdigest(), "raw_bytes": len(raw),
+                "called": True,
+                "status": "validated",
+                "skip_reason": None,
+                "error_code": None,
+                "error_field": None,
+                "finish_reason": "stop",
+                "latency_ms": 3.0,
+                "request_latency_ms": 2.0,
+                "raw_sha256": hashlib.sha256(raw).hexdigest(),
+                "raw_bytes": len(raw),
                 "relation": relation,
             }
-            rows.extend((
-                {"event": "begin", "event_id": event_id, "arm": arm},
-                {"event": "end", "event_id": event_id, "arm": arm, "stage": stage},
-            ))
-            audited[(event_id, arm)] = {"status": "validated", "relation": relation, "request_latency_ms": 2.0}
+            rows.extend(
+                (
+                    {"event": "begin", "event_id": event_id, "arm": arm},
+                    {"event": "end", "event_id": event_id, "arm": arm, "stage": stage},
+                )
+            )
+            audited[(event_id, arm)] = {
+                "status": "validated",
+                "relation": relation,
+                "request_latency_ms": 2.0,
+            }
     rows.append(auditor.summarize(audited, cases))
     journal = tmp_path / "journal.jsonl"
 
     def write():
-        journal.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8")
+        journal.write_text(
+            "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+        )
 
     write()
     return rows, write, journal, private
@@ -159,8 +176,12 @@ def test_contract_error_raw_replayed_in_full_journal(complete_journal, raw, code
     path.write_bytes(raw)
     stage = row["stage"]
     stage.update(
-        status="contract_error", error_code=code, error_field=field,
-        raw_sha256=hashlib.sha256(raw).hexdigest(), raw_bytes=len(raw), relation=None,
+        status="contract_error",
+        error_code=code,
+        error_field=field,
+        raw_sha256=hashlib.sha256(raw).hexdigest(),
+        raw_bytes=len(raw),
+        relation=None,
     )
     # Rebuild the published aggregate after the raw contract error.
     cases = auditor.load_cases(auditor.DATASET)
@@ -170,13 +191,17 @@ def test_contract_error_raw_replayed_in_full_journal(complete_journal, raw, code
             "relation": item["stage"]["relation"],
             "request_latency_ms": item["stage"]["request_latency_ms"],
         }
-        for item in rows if item["event"] == "end"
+        for item in rows
+        if item["event"] == "end"
     }
     rows[-1] = auditor.summarize(audited, cases)
     write()
     result = auditor.verify(auditor.DATASET, journal, private, model_path=journal)
     assert result["summary"]["arms"]["forward"]["contract_errors"] == 1
-    assert result["summary"]["arms"]["forward"]["route_predictions"]["ES01"] == "confirming_safety_status"
+    assert (
+        result["summary"]["arms"]["forward"]["route_predictions"]["ES01"]
+        == "confirming_safety_status"
+    )
     assert result["summary"]["gate_met"] is False
     stage["error_code"] = "incorrect_code"
     write()

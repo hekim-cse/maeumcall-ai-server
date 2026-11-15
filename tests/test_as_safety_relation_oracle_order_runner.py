@@ -30,8 +30,10 @@ def test_eligible_event_order_and_first_arm_balance():
         for assignment, (_, _, _, gold) in zip(order, selected, strict=True)
     )
     assert first == {
-        ("current", "forward"): 5, ("current", "reverse"): 4,
-        ("other", "forward"): 4, ("other", "reverse"): 5,
+        ("current", "forward"): 5,
+        ("current", "reverse"): 4,
+        ("other", "forward"): 4,
+        ("other", "reverse"): 5,
     }
 
 
@@ -49,7 +51,11 @@ def test_prompt_contains_oracle_b_without_scoring_labels_and_order_only_changes_
     assert reverse[0]["content"].split("\n")[0] == common
     assert forward[0]["content"].split("\n")[1:] == list(runner.DEFINITIONS.values())
     assert reverse[0]["content"].split("\n")[1:] == list(reversed(runner.DEFINITIONS.values()))
-    assert runner.relation_schema()["properties"]["relation"]["enum"] == ["current", "other", "unknown"]
+    assert runner.relation_schema()["properties"]["relation"]["enum"] == [
+        "current",
+        "other",
+        "unknown",
+    ]
 
 
 @pytest.mark.parametrize(
@@ -72,7 +78,12 @@ def test_contract_failure_keeps_raw_and_one_call(tmp_path, raw, code):
         return Completion(raw, "stop")
 
     stage = runner.call_event(
-        event_id, case, gold, "forward", RequestPolicy(), private,
+        event_id,
+        case,
+        gold,
+        "forward",
+        RequestPolicy(),
+        private,
         completion_call=fake_completion,
     )
     assert len(calls) == 1
@@ -97,7 +108,12 @@ def test_transport_failure_is_single_call_and_safe_confirmation(tmp_path):
         raise TransportError("connection_error")
 
     stage = runner.call_event(
-        event_id, case, gold, "forward", RequestPolicy(), private,
+        event_id,
+        case,
+        gold,
+        "forward",
+        RequestPolicy(),
+        private,
         completion_call=fail,
     )
     assert len(calls) == 1
@@ -115,13 +131,17 @@ def test_es06_safety_priority_and_paired_summary():
     for event_id, _, _, gold in runner.eligible_events(cases):
         for arm in runner.ARMS:
             relation = gold["owner_to_target"]
-            rows.append({
-                "event_id": event_id, "arm": arm,
-                "stage": {
-                    "status": "validated", "relation": relation,
-                    "request_latency_ms": 1.0,
-                },
-            })
+            rows.append(
+                {
+                    "event_id": event_id,
+                    "arm": arm,
+                    "stage": {
+                        "status": "validated",
+                        "relation": relation,
+                        "request_latency_ms": 1.0,
+                    },
+                }
+            )
     # Even if ES06's other-source event is invalid, the observed current event
     # still forces safety action in that case.
     for row in rows:
@@ -144,8 +164,13 @@ def test_all_correct_oracle_gates_only_this_development_diagnostic():
     cases = _cases()
     rows = [
         {
-            "event_id": event_id, "arm": arm,
-            "stage": {"status": "validated", "relation": gold["owner_to_target"], "request_latency_ms": 1.0},
+            "event_id": event_id,
+            "arm": arm,
+            "stage": {
+                "status": "validated",
+                "relation": gold["owner_to_target"],
+                "request_latency_ms": 1.0,
+            },
         }
         for event_id, _, _, gold in runner.eligible_events(cases)
         for arm in runner.ARMS
@@ -154,7 +179,9 @@ def test_all_correct_oracle_gates_only_this_development_diagnostic():
     assert summary["gate_met"] is True
     assert summary["claim_scope"] == runner.SCOPE
     assert summary["arms"]["forward"]["category_correct"] == {
-        "observed_current": 8, "uncertain_current": 1, "observed_other": 9,
+        "observed_current": 8,
+        "uncertain_current": 1,
+        "observed_other": 9,
     }
 
 
@@ -163,7 +190,9 @@ def test_protocol_contains_frozen_order_and_refuses_uncommitted_or_dirty(tmp_pat
     cases = _cases()
     sources = set(runner.REQUIRED_SOURCES)
     monkeypatch.setattr(runner, "_source_paths", lambda _: sources)
-    monkeypatch.setattr(runner.v4, "_committed", lambda _commit, relative: (runner.ROOT / relative).read_bytes())
+    monkeypatch.setattr(
+        runner.v4, "_committed", lambda _commit, relative: (runner.ROOT / relative).read_bytes()
+    )
     protocol = runner.build_protocol(commit, cases)
     assert set(protocol) == runner.PROTOCOL_FIELDS
     assert len(protocol["event_order"]) == 18

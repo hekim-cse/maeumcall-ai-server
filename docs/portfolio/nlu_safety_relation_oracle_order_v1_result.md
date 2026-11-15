@@ -8,6 +8,8 @@
 
 [동결 프로토콜](../../evals/structured_nlu/data/ai_heldout/as-safety-relation-oracle-order-v1-development-protocol.v1.json)은 모델·서버 이미지·입력·코드 해시, 36회 호출 순서, 재시도 없음, 집계와 안전 경로 규칙을 기록한다. 프로토콜 SHA-256은 `eec2b728466c3f3e132dbe493d39ed82cc2c00f0d81204bda532dc1d0e298991`, 동결 코드 커밋은 `98114c8c1de19e279fa4cf6ce3ac33cbd55741cc`다. [공개 저널](../../evals/structured_nlu/data/ai_heldout/as-safety-relation-oracle-order-v1-development-journal.v1.jsonl)의 SHA-256은 `5da313cc52c3b1bd3742e80575b7e78d1871649c74f0058735d6fba645663f3f`다. [독립 검증기](../../experiments/as_safety_relation_oracle_order_v1/verify.py)가 저장소 밖 원시 응답 **36개**의 해시·권한, 호출 순서, JSON 계약, 사건별 관계와 사례별 경로, 요약을 재계산해 [검증 기록](../../evals/structured_nlu/data/ai_heldout/as-safety-relation-oracle-order-v1-development-verification.v1.json)과 일치했다. 원시 응답은 공개 자료에 포함하지 않는다.
 
+모델 실행 후 CI 형식 검사를 위해 새 Python 파일 4개의 공백·줄바꿈만 정리했다. 네 파일의 Python AST가 동결 커밋과 일치함을 확인했고, 프로토콜이 커밋된 `dd72f15`의 별도 작업 트리에서 보존한 원시 응답 36개를 다시 독립 검증했다. 최신 체크아웃의 파일 해시는 동결 시점과 다르므로 원본 평가를 재검증할 때는 `dd72f15`를 사용한다.
+
 ## 실모델 결과
 
 | 항목 | `current → other → unknown` | `unknown → other → current` |

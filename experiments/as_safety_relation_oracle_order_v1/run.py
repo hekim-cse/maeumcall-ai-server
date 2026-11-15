@@ -39,7 +39,11 @@ ROUTE_POLICY = {
     "uncertain_current": "confirming_safety_status",
     "observed_other": "collecting_service_request",
     "unknown_or_failed": "confirming_safety_status",
-    "priority": ["safety_action_required", "confirming_safety_status", "collecting_service_request"],
+    "priority": [
+        "safety_action_required",
+        "confirming_safety_status",
+        "collecting_service_request",
+    ],
     "multi_event_example": "ES06: observed current takes priority over other or failed event",
 }
 INPUTS = {
@@ -47,10 +51,21 @@ INPUTS = {
     "relation_method": ROOT / "docs/portfolio/nlu_safety_relation_oracle_order_v1_method.md",
 }
 PROTOCOL_FIELDS = {
-    "kind", "claim_scope", "case_order", "event_order", "arm_order",
-    "frozen_code_commit", "input_hashes", "source_manifest", "model_sha256",
-    "server_image_digest", "request_policy", "local_runtime", "retry_policy",
-    "private_output", "route_policy",
+    "kind",
+    "claim_scope",
+    "case_order",
+    "event_order",
+    "arm_order",
+    "frozen_code_commit",
+    "input_hashes",
+    "source_manifest",
+    "model_sha256",
+    "server_image_digest",
+    "request_policy",
+    "local_runtime",
+    "retry_policy",
+    "private_output",
+    "route_policy",
 }
 REQUIRED_SOURCES = v4.REQUIRED_V4_SOURCES | {
     "experiments/as_safety_relation_oracle_order_v1/__init__.py",
@@ -62,7 +77,8 @@ REQUIRED_SOURCES = v4.REQUIRED_V4_SOURCES | {
 def _source_paths(commit: str) -> set[str]:
     paths: set[str] = set()
     for prefix in (
-        "experiments/as_safety_v2", "experiments/as_safety_v4",
+        "experiments/as_safety_v2",
+        "experiments/as_safety_v4",
         "experiments/as_safety_relation_oracle_order_v1",
     ):
         output = v4._git("ls-tree", "-r", "--name-only", commit, "--", prefix)
@@ -80,10 +96,19 @@ def eligible_events(cases: list[dict]) -> list[tuple[str, int, dict, dict]]:
             if gold["occurrence"] == "nonoccurring" or gold["hazard_owner_span"] is None:
                 continue
             selected.append((f"{case['id']}-{index}", index, case, gold))
-    counts = Counter(f"{gold['occurrence']}_{gold['owner_to_target']}" for _, _, _, gold in selected)
-    if len(selected) != 18 or len({case["id"] for _, _, case, _ in selected}) != 17 or counts != {
-        "observed_current": 8, "uncertain_current": 1, "observed_other": 9,
-    }:
+    counts = Counter(
+        f"{gold['occurrence']}_{gold['owner_to_target']}" for _, _, _, gold in selected
+    )
+    if (
+        len(selected) != 18
+        or len({case["id"] for _, _, case, _ in selected}) != 17
+        or counts
+        != {
+            "observed_current": 8,
+            "uncertain_current": 1,
+            "observed_other": 9,
+        }
+    ):
         raise ValueError("reviewed event denominator differs")
     return selected
 
@@ -101,8 +126,10 @@ def arm_order(cases: list[dict]) -> list[dict]:
 
 def relation_schema() -> dict:
     return {
-        "type": "object", "properties": {"relation": {"type": "string", "enum": list(RELATIONS)}},
-        "required": ["relation"], "additionalProperties": False,
+        "type": "object",
+        "properties": {"relation": {"type": "string", "enum": list(RELATIONS)}},
+        "required": ["relation"],
+        "additionalProperties": False,
     }
 
 
@@ -164,12 +191,18 @@ def build_protocol(commit: str, cases: list[dict]) -> dict:
             raise ValueError(f"source differs from commit: {relative}")
         manifest[relative] = v4.digest(frozen)
     return {
-        "kind": KIND, "claim_scope": SCOPE,
+        "kind": KIND,
+        "claim_scope": SCOPE,
         "case_order": list(dict.fromkeys(case["id"] for _, _, case, _ in eligible_events(cases))),
-        "event_order": event_order(cases), "arm_order": arm_order(cases),
-        "frozen_code_commit": commit, "input_hashes": inputs, "source_manifest": manifest,
-        "model_sha256": MODEL_SHA, "server_image_digest": IMAGE,
-        "request_policy": REQUEST, "local_runtime": RUNTIME,
+        "event_order": event_order(cases),
+        "arm_order": arm_order(cases),
+        "frozen_code_commit": commit,
+        "input_hashes": inputs,
+        "source_manifest": manifest,
+        "model_sha256": MODEL_SHA,
+        "server_image_digest": IMAGE,
+        "request_policy": REQUEST,
+        "local_runtime": RUNTIME,
         "retry_policy": "no_retry_manual_audit_on_interruption",
         "private_output": "outside_repository_mode_0700_files_0600",
         "route_policy": ROUTE_POLICY,
@@ -200,12 +233,20 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
 
 
 def call_event(
-    event_id: str, case: dict, gold: dict, arm: str, policy: RequestPolicy,
-    private_dir: Path, *, completion_call: v4.CompletionCall = post_json_completion,
+    event_id: str,
+    case: dict,
+    gold: dict,
+    arm: str,
+    policy: RequestPolicy,
+    private_dir: Path,
+    *,
+    completion_call: v4.CompletionCall = post_json_completion,
 ) -> dict:
     stage, raw = v4._call(
-        messages=relation_messages(case, gold, arm), schema=relation_schema(),
-        policy=policy, raw_path=private_dir / f"{event_id}-{arm}.json.txt",
+        messages=relation_messages(case, gold, arm),
+        schema=relation_schema(),
+        policy=policy,
+        raw_path=private_dir / f"{event_id}-{arm}.json.txt",
         completion_call=completion_call,
     )
     stage["relation"] = None
@@ -223,7 +264,9 @@ def _routes(rows: list[dict], cases: list[dict], arm: str) -> dict[str, str]:
     by_event = {(row["event_id"], row["arm"]): row["stage"] for row in rows}
     result = {}
     for case in cases:
-        if not any((f"{case['id']}-{i}", arm) in by_event for i in range(1, len(case["events"]) + 1)):
+        if not any(
+            (f"{case['id']}-{i}", arm) in by_event for i in range(1, len(case["events"]) + 1)
+        ):
             continue
         relations = []
         failed = False
@@ -238,7 +281,9 @@ def _routes(rows: list[dict], cases: list[dict], arm: str) -> dict[str, str]:
                 failed |= stage["status"] != "validated"
         result[case["id"]] = route_for_events(
             [{"occurrence": event["occurrence"]} for event in case["events"]],
-            relations, overflow=case["overflow"], failed=failed,
+            relations,
+            overflow=case["overflow"],
+            failed=failed,
         )
     return result
 
@@ -246,7 +291,9 @@ def _routes(rows: list[dict], cases: list[dict], arm: str) -> dict[str, str]:
 def summarize(rows: list[dict], cases: list[dict]) -> dict:
     selected = eligible_events(cases)
     by_event = {(row["event_id"], row["arm"]): row["stage"] for row in rows}
-    if len(rows) != 36 or set(by_event) != {(key, arm) for key, _, _, _ in selected for arm in ARMS}:
+    if len(rows) != 36 or set(by_event) != {
+        (key, arm) for key, _, _, _ in selected for arm in ARMS
+    }:
         raise ValueError("event/arm result denominator differs")
     result = {"cases": 17, "events": 18, "requests": 36, "claim_scope": SCOPE, "arms": {}}
     correct_by_arm: dict[str, dict[str, bool]] = {}
@@ -272,24 +319,41 @@ def summarize(rows: list[dict], cases: list[dict]) -> dict:
                 routes[case_id] == case_map[case_id]["expected_route"]
                 and all(correct[key] for key, _, case, _ in selected if case["id"] == case_id)
                 for case_id in (first, second)
-            ) for first, second in CONTRAST_PAIRS
+            )
+            for first, second in CONTRAST_PAIRS
         }
         latencies = sorted(by_event[(key, arm)]["request_latency_ms"] for key, _, _, _ in selected)
         result["arms"][arm] = {
             "relation_correct": sum(correct.values()),
-            "category_denominators": {"observed_current": 8, "uncertain_current": 1, "observed_other": 9},
+            "category_denominators": {
+                "observed_current": 8,
+                "uncertain_current": 1,
+                "observed_other": 9,
+            },
             "category_correct": category_correct,
-            "status_counts": dict(sorted(status.items())), "output_distribution": outputs,
+            "status_counts": dict(sorted(status.items())),
+            "output_distribution": outputs,
             "contract_errors": status["contract_error"],
             "response_errors": status["response_error"],
-            "route_correct": sum(routes[case_id] == case_map[case_id]["expected_route"] for case_id in routes),
+            "route_correct": sum(
+                routes[case_id] == case_map[case_id]["expected_route"] for case_id in routes
+            ),
             "route_predictions": routes,
             "es06_route": routes["ES06"],
-            "contrast_pairs_correct": sum(pair_detail.values()), "contrast_pairs": pair_detail,
-            "missed_direct_current": sum(case_map[key]["expected_route"] == "safety_action_required" and value != "safety_action_required" for key, value in routes.items()),
-            "false_direct_other": sum(case_map[key]["expected_route"] == "collecting_service_request" and value == "safety_action_required" for key, value in routes.items()),
+            "contrast_pairs_correct": sum(pair_detail.values()),
+            "contrast_pairs": pair_detail,
+            "missed_direct_current": sum(
+                case_map[key]["expected_route"] == "safety_action_required"
+                and value != "safety_action_required"
+                for key, value in routes.items()
+            ),
+            "false_direct_other": sum(
+                case_map[key]["expected_route"] == "collecting_service_request"
+                and value == "safety_action_required"
+                for key, value in routes.items()
+            ),
             "request_latency_p50_ms": round(statistics.median(latencies), 3),
-            "request_latency_p95_ms": round(latencies[math.ceil(len(latencies) * .95) - 1], 3),
+            "request_latency_p95_ms": round(latencies[math.ceil(len(latencies) * 0.95) - 1], 3),
         }
         correct_by_arm[arm] = correct
         routes_by_arm[arm] = routes
@@ -308,8 +372,7 @@ def summarize(rows: list[dict], cases: list[dict]) -> dict:
     }
     result["gate_met"] = (
         all(
-            result["arms"][arm]["category_correct"]
-            == result["arms"][arm]["category_denominators"]
+            result["arms"][arm]["category_correct"] == result["arms"][arm]["category_denominators"]
             and result["arms"][arm]["route_correct"] == 17
             and result["arms"][arm]["contrast_pairs_correct"] == 2
             and result["arms"][arm]["contract_errors"] == 0
@@ -321,7 +384,9 @@ def summarize(rows: list[dict], cases: list[dict]) -> dict:
     return result
 
 
-def run(args: argparse.Namespace, *, completion_call: v4.CompletionCall = post_json_completion) -> None:
+def run(
+    args: argparse.Namespace, *, completion_call: v4.CompletionCall = post_json_completion
+) -> None:
     if args.output.exists() or args.private_dir.exists():
         raise FileExistsError("existing output requires manual audit; never overwrite")
     protocol, protocol_sha = load_protocol(args.protocol, args.model_path)
@@ -336,9 +401,12 @@ def run(args: argparse.Namespace, *, completion_call: v4.CompletionCall = post_j
         raise ValueError("private output permissions differ")
     request = protocol["request_policy"]
     policy = RequestPolicy(
-        max_tokens=request["max_tokens"], temperature=request["temperature"],
-        repeat_penalty=request["repeat_penalty"], stop=tuple(request["stop"]),
-        timeout_seconds=request["timeout_seconds"], seed=request["seed"],
+        max_tokens=request["max_tokens"],
+        temperature=request["temperature"],
+        repeat_penalty=request["repeat_penalty"],
+        stop=tuple(request["stop"]),
+        timeout_seconds=request["timeout_seconds"],
+        seed=request["seed"],
     )
     lookup = {key: (case, gold) for key, _, case, gold in selected}
     rows = []
@@ -349,7 +417,9 @@ def run(args: argparse.Namespace, *, completion_call: v4.CompletionCall = post_j
             case, gold = lookup[key]
             for arm in assignment["arms"]:
                 v4._append(stream, {"event": "begin", "event_id": key, "arm": arm})
-                stage = call_event(key, case, gold, arm, policy, args.private_dir, completion_call=completion_call)
+                stage = call_event(
+                    key, case, gold, arm, policy, args.private_dir, completion_call=completion_call
+                )
                 row = {"event": "end", "event_id": key, "arm": arm, "stage": stage}
                 v4._append(stream, row)
                 rows.append(row)
