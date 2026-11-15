@@ -27,6 +27,30 @@ DATASET = (
     / "as-safety-event-source-v4-exploration-reviewed.v1.json"
 )
 ROW_ID = re.compile(r"ES\d{2}(?:-[12])?\Z")
+REVIEWED_CELL = re.compile(
+    r"A `(?P<target>[^`]+)`; "
+    r"E (?P<event_index>\d+) `(?P<event>[^`]+)` / (?P<occurrence>observed|uncertain); "
+    r"B (?:(?P<owner_index>\d+) `(?P<owner>[^`]+)`|`null`); "
+    r"`(?P<relation>current|other|unknown)`\Z"
+)
+
+
+def _reviewed_cell(cell: str) -> dict:
+    match = REVIEWED_CELL.fullmatch(cell)
+    if match is None:
+        raise ValueError("existing graph review cell differs")
+    owner = (
+        None
+        if match["owner"] is None
+        else {"clause_index": int(match["owner_index"]), "quote": match["owner"]}
+    )
+    return {
+        "target_quote": match["target"],
+        "event_span": {"clause_index": int(match["event_index"]), "quote": match["event"]},
+        "occurrence": match["occurrence"],
+        "hazard_owner_span": owner,
+        "owner_to_target": match["relation"],
+    }
 
 
 def _edge_cell(cell: str, allowed: frozenset[str]) -> tuple[str, dict | None]:
@@ -54,7 +78,7 @@ def compile_labels(*, approved: bool = False, review_path: Path = REVIEW) -> dic
         columns = [column.strip() for column in line.strip("|").split("|")]
         if len(columns) != 5 or ROW_ID.fullmatch(columns[0]) is None:
             raise ValueError("graph review row differs")
-        case_id, _, attachment_cell, edge_cell, _ = columns
+        case_id, existing_cell, attachment_cell, edge_cell, _ = columns
         case_id, _, suffix = case_id.partition("-")
         index = int(suffix) if suffix else 1
         key = (case_id, index)
@@ -64,6 +88,7 @@ def compile_labels(*, approved: bool = False, review_path: Path = REVIEW) -> dic
         edge, edge_span = _edge_cell(edge_cell, EDGE_KINDS)
         rows[key] = {
             "event_index": index,
+            "reviewed": _reviewed_cell(existing_cell),
             "event_subject_kind": attachment,
             "event_subject_evidence_span": attachment_span,
             "target_edge_kind": edge,
@@ -91,7 +116,17 @@ def compile_labels(*, approved: bool = False, review_path: Path = REVIEW) -> dic
                 continue
             if key not in rows:
                 raise ValueError(f"missing graph review row: {key}")
-            label = rows[key]
+            row = rows[key]
+            reviewed = row["reviewed"]
+            if reviewed != {
+                "target_quote": case["target"]["quote"],
+                "event_span": event["event_span"],
+                "occurrence": event["occurrence"],
+                "hazard_owner_span": event["hazard_owner_span"],
+                "owner_to_target": event["owner_to_target"],
+            }:
+                raise ValueError(f"existing graph review cell differs: {key}")
+            label = {field: value for field, value in row.items() if field != "reviewed"}
             used.add(key)
             predicted = validate_evidence_graph(
                 json.dumps(

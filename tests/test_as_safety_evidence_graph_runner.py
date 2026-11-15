@@ -183,6 +183,65 @@ def test_invalid_graph_output_confirms_once_and_keeps_raw(tmp_path):
     assert (tmp_path / "ES01-graph-1.json.txt").exists()
 
 
+@pytest.mark.parametrize(
+    ("changes", "error_code", "error_field"),
+    [
+        ({"target_edge_kind": "different"}, "edge_kind_invalid", "target_edge_kind"),
+        ({"unexpected": "value"}, "fields_invalid", "evidence_graph"),
+        (
+            {"subject_span": {"clause_index": 2, "quote": ""}},
+            "quote_blank",
+            "subject_span",
+        ),
+        (
+            {"subject_span": {"clause_index": 2, "quote": " "}},
+            "quote_blank",
+            "subject_span",
+        ),
+        (
+            {"subject_span": {"clause_index": 2, "quote": "\t"}},
+            "quote_blank",
+            "subject_span",
+        ),
+    ],
+)
+def test_malformed_graph_response_confirms_once_and_preserves_raw(
+    tmp_path, changes, error_code, error_field
+):
+    case = {**CASE, "events": CASE["events"][:1], "expected_route": "collecting_service_request"}
+    base = json.loads(
+        _reply(
+            "옆 라디오 충전기",
+            "옆 라디오 충전기에서 불꽃이 튀었어요",
+            "distinct",
+            "옆 라디오 충전기",
+            2,
+        ).content
+    )
+    raw = json.dumps({**base, **changes}, ensure_ascii=False)
+    calls = 0
+
+    def fake(messages, schema, *, policy):
+        nonlocal calls
+        calls += 1
+        return Completion(raw, "stop")
+
+    row = runner.call_case(case, RequestPolicy(), tmp_path, completion_call=fake)
+    stage = row["stages"][0]
+    assert calls == row["request_count"] == 1
+    assert row["route"] == "confirming_safety_status"
+    assert (stage["status"], stage["error_code"], stage["error_field"]) == (
+        "contract_error",
+        error_code,
+        error_field,
+    )
+    assert stage["effective_relation"] is None
+    path = tmp_path / "ES01-graph-1.json.txt"
+    assert path.read_text(encoding="utf-8") == raw
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    assert stage["raw_sha256"] == hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
 def test_reviewed_es_has_nineteen_calls_and_three_nonoccurring_skips(tmp_path):
     cases = load_cases(runner.INPUTS["dataset"])
     calls = 0
@@ -284,15 +343,16 @@ def test_unresolved_and_nonoccurring_paths(tmp_path):
 
 def test_unapproved_labels_and_existing_partial_output_block_before_model(tmp_path, monkeypatch):
     label_path = tmp_path / "labels.json"
-    label_path.write_text(
-        json.dumps(
-            {
-                "kind": "as_safety_evidence_graph_v1_labels",
-                "review_status": "draft",
-                "cases": LABELS,
-            }
-        )
-    )
+    approved = {
+        "kind": "as_safety_evidence_graph_v1_labels",
+        "review_status": "owner_approved_for_exploratory_evaluation",
+        "review_sha256": "0" * 64,
+        "cases": LABELS,
+    }
+    label_path.write_text(json.dumps(approved, ensure_ascii=False), encoding="utf-8")
+    assert runner.load_graph_labels(label_path, [CASE]) == LABELS
+    draft = {**approved, "review_status": "draft"}
+    label_path.write_text(json.dumps(draft, ensure_ascii=False), encoding="utf-8")
     with pytest.raises(ValueError, match="not approved"):
         runner.load_graph_labels(label_path, [CASE])
     output = tmp_path / "journal.jsonl"
