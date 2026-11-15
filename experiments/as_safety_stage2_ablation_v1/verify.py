@@ -450,9 +450,8 @@ def verify(
     prior._private_dir(private_dir)
     baseline = baseline_paired(baseline_private_dir, model_path)
     cases = load_cases(DATASET)
-    rows = [
-        parse_model_json(line) for line in journal_path.read_text(encoding="utf-8").splitlines()
-    ]
+    journal_raw = journal_path.read_bytes()
+    rows = [parse_model_json(line) for line in journal_raw.decode("utf-8").splitlines()]
     if len(rows) != 2 + 2 * len(cases) * len(ARMS):
         raise ValueError("journal row count differs")
     if rows[0] != {"event": "header", "protocol_sha256": protocol_sha}:
@@ -487,7 +486,7 @@ def verify(
         "kind": KIND,
         "claim_scope": SCOPE,
         "protocol_sha256": protocol_sha,
-        "journal_sha256": prior._digest(journal_path.read_bytes()),
+        "journal_sha256": prior._digest(journal_raw),
         "arms": summary["arms"],
         "baseline_paired": baseline,
         "model_sha256": protocol["model_sha256"],

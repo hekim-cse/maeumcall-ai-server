@@ -168,6 +168,37 @@ def test_length_finish_replays_with_raw(tmp_path: Path, arm: str) -> None:
     assert verify.summarize_arm([audited], [CASE], arm)["stage2_errors"] == 1
 
 
+@pytest.mark.parametrize(
+    ("arm", "raw", "expected_code"),
+    [
+        ("R", '{"owner_to_target":"same"}', "relation_invalid"),
+        (
+            "O",
+            '{"hazard_owner_span":{"clause_index":2,"quote":"토스터"},"owner_to_target":"same"}',
+            "relation_invalid",
+        ),
+        (
+            "O",
+            '{"hazard_owner_span":null,"owner_to_target":"unknown","extra":true}',
+            "fields_invalid",
+        ),
+    ],
+)
+def test_invalid_relation_and_extra_field_replay_to_confirmation(
+    tmp_path: Path, arm: str, raw: str, expected_code: str
+) -> None:
+    row, private = _candidate(tmp_path, arm, raw=raw)
+    assert row["request_count"] == 1
+    assert row["stage2"][0]["status"] == "contract_error"
+    assert row["stage2"][0]["error_code"] == expected_code
+    assert row["stage2"][0]["raw_sha256"] is not None
+    audited = verify.audit_end(row, CASE, arm, private)
+    assert audited["route"] == "confirming_safety_status"
+    summary = verify.summarize_arm([audited], [CASE], arm)
+    assert summary["request_count"] == 1
+    assert summary["stage2_errors"] == 1
+
+
 def test_relation_only_contract_rejects_extra_field_and_duplicate_key() -> None:
     with pytest.raises(Exception, match="fields_invalid"):
         verify._relation_only('{"owner_to_target":"other","extra":true}')
@@ -302,6 +333,32 @@ def test_full_journal_order_summary_and_inventory(
         ]
         == 1
     )
+    initial_bytes = journal.read_bytes()
+    original_read_bytes = Path.read_bytes
+    original_read_text = Path.read_text
+    journal_reads = {"bytes": 0, "text": 0}
+
+    def racing_read_bytes(path: Path) -> bytes:
+        content = original_read_bytes(path)
+        if path == journal:
+            journal_reads["bytes"] += 1
+            journal.write_bytes(b"changed after the snapshot")
+        return content
+
+    def racing_read_text(path: Path, *args, **kwargs) -> str:
+        content = original_read_text(path, *args, **kwargs)
+        if path == journal:
+            journal_reads["text"] += 1
+            journal.write_bytes(b"changed after the text read")
+        return content
+
+    with monkeypatch.context() as patch:
+        patch.setattr(Path, "read_bytes", racing_read_bytes)
+        patch.setattr(Path, "read_text", racing_read_text)
+        result = verify.verify(journal, journal, private, private, model_path=model)
+    assert journal_reads == {"bytes": 1, "text": 0}
+    assert result["journal_sha256"] == hashlib.sha256(initial_bytes).hexdigest()
+    write()
     document[1]["arm"] = "O"
     write()
     with pytest.raises(ValueError, match="journal arm or case order"):

@@ -99,25 +99,35 @@ def test_network_error_confirms_once_without_raw(tmp_path, arm):
     assert not list(tmp_path.iterdir())
 
 
-def test_R_rejects_extra_fields_and_O_rejects_blank_owner(tmp_path):
-    for arm, payload, expected in (
-        ("R", {"owner_to_target": "current", "extra": True}, "fields_invalid"),
+def test_malformed_relation_or_owner_confirms_once_without_retry(tmp_path):
+    for index, (arm, payload, expected, field) in enumerate(
         (
-            "O",
-            {"owner_to_target": "current", "hazard_owner_span": {"clause_index": 2, "quote": "  "}},
-            "quote_blank",
-        ),
+            ("R", {"owner_to_target": "current", "extra": True}, "fields_invalid", "stage2"),
+            ("R", {"owner_to_target": "same"}, "relation_invalid", "owner_to_target"),
+            (
+                "O",
+                {
+                    "owner_to_target": "current",
+                    "hazard_owner_span": {"clause_index": 2, "quote": "  "},
+                },
+                "quote_blank",
+                "hazard_owner_span",
+            ),
+        )
     ):
         calls = 0
+        case_dir = tmp_path / str(index)
+        case_dir.mkdir()
 
         def fake(messages, schema, *, policy, _payload=payload):
             nonlocal calls
             calls += 1
             return Completion(json.dumps(_payload), "stop")
 
-        row = candidate.call_case(arm, CASE, RequestPolicy(), tmp_path, completion_call=fake)
+        row = candidate.call_case(arm, CASE, RequestPolicy(), case_dir, completion_call=fake)
         assert calls == row["request_count"] == 1
         assert row["stage2"][0]["error_code"] == expected
+        assert row["stage2"][0]["error_field"] == field
         assert row["route"] == "confirming_safety_status"
 
 
