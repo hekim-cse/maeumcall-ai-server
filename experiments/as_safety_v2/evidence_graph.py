@@ -14,7 +14,9 @@ from experiments.as_safety_v2.json_contract import ValidationError, parse_model_
 from experiments.as_safety_v2.quotes import anchor_span, split_clauses
 
 ATTACHMENT_KINDS = frozenset({"subject", "location", "implicit", "unresolved"})
-EDGE_KINDS = frozenset({"same_entity", "part_of", "coreference", "distinct", "unresolved"})
+EDGE_KINDS = frozenset(
+    {"same_entity", "part_of", "located_at", "coreference", "distinct", "unresolved"}
+)
 OCCURRENCES = frozenset({"observed", "uncertain"})
 FIELDS = frozenset(
     {
@@ -119,7 +121,9 @@ def evidence_graph_messages(
                 "subject(명시 주체), location(발생 위치), implicit(문맥 연결), "
                 "unresolved(확인 불가) 중 하나로 분류하세요. 그 연결을 뒷받침하는 "
                 "원문 구절을 event_subject_evidence_span에 인용하세요. "
-                "다음 B→A 관계를 same_entity, part_of, coreference, distinct, unresolved "
+                "다음 B→A 관계를 same_entity(같은 물건), part_of(부품·표면), "
+                "located_at(A의 안·뒤 등 위치), coreference(지시어가 A를 가리킴), "
+                "distinct(별개 물건), unresolved(확인 불가) "
                 "중 하나로 분류하고 target_edge_evidence_span에 연결 근거를 인용하세요. "
                 "distinct라면 그 근거 구절에 B가 포함되어야 합니다. "
                 "구절이 없거나 관계가 불명확하면 unresolved와 null을 사용하세요. "
@@ -198,7 +202,7 @@ def validate_evidence_graph(
         raise ValidationError("distinct_subject_unlinked", "target_edge_evidence_span")
     relation = (
         "current"
-        if edge in {"same_entity", "part_of", "coreference"}
+        if edge in {"same_entity", "part_of", "located_at", "coreference"}
         else "other"
         if edge == "distinct"
         else "unknown"

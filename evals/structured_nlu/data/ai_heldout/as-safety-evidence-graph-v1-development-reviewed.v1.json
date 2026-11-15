@@ -1,0 +1,369 @@
+{
+  "kind": "as_safety_evidence_graph_v1_labels",
+  "review_status": "owner_approved_for_exploratory_evaluation",
+  "review_sha256": "6ce6f6060a99357fb5b79825c1189dab57857b367b8ef99a05d1ac5c45b59fea",
+  "cases": [
+    {
+      "id": "ES01",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "로봇청소기 전원 연결부에서 연기가 올라오는 걸 봤어요"
+          },
+          "target_edge_kind": "part_of",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "로봇청소기 전원 연결부"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES02",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "식기세척기 전원선에서 불꽃이 튀었어요"
+          },
+          "target_edge_kind": "part_of",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "식기세척기 전원선"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES03",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "subject",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "뒷면 배터리 부분이 부풀어 하판이 벌어져"
+          },
+          "target_edge_kind": "part_of",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "뒷면 배터리 부분"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES04",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "subject",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "손잡이 연결부가 녹으면서 매캐한 냄새가 났습니다"
+          },
+          "target_edge_kind": "part_of",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "이 선풍기를 켰을 때 손잡이 연결부"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES05",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "등받이 뒤에서 작은 불꽃이 튀었어요"
+          },
+          "target_edge_kind": "located_at",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "의자가 중간에 멈추는데, 방금 등받이 뒤"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES06",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "다른 기기의 충전기에서 불꽃이 튀었고"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "다른 기기의 충전기"
+          }
+        },
+        {
+          "event_index": 2,
+          "event_subject_kind": "subject",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "프린터 옆면이 뜨거워지며 플라스틱이 녹았습니다"
+          },
+          "target_edge_kind": "part_of",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "프린터 옆면"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES07",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "그 제품의 손잡이 안쪽에서 연기가 나서"
+          },
+          "target_edge_kind": "coreference",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "그 제품의 손잡이 안쪽"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES08",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "subject",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "시계 뒷면이 갑자기 뜨거워져 피부가 따끔했고 지금도 열이 남아 있어요"
+          },
+          "target_edge_kind": "part_of",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "시계 뒷면"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES09",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "탁상 조명 전원 연결부에서 연기가 올라오는 걸 봤어요"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "옆에 둔 탁상 조명 전원 연결부"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES10",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "subject",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "보조배터리의 케이스가 부풀어 올랐는데"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "옆에서 충전하던 보조배터리의 케이스"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES11",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "전기밥솥 전원선에서 불꽃이 튀었어요"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "옆에 둔 전기밥솥 전원선"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES12",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "subject",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "휴대용 손난로가 뜨거워져 겉면이 녹았어요"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "가방 안에 함께 넣어 둔 휴대용 손난로"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES13",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "전동 드릴 배터리에서는 매캐한 냄새와 연기가 났어요"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "함께 보관하던 전동 드릴 배터리"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES14",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "무선 충전 패드에서 불꽃이 튀어"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "그 옆의 무선 충전 패드"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES15",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "전자담배 충전기에서는 연기가 났지만"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "같은 서랍의 전자담배 충전기"
+          }
+        },
+        {
+          "event_index": 2,
+          "event_subject_kind": null,
+          "event_subject_evidence_span": null,
+          "target_edge_kind": null,
+          "target_edge_evidence_span": null
+        }
+      ]
+    },
+    {
+      "id": "ES16",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "subject",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "환풍기 모터가 과열돼 커버가 변형됐어요"
+          },
+          "target_edge_kind": "distinct",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "부엌 벽에 달린 환풍기 모터"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES17",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "unresolved",
+          "event_subject_evidence_span": null,
+          "target_edge_kind": "unresolved",
+          "target_edge_evidence_span": null
+        }
+      ]
+    },
+    {
+      "id": "ES18",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": "location",
+          "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "뒷면에 검은 얼룩이 있는데 원래 묻어 있던 먼지인지 열 때문에 생긴 자국인지 모르겠어요"
+          },
+          "target_edge_kind": "part_of",
+          "target_edge_evidence_span": {
+            "clause_index": 2,
+            "quote": "뒷면"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ES19",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": null,
+          "event_subject_evidence_span": null,
+          "target_edge_kind": null,
+          "target_edge_evidence_span": null
+        }
+      ]
+    },
+    {
+      "id": "ES20",
+      "events": [
+        {
+          "event_index": 1,
+          "event_subject_kind": null,
+          "event_subject_evidence_span": null,
+          "target_edge_kind": null,
+          "target_edge_evidence_span": null
+        }
+      ]
+    }
+  ]
+}
