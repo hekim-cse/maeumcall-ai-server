@@ -1,0 +1,271 @@
+"""Tamper checks for the development baseline's independent verifier."""
+
+from __future__ import annotations
+
+import copy
+import hashlib
+import json
+from types import SimpleNamespace
+
+import pytest
+
+from evals.structured_nlu.ai_heldout import load_reviewed_ai_heldout
+from evals.structured_nlu.metrics import score_predictions
+from evals.structured_nlu.schema import CasePrediction, EvaluationAttempt
+from experiments.nlu_current_baseline_v1 import run as baseline_runner
+from experiments.nlu_current_baseline_v1 import verify as auditor
+
+
+@pytest.fixture
+def complete_result(tmp_path, monkeypatch):
+    reviewed = load_reviewed_ai_heldout(auditor.DATASET, auditor.LEDGER)
+    predictions = tuple(
+        CasePrediction(
+            case_id=case.id,
+            attempts=(
+                EvaluationAttempt(
+                    contract_valid=False,
+                    latency_ms=1.0,
+                    output=None,
+                    error_type="ValueError",
+                ),
+                EvaluationAttempt(
+                    contract_valid=False,
+                    latency_ms=1.0,
+                    output=None,
+                    error_type="ValueError",
+                ),
+            ),
+        )
+        for case in reviewed.dataset.cases
+    )
+    result = {
+        "kind": auditor.RESULT_KIND,
+        "protocol_sha256": "a" * 64,
+        "predictions": [item.model_dump(mode="json") for item in predictions],
+        "summary": score_predictions(reviewed.dataset.cases, predictions).to_dict(),
+    }
+    rows = [{"event": "header", "protocol_sha256": "a" * 64}]
+    for prediction in result["predictions"]:
+        rows.append({"event": "begin", "case_id": prediction["case_id"]})
+        rows.append(
+            {
+                "event": "end",
+                "case_id": prediction["case_id"],
+                "prediction": prediction,
+                "raw_attempts": [
+                    {
+                        "attempt": ordinal,
+                        "status": "transport_error",
+                        "raw_sha256": None,
+                        "raw_bytes": None,
+                        "error_type": "ValueError",
+                    }
+                    for ordinal in (1, 2)
+                ],
+            }
+        )
+    rows.append({"event": "summary", "summary": result["summary"]})
+    journal = tmp_path / "journal.jsonl"
+    journal.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+    )
+    result["journal_sha256"] = hashlib.sha256(journal.read_bytes()).hexdigest()
+    monkeypatch.setattr(
+        auditor,
+        "check_protocol",
+        lambda _protocol, _model: ({"request_policy": auditor.REQUEST}, "a" * 64),
+    )
+    private_dir = tmp_path / "raw"
+    private_dir.mkdir(mode=0o700)
+    path = tmp_path / "result.json"
+
+    def write(value):
+        path.write_text(json.dumps(value, ensure_ascii=False), encoding="utf-8")
+        return path
+
+    return result, write, journal, private_dir
+
+
+def test_complete_artifact_replays_all_32_cases(complete_result, tmp_path):
+    result, write, journal, private_dir = complete_result
+    replay = auditor.verify(
+        tmp_path / "protocol.json",
+        write(result),
+        journal,
+        private_dir,
+        tmp_path / "model.gguf",
+    )
+    assert replay["case_count"] == 32
+    assert replay["summary"]["counts"]["fully_correct_cases"] == 0
+    assert replay["claim_scope"] == auditor.SCOPE
+
+
+def test_private_raw_replays_and_modified_bytes_are_rejected(complete_result, tmp_path):
+    result, write, journal, private_dir = complete_result
+    reviewed = load_reviewed_ai_heldout(auditor.DATASET, auditor.LEDGER)
+    case = reviewed.dataset.cases[0]
+    raw = b"{}"
+    prediction = auditor._run_case(
+        case,
+        endpoint=auditor.REQUEST["endpoint"],
+        model_id=auditor.REQUEST["model_id"],
+        policy=SimpleNamespace(**auditor.REQUEST),
+        completion_post=lambda *_args: raw.decode(),
+    )
+    assert len(prediction.attempts) == 2
+    result["predictions"][0] = prediction.model_dump(mode="json")
+    all_predictions = tuple(CasePrediction.model_validate(item) for item in result["predictions"])
+    result["summary"] = score_predictions(reviewed.dataset.cases, all_predictions).to_dict()
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    rows[2]["prediction"] = result["predictions"][0]
+    rows[2]["raw_attempts"] = []
+    for ordinal in (1, 2):
+        path = private_dir / f"{case.id}-attempt{ordinal}.txt"
+        path.write_bytes(raw)
+        path.chmod(0o600)
+        rows[2]["raw_attempts"].append(
+            {
+                "attempt": ordinal,
+                "status": "received",
+                "raw_sha256": hashlib.sha256(raw).hexdigest(),
+                "raw_bytes": len(raw),
+                "error_type": None,
+            }
+        )
+    rows[-1]["summary"] = result["summary"]
+    journal.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+    )
+    result["journal_sha256"] = hashlib.sha256(journal.read_bytes()).hexdigest()
+    auditor.verify(
+        tmp_path / "protocol.json",
+        write(result),
+        journal,
+        private_dir,
+        tmp_path / "model.gguf",
+    )
+    (private_dir / f"{case.id}-attempt1.txt").write_bytes(b"changed")
+    with pytest.raises(ValueError, match="private raw response differs"):
+        auditor.verify(
+            tmp_path / "protocol.json",
+            write(result),
+            journal,
+            private_dir,
+            tmp_path / "model.gguf",
+        )
+    (private_dir / f"{case.id}-attempt1.txt").write_bytes(raw)
+    result["predictions"][0]["attempts"][0]["error_type"] = "ForgedError"
+    rows[2]["prediction"] = result["predictions"][0]
+    journal.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+    )
+    result["journal_sha256"] = hashlib.sha256(journal.read_bytes()).hexdigest()
+    with pytest.raises(ValueError, match="raw-to-prediction replay differs"):
+        auditor.verify(
+            tmp_path / "protocol.json",
+            write(result),
+            journal,
+            private_dir,
+            tmp_path / "model.gguf",
+        )
+
+
+@pytest.mark.parametrize(
+    "tamper",
+    [
+        lambda item: item["summary"]["counts"].__setitem__("fully_correct_cases", 1),
+        lambda item: item["predictions"][1].__setitem__(
+            "case_id", item["predictions"][0]["case_id"]
+        ),
+        lambda item: item["predictions"][0].__setitem__("raw_completion", "private text"),
+        lambda item: item["predictions"][0]["attempts"][0].__setitem__(
+            "error_type", "private prompt: hello"
+        ),
+        lambda item: item.__setitem__("protocol_sha256", "b" * 64),
+    ],
+)
+def test_tampered_result_is_rejected(complete_result, tmp_path, tamper):
+    result, write, journal, private_dir = complete_result
+    changed = copy.deepcopy(result)
+    tamper(changed)
+    with pytest.raises((ValueError, TypeError)):
+        auditor.verify(
+            tmp_path / "protocol.json",
+            write(changed),
+            journal,
+            private_dir,
+            tmp_path / "model.gguf",
+        )
+
+
+@pytest.mark.parametrize("tamper", ("swap", "duplicate", "summary", "truncate"))
+def test_journal_tampering_is_rejected(complete_result, tmp_path, tamper):
+    result, write, journal, private_dir = complete_result
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    if tamper == "swap":
+        rows[1], rows[3] = rows[3], rows[1]
+    elif tamper == "duplicate":
+        rows.insert(3, rows[1])
+    elif tamper == "summary":
+        rows[-1]["summary"]["counts"]["fully_correct_cases"] = 1
+    else:
+        rows.pop()
+    journal.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+    )
+    with pytest.raises(ValueError):
+        auditor.verify(
+            tmp_path / "protocol.json",
+            write(result),
+            journal,
+            private_dir,
+            tmp_path / "model.gguf",
+        )
+
+
+def test_duplicate_json_key_is_rejected():
+    with pytest.raises(ValueError, match="duplicate JSON key"):
+        auditor._strict_json(b'{"kind":"a","kind":"b"}')
+
+
+def test_source_manifest_matches_runner_coverage():
+    assert auditor._expected_source_paths() == set(baseline_runner.SOURCE_PATHS)
+
+
+@pytest.mark.parametrize(
+    "omitted",
+    (
+        "evals/structured_nlu/semantics.py",
+        "llm/structured_output.py",
+        "services/flow/professor/appointment/llm_structured.py",
+    ),
+)
+def test_missing_model_source_is_rejected(tmp_path, monkeypatch, omitted):
+    protocol = {
+        "kind": auditor.PROTOCOL_KIND,
+        "scope": auditor.SCOPE,
+        "frozen_code_commit": "a" * 40,
+        "input_hashes": {
+            "dataset": hashlib.sha256(auditor.DATASET.read_bytes()).hexdigest(),
+            "review_ledger": hashlib.sha256(auditor.LEDGER.read_bytes()).hexdigest(),
+        },
+        "source_manifest": {
+            path: hashlib.sha256((auditor.ROOT / path).read_bytes()).hexdigest()
+            for path in auditor._expected_source_paths()
+            if path != omitted
+        },
+        "model_sha256": auditor.MODEL_SHA256,
+        "server_image_digest": auditor.IMAGE_DIGEST,
+        "request_policy": auditor.REQUEST,
+        "local_runtime": auditor.RUNTIME,
+        "case_order": list(auditor.CASE_ORDER),
+    }
+    monkeypatch.setattr(auditor, "_file_sha", lambda _path: auditor.MODEL_SHA256)
+    monkeypatch.setattr(
+        auditor, "_frozen", lambda _commit, relative: (auditor.ROOT / relative).read_bytes()
+    )
+    path = tmp_path / "protocol.json"
+    path.write_text(json.dumps(protocol), encoding="utf-8")
+    with pytest.raises(ValueError, match="source manifest paths differ"):
+        auditor.check_protocol(path, tmp_path / "model.gguf")
