@@ -1,0 +1,70 @@
+{
+  "categories": [
+    {
+      "case_id": "ai-internal-safety-v1-ss01",
+      "category": "direct"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss02",
+      "category": "direct"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss03",
+      "category": "direct"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss04",
+      "category": "direct"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss05",
+      "category": "uncertain"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss06",
+      "category": "uncertain"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss07",
+      "category": "uncertain"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss08",
+      "category": "uncertain"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss09",
+      "category": "other_source"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss10",
+      "category": "other_source"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss11",
+      "category": "other_source"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss12",
+      "category": "other_source"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss13",
+      "category": "nonoccurring"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss14",
+      "category": "nonoccurring"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss15",
+      "category": "nonoccurring"
+    },
+    {
+      "case_id": "ai-internal-safety-v1-ss16",
+      "category": "nonoccurring"
+    }
+  ],
+  "dataset_sha256": "315e75e9e82254bd55e32753b610e0f1b066dd6fa44d611fa536b8d60098c377",
+  "kind": "ai_reviewed_internal_safety16_categories_v1"
+}

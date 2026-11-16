@@ -1,0 +1,134 @@
+{
+  "dataset_sha256": "315e75e9e82254bd55e32753b610e0f1b066dd6fa44d611fa536b8d60098c377",
+  "decisions": [
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss01",
+      "case_sha256": "cdd5f098f2fd7dbbceba1a37a3e1bde004a58ba1e019ed652fe1c45ff6b955f8",
+      "decision": "accepted",
+      "rationale": "SS01: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 제빙기의 물통·소켓에서 누수와 차단기 동작을 관찰했다. `사용하던 중`은 최초 발생 시점이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss02",
+      "case_sha256": "fabd1fc3d014de477ea607ca5eede2db530cc0f4234afb793fa14e479bbc3d28",
+      "decision": "accepted",
+      "rationale": "SS02: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 재봉틀 부품이 튀어 신체 손상이 발생했다. `사용 중`은 발생 시점의 날짜·반복 여부가 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss03",
+      "case_sha256": "e788f42b5da5f038d9bd9dc027bfe5878fb89047ed852925b9193e3cf68b338f",
+      "decision": "accepted",
+      "rationale": "SS03: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 액체는 접수 제품의 배터리실에서 실제 누출됐다. 성분을 배터리 전해액으로 단정하지 않는다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss04",
+      "case_sha256": "9fd30e70677abee76885a30c4345642009d131503e80572059ec77268a4d2fd5",
+      "decision": "accepted",
+      "rationale": "SS04: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 호스 연결부는 접수하려는 주입기의 부위이며 파열·신체 위험이 실제 발생했다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss05",
+      "case_sha256": "f6d39832b5683d815cd0e071b73367b7c00bdc94645d2333aaf9689a48a2b3c8",
+      "decision": "accepted",
+      "rationale": "SS05: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 돌기는 관찰됐지만 열 변형인지 보호 비닐 들뜸인지 불명확하다. **안전 확인 필요**."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss06",
+      "case_sha256": "5563b1c741480fe203eac6bb6cd4cc1d03d28414742bfe9a7dc21fffc468fc43",
+      "decision": "accepted",
+      "rationale": "SS06: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 휘발유 냄새는 관찰됐지만 발전기와 별도 기름통 중 출처가 불명확하다. 냄새를 발전기 증상으로 옮기지 않는다. **출처 확인 필요**."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss07",
+      "case_sha256": "10afee69347c74b5dce03156789a891eb80237d48fa7b2a3c58a8ac0ba1bd343",
+      "decision": "accepted",
+      "rationale": "SS07: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 소독 후 손잡이 열감은 정상 잔열인지 이상 발열인지 구분되지 않는다. **안전 확인 필요**."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss08",
+      "case_sha256": "af2766d92b21e69fb1c7d0ecf935ed1197d78f7f33400742295fec962d4eb8ae",
+      "decision": "accepted",
+      "rationale": "SS08: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 검은 가루의 원인이 전선 피복인지 다림판 보풀인지 불명확하다. 피복 손상을 확정하지 않는다. **손상 확인 필요**."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss09",
+      "case_sha256": "5a8d206caa7873da30185a03df2c222fec18505e8e613aa22509222efdf1c986",
+      "decision": "accepted",
+      "rationale": "SS09: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 불은 다른 작업대의 납땜 인두·종이에서 났다. 턴테이블의 위험이나 안전을 확정하지 않는다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss10",
+      "case_sha256": "2e006a9e58af7fea36bf71a99c2b4a18a4551e2d56ca244fde2adf86dc248db2",
+      "decision": "accepted",
+      "rationale": "SS10: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 동생이 쓰는 같은 모델의 케이블 사고는 현재 접수 제품의 사고가 아니다. 전언으로 현재 제품의 안전을 단정하지 않는다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss11",
+      "case_sha256": "cc1d74bbcb669686b0f3e131f0331c8730bdc0bc5b3da6171c94f47500f6c55c",
+      "decision": "accepted",
+      "rationale": "SS11: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 액체는 떨어진 선반의 살충제 통에서 흘렀다. 센서의 누출로 옮기지 않는다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss12",
+      "case_sha256": "a93fb43a56a6b9a03b0f29fb29c654c47dacac76fcab5e1316dc75b99f95faab",
+      "decision": "accepted",
+      "rationale": "SS12: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 터진 것은 차량 냉각수 호스이며 블랙박스 부품이 아니다. 블랙박스의 위험을 확정하지 않는다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss13",
+      "case_sha256": "8948ffede708d6fcbc290c101d9e0b02567e9bf78618dc5ab79b434669157ec3",
+      "decision": "accepted",
+      "rationale": "SS13: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 배선 침수는 가정이고 현재 제품은 물에 닿은 적이 없다고 명시한다. 다른 안전 이상 전체의 부재를 입증하지 못해 공란이다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss14",
+      "case_sha256": "7bb24fe35bd1d62293ffbf5d01137531c1bfba71713827d9c1163d7283cb525b",
+      "decision": "accepted",
+      "rationale": "SS14: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 검은 줄은 원래 무늬이고 만져도 뜨겁지 않다고 명시한다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss15",
+      "case_sha256": "4df7bf487a99cd290fb4c87a1fb5058a8a04e527adac0fae2767a768c089441e",
+      "decision": "accepted",
+      "rationale": "SS15: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 스크루 변형을 걱정해 확인했지만 실제 변형이나 다른 안전 이상은 없다고 명시한다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:59+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-safety-v1-ss16",
+      "case_sha256": "db347037f1b340213f271c8664ce76b08d4a42d5541c73c0b8012276111ea5c5",
+      "decision": "accepted",
+      "rationale": "SS16: 사용자가 검수한 행동·7개 필드 값과 공란 및 안전 방향을 채택했다. 판단 근거를 AI가 요약: 칼날이 밖으로 드러나지 않았고 다른 안전 이상도 없다고 명시한다."
+    }
+  ],
+  "kind": "ai_reviewed_internal_case_decisions_v1"
+}

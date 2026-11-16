@@ -1,0 +1,26 @@
+{
+  "accepted_case_ids": [
+    "ai-internal-safety-v1-ss01",
+    "ai-internal-safety-v1-ss02",
+    "ai-internal-safety-v1-ss03",
+    "ai-internal-safety-v1-ss04",
+    "ai-internal-safety-v1-ss05",
+    "ai-internal-safety-v1-ss06",
+    "ai-internal-safety-v1-ss07",
+    "ai-internal-safety-v1-ss08",
+    "ai-internal-safety-v1-ss09",
+    "ai-internal-safety-v1-ss10",
+    "ai-internal-safety-v1-ss11",
+    "ai-internal-safety-v1-ss12",
+    "ai-internal-safety-v1-ss13",
+    "ai-internal-safety-v1-ss14",
+    "ai-internal-safety-v1-ss15",
+    "ai-internal-safety-v1-ss16"
+  ],
+  "adjudicated_at": "2026-11-17T03:22:59+09:00",
+  "adjudicator_id": "portfolio_owner",
+  "dataset_sha256": "315e75e9e82254bd55e32753b610e0f1b066dd6fa44d611fa536b8d60098c377",
+  "kind": "ai_authored_heldout_review_v1",
+  "rationale": "The portfolio owner adopted all 16 displayed AI-authored safety utterances, target/safety directions, actions, complete field values and nulls in this chat, including SS13 null and SS15/SS16 replacements. This timestamp records ledger creation, not the exact UI response time. Per-case rationale text was drafted by AI from user-approved labels; the owner did not write those rationales. No independent second human reviewer or model run.",
+  "reviewed_for": "ai_authored_heldout_accuracy"
+}
