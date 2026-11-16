@@ -30,6 +30,20 @@ SCOPE_BOUNDARY_GUIDANCE = (
 )
 
 
+def render_scope_contract(*, purpose: str, supported: str, outside: str) -> str:
+    """Describe a scenario's supported request, without classifying by keywords."""
+    if not all(value.strip() for value in (purpose, supported, outside)):
+        raise ValueError("scope contract entries must not be blank")
+    return (
+        f"\n현재 지원 목적: {purpose}."
+        f"\n지원하는 주된 요청: {supported}."
+        f"\n지원 범위 밖의 주된 요청: {outside}."
+        "\n위 항목은 단어 목록이 아니라 요청의 목적을 구분하는 의미 기준이다. "
+        "지원 범위 밖의 주된 요청에 현재 업무의 대상이나 시각이 언급되어도 "
+        "그 정보만으로 업무 진행으로 판단하지 않는다." + SCOPE_BOUNDARY_GUIDANCE
+    )
+
+
 class StructuredKeyError(ValueError):
     """An output object has missing or unexpected schema keys."""
 

@@ -1,0 +1,518 @@
+{
+  "dataset_sha256": "b3aa00925bd52b826a3e1ffd1423bf070148ccb945b0af7ac69c5f9ad3b03bef",
+  "decisions": [
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it01",
+      "case_sha256": "89274c05f822844ebbb68e4e8380766eca807b57b271fcabb0181c9b52729121",
+      "decision": "accepted",
+      "rationale": "고객센터:a/s 접수: IT01의 user_action=provide_details, product_type=전기오븐, symptom=예열을 시작하면 내부 팬이 멈추고 E7 오류가 뜸, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it02",
+      "case_sha256": "8fb08684d3e61dc8fd8b0eb0f88adcbfcb1da599f41d551234c82810bffcce0a",
+      "decision": "accepted",
+      "rationale": "고객센터:a/s 접수: IT02의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it03",
+      "case_sha256": "a60ef68f7926eb28b924f5de9280183d2dabb09851412fbf5f272e605e9bba1b",
+      "decision": "accepted",
+      "rationale": "고객센터:a/s 접수: IT03의 user_action=provide_details, model_name=DR-520, symptom=건조가 끝나도 문 잠금이 풀리지 않고 E3이 표시됨, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it04",
+      "case_sha256": "4f38b823b84e91ee2bf0ccc5226985191d36bc152fd07c438583950d1aed1401",
+      "decision": "accepted",
+      "rationale": "고객센터:a/s 접수: IT04의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it05",
+      "case_sha256": "0558dfc5441a18540cbbf61c4980faf55c7f0af86fb0943e282a34bd54d58399",
+      "decision": "accepted",
+      "rationale": "고객센터:요금/약정 상담: IT05의 user_action=provide_details, consultation_goal=새 가족 결합에 적용 가능한 할인 조건 확인, inquiry_type=discount, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it06",
+      "case_sha256": "fc655f5acc2f5bb0b46eb2fd45bf399fb4271c9bdeda2b850b43b7b3d428932a",
+      "decision": "accepted",
+      "rationale": "고객센터:요금/약정 상담: IT06의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it07",
+      "case_sha256": "5204908c8f7121ca734fd12f4233c241be9688b54e916935faa7b979fc7ffb89",
+      "decision": "accepted",
+      "rationale": "고객센터:요금/약정 상담: IT07의 user_action=provide_details, consultation_goal=매달 데이터가 절반 넘게 남아 월 요금을 낮출 수 있는 요금제 검토, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it08",
+      "case_sha256": "16095a6b2d61bf7e7feffdea67f70b2304205e0bf0da42e22093d5a84d5c9e57",
+      "decision": "accepted",
+      "rationale": "고객센터:요금/약정 상담: IT08의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it09",
+      "case_sha256": "81c48e8f5274a003e92edd6e0fe86ae9e6d094c5130b94db1e4bf31e15b4e9ae",
+      "decision": "accepted",
+      "rationale": "고객센터:인터넷/통화 문제 문의: IT09의 user_action=provide_details, next_action=remote_check, service_type=wired_internet, symptom=영상회의 중 몇 분마다 연결이 끊기고 모뎀 인터넷 표시등이 빨간색으로 바뀜, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it10",
+      "case_sha256": "40198ca353fbc030f04aa98501485adcf5fc85306ac0ccb2d4086a13760f52f3",
+      "decision": "accepted",
+      "rationale": "고객센터:인터넷/통화 문제 문의: IT10의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it11",
+      "case_sha256": "3a796b02d052cb53cde1b400a60459312b02ad01cf3b5d8ef275eaf567cdd289",
+      "decision": "accepted",
+      "rationale": "고객센터:인터넷/통화 문제 문의: IT11의 user_action=provide_details, occurred_at=2026년 11월 11일 밤부터, scope=specific_location, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it12",
+      "case_sha256": "2b453eb2a1353ac41386309937ac07c6595f2af8abed57461b8734bc9a0e366b",
+      "decision": "accepted",
+      "rationale": "고객센터:인터넷/통화 문제 문의: IT12의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it13",
+      "case_sha256": "3c6e0ded7cdd06acdc06e9df895fca4af3864f4fa49b028a2ed0e13b26df4647",
+      "decision": "accepted",
+      "rationale": "교수님:결석 사유 전달: IT13의 user_action=provide_absence_info, absence_date=2026년 11월 10일, absence_reason=수업에 가던 열차 운행 중단, class_name=자료구조 수업, user_name=최유진, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it14",
+      "case_sha256": "08c46715f8fb711d57f41fb8f07a424a63803a89fa165c9e89258c5b59c2fca1",
+      "decision": "accepted",
+      "rationale": "교수님:결석 사유 전달: IT14의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it15",
+      "case_sha256": "82b7186cfc66370f7c69d03b86b3fb6877458ba70b3abf964d5d6d3bedc31ed2",
+      "decision": "accepted",
+      "rationale": "교수님:결석 사유 전달: IT15의 user_action=provide_absence_info, absence_date=2026년 11월 12일, absence_reason=독감 증상, class_name=알고리즘 실습, user_name=박지훈, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it16",
+      "case_sha256": "13946e5869b533d07033a3bea35e21155a70d645f26fd6ea9a38347bad6bcb79",
+      "decision": "accepted",
+      "rationale": "교수님:결석 사유 전달: IT16의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it17",
+      "case_sha256": "2800eef6e6b9e1d1cec1721fab72c7103287c0c5e7179d0b322b98b58aa1215c",
+      "decision": "accepted",
+      "rationale": "교수님:과제 문의: IT17의 user_action=provide_assignment_info, assignment_topic=트리 순회 과제, course_name=자료구조, question=재귀 함수 대신 반복문 사용 가능 여부, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it18",
+      "case_sha256": "622308940ca327995806db40255ea6929888e57cdc920e41aded7259bed37dae",
+      "decision": "accepted",
+      "rationale": "교수님:과제 문의: IT18의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it19",
+      "case_sha256": "222199e4e2e280ab0d763eff3427a2adeda6fe2b79e69756f3a47ce77b6b07e4",
+      "decision": "accepted",
+      "rationale": "교수님:과제 문의: IT19의 user_action=provide_assignment_info, assignment_topic=운영체제 프로세스 스케줄링 보고서, question=비교할 알고리즘을 두 가지만 골라도 되는지, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it20",
+      "case_sha256": "aed51a6fc571674829955060ba87eaf9c4fcb4719768fe4d5735a613152a6b90",
+      "decision": "accepted",
+      "rationale": "교수님:과제 문의: IT20의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it21",
+      "case_sha256": "1664e2c31031f6d9fbe7e48f92c22ba02cde4ffc91b9fa6607fc93474f70d036",
+      "decision": "accepted",
+      "rationale": "교수님:면담 예약: IT21의 user_action=provide_appointment_info, appointment_purpose=연구 윤리 심사 신청서 준비 방향 상담, date=2027년 1월 20일, time=오전 10시, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it22",
+      "case_sha256": "b32d90e984bb03632b81c3e56cb32f977c28791d6169175c4f9f18d2d3865539",
+      "decision": "accepted",
+      "rationale": "교수님:면담 예약: IT22의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it23",
+      "case_sha256": "97f02489a36a92c319fe75973a62ff38c3b0859f6f7083266ce47c764cc680f9",
+      "decision": "accepted",
+      "rationale": "교수님:면담 예약: IT23의 user_action=provide_appointment_info, appointment_purpose=산학 프로젝트의 데이터 수집 계획 상담, date=2027년 1월 21일, time=오후 3시, user_name=서지우, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it24",
+      "case_sha256": "d113633d49a9911845d90ceedaee749af1f2de4f93a9984d17dace5bc45f6ef4",
+      "decision": "accepted",
+      "rationale": "교수님:면담 예약: IT24의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it25",
+      "case_sha256": "1652574ee713f19ed9e9c51000d34e161f0d1c289b7e6e4abee9d9eff3ab53aa",
+      "decision": "accepted",
+      "rationale": "배달:배달 지연 문의: IT25의 user_action=provide_details, delay_detail=배달 예상 시간이 두 번 연장됨, inquiry_goal=delivery_location, order_number=L-204, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it26",
+      "case_sha256": "b6df80de8e279d315ac89d6a36f383fe3fcb117c3916614fab598016a40a6e7c",
+      "decision": "accepted",
+      "rationale": "배달:배달 지연 문의: IT26의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it27",
+      "case_sha256": "28c7442f6bf568a2439d8ac973f839750e590c585888bb19629aac89be51a6a5",
+      "decision": "accepted",
+      "rationale": "배달:배달 지연 문의: IT27의 user_action=provide_details, delay_resolution=agent_handoff, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it28",
+      "case_sha256": "cf61403b2cd18928ee3998f00c4b68fdc29b87b1eff57c83450b2680dcb67236",
+      "decision": "accepted",
+      "rationale": "배달:배달 지연 문의: IT28의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it29",
+      "case_sha256": "6653db20f4e79e05a7b487e7000c5fc9b2af45fc47240ae065a78034320cc5bc",
+      "decision": "accepted",
+      "rationale": "배달:주문 변경: IT29의 user_action=provide_details, change_type=menu_option, order_number=M-604, requested_change=김치볶음밥의 계란 추가 옵션 제거, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it30",
+      "case_sha256": "7f5b066278facd88a1d157f84d5f8cd0afb555fd43c80053b1836928306320bc",
+      "decision": "accepted",
+      "rationale": "배달:주문 변경: IT30의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it31",
+      "case_sha256": "87467b6a079eb7283d236c0ceb6ed1c36eb806ad64648887648477900e3be117",
+      "decision": "accepted",
+      "rationale": "배달:주문 변경: IT31의 user_action=provide_details, requested_change=수령 장소를 같은 건물 2층 안내데스크로 변경, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it32",
+      "case_sha256": "e884d8044aa1c16270050906156c1b8503efa51ba656b115640ae5daa075fc4d",
+      "decision": "accepted",
+      "rationale": "배달:주문 변경: IT32의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it33",
+      "case_sha256": "3b30143a23d9c8b6976b5235db8e7257c31f36bbe7b4997c7135b828034a2ea8",
+      "decision": "accepted",
+      "rationale": "배달:환불/재배달 문의: IT33의 user_action=provide_details, issue_detail=받은 반찬 용기가 깨져 내용물이 새어 나옴, issue_type=damaged_or_quality, order_number=주문번호 M-928, resolution_preference=refund, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it34",
+      "case_sha256": "7a7707b23c8d74fd3c3049cccbfe88f5cf836341ae646818b5b95286c2e4f19f",
+      "decision": "accepted",
+      "rationale": "배달:환불/재배달 문의: IT34의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it35",
+      "case_sha256": "55c96c6a52c85e8e2023ddf965ee179e5fdf23ff508d14a47f340ade80826ff1",
+      "decision": "accepted",
+      "rationale": "배달:환불/재배달 문의: IT35의 user_action=provide_details, evidence_status=available, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it36",
+      "case_sha256": "9f10cdfc4ffb434374415c4271f0b1537b04bd2ea859de7a60b2ff7b933f3489",
+      "decision": "accepted",
+      "rationale": "배달:환불/재배달 문의: IT36의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it37",
+      "case_sha256": "9185ade156c88798518d69682b1fd1ed89eff564c68baeac497c64082e51dd89",
+      "decision": "accepted",
+      "rationale": "시청:대형폐기물 배출: IT37의 user_action=provide_details, item_name=낡은 캣타워, region=부산 연제구, request_topic=application, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it38",
+      "case_sha256": "cdd1ec01e52537e38c988f0c8ebd4c16fdb2e482529dc9afd818737fc721c737",
+      "decision": "accepted",
+      "rationale": "시청:대형폐기물 배출: IT38의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it39",
+      "case_sha256": "7b5258e7bb49c06d4a997c75f3f96c2077b72128a24e99528f442fbdfa44a653",
+      "decision": "accepted",
+      "rationale": "시청:대형폐기물 배출: IT39의 user_action=provide_details, quantity=두 개, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it40",
+      "case_sha256": "144c935e9db3114575da05601f8b216bde8cce693a0d9764d93cb688aa1c188a",
+      "decision": "accepted",
+      "rationale": "시청:대형폐기물 배출: IT40의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it41",
+      "case_sha256": "1318f183b552603de111a7b0bcc3a0ecf933033f1ccd11908f56228320aab400",
+      "decision": "accepted",
+      "rationale": "시청:여권 발급 문의: IT41의 user_action=provide_details, application_type=emergency, inquiry_topic=office, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it42",
+      "case_sha256": "e8ec7a111f893c92bcb1200e9a810afbb159b283afb100623e44dd17c00a4128",
+      "decision": "accepted",
+      "rationale": "시청:여권 발급 문의: IT42의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it43",
+      "case_sha256": "bb8ff44a2aa965a7d3b67714d924d6f522d92fbcd0ea3205adf05253afa36d6d",
+      "decision": "accepted",
+      "rationale": "시청:여권 발급 문의: IT43의 user_action=provide_details, inquiry_topic=online_eligibility, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it44",
+      "case_sha256": "4448182632991c0cd66d7358f1a2ed0338f41c5d09727b0c046c3aecf5ba0b89",
+      "decision": "accepted",
+      "rationale": "시청:여권 발급 문의: IT44의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it45",
+      "case_sha256": "2099a4c04ded8bf0b26e0eb0100dad1c94fea788e3691eb464aa1bff9d0f3d44",
+      "decision": "accepted",
+      "rationale": "시청:주민등록 등본 문의: IT45의 user_action=provide_details, applicant_relation=same_household, document_type=register_copy, inquiry_topic=documents, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it46",
+      "case_sha256": "a5954bcca7138f4c4aa182df581ba423f38fac6f9ef8b5896ae85132cc10fc91",
+      "decision": "accepted",
+      "rationale": "시청:주민등록 등본 문의: IT46의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it47",
+      "case_sha256": "abd878f3a3ec369e5585df49d7d5b8e1801a20c4decaa253caf085432ffa1bba",
+      "decision": "accepted",
+      "rationale": "시청:주민등록 등본 문의: IT47의 user_action=provide_details, issuance_channel=in_person, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it48",
+      "case_sha256": "b6bb2a99a65b1651a9d33d6f314dc27c50a7703121e3ac9994bc13b42b798977",
+      "decision": "accepted",
+      "rationale": "시청:주민등록 등본 문의: IT48의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it49",
+      "case_sha256": "72942fe6291b50125150e42c2b36018f822d424836bb1029cb7ad2d9484d7657",
+      "decision": "accepted",
+      "rationale": "예약:미용실 예약: IT49의 user_action=continue_collecting, date=2027년 1월 9일, service_type=레이어드 펌, time=오후 4시, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it50",
+      "case_sha256": "181f71b19688519cc542ad5920935ce4299ba84d44a64366c080c23e441aed49",
+      "decision": "accepted",
+      "rationale": "예약:미용실 예약: IT50의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it51",
+      "case_sha256": "fa9d8066ab7c738f2241f5f07eb5b08c0f772b46af174b6cafd9ca03c823efc3",
+      "decision": "accepted",
+      "rationale": "예약:미용실 예약: IT51의 user_action=continue_collecting, designer=지현 선생님, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it52",
+      "case_sha256": "8deefab9a030c72046f45a4d6b1d57c270580b525191663259eda47cc843c06f",
+      "decision": "accepted",
+      "rationale": "예약:미용실 예약: IT52의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it53",
+      "case_sha256": "38e600871a3e02b49bf0ce0433d4e7ca128387d51053606f2108f103426ef6fc",
+      "decision": "accepted",
+      "rationale": "예약:병원 예약: IT53의 user_action=continue_collecting, date=2027년 1월 13일, department=내과, time=오전, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it54",
+      "case_sha256": "a57d1e6a3de2c4297c977773ce5de9cb91d5bce2fbfd82bd95668e3f0e536590",
+      "decision": "accepted",
+      "rationale": "예약:병원 예약: IT54의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it55",
+      "case_sha256": "d5af546041237b0f02c864ecc5a511f830aa046b7c66aefcbc2c0b8cea34b231",
+      "decision": "accepted",
+      "rationale": "예약:병원 예약: IT55의 user_action=continue_collecting, time=오전 10시 반, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it56",
+      "case_sha256": "28a52f573a38268cfbe14ea252333bfaa0ac4524c2757681556885da5fad27eb",
+      "decision": "accepted",
+      "rationale": "예약:병원 예약: IT56의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it57",
+      "case_sha256": "3d129c2018919e7187f1fe0a5b08b512d33adad8c99d8ac6b24a8ce7262e2e79",
+      "decision": "accepted",
+      "rationale": "예약:스터디룸 예약: IT57의 user_action=continue_collecting, date=2027년 1월 15일, duration=한 시간 반, party_size=네 명, start_time=오전 10시, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it58",
+      "case_sha256": "40c280f49eecf06bfb680a4c50832fd3cdb1156a261de69c9258918eff459362",
+      "decision": "accepted",
+      "rationale": "예약:스터디룸 예약: IT58의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it59",
+      "case_sha256": "c7c66350deef86c8fab277a46859f05fb23b01f962a56141a6c7c7baea5fa3ea",
+      "decision": "accepted",
+      "rationale": "예약:스터디룸 예약: IT59의 user_action=continue_collecting, party_size=다섯 명, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it60",
+      "case_sha256": "a1a7b8537d3a4049b0105b7775cd44eef5097845b32073cc92b15095e4430b19",
+      "decision": "accepted",
+      "rationale": "예약:스터디룸 예약: IT60의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it61",
+      "case_sha256": "1097add15926acb6b361c1cb94740bd9e51cae21bf56cfc41eab6f4cbad07124",
+      "decision": "accepted",
+      "rationale": "예약:식당 예약: IT61의 user_action=continue_collecting, date=2027년 1월 24일, party_size=둘, time=저녁 6시쯤, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it62",
+      "case_sha256": "2fd04b01bf90346dc390a0bb6b1e3a451423070bc6dbde77ec74aa1282e8aa8c",
+      "decision": "accepted",
+      "rationale": "예약:식당 예약: IT62의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it63",
+      "case_sha256": "c4364a886c17623a98a3bdba2773e9832d24e32a06f43be197fa76abb348dfce",
+      "decision": "accepted",
+      "rationale": "예약:식당 예약: IT63의 user_action=continue_collecting, party_size=다섯 명, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    },
+    {
+      "adjudicated_at": "2026-11-17T03:22:33+09:00",
+      "adjudicator_role_id": "portfolio_owner",
+      "case_id": "ai-internal-test-v1-it64",
+      "case_sha256": "9c27907bfb3cc10f628d75a6db19a861dc1ceb3ee7f22ef72a6f9cf5438241aa",
+      "decision": "accepted",
+      "rationale": "예약:식당 예약: IT64의 user_action=unknown, 전체 필드 공란, 나머지 필드 공란을 사용자가 검토표에서 채택했다. 이 사례별 이유 문구는 AI가 채택된 라벨을 요약한 것이며, 기록 시각은 승인 메시지의 정확한 시각이 아니다."
+    }
+  ],
+  "kind": "ai_reviewed_internal_case_decisions_v1"
+}

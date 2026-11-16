@@ -1,0 +1,768 @@
+{
+  "cases": [
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss01",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss01",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "가정용 제빙기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "얼음을 만들다 멈춤; 물통 아래로 샌 물이 전원 소켓에 닿아 차단기가 내려감"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "수리받을 가정용 제빙기가 얼음을 만들다 멈췄어요. 사용하던 중 물통 아래로 샌 물이 제빙기 전원 소켓에 닿자 집 차단기가 내려갔습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss02",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss02",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전동 재봉틀"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "바늘땀을 놓침; 바늘 고정 나사가 풀려 바늘이 튀어 손등에 박힘"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "A/S 맡길 전동 재봉틀이 바늘땀을 놓치기 시작했습니다. 사용 중 바늘 고정 나사가 풀리며 바늘이 튀어 손등에 박혔습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss03",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss03",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "로봇 잔디깎이"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전되지 않음; 본체 배터리실에서 누런 액체가 흘러나옴"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "제 로봇 잔디깎이가 충전되지 않아 점검받고 싶습니다. 충전 중 본체 배터리실에서 누런 액체가 흘러나와 바닥을 적셨습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss04",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss04",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "휴대용 공기압 주입기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "압력 표시 불가; 주입기 호스 연결부가 터져 조각이 손에 튐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "safety",
+        "multi_field"
+      ],
+      "user_message": "수리 맡길 휴대용 공기압 주입기가 압력 표시를 못 합니다. 타이어에 바람을 넣던 중 주입기 호스 연결부가 터져 조각이 손에 튀었습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss05",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss05",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전기 그릴"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "온도 조절 불가; 손잡이 안쪽에 작은 돌기가 생김"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "ambiguous",
+        "multi_field"
+      ],
+      "user_message": "수리 맡길 전기 그릴의 온도 조절이 되지 않습니다. 손잡이 안쪽에 작은 돌기가 생겼는데, 열 때문에 변형된 건지 보호 비닐이 들뜬 건지 모르겠어요."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss06",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss06",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "휴대용 발전기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "시동이 걸리지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "ambiguous",
+        "multi_field"
+      ],
+      "user_message": "제 수리 대상은 휴대용 발전기입니다. 시동이 걸리지 않는데 주변에서 휘발유 냄새가 납니다. 발전기에서 새는지 옆에 둔 기름통에서 나는지 아직 확인하지 못했어요."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss07",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss07",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "자동 젖병 소독기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "버튼이 눌리지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "ambiguous",
+        "multi_field"
+      ],
+      "user_message": "접수하려는 자동 젖병 소독기의 버튼이 눌리지 않습니다. 소독을 마친 뒤 손잡이가 뜨거운 것 같았는데 막 끝난 소독 열 때문인지 이상 발열인지 구분이 안 됩니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss08",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss08",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "스팀다리미"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "물이 분사되지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "ambiguous",
+        "multi_field"
+      ],
+      "user_message": "수리 맡길 스팀다리미가 물을 분사하지 않아요. 전선 아래에 검은 가루가 있는데 피복이 벗겨져 나온 건지 다림판의 보풀인지 모르겠습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss09",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss09",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "블루투스 턴테이블"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "회전 속도가 일정하지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "수리를 맡길 블루투스 턴테이블은 회전 속도가 일정하지 않습니다. 같은 방의 다른 작업대에서 납땜 인두가 종이에 닿아 작은 불이 났습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss10",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss10",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "휴대용 번역기"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "화면이 깨짐"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "제 수리 대상은 휴대용 번역기인데 화면이 깨졌습니다. 동생이 쓰는 같은 모델의 충전 케이블에서 불꽃이 났다고 들었습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss11",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss11",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "스마트 화분 센서"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "흙 습도를 잘못 표시함"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "A/S 맡길 스마트 화분 센서가 흙 습도를 잘못 표시해 베란다를 살피던 중, 센서와 떨어진 선반의 살충제 통이 넘어져 액체가 흘렀습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss12",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss12",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "차량용 블랙박스"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "주행 영상이 저장되지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "multi_field"
+      ],
+      "user_message": "접수하려는 차량용 블랙박스는 영상이 저장되지 않습니다. 차량 냉각수 호스가 터져 갓길에 세웠을 때의 주행 영상도 남지 않았습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss13",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss13",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "자외선 살균함"
+            ]
+          },
+          "safety_status": null,
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "문 센서가 작동하지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "negation",
+        "multi_field"
+      ],
+      "user_message": "수리받을 자외선 살균함의 문 센서가 작동하지 않습니다. 내부 배선이 물에 젖으면 사용을 중단해야 하나요? 제 기기는 물에 닿은 적이 없습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss14",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss14",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "차량용 무선 충전기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "no_safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "충전이 자주 끊김"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "negation",
+        "multi_field"
+      ],
+      "user_message": "접수할 차량용 무선 충전기는 충전이 자주 끊깁니다. 케이스 가장자리의 검은 줄은 원래 제품 무늬이고, 손으로 만져도 뜨겁지 않습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss15",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss15",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "전동 와인 오프너"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "no_safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "버튼을 눌러도 회전하지 않음"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "negation",
+        "multi_field"
+      ],
+      "user_message": "수리 맡길 전동 와인 오프너가 버튼을 눌러도 회전하지 않습니다. 스크루가 휘면 위험할까 걱정돼 확인했지만, 제 제품에는 그런 변형이나 다른 안전 이상이 없습니다."
+    },
+    {
+      "conversation_group_id": "ai-internal-safety-v1-ss16",
+      "conversation_state": "greeting",
+      "current_fields": {
+        "model_name": null,
+        "occurred_at": null,
+        "preferred_schedule": null,
+        "product_type": null,
+        "safety_status": null,
+        "service_channel": null,
+        "symptom": null
+      },
+      "id": "ai-internal-safety-v1-ss16",
+      "labels": {
+        "change_field": null,
+        "fields": {
+          "model_name": null,
+          "occurred_at": null,
+          "preferred_schedule": null,
+          "product_type": {
+            "accepted_values": [
+              "음식물 처리기"
+            ]
+          },
+          "safety_status": {
+            "accepted_values": [
+              "no_safety_issue"
+            ]
+          },
+          "service_channel": null,
+          "symptom": {
+            "accepted_values": [
+              "뚜껑 버튼이 고장 남"
+            ]
+          }
+        },
+        "intent": "service_request",
+        "user_action": "provide_details"
+      },
+      "offered_alternative_times": [],
+      "provenance": "ai_authored",
+      "review_status": "adjudicated",
+      "scenario_key": "고객센터:a/s 접수",
+      "split": "test",
+      "tags": [
+        "negation",
+        "multi_field"
+      ],
+      "user_message": "수리 맡길 음식물 처리기의 뚜껑 버튼이 고장 났습니다. 회전하는 칼날이 밖으로 드러난 것은 아니며, 다른 안전 이상도 없습니다."
+    }
+  ],
+  "dataset_version": 1,
+  "declared_model_exposure": "not_run",
+  "kind": "ai_authored_heldout_dataset_v1",
+  "state_contract_version": 2
+}

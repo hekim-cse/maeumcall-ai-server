@@ -1,0 +1,1218 @@
+{
+  "arms": {
+    "baseline": {
+      "commit": "c46c27a52bc8cfc6e11bfa62985aa6a90d6f4da3",
+      "source_manifest": {
+        "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "core/auth.py": "5bee436fa5f78d3423f69e242752867e646f12e24fc0b19cea242fcd0791aebf",
+        "core/config.py": "46ba2dc5a0375d949f6454734bab97d2f03471fc83bb93d399801f7735c43794",
+        "core/database.py": "3a601d8730d1b6dc8a7dfeecbedc7b00e34b5c0eea2df8bdf5e3820f5d5b2334",
+        "core/models.py": "c7fa5bf3a40a1418848a0d4bfadd40d036c1b5f77689107f63359820d2caa904",
+        "core/observability.py": "19b73a76e869f10e3dbf2283a55fe575343d1a953f58603c4e9bd3365d6a0f8e",
+        "evals/structured_nlu/__init__.py": "641ba84e26228ca7f18b9d2bd310cd7f0bf0acd0e237bbb0ca586fa4b8e59d51",
+        "evals/structured_nlu/ai_heldout.py": "18e0e8341894fb4bfde01d44ae61b86844265224e5aaa7a2b62e90576e145736",
+        "evals/structured_nlu/ai_origin_policy.py": "396ed22c295b95af09ece42a20aa01d7fce2fb0bdee135cf0e2c1fd7e7effeb2",
+        "evals/structured_nlu/ai_reviewed_internal_policy_v1.py": "4fece7f5813506e69b1338453b63000a781ecd27e347b529558c69cf7ed2f05d",
+        "evals/structured_nlu/authoring.py": "6babd706f8cc8da801f0474368432d2d97c49f532d17363c83ae52d9fd2180b3",
+        "evals/structured_nlu/benchmark.py": "3dd9d7b2755afbe85f01db5ee11a1368ddfece90faa031d7adebe11dab161e99",
+        "evals/structured_nlu/boundary_followup_policy.py": "8361a9602af9f955e71aa89dfa7c9b5311cbf1a1d902c096ed62f7d4356ed76e",
+        "evals/structured_nlu/boundary_followup_review.py": "e163dafc391dac6de9f0c48c9feec631ed2d1abd43dfa7874315f035b5552175",
+        "evals/structured_nlu/comparison.py": "207a5fa7695832537cfece1e36875c40f34a9edbf5fa228bb3120b6bd3cca39c",
+        "evals/structured_nlu/contracts.py": "9c5714cc32e01a2873185b2dc7fb010f4955220dba814cb2c48aeba3c105a4a5",
+        "evals/structured_nlu/contrast.py": "fcedd57c78a472a37e1bdf73d038582e4e3ec1c890292a1090557e8deab33a49",
+        "evals/structured_nlu/coverage_candidate_policy.py": "71f54a7f9f3b8706d475658f04c2295f17a9adba120746d2f3bba5b09612567e",
+        "evals/structured_nlu/coverage_candidate_policy_v2.py": "db4643e0fb0537f155f9b241cc634fce5073e94bd17f4e059275c030bd6de886",
+        "evals/structured_nlu/coverage_candidate_policy_v3.py": "5da27174b4d22084b250fdb955f7bc3ccf594943846cc83ae26a83c7893e4cd1",
+        "evals/structured_nlu/coverage_candidate_policy_v4.py": "e64a097ed8ce79088750fe37c4641e90bad3b5681fbc7888dccc4719462bed90",
+        "evals/structured_nlu/coverage_candidate_policy_v5.py": "ec998d5e0227ce8a20245478ad015e1bbfcb19e6eb84a2356a83d1dcdb538670",
+        "evals/structured_nlu/coverage_candidate_policy_v6.py": "eb53d39a5426cef02450e5b2f9706f29c612a55a2f52646210c8572da4f1e4cd",
+        "evals/structured_nlu/coverage_candidate_policy_v7.py": "77ae5cb6eb4b64b204cd24caf179adf9bc58b462ce33b1382668d41d240baa1e",
+        "evals/structured_nlu/coverage_progress.py": "fe85ebff0ff7c8e8ea9351e3915e0570edae889559ee8ebc282a3101b712fe16",
+        "evals/structured_nlu/coverage_v3.py": "c93dad8cf2554ddb7144dd0fc04dacaf83a7ff416ecb5aa417b9b92c38660167",
+        "evals/structured_nlu/draft_seed_policy.py": "b419b2e53502dff2a3462b17b9884dd8863ce5d5eb22149e3e332dba520c5cbe",
+        "evals/structured_nlu/drafting.py": "f0cb3d3f32fb73e187e7b23603d2a1336197efa3150741ef3b0c8699bb73aa68",
+        "evals/structured_nlu/freeze.py": "694a6c364778cbe4e724fdd17e008af5adcb9be942dd3dbd33099a510aea6f8d",
+        "evals/structured_nlu/metrics.py": "bce99364dadeb0ae748df705847a2f8e284fd573aaa433d933fbaaf39786eda2",
+        "evals/structured_nlu/obligations.py": "9d1b4246d041e546801f004606e52f3004484d84a3cd7727c757f8da8e519d98",
+        "evals/structured_nlu/prior_meaning_amendments.py": "498887d4e3ae25d8ba4ec912802c64cc85160528f88542de7c8cbad6b68e64c9",
+        "evals/structured_nlu/review.py": "59e68622a37abfd4e01b3488f9dd86b0896b887b9f3fe8cc686121b8426fc7b8",
+        "evals/structured_nlu/schema.py": "e5c7cc2e3533ea6d963189a3584eb39d8eb906dbc6c557cd88fd0fffcf649fd3",
+        "evals/structured_nlu/semantic_boundary_policy.py": "959532fb5d5d78b4c8c91efe5ccc55ffae6c3da94ad67902f88c5caac57ca66e",
+        "evals/structured_nlu/semantic_boundary_review.py": "a6539ab012889d0fbecbbb213419c3e0dc20376ee7547d4eca93f60141f0dfff",
+        "evals/structured_nlu/semantic_support.py": "ac18d9098d18cf0476b0e40675486f80bbdf7b263c1b4e361868198f3c5d7c38",
+        "evals/structured_nlu/semantics.py": "fce9fa7bdf0bf0c3453b0cbaae10eb726e179cc6a3ad2bbbcab4a966929ae2e3",
+        "evals/structured_nlu/source_evidence.py": "718adf72aac0a5b9d03f40eb3a4b89aff32caf9245b80b1d9656a6d838893d58",
+        "evals/structured_nlu/subagent_candidate_policy.py": "5d0155f7aac0612dabf2d04ee5cdd2e0ad1da36af43a2f3c9b8900f8aba479a4",
+        "experiments/as_safety_v2/__init__.py": "64615758ef05e46666f27c576b8a2d81f5b71115c51a3eee757eb2c0e3102072",
+        "experiments/as_safety_v2/candidate_ids.py": "eb24e7599d61c90ee3a663ff348e20f963db423f0eb39023db7d05ab45bf9802",
+        "experiments/as_safety_v2/cases.py": "2581e91a81a38e77407fccd027ab083739c70a8a2d288d099084ace6432ffa67",
+        "experiments/as_safety_v2/evidence_graph.py": "31c957cda14e0474445bd864d7d40f7790fb7f13924361483e3fb7eb91efe46b",
+        "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
+        "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
+        "experiments/as_safety_v2/probe.py": "f9dae34a72ed0431136570c5107c24733f0b81547866231ca6bbc57786bdf6cc",
+        "experiments/as_safety_v2/quotes.py": "580d7816523c40cdda89850afde042bf5f29a28805e984a1cac643ed0a2a2f88",
+        "experiments/as_safety_v2/relation.py": "d3bc2b5c607e58be6ebdccdea19763a4d4f81d5c976c1d427e4e66cbfd5be058",
+        "experiments/as_safety_v2/run.py": "6350f94e760f777d3f6a82e6dd257fd53c068cc45bbe146238ffb06c30f92be8",
+        "experiments/as_safety_v2/source_lattice.py": "206a7984a921e05e18274bc6468b2e231f9c86c0aa0d923f2dec0875f9e53262",
+        "experiments/as_safety_v2/transport.py": "ccbaab8dae80b78275c6b1af29ce16c5dd3d88933a3db41c6f3b99717d1c8384",
+        "experiments/as_safety_v2/verify.py": "c4bcad9d305845a6fd177a517488bd613fd542ca3dcb1ad99c0dfca0905e41ff",
+        "experiments/as_safety_v2/verify_journal.py": "c5a294d90185684a3db2db1e92210392d656d401458ae87e7f0656e23f893fbc",
+        "experiments/as_safety_v2/verify_sources.py": "c9e296b58d77cdb9c1455105596336e525e498dd108cf70035b69fc9432c11df",
+        "experiments/as_safety_v4/__init__.py": "b5b18d83d34a41acf5c6188af5c7d03da4ff23ab33ac52ac6463d3794cf177f3",
+        "experiments/as_safety_v4/cases.py": "02e0c686c3bddb7593364067916fb6c49b6ca44d5420b85fd810a4053436a4aa",
+        "experiments/as_safety_v4/contract.py": "b7039e6a0562ddb808acf596ab575fc617feb3a8f467dd53e0cd5e44db153613",
+        "experiments/as_safety_v4/run.py": "5ff01016ced5c1fe1028e81cc1533f224fcb7abca6e84e0ba56a4f14e89ac9cb",
+        "experiments/as_safety_v4/verify.py": "21df5ea2758f36f1b2983d7d7e87bff55be5902f5db0e5e1a7504be4e8c473e6",
+        "experiments/nlu_current_baseline_v1/run.py": "dc12451380f5cb26c43e8c8f2599847fdc64d9f41beb10e42f4743e7f2873dc9",
+        "experiments/nlu_current_baseline_v1/verify.py": "7a7e2ef58b50f8a327d1b4ad6f5d4806519870b605078ff785e6bcb464e8d12a",
+        "llm/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "llm/client.py": "312e4a67749c8c898dd9f541a3e85df420499c4bc4769d333bd8b2a70a89e265",
+        "llm/errors.py": "58b11396b6b891998904188a5eacacf3d54b89c21028e0d55d24e5210dad33e3",
+        "llm/huggingface_provider.py": "3cbb729f0fd685625bc0ff0820374c4025a95635ab70971365cb9c0eafa620a0",
+        "llm/prompt_builder.py": "cbeb2d40fdf02134b5ef47120d59e99071f8a3d14b9d15386432d691af45d37d",
+        "llm/structured_output.py": "d43043e48b389df1710ab633f9e9df57a64fdc6e80dd82c521d873c153f02ef5",
+        "llm/system_prompts.py": "caa3aaa2c0b026a230542b4bf44f80c81fb4b8afa6bcd830c496b2fe18375120",
+        "schemas/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "schemas/chat_models.py": "e8838be8efce2243e9d6a2c51a3ea4f9254b9c33911f3b2305e3027ae8fe7b9c",
+        "schemas/tts_models.py": "871d3baf757cef84e2417a2c7c78820807f47fa59f197414233e2b608b8d1615",
+        "scripts/__init__.py": "68f501ad5c795e5090fac421a54c0be5a840bce7f1e6eef1c3fefa509c77bd79",
+        "scripts/action_field_dev_cases.py": "d94003ad3598b91028cc0da328b3ae3fcc7a4d5da57393e51019af88878a7f18",
+        "scripts/analyze_aihub_mature_female_reference.py": "e55615b8b4f2e2bc661c9bd847a2e543b824130aa4808e8df0e3f5035cd43e1a",
+        "scripts/as_safety_completion_v2.py": "a0310fd48f11eb9e0e624d57225f07b8b09ba89c5cfd7aba999befa36e08582e",
+        "scripts/as_safety_consensus_v1.py": "8de48f6c7d863b5779ae7bfbfd6ee7239d471ee177169c555c2006d290f02676",
+        "scripts/as_safety_pair_executor_v2.py": "b0c846ba1480100f1a6715c86c6492c88f13871c75ec29c678816f095d5b043a",
+        "scripts/as_safety_pair_executor_v3.py": "812e609e224e49694a65fe59aab30a3df8f97897b1beee55f5a333ba08e1c734",
+        "scripts/as_safety_preflight_v3.py": "1bf4ab3f2e76e3089cd5552e8a19f21865b085d17d471627e57f7ae0c95b198e",
+        "scripts/audit_as_safety_event_gate_fresh.py": "3c569697fed7d26dd28abeb74411c8ee3b9c67d0257f2cf234dca16e5f125499",
+        "scripts/audit_as_safety_gold_owner_link_journal.py": "49bbb4da66e364559aa6dff81c9117ca34975f2c0b576e3b9f789e462ebd66a0",
+        "scripts/audit_as_safety_layered_failure.py": "3fcaffdaa4522e6aae18618030c18d187d4e770bbaa4768a959d1ebc6407d89a",
+        "scripts/audit_as_safety_owner_evidence_journal.py": "7c7310a593b625f618ef73b645719bd42565b9663862592cd3d30557fc0a8396",
+        "scripts/audit_as_safety_pair_errors.py": "477f70fb20fa82afe744f945f8b632c76a075cc1397829a649e0f77ef3ec7d41",
+        "scripts/audit_as_safety_pre_model_guard.py": "24551bc3aac9fc1bc20f99511069da41bc1b34a3aeeeab0af374609c3caebe2e",
+        "scripts/audit_as_safety_source_lattice.py": "4605d7b6486196fd40572ff368241c63bc352fd631a823d6fa3bdbd64293c8aa",
+        "scripts/audit_as_safety_source_link_development.py": "1457f2b93785691a815a33cd8904dd07273e3879cf13e1520fa7989728098890",
+        "scripts/broad_ai_exploration_cases.py": "1c5d50898949baf1f72646eb102be60997fd181fec0eb765c8ecfd78419ffa15",
+        "scripts/build_as_safety_evidence_graph_labels.py": "138be6605bd2e06c36e3073847a3398db518c1fcb06c269ed8b4c510983198ac",
+        "scripts/build_qwen_mother_voice_clone.py": "7554499b5f30dc3b636252c0775c45430773adde61f540ba7b481a464f846c08",
+        "scripts/check_python_version.py": "3d56425ed5adcf2e695df7f0500eafb51e7a5c2112bde39720c20b9c90d9419a",
+        "scripts/classify_as_safety_typed_relation_failure.py": "18c14135d32b49588319872bef60ea684ac5ddf9755b2731f159af0d5208b0a4",
+        "scripts/compare_action_field_model_reports.py": "6e6052a8929858d74e0a6e8b867b0e0c410a2953b9a8ad29388375a4371b7abe",
+        "scripts/compare_exploratory_gguf_reports.py": "a3664b5dd627349440e88b37baf310b6c26b06422302696dd7c1cef1b1433c24",
+        "scripts/compare_gguf_broad_ai_dev.py": "47b90b108eb50342030f45f24637366007f60fbb59f1a0ff28c51132d2996ac9",
+        "scripts/compare_workflow_schema_experiment.py": "dc61613f40c38402a1e0203ff0b3b572ad7e8c27612643e290514c46126d7297",
+        "scripts/compile_structured_nlu_corpus.py": "4ce6501b19153b37fa6756ff51ba995a702c9e9d5d72507c7c5670809e943299",
+        "scripts/freeze_structured_nlu_benchmark.py": "1427f11343e7c078657b8a1773f58ce42f0abcb994d45aef4212ade80d8239fb",
+        "scripts/fresh_scope_ai_cases.py": "7b802a3e91a540b60c34ef83b0c3c483c35030029e04c53d67f929583a44f11e",
+        "scripts/generate_bark_korean_auditions.py": "8af93960ddb59332c057972c4093aa1fe00c486cf7aca6eb4c37883c94a3d69d",
+        "scripts/generate_chatterbox_audition.py": "ce53532b7ccdb1647aa0ecfce974689d241da1a8d103dc4cb62ef2ad6e531499",
+        "scripts/generate_magpie_tts_auditions.py": "40d96fa21b3e7f87fbf715a0612659eb4bf3803ad6c6f902a0a7c351174b4581",
+        "scripts/generate_melotts_audition.py": "1b9599aa07e1017f8bf3a4a2f14eaf702bdc45e806c1c0f0df2df19986e43bc9",
+        "scripts/generate_qwen_mother_voice_design_auditions.py": "73b58fa4928d3e8104a57fd74467cc2525bba6366ef8069e062baaba5231a290",
+        "scripts/generate_qwen_role_casting_auditions.py": "73c4e809b48a4765ae0c17ca2619e145811b3ee91a1317e11f4468edcaad3f69",
+        "scripts/generate_scenario_tts_auditions.py": "4c8107ad2be8451fbc7cba8b5bf56d841f4dffaa84ecd72c189917a9e412a6ae",
+        "scripts/generate_tts_auditions.py": "eea824d54222fa2121571cec9ea71d2283170cf01c38813018bcf1c11b87f415",
+        "scripts/gguf_action_field_split.py": "88866c35eb43f8d03eca3c0007e35a2ddaab3c556c06e5b49829c0f4e3b09a50",
+        "scripts/gguf_service_workflow_schema.py": "6fce0ab00bfb0d6be8a4458908c505a812cd43497bb32ead229315295b47b090",
+        "scripts/materialize_nlu_review_followup_dataset.py": "5310c4a97fdbefaffb76e15299a27cdc44ab4e31cbacbb54abfc729490173f2b",
+        "scripts/materialize_nlu_safety_confirmation_dataset.py": "ed1fc8e2ec89c658b7b84356280b82f22d6340d946aff648d730f62c1056e3be",
+        "scripts/materialize_nlu_safety_contract_dataset.py": "9674575db5d1dcfef31d47306f94365a20fb2d465665c8475a3886cf2ca2fae6",
+        "scripts/materialize_nlu_safety_postfreeze_dataset.py": "17107a70b2d7db801e3c8939475f6eed2e4caa8cab8d860c677302b579b09d56",
+        "scripts/materialize_nlu_scope_dataset.py": "32bd72971f8463cfebbdd6c8d88e3a6caa284655a514d5ca24b304824a7077e6",
+        "scripts/migrate_baseline_json.py": "644655a634c8448172ccab18f70f38ec97a548590db6d92ddca67cb761d16229",
+        "scripts/migrate_firestore_user_documents.py": "6b2a436b004b5f1d75ce5d9e1157c5bea739641a53db8e218f64563bfa4afa73",
+        "scripts/normalize_tts_pitch_register.py": "fc40575b82bdeb4d04eb730537682f006892eaa1db9da495cf21a018343760d8",
+        "scripts/prepare_hf_model_cache.py": "fc676e1b58bddaea4117e05a103671b0400258640704dfc828aad8285fa7f352",
+        "scripts/probe_as_safety_clause_index.py": "87579cb1ee8d0b236de5a13e81c84ce74823e756987d1407bd19d0709c52f62b",
+        "scripts/probe_as_safety_compact_relation.py": "f2718271a54e9f8b36461de68d34aa654c056831f09ed86f65c5c3decd20e988",
+        "scripts/probe_as_safety_entailment_v2.py": "df9325ca93f03ac530c382cf199439900fe2177f7aa7c4f670d15f61d7991965",
+        "scripts/probe_as_safety_entity_link_v1.py": "f68c9ce08756caf64a273842e1e3e34d98bd83e1f1691c72b010c94ed4a949d3",
+        "scripts/probe_as_safety_event_gate.py": "d2e6c3a84b09a4edaebf6a06a60ca6021d79b456db8b6ff4206859c3f13d92b6",
+        "scripts/probe_as_safety_evidence.py": "9d90f208bdebcc6381eb990f9738b2f378b63fe26e84e0c64b532a423046704b",
+        "scripts/probe_as_safety_gold_owner_link.py": "9c354445e8f317cf7a25b565ccfcc960c7637b7f78393ac5d51185019d5680eb",
+        "scripts/probe_as_safety_grounded_attribution.py": "df1c45f66aefff3aac105a1f43f3b7c098410db510364cf739f4601ceded5c33",
+        "scripts/probe_as_safety_grounded_entity_link_v1.py": "ad935bdcbcad6d07c20c623550bd9e90dc70cde76362af48bf80d32c1a7c77f3",
+        "scripts/probe_as_safety_grounded_entity_link_v2.py": "e1a608a001831f4f06da0f7d774ffa38e2e6915f39eb83c46257877896ef05de",
+        "scripts/probe_as_safety_oracle_relation.py": "323af7e69e0c999df6fb13f1bf7ff90bd806906883e6eec09b0ad9e8791781f5",
+        "scripts/probe_as_safety_owner_evidence.py": "2261dac4d45b5931f9a16db502396c1fc05ca0ede5ccd5a3854f18cfa74484ef",
+        "scripts/probe_as_safety_owner_resolution_v1.py": "7c786006e92a9ee14f5114289843abd95fbb9284b018217d80a996d421797778",
+        "scripts/probe_as_safety_relation.py": "8be4530da9cc1341820a25f6e6aae12ef3afe52123d38b12effbeead5bbc7cd4",
+        "scripts/probe_as_safety_source_link_v1.py": "099a5ebee53e2af9654ae8d242831941e674f16eec4200a8d7b5e4df0cf0d743",
+        "scripts/probe_as_safety_staged_relation.py": "a39f208f7953bfca10f59dd4524171f06f125c845a2c592687e1780609a7708c",
+        "scripts/probe_as_safety_symmetric_entity_link_v1.py": "8230a8997f127a688b0504b6112d1718385f49edbaaf5ab5b85bc8a83bb65d7e",
+        "scripts/probe_as_safety_typed_relation.py": "f58262ba266592f9275e132531a3bce62bedc888a8a75f86a02910b098823ca7",
+        "scripts/probe_chat_latency.py": "952ce41db73a1529b6297dbf8b54a41e1bcbac76ba73058083d34a2e591d9069",
+        "scripts/probe_gguf_action_field_dev.py": "34a5c8cb8eeb9445756d00ee9f1dc38e118163e7ed6de2b0859596e9f986d6a8",
+        "scripts/probe_gguf_ai_candidates.py": "bff72900f62c04b2daee3c16b719d2b736202d36ba560bc3752d6b0d4be60fe6",
+        "scripts/probe_gguf_boundary_followup_pair.py": "9cd51aa0236fc3cfca0eefdee7aaf34c00ef47fd93dcc3ebe19e380c9e8306c1",
+        "scripts/probe_gguf_broad_ai_dev.py": "27f5218454beeb0f1c203a7887979e35e5abb3a7bdac68e2fb0de2fb9a3746d3",
+        "scripts/probe_gguf_field_boundary.py": "7fea9d6c1430527bee36d45fe9557bceeb738a657fe405336ba0c0237006af89",
+        "scripts/probe_gguf_hospital.py": "f091aa5191806e4967e87f771cd226c513fa580dcf7445b73a78ade5eb874dba",
+        "scripts/probe_gguf_out_of_scope_instruction.py": "e470f8cc4ba5326a62d290622bcea387bd953fb79cf99d4c00a7c9537240192f",
+        "scripts/probe_gguf_review_draft_round2.py": "89738aca1522a295fded46a539b8b5aac4a087909180261a68034c51ffc2607a",
+        "scripts/probe_gguf_scope_instruction.py": "a8eebe67367a3a92ccbcb3e5caf430ca3808340ae58a28257e9b0e131a0ce599",
+        "scripts/probe_gguf_semantic_boundary_pair.py": "a2dd8c2a08f6f8e25577fdcaa22352ca0ff2e2c84359dd07be1521a7226d866c",
+        "scripts/probe_gguf_semantic_support.py": "383ff44d9701e3534282c1f7169cc77a9d8c277a64d27c5fe65d7a7f18f2aa6a",
+        "scripts/probe_gguf_source_evidence.py": "25469441b50d6298ffd848b4f00275c58c8c5f77528d14c9e55ef7287006ac10",
+        "scripts/probe_gguf_structured_nlu.py": "152b7b60998278e88b2d9faf155a29864a2e3ad78b0ae0ed5631d5ce02665087",
+        "scripts/probe_gguf_time_instruction.py": "6dd3c02172a89a7620848ebcbcf0e86bef2d6c9973ecfb10e1dc90a24400980e",
+        "scripts/probe_nlu_safety_confirmation_graph.py": "7dd23c148d2ad4913354cace89f8a22e6260d54dcd8154b19d2cdc69645066c0",
+        "scripts/probe_nlu_safety_graph.py": "238ba75e900764d29f67f47e7b439f9f69123d76f56dd0cdd01e8b1741529304",
+        "scripts/probe_nlu_scope_boundary.py": "295983a30d5281d71e64e117013b0aa7c33484906d564277055945771bdfde87",
+        "scripts/probe_safety_focus_development.py": "3cfdbbd3cb967aa3b1ccbc3049b70b32b95b81dceb1a8a45f54d0cd7cf2046d6",
+        "scripts/refine_tts_timing_and_prosody.py": "820e14e382b85e1b8c3487806172f233a31bc99116c47282cf3e4d5eeb5f1989",
+        "scripts/run_ai_heldout_pair.py": "8b1d0753f4096cbf126281e0b020ae4a5a56aa3856cee285e4ca7871dcb6777e",
+        "scripts/run_as_safety_compact_relation_development.py": "453739fcba09848bc47be4927e9e8774f8dca6915a1aa3fae1ca7bceb4e75f8e",
+        "scripts/run_as_safety_consensus_fresh.py": "4611ff416d2d46007f4b0658490ee41dec35ebe2007cc875f0edaec799b1902b",
+        "scripts/run_as_safety_entailment_development.py": "189ee9dce64f813bd9a0d02f1fc5744d9055b9043f7d47d60a7d858add152be7",
+        "scripts/run_as_safety_entity_link_diagnostic.py": "dfbb304f46798d3476d6966967c3261e757f77f988c190bbe79838c50607bb12",
+        "scripts/run_as_safety_event_gate_fresh.py": "6a35d835714ae933696cf728864d9d7d82703f03149892a80a7a05248d83366e",
+        "scripts/run_as_safety_gold_owner_link_diagnostic.py": "fdcd06bd6312059dc39b34450b41c44ee03cf45ba30c766502683f2ceb2117bc",
+        "scripts/run_as_safety_grounded_development.py": "328ec6dfbc10bb5bd4c2386829056d67d2761d351f8376cbfcac9ab5cafa5580",
+        "scripts/run_as_safety_grounded_entity_link_cause_diagnostic.py": "e60c8fbdb7edab54f9a87c7d71cd4d37c693a866347ec3f82e3ee411d6dcf156",
+        "scripts/run_as_safety_grounded_entity_link_diagnostic.py": "2a721486646c0393876c0d1ba89c8794151fcdf92cb94c3f8e71586b19508aeb",
+        "scripts/run_as_safety_oracle_relation_diagnostic.py": "a20d57f0ec08d4dd64cb670d261c2a831ed6cfb702b369a9c16950396df79078",
+        "scripts/run_as_safety_owner_evidence_diagnostic.py": "c10c5a8d3f73aac75344d7cb129b65204d053c9bc0a3913f94c56f274e0d2c89",
+        "scripts/run_as_safety_owner_resolution_development.py": "e3cdc32f63f657d84042b94450dbbdefc9f4ea48042ddc94717dd39d19ffa108",
+        "scripts/run_as_safety_quantization_development_pair.py": "502d681a43631f0e181d87c76f96ddc4756348616c172639d6eab38adce30b05",
+        "scripts/run_as_safety_relation_pair.py": "f9fa857480b30247c6bee417e509c3e71a9a29453d18687ae44fdec20ac33266",
+        "scripts/run_as_safety_staged_relation_development.py": "c9e153e44b42a974bd34fcd62556da72605010bdc4695a1fe0185be46cca4eba",
+        "scripts/run_as_safety_symmetric_link_development.py": "219ade25de74737ef02ae6dd0d47823a14cb01364f96f9be5290e94b8dafe742",
+        "scripts/run_as_safety_typed_relation_development.py": "7603f81de0841a9310724d8657fc04e647abc9c9b8c0e3b3cec297303c763534",
+        "scripts/run_as_safety_typed_relation_diagnostic.py": "f43d57abb46c2f0084be15be528cef5b3751b9ca0dc17b9a5249ffbef47e406c",
+        "scripts/run_nlu_safety_confirmation_pair.py": "64ad5b6d1b4b1d27f7fbe00b527428a149884b79d0bd2cfb489dd853dc68a5d7",
+        "scripts/run_nlu_safety_graph_pair.py": "9a207062ab4a88c3ae17d915c2b40442056a3adea799da975a88145da45aab94",
+        "scripts/run_nlu_safety_postfreeze_pair.py": "cb68a6edd4eb38c5b199c71460ae28d569a9dd33422b3eac36801468d88c650e",
+        "scripts/run_nlu_scope_revision_pair.py": "a76b117c327f849c0e612fa746904945b80e8a98b40dd1583df1be5bbb280d68",
+        "scripts/tts_audition_common.py": "2d2fbc58b68400a30d9f97052cd9b4fdf2f0faac8c9edcd62f2724f9a2740d1e",
+        "scripts/validate_nlu_review_draft.py": "a2f942844fa8e935c16e27f1624b53ee0f1be47ffbf16321700c3ef29f96534b",
+        "scripts/verify_as_safety_compact_relation_development.py": "32fdc884f34e2cc5a5aa4cf8208750faf1cf0e4645586aa2e552fe7fa092d671",
+        "scripts/verify_as_safety_consensus_fresh.py": "1d581afc269d35fc505a574450095c0ae3ee4d81691f066b236de109be2fc474",
+        "scripts/verify_as_safety_entailment_development.py": "701318863153beaf104a4e8b1b8a6f7f8fe25031be569938595cbe24b9a296ff",
+        "scripts/verify_as_safety_entity_link_diagnostic.py": "fc1449e6d6fddc8eeff528ad0cbe9400e0572b3e605b01a4ca7bbc6d73c83b0b",
+        "scripts/verify_as_safety_event_gate_fresh.py": "7df501a0e92e7d751e8cb7d1f3ff15b650d0f49d13eac7667e0b939e3de9b41c",
+        "scripts/verify_as_safety_gold_owner_link_diagnostic.py": "b764097780440d98cebadf9638ebbcb71a9b7a22dadb7ff59065b21a946fb83e",
+        "scripts/verify_as_safety_grounded_development.py": "d5908e4e2a21d1a2d8bd45de9065a53105faad00a0df46c97b54694e83d39714",
+        "scripts/verify_as_safety_grounded_entity_link_cause_diagnostic.py": "e5b4e9156f235f739ebfe69081300960cf28282fd80bdb172777f434ecb5bcb7",
+        "scripts/verify_as_safety_grounded_entity_link_diagnostic.py": "f7917d47d737b540b88d944a50b67d8f6f42a928c9499e0709a62c5b752a9b10",
+        "scripts/verify_as_safety_oracle_relation_diagnostic.py": "0ce904c7f5836484c851f8222d887512466acc64a54d36e22dabeb8f812e4cea",
+        "scripts/verify_as_safety_owner_evidence_diagnostic.py": "491b4af2eb1b31001c8f97d44583661ead1404f41d3ee203fab2cef962fcdc76",
+        "scripts/verify_as_safety_owner_resolution_development.py": "b0479b594e9eae093641e9057fa3a76dd50fac1d4697aca91622d53222da560b",
+        "scripts/verify_as_safety_pair_journal_v2.py": "f58adbda4974e7bdc89084e0fd921b94e74fecf24d63d3c9f4620e4be775c109",
+        "scripts/verify_as_safety_pair_journal_v3.py": "f84efe63cc4f2fc3c94cb573797909ca00d39f9a4102d9e75c71bbfdf7e8412d",
+        "scripts/verify_as_safety_quantization_development_pair.py": "e190f015e6aa47505e80c5a7cbd797714a2596cb6f36d482ee8907475a81a401",
+        "scripts/verify_as_safety_relation_pair.py": "0ed6e739d86e13994f6801f6f24417bcaaa89063bd2b7199723da92a8d17b0f6",
+        "scripts/verify_as_safety_staged_relation_development.py": "ebab0cdbfc6813fafbe34190cb21d5aed190f42a8855a79cd12971d20fbaf208",
+        "scripts/verify_as_safety_symmetric_link_development.py": "4a45997c4ddc97f9661138d3d472952fadf99ced73a579bc11a45a66c1e930d7",
+        "scripts/verify_as_safety_typed_relation_development.py": "7afc7ffc355472dedab6cdeace34c8739cf790dfc43cf30ff53b0fbbaac6f263",
+        "scripts/verify_as_safety_typed_relation_diagnostic.py": "1bb47dd57bf28844b995a67642efcd5058b9b58450d0ba04919db858b6a5b6d3",
+        "scripts/verify_core_container.py": "8478b235119093805756c20fa3e031f920e5951c1226897434639056e84db6e5",
+        "scripts/verify_nlu_safety_confirmation_pair.py": "ff14f2ef68ecb755cc1da35c25f7167a75d8006318457ca9eb2e3a16601e7fd0",
+        "scripts/verify_nlu_safety_graph_pair.py": "662d26a155eefdac88f31c9f46ef314b9d4483c9368727fbe2d68b82fc92fb28",
+        "scripts/verify_nlu_safety_postfreeze_pair.py": "70e78d08c60072b5c2131139971a77ce72fba6e063ed375e00728306c4e5c6c7",
+        "scripts/verify_nlu_scope_revision_pair.py": "04f09a2253cb3f21e2ab085a6e60f5ce42422c82e674f38eb5253db5c9ebf06c",
+        "services/flow/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/cityhall/__init__.py": "d0b9444ce051ea1dbd6d36e6f2de43723ecdc7db3b057361a9b5dbd733c10a7d",
+        "services/flow/cityhall/contracts.py": "bae669646dde9dc288202e566fc10d6abeb657366beac582d2cb43fa6f01b7ed",
+        "services/flow/common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/common/detailed_state_validation.py": "d990754ab240fb9a686ad559d9d1b57b954f5ac97029a3e0aff653057bca9446",
+        "services/flow/common/scenario_keys.py": "9fd1feef16588fd4c91cc0085a0300119d28134d9d35014286c40fa1dd878a29",
+        "services/flow/common/state_contract.py": "26d64f0d60cf6f136c0fdf75eff4d546ad24f1f05de7fb2cec14c75eff95a3a2",
+        "services/flow/delivery/__init__.py": "42eb1329d298302d28fded626b9f78a04cff0d5211b4ac86073e2a631f1db8d7",
+        "services/flow/delivery/contracts.py": "366c923e9661f121dca24d8c5b338fa40571cf4ab49d37b2e67b503c4e7d11b6",
+        "services/flow/professor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/professor/absence/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/professor/absence/generation.py": "8cd7b8f21944d90c74d60ea284e918c959dc393a5b9e0f0f0669d7dc2c2d220b",
+        "services/flow/professor/absence/graph.py": "adfb7b6bf4e0a763cb5ee0989a5906c45528f04bd5ec36f30fb197f935348bb9",
+        "services/flow/professor/absence/llm_structured.py": "316347f31afc3c526ac234ee9c0fdff270ecfbcb2e9d48bec07458b296b37fa9",
+        "services/flow/professor/absence/nodes.py": "2a09774d53aa59ed4f65455da61d5dc50af1d55ee5f136af21e2247ac5695088",
+        "services/flow/professor/absence/policy.py": "c303d8b51985eb330d39015bad2d6dc8d91b4e46580bbeb1438654de33e6b36f",
+        "services/flow/professor/absence/replies.py": "dffbe34a40c1c7a5f577952ac983c973f3f722070e76d081274e73d53cfb08d2",
+        "services/flow/professor/absence/response.py": "d939368110850428710a618c7fd2e3a3bc4dc95d0ad726b93dcb201d77468973",
+        "services/flow/professor/absence/response_policy.py": "c712b16310db2a64870be625b5187eded4596bb9e1855041e2aa7d4ccd768739",
+        "services/flow/professor/absence/state.py": "951a0dadebbcc1c37572d36a4b4c9faad00e408ce2d856e0d6f5ef8eb4bc231f",
+        "services/flow/professor/appointment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/professor/appointment/generation.py": "4dce7b5ce9d768e92b6ba534bd2f61174c8330f5aa921a8bb5196dda77210c49",
+        "services/flow/professor/appointment/graph.py": "f59279e1d867caa98b9046d9a82888d2f8b89a7d6935bd88061a047554c1aacf",
+        "services/flow/professor/appointment/llm_structured.py": "a806e6c9459d23cf6135c35e1b1e10926807a0b0d00691c7c0dbf248394de5dd",
+        "services/flow/professor/appointment/nodes.py": "132a1509eed50ea551ed8de00650818c38094ab23d0cc49df993bf5cc52a2b0a",
+        "services/flow/professor/appointment/policy.py": "034feb1b94f0b44866d47ebac863a11991192754a020fbecd3ef31d7f8ad1d62",
+        "services/flow/professor/appointment/replies.py": "d7a9c0c5668d33a13a255c9cd5d52aaed9fec567ef0d70b05f9652277a41d9d0",
+        "services/flow/professor/appointment/response.py": "2809b4f3c8b0d29f98bdf340b416e141039e4370e6cdd704d870a45cefc66d37",
+        "services/flow/professor/appointment/response_policy.py": "bdd70c954ffd36ac862734cefe20abe79def05fa3d4e7feff5737de925849689",
+        "services/flow/professor/appointment/state.py": "bae788487a15fe90bf794dd2105705cf11edc3bd4d4cc3b287a5959a41b20f72",
+        "services/flow/professor/assignment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/professor/assignment/generation.py": "d1e2c8f3b522af88ac1a37673ef93f8286d7e9827da19166463a658a8f1e0ad9",
+        "services/flow/professor/assignment/graph.py": "5fb729a0ea43eee9c6bdc7811aa4b9fb87f5827dea3855c9389f7a82bb182454",
+        "services/flow/professor/assignment/llm_structured.py": "050bd795a4715dedad0a4e0d6d3a98d34f6edec9c70063daedc245b9d4a317a9",
+        "services/flow/professor/assignment/nodes.py": "613aefa324da1f0b6c48d4053e9a5ec07fbcf90441a85d9eb2844f4f35e18665",
+        "services/flow/professor/assignment/policy.py": "98244c0be40169deeb0cad9aed45adaebad32c2affc0aa75ea4d33ea4566f175",
+        "services/flow/professor/assignment/replies.py": "e370dd486a5171c78ec96460a09616786cf34ccf3dfdab6e988a72ea2398b01f",
+        "services/flow/professor/assignment/response.py": "5abf209058e79d49f071bcdebf38f8f62873cd971898848975922c0cc86b364f",
+        "services/flow/professor/assignment/response_policy.py": "508ed9fc6ad2e4c5ae8bebf474838f9e565c12909b9bcf4569ce4dc6aa1d7904",
+        "services/flow/professor/assignment/state.py": "69a3a13d7c084fef6a98e11e1032c3c60aa5e86eb904ec45f9c117decae642a9",
+        "services/flow/professor/common/__init__.py": "e9b4cd3311b8080cb0526f250ad6e7eb52915c079ced85451a383811ac758983",
+        "services/flow/professor/common/graph.py": "cdbeec846ba42f000893a395b2e1cd9383258c0c2f336a888cac86d822b59d73",
+        "services/flow/registry.py": "65cd3414acfb0ccb436cab0fe84873295b6d169cf217c3f1f69081ef908f0663",
+        "services/flow/reservation/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/common/availability_contract.py": "0247a8b1becff697b3a6e8a60c8b89ab4719b2d907ad8a692021f87ff129e769",
+        "services/flow/reservation/common/availability_provider.py": "3e39ade3b5dff0024c17d7906571e2251158aff96e43328b6e939cfc023f3077",
+        "services/flow/reservation/common/graph_builder.py": "ee05e22904e29f23d130340a645cf9622aa39185c200b29657919ae3f427a83f",
+        "services/flow/reservation/common/structured_contract.py": "1c398d27736e67a752cf4a3ad59e824f6c3a087471f470e6c81a9128445d7467",
+        "services/flow/reservation/common/time_utils.py": "d0b5ac07eb1fc39dca9b9a3378cc30ce26bd2ea5446933707e9006ea2f1c5b7b",
+        "services/flow/reservation/hair_salon/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/hair_salon/availability.py": "7a0414be2165c0b549d2b8f4025aa1c4e09c692d37adafb2d1090a573b8dc65a",
+        "services/flow/reservation/hair_salon/generation.py": "0b21a13aae0611e228b45e3bd4ae6347f9f14167d8ab57f848090a3dd800babf",
+        "services/flow/reservation/hair_salon/graph.py": "d13df15f87796b688d9f447419e5de7d34e04ebc829ddb25a3255d448bb241ce",
+        "services/flow/reservation/hair_salon/llm_structured.py": "83c0eb608a0b6275d125154ef65ce90edd003201da87b7055330a8f93e9c2907",
+        "services/flow/reservation/hair_salon/nodes.py": "09e93d182095fc1a39f60591945029a3393c87f1be30d571b2765215dd2d9e7a",
+        "services/flow/reservation/hair_salon/policy.py": "48293c516dafdb0c72b2f9066ee912dd103d2dec11987b62ffc5d304ac95a907",
+        "services/flow/reservation/hair_salon/replies.py": "b010da14e3988267c001de3d6fb0fc94ce68197a799bcbc099e9f814bd303a34",
+        "services/flow/reservation/hair_salon/response.py": "ccaad73ee85688caaeaafd032677f36642d8ba31371021aa4916631272ebd026",
+        "services/flow/reservation/hair_salon/response_policy.py": "e65c0f158f4a00cdec5d9db30d9f6b9a61d58cb481c39066850d7a5996df6371",
+        "services/flow/reservation/hair_salon/state.py": "68428c4d39671054bcb37b179d19683c841b535e9b138ded8eb502fef126f79b",
+        "services/flow/reservation/hospital/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/hospital/availability.py": "3a255909cc5b84698a6521a9bce4056d40e5357f6af7df9cc39b3e61af8bad30",
+        "services/flow/reservation/hospital/generation.py": "918677358290d4de0d5bf1a7b1fc492d4333d46f8ce30853ca52b2488a3a503e",
+        "services/flow/reservation/hospital/graph.py": "bcf9e1489252ecfb7982f83a085b94f49a3f20bd46283d3a4ecb47decd99f397",
+        "services/flow/reservation/hospital/llm_structured.py": "1b032f5190094aa2e1d42026a42dac51b5395cba6ba625bcfa384b31ae2c39e4",
+        "services/flow/reservation/hospital/nodes.py": "82f89368cc3f3528e028ad38c6120b0904e0ba1508fb6dc23d732ec2b0c5a8fa",
+        "services/flow/reservation/hospital/policy.py": "90f2c6b47534c528f5aca05303e626dd34eeb705f44eaaa4003b9e7fbf10ac9c",
+        "services/flow/reservation/hospital/replies.py": "5fb7df06affbb347daa15f0a4431b5abc94461039ba6bc32709219303f53173f",
+        "services/flow/reservation/hospital/response.py": "7b2e19e338a68ffefe408498efe51477b158383d6f9a4cba6691ce5e5164b46d",
+        "services/flow/reservation/hospital/response_policy.py": "16d68e22890ae6f769880264d743d2079325e805abe45b0641dbd3407489912c",
+        "services/flow/reservation/hospital/state.py": "b80647e1a8f14bfada89263a0ef38c1fde5b5a73c9fc4494149d468c0a346529",
+        "services/flow/reservation/restaurant/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/restaurant/availability.py": "d8ab4678fd7aef5baed501ec8955dff944cc71a28dd991fb0614761e835e3d02",
+        "services/flow/reservation/restaurant/generation.py": "a7bd201f2beb324d83850e6d3aebaa41f47153487b092731578453f27de396a6",
+        "services/flow/reservation/restaurant/graph.py": "9dd9a7899b46cf97f1d92e3944910a2463e1cc4b22e47d85b39303e1d7ce23ce",
+        "services/flow/reservation/restaurant/llm_structured.py": "eaddeeb1831d46f92e8664fc24e9dff6e7b6939dff705a46b72fa04aaac9579c",
+        "services/flow/reservation/restaurant/nodes.py": "06afb0ef764eeb3a9fa0a1e15d274fd9c888e9c55c60bcbb0fed5b17bf4c662f",
+        "services/flow/reservation/restaurant/policy.py": "9f69530ced73340ded74463007f8b637ef46730b5d29267184dbf969db0d9e6b",
+        "services/flow/reservation/restaurant/replies.py": "bb49ae12a094a66c72afddaaa4c6250c5d597f0214cc97c494a6cd0d9bb95223",
+        "services/flow/reservation/restaurant/response.py": "2b017121026382ae32b48edd4acb337f7e954114c8627b708de67411ba03371e",
+        "services/flow/reservation/restaurant/response_policy.py": "82634e330ecaa275e7d7bac3239f9272e7361b2c36c05cb2957e271f2c4e0dfb",
+        "services/flow/reservation/restaurant/state.py": "b9040c3eab39a9f76db915f14c453f8ef599730baca3028635648879275b92c3",
+        "services/flow/reservation/study_room/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/study_room/availability.py": "2ea2a08c59fd1d45d5721b204d4ee34d4c43f887bfdca6b7390c7c50a8383f1e",
+        "services/flow/reservation/study_room/generation.py": "f88c4acb1c97001c19a41c7a425ea4b83516f661b05c4a287d78b5a80eee3ea6",
+        "services/flow/reservation/study_room/graph.py": "3a9f7174072c926dc8ef4dbbbec5a2a463a00aa2e679161b1e4caebb52e41c16",
+        "services/flow/reservation/study_room/llm_structured.py": "88b8b078c008711aef60d070a86c3920e281160a9e74f74df9a9a90d3a3c0b75",
+        "services/flow/reservation/study_room/nodes.py": "1450a83eeb62bbdedd01dbbfbbc38cdac0cb85ac30a1f5eba8541e935c2ecef6",
+        "services/flow/reservation/study_room/policy.py": "fe2b9f434d207e037bddad4341424f036537a5ef5aa76be8b8e7a5465a99d9ab",
+        "services/flow/reservation/study_room/response.py": "3146893a24e4b40e161941f0d65f7950746dbbd7a6cc7228ccd6fa6aea31762a",
+        "services/flow/reservation/study_room/response_policy.py": "885dbb88a6a878bf6a30d0c18cc3a86668b616a1ed2a8cea951596cb1b121543",
+        "services/flow/reservation/study_room/state.py": "62cd6f51ca09a53a3e4113773903d7876a0e13eecccc78db881a0bdd0ea63131",
+        "services/flow/scenario/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "services/flow/scenario/graph.py": "904bd5ad8802e22cd808541009e16967094e2f40de6101efbec203ae51a2b3e5",
+        "services/flow/scenario/registry.py": "64b962ba8a2f5657c79f5ea3a1b04e9b0b55b4cda4faf8f07e7375cdcff11fc8",
+        "services/flow/scenario/response.py": "6765e1e92f54c42f649cbed1c92be09d5b719fe317c20b8e6430807ab50f97c2",
+        "services/flow/scenario/state.py": "af4baa717763bef28326764571f67aa8474d902623999377ccfd6690a9020844",
+        "services/flow/service_workflow/__init__.py": "d9f9322261000021ec66cf9c8e180de5dad404b3be009351ac9377373b9b7789",
+        "services/flow/service_workflow/contracts.py": "0e3de7faf97e601054d9d859b430d143974713e4530374ecffb7efe2c227e5d0",
+        "services/flow/service_workflow/graph.py": "51127738cfb8b44b8852396a41ccbda485ec070940503040f92db9f122de5b69",
+        "services/flow/service_workflow/nodes.py": "fb7a818f5bbfd079dae3cf359f7e2832c8888f83663fe012e4dadff6f0eae15c",
+        "services/flow/service_workflow/safety.py": "37b71a3fdee51c9b99b4486248c4889717ca24e30493cb73173b0c2a7c847951",
+        "services/flow/service_workflow/state.py": "1c59e4329681903198fdd2e1a2aa57c79d86a4621c7fd28edcb809de8661f571",
+        "services/flow/service_workflow/structured.py": "a4b5748fd5a9abc351b779f399246492d21c16e61a83f7e78fff8bdf2486786d",
+        "services/flow/service_workflow/structured_contract.py": "0b11f8e4d13a5af4461d21559d9eaf6d63645c1aa6f556753d4ee12c85cdc3d6",
+        "services/flow/support/__init__.py": "be157f95b984dc8714f85a0dc3c60ff51810b5ca738ec8700be724333cbc8c17",
+        "services/flow/support/contracts.py": "e1413f011ce3a27661cd064ac4047cbc47880ae2c9235af45930c842081de7e9"
+      }
+    },
+    "candidate": {
+      "commit": "04af27849563f7b30845441e0f8fc6ca90f876ff",
+      "source_manifest": {
+        "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "core/auth.py": "5bee436fa5f78d3423f69e242752867e646f12e24fc0b19cea242fcd0791aebf",
+        "core/config.py": "46ba2dc5a0375d949f6454734bab97d2f03471fc83bb93d399801f7735c43794",
+        "core/database.py": "3a601d8730d1b6dc8a7dfeecbedc7b00e34b5c0eea2df8bdf5e3820f5d5b2334",
+        "core/models.py": "c7fa5bf3a40a1418848a0d4bfadd40d036c1b5f77689107f63359820d2caa904",
+        "core/observability.py": "19b73a76e869f10e3dbf2283a55fe575343d1a953f58603c4e9bd3365d6a0f8e",
+        "evals/structured_nlu/__init__.py": "641ba84e26228ca7f18b9d2bd310cd7f0bf0acd0e237bbb0ca586fa4b8e59d51",
+        "evals/structured_nlu/ai_heldout.py": "18e0e8341894fb4bfde01d44ae61b86844265224e5aaa7a2b62e90576e145736",
+        "evals/structured_nlu/ai_origin_policy.py": "396ed22c295b95af09ece42a20aa01d7fce2fb0bdee135cf0e2c1fd7e7effeb2",
+        "evals/structured_nlu/ai_reviewed_internal_policy_v1.py": "4fece7f5813506e69b1338453b63000a781ecd27e347b529558c69cf7ed2f05d",
+        "evals/structured_nlu/authoring.py": "6babd706f8cc8da801f0474368432d2d97c49f532d17363c83ae52d9fd2180b3",
+        "evals/structured_nlu/benchmark.py": "3dd9d7b2755afbe85f01db5ee11a1368ddfece90faa031d7adebe11dab161e99",
+        "evals/structured_nlu/boundary_followup_policy.py": "8361a9602af9f955e71aa89dfa7c9b5311cbf1a1d902c096ed62f7d4356ed76e",
+        "evals/structured_nlu/boundary_followup_review.py": "e163dafc391dac6de9f0c48c9feec631ed2d1abd43dfa7874315f035b5552175",
+        "evals/structured_nlu/comparison.py": "207a5fa7695832537cfece1e36875c40f34a9edbf5fa228bb3120b6bd3cca39c",
+        "evals/structured_nlu/contracts.py": "9c5714cc32e01a2873185b2dc7fb010f4955220dba814cb2c48aeba3c105a4a5",
+        "evals/structured_nlu/contrast.py": "fcedd57c78a472a37e1bdf73d038582e4e3ec1c890292a1090557e8deab33a49",
+        "evals/structured_nlu/coverage_candidate_policy.py": "71f54a7f9f3b8706d475658f04c2295f17a9adba120746d2f3bba5b09612567e",
+        "evals/structured_nlu/coverage_candidate_policy_v2.py": "db4643e0fb0537f155f9b241cc634fce5073e94bd17f4e059275c030bd6de886",
+        "evals/structured_nlu/coverage_candidate_policy_v3.py": "5da27174b4d22084b250fdb955f7bc3ccf594943846cc83ae26a83c7893e4cd1",
+        "evals/structured_nlu/coverage_candidate_policy_v4.py": "e64a097ed8ce79088750fe37c4641e90bad3b5681fbc7888dccc4719462bed90",
+        "evals/structured_nlu/coverage_candidate_policy_v5.py": "ec998d5e0227ce8a20245478ad015e1bbfcb19e6eb84a2356a83d1dcdb538670",
+        "evals/structured_nlu/coverage_candidate_policy_v6.py": "eb53d39a5426cef02450e5b2f9706f29c612a55a2f52646210c8572da4f1e4cd",
+        "evals/structured_nlu/coverage_candidate_policy_v7.py": "77ae5cb6eb4b64b204cd24caf179adf9bc58b462ce33b1382668d41d240baa1e",
+        "evals/structured_nlu/coverage_progress.py": "fe85ebff0ff7c8e8ea9351e3915e0570edae889559ee8ebc282a3101b712fe16",
+        "evals/structured_nlu/coverage_v3.py": "c93dad8cf2554ddb7144dd0fc04dacaf83a7ff416ecb5aa417b9b92c38660167",
+        "evals/structured_nlu/draft_seed_policy.py": "b419b2e53502dff2a3462b17b9884dd8863ce5d5eb22149e3e332dba520c5cbe",
+        "evals/structured_nlu/drafting.py": "f0cb3d3f32fb73e187e7b23603d2a1336197efa3150741ef3b0c8699bb73aa68",
+        "evals/structured_nlu/freeze.py": "694a6c364778cbe4e724fdd17e008af5adcb9be942dd3dbd33099a510aea6f8d",
+        "evals/structured_nlu/metrics.py": "bce99364dadeb0ae748df705847a2f8e284fd573aaa433d933fbaaf39786eda2",
+        "evals/structured_nlu/obligations.py": "9d1b4246d041e546801f004606e52f3004484d84a3cd7727c757f8da8e519d98",
+        "evals/structured_nlu/prior_meaning_amendments.py": "498887d4e3ae25d8ba4ec912802c64cc85160528f88542de7c8cbad6b68e64c9",
+        "evals/structured_nlu/review.py": "59e68622a37abfd4e01b3488f9dd86b0896b887b9f3fe8cc686121b8426fc7b8",
+        "evals/structured_nlu/schema.py": "e5c7cc2e3533ea6d963189a3584eb39d8eb906dbc6c557cd88fd0fffcf649fd3",
+        "evals/structured_nlu/semantic_boundary_policy.py": "959532fb5d5d78b4c8c91efe5ccc55ffae6c3da94ad67902f88c5caac57ca66e",
+        "evals/structured_nlu/semantic_boundary_review.py": "a6539ab012889d0fbecbbb213419c3e0dc20376ee7547d4eca93f60141f0dfff",
+        "evals/structured_nlu/semantic_support.py": "ac18d9098d18cf0476b0e40675486f80bbdf7b263c1b4e361868198f3c5d7c38",
+        "evals/structured_nlu/semantics.py": "fce9fa7bdf0bf0c3453b0cbaae10eb726e179cc6a3ad2bbbcab4a966929ae2e3",
+        "evals/structured_nlu/source_evidence.py": "718adf72aac0a5b9d03f40eb3a4b89aff32caf9245b80b1d9656a6d838893d58",
+        "evals/structured_nlu/subagent_candidate_policy.py": "5d0155f7aac0612dabf2d04ee5cdd2e0ad1da36af43a2f3c9b8900f8aba479a4",
+        "experiments/as_safety_v2/__init__.py": "64615758ef05e46666f27c576b8a2d81f5b71115c51a3eee757eb2c0e3102072",
+        "experiments/as_safety_v2/candidate_ids.py": "eb24e7599d61c90ee3a663ff348e20f963db423f0eb39023db7d05ab45bf9802",
+        "experiments/as_safety_v2/cases.py": "2581e91a81a38e77407fccd027ab083739c70a8a2d288d099084ace6432ffa67",
+        "experiments/as_safety_v2/evidence_graph.py": "31c957cda14e0474445bd864d7d40f7790fb7f13924361483e3fb7eb91efe46b",
+        "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
+        "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
+        "experiments/as_safety_v2/probe.py": "f9dae34a72ed0431136570c5107c24733f0b81547866231ca6bbc57786bdf6cc",
+        "experiments/as_safety_v2/quotes.py": "580d7816523c40cdda89850afde042bf5f29a28805e984a1cac643ed0a2a2f88",
+        "experiments/as_safety_v2/relation.py": "d3bc2b5c607e58be6ebdccdea19763a4d4f81d5c976c1d427e4e66cbfd5be058",
+        "experiments/as_safety_v2/run.py": "6350f94e760f777d3f6a82e6dd257fd53c068cc45bbe146238ffb06c30f92be8",
+        "experiments/as_safety_v2/source_lattice.py": "206a7984a921e05e18274bc6468b2e231f9c86c0aa0d923f2dec0875f9e53262",
+        "experiments/as_safety_v2/transport.py": "ccbaab8dae80b78275c6b1af29ce16c5dd3d88933a3db41c6f3b99717d1c8384",
+        "experiments/as_safety_v2/verify.py": "c4bcad9d305845a6fd177a517488bd613fd542ca3dcb1ad99c0dfca0905e41ff",
+        "experiments/as_safety_v2/verify_journal.py": "c5a294d90185684a3db2db1e92210392d656d401458ae87e7f0656e23f893fbc",
+        "experiments/as_safety_v2/verify_sources.py": "c9e296b58d77cdb9c1455105596336e525e498dd108cf70035b69fc9432c11df",
+        "experiments/as_safety_v4/__init__.py": "b5b18d83d34a41acf5c6188af5c7d03da4ff23ab33ac52ac6463d3794cf177f3",
+        "experiments/as_safety_v4/cases.py": "02e0c686c3bddb7593364067916fb6c49b6ca44d5420b85fd810a4053436a4aa",
+        "experiments/as_safety_v4/contract.py": "b7039e6a0562ddb808acf596ab575fc617feb3a8f467dd53e0cd5e44db153613",
+        "experiments/as_safety_v4/run.py": "5ff01016ced5c1fe1028e81cc1533f224fcb7abca6e84e0ba56a4f14e89ac9cb",
+        "experiments/as_safety_v4/verify.py": "21df5ea2758f36f1b2983d7d7e87bff55be5902f5db0e5e1a7504be4e8c473e6",
+        "experiments/nlu_current_baseline_v1/run.py": "dc12451380f5cb26c43e8c8f2599847fdc64d9f41beb10e42f4743e7f2873dc9",
+        "experiments/nlu_current_baseline_v1/verify.py": "7a7e2ef58b50f8a327d1b4ad6f5d4806519870b605078ff785e6bcb464e8d12a",
+        "llm/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "llm/client.py": "312e4a67749c8c898dd9f541a3e85df420499c4bc4769d333bd8b2a70a89e265",
+        "llm/errors.py": "58b11396b6b891998904188a5eacacf3d54b89c21028e0d55d24e5210dad33e3",
+        "llm/huggingface_provider.py": "3cbb729f0fd685625bc0ff0820374c4025a95635ab70971365cb9c0eafa620a0",
+        "llm/prompt_builder.py": "cbeb2d40fdf02134b5ef47120d59e99071f8a3d14b9d15386432d691af45d37d",
+        "llm/structured_output.py": "5af31017ef8af7b0fd8bbbc15cacdbeed61e56577401c71f6b30550b543a4ba3",
+        "llm/system_prompts.py": "caa3aaa2c0b026a230542b4bf44f80c81fb4b8afa6bcd830c496b2fe18375120",
+        "schemas/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "schemas/chat_models.py": "e8838be8efce2243e9d6a2c51a3ea4f9254b9c33911f3b2305e3027ae8fe7b9c",
+        "schemas/tts_models.py": "871d3baf757cef84e2417a2c7c78820807f47fa59f197414233e2b608b8d1615",
+        "scripts/__init__.py": "68f501ad5c795e5090fac421a54c0be5a840bce7f1e6eef1c3fefa509c77bd79",
+        "scripts/action_field_dev_cases.py": "d94003ad3598b91028cc0da328b3ae3fcc7a4d5da57393e51019af88878a7f18",
+        "scripts/analyze_aihub_mature_female_reference.py": "e55615b8b4f2e2bc661c9bd847a2e543b824130aa4808e8df0e3f5035cd43e1a",
+        "scripts/as_safety_completion_v2.py": "a0310fd48f11eb9e0e624d57225f07b8b09ba89c5cfd7aba999befa36e08582e",
+        "scripts/as_safety_consensus_v1.py": "8de48f6c7d863b5779ae7bfbfd6ee7239d471ee177169c555c2006d290f02676",
+        "scripts/as_safety_pair_executor_v2.py": "b0c846ba1480100f1a6715c86c6492c88f13871c75ec29c678816f095d5b043a",
+        "scripts/as_safety_pair_executor_v3.py": "812e609e224e49694a65fe59aab30a3df8f97897b1beee55f5a333ba08e1c734",
+        "scripts/as_safety_preflight_v3.py": "1bf4ab3f2e76e3089cd5552e8a19f21865b085d17d471627e57f7ae0c95b198e",
+        "scripts/audit_as_safety_event_gate_fresh.py": "3c569697fed7d26dd28abeb74411c8ee3b9c67d0257f2cf234dca16e5f125499",
+        "scripts/audit_as_safety_gold_owner_link_journal.py": "49bbb4da66e364559aa6dff81c9117ca34975f2c0b576e3b9f789e462ebd66a0",
+        "scripts/audit_as_safety_layered_failure.py": "3fcaffdaa4522e6aae18618030c18d187d4e770bbaa4768a959d1ebc6407d89a",
+        "scripts/audit_as_safety_owner_evidence_journal.py": "7c7310a593b625f618ef73b645719bd42565b9663862592cd3d30557fc0a8396",
+        "scripts/audit_as_safety_pair_errors.py": "477f70fb20fa82afe744f945f8b632c76a075cc1397829a649e0f77ef3ec7d41",
+        "scripts/audit_as_safety_pre_model_guard.py": "24551bc3aac9fc1bc20f99511069da41bc1b34a3aeeeab0af374609c3caebe2e",
+        "scripts/audit_as_safety_source_lattice.py": "4605d7b6486196fd40572ff368241c63bc352fd631a823d6fa3bdbd64293c8aa",
+        "scripts/audit_as_safety_source_link_development.py": "1457f2b93785691a815a33cd8904dd07273e3879cf13e1520fa7989728098890",
+        "scripts/broad_ai_exploration_cases.py": "1c5d50898949baf1f72646eb102be60997fd181fec0eb765c8ecfd78419ffa15",
+        "scripts/build_as_safety_evidence_graph_labels.py": "138be6605bd2e06c36e3073847a3398db518c1fcb06c269ed8b4c510983198ac",
+        "scripts/build_qwen_mother_voice_clone.py": "7554499b5f30dc3b636252c0775c45430773adde61f540ba7b481a464f846c08",
+        "scripts/check_python_version.py": "3d56425ed5adcf2e695df7f0500eafb51e7a5c2112bde39720c20b9c90d9419a",
+        "scripts/classify_as_safety_typed_relation_failure.py": "18c14135d32b49588319872bef60ea684ac5ddf9755b2731f159af0d5208b0a4",
+        "scripts/compare_action_field_model_reports.py": "6e6052a8929858d74e0a6e8b867b0e0c410a2953b9a8ad29388375a4371b7abe",
+        "scripts/compare_exploratory_gguf_reports.py": "a3664b5dd627349440e88b37baf310b6c26b06422302696dd7c1cef1b1433c24",
+        "scripts/compare_gguf_broad_ai_dev.py": "47b90b108eb50342030f45f24637366007f60fbb59f1a0ff28c51132d2996ac9",
+        "scripts/compare_workflow_schema_experiment.py": "dc61613f40c38402a1e0203ff0b3b572ad7e8c27612643e290514c46126d7297",
+        "scripts/compile_structured_nlu_corpus.py": "4ce6501b19153b37fa6756ff51ba995a702c9e9d5d72507c7c5670809e943299",
+        "scripts/freeze_structured_nlu_benchmark.py": "1427f11343e7c078657b8a1773f58ce42f0abcb994d45aef4212ade80d8239fb",
+        "scripts/fresh_scope_ai_cases.py": "7b802a3e91a540b60c34ef83b0c3c483c35030029e04c53d67f929583a44f11e",
+        "scripts/generate_bark_korean_auditions.py": "8af93960ddb59332c057972c4093aa1fe00c486cf7aca6eb4c37883c94a3d69d",
+        "scripts/generate_chatterbox_audition.py": "ce53532b7ccdb1647aa0ecfce974689d241da1a8d103dc4cb62ef2ad6e531499",
+        "scripts/generate_magpie_tts_auditions.py": "40d96fa21b3e7f87fbf715a0612659eb4bf3803ad6c6f902a0a7c351174b4581",
+        "scripts/generate_melotts_audition.py": "1b9599aa07e1017f8bf3a4a2f14eaf702bdc45e806c1c0f0df2df19986e43bc9",
+        "scripts/generate_qwen_mother_voice_design_auditions.py": "73b58fa4928d3e8104a57fd74467cc2525bba6366ef8069e062baaba5231a290",
+        "scripts/generate_qwen_role_casting_auditions.py": "73c4e809b48a4765ae0c17ca2619e145811b3ee91a1317e11f4468edcaad3f69",
+        "scripts/generate_scenario_tts_auditions.py": "4c8107ad2be8451fbc7cba8b5bf56d841f4dffaa84ecd72c189917a9e412a6ae",
+        "scripts/generate_tts_auditions.py": "eea824d54222fa2121571cec9ea71d2283170cf01c38813018bcf1c11b87f415",
+        "scripts/gguf_action_field_split.py": "88866c35eb43f8d03eca3c0007e35a2ddaab3c556c06e5b49829c0f4e3b09a50",
+        "scripts/gguf_service_workflow_schema.py": "6fce0ab00bfb0d6be8a4458908c505a812cd43497bb32ead229315295b47b090",
+        "scripts/materialize_nlu_review_followup_dataset.py": "5310c4a97fdbefaffb76e15299a27cdc44ab4e31cbacbb54abfc729490173f2b",
+        "scripts/materialize_nlu_safety_confirmation_dataset.py": "ed1fc8e2ec89c658b7b84356280b82f22d6340d946aff648d730f62c1056e3be",
+        "scripts/materialize_nlu_safety_contract_dataset.py": "9674575db5d1dcfef31d47306f94365a20fb2d465665c8475a3886cf2ca2fae6",
+        "scripts/materialize_nlu_safety_postfreeze_dataset.py": "17107a70b2d7db801e3c8939475f6eed2e4caa8cab8d860c677302b579b09d56",
+        "scripts/materialize_nlu_scope_dataset.py": "32bd72971f8463cfebbdd6c8d88e3a6caa284655a514d5ca24b304824a7077e6",
+        "scripts/migrate_baseline_json.py": "644655a634c8448172ccab18f70f38ec97a548590db6d92ddca67cb761d16229",
+        "scripts/migrate_firestore_user_documents.py": "6b2a436b004b5f1d75ce5d9e1157c5bea739641a53db8e218f64563bfa4afa73",
+        "scripts/normalize_tts_pitch_register.py": "fc40575b82bdeb4d04eb730537682f006892eaa1db9da495cf21a018343760d8",
+        "scripts/prepare_hf_model_cache.py": "fc676e1b58bddaea4117e05a103671b0400258640704dfc828aad8285fa7f352",
+        "scripts/probe_as_safety_clause_index.py": "87579cb1ee8d0b236de5a13e81c84ce74823e756987d1407bd19d0709c52f62b",
+        "scripts/probe_as_safety_compact_relation.py": "f2718271a54e9f8b36461de68d34aa654c056831f09ed86f65c5c3decd20e988",
+        "scripts/probe_as_safety_entailment_v2.py": "df9325ca93f03ac530c382cf199439900fe2177f7aa7c4f670d15f61d7991965",
+        "scripts/probe_as_safety_entity_link_v1.py": "f68c9ce08756caf64a273842e1e3e34d98bd83e1f1691c72b010c94ed4a949d3",
+        "scripts/probe_as_safety_event_gate.py": "d2e6c3a84b09a4edaebf6a06a60ca6021d79b456db8b6ff4206859c3f13d92b6",
+        "scripts/probe_as_safety_evidence.py": "9d90f208bdebcc6381eb990f9738b2f378b63fe26e84e0c64b532a423046704b",
+        "scripts/probe_as_safety_gold_owner_link.py": "9c354445e8f317cf7a25b565ccfcc960c7637b7f78393ac5d51185019d5680eb",
+        "scripts/probe_as_safety_grounded_attribution.py": "df1c45f66aefff3aac105a1f43f3b7c098410db510364cf739f4601ceded5c33",
+        "scripts/probe_as_safety_grounded_entity_link_v1.py": "ad935bdcbcad6d07c20c623550bd9e90dc70cde76362af48bf80d32c1a7c77f3",
+        "scripts/probe_as_safety_grounded_entity_link_v2.py": "e1a608a001831f4f06da0f7d774ffa38e2e6915f39eb83c46257877896ef05de",
+        "scripts/probe_as_safety_oracle_relation.py": "323af7e69e0c999df6fb13f1bf7ff90bd806906883e6eec09b0ad9e8791781f5",
+        "scripts/probe_as_safety_owner_evidence.py": "2261dac4d45b5931f9a16db502396c1fc05ca0ede5ccd5a3854f18cfa74484ef",
+        "scripts/probe_as_safety_owner_resolution_v1.py": "7c786006e92a9ee14f5114289843abd95fbb9284b018217d80a996d421797778",
+        "scripts/probe_as_safety_relation.py": "8be4530da9cc1341820a25f6e6aae12ef3afe52123d38b12effbeead5bbc7cd4",
+        "scripts/probe_as_safety_source_link_v1.py": "099a5ebee53e2af9654ae8d242831941e674f16eec4200a8d7b5e4df0cf0d743",
+        "scripts/probe_as_safety_staged_relation.py": "a39f208f7953bfca10f59dd4524171f06f125c845a2c592687e1780609a7708c",
+        "scripts/probe_as_safety_symmetric_entity_link_v1.py": "8230a8997f127a688b0504b6112d1718385f49edbaaf5ab5b85bc8a83bb65d7e",
+        "scripts/probe_as_safety_typed_relation.py": "f58262ba266592f9275e132531a3bce62bedc888a8a75f86a02910b098823ca7",
+        "scripts/probe_chat_latency.py": "952ce41db73a1529b6297dbf8b54a41e1bcbac76ba73058083d34a2e591d9069",
+        "scripts/probe_gguf_action_field_dev.py": "34a5c8cb8eeb9445756d00ee9f1dc38e118163e7ed6de2b0859596e9f986d6a8",
+        "scripts/probe_gguf_ai_candidates.py": "bff72900f62c04b2daee3c16b719d2b736202d36ba560bc3752d6b0d4be60fe6",
+        "scripts/probe_gguf_boundary_followup_pair.py": "9cd51aa0236fc3cfca0eefdee7aaf34c00ef47fd93dcc3ebe19e380c9e8306c1",
+        "scripts/probe_gguf_broad_ai_dev.py": "27f5218454beeb0f1c203a7887979e35e5abb3a7bdac68e2fb0de2fb9a3746d3",
+        "scripts/probe_gguf_field_boundary.py": "7fea9d6c1430527bee36d45fe9557bceeb738a657fe405336ba0c0237006af89",
+        "scripts/probe_gguf_hospital.py": "f091aa5191806e4967e87f771cd226c513fa580dcf7445b73a78ade5eb874dba",
+        "scripts/probe_gguf_out_of_scope_instruction.py": "e470f8cc4ba5326a62d290622bcea387bd953fb79cf99d4c00a7c9537240192f",
+        "scripts/probe_gguf_review_draft_round2.py": "89738aca1522a295fded46a539b8b5aac4a087909180261a68034c51ffc2607a",
+        "scripts/probe_gguf_scope_instruction.py": "a8eebe67367a3a92ccbcb3e5caf430ca3808340ae58a28257e9b0e131a0ce599",
+        "scripts/probe_gguf_semantic_boundary_pair.py": "a2dd8c2a08f6f8e25577fdcaa22352ca0ff2e2c84359dd07be1521a7226d866c",
+        "scripts/probe_gguf_semantic_support.py": "383ff44d9701e3534282c1f7169cc77a9d8c277a64d27c5fe65d7a7f18f2aa6a",
+        "scripts/probe_gguf_source_evidence.py": "25469441b50d6298ffd848b4f00275c58c8c5f77528d14c9e55ef7287006ac10",
+        "scripts/probe_gguf_structured_nlu.py": "152b7b60998278e88b2d9faf155a29864a2e3ad78b0ae0ed5631d5ce02665087",
+        "scripts/probe_gguf_time_instruction.py": "6dd3c02172a89a7620848ebcbcf0e86bef2d6c9973ecfb10e1dc90a24400980e",
+        "scripts/probe_nlu_safety_confirmation_graph.py": "7dd23c148d2ad4913354cace89f8a22e6260d54dcd8154b19d2cdc69645066c0",
+        "scripts/probe_nlu_safety_graph.py": "238ba75e900764d29f67f47e7b439f9f69123d76f56dd0cdd01e8b1741529304",
+        "scripts/probe_nlu_scope_boundary.py": "295983a30d5281d71e64e117013b0aa7c33484906d564277055945771bdfde87",
+        "scripts/probe_safety_focus_development.py": "3cfdbbd3cb967aa3b1ccbc3049b70b32b95b81dceb1a8a45f54d0cd7cf2046d6",
+        "scripts/refine_tts_timing_and_prosody.py": "820e14e382b85e1b8c3487806172f233a31bc99116c47282cf3e4d5eeb5f1989",
+        "scripts/run_ai_heldout_pair.py": "8b1d0753f4096cbf126281e0b020ae4a5a56aa3856cee285e4ca7871dcb6777e",
+        "scripts/run_as_safety_compact_relation_development.py": "453739fcba09848bc47be4927e9e8774f8dca6915a1aa3fae1ca7bceb4e75f8e",
+        "scripts/run_as_safety_consensus_fresh.py": "4611ff416d2d46007f4b0658490ee41dec35ebe2007cc875f0edaec799b1902b",
+        "scripts/run_as_safety_entailment_development.py": "189ee9dce64f813bd9a0d02f1fc5744d9055b9043f7d47d60a7d858add152be7",
+        "scripts/run_as_safety_entity_link_diagnostic.py": "dfbb304f46798d3476d6966967c3261e757f77f988c190bbe79838c50607bb12",
+        "scripts/run_as_safety_event_gate_fresh.py": "6a35d835714ae933696cf728864d9d7d82703f03149892a80a7a05248d83366e",
+        "scripts/run_as_safety_gold_owner_link_diagnostic.py": "fdcd06bd6312059dc39b34450b41c44ee03cf45ba30c766502683f2ceb2117bc",
+        "scripts/run_as_safety_grounded_development.py": "328ec6dfbc10bb5bd4c2386829056d67d2761d351f8376cbfcac9ab5cafa5580",
+        "scripts/run_as_safety_grounded_entity_link_cause_diagnostic.py": "e60c8fbdb7edab54f9a87c7d71cd4d37c693a866347ec3f82e3ee411d6dcf156",
+        "scripts/run_as_safety_grounded_entity_link_diagnostic.py": "2a721486646c0393876c0d1ba89c8794151fcdf92cb94c3f8e71586b19508aeb",
+        "scripts/run_as_safety_oracle_relation_diagnostic.py": "a20d57f0ec08d4dd64cb670d261c2a831ed6cfb702b369a9c16950396df79078",
+        "scripts/run_as_safety_owner_evidence_diagnostic.py": "c10c5a8d3f73aac75344d7cb129b65204d053c9bc0a3913f94c56f274e0d2c89",
+        "scripts/run_as_safety_owner_resolution_development.py": "e3cdc32f63f657d84042b94450dbbdefc9f4ea48042ddc94717dd39d19ffa108",
+        "scripts/run_as_safety_quantization_development_pair.py": "502d681a43631f0e181d87c76f96ddc4756348616c172639d6eab38adce30b05",
+        "scripts/run_as_safety_relation_pair.py": "f9fa857480b30247c6bee417e509c3e71a9a29453d18687ae44fdec20ac33266",
+        "scripts/run_as_safety_staged_relation_development.py": "c9e153e44b42a974bd34fcd62556da72605010bdc4695a1fe0185be46cca4eba",
+        "scripts/run_as_safety_symmetric_link_development.py": "219ade25de74737ef02ae6dd0d47823a14cb01364f96f9be5290e94b8dafe742",
+        "scripts/run_as_safety_typed_relation_development.py": "7603f81de0841a9310724d8657fc04e647abc9c9b8c0e3b3cec297303c763534",
+        "scripts/run_as_safety_typed_relation_diagnostic.py": "f43d57abb46c2f0084be15be528cef5b3751b9ca0dc17b9a5249ffbef47e406c",
+        "scripts/run_nlu_safety_confirmation_pair.py": "64ad5b6d1b4b1d27f7fbe00b527428a149884b79d0bd2cfb489dd853dc68a5d7",
+        "scripts/run_nlu_safety_graph_pair.py": "9a207062ab4a88c3ae17d915c2b40442056a3adea799da975a88145da45aab94",
+        "scripts/run_nlu_safety_postfreeze_pair.py": "cb68a6edd4eb38c5b199c71460ae28d569a9dd33422b3eac36801468d88c650e",
+        "scripts/run_nlu_scope_revision_pair.py": "a76b117c327f849c0e612fa746904945b80e8a98b40dd1583df1be5bbb280d68",
+        "scripts/tts_audition_common.py": "2d2fbc58b68400a30d9f97052cd9b4fdf2f0faac8c9edcd62f2724f9a2740d1e",
+        "scripts/validate_nlu_review_draft.py": "a2f942844fa8e935c16e27f1624b53ee0f1be47ffbf16321700c3ef29f96534b",
+        "scripts/verify_as_safety_compact_relation_development.py": "32fdc884f34e2cc5a5aa4cf8208750faf1cf0e4645586aa2e552fe7fa092d671",
+        "scripts/verify_as_safety_consensus_fresh.py": "1d581afc269d35fc505a574450095c0ae3ee4d81691f066b236de109be2fc474",
+        "scripts/verify_as_safety_entailment_development.py": "701318863153beaf104a4e8b1b8a6f7f8fe25031be569938595cbe24b9a296ff",
+        "scripts/verify_as_safety_entity_link_diagnostic.py": "fc1449e6d6fddc8eeff528ad0cbe9400e0572b3e605b01a4ca7bbc6d73c83b0b",
+        "scripts/verify_as_safety_event_gate_fresh.py": "7df501a0e92e7d751e8cb7d1f3ff15b650d0f49d13eac7667e0b939e3de9b41c",
+        "scripts/verify_as_safety_gold_owner_link_diagnostic.py": "b764097780440d98cebadf9638ebbcb71a9b7a22dadb7ff59065b21a946fb83e",
+        "scripts/verify_as_safety_grounded_development.py": "d5908e4e2a21d1a2d8bd45de9065a53105faad00a0df46c97b54694e83d39714",
+        "scripts/verify_as_safety_grounded_entity_link_cause_diagnostic.py": "e5b4e9156f235f739ebfe69081300960cf28282fd80bdb172777f434ecb5bcb7",
+        "scripts/verify_as_safety_grounded_entity_link_diagnostic.py": "f7917d47d737b540b88d944a50b67d8f6f42a928c9499e0709a62c5b752a9b10",
+        "scripts/verify_as_safety_oracle_relation_diagnostic.py": "0ce904c7f5836484c851f8222d887512466acc64a54d36e22dabeb8f812e4cea",
+        "scripts/verify_as_safety_owner_evidence_diagnostic.py": "491b4af2eb1b31001c8f97d44583661ead1404f41d3ee203fab2cef962fcdc76",
+        "scripts/verify_as_safety_owner_resolution_development.py": "b0479b594e9eae093641e9057fa3a76dd50fac1d4697aca91622d53222da560b",
+        "scripts/verify_as_safety_pair_journal_v2.py": "f58adbda4974e7bdc89084e0fd921b94e74fecf24d63d3c9f4620e4be775c109",
+        "scripts/verify_as_safety_pair_journal_v3.py": "f84efe63cc4f2fc3c94cb573797909ca00d39f9a4102d9e75c71bbfdf7e8412d",
+        "scripts/verify_as_safety_quantization_development_pair.py": "e190f015e6aa47505e80c5a7cbd797714a2596cb6f36d482ee8907475a81a401",
+        "scripts/verify_as_safety_relation_pair.py": "0ed6e739d86e13994f6801f6f24417bcaaa89063bd2b7199723da92a8d17b0f6",
+        "scripts/verify_as_safety_staged_relation_development.py": "ebab0cdbfc6813fafbe34190cb21d5aed190f42a8855a79cd12971d20fbaf208",
+        "scripts/verify_as_safety_symmetric_link_development.py": "4a45997c4ddc97f9661138d3d472952fadf99ced73a579bc11a45a66c1e930d7",
+        "scripts/verify_as_safety_typed_relation_development.py": "7afc7ffc355472dedab6cdeace34c8739cf790dfc43cf30ff53b0fbbaac6f263",
+        "scripts/verify_as_safety_typed_relation_diagnostic.py": "1bb47dd57bf28844b995a67642efcd5058b9b58450d0ba04919db858b6a5b6d3",
+        "scripts/verify_core_container.py": "8478b235119093805756c20fa3e031f920e5951c1226897434639056e84db6e5",
+        "scripts/verify_nlu_safety_confirmation_pair.py": "ff14f2ef68ecb755cc1da35c25f7167a75d8006318457ca9eb2e3a16601e7fd0",
+        "scripts/verify_nlu_safety_graph_pair.py": "662d26a155eefdac88f31c9f46ef314b9d4483c9368727fbe2d68b82fc92fb28",
+        "scripts/verify_nlu_safety_postfreeze_pair.py": "70e78d08c60072b5c2131139971a77ce72fba6e063ed375e00728306c4e5c6c7",
+        "scripts/verify_nlu_scope_revision_pair.py": "04f09a2253cb3f21e2ab085a6e60f5ce42422c82e674f38eb5253db5c9ebf06c",
+        "services/flow/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/cityhall/__init__.py": "d0b9444ce051ea1dbd6d36e6f2de43723ecdc7db3b057361a9b5dbd733c10a7d",
+        "services/flow/cityhall/contracts.py": "fba5ac0c9817d7ea4cce80103680c2e45641310a0500c32efa83052dcbe99795",
+        "services/flow/common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/common/detailed_state_validation.py": "d990754ab240fb9a686ad559d9d1b57b954f5ac97029a3e0aff653057bca9446",
+        "services/flow/common/scenario_keys.py": "9fd1feef16588fd4c91cc0085a0300119d28134d9d35014286c40fa1dd878a29",
+        "services/flow/common/state_contract.py": "26d64f0d60cf6f136c0fdf75eff4d546ad24f1f05de7fb2cec14c75eff95a3a2",
+        "services/flow/delivery/__init__.py": "42eb1329d298302d28fded626b9f78a04cff0d5211b4ac86073e2a631f1db8d7",
+        "services/flow/delivery/contracts.py": "f19a77023167076edae2025ac919542c5dd144084de1d27b6344a6073dbc6ed3",
+        "services/flow/professor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/professor/absence/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/professor/absence/generation.py": "8cd7b8f21944d90c74d60ea284e918c959dc393a5b9e0f0f0669d7dc2c2d220b",
+        "services/flow/professor/absence/graph.py": "adfb7b6bf4e0a763cb5ee0989a5906c45528f04bd5ec36f30fb197f935348bb9",
+        "services/flow/professor/absence/llm_structured.py": "4cdbd754f46c3b6bde59442bd09a10630252f01af49b128efd179eea3c34ff42",
+        "services/flow/professor/absence/nodes.py": "2a09774d53aa59ed4f65455da61d5dc50af1d55ee5f136af21e2247ac5695088",
+        "services/flow/professor/absence/policy.py": "c303d8b51985eb330d39015bad2d6dc8d91b4e46580bbeb1438654de33e6b36f",
+        "services/flow/professor/absence/replies.py": "dffbe34a40c1c7a5f577952ac983c973f3f722070e76d081274e73d53cfb08d2",
+        "services/flow/professor/absence/response.py": "d939368110850428710a618c7fd2e3a3bc4dc95d0ad726b93dcb201d77468973",
+        "services/flow/professor/absence/response_policy.py": "c712b16310db2a64870be625b5187eded4596bb9e1855041e2aa7d4ccd768739",
+        "services/flow/professor/absence/state.py": "951a0dadebbcc1c37572d36a4b4c9faad00e408ce2d856e0d6f5ef8eb4bc231f",
+        "services/flow/professor/appointment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/professor/appointment/generation.py": "4dce7b5ce9d768e92b6ba534bd2f61174c8330f5aa921a8bb5196dda77210c49",
+        "services/flow/professor/appointment/graph.py": "f59279e1d867caa98b9046d9a82888d2f8b89a7d6935bd88061a047554c1aacf",
+        "services/flow/professor/appointment/llm_structured.py": "899cef208ab9f539511b18ea17d9306934e250523baf82924c8306d1c6556e05",
+        "services/flow/professor/appointment/nodes.py": "132a1509eed50ea551ed8de00650818c38094ab23d0cc49df993bf5cc52a2b0a",
+        "services/flow/professor/appointment/policy.py": "034feb1b94f0b44866d47ebac863a11991192754a020fbecd3ef31d7f8ad1d62",
+        "services/flow/professor/appointment/replies.py": "d7a9c0c5668d33a13a255c9cd5d52aaed9fec567ef0d70b05f9652277a41d9d0",
+        "services/flow/professor/appointment/response.py": "2809b4f3c8b0d29f98bdf340b416e141039e4370e6cdd704d870a45cefc66d37",
+        "services/flow/professor/appointment/response_policy.py": "bdd70c954ffd36ac862734cefe20abe79def05fa3d4e7feff5737de925849689",
+        "services/flow/professor/appointment/state.py": "bae788487a15fe90bf794dd2105705cf11edc3bd4d4cc3b287a5959a41b20f72",
+        "services/flow/professor/assignment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/professor/assignment/generation.py": "d1e2c8f3b522af88ac1a37673ef93f8286d7e9827da19166463a658a8f1e0ad9",
+        "services/flow/professor/assignment/graph.py": "5fb729a0ea43eee9c6bdc7811aa4b9fb87f5827dea3855c9389f7a82bb182454",
+        "services/flow/professor/assignment/llm_structured.py": "fce33b4bcae0e6b20c4b98fb48962883a84bba8a49e801035c3d47a0220e6aa9",
+        "services/flow/professor/assignment/nodes.py": "613aefa324da1f0b6c48d4053e9a5ec07fbcf90441a85d9eb2844f4f35e18665",
+        "services/flow/professor/assignment/policy.py": "98244c0be40169deeb0cad9aed45adaebad32c2affc0aa75ea4d33ea4566f175",
+        "services/flow/professor/assignment/replies.py": "e370dd486a5171c78ec96460a09616786cf34ccf3dfdab6e988a72ea2398b01f",
+        "services/flow/professor/assignment/response.py": "5abf209058e79d49f071bcdebf38f8f62873cd971898848975922c0cc86b364f",
+        "services/flow/professor/assignment/response_policy.py": "508ed9fc6ad2e4c5ae8bebf474838f9e565c12909b9bcf4569ce4dc6aa1d7904",
+        "services/flow/professor/assignment/state.py": "69a3a13d7c084fef6a98e11e1032c3c60aa5e86eb904ec45f9c117decae642a9",
+        "services/flow/professor/common/__init__.py": "e9b4cd3311b8080cb0526f250ad6e7eb52915c079ced85451a383811ac758983",
+        "services/flow/professor/common/graph.py": "cdbeec846ba42f000893a395b2e1cd9383258c0c2f336a888cac86d822b59d73",
+        "services/flow/registry.py": "65cd3414acfb0ccb436cab0fe84873295b6d169cf217c3f1f69081ef908f0663",
+        "services/flow/reservation/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/common/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/common/availability_contract.py": "0247a8b1becff697b3a6e8a60c8b89ab4719b2d907ad8a692021f87ff129e769",
+        "services/flow/reservation/common/availability_provider.py": "3e39ade3b5dff0024c17d7906571e2251158aff96e43328b6e939cfc023f3077",
+        "services/flow/reservation/common/graph_builder.py": "ee05e22904e29f23d130340a645cf9622aa39185c200b29657919ae3f427a83f",
+        "services/flow/reservation/common/structured_contract.py": "1c398d27736e67a752cf4a3ad59e824f6c3a087471f470e6c81a9128445d7467",
+        "services/flow/reservation/common/time_utils.py": "d0b5ac07eb1fc39dca9b9a3378cc30ce26bd2ea5446933707e9006ea2f1c5b7b",
+        "services/flow/reservation/hair_salon/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/hair_salon/availability.py": "7a0414be2165c0b549d2b8f4025aa1c4e09c692d37adafb2d1090a573b8dc65a",
+        "services/flow/reservation/hair_salon/generation.py": "0b21a13aae0611e228b45e3bd4ae6347f9f14167d8ab57f848090a3dd800babf",
+        "services/flow/reservation/hair_salon/graph.py": "d13df15f87796b688d9f447419e5de7d34e04ebc829ddb25a3255d448bb241ce",
+        "services/flow/reservation/hair_salon/llm_structured.py": "08af6b6842451271dce53f0e2693c1d133e03ce08a2bb8768e4916304ba8965e",
+        "services/flow/reservation/hair_salon/nodes.py": "09e93d182095fc1a39f60591945029a3393c87f1be30d571b2765215dd2d9e7a",
+        "services/flow/reservation/hair_salon/policy.py": "48293c516dafdb0c72b2f9066ee912dd103d2dec11987b62ffc5d304ac95a907",
+        "services/flow/reservation/hair_salon/replies.py": "b010da14e3988267c001de3d6fb0fc94ce68197a799bcbc099e9f814bd303a34",
+        "services/flow/reservation/hair_salon/response.py": "ccaad73ee85688caaeaafd032677f36642d8ba31371021aa4916631272ebd026",
+        "services/flow/reservation/hair_salon/response_policy.py": "e65c0f158f4a00cdec5d9db30d9f6b9a61d58cb481c39066850d7a5996df6371",
+        "services/flow/reservation/hair_salon/state.py": "68428c4d39671054bcb37b179d19683c841b535e9b138ded8eb502fef126f79b",
+        "services/flow/reservation/hospital/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/hospital/availability.py": "3a255909cc5b84698a6521a9bce4056d40e5357f6af7df9cc39b3e61af8bad30",
+        "services/flow/reservation/hospital/generation.py": "918677358290d4de0d5bf1a7b1fc492d4333d46f8ce30853ca52b2488a3a503e",
+        "services/flow/reservation/hospital/graph.py": "bcf9e1489252ecfb7982f83a085b94f49a3f20bd46283d3a4ecb47decd99f397",
+        "services/flow/reservation/hospital/llm_structured.py": "5cd6a3809678a9b967880a0061a8a52995040c17c99bbddb582f95354df03622",
+        "services/flow/reservation/hospital/nodes.py": "82f89368cc3f3528e028ad38c6120b0904e0ba1508fb6dc23d732ec2b0c5a8fa",
+        "services/flow/reservation/hospital/policy.py": "90f2c6b47534c528f5aca05303e626dd34eeb705f44eaaa4003b9e7fbf10ac9c",
+        "services/flow/reservation/hospital/replies.py": "5fb7df06affbb347daa15f0a4431b5abc94461039ba6bc32709219303f53173f",
+        "services/flow/reservation/hospital/response.py": "7b2e19e338a68ffefe408498efe51477b158383d6f9a4cba6691ce5e5164b46d",
+        "services/flow/reservation/hospital/response_policy.py": "16d68e22890ae6f769880264d743d2079325e805abe45b0641dbd3407489912c",
+        "services/flow/reservation/hospital/state.py": "b80647e1a8f14bfada89263a0ef38c1fde5b5a73c9fc4494149d468c0a346529",
+        "services/flow/reservation/restaurant/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/restaurant/availability.py": "d8ab4678fd7aef5baed501ec8955dff944cc71a28dd991fb0614761e835e3d02",
+        "services/flow/reservation/restaurant/generation.py": "a7bd201f2beb324d83850e6d3aebaa41f47153487b092731578453f27de396a6",
+        "services/flow/reservation/restaurant/graph.py": "9dd9a7899b46cf97f1d92e3944910a2463e1cc4b22e47d85b39303e1d7ce23ce",
+        "services/flow/reservation/restaurant/llm_structured.py": "f3caffc4ee0ce1c57eefe711d1c640b9d9d3f637d80f556f9242dee77dc83a23",
+        "services/flow/reservation/restaurant/nodes.py": "06afb0ef764eeb3a9fa0a1e15d274fd9c888e9c55c60bcbb0fed5b17bf4c662f",
+        "services/flow/reservation/restaurant/policy.py": "9f69530ced73340ded74463007f8b637ef46730b5d29267184dbf969db0d9e6b",
+        "services/flow/reservation/restaurant/replies.py": "bb49ae12a094a66c72afddaaa4c6250c5d597f0214cc97c494a6cd0d9bb95223",
+        "services/flow/reservation/restaurant/response.py": "2b017121026382ae32b48edd4acb337f7e954114c8627b708de67411ba03371e",
+        "services/flow/reservation/restaurant/response_policy.py": "82634e330ecaa275e7d7bac3239f9272e7361b2c36c05cb2957e271f2c4e0dfb",
+        "services/flow/reservation/restaurant/state.py": "b9040c3eab39a9f76db915f14c453f8ef599730baca3028635648879275b92c3",
+        "services/flow/reservation/study_room/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "services/flow/reservation/study_room/availability.py": "2ea2a08c59fd1d45d5721b204d4ee34d4c43f887bfdca6b7390c7c50a8383f1e",
+        "services/flow/reservation/study_room/generation.py": "f88c4acb1c97001c19a41c7a425ea4b83516f661b05c4a287d78b5a80eee3ea6",
+        "services/flow/reservation/study_room/graph.py": "3a9f7174072c926dc8ef4dbbbec5a2a463a00aa2e679161b1e4caebb52e41c16",
+        "services/flow/reservation/study_room/llm_structured.py": "9e20b16f0f0f0f17d43e1931dfc95b4dea115ee24d87e24fac5a8243feb74e82",
+        "services/flow/reservation/study_room/nodes.py": "1450a83eeb62bbdedd01dbbfbbc38cdac0cb85ac30a1f5eba8541e935c2ecef6",
+        "services/flow/reservation/study_room/policy.py": "fe2b9f434d207e037bddad4341424f036537a5ef5aa76be8b8e7a5465a99d9ab",
+        "services/flow/reservation/study_room/response.py": "3146893a24e4b40e161941f0d65f7950746dbbd7a6cc7228ccd6fa6aea31762a",
+        "services/flow/reservation/study_room/response_policy.py": "885dbb88a6a878bf6a30d0c18cc3a86668b616a1ed2a8cea951596cb1b121543",
+        "services/flow/reservation/study_room/state.py": "62cd6f51ca09a53a3e4113773903d7876a0e13eecccc78db881a0bdd0ea63131",
+        "services/flow/scenario/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "services/flow/scenario/graph.py": "904bd5ad8802e22cd808541009e16967094e2f40de6101efbec203ae51a2b3e5",
+        "services/flow/scenario/registry.py": "64b962ba8a2f5657c79f5ea3a1b04e9b0b55b4cda4faf8f07e7375cdcff11fc8",
+        "services/flow/scenario/response.py": "6765e1e92f54c42f649cbed1c92be09d5b719fe317c20b8e6430807ab50f97c2",
+        "services/flow/scenario/state.py": "af4baa717763bef28326764571f67aa8474d902623999377ccfd6690a9020844",
+        "services/flow/service_workflow/__init__.py": "d9f9322261000021ec66cf9c8e180de5dad404b3be009351ac9377373b9b7789",
+        "services/flow/service_workflow/contracts.py": "fcfd8ba024c42b240bbf65b374a4fae70f1838bc6f21c4bea9e60e2e07fec23b",
+        "services/flow/service_workflow/graph.py": "51127738cfb8b44b8852396a41ccbda485ec070940503040f92db9f122de5b69",
+        "services/flow/service_workflow/nodes.py": "fb7a818f5bbfd079dae3cf359f7e2832c8888f83663fe012e4dadff6f0eae15c",
+        "services/flow/service_workflow/safety.py": "37b71a3fdee51c9b99b4486248c4889717ca24e30493cb73173b0c2a7c847951",
+        "services/flow/service_workflow/state.py": "1c59e4329681903198fdd2e1a2aa57c79d86a4621c7fd28edcb809de8661f571",
+        "services/flow/service_workflow/structured.py": "d03a4de3064a7e150124b569b4098c1bb7c4a08b9213a58ee4a8f0777d1aaf8c",
+        "services/flow/service_workflow/structured_contract.py": "0b11f8e4d13a5af4461d21559d9eaf6d63645c1aa6f556753d4ee12c85cdc3d6",
+        "services/flow/support/__init__.py": "be157f95b984dc8714f85a0dc3c60ff51810b5ca738ec8700be724333cbc8c17",
+        "services/flow/support/contracts.py": "95e683b7b04a7251b09d47f29a1945ecead4c95a827fda141de9c7e23f024d7c"
+      }
+    }
+  },
+  "bootstrap": {
+    "draws_per_stratum": 2,
+    "metric": "candidate_minus_baseline_exact_fraction",
+    "percentile": "linear_interpolation_at_p_times_(n_minus_1),_p=0.025_and_0.975",
+    "resamples": 20000,
+    "seed": 0,
+    "strata": "scenario_key×scope; 32 strata with 2 paired cases each"
+  },
+  "case_order": [
+    "ai-internal-test-v1-it01",
+    "ai-internal-test-v1-it02",
+    "ai-internal-test-v1-it03",
+    "ai-internal-test-v1-it04",
+    "ai-internal-test-v1-it05",
+    "ai-internal-test-v1-it06",
+    "ai-internal-test-v1-it07",
+    "ai-internal-test-v1-it08",
+    "ai-internal-test-v1-it09",
+    "ai-internal-test-v1-it10",
+    "ai-internal-test-v1-it11",
+    "ai-internal-test-v1-it12",
+    "ai-internal-test-v1-it13",
+    "ai-internal-test-v1-it14",
+    "ai-internal-test-v1-it15",
+    "ai-internal-test-v1-it16",
+    "ai-internal-test-v1-it17",
+    "ai-internal-test-v1-it18",
+    "ai-internal-test-v1-it19",
+    "ai-internal-test-v1-it20",
+    "ai-internal-test-v1-it21",
+    "ai-internal-test-v1-it22",
+    "ai-internal-test-v1-it23",
+    "ai-internal-test-v1-it24",
+    "ai-internal-test-v1-it25",
+    "ai-internal-test-v1-it26",
+    "ai-internal-test-v1-it27",
+    "ai-internal-test-v1-it28",
+    "ai-internal-test-v1-it29",
+    "ai-internal-test-v1-it30",
+    "ai-internal-test-v1-it31",
+    "ai-internal-test-v1-it32",
+    "ai-internal-test-v1-it33",
+    "ai-internal-test-v1-it34",
+    "ai-internal-test-v1-it35",
+    "ai-internal-test-v1-it36",
+    "ai-internal-test-v1-it37",
+    "ai-internal-test-v1-it38",
+    "ai-internal-test-v1-it39",
+    "ai-internal-test-v1-it40",
+    "ai-internal-test-v1-it41",
+    "ai-internal-test-v1-it42",
+    "ai-internal-test-v1-it43",
+    "ai-internal-test-v1-it44",
+    "ai-internal-test-v1-it45",
+    "ai-internal-test-v1-it46",
+    "ai-internal-test-v1-it47",
+    "ai-internal-test-v1-it48",
+    "ai-internal-test-v1-it49",
+    "ai-internal-test-v1-it50",
+    "ai-internal-test-v1-it51",
+    "ai-internal-test-v1-it52",
+    "ai-internal-test-v1-it53",
+    "ai-internal-test-v1-it54",
+    "ai-internal-test-v1-it55",
+    "ai-internal-test-v1-it56",
+    "ai-internal-test-v1-it57",
+    "ai-internal-test-v1-it58",
+    "ai-internal-test-v1-it59",
+    "ai-internal-test-v1-it60",
+    "ai-internal-test-v1-it61",
+    "ai-internal-test-v1-it62",
+    "ai-internal-test-v1-it63",
+    "ai-internal-test-v1-it64"
+  ],
+  "harness_source_manifest": {
+    "experiments/internal_test_pair_v1/qualification.py": "16847e6f1abccc4ad0671bef4e26c7fa583a397870f601705c2be4761e8f954f",
+    "experiments/internal_test_pair_v1/run.py": "f93ed7cf65ae75b999923e235370134d583858ec706d776564b685af1cf0bc75",
+    "experiments/internal_test_pair_v1/verify.py": "b78d5e3a5333ac78534b2502134aa9687bac2e3e7983223d54dc992e4b8e4a48",
+    "experiments/internal_test_pair_v1/worker.py": "64ddcbbaa8a412236d5ce08fce9ef6bd1c76ffae373b2580da285d45e2dff7b3"
+  },
+  "input_commit": "efff603be9642e2b5d30de26bf46fc4bfbff4214",
+  "inputs": {
+    "known_corpus_inventory": "ad0bf24cfe7f637fcaf7d7c855002a1e3325bffb35695b6b264c59e62876bbb4",
+    "test_case_decisions": "b34b53e043b695998a54e5e5950c0254d8ff7a74aeec97e86e0c18cd80ecfe96",
+    "test_dataset": "b3aa00925bd52b826a3e1ffd1423bf070148ccb945b0af7ac69c5f9ad3b03bef",
+    "test_review_ledger": "617903d8c76d95cc068e9fe8c14f6bb4f232e808c400f38393a17c183b933619",
+    "validation_dataset": "860e1f5ddf04af30e07f9b6fcb94038d83a390c7784d60bf25fd6f05d0dc966b"
+  },
+  "kind": "ai_reviewed_internal_test_pair_v1",
+  "known_corpus_scope": "repository_corpus_plus_validation_exact_match_only;semantic_review_separate",
+  "local_runtime": {
+    "context_tokens": 4096,
+    "cpu_count": 2,
+    "docker_desktop_target_memory_bytes": 12884901888,
+    "docker_host_min_memory_bytes": 12348030976,
+    "host_port": 18081,
+    "memory_bytes": 10737418240,
+    "parallel_slots": 1,
+    "restart_interval_arm_evaluations": 8,
+    "threads": 2
+  },
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "output_paths": {
+    "journal": "/private/tmp/maeumcall-nlu-internal-test64-pair-protocol.v1-journal.jsonl",
+    "private_dir": "/private/tmp/maeumcall-nlu-internal-test64-pair-protocol.v1-raw",
+    "result": "/private/tmp/maeumcall-nlu-internal-test64-pair-protocol.v1-result.json",
+    "verified_receipt": "/private/tmp/maeumcall-nlu-internal-test64-pair-protocol.v1-verified.json"
+  },
+  "pair_order": [
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it01"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it02"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it03"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it04"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it05"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it06"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it07"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it08"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it09"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it10"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it11"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it12"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it13"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it14"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it15"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it16"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it17"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it18"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it19"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it20"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it21"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it22"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it23"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it24"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it25"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it26"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it27"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it28"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it29"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it30"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it31"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it32"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it33"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it34"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it35"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it36"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it37"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it38"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it39"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it40"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it41"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it42"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it43"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it44"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it45"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it46"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it47"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it48"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it49"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it50"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it51"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it52"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it53"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it54"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it55"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it56"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it57"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it58"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it59"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it60"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it61"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "ai-internal-test-v1-it62"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it63"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "ai-internal-test-v1-it64"
+    }
+  ],
+  "policy_sha256": "e391b8053cd81e14715c4e1c93ef4916a06176e2e3b573aa0540aae1971bdcab",
+  "request_policy": {
+    "cache_policy": "mixed",
+    "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
+    "max_tokens": 180,
+    "model_id": "kanana-q5",
+    "repeat_penalty": 1.05,
+    "retry_policy": "one_retry_after_contract_failure",
+    "stop": [
+      "<|eot_id|>"
+    ],
+    "temperature": 0,
+    "timeout_seconds": 180
+  },
+  "scope": "ai_authored_user_adjudicated_fresh_internal_test_not_human_authored",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35"
+}

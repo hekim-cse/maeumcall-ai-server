@@ -1,0 +1,121 @@
+{
+  "arm_evaluations": 32,
+  "cases": 16,
+  "journal_sha256": "1580b6ce4081c7c53b0c2644e91a8816c8f55e0c85227da7e319b522f990e6c8",
+  "kind": "ai_reviewed_internal_safety16_pair_v1_verified_receipt",
+  "paired_counts": {
+    "baseline_only": 0,
+    "both_correct": 0,
+    "both_incorrect": 16,
+    "candidate_only": 0
+  },
+  "protocol_sha256": "09eabc0caa33e9a274cb44112bb80e9f017e1fdf5c72ef6ad26dee6017ba24af",
+  "publication_status": "safety16_raw_verified_exposure_audit_pending",
+  "safety_counts": {
+    "categories": {
+      "direct": {
+        "baseline_guard": 2,
+        "candidate_guard": 4,
+        "denominator": 4
+      },
+      "nonoccurring": {
+        "baseline_guard": 0,
+        "candidate_guard": 0,
+        "denominator": 4
+      },
+      "other_source": {
+        "baseline_guard": 1,
+        "candidate_guard": 2,
+        "denominator": 4
+      },
+      "uncertain": {
+        "baseline_guard": 0,
+        "candidate_guard": 1,
+        "denominator": 4
+      }
+    },
+    "direct_candidate_misses": 0,
+    "direct_new_misses": 0,
+    "gate_status": "no_new_direct_miss",
+    "negative_baseline_false_alarms": 1,
+    "negative_candidate_false_alarms": 2,
+    "negative_denominator": 8
+  },
+  "scope": "ai_authored_user_adjudicated_fresh_safety16_separate_from_test64",
+  "summaries": {
+    "baseline": {
+      "case_exact_match_rate": 0.0,
+      "change_field_accuracy": null,
+      "complete_failure_rate": 0.0,
+      "counts": {
+        "action_matches": 16,
+        "applicable_change_fields": 0,
+        "cases": 16,
+        "change_field_matches": 0,
+        "exact_value_matches": 8,
+        "final_contract_passes": 16,
+        "first_attempt_contract_passes": 16,
+        "fully_correct_cases": 0,
+        "gold_absent_slots": 73,
+        "gold_present_slots": 39,
+        "hallucinated_slots": 12,
+        "intent_matches": 16,
+        "omitted_slots": 11,
+        "retried_cases": 0,
+        "slot_false_negatives": 11,
+        "slot_false_positives": 12,
+        "slot_true_positives": 28
+      },
+      "final_contract_success_rate": 1.0,
+      "first_attempt_contract_success_rate": 1.0,
+      "hallucination_rate": 0.1643835616438356,
+      "intent_accuracy": 1.0,
+      "omission_rate": 0.28205128205128205,
+      "retry_rate": 0.0,
+      "slot_exact_match_rate": 0.20512820512820512,
+      "slot_presence_f1": 0.708860759493671,
+      "slot_presence_precision": 0.7,
+      "slot_presence_recall": 0.717948717948718,
+      "user_action_accuracy": 1.0,
+      "user_action_macro_f1": 1.0
+    },
+    "candidate": {
+      "case_exact_match_rate": 0.0,
+      "change_field_accuracy": null,
+      "complete_failure_rate": 0.0625,
+      "counts": {
+        "action_matches": 15,
+        "applicable_change_fields": 0,
+        "cases": 16,
+        "change_field_matches": 0,
+        "exact_value_matches": 10,
+        "final_contract_passes": 15,
+        "first_attempt_contract_passes": 15,
+        "fully_correct_cases": 0,
+        "gold_absent_slots": 68,
+        "gold_present_slots": 39,
+        "hallucinated_slots": 15,
+        "intent_matches": 15,
+        "omitted_slots": 9,
+        "retried_cases": 1,
+        "slot_false_negatives": 9,
+        "slot_false_positives": 15,
+        "slot_true_positives": 30
+      },
+      "final_contract_success_rate": 0.9375,
+      "first_attempt_contract_success_rate": 0.9375,
+      "hallucination_rate": 0.22058823529411764,
+      "intent_accuracy": 0.9375,
+      "omission_rate": 0.23076923076923078,
+      "retry_rate": 0.0625,
+      "slot_exact_match_rate": 0.2564102564102564,
+      "slot_presence_f1": 0.7142857142857142,
+      "slot_presence_precision": 0.6666666666666666,
+      "slot_presence_recall": 0.7692307692307693,
+      "user_action_accuracy": 0.9375,
+      "user_action_macro_f1": 0.967741935483871
+    }
+  },
+  "unverified_result_sha256": "2de007e1955d23cb079084b26fd2fb52dea4cb2ac56cf6d8ae35ec4e1de18725",
+  "verification_status": "verified"
+}

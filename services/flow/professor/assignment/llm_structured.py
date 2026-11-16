@@ -4,7 +4,6 @@ from typing import Any
 
 from llm.huggingface_provider import complete_hf_json
 from llm.structured_output import (
-    SCOPE_BOUNDARY_GUIDANCE,
     ActionFieldRule,
     action_field_rules_json_for_state,
     allowed_actions_json_for_state,
@@ -13,6 +12,7 @@ from llm.structured_output import (
     build_state_action_contract,
     complete_validated_json,
     optional_string,
+    render_scope_contract,
     require_exact_keys,
     validate_action_field_delta,
 )
@@ -81,8 +81,11 @@ def analyze_professor_assignment_user_message(
                 "content": (
                     "너는 전화 시뮬레이션 서버의 대화 상태 분석기이다. "
                     "반드시 JSON 객체만 출력한다. 설명 문장, markdown, 코드블록은 출력하지 않는다."
-                    "\n현재 지원 목적: 수업 과제의 내용, 제출 또는 수행 방법을 문의하는 것."
-                    + SCOPE_BOUNDARY_GUIDANCE
+                    + render_scope_contract(
+                        purpose="수업 과제의 내용, 제출 또는 수행 방법을 문의하는 것",
+                        supported="현재 수업 과제의 요구사항·수행·제출 방법 문의",
+                        outside="과제와 무관한 학과 행사·수업 운영 문의",
+                    )
                 ),
             },
             {"role": "user", "content": prompt},
