@@ -1,0 +1,135 @@
+{
+  "dataset_sha256": "8730b8b9b984a4dd586de3f6d69d87ac9294a20c36b280f15a798f127874502f",
+  "harness_commit": "de93c4edf5e7f90132c5b0d692c6071b2a47a1e0",
+  "harness_manifest": {
+    "experiments/internal_validation_pf_sentinel_v1/__init__.py": "b8d49e53f0eb29857836d58acd14f300079bab35de015ab65e94116a0101bf35",
+    "experiments/internal_validation_pf_sentinel_v1/gate.py": "0c0bdf8103e873a150272445b1ffb42c9f5944dc0815cb9f60d7fc8ffbb9e334",
+    "experiments/internal_validation_pf_sentinel_v1/run.py": "6ef97f5020c3ab2dce293af84c7c0e2749f1ed9544d6d2145639d66ec536ac76",
+    "experiments/internal_validation_pf_sentinel_v1/verify.py": "f481a0f1bf70e449b6be3ee6c391987a95045aad298c656417c4c2564994b695",
+    "experiments/internal_validation_pf_sentinel_v1/worker.py": "be425d3aa93e77a95b40d7d9bcce9dc0428f547495f4412403d94e3401355ba9"
+  },
+  "kind": "exposed_pf_safety_regression_gate_v1",
+  "output_paths": {
+    "journal": "/private/tmp/maeumcall-pf-gate-v1-journal.jsonl",
+    "private_dir": "/private/tmp/maeumcall-pf-gate-v1-raw",
+    "result": "/private/tmp/maeumcall-pf-gate-v1-result.json",
+    "verified_receipt": "/private/tmp/maeumcall-pf-gate-v1-verified.json"
+  },
+  "pair_order": [
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf01"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf02"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf03"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf04"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf05"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf06"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf07"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf08"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf09"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf10"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf11"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf12"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf13"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf14"
+    },
+    {
+      "arms": [
+        "baseline",
+        "candidate"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf15"
+    },
+    {
+      "arms": [
+        "candidate",
+        "baseline"
+      ],
+      "case_id": "nlu-safety-postfreeze-pf16"
+    }
+  ],
+  "review_ledger_sha256": "4a0573eaa837aa86a28f638cc0b710fdf166fe343a772f5ac132a125d8edb40e",
+  "scope": "exposed_ai_authored_pf_development_safety_regression_only",
+  "validation_protocol_sha256": "02bc4b8a790be6da3f5db22df6d15e1e188b88aad3d6afb178230b7a98320d09"
+}
