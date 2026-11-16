@@ -109,35 +109,35 @@ def test_pf_manual_restart_boundary_keeps_docker_restart_count():
 
 
 def test_pf_worker_replays_saved_completion_without_http(tmp_path, monkeypatch):
-    from scripts import probe_nlu_safety_graph, run_ai_heldout_pair
+    from scripts import run_ai_heldout_pair
 
     private = tmp_path / "raw"
     private.mkdir(mode=0o700)
     monkeypatch.setattr(worker, "_frozen_arm", lambda *_args: None)
+    valid = json.dumps(
+        {
+            "intent": "service_request",
+            "fields": {
+                "product_type": None,
+                "model_name": None,
+                "symptom": None,
+                "occurred_at": None,
+                "safety_status": None,
+                "service_channel": None,
+                "preferred_schedule": None,
+            },
+            "user_action": "unknown",
+            "change_field": None,
+        }
+    )
+    live_responses = iter(['{"intent":"service_request"}', valid])
     live_calls = []
 
     def fake_http(_endpoint, _model_id, _messages, _policy):
         live_calls.append(True)
-        return '{"answer":"ok"}'
-
-    def fake_graph(case, *, endpoint, model_id, policy, completion_post):
-        assert model_id == "kanana-q5"
-        raw = completion_post(
-            endpoint, model_id, [{"role": "user", "content": case.user_message}], policy
-        )
-        assert raw == '{"answer":"ok"}'
-        return {
-            "case_id": case.id,
-            "model_request_count": 1,
-            "attempts": [{"latency_ms": 12.5, "contract_valid": True}],
-            "conversation_state": "collecting_service_request",
-            "workflow_status": "in_progress",
-            "safety_status": None,
-            "error_type": None,
-        }
+        return next(live_responses)
 
     monkeypatch.setattr(run_ai_heldout_pair, "_post_completion", fake_http)
-    monkeypatch.setattr(probe_nlu_safety_graph, "run_graph_case", fake_graph)
     payload = {
         "mode": "live",
         "arm": "baseline",
@@ -154,8 +154,15 @@ def test_pf_worker_replays_saved_completion_without_http(tmp_path, monkeypatch):
         "raw_attempts": [],
     }
     live = worker.one_case(payload)
-    assert live_calls == [True]
-    assert live["projection"]["attempts"] == [{"contract_valid": True}]
+    assert live_calls == [True, True]
+    assert live["projection"]["model_request_count"] == 2
+    assert [attempt["contract_valid"] for attempt in live["projection"]["attempts"]] == [
+        False,
+        True,
+    ]
+    assert live["projection"]["attempts"][0]["error_type"] == "StructuredKeyError"
+    assert live["projection"]["error_type"] is None
+    assert len(live["raw_attempts"]) == 2
     monkeypatch.setattr(
         run_ai_heldout_pair,
         "_post_completion",
@@ -163,6 +170,55 @@ def test_pf_worker_replays_saved_completion_without_http(tmp_path, monkeypatch):
     )
     replay = worker.one_case({**payload, "mode": "replay", "raw_attempts": live["raw_attempts"]})
     assert replay == live
+
+
+def test_pf_worker_replay_preserves_exhausted_contract_error(tmp_path, monkeypatch):
+    from scripts import run_ai_heldout_pair
+
+    private = tmp_path / "raw"
+    private.mkdir(mode=0o700)
+    monkeypatch.setattr(worker, "_frozen_arm", lambda *_args: None)
+    live_calls = []
+
+    def fake_http(_endpoint, _model_id, _messages, _policy):
+        live_calls.append(True)
+        return '{"intent":"service_request"}'
+
+    monkeypatch.setattr(run_ai_heldout_pair, "_post_completion", fake_http)
+    payload = {
+        "mode": "live",
+        "arm": "baseline",
+        "arm_root": str(Path(__file__).resolve().parents[1]),
+        "commit": "ignored",
+        "head": "ignored",
+        "manifest": {},
+        "case_id": gate.IDS[0],
+        "private_dir": str(private),
+        "request_policy": {
+            "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
+            "model_id": "kanana-q5",
+        },
+        "raw_attempts": [],
+    }
+    live = worker.one_case(payload)
+    assert live_calls == [True, True]
+    assert live["projection"]["model_request_count"] == 2
+    assert all(not row["contract_valid"] for row in live["projection"]["attempts"])
+    assert live["projection"]["error_type"] == "AIResponseValidationError"
+    assert len(live["raw_attempts"]) == 2
+    monkeypatch.setattr(
+        run_ai_heldout_pair,
+        "_post_completion",
+        lambda *_args: pytest.fail("replay called HTTP"),
+    )
+    replay = worker.one_case({**payload, "mode": "replay", "raw_attempts": live["raw_attempts"]})
+    assert replay == live
+    projections = {
+        arm: {case_id: state(False) for case_id in gate.IDS} for arm in ("baseline", "candidate")
+    }
+    projections["baseline"][gate.IDS[0]] = live["projection"]
+    with pytest.raises(ValueError, match="graph error"):
+        summarize(projections)
 
 
 def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch, tmp_path):

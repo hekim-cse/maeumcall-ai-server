@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from evals.structured_nlu.ai_heldout import AIHeldoutDataset
-from evals.structured_nlu.schema import CasePrediction, EvaluationAttempt
+from evals.structured_nlu.schema import CasePrediction, EvaluationAttempt, NormalizedPrediction
 from experiments.internal_validation_pair_v1 import qualification as gate
 from experiments.internal_validation_pair_v1 import run as pair_run
 from experiments.internal_validation_pair_v1 import verify as pair_verify
@@ -23,6 +23,32 @@ def test_full_model_free_roundtrip_and_raw_tamper(monkeypatch, tmp_path):
         (gate.ROOT / gate.INPUT_PATHS["validation_dataset"]).read_bytes()
     )
     ids = [case.id for case in dataset.cases]
+    cases_by_id = {case.id: case for case in dataset.cases}
+    correct_arms = {
+        ids[0]: {"baseline", "candidate"},
+        ids[1]: {"baseline"},
+        ids[2]: {"candidate"},
+    }
+
+    def prediction_for(arm: str, case_id: str, latency_ms: float) -> CasePrediction:
+        if arm in correct_arms.get(case_id, set()):
+            labels = cases_by_id[case_id].labels
+            output = NormalizedPrediction(
+                intent=labels.intent,
+                fields={
+                    key: None if value is None else value.accepted_values[0]
+                    for key, value in labels.fields.items()
+                },
+                user_action=labels.user_action,
+                change_field=labels.change_field,
+            )
+            attempt = EvaluationAttempt(contract_valid=True, latency_ms=latency_ms, output=output)
+        else:
+            attempt = EvaluationAttempt(
+                contract_valid=False, latency_ms=latency_ms, error_type="StructuredKeyError"
+            )
+        return CasePrediction(case_id=case_id, attempts=(attempt,))
+
     protocol = {
         "case_order": ids,
         "pair_order": gate.pair_order(ids),
@@ -77,14 +103,7 @@ def test_full_model_free_roundtrip_and_raw_tamper(monkeypatch, tmp_path):
         path = private_dir / f"{arm}-{case_id}-attempt1.txt"
         path.write_bytes(raw)
         os.chmod(path, 0o600)
-        prediction = CasePrediction(
-            case_id=case_id,
-            attempts=(
-                EvaluationAttempt(
-                    contract_valid=False, latency_ms=1, error_type="StructuredKeyError"
-                ),
-            ),
-        )
+        prediction = prediction_for(arm, case_id, latency_ms=1)
         return {
             "status": "complete",
             "case_id": case_id,
@@ -108,14 +127,7 @@ def test_full_model_free_roundtrip_and_raw_tamper(monkeypatch, tmp_path):
     monkeypatch.setattr(
         pair_verify,
         "_replay",
-        lambda *, case_id, **kwargs: CasePrediction(
-            case_id=case_id,
-            attempts=(
-                EvaluationAttempt(
-                    contract_valid=False, latency_ms=9, error_type="StructuredKeyError"
-                ),
-            ),
-        ),
+        lambda *, case_id, arm, **kwargs: prediction_for(arm, case_id, latency_ms=9),
     )
 
     baseline = tmp_path / "baseline"
@@ -141,7 +153,12 @@ def test_full_model_free_roundtrip_and_raw_tamper(monkeypatch, tmp_path):
     assert not receipt.exists()
     verified = pair_verify.verify(**common)
     assert verified["verification_status"] == "verified"
-    assert verified["paired_counts"]["both_incorrect"] == 32
+    assert verified["paired_counts"] == {
+        "both_correct": 1,
+        "baseline_only": 1,
+        "candidate_only": 1,
+        "both_incorrect": 29,
+    }
     assert json.loads(receipt.read_text()) == verified
     receipt.unlink()
     next(private.iterdir()).write_text("tampered")
