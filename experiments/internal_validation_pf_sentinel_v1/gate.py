@@ -18,7 +18,9 @@ IDS = [f"nlu-safety-postfreeze-pf{i:02}" for i in range(1, 17)]
 
 
 def _manifest(root: Path, commit: str) -> dict[str, str]:
-    names = q._git(root, "ls-tree", "-r", "--name-only", commit, "--", HARNESS).decode().splitlines()
+    names = (
+        q._git(root, "ls-tree", "-r", "--name-only", commit, "--", HARNESS).decode().splitlines()
+    )
     files = sorted(name for name in names if name.endswith(".py"))
     if len(files) < 4 or f"{HARNESS}/gate.py" not in files:
         raise ValueError("PF harness is not committed")
@@ -26,23 +28,38 @@ def _manifest(root: Path, commit: str) -> dict[str, str]:
 
 
 def build(
-    *, root: Path, baseline_root: Path, validation_protocol: Path, model_path: Path,
-    result: Path, journal: Path, private_dir: Path, receipt: Path,
+    *,
+    root: Path,
+    baseline_root: Path,
+    validation_protocol: Path,
+    model_path: Path,
+    result: Path,
+    journal: Path,
+    private_dir: Path,
+    receipt: Path,
     harness_commit: str | None = None,
 ) -> dict:
     validation, validation_sha = q.preflight(
-        protocol_path=validation_protocol, baseline_root=baseline_root,
-        candidate_root=root, model_path=model_path,
+        protocol_path=validation_protocol,
+        baseline_root=baseline_root,
+        candidate_root=root,
+        model_path=model_path,
         output=Path(json.loads(validation_protocol.read_bytes())["output_paths"]["result"]),
         journal=Path(json.loads(validation_protocol.read_bytes())["output_paths"]["journal"]),
-        private_dir=Path(json.loads(validation_protocol.read_bytes())["output_paths"]["private_dir"]),
-        receipt=Path(json.loads(validation_protocol.read_bytes())["output_paths"]["verified_receipt"]),
+        private_dir=Path(
+            json.loads(validation_protocol.read_bytes())["output_paths"]["private_dir"]
+        ),
+        receipt=Path(
+            json.loads(validation_protocol.read_bytes())["output_paths"]["verified_receipt"]
+        ),
     )
     if q._file_sha(model_path) != validation["model_sha256"]:
         raise ValueError("Q5 file differs")
     source = root / DATASET
     ledger = root / LEDGER
-    reviewed = load_reviewed_ai_heldout(source, ledger, expected_scenario_keys=frozenset({"고객센터:a/s 접수"}))
+    reviewed = load_reviewed_ai_heldout(
+        source, ledger, expected_scenario_keys=frozenset({"고객센터:a/s 접수"})
+    )
     if [case.id for case in reviewed.dataset.cases] != IDS:
         raise ValueError("PF case order differs")
     for index, case in enumerate(reviewed.dataset.cases):
@@ -77,7 +94,10 @@ def build(
         "harness_commit": harness_commit,
         "harness_manifest": _manifest(root, harness_commit),
         "pair_order": [
-            {"case_id": case_id, "arms": (["baseline", "candidate"] if i % 2 == 0 else ["candidate", "baseline"])}
+            {
+                "case_id": case_id,
+                "arms": (["baseline", "candidate"] if i % 2 == 0 else ["candidate", "baseline"]),
+            }
             for i, case_id in enumerate(IDS)
         ],
         "output_paths": paths,
@@ -85,22 +105,36 @@ def build(
 
 
 def check(
-    *, protocol_path: Path, root: Path, baseline_root: Path,
-    validation_protocol: Path, model_path: Path,
+    *,
+    protocol_path: Path,
+    root: Path,
+    baseline_root: Path,
+    validation_protocol: Path,
+    model_path: Path,
 ) -> tuple[dict, dict]:
     raw = protocol_path.read_bytes()
     protocol = q._strict_json(raw)
     if type(protocol) is not dict or set(protocol) != {
-        "kind", "scope", "validation_protocol_sha256", "dataset_sha256",
-        "review_ledger_sha256", "harness_commit", "harness_manifest",
-        "pair_order", "output_paths",
+        "kind",
+        "scope",
+        "validation_protocol_sha256",
+        "dataset_sha256",
+        "review_ledger_sha256",
+        "harness_commit",
+        "harness_manifest",
+        "pair_order",
+        "output_paths",
     }:
         raise ValueError("PF protocol shape differs")
     output_paths = protocol["output_paths"]
     expected = build(
-        root=root, baseline_root=baseline_root, validation_protocol=validation_protocol,
-        model_path=model_path, result=Path(output_paths["result"]),
-        journal=Path(output_paths["journal"]), private_dir=Path(output_paths["private_dir"]),
+        root=root,
+        baseline_root=baseline_root,
+        validation_protocol=validation_protocol,
+        model_path=model_path,
+        result=Path(output_paths["result"]),
+        journal=Path(output_paths["journal"]),
+        private_dir=Path(output_paths["private_dir"]),
         receipt=Path(output_paths["verified_receipt"]),
         harness_commit=protocol["harness_commit"],
     )
@@ -110,7 +144,8 @@ def check(
     if q._git(root, "show", f"HEAD:{relative}") != raw:
         raise ValueError("PF protocol must be committed")
     current_names = {
-        name for name in q._git(root, "ls-files", "--", HARNESS).decode().splitlines()
+        name
+        for name in q._git(root, "ls-files", "--", HARNESS).decode().splitlines()
         if name.endswith(".py")
     }
     if current_names != set(protocol["harness_manifest"]):
@@ -136,12 +171,18 @@ def main() -> None:
     parser.add_argument("--receipt", type=Path)
     args = parser.parse_args()
     if args.mode == "build":
-        if any(path is None for path in (args.result, args.journal, args.private_dir, args.receipt)):
+        if any(
+            path is None for path in (args.result, args.journal, args.private_dir, args.receipt)
+        ):
             parser.error("build requires all four output paths")
         protocol = build(
-            root=args.root, baseline_root=args.baseline_root,
-            validation_protocol=args.validation_protocol, model_path=args.model_path,
-            result=args.result, journal=args.journal, private_dir=args.private_dir,
+            root=args.root,
+            baseline_root=args.baseline_root,
+            validation_protocol=args.validation_protocol,
+            model_path=args.model_path,
+            result=args.result,
+            journal=args.journal,
+            private_dir=args.private_dir,
             receipt=args.receipt,
         )
         with args.protocol.open("x", encoding="utf-8") as stream:
@@ -149,8 +190,11 @@ def main() -> None:
             stream.write("\n")
     else:
         protocol, _ = check(
-            protocol_path=args.protocol, root=args.root, baseline_root=args.baseline_root,
-            validation_protocol=args.validation_protocol, model_path=args.model_path,
+            protocol_path=args.protocol,
+            root=args.root,
+            baseline_root=args.baseline_root,
+            validation_protocol=args.validation_protocol,
+            model_path=args.model_path,
         )
         print(json.dumps({"pf_cases": len(protocol["pair_order"]), "model_calls": 0}))
 

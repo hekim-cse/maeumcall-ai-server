@@ -63,7 +63,9 @@ def test_scope_boundary_instruction_reaches_each_live_analyzer(case: AIHeldoutCa
     assert observed_messages
     assert all(SCOPE_BOUNDARY_GUIDANCE in messages[0]["content"] for messages in observed_messages)
     assert all("지원하는 주된 요청:" in messages[0]["content"] for messages in observed_messages)
-    assert all("지원 범위 밖의 주된 요청:" in messages[0]["content"] for messages in observed_messages)
+    assert all(
+        "지원 범위 밖의 주된 요청:" in messages[0]["content"] for messages in observed_messages
+    )
     assert all(
         f"현재 지원 목적: {EXPECTED_PURPOSES[case.scenario_key]}" in messages[0]["content"]
         for messages in observed_messages

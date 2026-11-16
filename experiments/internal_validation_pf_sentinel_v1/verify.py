@@ -3,15 +3,31 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import stat
 from pathlib import Path
 
 from experiments.internal_validation_pair_v1 import qualification as q
-from experiments.internal_validation_pair_v1.verify import BOUNDARY_KEYS, _read_rows
+from experiments.internal_validation_pair_v1.verify import BOUNDARY_KEYS
 from experiments.internal_validation_pf_sentinel_v1 import gate
 from experiments.internal_validation_pf_sentinel_v1.run import _worker
+
+
+def _read_attested_result(path: Path) -> tuple[dict, str]:
+    raw = path.read_bytes()
+    return q._strict_json(raw), hashlib.sha256(raw).hexdigest()
+
+
+def _read_attested_journal(path: Path) -> tuple[list[dict], str]:
+    raw = path.read_bytes()
+    if not raw.endswith(b"\n"):
+        raise ValueError("journal ends with incomplete line")
+    rows = [q._strict_json(line) for line in raw.splitlines()]
+    if not rows or any(type(row) is not dict for row in rows):
+        raise ValueError("journal row format differs")
+    return rows, hashlib.sha256(raw).hexdigest()
 
 
 def _boundary(row: dict, *, phase: str, completed: int, previous: dict | None) -> dict:
@@ -68,7 +84,10 @@ def _safe(state: dict) -> bool:
         return True
     if state["conversation_state"] != "collecting_service_request":
         raise ValueError("PF graph state differs")
-    if state["workflow_status"] != "in_progress" or state["safety_status"] not in (None, "no_safety_issue"):
+    if state["workflow_status"] != "in_progress" or state["safety_status"] not in (
+        None,
+        "no_safety_issue",
+    ):
         raise ValueError("PF collecting route fields disagree")
     return False
 
@@ -90,8 +109,12 @@ def summarize(projections: dict) -> dict:
         "baseline_direct_hits": sum(before[item] for item in positive),
         "candidate_direct_hits": sum(after[item] for item in positive),
         "new_direct_danger_misses": [item for item in positive if before[item] and not after[item]],
-        "preexisting_direct_danger_misses": [item for item in positive if not before[item] and not after[item]],
-        "recovered_direct_danger_hits": [item for item in positive if not before[item] and after[item]],
+        "preexisting_direct_danger_misses": [
+            item for item in positive if not before[item] and not after[item]
+        ],
+        "recovered_direct_danger_hits": [
+            item for item in positive if not before[item] and after[item]
+        ],
         "retained_direct_danger_hits": [item for item in positive if before[item] and after[item]],
         "baseline_false_alarms": [item for item in negative if before[item]],
         "candidate_false_alarms": [item for item in negative if after[item]],
@@ -100,30 +123,46 @@ def summarize(projections: dict) -> dict:
 
 
 def verify(
-    *, root: Path, baseline_root: Path, validation_protocol: Path,
-    protocol_path: Path, model_path: Path,
+    *,
+    root: Path,
+    baseline_root: Path,
+    validation_protocol: Path,
+    protocol_path: Path,
+    model_path: Path,
 ) -> dict:
     protocol, runtime = gate.check(
-        protocol_path=protocol_path, root=root, baseline_root=baseline_root,
-        validation_protocol=validation_protocol, model_path=model_path,
+        protocol_path=protocol_path,
+        root=root,
+        baseline_root=baseline_root,
+        validation_protocol=validation_protocol,
+        model_path=model_path,
     )
     paths = {key: Path(value) for key, value in protocol["output_paths"].items()}
     result_path, journal, private, receipt = (
-        paths["result"], paths["journal"], paths["private_dir"], paths["verified_receipt"]
+        paths["result"],
+        paths["journal"],
+        paths["private_dir"],
+        paths["verified_receipt"],
     )
     if receipt.exists() or receipt.is_symlink():
         raise FileExistsError("PF receipt already exists")
     if private.is_symlink() or stat.S_IMODE(private.stat().st_mode) != 0o700:
         raise ValueError("PF private directory permissions differ")
-    rows = _read_rows(journal)
-    result = q._strict_json(result_path.read_bytes())
-    if set(result) != {"kind", "verification_status", "protocol_sha256", "journal_sha256", "projections"}:
+    rows, journal_sha256 = _read_attested_journal(journal)
+    result, result_sha256 = _read_attested_result(result_path)
+    if set(result) != {
+        "kind",
+        "verification_status",
+        "protocol_sha256",
+        "journal_sha256",
+        "projections",
+    }:
         raise ValueError("PF unverified result shape differs")
     if (
         result["kind"] != "exposed_pf_safety_regression_unverified_v1"
         or result["verification_status"] != "unverified"
         or result["protocol_sha256"] != q._file_sha(protocol_path)
-        or result["journal_sha256"] != q._file_sha(journal)
+        or result["journal_sha256"] != journal_sha256
     ):
         raise ValueError("PF result identity differs")
     cursor = 0
@@ -162,20 +201,33 @@ def verify(
                 if type(item) is not dict or set(item) != {"name", "sha256", "bytes"}:
                     raise ValueError("PF raw metadata differs")
                 raw_names.add(item["name"])
-            replay = _worker(root, arm_roots[arm], {
-                "mode": "replay", "arm": arm, "arm_root": str(arm_roots[arm]),
-                "commit": runtime["arms"][arm]["commit"], "head": heads[arm],
-                "manifest": runtime["arms"][arm]["source_manifest"],
-                "case_id": case_id, "private_dir": str(private),
-                "request_policy": runtime["request_policy"], "raw_attempts": raw_attempts,
-            })
+            replay = _worker(
+                root,
+                arm_roots[arm],
+                {
+                    "mode": "replay",
+                    "arm": arm,
+                    "arm_root": str(arm_roots[arm]),
+                    "commit": runtime["arms"][arm]["commit"],
+                    "head": heads[arm],
+                    "manifest": runtime["arms"][arm]["source_manifest"],
+                    "case_id": case_id,
+                    "private_dir": str(private),
+                    "request_policy": runtime["request_policy"],
+                    "raw_attempts": raw_attempts,
+                },
+            )
             if replay != {key: value for key, value in end.items() if key != "event"}:
                 raise ValueError("PF graph result differs from raw replay")
             observed[arm][case_id] = replay["projection"]
             completed += 1
             if completed % 8 == 0 and completed < 32:
-                previous = _boundary(take(), phase="before_restart", completed=completed, previous=previous)
-                previous = _boundary(take(), phase="after_restart", completed=completed, previous=previous)
+                previous = _boundary(
+                    take(), phase="before_restart", completed=completed, previous=previous
+                )
+                previous = _boundary(
+                    take(), phase="after_restart", completed=completed, previous=previous
+                )
     _boundary(take(), phase="final", completed=32, previous=previous)
     if cursor != len(rows):
         raise ValueError("PF journal has trailing rows")
@@ -189,7 +241,7 @@ def verify(
         "verification_status": "verified",
         "protocol_sha256": result["protocol_sha256"],
         "journal_sha256": result["journal_sha256"],
-        "unverified_result_sha256": q._file_sha(result_path),
+        "unverified_result_sha256": result_sha256,
         "cases": 16,
         "arm_evaluations": 32,
         "summary": summary,
@@ -209,11 +261,18 @@ def main() -> None:
     parser.add_argument("--protocol", type=Path, required=True)
     parser.add_argument("--model-path", type=Path, required=True)
     args = parser.parse_args()
-    print(json.dumps(verify(
-        root=args.root, baseline_root=args.baseline_root,
-        validation_protocol=args.validation_protocol, protocol_path=args.protocol,
-        model_path=args.model_path,
-    ), ensure_ascii=False))
+    print(
+        json.dumps(
+            verify(
+                root=args.root,
+                baseline_root=args.baseline_root,
+                validation_protocol=args.validation_protocol,
+                protocol_path=args.protocol,
+                model_path=args.model_path,
+            ),
+            ensure_ascii=False,
+        )
+    )
 
 
 if __name__ == "__main__":

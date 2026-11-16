@@ -27,7 +27,9 @@ def _cases():
                         scenario_key=scenario,
                         conversation_state=state,
                         user_message=f"synthetic {case_id}",
-                        labels=SimpleNamespace(user_action="unknown" if scope == "out" else "provide_details"),
+                        labels=SimpleNamespace(
+                            user_action="unknown" if scope == "out" else "provide_details"
+                        ),
                         tags=(DifficultyTag.HARD_NEGATIVE,) if scope == "out" else (),
                     )
                 )
@@ -46,7 +48,9 @@ def _inputs():
 
 def test_exact_64_slots_pair_balance_and_overlap(monkeypatch, tmp_path: Path):
     cases = _cases()
-    assert len(cases) == 64 and all(_category(case) in {"in_scope", "out_of_scope_unknown"} for case in cases)
+    assert len(cases) == 64 and all(
+        _category(case) in {"in_scope", "out_of_scope_unknown"} for case in cases
+    )
     monkeypatch.setattr(gate, "_checked_split", lambda *args: SimpleNamespace(cases=cases))
     monkeypatch.setattr(gate, "_balanced_scenarios", lambda *args: 4)
     monkeypatch.setattr(gate, "_known_inventory", lambda *args: set())
@@ -57,7 +61,11 @@ def test_exact_64_slots_pair_balance_and_overlap(monkeypatch, tmp_path: Path):
     assert [pair["case_id"] for pair in pairs] == ids
     for scenario in {row[0] for row in slots}:
         for scope in ("in", "out"):
-            arms = [pair["arms"] for slot, pair in zip(slots, pairs, strict=True) if slot[0] == scenario and slot[2] == scope]
+            arms = [
+                pair["arms"]
+                for slot, pair in zip(slots, pairs, strict=True)
+                if slot[0] == scenario and slot[2] == scope
+            ]
             assert arms == [["baseline", "candidate"], ["candidate", "baseline"]]
     known = hashlib.sha256(b"synthetic scenario_00-greeting-in").hexdigest()
     monkeypatch.setattr(gate, "_known_inventory", lambda *args: {known})
@@ -108,10 +116,13 @@ def test_safety16_category_balance_exposure_and_new_miss_gate(monkeypatch, tmp_p
             scenario_key="고객센터:a/s 접수",
             conversation_state="greeting",
             user_message=f"합성 안전 {index}",
-            labels=SimpleNamespace(fields={
-                "safety_status": SimpleNamespace(accepted_values=("safety_issue",))
-                if index < 4 else None
-            }),
+            labels=SimpleNamespace(
+                fields={
+                    "safety_status": SimpleNamespace(accepted_values=("safety_issue",))
+                    if index < 4
+                    else None
+                }
+            ),
         )
         for index in range(16)
     ]
@@ -123,13 +134,17 @@ def test_safety16_category_balance_exposure_and_new_miss_gate(monkeypatch, tmp_p
         "safety_dataset": b"synthetic safety dataset",
         "safety_review_ledger": b"review",
         "safety_case_decisions": b"decisions",
-        "safety_category_ledger": json.dumps({
-            "kind": "ai_reviewed_internal_safety16_categories_v1",
-            "dataset_sha256": hashlib.sha256(b"synthetic safety dataset").hexdigest(),
-            "categories": categories,
-        }).encode(),
+        "safety_category_ledger": json.dumps(
+            {
+                "kind": "ai_reviewed_internal_safety16_categories_v1",
+                "dataset_sha256": hashlib.sha256(b"synthetic safety dataset").hexdigest(),
+                "categories": categories,
+            }
+        ).encode(),
         "test_dataset": json.dumps({"cases": [{"user_message": "prior test"}]}).encode(),
-        "validation_dataset": json.dumps({"cases": [{"user_message": "prior validation"}]}).encode(),
+        "validation_dataset": json.dumps(
+            {"cases": [{"user_message": "prior validation"}]}
+        ).encode(),
         "known_corpus_inventory": b"inventory",
     }
     monkeypatch.setattr(gate, "_checked_split", lambda *args: SimpleNamespace(cases=cases))
@@ -168,7 +183,9 @@ def test_safety16_category_balance_exposure_and_new_miss_gate(monkeypatch, tmp_p
 
     def prediction(guard: bool):
         return SimpleNamespace(
-            final_output=SimpleNamespace(fields={"safety_status": "safety_issue"}) if guard else None
+            final_output=SimpleNamespace(fields={"safety_status": "safety_issue"})
+            if guard
+            else None
         )
 
     before = [prediction(index == 0) for index in range(16)]

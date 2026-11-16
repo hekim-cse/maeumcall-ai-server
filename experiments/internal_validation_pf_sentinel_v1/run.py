@@ -16,10 +16,20 @@ from experiments.nlu_current_baseline_v1 import run as server
 
 
 def _worker(root: Path, arm_root: Path, payload: dict) -> dict:
+    root = root.resolve()
+    arm_root = arm_root.resolve()
+    payload = {
+        **payload,
+        "arm_root": str(Path(payload["arm_root"]).resolve()),
+        "private_dir": str(Path(payload["private_dir"]).resolve()),
+    }
     result = subprocess.run(
         (sys.executable, str(root / gate.HARNESS / "worker.py")),
-        cwd=arm_root, input=json.dumps(payload, ensure_ascii=False), text=True,
-        capture_output=True, timeout=600,
+        cwd=arm_root,
+        input=json.dumps(payload, ensure_ascii=False),
+        text=True,
+        capture_output=True,
+        timeout=600,
     )
     if result.returncode:
         raise ValueError(f"PF worker failed: {payload['arm']}/{payload['case_id']}")
@@ -36,12 +46,25 @@ def _boundary(stream, name: str, model_path: Path, runtime: dict, phase: str, co
 
 
 def run(
-    *, root: Path, baseline_root: Path, validation_protocol: Path,
-    protocol_path: Path, model_path: Path, container_name: str,
+    *,
+    root: Path,
+    baseline_root: Path,
+    validation_protocol: Path,
+    protocol_path: Path,
+    model_path: Path,
+    container_name: str,
 ) -> dict:
+    root = root.resolve()
+    baseline_root = baseline_root.resolve()
+    validation_protocol = validation_protocol.resolve()
+    protocol_path = protocol_path.resolve()
+    model_path = model_path.resolve()
     protocol, runtime = gate.check(
-        protocol_path=protocol_path, root=root, baseline_root=baseline_root,
-        validation_protocol=validation_protocol, model_path=model_path,
+        protocol_path=protocol_path,
+        root=root,
+        baseline_root=baseline_root,
+        validation_protocol=validation_protocol,
+        model_path=model_path,
     )
     paths = {key: Path(value) for key, value in protocol["output_paths"].items()}
     if any(path.exists() or path.is_symlink() for path in paths.values()):
@@ -74,18 +97,32 @@ def run(
         completed = 0
         for pair in protocol["pair_order"]:
             for arm in pair["arms"]:
-                current = server.verify_container(container_name, model_path, runtime["local_runtime"])
-                if server._identity(current) != identity or current["RestartCount"] != restart_count:
+                current = server.verify_container(
+                    container_name, model_path, runtime["local_runtime"]
+                )
+                if (
+                    server._identity(current) != identity
+                    or current["RestartCount"] != restart_count
+                ):
                     raise ValueError("PF unplanned server restart")
                 case_id = pair["case_id"]
                 server._append(stream, {"event": "begin", "arm": arm, "case_id": case_id})
-                row = _worker(root, arm_roots[arm], {
-                    "mode": "live", "arm": arm, "arm_root": str(arm_roots[arm]),
-                    "commit": runtime["arms"][arm]["commit"], "head": heads[arm],
-                    "manifest": runtime["arms"][arm]["source_manifest"],
-                    "case_id": case_id, "private_dir": str(private),
-                    "request_policy": runtime["request_policy"], "raw_attempts": [],
-                })
+                row = _worker(
+                    root,
+                    arm_roots[arm],
+                    {
+                        "mode": "live",
+                        "arm": arm,
+                        "arm_root": str(arm_roots[arm]),
+                        "commit": runtime["arms"][arm]["commit"],
+                        "head": heads[arm],
+                        "manifest": runtime["arms"][arm]["source_manifest"],
+                        "case_id": case_id,
+                        "private_dir": str(private),
+                        "request_policy": runtime["request_policy"],
+                        "raw_attempts": [],
+                    },
+                )
                 server._append(stream, {"event": "end", **row})
                 state = row["projection"]
                 if state["error_type"] is not None:
@@ -93,14 +130,23 @@ def run(
                 projections[arm][case_id] = state
                 completed += 1
                 if completed % 8 == 0 and completed < 32:
-                    before = _boundary(stream, container_name, model_path, runtime, "before_restart", completed)
-                    if server._identity(before) != identity or before["restart_count"] != restart_count:
+                    before = _boundary(
+                        stream, container_name, model_path, runtime, "before_restart", completed
+                    )
+                    if (
+                        server._identity(before) != identity
+                        or before["restart_count"] != restart_count
+                    ):
                         raise ValueError("PF server changed before planned restart")
                     subprocess.run(
                         ("docker", "restart", "--time", "10", container_name),
-                        check=True, capture_output=True, timeout=150,
+                        check=True,
+                        capture_output=True,
+                        timeout=150,
                     )
-                    after = _boundary(stream, container_name, model_path, runtime, "after_restart", completed)
+                    after = _boundary(
+                        stream, container_name, model_path, runtime, "after_restart", completed
+                    )
                     if (
                         before["container_id"] != after["container_id"]
                         or before["started_at"] == after["started_at"]
@@ -134,9 +180,12 @@ def main() -> None:
     parser.add_argument("--container-name", required=True)
     args = parser.parse_args()
     run(
-        root=args.root, baseline_root=args.baseline_root,
-        validation_protocol=args.validation_protocol, protocol_path=args.protocol,
-        model_path=args.model_path, container_name=args.container_name,
+        root=args.root,
+        baseline_root=args.baseline_root,
+        validation_protocol=args.validation_protocol,
+        protocol_path=args.protocol,
+        model_path=args.model_path,
+        container_name=args.container_name,
     )
 
 

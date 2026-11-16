@@ -50,6 +50,9 @@ def _worker(
     case_id: str,
     worktree_head: str,
 ) -> dict:
+    candidate_root = candidate_root.resolve()
+    arm_root = arm_roots[arm].resolve()
+    private_dir = private_dir.resolve()
     payload = {
         "request_policy": protocol["request_policy"],
         "commit": protocol["arms"][arm]["commit"],
@@ -63,7 +66,7 @@ def _worker(
             "--mode",
             "live",
             "--arm-root",
-            str(arm_roots[arm]),
+            str(arm_root),
             "--arm",
             arm,
             "--case-id",
@@ -75,7 +78,7 @@ def _worker(
         capture_output=True,
         text=True,
         timeout=600,
-        cwd=arm_roots[arm],
+        cwd=arm_root,
     )
     if result.returncode not in (0, 2):
         raise ValueError(f"arm worker failed before a complete response: {arm}/{case_id}")
@@ -122,6 +125,14 @@ def run(
     container_name: str,
 ) -> dict:
     """Require a fresh outside-worktree journal; an interrupted run is never resumed."""
+    protocol_path = protocol_path.resolve()
+    baseline_root = baseline_root.resolve()
+    candidate_root = candidate_root.resolve()
+    model_path = model_path.resolve()
+    output = output.resolve()
+    journal = journal.resolve()
+    private_dir = private_dir.resolve()
+    receipt = receipt.resolve()
     protocol, protocol_sha = gate.preflight(
         protocol_path=protocol_path,
         baseline_root=baseline_root,

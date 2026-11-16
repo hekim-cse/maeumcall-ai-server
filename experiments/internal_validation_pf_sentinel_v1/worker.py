@@ -28,7 +28,9 @@ def _frozen_arm(root: Path, commit: str, head: str, manifest: dict[str, str]) ->
         raise ValueError("PF arm worktree is dirty")
     subprocess.run(
         ("git", "merge-base", "--is-ancestor", commit, head),
-        cwd=root, check=True, capture_output=True,
+        cwd=root,
+        check=True,
+        capture_output=True,
     )
     for name, digest in manifest.items():
         path = root / name
@@ -78,8 +80,16 @@ def _projection(result: dict) -> dict:
 def one_case(payload: dict) -> dict:
     """Use recorded completions for replay; never call HTTP in replay mode."""
     if set(payload) != {
-        "mode", "arm", "arm_root", "commit", "head", "manifest", "case_id",
-        "private_dir", "request_policy", "raw_attempts",
+        "mode",
+        "arm",
+        "arm_root",
+        "commit",
+        "head",
+        "manifest",
+        "case_id",
+        "private_dir",
+        "request_policy",
+        "raw_attempts",
     }:
         raise ValueError("PF worker payload shape differs")
     mode = payload["mode"]
@@ -99,7 +109,9 @@ def one_case(payload: dict) -> dict:
     from scripts.run_ai_heldout_pair import _post_completion
 
     dataset = AIHeldoutDataset.model_validate_json(
-        (root / "evals/structured_nlu/data/ai_heldout/nlu-safety-postfreeze-reviewed.v1.json").read_bytes()
+        (
+            root / "evals/structured_nlu/data/ai_heldout/nlu-safety-postfreeze-reviewed.v1.json"
+        ).read_bytes()
     )
     case = next((item for item in dataset.cases if item.id == case_id), None)
     if case is None:
@@ -125,14 +137,22 @@ def one_case(payload: dict) -> dict:
     request = payload["request_policy"]
     policy = SimpleNamespace(**request)
     result = run_graph_case(
-        case, endpoint=request["endpoint"], model_id=request["model_id"],
-        policy=policy, completion_post=completion_post,
+        case,
+        endpoint=request["endpoint"],
+        model_id=request["model_id"],
+        policy=policy,
+        completion_post=completion_post,
     )
     if mode == "replay" and len(records) != len(supplied):
         raise ValueError("PF replay left unused raw attempts")
     if result["model_request_count"] != len(records):
         raise ValueError("PF graph call count differs")
-    return {"arm": arm, "case_id": case_id, "projection": _projection(result), "raw_attempts": records}
+    return {
+        "arm": arm,
+        "case_id": case_id,
+        "projection": _projection(result),
+        "raw_attempts": records,
+    }
 
 
 def main() -> None:

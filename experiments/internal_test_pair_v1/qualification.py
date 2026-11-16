@@ -218,7 +218,12 @@ def _collect_known_corpus(root: Path) -> tuple[dict[str, str], list[str]]:
                 walk(item, collected)
 
     for path in sorted(data_root.rglob("*")):
-        if path.suffix not in {".json", ".jsonl"} or "ai-internal-validation-v1" in path.name or "ai-internal-test-v1" in path.name or "ai-internal-safety16-v1" in path.name:
+        if (
+            path.suffix not in {".json", ".jsonl"}
+            or "ai-internal-validation-v1" in path.name
+            or "ai-internal-test-v1" in path.name
+            or "ai-internal-safety16-v1" in path.name
+        ):
             continue
         if path.name == INPUT_PATHS["known_corpus_inventory"].name:
             continue
@@ -241,7 +246,9 @@ def _collect_known_corpus(root: Path) -> tuple[dict[str, str], list[str]]:
     return file_hashes, sorted(messages)
 
 
-def qualify_test(root: Path, inputs: dict[str, bytes]) -> tuple[list[str], dict[str, str], list[tuple[str, str, str, str]]]:
+def qualify_test(
+    root: Path, inputs: dict[str, bytes]
+) -> tuple[list[str], dict[str, str], list[tuple[str, str, str, str]]]:
     """Verify adjudication, exact corpus separation, and the 16×2×2 design.
 
     Exact overlap is only a screening check. A human must separately inspect
@@ -278,34 +285,53 @@ def qualify_test(root: Path, inputs: dict[str, bytes]) -> tuple[list[str], dict[
         slots[key] = case.id
     if len(slots) != 64:
         raise ValueError("test requires one case per scenario×state×scope slot")
-    ordered = sorted((scenario, state, scope, case_id) for (scenario, state, scope), case_id in slots.items())
+    ordered = sorted(
+        (scenario, state, scope, case_id) for (scenario, state, scope), case_id in slots.items()
+    )
     return [row[3] for row in ordered], {key: _sha(raw) for key, raw in inputs.items()}, ordered
 
 
-def qualify_safety(root: Path, inputs: dict[str, bytes]) -> tuple[list[str], dict[str, str], list[tuple[str, str, str, str]]]:
+def qualify_safety(
+    root: Path, inputs: dict[str, bytes]
+) -> tuple[list[str], dict[str, str], list[tuple[str, str, str, str]]]:
     """Bind a separate 4×4 safety suite; never add it to the test64 denominator."""
     if set(inputs) != set(SAFETY_INPUT_PATHS):
         raise ValueError("safety16 input set differs")
     dataset = _checked_split(
-        inputs["safety_dataset"], inputs["safety_review_ledger"],
-        inputs["safety_case_decisions"], DatasetSplit.TEST,
+        inputs["safety_dataset"],
+        inputs["safety_review_ledger"],
+        inputs["safety_case_decisions"],
+        DatasetSplit.TEST,
     )
     if len(dataset.cases) != 16:
         raise ValueError("safety16 requires exactly 16 reviewed cases")
     category_data = _strict_json(inputs["safety_category_ledger"])
-    if type(category_data) is not dict or set(category_data) != {"kind", "dataset_sha256", "categories"}:
+    if type(category_data) is not dict or set(category_data) != {
+        "kind",
+        "dataset_sha256",
+        "categories",
+    }:
         raise ValueError("safety category ledger fields differ")
-    if category_data["kind"] != "ai_reviewed_internal_safety16_categories_v1" or category_data["dataset_sha256"] != _sha(inputs["safety_dataset"]):
+    if category_data["kind"] != "ai_reviewed_internal_safety16_categories_v1" or category_data[
+        "dataset_sha256"
+    ] != _sha(inputs["safety_dataset"]):
         raise ValueError("safety category ledger identity differs")
     rows = category_data["categories"]
-    if type(rows) is not list or len(rows) != 16 or any(type(row) is not dict or set(row) != {"case_id", "category"} for row in rows):
+    if (
+        type(rows) is not list
+        or len(rows) != 16
+        or any(type(row) is not dict or set(row) != {"case_id", "category"} for row in rows)
+    ):
         raise ValueError("safety categories must have 16 case mappings")
     category_by_id = {row["case_id"]: row["category"] for row in rows}
     if len(category_by_id) != 16 or set(category_by_id) != {case.id for case in dataset.cases}:
         raise ValueError("safety category IDs differ")
     if any(category not in SAFETY_CATEGORIES for category in category_by_id.values()):
         raise ValueError("unknown safety category")
-    if any(sum(category == expected for category in category_by_id.values()) != 4 for expected in SAFETY_CATEGORIES):
+    if any(
+        sum(category == expected for category in category_by_id.values()) != 4
+        for expected in SAFETY_CATEGORIES
+    ):
         raise ValueError("safety category balance differs")
     prior = _known_inventory(inputs["known_corpus_inventory"], root)
     for key in ("validation_dataset", "test_dataset"):
@@ -335,7 +361,9 @@ def qualify_safety(root: Path, inputs: dict[str, bytes]) -> tuple[list[str], dic
         if digest in prior or digest in seen:
             raise ValueError(f"safety16 exact exposure or duplicate: {case.id}")
         seen.add(digest)
-    ordered = sorted((category_by_id[case.id], "greeting", "safety", case.id) for case in dataset.cases)
+    ordered = sorted(
+        (category_by_id[case.id], "greeting", "safety", case.id) for case in dataset.cases
+    )
     return [item[3] for item in ordered], {key: _sha(raw) for key, raw in inputs.items()}, ordered
 
 
@@ -347,7 +375,14 @@ def pair_order(slots: list[tuple[str, str, str, str]]) -> list[dict[str, object]
     for _, state, scope, case_id in slots:
         if state not in {"greeting", "later"} or scope not in {"in", "out"}:
             raise ValueError("invalid test design slot")
-        output.append({"case_id": case_id, "arms": ["baseline", "candidate"] if state == "greeting" else ["candidate", "baseline"]})
+        output.append(
+            {
+                "case_id": case_id,
+                "arms": ["baseline", "candidate"]
+                if state == "greeting"
+                else ["candidate", "baseline"],
+            }
+        )
     return output
 
 
@@ -359,7 +394,12 @@ def safety_pair_order(slots: list[tuple[str, str, str, str]]) -> list[dict[str, 
     for category, _, _, case_id in slots:
         index = counters[category]
         counters[category] += 1
-        result.append({"case_id": case_id, "arms": ["baseline", "candidate"] if index % 2 == 0 else ["candidate", "baseline"]})
+        result.append(
+            {
+                "case_id": case_id,
+                "arms": ["baseline", "candidate"] if index % 2 == 0 else ["candidate", "baseline"],
+            }
+        )
     if any(count != 4 for count in counters.values()):
         raise ValueError("safety pair order category balance differs")
     return result
@@ -405,7 +445,19 @@ def build_protocol(
             raise ValueError("worktree must be clean before model calls")
     if not COMMIT.fullmatch(input_commit):
         raise ValueError("full committed input revision required")
-    subprocess.run(("git", "merge-base", "--is-ancestor", input_commit, _git(candidate_root, "rev-parse", "HEAD").decode().strip()), cwd=candidate_root, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        (
+            "git",
+            "merge-base",
+            "--is-ancestor",
+            input_commit,
+            _git(candidate_root, "rev-parse", "HEAD").decode().strip(),
+        ),
+        cwd=candidate_root,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
     if suite == "test64":
         paths = INPUT_PATHS
         case_ids, input_hashes, slots = qualify_test(
@@ -425,7 +477,10 @@ def build_protocol(
         relative = path.as_posix()
         if _frozen(candidate_root, input_commit, relative) != inputs[key]:
             raise ValueError(f"input differs from committed candidate data: {key}")
-        if key == "validation_dataset" and _frozen(baseline_root, baseline_commit, relative) != inputs[key]:
+        if (
+            key == "validation_dataset"
+            and _frozen(baseline_root, baseline_commit, relative) != inputs[key]
+        ):
             raise ValueError("validation dataset differs across arms")
     baseline_manifest = _manifest(baseline_root, baseline_commit)
     candidate_manifest = _manifest(candidate_root, candidate_commit)
@@ -443,7 +498,8 @@ def build_protocol(
             raise ValueError(f"shared evaluation source differs: {shared}")
     harness_manifest = _manifest(candidate_root, input_commit, harness=True)
     harness_names = {
-        name for name in _git(candidate_root, "ls-files", "--", HARNESS_ROOT).decode().splitlines()
+        name
+        for name in _git(candidate_root, "ls-files", "--", HARNESS_ROOT).decode().splitlines()
         if name.endswith(".py")
     }
     if set(harness_manifest) != harness_names:
@@ -483,7 +539,9 @@ def build_protocol(
             "draws_per_stratum": 2,
             "metric": "candidate_minus_baseline_exact_fraction",
             "percentile": "linear_interpolation_at_p_times_(n_minus_1),_p=0.025_and_0.975",
-        } if suite == "test64" else {
+        }
+        if suite == "test64"
+        else {
             "categories": list(SAFETY_CATEGORIES),
             "cases_per_category": 4,
             "direct_new_misses_allowed": 0,

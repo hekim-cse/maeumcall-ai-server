@@ -34,10 +34,7 @@ def _synthetic_inputs(candidate: Path) -> None:
                     (name for name in contract.conversation_states if name != "greeting"),
                     key=lambda name: ("collecting" not in name, name),
                 )
-                state = next(
-                    name for name in candidates
-                    if _valid_later(source, name)
-                )
+                state = next(name for name in candidates if _valid_later(source, name))
             case_id = f"synthetic-test-{index:02d}-{state_kind}"
             case = AIHeldoutCase.model_validate(
                 source.model_copy(
@@ -54,7 +51,9 @@ def _synthetic_inputs(candidate: Path) -> None:
     dataset = AIHeldoutDataset.model_validate(
         original.model_copy(update={"cases": tuple(cases)}).model_dump(mode="json")
     )
-    raw = (json.dumps(dataset.model_dump(mode="json"), ensure_ascii=False, indent=2) + "\n").encode()
+    raw = (
+        json.dumps(dataset.model_dump(mode="json"), ensure_ascii=False, indent=2) + "\n"
+    ).encode()
     digest = hashlib.sha256(raw).hexdigest()
     ids = sorted(case.id for case in dataset.cases)
     reviewed_at = "2026-11-17T00:00:00+09:00"
@@ -104,9 +103,17 @@ def _valid_later(source: AIHeldoutCase, state: str) -> bool:
 
 def _synthetic_safety_inputs(candidate: Path) -> None:
     source = AIHeldoutDataset.model_validate_json(
-        (candidate / "evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-reviewed.v1.json").read_bytes()
+        (
+            candidate
+            / "evals/structured_nlu/data/ai_heldout/nlu-safety-confirmation-reviewed.v1.json"
+        ).read_bytes()
     )
-    selected = list(source.cases[:4]) + list(source.cases[12:16]) + list(source.cases[20:24]) + list(source.cases[28:32])
+    selected = (
+        list(source.cases[:4])
+        + list(source.cases[12:16])
+        + list(source.cases[20:24])
+        + list(source.cases[28:32])
+    )
     categories = ("direct", "uncertain", "other_source", "nonoccurring")
     cases = []
     mappings = []
@@ -126,7 +133,9 @@ def _synthetic_safety_inputs(candidate: Path) -> None:
     dataset = AIHeldoutDataset.model_validate(
         source.model_copy(update={"cases": tuple(cases)}).model_dump(mode="json")
     )
-    raw = (json.dumps(dataset.model_dump(mode="json"), ensure_ascii=False, indent=2) + "\n").encode()
+    raw = (
+        json.dumps(dataset.model_dump(mode="json"), ensure_ascii=False, indent=2) + "\n"
+    ).encode()
     digest = hashlib.sha256(raw).hexdigest()
     reviewed_at = "2026-11-17T00:00:00+09:00"
     ledger = {
@@ -162,7 +171,10 @@ def _synthetic_safety_inputs(candidate: Path) -> None:
         ("safety_dataset", raw),
         ("safety_review_ledger", (json.dumps(ledger, ensure_ascii=False) + "\n").encode()),
         ("safety_case_decisions", (json.dumps(decisions, ensure_ascii=False) + "\n").encode()),
-        ("safety_category_ledger", (json.dumps(category_ledger, ensure_ascii=False) + "\n").encode()),
+        (
+            "safety_category_ledger",
+            (json.dumps(category_ledger, ensure_ascii=False) + "\n").encode(),
+        ),
     ):
         path = candidate / gate.SAFETY_INPUT_PATHS[key]
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -183,11 +195,46 @@ def test_two_git_worktrees_fake_q5_full_receipt_and_tamper(monkeypatch, tmp_path
     baseline = tmp_path / "baseline"
     candidate = tmp_path / "candidate"
     subprocess.run(
-        ("git", "clone", "-q", "--local", "--no-hardlinks", "--no-checkout", str(gate.ROOT), str(clone)),
+        (
+            "git",
+            "clone",
+            "-q",
+            "--local",
+            "--no-hardlinks",
+            "--no-checkout",
+            str(gate.ROOT),
+            str(clone),
+        ),
         check=True,
     )
-    subprocess.run(("git", "-C", str(clone), "worktree", "add", "-q", "--detach", str(baseline), gate.BASELINE_COMMIT), check=True)
-    subprocess.run(("git", "-C", str(clone), "worktree", "add", "-q", "--detach", str(candidate), gate.CANDIDATE_COMMIT), check=True)
+    subprocess.run(
+        (
+            "git",
+            "-C",
+            str(clone),
+            "worktree",
+            "add",
+            "-q",
+            "--detach",
+            str(baseline),
+            gate.BASELINE_COMMIT,
+        ),
+        check=True,
+    )
+    subprocess.run(
+        (
+            "git",
+            "-C",
+            str(clone),
+            "worktree",
+            "add",
+            "-q",
+            "--detach",
+            str(candidate),
+            gate.CANDIDATE_COMMIT,
+        ),
+        check=True,
+    )
     shutil.copytree(
         gate.ROOT / gate.HARNESS_ROOT,
         candidate / gate.HARNESS_ROOT,
@@ -199,7 +246,18 @@ def test_two_git_worktrees_fake_q5_full_receipt_and_tamper(monkeypatch, tmp_path
     def commit(message: str) -> str:
         subprocess.run(("git", "-C", str(candidate), "add", "."), check=True)
         subprocess.run(
-            ("git", "-C", str(candidate), "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", message),
+            (
+                "git",
+                "-C",
+                str(candidate),
+                "-c",
+                "user.name=Test",
+                "-c",
+                "user.email=test@example.invalid",
+                "commit",
+                "-qm",
+                message,
+            ),
             check=True,
         )
         return gate._git(candidate, "rev-parse", "HEAD").decode().strip()
@@ -275,7 +333,11 @@ def test_two_git_worktrees_fake_q5_full_receipt_and_tamper(monkeypatch, tmp_path
     def observed(*_args, **_kwargs):
         return {
             "Id": "d" * 64,
-            "State": {"StartedAt": f"start-{state['restarts']}", "Running": True, "OOMKilled": False},
+            "State": {
+                "StartedAt": f"start-{state['restarts']}",
+                "Running": True,
+                "OOMKilled": False,
+            },
             "RestartCount": 0,
         }
 

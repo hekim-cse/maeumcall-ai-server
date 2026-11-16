@@ -145,6 +145,9 @@ def _replay(
     dataset_key: str,
     dataset_relative: Path,
 ) -> CasePrediction:
+    candidate_root = candidate_root.resolve()
+    arm_root = arm_root.resolve()
+    private_dir = private_dir.resolve()
     payload = {
         "request_policy": protocol["request_policy"],
         "commit": protocol["arms"][arm]["commit"],
@@ -238,7 +241,9 @@ def stratified_bootstrap(cases, predictions: dict[str, list[CasePrediction]]) ->
     if len(strata) != 32 or any(len(indices) != 2 for indices in strata.values()):
         raise ValueError("bootstrap strata differ from 32×2 preregistration")
     deltas = []
-    for case, before, after in zip(cases, predictions["baseline"], predictions["candidate"], strict=True):
+    for case, before, after in zip(
+        cases, predictions["baseline"], predictions["candidate"], strict=True
+    ):
         before_ok = score_predictions((case,), (before,)).counts.fully_correct_cases == 1
         after_ok = score_predictions((case,), (after,)).counts.fully_correct_cases == 1
         deltas.append(int(after_ok) - int(before_ok))
@@ -277,10 +282,17 @@ def safety_counts(
         for category in gate.SAFETY_CATEGORIES
     }
     new_direct_misses = 0
-    for case, before, after in zip(cases, predictions["baseline"], predictions["candidate"], strict=True):
+    for case, before, after in zip(
+        cases, predictions["baseline"], predictions["candidate"], strict=True
+    ):
         category = category_by_id[case.id]
-        before_guard = bool(before.final_output and before.final_output.fields.get("safety_status") == "safety_issue")
-        after_guard = bool(after.final_output and after.final_output.fields.get("safety_status") == "safety_issue")
+        before_guard = bool(
+            before.final_output
+            and before.final_output.fields.get("safety_status") == "safety_issue"
+        )
+        after_guard = bool(
+            after.final_output and after.final_output.fields.get("safety_status") == "safety_issue"
+        )
         counts[category]["denominator"] += 1
         counts[category]["baseline_guard"] += int(before_guard)
         counts[category]["candidate_guard"] += int(after_guard)
@@ -292,8 +304,12 @@ def safety_counts(
         "categories": counts,
         "direct_new_misses": new_direct_misses,
         "direct_candidate_misses": 4 - counts["direct"]["candidate_guard"],
-        "negative_baseline_false_alarms": sum(counts[key]["baseline_guard"] for key in ("other_source", "nonoccurring")),
-        "negative_candidate_false_alarms": sum(counts[key]["candidate_guard"] for key in ("other_source", "nonoccurring")),
+        "negative_baseline_false_alarms": sum(
+            counts[key]["baseline_guard"] for key in ("other_source", "nonoccurring")
+        ),
+        "negative_candidate_false_alarms": sum(
+            counts[key]["candidate_guard"] for key in ("other_source", "nonoccurring")
+        ),
         "negative_denominator": 8,
         "gate_status": "no_new_direct_miss" if new_direct_misses == 0 else "failed_new_direct_miss",
     }
@@ -310,6 +326,14 @@ def verify(
     private_dir: Path,
     receipt: Path,
 ) -> dict:
+    protocol_path = protocol_path.resolve()
+    baseline_root = baseline_root.resolve()
+    candidate_root = candidate_root.resolve()
+    model_path = model_path.resolve()
+    output = output.resolve()
+    journal = journal.resolve()
+    private_dir = private_dir.resolve()
+    receipt = receipt.resolve()
     protocol, protocol_sha = gate.preflight(
         protocol_path=protocol_path,
         baseline_root=baseline_root,
@@ -322,12 +346,19 @@ def verify(
     )
     if protocol["kind"] == gate.KIND:
         dataset_key, dataset_relative, case_count, result_kind, result_scope = (
-            "test_dataset", gate.INPUT_PATHS["test_dataset"], 64, RESULT_KIND, gate.SCOPE
+            "test_dataset",
+            gate.INPUT_PATHS["test_dataset"],
+            64,
+            RESULT_KIND,
+            gate.SCOPE,
         )
     elif protocol["kind"] == gate.SAFETY_KIND:
         dataset_key, dataset_relative, case_count, result_kind, result_scope = (
-            "safety_dataset", gate.SAFETY_INPUT_PATHS["safety_dataset"], 16,
-            "ai_reviewed_internal_safety16_pair_v1_result", gate.SAFETY_SCOPE
+            "safety_dataset",
+            gate.SAFETY_INPUT_PATHS["safety_dataset"],
+            16,
+            "ai_reviewed_internal_safety16_pair_v1_result",
+            gate.SAFETY_SCOPE,
         )
     else:
         raise ValueError("unknown paired suite")
@@ -418,7 +449,10 @@ def verify(
                 raise ValueError("recorded prediction differs from raw replay")
             predictions[arm].append(prediction)
             count += 1
-            if count % gate.LOCAL_RUNTIME["restart_interval_arm_evaluations"] == 0 and count < 2 * case_count:
+            if (
+                count % gate.LOCAL_RUNTIME["restart_interval_arm_evaluations"] == 0
+                and count < 2 * case_count
+            ):
                 previous = _boundary(
                     take(), phase="before_restart", completed=count, previous=previous
                 )
@@ -450,9 +484,13 @@ def verify(
     if result != expected:
         raise ValueError("public result differs from verified journal")
     verified = {
-        "kind": "ai_reviewed_internal_test_pair_v1_verified_receipt" if case_count == 64 else "ai_reviewed_internal_safety16_pair_v1_verified_receipt",
+        "kind": "ai_reviewed_internal_test_pair_v1_verified_receipt"
+        if case_count == 64
+        else "ai_reviewed_internal_safety16_pair_v1_verified_receipt",
         "verification_status": "verified",
-        "publication_status": "provisional_pending_fresh_safety16_and_exposure_audit" if case_count == 64 else "safety16_raw_verified_exposure_audit_pending",
+        "publication_status": "provisional_pending_fresh_safety16_and_exposure_audit"
+        if case_count == 64
+        else "safety16_raw_verified_exposure_audit_pending",
         "scope": result_scope,
         "cases": case_count,
         "arm_evaluations": 2 * case_count,
@@ -466,9 +504,12 @@ def verify(
         verified["safety_condition"] = "unverified"
         verified["bootstrap"] = stratified_bootstrap(cases, predictions)
     else:
-        category_data = gate._strict_json((candidate_root / gate.SAFETY_INPUT_PATHS["safety_category_ledger"]).read_bytes())
+        category_data = gate._strict_json(
+            (candidate_root / gate.SAFETY_INPUT_PATHS["safety_category_ledger"]).read_bytes()
+        )
         verified["safety_counts"] = safety_counts(
-            cases, predictions,
+            cases,
+            predictions,
             {row["case_id"]: row["category"] for row in category_data["categories"]},
         )
     with receipt.open("x", encoding="utf-8") as stream:

@@ -19,8 +19,29 @@ def reviewed_inputs():
     return {key: (gate.ROOT / path).read_bytes() for key, path in gate.INPUT_PATHS.items()}
 
 
-def test_reviewed_validation_qualifies_only_as_balanced_candidate_selection(reviewed_inputs):
-    case_ids, digests = gate.qualify_validation(gate.ROOT, reviewed_inputs)
+def test_reviewed_validation_qualifies_only_as_balanced_candidate_selection(
+    reviewed_inputs, tmp_path
+):
+    # The frozen inventory describes the corpus before the later test80 datasets.
+    with pytest.raises(ValueError, match="known-corpus inventory differs"):
+        gate.qualify_validation(gate.ROOT, reviewed_inputs)
+    historical_root = tmp_path / "candidate"
+    subprocess.run(
+        ("git", "clone", "--local", "--no-hardlinks", "-q", str(gate.ROOT), str(historical_root)),
+        check=True,
+    )
+    subprocess.run(
+        (
+            "git",
+            "-C",
+            str(historical_root),
+            "checkout",
+            "-q",
+            "04af27849563f7b30845441e0f8fc6ca90f876ff",
+        ),
+        check=True,
+    )
+    case_ids, digests = gate.qualify_validation(historical_root, reviewed_inputs)
     schedule = gate.pair_order(case_ids)
     assert len(case_ids) == len(schedule) == 32
     assert len(digests) == 4

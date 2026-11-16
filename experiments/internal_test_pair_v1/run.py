@@ -23,7 +23,13 @@ def _suite(protocol: dict) -> tuple[str, Path, int, str, str]:
     if protocol["kind"] == gate.KIND:
         return "test_dataset", gate.INPUT_PATHS["test_dataset"], 64, RESULT_KIND, gate.SCOPE
     if protocol["kind"] == gate.SAFETY_KIND:
-        return "safety_dataset", gate.SAFETY_INPUT_PATHS["safety_dataset"], 16, "ai_reviewed_internal_safety16_pair_v1_result", gate.SAFETY_SCOPE
+        return (
+            "safety_dataset",
+            gate.SAFETY_INPUT_PATHS["safety_dataset"],
+            16,
+            "ai_reviewed_internal_safety16_pair_v1_result",
+            gate.SAFETY_SCOPE,
+        )
     raise ValueError("unknown paired suite")
 
 
@@ -60,6 +66,9 @@ def _worker(
     dataset_key: str,
     dataset_relative: Path,
 ) -> dict:
+    candidate_root = candidate_root.resolve()
+    arm_root = arm_roots[arm].resolve()
+    private_dir = private_dir.resolve()
     payload = {
         "request_policy": protocol["request_policy"],
         "commit": protocol["arms"][arm]["commit"],
@@ -77,7 +86,7 @@ def _worker(
             "--mode",
             "live",
             "--arm-root",
-            str(arm_roots[arm]),
+            str(arm_root),
             "--arm",
             arm,
             "--case-id",
@@ -89,7 +98,7 @@ def _worker(
         capture_output=True,
         text=True,
         timeout=600,
-        cwd=arm_roots[arm],
+        cwd=arm_root,
     )
     if result.returncode not in (0, 2):
         raise ValueError(f"arm worker failed before a complete response: {arm}/{case_id}")
@@ -136,6 +145,14 @@ def run(
     container_name: str,
 ) -> dict:
     """Require a fresh outside-worktree journal; an interrupted run is never resumed."""
+    protocol_path = protocol_path.resolve()
+    baseline_root = baseline_root.resolve()
+    candidate_root = candidate_root.resolve()
+    model_path = model_path.resolve()
+    output = output.resolve()
+    journal = journal.resolve()
+    private_dir = private_dir.resolve()
+    receipt = receipt.resolve()
     protocol, protocol_sha = gate.preflight(
         protocol_path=protocol_path,
         baseline_root=baseline_root,
@@ -240,7 +257,9 @@ def run(
                         raise ValueError("planned restart identity differs")
                     identity = _identity(after)
                     prior_restart_count = after["restart_count"]
-        if completed != 2 * case_count or any(len(rows) != case_count for rows in predictions.values()):
+        if completed != 2 * case_count or any(
+            len(rows) != case_count for rows in predictions.values()
+        ):
             raise ValueError("paired run is incomplete")
         final = _boundary(stream, container_name, model_path, protocol, "final", completed)
         if _identity(final) != identity or final["restart_count"] != prior_restart_count:

@@ -50,16 +50,14 @@ def test_pf_gate_separates_new_miss_preexisting_miss_recovery_and_false_alarm():
 
 def test_pf_gate_rejects_invalid_safety_state_and_graph_error():
     projections = {
-        arm: {case_id: state(False) for case_id in gate.IDS}
-        for arm in ("baseline", "candidate")
+        arm: {case_id: state(False) for case_id in gate.IDS} for arm in ("baseline", "candidate")
     }
-    projections["candidate"][gate.IDS[0]] = {
-        **state(True), "workflow_status": "in_progress"
-    }
+    projections["candidate"][gate.IDS[0]] = {**state(True), "workflow_status": "in_progress"}
     with pytest.raises(ValueError, match="safety route"):
         summarize(projections)
     projections["candidate"][gate.IDS[0]] = {
-        **state(False), "error_type": "AIResponseValidationError"
+        **state(False),
+        "error_type": "AIResponseValidationError",
     }
     with pytest.raises(ValueError, match="graph error"):
         summarize(projections)
@@ -79,10 +77,18 @@ def test_pf_private_raw_replay_detects_tampering(tmp_path):
 
 def test_pf_manual_restart_boundary_keeps_docker_restart_count():
     base = {
-        "event": "server_boundary", "phase": "initial", "completed_cases": 0,
-        "running": True, "healthy": True, "oom_killed": False, "exit_code": 0,
-        "restart_count": 0, "container_id": "d" * 64, "started_at": "start-0",
-        "docker_host_memory_bytes": 12 * 1024**3, "memory_usage": "1GiB / 10GiB",
+        "event": "server_boundary",
+        "phase": "initial",
+        "completed_cases": 0,
+        "running": True,
+        "healthy": True,
+        "oom_killed": False,
+        "exit_code": 0,
+        "restart_count": 0,
+        "container_id": "d" * 64,
+        "started_at": "start-0",
+        "docker_host_memory_bytes": 12 * 1024**3,
+        "memory_usage": "1GiB / 10GiB",
     }
     before = {**base, "phase": "before_restart", "completed_cases": 8}
     after = {**base, "phase": "after_restart", "completed_cases": 8, "started_at": "start-1"}
@@ -90,11 +96,16 @@ def test_pf_manual_restart_boundary_keeps_docker_restart_count():
     previous = _boundary(before, phase="before_restart", completed=8, previous=previous)
     assert _boundary(after, phase="after_restart", completed=8, previous=previous) == after
     with pytest.raises(ValueError, match="planned restart"):
-        _boundary({**after, "restart_count": 1}, phase="after_restart", completed=8,
-                  previous=previous)
+        _boundary(
+            {**after, "restart_count": 1}, phase="after_restart", completed=8, previous=previous
+        )
     with pytest.raises(ValueError, match="planned restart"):
-        _boundary({**after, "started_at": "start-0"}, phase="after_restart", completed=8,
-                  previous=previous)
+        _boundary(
+            {**after, "started_at": "start-0"},
+            phase="after_restart",
+            completed=8,
+            previous=previous,
+        )
 
 
 def test_pf_worker_replays_saved_completion_without_http(tmp_path, monkeypatch):
@@ -111,7 +122,9 @@ def test_pf_worker_replays_saved_completion_without_http(tmp_path, monkeypatch):
 
     def fake_graph(case, *, endpoint, model_id, policy, completion_post):
         assert model_id == "kanana-q5"
-        raw = completion_post(endpoint, model_id, [{"role": "user", "content": case.user_message}], policy)
+        raw = completion_post(
+            endpoint, model_id, [{"role": "user", "content": case.user_message}], policy
+        )
         assert raw == '{"answer":"ok"}'
         return {
             "case_id": case.id,
@@ -126,9 +139,14 @@ def test_pf_worker_replays_saved_completion_without_http(tmp_path, monkeypatch):
     monkeypatch.setattr(run_ai_heldout_pair, "_post_completion", fake_http)
     monkeypatch.setattr(probe_nlu_safety_graph, "run_graph_case", fake_graph)
     payload = {
-        "mode": "live", "arm": "baseline", "arm_root": str(Path(__file__).resolve().parents[1]),
-        "commit": "ignored", "head": "ignored", "manifest": {},
-        "case_id": gate.IDS[0], "private_dir": str(private),
+        "mode": "live",
+        "arm": "baseline",
+        "arm_root": str(Path(__file__).resolve().parents[1]),
+        "commit": "ignored",
+        "head": "ignored",
+        "manifest": {},
+        "case_id": gate.IDS[0],
+        "private_dir": str(private),
         "request_policy": {
             "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
             "model_id": "kanana-q5",
@@ -139,7 +157,8 @@ def test_pf_worker_replays_saved_completion_without_http(tmp_path, monkeypatch):
     assert live_calls == [True]
     assert live["projection"]["attempts"] == [{"contract_valid": True}]
     monkeypatch.setattr(
-        run_ai_heldout_pair, "_post_completion",
+        run_ai_heldout_pair,
+        "_post_completion",
         lambda *_args: pytest.fail("replay called HTTP"),
     )
     replay = worker.one_case({**payload, "mode": "replay", "raw_attempts": live["raw_attempts"]})
@@ -157,9 +176,13 @@ def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch,
         {
             "intent": "service_request",
             "fields": {
-                "product_type": None, "model_name": None, "symptom": None,
-                "occurred_at": None, "safety_status": None,
-                "service_channel": None, "preferred_schedule": None,
+                "product_type": None,
+                "model_name": None,
+                "symptom": None,
+                "occurred_at": None,
+                "safety_status": None,
+                "service_channel": None,
+                "preferred_schedule": None,
             },
             "user_action": "unknown",
             "change_field": None,
@@ -181,25 +204,45 @@ def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch,
         check=True,
     )
     baseline_commit = validation_gate._git(root, "rev-parse", "c46c27a").decode().strip()
-    head = validation_gate._git(root, "rev-parse", "HEAD").decode().strip()
+    # This historical sentinel predates the later test80 corpus additions.
+    head = (
+        validation_gate._git(root, "rev-parse", "a21da1aedbd562a9c3d1c6971f1ca24f883b2945")
+        .decode()
+        .strip()
+    )
     for path, commit in ((baseline, baseline_commit), (candidate, head)):
         subprocess.run(
             ("git", "-C", str(clone), "worktree", "add", "-q", "--detach", str(path), commit),
             check=True,
         )
-    shutil.copytree(root / gate.HARNESS, candidate / gate.HARNESS,
-                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"), dirs_exist_ok=True)
+    shutil.copytree(
+        root / gate.HARNESS,
+        candidate / gate.HARNESS,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        dirs_exist_ok=True,
+    )
 
     def commit(message: str) -> None:
         subprocess.run(("git", "-C", str(candidate), "add", "."), check=True)
         if not subprocess.run(
             ("git", "-C", str(candidate), "status", "--porcelain"),
-            check=True, capture_output=True,
+            check=True,
+            capture_output=True,
         ).stdout:
             return
         subprocess.run(
-            ("git", "-C", str(candidate), "-c", "user.name=Test",
-             "-c", "user.email=test@example.invalid", "commit", "-qm", message),
+            (
+                "git",
+                "-C",
+                str(candidate),
+                "-c",
+                "user.name=Test",
+                "-c",
+                "user.email=test@example.invalid",
+                "commit",
+                "-qm",
+                message,
+            ),
             check=True,
         )
 
@@ -207,40 +250,75 @@ def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch,
     model = Path("/Users/khe/.cache/maeumcall-models/kanana-1.5-2.1b-q5-k-m.gguf")
     if not model.is_file():
         pytest.skip("frozen Q5 model file unavailable for protocol integrity check")
-    validation = candidate / "evals/structured_nlu/data/ai_heldout/nlu-internal-validation-pair-protocol.v1.json"
+    validation = (
+        candidate
+        / "evals/structured_nlu/data/ai_heldout/nlu-internal-validation-pair-protocol.v1.json"
+    )
     pf_protocol = candidate / "evals/structured_nlu/data/ai_heldout/pf-synthetic-protocol.json"
     output = tmp_path / "pf-result.json"
     journal = tmp_path / "pf-journal.jsonl"
     private = tmp_path / "pf-raw"
     receipt = tmp_path / "pf-verified.json"
-    pf_protocol.write_text(json.dumps(gate.build(
-        root=candidate, baseline_root=baseline, validation_protocol=validation,
-        model_path=model, result=output, journal=journal,
-        private_dir=private, receipt=receipt,
-    ), ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    pf_protocol.write_text(
+        json.dumps(
+            gate.build(
+                root=candidate,
+                baseline_root=baseline,
+                validation_protocol=validation,
+                model_path=model,
+                result=output,
+                journal=journal,
+                private_dir=private,
+                receipt=receipt,
+            ),
+            ensure_ascii=False,
+            sort_keys=True,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     commit("PF protocol")
-    assert gate.check(
-        protocol_path=pf_protocol, root=candidate, baseline_root=baseline,
-        validation_protocol=validation, model_path=model,
-    )[0]["kind"] == gate.KIND
+    assert (
+        gate.check(
+            protocol_path=pf_protocol,
+            root=candidate,
+            baseline_root=baseline,
+            validation_protocol=validation,
+            model_path=model,
+        )[0]["kind"]
+        == gate.KIND
+    )
 
     state = {"restart_events": 0}
 
     def observed(*_args, **_kwargs):
         return {
             "Id": "d" * 64,
-            "State": {"StartedAt": f"start-{state['restart_events']}", "Running": True, "OOMKilled": False},
+            "State": {
+                "StartedAt": f"start-{state['restart_events']}",
+                "Running": True,
+                "OOMKilled": False,
+            },
             "RestartCount": 0,
         }
 
     def boundary(stream, _name, _model, _protocol, phase, count):
         row = {
-            "event": "server_boundary", "phase": phase, "completed_cases": count,
-            "running": True, "oom_killed": False, "exit_code": 0,
-            "restart_count": 0, "container_id": "d" * 64,
+            "event": "server_boundary",
+            "phase": phase,
+            "completed_cases": count,
+            "running": True,
+            "oom_killed": False,
+            "exit_code": 0,
+            "restart_count": 0,
+            "container_id": "d" * 64,
             "started_at": f"start-{state['restart_events']}",
-            "docker_host_memory_bytes": validation_gate.LOCAL_RUNTIME["docker_host_min_memory_bytes"],
-            "memory_usage": "1GiB / 10GiB", "healthy": True,
+            "docker_host_memory_bytes": validation_gate.LOCAL_RUNTIME[
+                "docker_host_min_memory_bytes"
+            ],
+            "memory_usage": "1GiB / 10GiB",
+            "healthy": True,
         }
         pf_run.server._append(stream, row)
         return row
@@ -257,8 +335,11 @@ def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch,
     monkeypatch.setattr(pf_run, "_boundary", boundary)
     monkeypatch.setattr(pf_run.subprocess, "run", intercept)
     common = dict(
-        root=candidate, baseline_root=baseline, validation_protocol=validation,
-        protocol_path=pf_protocol, model_path=model,
+        root=candidate,
+        baseline_root=baseline,
+        validation_protocol=validation,
+        protocol_path=pf_protocol,
+        model_path=model,
     )
     unverified = pf_run.run(**common, container_name="fake")
     assert unverified["verification_status"] == "unverified"

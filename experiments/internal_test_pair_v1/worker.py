@@ -128,8 +128,11 @@ def one_case(
     if _sha(dataset_bytes) != dataset_sha256:
         raise ValueError("common TEST dataset digest differs")
     frozen = subprocess.run(
-        ("git", "show", f"{data_commit}:{relative}"), cwd=data_root,
-        check=True, capture_output=True, timeout=30,
+        ("git", "show", f"{data_commit}:{relative}"),
+        cwd=data_root,
+        check=True,
+        capture_output=True,
+        timeout=30,
     ).stdout
     if frozen != dataset_bytes:
         raise ValueError("common TEST dataset differs from input commit")
@@ -235,7 +238,10 @@ def main() -> None:
         data_root=Path(data["data_root"]),
         data_commit=data["data_commit"],
         dataset_sha256=data["dataset_sha256"],
-        dataset_relative=data.get("dataset_relative", "evals/structured_nlu/data/ai_heldout/ai-internal-test-v1-reviewed.json"),
+        dataset_relative=data.get(
+            "dataset_relative",
+            "evals/structured_nlu/data/ai_heldout/ai-internal-test-v1-reviewed.json",
+        ),
         recorded_attempts=data.get("raw_attempts"),
     )
     print(json.dumps(result, ensure_ascii=False, allow_nan=False))
