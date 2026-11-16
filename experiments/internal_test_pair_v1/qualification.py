@@ -621,7 +621,7 @@ def main() -> None:
         print(
             json.dumps(
                 {
-                    "scope": SCOPE,
+                    "scope": protocol["scope"],
                     "protocol_sha256": digest,
                     "test_cases": len(protocol["case_order"]),
                     "model_calls": 0,
