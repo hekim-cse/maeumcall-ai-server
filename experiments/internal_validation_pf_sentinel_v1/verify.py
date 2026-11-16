@@ -4,13 +4,59 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import stat
 from pathlib import Path
 
 from experiments.internal_validation_pair_v1 import qualification as q
-from experiments.internal_validation_pair_v1.verify import _boundary, _read_rows
+from experiments.internal_validation_pair_v1.verify import BOUNDARY_KEYS, _read_rows
 from experiments.internal_validation_pf_sentinel_v1 import gate
 from experiments.internal_validation_pf_sentinel_v1.run import _worker
+
+
+def _boundary(row: dict, *, phase: str, completed: int, previous: dict | None) -> dict:
+    """Check explicit restart boundaries; manual `docker restart` keeps RestartCount."""
+    if set(row) != BOUNDARY_KEYS or row["event"] != "server_boundary":
+        raise ValueError("PF server boundary fields differ")
+    if row["phase"] != phase or row["completed_cases"] != completed:
+        raise ValueError("PF server boundary schedule differs")
+    if (
+        row["running"] is not True
+        or row["healthy"] is not True
+        or row["oom_killed"] is not False
+        or row["exit_code"] != 0
+    ):
+        raise ValueError("PF server boundary unhealthy")
+    if (
+        type(row["docker_host_memory_bytes"]) is not int
+        or row["docker_host_memory_bytes"] < q.LOCAL_RUNTIME["docker_host_min_memory_bytes"]
+        or type(row["container_id"]) is not str
+        or re.fullmatch(r"[0-9a-f]{64}", row["container_id"]) is None
+        or type(row["started_at"]) is not str
+        or not 0 < len(row["started_at"]) <= 64
+        or type(row["memory_usage"]) is not str
+        or re.fullmatch(r"[0-9.]+[KMGT]?i?B / [0-9.]+[KMGT]?i?B", row["memory_usage"]) is None
+        or type(row["restart_count"]) is not int
+        or row["restart_count"] < 0
+    ):
+        raise ValueError("PF server boundary identity differs")
+    if previous is None:
+        if phase != "initial" or row["restart_count"] != 0:
+            raise ValueError("PF initial server restart count differs")
+    elif phase == "after_restart":
+        if (
+            row["container_id"] != previous["container_id"]
+            or row["started_at"] == previous["started_at"]
+            or row["restart_count"] != previous["restart_count"]
+        ):
+            raise ValueError("PF planned restart boundary differs")
+    elif (
+        row["container_id"] != previous["container_id"]
+        or row["started_at"] != previous["started_at"]
+        or row["restart_count"] != previous["restart_count"]
+    ):
+        raise ValueError("PF unplanned restart boundary")
+    return row
 
 
 def _safe(state: dict) -> bool:

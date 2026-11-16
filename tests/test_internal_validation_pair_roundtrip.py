@@ -48,7 +48,7 @@ def test_full_model_free_roundtrip_and_raw_tamper(monkeypatch, tmp_path):
 
     def observe(*args, **kwargs):
         container["State"]["StartedAt"] = f"start-{state['starts']}"
-        container["RestartCount"] = state["starts"]
+        container["RestartCount"] = 0
         return container.copy()
 
     def boundary(stream, _name, _model, _protocol, phase, count):
@@ -59,7 +59,7 @@ def test_full_model_free_roundtrip_and_raw_tamper(monkeypatch, tmp_path):
             "running": True,
             "oom_killed": False,
             "exit_code": 0,
-            "restart_count": state["starts"],
+            "restart_count": 0,
             "container_id": "d" * 64,
             "started_at": f"start-{state['starts']}",
             "docker_host_memory_bytes": gate.LOCAL_RUNTIME["docker_host_min_memory_bytes"],
@@ -277,7 +277,7 @@ def test_real_git_protocol_and_raw_replay_with_fake_q5(monkeypatch, tmp_path):
                 "Running": True,
                 "OOMKilled": False,
             },
-            "RestartCount": state["restarts"],
+            "RestartCount": 0,
         }
 
     def boundary(stream, _name, _model, _protocol, phase, count):
@@ -288,7 +288,7 @@ def test_real_git_protocol_and_raw_replay_with_fake_q5(monkeypatch, tmp_path):
             "running": True,
             "oom_killed": False,
             "exit_code": 0,
-            "restart_count": state["restarts"],
+            "restart_count": 0,
             "container_id": "d" * 64,
             "started_at": f"start-{state['restarts']}",
             "docker_host_memory_bytes": gate.LOCAL_RUNTIME["docker_host_min_memory_bytes"],

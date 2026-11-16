@@ -104,11 +104,10 @@ def run(
                     if (
                         before["container_id"] != after["container_id"]
                         or before["started_at"] == after["started_at"]
-                        or after["restart_count"] != restart_count + 1
+                        or after["restart_count"] != restart_count
                     ):
                         raise ValueError("PF planned restart identity differs")
                     identity = server._identity(after)
-                    restart_count += 1
         final = _boundary(stream, container_name, model_path, runtime, "final", 32)
         if server._identity(final) != identity or final["restart_count"] != restart_count:
             raise ValueError("PF final server identity differs")

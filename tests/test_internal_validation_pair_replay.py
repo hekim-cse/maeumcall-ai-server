@@ -30,7 +30,20 @@ def _boundary(*, phase: str, count: int, started: str, restarts: int) -> dict:
 
 def test_restart_boundary_rejects_unchanged_start_time():
     before = _boundary(phase="before_restart", count=8, started="time-a", restarts=0)
-    after = _boundary(phase="after_restart", count=8, started="time-a", restarts=1)
+    after = _boundary(phase="after_restart", count=8, started="time-a", restarts=0)
+    with pytest.raises(ValueError, match="planned restart"):
+        verify._boundary(after, phase="after_restart", completed=8, previous=before)
+
+
+def test_manual_restart_boundary_accepts_new_start_time_same_restart_count():
+    before = _boundary(phase="before_restart", count=8, started="time-a", restarts=0)
+    after = _boundary(phase="after_restart", count=8, started="time-b", restarts=0)
+    assert verify._boundary(after, phase="after_restart", completed=8, previous=before) == after
+
+
+def test_manual_restart_boundary_rejects_automatic_restart_count_increase():
+    before = _boundary(phase="before_restart", count=8, started="time-a", restarts=0)
+    after = _boundary(phase="after_restart", count=8, started="time-b", restarts=1)
     with pytest.raises(ValueError, match="planned restart"):
         verify._boundary(after, phase="after_restart", completed=8, previous=before)
 

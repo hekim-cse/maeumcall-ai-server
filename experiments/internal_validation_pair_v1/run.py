@@ -212,10 +212,12 @@ def run(
                     after = _boundary(
                         stream, container_name, model_path, protocol, "after_restart", completed
                     )
+                    # Docker's RestartCount tracks automatic restarts; a manual
+                    # `docker restart` changes StartedAt but leaves that count unchanged.
                     if (
                         before["container_id"] != after["container_id"]
                         or before["started_at"] == after["started_at"]
-                        or after["restart_count"] != prior_restart_count + 1
+                        or after["restart_count"] != prior_restart_count
                     ):
                         raise ValueError("planned restart identity differs")
                     identity = _identity(after)

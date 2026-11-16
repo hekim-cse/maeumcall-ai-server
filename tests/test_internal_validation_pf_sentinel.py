@@ -11,7 +11,7 @@ import pytest
 from experiments.internal_validation_pf_sentinel_v1 import gate, worker
 from experiments.internal_validation_pf_sentinel_v1 import run as pf_run
 from experiments.internal_validation_pf_sentinel_v1 import verify as pf_verify
-from experiments.internal_validation_pf_sentinel_v1.verify import summarize
+from experiments.internal_validation_pf_sentinel_v1.verify import _boundary, summarize
 
 
 def state(safe: bool) -> dict:
@@ -75,6 +75,26 @@ def test_pf_private_raw_replay_detects_tampering(tmp_path):
     path.write_text("altered", encoding="utf-8")
     with pytest.raises(ValueError, match="response differs"):
         worker._read(path, record)
+
+
+def test_pf_manual_restart_boundary_keeps_docker_restart_count():
+    base = {
+        "event": "server_boundary", "phase": "initial", "completed_cases": 0,
+        "running": True, "healthy": True, "oom_killed": False, "exit_code": 0,
+        "restart_count": 0, "container_id": "d" * 64, "started_at": "start-0",
+        "docker_host_memory_bytes": 12 * 1024**3, "memory_usage": "1GiB / 10GiB",
+    }
+    before = {**base, "phase": "before_restart", "completed_cases": 8}
+    after = {**base, "phase": "after_restart", "completed_cases": 8, "started_at": "start-1"}
+    previous = _boundary(base, phase="initial", completed=0, previous=None)
+    previous = _boundary(before, phase="before_restart", completed=8, previous=previous)
+    assert _boundary(after, phase="after_restart", completed=8, previous=previous) == after
+    with pytest.raises(ValueError, match="planned restart"):
+        _boundary({**after, "restart_count": 1}, phase="after_restart", completed=8,
+                  previous=previous)
+    with pytest.raises(ValueError, match="planned restart"):
+        _boundary({**after, "started_at": "start-0"}, phase="after_restart", completed=8,
+                  previous=previous)
 
 
 def test_pf_worker_replays_saved_completion_without_http(tmp_path, monkeypatch):
@@ -168,10 +188,15 @@ def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch,
             check=True,
         )
     shutil.copytree(root / gate.HARNESS, candidate / gate.HARNESS,
-                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"), dirs_exist_ok=True)
 
     def commit(message: str) -> None:
         subprocess.run(("git", "-C", str(candidate), "add", "."), check=True)
+        if not subprocess.run(
+            ("git", "-C", str(candidate), "status", "--porcelain"),
+            check=True, capture_output=True,
+        ).stdout:
+            return
         subprocess.run(
             ("git", "-C", str(candidate), "-c", "user.name=Test",
              "-c", "user.email=test@example.invalid", "commit", "-qm", message),
@@ -199,21 +224,21 @@ def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch,
         validation_protocol=validation, model_path=model,
     )[0]["kind"] == gate.KIND
 
-    state = {"restarts": 0}
+    state = {"restart_events": 0}
 
     def observed(*_args, **_kwargs):
         return {
             "Id": "d" * 64,
-            "State": {"StartedAt": f"start-{state['restarts']}", "Running": True, "OOMKilled": False},
-            "RestartCount": state["restarts"],
+            "State": {"StartedAt": f"start-{state['restart_events']}", "Running": True, "OOMKilled": False},
+            "RestartCount": 0,
         }
 
     def boundary(stream, _name, _model, _protocol, phase, count):
         row = {
             "event": "server_boundary", "phase": phase, "completed_cases": count,
             "running": True, "oom_killed": False, "exit_code": 0,
-            "restart_count": state["restarts"], "container_id": "d" * 64,
-            "started_at": f"start-{state['restarts']}",
+            "restart_count": 0, "container_id": "d" * 64,
+            "started_at": f"start-{state['restart_events']}",
             "docker_host_memory_bytes": validation_gate.LOCAL_RUNTIME["docker_host_min_memory_bytes"],
             "memory_usage": "1GiB / 10GiB", "healthy": True,
         }
@@ -224,7 +249,7 @@ def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch,
 
     def intercept(command, *args, **kwargs):
         if tuple(command[:2]) == ("docker", "restart"):
-            state["restarts"] += 1
+            state["restart_events"] += 1
             return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
         return original_run(command, *args, **kwargs)
 
@@ -239,7 +264,7 @@ def test_real_git_pf_protocol_32_arm_raw_replay_with_fake_transport(monkeypatch,
     assert unverified["verification_status"] == "unverified"
     assert len(unverified["projections"]["baseline"]) == 16
     assert len(unverified["projections"]["candidate"]) == 16
-    assert state["restarts"] == 3
+    assert state["restart_events"] == 3
     verified = pf_verify.verify(**common)
     assert verified["verification_status"] == "verified"
     assert verified["gate_passed"] is True

@@ -84,10 +84,12 @@ def _boundary(row: dict, *, phase: str, completed: int, previous: dict | None) -
         if row["restart_count"] != 0:
             raise ValueError("pre-run server restart count differs")
     elif phase == "after_restart":
+        # A planned manual restart changes StartedAt without incrementing
+        # Docker's automatic RestartCount.
         if (
             row["container_id"] != previous["container_id"]
             or row["started_at"] == previous["started_at"]
-            or row["restart_count"] != previous["restart_count"] + 1
+            or row["restart_count"] != previous["restart_count"]
         ):
             raise ValueError("planned restart record differs")
     elif (
