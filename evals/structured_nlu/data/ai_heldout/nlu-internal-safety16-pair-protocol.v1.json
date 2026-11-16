@@ -674,12 +674,12 @@
     "ai-internal-safety-v1-ss08"
   ],
   "harness_source_manifest": {
-    "experiments/internal_test_pair_v1/qualification.py": "5a079b10f5dae956fe3c481e71a068b83ab0c8653ee0806403a349a91b7d8725",
+    "experiments/internal_test_pair_v1/qualification.py": "16847e6f1abccc4ad0671bef4e26c7fa583a397870f601705c2be4761e8f954f",
     "experiments/internal_test_pair_v1/run.py": "f93ed7cf65ae75b999923e235370134d583858ec706d776564b685af1cf0bc75",
     "experiments/internal_test_pair_v1/verify.py": "b78d5e3a5333ac78534b2502134aa9687bac2e3e7983223d54dc992e4b8e4a48",
     "experiments/internal_test_pair_v1/worker.py": "64ddcbbaa8a412236d5ce08fce9ef6bd1c76ffae373b2580da285d45e2dff7b3"
   },
-  "input_commit": "6f601f7d38bcd135a7c368707b08673811b6c981",
+  "input_commit": "efff603be9642e2b5d30de26bf46fc4bfbff4214",
   "inputs": {
     "known_corpus_inventory": "ad0bf24cfe7f637fcaf7d7c855002a1e3325bffb35695b6b264c59e62876bbb4",
     "safety_case_decisions": "3b1d33097aa71b2bc87dc2b10a721d041232ce21b235ea2f8a9c399e69a04fc4",
