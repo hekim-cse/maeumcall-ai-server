@@ -1,6 +1,6 @@
 # SS01–SS16 A/S 안전 표본: 행동·전체 필드 검수 기록
 
-> **AI 작성·사용자 행동/전체 필드 및 SS13 수정 검수 완료, 모델 미실행.** 사용자가 [발화와 대상·위험 방향](nlu_internal_safety16_draft.md), 행동, 모든 필드 값·공란, SS15·SS16 교체안, SS13 `safety_status=null`을 채택했다. 최종 데이터 동결·원문 중복 재검사 전이며 모두 가상 사례다.
+> **실모델 실행 전 사용자 1인 전체 필드 검수 기록.** 사용자가 [발화와 대상·위험 방향](nlu_internal_safety16_draft.md), 행동, 모든 필드 값·공란, SS15·SS16 교체안, SS13 `safety_status=null`을 채택했다. 이후 데이터를 동결하고 원문 재검사와 [실모델 평가](nlu_internal_test80_verified_result.md)를 완료했다. 모두 가상 사례다.
 
 ## 공통 계약과 읽는 법
 

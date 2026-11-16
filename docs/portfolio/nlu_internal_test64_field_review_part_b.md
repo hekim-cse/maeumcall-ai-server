@@ -1,6 +1,6 @@
 # 내부 test IT33–IT64 행동·전체 필드 검토 초안 B
 
-> **AI 작성·사용자 문장·상태·업무 방향·전체 필드 검수 완료, 모델 미실행.** [발화 원문과 상태](nlu_internal_test64_draft_part_b.md)의 IT33–IT64에 대응한다. 사용자가 아래 행동 코드, 비공란 값과 공란을 채택하고 [IT40·IT41 교체안](nlu_internal_test80_independence_revision_review.md)도 승인했다. 아직 동결된 `adjudicated` 평가 데이터나 성능 분모가 아니다. 모든 이름·주문번호는 가상이다.
+> **실모델 실행 전 사용자 1인 전체 필드 검수 기록.** [발화 원문과 상태](nlu_internal_test64_draft_part_b.md)의 IT33–IT64에 대응한다. 사용자가 아래 행동 코드, 비공란 값과 공란을 채택하고 [IT40·IT41 교체안](nlu_internal_test80_independence_revision_review.md)도 승인했다. 이후 `adjudicated` 데이터를 동결하고 [실모델 평가](nlu_internal_test80_verified_result.md)를 완료했다. 모든 이름·주문번호는 가상이다.
 
 `fields`는 **이번 발화의 추출 값**이며 누적된 `current_fields`를 복사하지 않는다. 각 JSON 객체에 해당 시나리오의 **모든 필드**를 명시했다. 비공란 문자열은 사용자가 채택한 허용값 하나다. 추가 허용 표기는 확정하지 않았다. 표의 `change_field`는 전부 `null`이다. `offered_alternative_times`는 전부 빈 목록이다. 같은 후속 상태의 두 문장은 **독립 대화**다.
 

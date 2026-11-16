@@ -1,6 +1,6 @@
 # 내부 test 신규 발화 IT33–IT64: 사용자 문장·업무 방향 검토 초안 B
 
-> **AI 작성·사용자 문장/방향·전체 필드 검수 완료, 모델 미실행.** 이 표는 16개 상세 업무 내부 test 64건 중 뒤쪽 8개 업무의 문장 32건이다. 사용자가 [IT40·IT41 교체 문장과 라벨 방향](nlu_internal_test80_independence_revision_review.md)까지 채택했다. [전체 필드 검토표](nlu_internal_test64_field_review_part_b.md)의 행동·비공란·공란도 채택했지만 아직 동결된 평가 데이터가 아니며 성능 분모에 넣지 않는다. 모든 등장인물·주문번호는 가상이다.
+> **실모델 실행 전 AI 작성 문장 검수 기록.** 이 표는 16개 상세 업무 내부 test 64건 중 뒤쪽 8개 업무의 문장 32건이다. 사용자가 [IT40·IT41 교체 문장과 라벨 방향](nlu_internal_test80_independence_revision_review.md), [전체 필드 검토표](nlu_internal_test64_field_review_part_b.md)의 행동·비공란·공란을 채택했다. 이후 데이터를 동결하고 [실모델 평가](nlu_internal_test80_verified_result.md)를 완료했다. 모든 등장인물·주문번호는 가상이다.
 
 각 업무는 시작 상태에서 업무 안·범위 밖 각 1건, 실제 후속 상태에서 업무 안·범위 밖 각 1건이다. 후속 상태의 두 문장은 **서로 다른 독립 대화**에 같은 상태 조건을 적용한 후보이며 한 대화의 연속 발화가 아니다.
 
