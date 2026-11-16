@@ -392,6 +392,13 @@ def test_two_git_worktrees_fake_q5_full_receipt_and_tamper(monkeypatch, tmp_path
     safety_result = pair_run.run(**safety_common, container_name="fake")
     assert len(safety_result["predictions"]["baseline"]) == 16
     assert len(safety_result["predictions"]["candidate"]) == 16
+    assert all(
+        len(row["attempts"]) == 2
+        and all(not attempt["contract_valid"] for attempt in row["attempts"])
+        for rows in safety_result["predictions"].values()
+        for row in rows
+    )
+    assert len(list(safety_private.glob("*.txt"))) == 32 * 2
     assert state["restarts"] == 18
     safety_verified = pair_verify.verify(**safety_common)
     assert safety_verified["verification_status"] == "verified"
