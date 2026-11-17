@@ -1,0 +1,253 @@
+{
+  "kind": "as_safety_explicit_baseline_v1_exposed_development_result",
+  "protocol_sha256": "d2acad40040c0e5ecc0d93b8cbc3da445326bea913d3c65abd8080160eff6561",
+  "frozen_code_commit": "009b1f83cb5b1a99cab9f1a7c7706816572d73f9",
+  "claim_scope": "reviewed_A_E_B_oracle_exposed_ES_not_official_accuracy",
+  "summary": {
+    "events": 22,
+    "actionable_events": 19,
+    "relation_correct": 4,
+    "category_correct": {
+      "observed_current": {
+        "correct": 2,
+        "total": 8
+      },
+      "observed_other": {
+        "correct": 1,
+        "total": 9
+      },
+      "observed_unknown": {
+        "correct": 1,
+        "total": 1
+      },
+      "uncertain_current": {
+        "correct": 0,
+        "total": 1
+      }
+    },
+    "relation_output": {
+      "current": 2,
+      "unknown": 16,
+      "other": 1
+    },
+    "basis_output": {
+      "target_prefix_candidate": 2,
+      "insufficient_evidence": 15,
+      "explicit_other_device": 1,
+      "nonoccurring": 3,
+      "owner_missing": 1
+    },
+    "decided": 3,
+    "decided_correct": 3,
+    "conditional_route_correct": 6,
+    "conditional_route_total": 20,
+    "missed_direct_current_events": 6,
+    "missed_direct_current_cases": 6,
+    "false_direct_other_cases": [],
+    "contrast_pairs_correct": 0,
+    "contrast_pairs_total": 2,
+    "errors": 0,
+    "error_total": 22,
+    "development_gate_passed": false
+  },
+  "events": [
+    {
+      "event_id": "ES01-1",
+      "occurrence": "observed",
+      "gold_relation": "current",
+      "predicted_relation": "current",
+      "basis": "target_prefix_candidate",
+      "error_code": null
+    },
+    {
+      "event_id": "ES02-1",
+      "occurrence": "observed",
+      "gold_relation": "current",
+      "predicted_relation": "current",
+      "basis": "target_prefix_candidate",
+      "error_code": null
+    },
+    {
+      "event_id": "ES03-1",
+      "occurrence": "observed",
+      "gold_relation": "current",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES04-1",
+      "occurrence": "observed",
+      "gold_relation": "current",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES05-1",
+      "occurrence": "observed",
+      "gold_relation": "current",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES06-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "other",
+      "basis": "explicit_other_device",
+      "error_code": null
+    },
+    {
+      "event_id": "ES06-2",
+      "occurrence": "observed",
+      "gold_relation": "current",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES07-1",
+      "occurrence": "observed",
+      "gold_relation": "current",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES08-1",
+      "occurrence": "observed",
+      "gold_relation": "current",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES09-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES10-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES11-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES12-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES13-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES14-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES15-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES15-2",
+      "occurrence": "nonoccurring",
+      "gold_relation": null,
+      "predicted_relation": null,
+      "basis": "nonoccurring",
+      "error_code": null
+    },
+    {
+      "event_id": "ES16-1",
+      "occurrence": "observed",
+      "gold_relation": "other",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES17-1",
+      "occurrence": "observed",
+      "gold_relation": "unknown",
+      "predicted_relation": "unknown",
+      "basis": "owner_missing",
+      "error_code": null
+    },
+    {
+      "event_id": "ES18-1",
+      "occurrence": "uncertain",
+      "gold_relation": "current",
+      "predicted_relation": "unknown",
+      "basis": "insufficient_evidence",
+      "error_code": null
+    },
+    {
+      "event_id": "ES19-1",
+      "occurrence": "nonoccurring",
+      "gold_relation": null,
+      "predicted_relation": null,
+      "basis": "nonoccurring",
+      "error_code": null
+    },
+    {
+      "event_id": "ES20-1",
+      "occurrence": "nonoccurring",
+      "gold_relation": null,
+      "predicted_relation": null,
+      "basis": "nonoccurring",
+      "error_code": null
+    }
+  ],
+  "routes": {
+    "ES01": "safety_action_required",
+    "ES02": "safety_action_required",
+    "ES03": "confirming_safety_status",
+    "ES04": "confirming_safety_status",
+    "ES05": "confirming_safety_status",
+    "ES06": "confirming_safety_status",
+    "ES07": "confirming_safety_status",
+    "ES08": "confirming_safety_status",
+    "ES09": "confirming_safety_status",
+    "ES10": "confirming_safety_status",
+    "ES11": "confirming_safety_status",
+    "ES12": "confirming_safety_status",
+    "ES13": "confirming_safety_status",
+    "ES14": "confirming_safety_status",
+    "ES15": "confirming_safety_status",
+    "ES16": "confirming_safety_status",
+    "ES17": "confirming_safety_status",
+    "ES18": "confirming_safety_status",
+    "ES19": "collecting_service_request",
+    "ES20": "collecting_service_request"
+  }
+}
