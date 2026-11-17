@@ -42,8 +42,7 @@ def _validate(payload, *, event=FIRST_EVENT, message=MESSAGE, occurrence="observ
 
 def test_prompt_and_schema_exclude_gold_owner_relation_and_route():
     prompt = "\n".join(
-        item["content"]
-        for item in event_owner_messages(MESSAGE, FIRST_EVENT, "observed", **TARGET)
+        item["content"] for item in event_owner_messages(MESSAGE, FIRST_EVENT, "observed", **TARGET)
     )
     assert "검수된 위험 사건 E: 2. 불꽃이 튀었어요" in prompt
     assert "다른 기기의 충전기" in prompt  # The original user utterance is visible.
@@ -82,7 +81,11 @@ def test_unknown_owner_requires_all_spans_null():
     }
     assert _validate(unresolved, message=message, event=event)["subject_span"] is None
     with pytest.raises(ValidationError, match="attachment_consistency_invalid"):
-        _validate({**unresolved, "subject_span": {"clause_index": 1, "quote": "프린터"}}, message=message, event=event)
+        _validate(
+            {**unresolved, "subject_span": {"clause_index": 1, "quote": "프린터"}},
+            message=message,
+            event=event,
+        )
 
 
 def test_direct_quote_must_link_both_event_and_subject():
@@ -98,7 +101,10 @@ def test_direct_quote_must_link_both_event_and_subject():
 
     partial_event = {
         **FIRST_OUTPUT,
-        "event_subject_evidence_span": {"clause_index": 2, "quote": "다른 기기의 충전기에서 불꽃이"},
+        "event_subject_evidence_span": {
+            "clause_index": 2,
+            "quote": "다른 기기의 충전기에서 불꽃이",
+        },
     }
     with pytest.raises(ValidationError, match="direct_attachment_unlinked"):
         _validate(partial_event)
