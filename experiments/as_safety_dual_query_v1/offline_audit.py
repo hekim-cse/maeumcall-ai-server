@@ -56,7 +56,8 @@ def audit(protocol_path: Path, journal_path: Path, private_dir: Path, model_path
     system_different = 0
     user_same = 0
     response_same = 0
-    by_gold_and_answers: Counter[tuple[str, str, str]] = Counter()
+    missing_response_pairs = 0
+    by_gold_and_answers: Counter[tuple[str, str | None, str | None]] = Counter()
     for event_id in protocol["event_order"]:
         case_id, index = event_id.rsplit("-", 1)
         case = by_case[case_id]
@@ -71,7 +72,12 @@ def audit(protocol_path: Path, journal_path: Path, private_dir: Path, model_path
         user_same += current_messages[1] == distinct_messages[1]
         current_stage = ends[(event_id, "current")]
         distinct_stage = ends[(event_id, "distinct")]
-        response_same += current_stage["raw_sha256"] == distinct_stage["raw_sha256"]
+        current_raw = current_stage["raw_sha256"]
+        distinct_raw = distinct_stage["raw_sha256"]
+        if current_raw is None or distinct_raw is None:
+            missing_response_pairs += 1
+        else:
+            response_same += current_raw == distinct_raw
         category = f"{gold['occurrence']}_{gold['owner_to_target']}"
         by_gold_and_answers[(category, current_stage["decision"], distinct_stage["decision"])] += 1
     return {
@@ -86,6 +92,7 @@ def audit(protocol_path: Path, journal_path: Path, private_dir: Path, model_path
         "different_system_question_pairs": system_different,
         "same_user_input_pairs": user_same,
         "same_raw_response_pairs": response_same,
+        "pairs_with_missing_raw_response": missing_response_pairs,
         "gold_category_and_decisions": [
             {
                 "category": category,
@@ -94,7 +101,12 @@ def audit(protocol_path: Path, journal_path: Path, private_dir: Path, model_path
                 "count": count,
             }
             for (category, current_answer, distinct_answer), count in sorted(
-                by_gold_and_answers.items()
+                by_gold_and_answers.items(),
+                key=lambda item: (
+                    item[0][0],
+                    item[0][1] if item[0][1] is not None else "",
+                    item[0][2] if item[0][2] is not None else "",
+                ),
             )
         ],
         "wire_request_captured": False,
