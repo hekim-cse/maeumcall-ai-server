@@ -73,7 +73,7 @@ def predict_relation(
 
     for prefix in (f"{target_name} ", f"{target_name}의 "):
         if owner.startswith(prefix):
-            suffix = owner[len(prefix) :]
+            suffix = owner[len(prefix) :].lstrip()
             if suffix and not suffix.startswith("용"):
                 # This is only a string-level candidate, never proof that the
                 # remainder names a physical part of A.

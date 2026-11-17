@@ -158,3 +158,38 @@ def test_nonoccurring_owner_is_rejected():
             hazard_owner_span=_span("선풍기"),
             occurrence="nonoccurring",
         )
+
+
+@pytest.mark.parametrize("spaces", [" ", "  ", "   "])
+def test_usage_phrase_stays_unknown_with_extra_spacing(spaces):
+    message = f"로봇청소기{spaces}용 충전기에서 연기가 났어요."
+    assert predict_relation(
+        message,
+        target=_span("로봇청소기"),
+        event_span=_span("연기가 났어요"),
+        hazard_owner_span=_span(f"로봇청소기{spaces}용 충전기"),
+        occurrence="observed",
+    ) == {"relation": "unknown", "basis": "insufficient_evidence"}
+
+
+def test_invalid_occurrence_and_extra_quote_field_are_rejected():
+    message = "로봇청소기 전원 연결부에서 연기가 났어요."
+    args = {
+        "target": _span("로봇청소기"),
+        "event_span": _span("연기가 났어요"),
+        "hazard_owner_span": _span("로봇청소기 전원 연결부"),
+    }
+    with pytest.raises(ValidationError, match="occurrence_invalid"):
+        predict_relation(message, occurrence="Observed", **args)
+    with pytest.raises(ValidationError, match="quote_fields_invalid"):
+        predict_relation(
+            message,
+            occurrence="observed",
+            **(args | {"hazard_owner_span": args["hazard_owner_span"] | {"extra": 1}}),
+        )
+    with pytest.raises(ValidationError, match="quote_blank"):
+        predict_relation(
+            message,
+            occurrence="observed",
+            **(args | {"hazard_owner_span": _span(" 로봇청소기 전원 연결부")}),
+        )
