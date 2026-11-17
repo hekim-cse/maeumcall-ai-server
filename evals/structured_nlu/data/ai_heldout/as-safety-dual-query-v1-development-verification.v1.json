@@ -1,0 +1,113 @@
+{
+  "kind": "as_safety_dual_query_v1_development_v1",
+  "protocol_sha256": "5b97d2882c30067925a41c0421d40c09f170183b44109d2f655093303204e5d5",
+  "journal_sha256": "93ddf25bc5ca02f259efe5f5c2b33284655918602e52997a6bee5ec8041fb270",
+  "private_raw_count": 36,
+  "summary": {
+    "cases": 17,
+    "events": 18,
+    "requests": 36,
+    "claim_scope": "exposed_ai_authored_owner_oracle_dual_query_development_only",
+    "relation_correct": 0,
+    "category_denominators": {
+      "observed_current": 8,
+      "uncertain_current": 1,
+      "observed_other": 9
+    },
+    "category_correct": {
+      "observed_current": 0,
+      "uncertain_current": 0,
+      "observed_other": 0
+    },
+    "status_counts": {
+      "validated": 36
+    },
+    "decision_distribution": {
+      "current": {
+        "yes": 17,
+        "no": 0,
+        "unknown": 1
+      },
+      "distinct": {
+        "yes": 17,
+        "no": 0,
+        "unknown": 1
+      }
+    },
+    "output_distribution": {
+      "current": 0,
+      "other": 0,
+      "unknown": 18
+    },
+    "abstention_reasons": {
+      "error_pair": 0,
+      "any_unknown": 1,
+      "contradiction": 17,
+      "both_no": 0
+    },
+    "directional_relation_errors": {
+      "observed_current_to_other": 0,
+      "observed_current_to_unknown": 8,
+      "uncertain_current_to_other": 0,
+      "uncertain_current_to_unknown": 1,
+      "observed_other_to_current": 0,
+      "observed_other_to_unknown": 9
+    },
+    "contract_errors": 0,
+    "response_errors": 0,
+    "unresolved_pairs": 18,
+    "decided_relation_count": 0,
+    "decided_relation_correct": 0,
+    "relation_decision_denominator": 18,
+    "relation_decision_rate": 0.0,
+    "decided_relation_accuracy_denominator": 0,
+    "decided_relation_accuracy": null,
+    "route_correct": 1,
+    "route_predictions": {
+      "ES01": "confirming_safety_status",
+      "ES02": "confirming_safety_status",
+      "ES03": "confirming_safety_status",
+      "ES04": "confirming_safety_status",
+      "ES05": "confirming_safety_status",
+      "ES06": "confirming_safety_status",
+      "ES07": "confirming_safety_status",
+      "ES08": "confirming_safety_status",
+      "ES09": "confirming_safety_status",
+      "ES10": "confirming_safety_status",
+      "ES11": "confirming_safety_status",
+      "ES12": "confirming_safety_status",
+      "ES13": "confirming_safety_status",
+      "ES14": "confirming_safety_status",
+      "ES15": "confirming_safety_status",
+      "ES16": "confirming_safety_status",
+      "ES18": "confirming_safety_status"
+    },
+    "es06_route": "confirming_safety_status",
+    "contrast_pairs_correct": 0,
+    "contrast_pairs": {
+      "ES01/ES09": false,
+      "ES02/ES11": false
+    },
+    "missed_direct_current": 8,
+    "false_direct_other": 0,
+    "event_request_latency_count": 18,
+    "event_request_latency_p50_ms": 4671.422,
+    "event_request_latency_p95_ms": 6782.74,
+    "question_request_latency_ms": {
+      "current": {
+        "count": 18,
+        "p50": 2323.401,
+        "p95": 4252.349
+      },
+      "distinct": {
+        "count": 18,
+        "p50": 2332.072,
+        "p95": 2532.342
+      }
+    },
+    "case_request_latency_count": 17,
+    "case_request_latency_p50_ms": 4669.294,
+    "case_request_latency_p95_ms": 9810.469,
+    "gate_met": false
+  }
+}
