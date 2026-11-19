@@ -1,0 +1,137 @@
+{
+  "baseline_response_format": "json_object_with_schema",
+  "call_order": [
+    [
+      "ES01",
+      "baseline"
+    ],
+    [
+      "ES01",
+      "variant"
+    ],
+    [
+      "ES03",
+      "variant"
+    ],
+    [
+      "ES03",
+      "baseline"
+    ],
+    [
+      "ES09",
+      "baseline"
+    ],
+    [
+      "ES09",
+      "variant"
+    ],
+    [
+      "ES17",
+      "variant"
+    ],
+    [
+      "ES17",
+      "baseline"
+    ],
+    [
+      "ES18",
+      "baseline"
+    ],
+    [
+      "ES18",
+      "variant"
+    ]
+  ],
+  "case_ids": [
+    "ES01",
+    "ES03",
+    "ES09",
+    "ES17",
+    "ES18"
+  ],
+  "claim_scope": "already_exposed_ai_authored_user_reviewed_es_paired_development_probe_only",
+  "container_name": "as-safety-eb-format-v3",
+  "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
+  "frozen_code_commit": "0464d6b3b40635ed72956309b93f09740df6d038",
+  "historical_v2_protocol_sha256": "fa7a2f574220e7fb92275277895d5aa14c14f12434cf715c7fdb8aa8702de56c",
+  "input_hashes": {
+    "dataset": "49e4e960d901c037c7d10de6899aaeade3c71809060772571f0c8f58409d52f7",
+    "edge_review": "6ce6f6060a99357fb5b79825c1189dab57857b367b8ef99a05d1ac5c45b59fea",
+    "field_review": "fc572a55337143bf15fb2a26d78009812b06404c0de7f8a9a3f0201857adb558",
+    "method": "33b5119999be170e4d0bcd7053ff3aba18c3c4c4ec2d6fe3c2359f5ad31e369d",
+    "method_v2": "6db751824de7a667ce11758f8fa8cfa149f5d739e431ddc11d7be9741e7c741b",
+    "method_v3": "05ca7ad9337eddf11db440ed19ec7b9ba26447e5a242baa29cfb54914e4c2d75",
+    "utterance_review": "399a4f2d8739ab4899adeba9a62cc1f388fcd3802ef7a5147350c2de55b1d8bb"
+  },
+  "kind": "as_safety_atomic_edge_response_format_v3_development_v1",
+  "local_runtime": {
+    "context_tokens": 4096,
+    "cpu_count": 2,
+    "host_port": 18081,
+    "memory_bytes": 4294967296,
+    "parallel_slots": 1,
+    "threads": 2
+  },
+  "model_id": "/models/kanana.gguf",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "private_output": "outside_repository_mode_0700_files_0600",
+  "request_policy": {
+    "max_tokens": 320,
+    "repeat_penalty": 1.05,
+    "seed": 0,
+    "stop": [
+      "<|eot_id|>"
+    ],
+    "temperature": 0,
+    "timeout_seconds": 180
+  },
+  "request_sha256_by_call": {
+    "ES01:baseline": "e18562b7875925a288bd0d868c3ba80c9c2d4ed9841c7c7eb254ec89e1c3147c",
+    "ES01:variant": "43c4203401688cfdb428b4f152414bd6f09b02ab383ea01f4aea6887e41f47d0",
+    "ES03:baseline": "8d9e0e59ce5c0eba9292385797b803d5cd83d5be3bb774d0c521ac882af1ce26",
+    "ES03:variant": "63d33eba2fd89a9926b5e072e7f30393ce7b66f6d22622bde351254dc659f496",
+    "ES09:baseline": "1d8409d4d9dd848b83f9e763d45ca9a28777bc43bcf418c659da22915800ac9b",
+    "ES09:variant": "40e3bcb1791ce59794de918fba400042c19e43864eb3c6dc52ec3669c8848ccc",
+    "ES17:baseline": "2fbd7e68f4f37480e50baebda457b7557fa9a6d9df1ca8acbba6991db3c91f8b",
+    "ES17:variant": "bce6f87fa308076560efeefc8ec242dd806b33e227d6d68b2d9f9f957cd4d832",
+    "ES18:baseline": "0333a979e3e0598518f9ea7dee157571d5ee80b2a88e3daae2ad5cd3e0b1ab8a",
+    "ES18:variant": "47bb6e3ba1da778435f8c1c1a141230aef8b06b00cd1940f26a4961db856c257"
+  },
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "score_scope": "E_to_B_only; no B_to_A; no safety_route; no official_accuracy",
+  "server_args": [
+    "-m",
+    "/models/kanana.gguf",
+    "-c",
+    "4096",
+    "-t",
+    "2",
+    "-np",
+    "1",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8080"
+  ],
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "source_manifest": {
+    "experiments/as_safety_atomic_edges_v1/event_owner.py": "9b7cdb854f64c1768c05e9b9e95cd2b786cef2a097db854bef6f3acd583bda3e",
+    "experiments/as_safety_atomic_edges_v1/run.py": "f38f60808ebb3b1bdaed7381446ad43326bbe0970113f0dbc157ea2afb1ab764",
+    "experiments/as_safety_atomic_edges_v1/verify.py": "0d436107afa65c4a65cfd042557ab21be47f521c5adacfd5b97f9fc519298c4f",
+    "experiments/as_safety_atomic_edges_v2/__init__.py": "055acdd26d8f85c0c450e2703983143dd3367488b7d6c881e9202138a987d80c",
+    "experiments/as_safety_atomic_edges_v2/run.py": "d278acc40fb19483b3cb3adc06eacb4139cc9936143e979d9630933447c25074",
+    "experiments/as_safety_atomic_edges_v2/verify.py": "bb0be4b598711de5ac0d28d9153243f20a5015978e1dc6774b419d396045c03b",
+    "experiments/as_safety_atomic_edges_v3/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/as_safety_atomic_edges_v3/run.py": "bd067af77b2aaf7e0b42237087323da4c4ee024e238b90f1c9fab40cb9a5635f",
+    "experiments/as_safety_atomic_edges_v3/verify.py": "aa879eb672ce5203fefa600d6cc2c409920b723c64079241106a8566c496d371",
+    "experiments/as_safety_v2/evidence_graph.py": "31c957cda14e0474445bd864d7d40f7790fb7f13924361483e3fb7eb91efe46b",
+    "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
+    "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
+    "experiments/as_safety_v2/quotes.py": "580d7816523c40cdda89850afde042bf5f29a28805e984a1cac643ed0a2a2f88",
+    "experiments/as_safety_v2/transport.py": "ccbaab8dae80b78275c6b1af29ce16c5dd3d88933a3db41c6f3b99717d1c8384",
+    "experiments/as_safety_v4/cases.py": "02e0c686c3bddb7593364067916fb6c49b6ca44d5420b85fd810a4053436a4aa",
+    "experiments/as_safety_v4/contract.py": "b7039e6a0562ddb808acf596ab575fc617feb3a8f467dd53e0cd5e44db153613",
+    "experiments/as_safety_v4/run.py": "5ff01016ced5c1fe1028e81cc1533f224fcb7abca6e84e0ba56a4f14e89ac9cb"
+  },
+  "variant_response_format": "plain_json_object"
+}
