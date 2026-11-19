@@ -49,7 +49,7 @@
     "ES19:1",
     "ES20:1"
   ],
-  "frozen_code_commit": "439bed72196973697347d8012dd4982085c0fb9b",
+  "frozen_code_commit": "6f322d0ff1c98c0d6704401d6427d2798c25542f",
   "input_hashes": {
     "dataset": "49e4e960d901c037c7d10de6899aaeade3c71809060772571f0c8f58409d52f7",
     "utterance_review": "399a4f2d8739ab4899adeba9a62cc1f388fcd3802ef7a5147350c2de55b1d8bb",
@@ -59,8 +59,8 @@
   },
   "source_manifest": {
     "experiments/as_safety_atomic_edges_v1/event_owner.py": "9b7cdb854f64c1768c05e9b9e95cd2b786cef2a097db854bef6f3acd583bda3e",
-    "experiments/as_safety_atomic_edges_v1/run.py": "a4f06a9d46fbd029da4b560c2d4c32f5817e0b83f0e5f385e943aaffd0420e2c",
-    "experiments/as_safety_atomic_edges_v1/verify.py": "a7178d6c031334b83f1ff7fc5911525aaf0ec17e6e3cbb492851e9a6b385b38e",
+    "experiments/as_safety_atomic_edges_v1/run.py": "2a498c8e2641f7ef5feb95d80021f5a6826669986f7fe27b3c7fb75ded520dc7",
+    "experiments/as_safety_atomic_edges_v1/verify.py": "e25cf215d6977a251add4428d78cfb3ecfd1b1e6fbbced2b8c76b7cfe3e80656",
     "experiments/as_safety_v2/evidence_graph.py": "31c957cda14e0474445bd864d7d40f7790fb7f13924361483e3fb7eb91efe46b",
     "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
     "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
@@ -72,6 +72,7 @@
   },
   "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
   "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "container_name": "as-safety-atomic-edge-v1",
   "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
   "model_id": "/models/kanana.gguf",
   "server_args": [
