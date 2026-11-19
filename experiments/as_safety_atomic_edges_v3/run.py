@@ -287,6 +287,8 @@ def post_format_completion(
 
 
 def prepare_protocol(path: Path, model_path: Path) -> dict:
+    if not path.resolve().is_relative_to(ROOT):
+        raise ValueError("protocol must be created inside repository")
     if path.exists():
         raise FileExistsError("protocol already exists")
     _clean_checkout()
@@ -333,6 +335,11 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, by
         or any(protocol.get(key) != value for key, value in expected.items())
     ):
         raise ValueError("protocol identity differs")
+    if (
+        type(protocol["request_policy"]) is not dict
+        or type(protocol["request_policy"].get("timeout_seconds")) is not int
+    ):
+        raise ValueError("request timeout type differs")
     commit = protocol["frozen_code_commit"]
     if type(commit) is not str or not COMMIT_RE.fullmatch(commit):
         raise ValueError("frozen commit differs")
@@ -406,15 +413,17 @@ def run(args: argparse.Namespace, *, completion_call=post_format_completion) -> 
         cases[key]["events"][0]["occurrence"] not in {"observed", "uncertain"} for key in CASE_IDS
     ):
         raise ValueError("control event occurrence differs")
-    v4.verify_container(args.container_name, args.model_path)
+    policy = _policy(protocol)
     initial_identity = _container_identity(args.container_name)
+    v4.verify_container(args.container_name, args.model_path)
+    if _container_identity(args.container_name) != initial_identity:
+        raise ValueError("model server changed during configuration check")
     if args.private_dir.is_symlink() or args.private_dir.resolve().is_relative_to(ROOT):
         raise ValueError("private output must be outside repository")
     args.private_dir.mkdir(mode=0o700, parents=False)
     args.private_dir.chmod(0o700)
     if stat.S_IMODE(args.private_dir.stat().st_mode) != 0o700:
         raise ValueError("private output permissions differ")
-    policy = _policy(protocol)
     with args.output.open("x", encoding="utf-8") as stream:
         _append(stream, {"event": "header", "protocol_sha256": protocol_sha})
         for case_id, condition in ORDER:
@@ -438,6 +447,8 @@ def run(args: argparse.Namespace, *, completion_call=post_format_completion) -> 
                 "raw_bytes": None,
                 "request_latency_ms": None,
             }
+            if _container_identity(args.container_name) != initial_identity:
+                raise ValueError("model server changed before request; partial run requires audit")
             started = time.perf_counter()
             try:
                 completion: Completion = completion_call(
@@ -453,12 +464,17 @@ def run(args: argparse.Namespace, *, completion_call=post_format_completion) -> 
                 row["error_code"], row["http_status"] = error.code, error.status_code
             else:
                 row["request_latency_ms"] = round((time.perf_counter() - started) * 1000, 3)
-                row["finish_reason"] = completion.finish_reason
-                row["raw_sha256"], row["raw_bytes"] = v1._write_private_raw(
-                    args.private_dir / f"{case_id}-{condition}.json.txt", completion.content
-                )
-                if completion.finish_reason != "stop":
-                    row["error_code"] = "finish_length"
+                try:
+                    completion.content.encode("utf-8")
+                except UnicodeEncodeError:
+                    row["error_code"] = "response_fields_invalid"
+                else:
+                    row["finish_reason"] = completion.finish_reason
+                    row["raw_sha256"], row["raw_bytes"] = v1._write_private_raw(
+                        args.private_dir / f"{case_id}-{condition}.json.txt", completion.content
+                    )
+                    if completion.finish_reason != "stop":
+                        row["error_code"] = "finish_length"
             if _container_identity(args.container_name) != initial_identity:
                 raise ValueError("model server changed during run; partial run requires audit")
             _append(stream, row)

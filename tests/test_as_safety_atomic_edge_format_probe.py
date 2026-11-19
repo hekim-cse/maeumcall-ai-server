@@ -103,7 +103,10 @@ def test_plain_transport_sends_exact_variant_bytes(monkeypatch):
     ]
 
 
-def test_runner_records_ten_calls_and_does_not_retry_transport_error(tmp_path, monkeypatch):
+@pytest.mark.parametrize("first_failure", ["timeout", "invalid_utf8"])
+def test_runner_records_ten_calls_and_does_not_retry_first_failure(
+    tmp_path, monkeypatch, first_failure
+):
     verified = _inputs()
     protocol = {
         **probe._identity(),
@@ -119,9 +122,11 @@ def test_runner_records_ten_calls_and_does_not_retry_transport_error(tmp_path, m
     calls = []
 
     def fake_completion(messages, schema, *, condition, policy, endpoint, model_id):
-        calls.append(messages)
+        calls.append((messages, condition))
         if len(calls) == 1:
-            raise TransportError("timeout")
+            if first_failure == "timeout":
+                raise TransportError("timeout")
+            return Completion("\ud800", "stop")
         return Completion(
             json.dumps(
                 {
@@ -147,9 +152,16 @@ def test_runner_records_ten_calls_and_does_not_retry_transport_error(tmp_path, m
     )
     rows = [json.loads(line) for line in output.read_text().splitlines()]
     assert len(calls) == 10
+    cases = _cases()
+    assert calls == [
+        (probe.messages(cases[case_id], cases[case_id]["events"][0], condition), condition)
+        for case_id, condition in probe.ORDER
+    ]
     assert len(rows) == 11
     assert [(row["case_id"], row["condition"]) for row in rows[1:]] == list(probe.ORDER)
-    assert rows[1]["error_code"] == "timeout"
+    assert rows[1]["error_code"] == (
+        "timeout" if first_failure == "timeout" else "response_fields_invalid"
+    )
     assert rows[1]["raw_sha256"] is None
     assert rows[2]["raw_sha256"] is not None
     assert not (private / "ES01-baseline.json.txt").exists()
@@ -157,7 +169,14 @@ def test_runner_records_ten_calls_and_does_not_retry_transport_error(tmp_path, m
     assert private.stat().st_mode & 0o777 == 0o700
 
 
-def test_runner_stops_on_container_replacement_without_next_call(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    ("matching_identity_checks", "expected_journal_lines"),
+    [(3, 1), (4, 2)],
+    ids=["during-first-request", "before-second-request"],
+)
+def test_runner_stops_on_container_replacement_without_next_call(
+    tmp_path, monkeypatch, matching_identity_checks, expected_journal_lines
+):
     verified = _inputs()
     protocol = {**probe._identity(), "request_sha256_by_call": probe._request_hashes(verified)}
     monkeypatch.setattr(
@@ -166,7 +185,9 @@ def test_runner_stops_on_container_replacement_without_next_call(tmp_path, monke
         lambda protocol_path, model_path: (protocol, "protocol-sha", verified),
     )
     monkeypatch.setattr(probe.v4, "verify_container", lambda name, model_path: None)
-    identities = iter([("first-id", "first-start"), ("second-id", "second-start")])
+    identities = iter(
+        [("first-id", "first-start")] * matching_identity_checks + [("second-id", "second-start")]
+    )
     monkeypatch.setattr(probe, "_container_identity", lambda name: next(identities))
     calls = []
 
@@ -197,8 +218,59 @@ def test_runner_stops_on_container_replacement_without_next_call(tmp_path, monke
             completion_call=fake_completion,
         )
     assert len(calls) == 1
-    assert len(output.read_text().splitlines()) == 1
+    assert len(output.read_text().splitlines()) == expected_journal_lines
     assert (private / "ES01-baseline.json.txt").exists()
+
+
+def test_runner_rejects_server_replacement_during_configuration_check(tmp_path, monkeypatch):
+    verified = _inputs()
+    protocol = {**probe._identity(), "request_sha256_by_call": probe._request_hashes(verified)}
+    monkeypatch.setattr(
+        probe,
+        "load_protocol",
+        lambda protocol_path, model_path: (protocol, "protocol-sha", verified),
+    )
+    monkeypatch.setattr(probe.v4, "verify_container", lambda name, model_path: None)
+    identities = iter([("first-id", "first-start"), ("second-id", "second-start")])
+    monkeypatch.setattr(probe, "_container_identity", lambda name: next(identities))
+    output = tmp_path / "journal.jsonl"
+    private = tmp_path / "private"
+    with pytest.raises(ValueError, match="configuration check"):
+        probe.run(
+            argparse.Namespace(
+                output=output,
+                private_dir=private,
+                protocol=tmp_path / "protocol.json",
+                model_path=tmp_path / "model.gguf",
+                container_name=probe.CONTAINER_NAME,
+            )
+        )
+    assert not output.exists()
+    assert not private.exists()
+
+
+def test_prepare_rejects_protocol_path_outside_repository_before_creating_file(tmp_path):
+    protocol = tmp_path / "protocol.json"
+    with pytest.raises(ValueError, match="inside repository"):
+        probe.prepare_protocol(protocol, tmp_path / "model.gguf")
+    assert not protocol.exists()
+
+
+def test_load_protocol_rejects_float_timeout_before_model_check(tmp_path):
+    protocol = {
+        **probe._identity(),
+        "frozen_code_commit": "0" * 40,
+        "source_manifest": {},
+        "input_hashes": {},
+        "request_sha256_by_call": {},
+    }
+    protocol["request_policy"] = {**protocol["request_policy"], "timeout_seconds": 180.0}
+    path = tmp_path / "protocol.json"
+    path.write_text(json.dumps(protocol))
+    with pytest.raises(ValueError, match="timeout type"):
+        probe.load_protocol(path, tmp_path / "model.gguf")
+    with pytest.raises(verify.VerificationError, match="timeout type"):
+        verify.check_protocol(path, tmp_path / "model.gguf")
 
 
 def test_runner_rejects_public_journal_inside_private_directory(tmp_path):
@@ -265,7 +337,7 @@ def test_replay_rejects_tampered_request_or_response_metadata(tmp_path, tamper):
         verify._journal(journal, "protocol-sha", sources, protocol)
 
 
-def _synthetic_full_replay(tmp_path, monkeypatch, *, variant_es01_raw=None):
+def _synthetic_full_replay(tmp_path, monkeypatch, *, variant_es01_raw=None, variant_es17_raw=None):
     verified = _inputs()
     protocol = {
         **probe._identity(),
@@ -309,9 +381,13 @@ def _synthetic_full_replay(tmp_path, monkeypatch, *, variant_es01_raw=None):
     rows = [{"event": "header", "protocol_sha256": "protocol-sha"}]
     for case_id, condition in probe.ORDER:
         raw = (
-            variant_es01_raw
-            if case_id == "ES01" and condition == "variant" and variant_es01_raw is not None
-            else prior_raw
+            variant_es17_raw
+            if case_id == "ES17" and condition == "variant" and variant_es17_raw is not None
+            else (
+                variant_es01_raw
+                if case_id == "ES01" and condition == "variant" and variant_es01_raw is not None
+                else prior_raw
+            )
         )
         raw_path = private / f"{case_id}-{condition}.json.txt"
         raw_path.write_text(raw)
@@ -363,6 +439,7 @@ def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path
         assert result["resolved_evidence_denominator"] == 4
         assert result["ES17_correct_abstention"] == 1
         assert result["ES17_false_resolution"] == 0
+        assert result["ES17_evaluable"] is True
 
 
 @pytest.mark.parametrize(
@@ -384,8 +461,13 @@ def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path
             "event_subject_kind": "location",
             "event_subject_evidence_span": {"clause_index": 2, "quote": " "},
         },
+        {
+            "subject_span": "다른 위치",
+            "event_subject_kind": "location",
+            "event_subject_evidence_span": "다른 근거",
+        },
     ],
-    ids=["invalid-kind", "extra-field", "blank-quote"],
+    ids=["invalid-kind", "extra-field", "blank-quote", "string-quote"],
 )
 def test_full_replay_counts_malformed_model_output_as_contract_error(
     tmp_path, monkeypatch, malformed
@@ -401,6 +483,15 @@ def test_full_replay_counts_malformed_model_output_as_contract_error(
     assert report["summary"]["variant"]["contract_errors"] == 1
     assert report["summary"]["variant"]["B_resolved_denominator"] == 4
     assert report["summary"]["variant"]["resolved_evidence_denominator"] == 4
+    if type(malformed["subject_span"]) is str:
+        assert (
+            next(
+                row
+                for row in report["paired_cases"]
+                if row["case_id"] == "ES01" and row["condition"] == "variant"
+            )["contract_error_code"]
+            == "quote_fields_invalid"
+        )
     assert (
         next(
             row
@@ -408,4 +499,28 @@ def test_full_replay_counts_malformed_model_output_as_contract_error(
             if row["case_id"] == "ES01" and row["condition"] == "variant"
         )["contract_pass"]
         is False
+    )
+
+
+def test_replay_marks_invalid_es17_as_not_evaluable(tmp_path, monkeypatch):
+    malformed = json.dumps(
+        {
+            "subject_span": "잘못된 형식",
+            "event_subject_kind": "location",
+            "event_subject_evidence_span": "잘못된 근거",
+        },
+        ensure_ascii=False,
+    )
+    report = _synthetic_full_replay(tmp_path, monkeypatch, variant_es17_raw=malformed)
+    variant = report["summary"]["variant"]
+    assert variant["ES17_evaluable"] is False
+    assert variant["ES17_correct_abstention"] == 0
+    assert variant["ES17_false_resolution"] == 0
+    assert (
+        next(
+            row
+            for row in report["paired_cases"]
+            if row["case_id"] == "ES17" and row["condition"] == "variant"
+        )["contract_error_code"]
+        == "quote_fields_invalid"
     )

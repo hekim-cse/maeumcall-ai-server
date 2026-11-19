@@ -66,6 +66,19 @@ TRANSPORT_CODES = {
 }
 REFERENCE_PROTOCOL_SHA256 = "fa7a2f574220e7fb92275277895d5aa14c14f12434cf715c7fdb8aa8702de56c"
 REFERENCE_JOURNAL_SHA256 = "804c1c1f64545e7f883ed783ffecdd67b8d89908dd3b055104e24b43925c0b3b"
+CONTRACT_ERROR_CODES = {
+    "invalid JSON": "invalid_json",
+    "duplicate JSON key": "duplicate_json_key",
+    "nonfinite JSON value": "nonfinite_json_value",
+    "output fields differ": "output_fields_invalid",
+    "event subject kind invalid": "subject_kind_invalid",
+    "quote fields invalid": "quote_fields_invalid",
+    "quote index invalid": "quote_index_invalid",
+    "quote blank or invalid": "quote_blank_or_invalid",
+    "quote is not uniquely anchored": "quote_not_anchored",
+    "unresolved spans inconsistent": "unresolved_spans_inconsistent",
+    "direct evidence does not contain event and subject": "direct_evidence_invalid",
+}
 
 
 class VerificationError(ValueError):
@@ -148,6 +161,11 @@ def check_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, b
     }
     if any(protocol[key] != value for key, value in expected.items()):
         raise VerificationError("protocol identity differs")
+    if (
+        type(protocol["request_policy"]) is not dict
+        or type(protocol["request_policy"].get("timeout_seconds")) is not int
+    ):
+        raise VerificationError("request timeout type differs")
     if not model_path.is_file() or _digest_file(model_path) != v1.MODEL_SHA:
         raise VerificationError("model file digest differs")
     commit = protocol["frozen_code_commit"]
@@ -416,6 +434,7 @@ def verify_result(
             "resolved_evidence_denominator": 4,
             "ES17_correct_abstention": 0,
             "ES17_false_resolution": 0,
+            "ES17_evaluable": False,
             "contract_errors": 0,
             "transport_or_length_errors": 0,
         }
@@ -435,6 +454,7 @@ def verify_result(
                     and row["raw_sha256"] == reference_rows[case_id]["raw_sha256"]
                 )
             decision = None
+            contract_error_code = None
             if row["error_code"] is not None or row["finish_reason"] != "stop":
                 metrics["transport_or_length_errors"] += 1
             elif raw is not None:
@@ -442,8 +462,9 @@ def verify_result(
                     decision = v1.replay_event_owner(
                         raw, source["user_message"], event["event_span"]
                     )
-                except v1.VerificationError:
+                except v1.VerificationError as error:
                     metrics["contract_errors"] += 1
+                    contract_error_code = CONTRACT_ERROR_CODES.get(str(error), "contract_invalid")
                 else:
                     metrics["contract_pass"] += 1
                     metrics["abstentions"] += decision["event_subject_kind"] == "unresolved"
@@ -462,6 +483,7 @@ def verify_result(
             if gold is None:
                 if case_id != "ES17":
                     raise VerificationError("unexpected unresolved reference")
+                metrics["ES17_evaluable"] = decision is not None
                 metrics["ES17_correct_abstention"] += (
                     decision is not None and decision["event_subject_kind"] == "unresolved"
                 )
@@ -475,6 +497,7 @@ def verify_result(
                     "case_id": case_id,
                     "condition": condition,
                     "contract_pass": decision is not None,
+                    "contract_error_code": contract_error_code,
                     "abstained": decision is not None
                     and decision["event_subject_kind"] == "unresolved",
                     "B_exact_resolved": gold is not None
