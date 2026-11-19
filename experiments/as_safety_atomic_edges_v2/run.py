@@ -79,6 +79,36 @@ def _clean_checkout() -> None:
         raise ValueError("checkout must be clean before preparing or running")
 
 
+def _unique_pairs(pairs: list[tuple[str, object]]) -> dict:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate protocol JSON key")
+        result[key] = value
+    return result
+
+
+def _container_identity(name: str) -> tuple[str, str]:
+    """Detect a restarted or replaced model server across sequential calls."""
+    observed = json.loads(
+        subprocess.run(
+            ("docker", "inspect", name), check=True, capture_output=True, text=True
+        ).stdout
+    )[0]
+    container_id = observed.get("Id")
+    state = observed.get("State")
+    started_at = state.get("StartedAt") if type(state) is dict else None
+    if (
+        type(container_id) is not str
+        or not container_id
+        or type(started_at) is not str
+        or not started_at
+        or state.get("Running") is not True
+    ):
+        raise ValueError("model server identity differs")
+    return container_id, started_at
+
+
 def messages(case: dict, event: dict, condition: str) -> list[dict[str, str]]:
     if condition not in {"baseline", "variant"}:
         raise ValueError("unknown condition")
@@ -186,7 +216,7 @@ def prepare_protocol(path: Path, model_path: Path) -> dict:
 
 def load_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, bytes]]:
     raw = path.read_bytes()
-    protocol = json.loads(raw)
+    protocol = json.loads(raw, object_pairs_hook=_unique_pairs)
     expected = _identity()
     if (
         type(protocol) is not dict
@@ -259,6 +289,8 @@ def _append(stream, row: dict) -> None:
 def run(args: argparse.Namespace, *, completion_call=post_json_completion) -> None:
     if args.output.exists() or args.private_dir.exists():
         raise FileExistsError("partial or existing run requires manual audit")
+    if args.output.resolve().is_relative_to(args.private_dir.resolve()):
+        raise ValueError("journal must be outside private response directory")
     protocol, protocol_sha, verified = load_protocol(args.protocol, args.model_path)
     if args.container_name != protocol["container_name"]:
         raise ValueError("container name differs")
@@ -268,6 +300,7 @@ def run(args: argparse.Namespace, *, completion_call=post_json_completion) -> No
     ):
         raise ValueError("control event occurrence differs")
     v4.verify_container(args.container_name, args.model_path)
+    initial_identity = _container_identity(args.container_name)
     if args.private_dir.is_symlink() or args.private_dir.resolve().is_relative_to(ROOT):
         raise ValueError("private output must be outside repository")
     args.private_dir.mkdir(mode=0o700, parents=False)
@@ -314,6 +347,8 @@ def run(args: argparse.Namespace, *, completion_call=post_json_completion) -> No
                 )
                 if completion.finish_reason != "stop":
                     row["error_code"] = "finish_length"
+            if _container_identity(args.container_name) != initial_identity:
+                raise ValueError("model server changed during run; partial run requires audit")
             _append(stream, row)
 
 

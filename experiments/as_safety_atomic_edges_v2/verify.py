@@ -270,6 +270,7 @@ def _journal(path: Path, protocol_sha: str, sources: dict[str, dict], protocol: 
             set(row) != ROW_FIELDS
             or row["event"] != "result"
             or row["case_id"] != case_id
+            or type(row["event_index"]) is not int
             or row["event_index"] != 1
             or row["condition"] != condition
             or row["request_sha256"] != _request_sha(sources[case_id], condition, protocol)

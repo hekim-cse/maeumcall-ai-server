@@ -71,6 +71,7 @@ def test_runner_records_ten_calls_and_does_not_retry_transport_error(tmp_path, m
         lambda protocol_path, model_path: (protocol, "protocol-sha", verified),
     )
     monkeypatch.setattr(probe.v4, "verify_container", lambda name, model_path: None)
+    monkeypatch.setattr(probe, "_container_identity", lambda name: ("same-id", "same-start"))
     calls = []
 
     def fake_completion(messages, schema, *, policy, endpoint, model_id):
@@ -112,7 +113,75 @@ def test_runner_records_ten_calls_and_does_not_retry_transport_error(tmp_path, m
     assert private.stat().st_mode & 0o777 == 0o700
 
 
-@pytest.mark.parametrize("tamper", ["wrong_hash", "duplicate_condition", "bad_status"])
+def test_runner_stops_on_container_replacement_without_next_call(tmp_path, monkeypatch):
+    verified = _inputs()
+    protocol = {**probe._identity(), "request_sha256_by_call": probe._request_hashes(verified)}
+    monkeypatch.setattr(
+        probe,
+        "load_protocol",
+        lambda protocol_path, model_path: (protocol, "protocol-sha", verified),
+    )
+    monkeypatch.setattr(probe.v4, "verify_container", lambda name, model_path: None)
+    identities = iter([("first-id", "first-start"), ("second-id", "second-start")])
+    monkeypatch.setattr(probe, "_container_identity", lambda name: next(identities))
+    calls = []
+
+    def fake_completion(messages, schema, *, policy, endpoint, model_id):
+        calls.append(messages)
+        return Completion(
+            json.dumps(
+                {
+                    "subject_span": None,
+                    "event_subject_kind": "unresolved",
+                    "event_subject_evidence_span": None,
+                }
+            ),
+            "stop",
+        )
+
+    output = tmp_path / "journal.jsonl"
+    private = tmp_path / "private"
+    with pytest.raises(ValueError, match="model server changed"):
+        probe.run(
+            argparse.Namespace(
+                output=output,
+                private_dir=private,
+                protocol=tmp_path / "protocol.json",
+                model_path=tmp_path / "model.gguf",
+                container_name=probe.CONTAINER_NAME,
+            ),
+            completion_call=fake_completion,
+        )
+    assert len(calls) == 1
+    assert len(output.read_text().splitlines()) == 1
+    assert (private / "ES01-baseline.json.txt").exists()
+
+
+def test_runner_rejects_public_journal_inside_private_directory(tmp_path):
+    private = tmp_path / "private"
+    with pytest.raises(ValueError, match="journal must be outside"):
+        probe.run(
+            argparse.Namespace(
+                output=private / "journal.jsonl",
+                private_dir=private,
+                protocol=tmp_path / "protocol.json",
+                model_path=tmp_path / "model.gguf",
+                container_name=probe.CONTAINER_NAME,
+            )
+        )
+    assert not private.exists()
+
+
+def test_runner_rejects_duplicate_protocol_json_keys(tmp_path):
+    protocol = tmp_path / "protocol.json"
+    protocol.write_text('{"kind": 1, "kind": 2}')
+    with pytest.raises(ValueError, match="duplicate protocol JSON key"):
+        probe.load_protocol(protocol, tmp_path / "model.gguf")
+
+
+@pytest.mark.parametrize(
+    "tamper", ["wrong_hash", "duplicate_condition", "bad_status", "bool_index", "float_index"]
+)
 def test_replay_rejects_tampered_request_or_response_metadata(tmp_path, tamper):
     sources = verify._source_cases(_inputs())
     protocol = {
@@ -140,6 +209,10 @@ def test_replay_rejects_tampered_request_or_response_metadata(tmp_path, tamper):
         rows[1]["request_sha256"] = "0" * 64
     elif tamper == "duplicate_condition":
         rows[2]["condition"] = "baseline"
+    elif tamper == "bool_index":
+        rows[1]["event_index"] = True
+    elif tamper == "float_index":
+        rows[1]["event_index"] = 1.0
     else:
         rows[1]["http_status"] = 200
     journal = tmp_path / "journal.jsonl"
@@ -148,7 +221,7 @@ def test_replay_rejects_tampered_request_or_response_metadata(tmp_path, tamper):
         verify._journal(journal, "protocol-sha", sources, protocol)
 
 
-def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path, monkeypatch):
+def _synthetic_full_replay(tmp_path, monkeypatch, *, variant_es01_raw=None):
     verified = _inputs()
     protocol = {
         **probe._identity(),
@@ -189,8 +262,13 @@ def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path
     private.mkdir(mode=0o700)
     rows = [{"event": "header", "protocol_sha256": "protocol-sha"}]
     for case_id, condition in probe.ORDER:
+        raw = (
+            variant_es01_raw
+            if case_id == "ES01" and condition == "variant" and variant_es01_raw is not None
+            else prior_raw
+        )
         raw_path = private / f"{case_id}-{condition}.json.txt"
-        raw_path.write_text(prior_raw)
+        raw_path.write_text(raw)
         raw_path.chmod(0o600)
         rows.append(
             {
@@ -202,8 +280,8 @@ def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path
                 "finish_reason": "stop",
                 "error_code": None,
                 "http_status": None,
-                "raw_sha256": prior_sha,
-                "raw_bytes": len(prior_raw.encode()),
+                "raw_sha256": probe.digest(raw.encode()),
+                "raw_bytes": len(raw.encode()),
                 "request_latency_ms": 1.0,
             }
         )
@@ -211,7 +289,7 @@ def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path
     journal.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
     reference_protocol = v1.DATA / "as-safety-atomic-edge-v1-development-protocol.json"
     reference_journal = v1.DATA / "as-safety-atomic-edge-v1-development-journal.v1.jsonl"
-    report = verify.verify_result(
+    return verify.verify_result(
         tmp_path / "protocol.json",
         tmp_path / "model.gguf",
         journal,
@@ -220,6 +298,10 @@ def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path
         reference_journal,
         tmp_path / "reference-private",
     )
+
+
+def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path, monkeypatch):
+    report = _synthetic_full_replay(tmp_path, monkeypatch)
     assert report["historical_baseline_all_reproduced"] is True
     assert len(report["historical_baseline_reproduced"]) == 5
     assert len(report["paired_cases"]) == 10
@@ -234,3 +316,49 @@ def test_full_replay_reports_fixed_denominators_and_reproduced_baseline(tmp_path
         assert result["resolved_evidence_denominator"] == 4
         assert result["ES17_correct_abstention"] == 1
         assert result["ES17_false_resolution"] == 0
+
+
+@pytest.mark.parametrize(
+    "malformed",
+    [
+        {
+            "subject_span": None,
+            "event_subject_kind": "invented",
+            "event_subject_evidence_span": None,
+        },
+        {
+            "subject_span": None,
+            "event_subject_kind": "unresolved",
+            "event_subject_evidence_span": None,
+            "unexpected": 1,
+        },
+        {
+            "subject_span": {"clause_index": 2, "quote": " "},
+            "event_subject_kind": "location",
+            "event_subject_evidence_span": {"clause_index": 2, "quote": " "},
+        },
+    ],
+    ids=["invalid-kind", "extra-field", "blank-quote"],
+)
+def test_full_replay_counts_malformed_model_output_as_contract_error(
+    tmp_path, monkeypatch, malformed
+):
+    report = _synthetic_full_replay(
+        tmp_path,
+        monkeypatch,
+        variant_es01_raw=json.dumps(malformed, ensure_ascii=False),
+    )
+    assert report["historical_baseline_all_reproduced"] is True
+    assert report["summary"]["baseline"]["contract_pass"] == 5
+    assert report["summary"]["variant"]["contract_pass"] == 4
+    assert report["summary"]["variant"]["contract_errors"] == 1
+    assert report["summary"]["variant"]["B_resolved_denominator"] == 4
+    assert report["summary"]["variant"]["resolved_evidence_denominator"] == 4
+    assert (
+        next(
+            row
+            for row in report["paired_cases"]
+            if row["case_id"] == "ES01" and row["condition"] == "variant"
+        )["contract_pass"]
+        is False
+    )
