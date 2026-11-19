@@ -180,7 +180,7 @@ def _expected_protocol() -> dict:
     }
 
 
-def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
+def load_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, bytes]]:
     raw = path.read_bytes()
     protocol = json.loads(raw)
     if type(protocol) is not dict or set(protocol) != PROTOCOL_FIELDS:
@@ -195,17 +195,20 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
         raise ValueError("model file is missing or its SHA-256 differs")
     if type(protocol["input_hashes"]) is not dict or set(protocol["input_hashes"]) != set(INPUTS):
         raise ValueError("input manifest paths differ")
+    verified_inputs = {}
     for key, source in INPUTS.items():
         relative = source.relative_to(ROOT).as_posix()
         frozen = _committed(commit, relative)
+        current = source.read_bytes()
         expected_sha = protocol["input_hashes"][key]
         if (
             type(expected_sha) is not str
             or not SHA_RE.fullmatch(expected_sha)
             or digest(frozen) != expected_sha
-            or source.read_bytes() != frozen
+            or current != frozen
         ):
             raise ValueError(f"frozen input differs: {key}")
+        verified_inputs[key] = current
     manifest = protocol["source_manifest"]
     if type(manifest) is not dict or set(manifest) != _source_paths(commit):
         raise ValueError("source manifest paths differ")
@@ -223,7 +226,7 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
         raise ValueError("protocol must be committed before model calls")
     if _git("status", "--porcelain").strip():
         raise ValueError("checkout must be clean before model calls")
-    return protocol, digest(raw)
+    return protocol, digest(raw), verified_inputs
 
 
 def _request_projection(case: dict) -> dict:
@@ -245,9 +248,9 @@ def _request_projection(case: dict) -> dict:
     }
 
 
-def load_request_cases(path: Path) -> list[dict]:
+def load_request_cases(verified_inputs: dict[str, bytes]) -> list[dict]:
     """Project only source text, A, E and occurrence into inference inputs."""
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = json.loads(verified_inputs["dataset"])
     if type(payload) is not dict or set(payload) != {
         "kind",
         "provenance",
@@ -264,8 +267,8 @@ def load_request_cases(path: Path) -> list[dict]:
         or payload["review_date"] != "2026-11-15"
         or payload["source_sha256"]
         != {
-            "utterances": digest(INPUTS["utterance_review"].read_bytes()),
-            "fields": digest(INPUTS["field_review"].read_bytes()),
+            "utterances": digest(verified_inputs["utterance_review"]),
+            "fields": digest(verified_inputs["field_review"]),
         }
     ):
         raise ValueError("reviewed input provenance differs")
@@ -349,7 +352,6 @@ def _call_event(
     *,
     completion_call: CompletionCall = post_json_completion,
 ) -> dict:
-    started = time.perf_counter()
     row = {
         "event": "result",
         "case_id": case["case_id"],
@@ -362,24 +364,29 @@ def _call_event(
         "raw_bytes": None,
         "request_latency_ms": None,
     }
+    messages = event_owner_messages(
+        case["user_message"],
+        event["event_span"],
+        event["occurrence"],
+        product_index=case["product_index"],
+        target_mention=case["target_mention"],
+    )
+    schema = event_owner_schema(case["user_message"])
+    started = time.perf_counter()
     try:
         completion = completion_call(
-            event_owner_messages(
-                case["user_message"],
-                event["event_span"],
-                event["occurrence"],
-                product_index=case["product_index"],
-                target_mention=case["target_mention"],
-            ),
-            event_owner_schema(case["user_message"]),
+            messages,
+            schema,
             policy=policy,
             endpoint=ENDPOINT,
             model_id=MODEL_ID,
         )
     except TransportError as error:
+        row["request_latency_ms"] = round((time.perf_counter() - started) * 1000, 3)
         row["error_code"] = error.code
         row["http_status"] = error.status_code
     else:
+        row["request_latency_ms"] = round((time.perf_counter() - started) * 1000, 3)
         row["finish_reason"] = completion.finish_reason
         row["raw_sha256"], row["raw_bytes"] = _write_private_raw(
             private_dir / f"{case['case_id']}-event-{event['event_index']}.json.txt",
@@ -387,7 +394,6 @@ def _call_event(
         )
         if completion.finish_reason != "stop":
             row["error_code"] = "finish_length"
-    row["request_latency_ms"] = round((time.perf_counter() - started) * 1000, 3)
     return row
 
 
@@ -398,10 +404,10 @@ def run(
 ) -> None:
     if args.output.exists() or args.private_dir.exists():
         raise FileExistsError("existing or partial run requires manual audit; never overwrite")
-    protocol, protocol_sha = load_protocol(args.protocol, args.model_path)
+    protocol, protocol_sha, verified_inputs = load_protocol(args.protocol, args.model_path)
     if args.container_name != protocol["container_name"]:
         raise ValueError("container name differs from frozen protocol")
-    request_cases = load_request_cases(INPUTS["dataset"])
+    request_cases = load_request_cases(verified_inputs)
     v4.verify_container(args.container_name, args.model_path)
     if args.private_dir.is_symlink() or args.private_dir.resolve().is_relative_to(ROOT):
         raise ValueError("raw responses must be outside the repository")

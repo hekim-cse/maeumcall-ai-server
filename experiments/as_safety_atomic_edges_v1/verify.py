@@ -160,7 +160,12 @@ def _expected_protocol() -> dict:
     }
 
 
-def check_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
+def check_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, bytes]]:
+    """Verify frozen commit blobs and return the exact reviewed input bytes.
+
+    The replay verifier may evolve after the frozen run; its own hash is reported
+    separately rather than requiring the current working tree to match that run.
+    """
     raw = path.read_bytes()
     protocol = _json(raw.decode("utf-8"))
     if type(protocol) is not dict or set(protocol) != PROTOCOL_FIELDS:
@@ -181,26 +186,36 @@ def check_protocol(path: Path, model_path: Path) -> tuple[dict, str]:
             type(expected) is not str
             or not SHA_RE.fullmatch(expected)
             or _digest(frozen) != expected
-            or (ROOT / relative).read_bytes() != frozen
+            or (
+                relative
+                not in {
+                    "experiments/as_safety_atomic_edges_v1/run.py",
+                    "experiments/as_safety_atomic_edges_v1/verify.py",
+                }
+                and (ROOT / relative).read_bytes() != frozen
+            )
         ):
             raise VerificationError("frozen source differs")
     hashes = protocol.get("input_hashes")
     if type(hashes) is not dict or set(hashes) != set(INPUTS):
         raise VerificationError("input manifest paths differ")
+    verified_inputs = {}
     for key, source in INPUTS.items():
         frozen = _committed(commit, source.relative_to(ROOT).as_posix())
         expected = hashes[key]
+        current = source.read_bytes()
         if (
             type(expected) is not str
             or not SHA_RE.fullmatch(expected)
             or _digest(frozen) != expected
-            or source.read_bytes() != frozen
+            or current != frozen
         ):
             raise VerificationError("frozen input differs")
+        verified_inputs[key] = current
     relative = path.resolve().relative_to(ROOT).as_posix()
     if _git("show", f"HEAD:{relative}") != raw:
         raise VerificationError("protocol is not the committed version")
-    return protocol, _digest(raw)
+    return protocol, _digest(raw), verified_inputs
 
 
 def _unique(pairs: list[tuple[str, object]]) -> dict:
@@ -256,9 +271,17 @@ def _contains(outer: dict, inner: dict) -> bool:
     )
 
 
-def load_scoring_cases(path: Path) -> list[dict]:
+def _same_quote(actual: dict | None, expected: dict | None) -> bool:
+    if actual is None or expected is None:
+        return actual is expected
+    return (
+        actual["clause_index"] == expected["clause_index"] and actual["quote"] == expected["quote"]
+    )
+
+
+def load_scoring_cases(path: Path, *, raw: bytes | None = None) -> list[dict]:
     """Load E→B gold plus a current-risk stratum; never score B→A or routes."""
-    payload = _json(path.read_text(encoding="utf-8"))
+    payload = _json((path.read_bytes() if raw is None else raw).decode("utf-8"))
     if type(payload) is not dict or set(payload) != {
         "kind",
         "provenance",
@@ -380,10 +403,10 @@ def _review_cell(cell: str) -> tuple[str, dict | None]:
     return kind, {"clause_index": int(clause), "quote": quote}
 
 
-def load_edge_labels(path: Path) -> dict[tuple[str, int], dict]:
+def load_edge_labels(path: Path, *, raw: bytes | None = None) -> dict[tuple[str, int], dict]:
     """Read only the E→B column; the B→A column is deliberately ignored."""
     labels = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in (path.read_bytes() if raw is None else raw).decode("utf-8").splitlines():
         if not line.startswith("| ES"):
             continue
         columns = [column.strip() for column in line.strip("|").split("|")]
@@ -451,17 +474,41 @@ def _read_journal(path: Path, protocol_sha: str) -> list[dict]:
         latency = row["request_latency_ms"]
         if called:
             finish_reason = row["finish_reason"]
-            if (
-                type(latency) not in {int, float}
-                or not math.isfinite(latency)
-                or latency < 0
-                or (row["error_code"] is not None and type(row["error_code"]) is not str)
-                or (row["http_status"] is not None and type(row["http_status"]) is not int)
-                or (
-                    finish_reason is not None
-                    and (type(finish_reason) is not str or finish_reason not in {"stop", "length"})
+            error_code = row["error_code"]
+            http_status = row["http_status"]
+            has_raw = row["raw_sha256"] is not None and row["raw_bytes"] is not None
+            if type(latency) not in {int, float} or not math.isfinite(latency) or latency < 0:
+                raise VerificationError("journal response metadata differs")
+            if finish_reason == "stop":
+                valid_response = error_code is None and http_status is None and has_raw
+            elif finish_reason == "length":
+                valid_response = error_code == "finish_length" and http_status is None and has_raw
+            elif finish_reason is None:
+                transport_codes = {
+                    "redirect",
+                    "request_too_large",
+                    "http_status",
+                    "http_error",
+                    "network_error",
+                    "timeout",
+                    "response_too_large",
+                    "invalid_response_json",
+                    "response_fields_invalid",
+                }
+                valid_response = (
+                    type(error_code) is str
+                    and error_code in transport_codes
+                    and row["raw_sha256"] is None
+                    and row["raw_bytes"] is None
+                    and (
+                        type(http_status) is int and 100 <= http_status <= 599
+                        if error_code in {"http_status", "http_error"}
+                        else http_status is None
+                    )
                 )
-            ):
+            else:
+                valid_response = False
+            if not valid_response:
                 raise VerificationError("journal response metadata differs")
         elif latency is not None:
             raise VerificationError("skipped event has latency")
@@ -472,6 +519,7 @@ def _read_journal(path: Path, protocol_sha: str) -> list[dict]:
             row.get("skip_reason") != "nonoccurring"
             or row["finish_reason"] is not None
             or row["error_code"] is not None
+            or row["http_status"] is not None
             or row["raw_sha256"] is not None
             or row["raw_bytes"] is not None
         ):
@@ -511,14 +559,14 @@ def verify_result(
     journal_path: Path,
     private_dir: Path,
 ) -> dict:
-    protocol, protocol_sha = check_protocol(protocol_path, model_path)
+    protocol, protocol_sha, verified_inputs = check_protocol(protocol_path, model_path)
     if private_dir.is_symlink() or private_dir.resolve().is_relative_to(ROOT):
         raise VerificationError("private responses must be outside the repository")
     if stat.S_IMODE(private_dir.stat().st_mode) != 0o700:
         raise VerificationError("private response directory permissions differ")
     rows = _read_journal(journal_path, protocol_sha)
-    cases = load_scoring_cases(INPUTS["dataset"])
-    labels = load_edge_labels(INPUTS["edge_review"])
+    cases = load_scoring_cases(INPUTS["dataset"], raw=verified_inputs["dataset"])
+    labels = load_edge_labels(INPUTS["edge_review"], raw=verified_inputs["edge_review"])
     result_by_key = {(row["case_id"], row["event_index"]): row for row in rows}
     expected_raw_files = {
         f"{row['case_id']}-event-{row['event_index']}.json.txt"
@@ -580,10 +628,7 @@ def verify_result(
             if (
                 decision is not None
                 and decision["subject_span"] is not None
-                and (
-                    decision["subject_span"]["clause_index"] == gold_subject["clause_index"]
-                    and decision["subject_span"]["quote"] == gold_subject["quote"]
-                )
+                and _same_quote(decision["subject_span"], gold_subject)
             ):
                 b_exact += 1
         else:
@@ -595,21 +640,15 @@ def verify_result(
                 and decision["event_subject_evidence_span"] is None
             ):
                 unresolved_exact += 1
+        gold_evidence = label["event_subject_evidence_span"]
+        if gold_evidence is not None:
+            resolved_evidence_denominator += 1
         if decision is not None:
             kind_exact += decision["event_subject_kind"] == label["event_subject_kind"]
             evidence = decision["event_subject_evidence_span"]
-            gold_evidence = label["event_subject_evidence_span"]
-            exact_evidence = (
-                evidence is None
-                and gold_evidence is None
-                or evidence is not None
-                and gold_evidence is not None
-                and evidence["clause_index"] == gold_evidence["clause_index"]
-                and evidence["quote"] == gold_evidence["quote"]
-            )
+            exact_evidence = _same_quote(evidence, gold_evidence)
             evidence_exact += exact_evidence
             if gold_evidence is not None:
-                resolved_evidence_denominator += 1
                 resolved_evidence_exact += exact_evidence
 
         # This reviewed label only selects the requested E→B failure slice.
@@ -618,15 +657,14 @@ def verify_result(
                 decision is not None
                 and decision["subject_span"] is not None
                 and gold_subject is not None
-                and decision["subject_span"]["clause_index"] == gold_subject["clause_index"]
-                and decision["subject_span"]["quote"] == gold_subject["quote"]
+                and _same_quote(decision["subject_span"], gold_subject)
                 and decision["event_subject_kind"] == label["event_subject_kind"]
                 and decision["event_subject_evidence_span"] is not None
                 and label["event_subject_evidence_span"] is not None
-                and decision["event_subject_evidence_span"]["clause_index"]
-                == label["event_subject_evidence_span"]["clause_index"]
-                and decision["event_subject_evidence_span"]["quote"]
-                == label["event_subject_evidence_span"]["quote"]
+                and _same_quote(
+                    decision["event_subject_evidence_span"],
+                    label["event_subject_evidence_span"],
+                )
             )
             if not triple_exact:
                 reasons = []
@@ -635,15 +673,14 @@ def verify_result(
                 else:
                     if decision["subject_span"] is None or (
                         gold_subject is None
-                        or decision["subject_span"]["clause_index"] != gold_subject["clause_index"]
-                        or decision["subject_span"]["quote"] != gold_subject["quote"]
+                        or not _same_quote(decision["subject_span"], gold_subject)
                     ):
                         reasons.append("subject_span_mismatch")
                     if decision["event_subject_kind"] != label["event_subject_kind"]:
                         reasons.append("event_subject_kind_mismatch")
                     actual_evidence = decision["event_subject_evidence_span"]
                     expected_evidence = label["event_subject_evidence_span"]
-                    if actual_evidence != expected_evidence:
+                    if not _same_quote(actual_evidence, expected_evidence):
                         reasons.append("event_subject_evidence_mismatch")
                 current_product_risk_extraction_failures.append(
                     {"case_id": case_id, "event_index": event_index, "reasons": reasons}
@@ -660,6 +697,7 @@ def verify_result(
     return {
         "claim_scope": SCOPE,
         "protocol_sha256": protocol_sha,
+        "replay_verifier_sha256": _digest_file(Path(__file__)),
         "case_count": len(cases),
         "event_calls": len(CALL_ORDER),
         "nonoccurring_skips": list(SKIP_ORDER),

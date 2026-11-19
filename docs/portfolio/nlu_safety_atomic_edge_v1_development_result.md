@@ -8,7 +8,9 @@
 - 모델 파일 SHA-256: `644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d`. 컨테이너 이미지는 `sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35`, 실행 컨테이너 ID는 `b49d856115fbff1fd4c9691f3302b3c5b6ef9b5cbe6eafb489b9d7074c8e1d47`이다.
 - 로컬 런타임은 CPU 2개, 메모리 4 GiB, 컨텍스트 4096, 스레드 2, 병렬 슬롯 1이었다. 요청은 max tokens 320, temperature 0, repeat penalty 1.05, seed 0, timeout 180초로 고정했다. 관찰·불확실 사건 19건을 정해진 순서대로 한 번씩 호출했고 재시도하지 않았다. 미발생 사건 3건은 호출하지 않았다.
 - [공개 실행 저널](../../evals/structured_nlu/data/ai_heldout/as-safety-atomic-edge-v1-development-journal.v1.jsonl)의 SHA-256은 `fb78c0614797c45dc0fc17ec70a60c34a003ee80b72e6f0d08b5ad17c0473668`이다. 저널에는 원문이나 모델 응답을 넣지 않았다. 원시 응답은 저장소 밖에 보관했다. 독립 검증기는 저널 순서, 원시 응답 해시, 원문 인용 위치, 계약 및 집계를 재검증했다.
-- 실행기·검증기 테스트 17개와 Ruff를 통과했고, 실모델 실행 전에 독립 코드 검토에서 blocking finding이 없었다. 실행 후 Docker 컨테이너와 Docker Desktop을 종료했다.
+- 실모델 실행 당시 실행기·검증기 테스트 17개와 Ruff를 통과했고, 실행 전 독립 코드 검토에서 blocking finding이 없었다. 실행 후 Docker 컨테이너와 Docker Desktop을 종료했다.
+- PR 리뷰 후 실행기와 검증기를 보강했다. 원본 프로토콜·저널·비공개 응답은 수정하지 않았으며, 보강한 검증기(SHA-256 `0d436107afa65c4a65cfd042557ab21be47f521c5adacfd5b97f9fc519298c4f`)로 **기존 원시 응답만 다시 검증**했다. 모델 재호출 없이 아래 집계가 유지됨을 확인했다. 보강된 실행기 코드는 원래 고정 커밋과 다르므로 원본 프로토콜의 재실행 코드로 취급하지 않는다. 리뷰 후 관련 테스트 25개와 Ruff를 통과했다.
+- 원본 저널의 `request_latency_ms`에는 응답 파일 저장 시간이 포함될 수 있다. 리뷰 후 실행기에서는 요청 호출 구간만 측정하도록 고쳤지만, **원본 지연 시간 값은 재측정하지 않았다**. 따라서 이 저널의 지연 시간을 순수 모델 응답 시간으로 인용하지 않는다.
 
 ## E→B 결과
 
