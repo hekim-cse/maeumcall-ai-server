@@ -50,6 +50,7 @@ IMAGE = "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35
 MODEL_SHA = "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d"
 ENDPOINT = "http://127.0.0.1:18081/v1/chat/completions"
 MODEL_ID = "/models/kanana.gguf"
+CONTAINER_NAME = "as-safety-atomic-edge-v1"
 RUNTIME = {
     "host_port": 18081,
     "cpu_count": 2,
@@ -91,6 +92,7 @@ PROTOCOL_FIELDS = {
     "source_manifest",
     "model_sha256",
     "server_image_digest",
+    "container_name",
     "endpoint",
     "model_id",
     "server_args",
@@ -143,6 +145,7 @@ def _expected_protocol() -> dict:
         "skip_order": list(SKIP_ORDER),
         "model_sha256": MODEL_SHA,
         "server_image_digest": IMAGE,
+        "container_name": CONTAINER_NAME,
         "endpoint": ENDPOINT,
         "model_id": MODEL_ID,
         "server_args": list(SERVER_ARGS),
