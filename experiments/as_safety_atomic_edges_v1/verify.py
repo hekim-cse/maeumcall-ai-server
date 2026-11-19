@@ -153,7 +153,10 @@ def _expected_protocol() -> dict:
         "request_policy": REQUEST_POLICY,
         "retry_policy": "no_retry_manual_audit_on_interruption",
         "private_output": "outside_repository_mode_0700_files_0600",
-        "score_scope": "event_owner_only; no B_to_A scoring; no route calculation",
+        "score_scope": (
+            "event_owner_only; reviewed_current_label_for_failure_stratification_only; "
+            "no B_to_A scoring; no route calculation"
+        ),
     }
 
 
@@ -254,7 +257,7 @@ def _contains(outer: dict, inner: dict) -> bool:
 
 
 def load_scoring_cases(path: Path) -> list[dict]:
-    """Load E→B gold only; never inspect expected B→A relations or routes."""
+    """Load E→B gold plus a current-risk stratum; never score B→A or routes."""
     payload = _json(path.read_text(encoding="utf-8"))
     if type(payload) is not dict or set(payload) != {
         "kind",
@@ -543,7 +546,7 @@ def verify_result(
     unresolved_exact = 0
     kind_exact = 0
     evidence_exact = 0
-    current_risk_misses = []
+    current_product_risk_extraction_failures = []
     resolved_evidence_denominator = 0
     resolved_evidence_exact = 0
 
@@ -609,6 +612,7 @@ def verify_result(
                 resolved_evidence_denominator += 1
                 resolved_evidence_exact += exact_evidence
 
+        # This reviewed label only selects the requested E→B failure slice.
         if event["is_current_product_risk"]:
             triple_exact = (
                 decision is not None
@@ -641,7 +645,7 @@ def verify_result(
                     expected_evidence = label["event_subject_evidence_span"]
                     if actual_evidence != expected_evidence:
                         reasons.append("event_subject_evidence_mismatch")
-                current_risk_misses.append(
+                current_product_risk_extraction_failures.append(
                     {"case_id": case_id, "event_index": event_index, "reasons": reasons}
                 )
 
@@ -670,7 +674,10 @@ def verify_result(
             "matched": resolved_evidence_exact,
             "denominator": resolved_evidence_denominator,
         },
-        "current_product_E_to_B_misses": current_risk_misses,
+        "current_product_risk_E_to_B_extraction_failures": (
+            current_product_risk_extraction_failures
+        ),
+        "current_product_risk_stratification": ("reviewed current label only; no B→A model score"),
         "B_to_A_evaluated": False,
         "final_safety_route_evaluated": False,
         "official_accuracy_or_improvement_claim": False,

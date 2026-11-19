@@ -173,7 +173,10 @@ def _expected_protocol() -> dict:
         "request_policy": REQUEST_POLICY,
         "retry_policy": RETRY_POLICY,
         "private_output": PRIVATE_OUTPUT,
-        "score_scope": "event_owner_only; no B_to_A scoring; no route calculation",
+        "score_scope": (
+            "event_owner_only; reviewed_current_label_for_failure_stratification_only; "
+            "no B_to_A scoring; no route calculation"
+        ),
     }
 
 
