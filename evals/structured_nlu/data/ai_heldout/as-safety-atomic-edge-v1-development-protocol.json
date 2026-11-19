@@ -1,0 +1,112 @@
+{
+  "kind": "as_safety_atomic_edge_v1_development_v1",
+  "claim_scope": "already_exposed_ai_authored_user_reviewed_es_development_diagnostic_only",
+  "case_order": [
+    "ES01",
+    "ES02",
+    "ES03",
+    "ES04",
+    "ES05",
+    "ES06",
+    "ES07",
+    "ES08",
+    "ES09",
+    "ES10",
+    "ES11",
+    "ES12",
+    "ES13",
+    "ES14",
+    "ES15",
+    "ES16",
+    "ES17",
+    "ES18",
+    "ES19",
+    "ES20"
+  ],
+  "call_order": [
+    "ES01:1",
+    "ES02:1",
+    "ES03:1",
+    "ES04:1",
+    "ES05:1",
+    "ES06:1",
+    "ES06:2",
+    "ES07:1",
+    "ES08:1",
+    "ES09:1",
+    "ES10:1",
+    "ES11:1",
+    "ES12:1",
+    "ES13:1",
+    "ES14:1",
+    "ES15:1",
+    "ES16:1",
+    "ES17:1",
+    "ES18:1"
+  ],
+  "skip_order": [
+    "ES15:2",
+    "ES19:1",
+    "ES20:1"
+  ],
+  "frozen_code_commit": "439bed72196973697347d8012dd4982085c0fb9b",
+  "input_hashes": {
+    "dataset": "49e4e960d901c037c7d10de6899aaeade3c71809060772571f0c8f58409d52f7",
+    "utterance_review": "399a4f2d8739ab4899adeba9a62cc1f388fcd3802ef7a5147350c2de55b1d8bb",
+    "field_review": "fc572a55337143bf15fb2a26d78009812b06404c0de7f8a9a3f0201857adb558",
+    "method": "33b5119999be170e4d0bcd7053ff3aba18c3c4c4ec2d6fe3c2359f5ad31e369d",
+    "edge_review": "6ce6f6060a99357fb5b79825c1189dab57857b367b8ef99a05d1ac5c45b59fea"
+  },
+  "source_manifest": {
+    "experiments/as_safety_atomic_edges_v1/event_owner.py": "9b7cdb854f64c1768c05e9b9e95cd2b786cef2a097db854bef6f3acd583bda3e",
+    "experiments/as_safety_atomic_edges_v1/run.py": "a4f06a9d46fbd029da4b560c2d4c32f5817e0b83f0e5f385e943aaffd0420e2c",
+    "experiments/as_safety_atomic_edges_v1/verify.py": "a7178d6c031334b83f1ff7fc5911525aaf0ec17e6e3cbb492851e9a6b385b38e",
+    "experiments/as_safety_v2/evidence_graph.py": "31c957cda14e0474445bd864d7d40f7790fb7f13924361483e3fb7eb91efe46b",
+    "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
+    "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
+    "experiments/as_safety_v2/quotes.py": "580d7816523c40cdda89850afde042bf5f29a28805e984a1cac643ed0a2a2f88",
+    "experiments/as_safety_v2/transport.py": "ccbaab8dae80b78275c6b1af29ce16c5dd3d88933a3db41c6f3b99717d1c8384",
+    "experiments/as_safety_v4/cases.py": "02e0c686c3bddb7593364067916fb6c49b6ca44d5420b85fd810a4053436a4aa",
+    "experiments/as_safety_v4/contract.py": "b7039e6a0562ddb808acf596ab575fc617feb3a8f467dd53e0cd5e44db153613",
+    "experiments/as_safety_v4/run.py": "5ff01016ced5c1fe1028e81cc1533f224fcb7abca6e84e0ba56a4f14e89ac9cb"
+  },
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
+  "model_id": "/models/kanana.gguf",
+  "server_args": [
+    "-m",
+    "/models/kanana.gguf",
+    "-c",
+    "4096",
+    "-t",
+    "2",
+    "-np",
+    "1",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8080"
+  ],
+  "local_runtime": {
+    "host_port": 18081,
+    "cpu_count": 2,
+    "memory_bytes": 4294967296,
+    "context_tokens": 4096,
+    "threads": 2,
+    "parallel_slots": 1
+  },
+  "request_policy": {
+    "max_tokens": 320,
+    "temperature": 0,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "<|eot_id|>"
+    ],
+    "timeout_seconds": 180,
+    "seed": 0
+  },
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "private_output": "outside_repository_mode_0700_files_0600",
+  "score_scope": "event_owner_only; no B_to_A scoring; no route calculation"
+}
