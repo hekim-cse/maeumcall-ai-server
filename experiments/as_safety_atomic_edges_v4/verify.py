@@ -96,6 +96,15 @@ def _digest_file(path: Path) -> str:
     return hasher.hexdigest()
 
 
+# Bind the reported verifier identity to the module loaded for this process.
+LOADED_VERIFIER_SHA256 = _digest_file(Path(__file__))
+
+
+def _check_loaded_verifier() -> None:
+    if _digest_file(Path(__file__)) != LOADED_VERIFIER_SHA256:
+        raise VerificationError("verifier source changed during replay")
+
+
 def _git(*args: str) -> bytes:
     return subprocess.run(("git", *args), cwd=ROOT, check=True, capture_output=True).stdout
 
@@ -416,6 +425,7 @@ def verify_result(
     reference_journal_path: Path,
     reference_private_dir: Path,
 ) -> dict:
+    _check_loaded_verifier()
     if (
         _digest_file(reference_protocol_path) != REFERENCE_PROTOCOL_SHA256
         or _digest_file(reference_journal_path) != REFERENCE_JOURNAL_SHA256
@@ -578,10 +588,11 @@ def verify_result(
                 )
             per_case.append(case_result)
         summary[condition] = metrics
+    _check_loaded_verifier()
     return {
         "claim_scope": protocol["claim_scope"],
         "protocol_sha256": protocol_sha,
-        "replay_verifier_sha256": _digest_file(Path(__file__)),
+        "replay_verifier_sha256": LOADED_VERIFIER_SHA256,
         "summary": summary,
         "historical_baseline_reproduced": baseline_reproduced,
         "historical_baseline_all_reproduced": all(baseline_reproduced.values()),

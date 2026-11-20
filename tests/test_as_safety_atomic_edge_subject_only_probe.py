@@ -1,7 +1,9 @@
 """Offline checks for the frozen ES subject-only development probe."""
 
 import argparse
+import hashlib
 import json
+from pathlib import Path
 
 import pytest
 
@@ -10,6 +12,19 @@ from experiments.as_safety_atomic_edges_v3 import run as reference
 from experiments.as_safety_atomic_edges_v4 import run as probe
 from experiments.as_safety_atomic_edges_v4 import verify
 from experiments.as_safety_v2.transport import Completion, TransportError
+
+EXPECTED_ORDER = (
+    ("ES01", "baseline"),
+    ("ES01", "variant"),
+    ("ES03", "variant"),
+    ("ES03", "baseline"),
+    ("ES09", "baseline"),
+    ("ES09", "variant"),
+    ("ES17", "variant"),
+    ("ES17", "baseline"),
+    ("ES18", "baseline"),
+    ("ES18", "variant"),
+)
 
 
 def _inputs():
@@ -71,6 +86,10 @@ def test_independent_request_rebuild_matches_runner_without_importing_candidate(
         ('{"subject_span":null,"event_subject_kind":"subject"}', "unresolved spans inconsistent"),
         ('{"subject_span":null,"event_subject_kind":"unknown"}', "event subject kind invalid"),
         (
+            '{"subject_span":{"clause_index":1,"quote":" "},"event_subject_kind":"subject"}',
+            "quote blank or invalid",
+        ),
+        (
             '{"subject_span":null,"event_subject_kind":"unresolved","extra":1}',
             "output fields differ",
         ),
@@ -124,10 +143,14 @@ def test_runner_keeps_order_after_first_timeout_and_never_retries(tmp_path, monk
     )
     monkeypatch.setattr(probe.v4, "verify_container", lambda name, model_path: None)
     monkeypatch.setattr(probe, "_container_identity", lambda name: ("same-id", "same-start"))
+    monkeypatch.setattr(probe, "_verify_local_docker_endpoint", lambda: None)
     calls = []
 
     def fake_completion(messages, schema, *, condition, policy, endpoint, model_id):
-        calls.append((condition, tuple(schema["required"]), messages))
+        outbound_sha = hashlib.sha256(
+            probe.request_bytes(messages, schema, policy, condition)
+        ).hexdigest()
+        calls.append((condition, tuple(schema["required"]), messages, outbound_sha))
         if len(calls) == 1:
             raise TransportError("timeout")
         content = (
@@ -156,8 +179,13 @@ def test_runner_keeps_order_after_first_timeout_and_never_retries(tmp_path, monk
     rows = [json.loads(line) for line in output.read_text().splitlines()]
     assert len(calls) == 10
     assert len(rows) == 11
-    assert [(r["case_id"], r["condition"]) for r in rows[1:]] == list(probe.ORDER)
+    assert probe.ORDER == EXPECTED_ORDER
+    assert [(r["case_id"], r["condition"]) for r in rows[1:]] == list(EXPECTED_ORDER)
     assert [r["condition"] for r in rows[1:]] == [call[0] for call in calls]
+    assert [call[3] for call in calls] == [
+        protocol["request_sha256_by_call"][f"{case_id}:{condition}"]
+        for case_id, condition in EXPECTED_ORDER
+    ]
     assert calls[0][0] == "baseline" and calls[1][0] == "variant"
     assert set(calls[0][1]) == {
         "subject_span",
@@ -169,6 +197,81 @@ def test_runner_keeps_order_after_first_timeout_and_never_retries(tmp_path, monk
     assert rows[1]["raw_sha256"] is None
     assert private.stat().st_mode & 0o777 == 0o700
     assert (private / "ES01-variant.json.txt").stat().st_mode & 0o777 == 0o600
+
+
+@pytest.mark.parametrize("host", ["tcp://127.0.0.1:2375", "ssh://example.invalid"])
+def test_runner_rejects_nonlocal_docker_host_before_container_inspection(monkeypatch, host):
+    monkeypatch.setenv("DOCKER_HOST", host)
+    with pytest.raises(ValueError, match="local Unix socket"):
+        probe._verify_local_docker_endpoint()
+
+
+def test_runner_rejects_remote_docker_context(monkeypatch):
+    monkeypatch.delenv("DOCKER_HOST", raising=False)
+
+    def fake_run(command, **kwargs):
+        class Result:
+            stdout = "desktop-linux\n" if command[-1] == "show" else "tcp://remote:2375\n"
+
+        return Result()
+
+    monkeypatch.setattr(probe.subprocess, "run", fake_run)
+    with pytest.raises(ValueError, match="context must use a local Unix socket"):
+        probe._verify_local_docker_endpoint()
+
+
+def test_runner_rejects_missing_journal_parent_before_private_dir(tmp_path):
+    private = tmp_path / "private"
+    with pytest.raises(ValueError, match="journal parent directory"):
+        probe.run(
+            argparse.Namespace(
+                output=tmp_path / "missing" / "journal.jsonl",
+                private_dir=private,
+                protocol=tmp_path / "protocol.json",
+                model_path=tmp_path / "model.gguf",
+                container_name=probe.CONTAINER_NAME,
+            )
+        )
+    assert not private.exists()
+
+
+def test_failed_journal_creation_removes_new_empty_private_dir(tmp_path, monkeypatch):
+    verified = _inputs()
+    protocol = {**probe._identity(), "request_sha256_by_call": probe._request_hashes(verified)}
+    monkeypatch.setattr(
+        probe, "load_protocol", lambda protocol_path, model_path: (protocol, "frozen-sha", verified)
+    )
+    monkeypatch.setattr(probe, "_verify_local_docker_endpoint", lambda: None)
+    monkeypatch.setattr(probe.v4, "verify_container", lambda name, model_path: None)
+    monkeypatch.setattr(probe, "_container_identity", lambda name: ("same-id", "same-start"))
+    output = tmp_path / "journal.jsonl"
+    output.symlink_to(tmp_path / "missing-target")
+    private = tmp_path / "private"
+    with pytest.raises(FileExistsError):
+        probe.run(
+            argparse.Namespace(
+                output=output,
+                private_dir=private,
+                protocol=tmp_path / "protocol.json",
+                model_path=tmp_path / "model.gguf",
+                container_name=probe.CONTAINER_NAME,
+            )
+        )
+    assert not private.exists()
+    assert output.is_symlink()
+
+
+def test_verifier_rejects_changed_on_disk_source(monkeypatch):
+    original = verify._digest_file
+
+    def changed(path: Path):
+        if path == Path(verify.__file__):
+            return "0" * 64
+        return original(path)
+
+    monkeypatch.setattr(verify, "_digest_file", changed)
+    with pytest.raises(verify.VerificationError, match="verifier source changed"):
+        verify._check_loaded_verifier()
 
 
 def test_prepare_rejects_outside_protocol_path_before_creating_file(tmp_path):

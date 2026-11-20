@@ -114,6 +114,30 @@ def _container_identity(name: str) -> tuple[str, str]:
     return container_id, started_at
 
 
+def _verify_local_docker_endpoint() -> None:
+    """Require the inspected container to run on this host's Unix Docker socket."""
+    override = os.environ.get("DOCKER_HOST")
+    if override is not None and not override.startswith("unix:///"):
+        raise ValueError("Docker host must use a local Unix socket")
+    context = subprocess.run(
+        ("docker", "context", "show"), check=True, capture_output=True, text=True
+    ).stdout.strip()
+    if not context:
+        raise ValueError("Docker context is empty")
+    endpoint = subprocess.run(
+        ("docker", "context", "inspect", context, "--format", "{{.Endpoints.docker.Host}}"),
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if not endpoint.startswith("unix:///"):
+        raise ValueError("Docker context must use a local Unix socket")
+    if override is not None and override != endpoint:
+        raise ValueError("Docker host override differs from active context")
+    if not Path(endpoint.removeprefix("unix://")).is_socket():
+        raise ValueError("local Docker socket is unavailable")
+
+
 def messages(case: dict, event: dict, condition: str) -> list[dict[str, str]]:
     if condition not in {"baseline", "variant"}:
         raise ValueError("unknown condition")
@@ -379,6 +403,10 @@ def run(args: argparse.Namespace, *, completion_call=post_format_completion) -> 
         raise FileExistsError("partial or existing run requires manual audit")
     if args.output.resolve().is_relative_to(args.private_dir.resolve()):
         raise ValueError("journal must be outside private response directory")
+    if not args.output.parent.is_dir():
+        raise ValueError("journal parent directory is unavailable")
+    if not os.access(args.output.parent, os.W_OK | os.X_OK):
+        raise ValueError("journal parent directory is not writable")
     protocol, protocol_sha, verified = load_protocol(args.protocol, args.model_path)
     if args.container_name != protocol["container_name"]:
         raise ValueError("container name differs")
@@ -388,6 +416,7 @@ def run(args: argparse.Namespace, *, completion_call=post_format_completion) -> 
     ):
         raise ValueError("control event occurrence differs")
     policy = _policy(protocol)
+    _verify_local_docker_endpoint()
     initial_identity = _container_identity(args.container_name)
     v4.verify_container(args.container_name, args.model_path)
     if _container_identity(args.container_name) != initial_identity:
@@ -398,7 +427,16 @@ def run(args: argparse.Namespace, *, completion_call=post_format_completion) -> 
     args.private_dir.chmod(0o700)
     if stat.S_IMODE(args.private_dir.stat().st_mode) != 0o700:
         raise ValueError("private output permissions differ")
-    with args.output.open("x", encoding="utf-8") as stream:
+    try:
+        journal_stream = args.output.open("x", encoding="utf-8")
+    except OSError:
+        # No request was made and this run created the empty private directory.
+        try:
+            args.private_dir.rmdir()
+        except OSError:
+            pass
+        raise
+    with journal_stream as stream:
         _append(stream, {"event": "header", "protocol_sha256": protocol_sha})
         for case_id, condition in ORDER:
             case = cases[case_id]
