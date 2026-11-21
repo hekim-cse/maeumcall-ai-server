@@ -136,11 +136,13 @@ def _tokenize_request(body: bytes) -> int:
     opener = build_opener(ProxyHandler({}), _NoRedirect())
     try:
         with opener.open(request, timeout=30) as response:
-            payload = response.read(4096)
+            payload = response.read(4097)
             if response.status != 200:
                 raise ValueError("tokenizer endpoint unavailable")
     except (OSError, ValueError, TransportError) as error:
         raise ValueError("tokenizer endpoint unavailable") from error
+    if len(payload) > 4096:
+        raise ValueError("tokenizer response too large")
     try:
         parsed_response = json.loads(payload)
     except (ValueError, UnicodeDecodeError) as error:
@@ -249,6 +251,8 @@ def load_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, di
         or any(protocol.get(key) != value for key, value in expected.items())
     ):
         raise ValueError("protocol identity differs")
+    if type(protocol["request_policy"].get("timeout_seconds")) is not int:
+        raise ValueError("request timeout type differs")
     if not model_path.is_file() or v1.digest_file(model_path) != v1.MODEL_SHA:
         raise ValueError("model file digest differs")
     commit = protocol["frozen_code_commit"]

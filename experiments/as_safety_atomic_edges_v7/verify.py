@@ -165,11 +165,11 @@ def _gold_candidate_availability(cases: dict[str, dict]) -> dict[str, dict]:
         case = cases[case_id]
         _, lattice = _candidate_rows(case)
         gold = case["gold_subject_span"]
-        match = (
+        position = (
             next(
                 (
-                    item.id
-                    for item in lattice.candidates
+                    index
+                    for index, item in enumerate(lattice.candidates, 1)
                     if (item.clause_index, item.quote) == (gold["clause_index"], gold["quote"])
                 ),
                 None,
@@ -179,7 +179,12 @@ def _gold_candidate_availability(cases: dict[str, dict]) -> dict[str, dict]:
         )
         result[case_id] = {
             "candidate_count": len(lattice.candidates),
-            "gold_B_candidate_id": match,
+            "gold_B_candidate_id": lattice.candidates[position - 1].id if position else None,
+            "gold_B_display_position_index_base": 1,
+            "gold_B_display_position_by_arm": {
+                "B": position,
+                "C": len(lattice.candidates) - position + 1 if position else None,
+            },
             "gold_B_required": gold is not None,
         }
     return result
@@ -290,6 +295,8 @@ def check_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, d
         "request_sha256_by_call",
     } or any(protocol.get(key) != value for key, value in expected.items()):
         raise VerificationError("protocol identity differs")
+    if type(protocol["request_policy"].get("timeout_seconds")) is not int:
+        raise VerificationError("request timeout type differs")
     if not model_path.is_file() or _digest_file(model_path) != v1_run.MODEL_SHA:
         raise VerificationError("model file digest differs")
     commit = protocol["frozen_code_commit"]
@@ -504,6 +511,8 @@ def verify_result(
                 "arm": call[-1],
                 "contract_pass": decision is not None,
                 "contract_error_code": contract_error_code,
+                "error_code": row["error_code"],
+                "finish_reason": row["finish_reason"],
                 "valid_nonnull": bool(valid_nonnull) if decision is not None else None,
                 "source_quote_anchored": bool(valid_nonnull) if decision is not None else None,
                 "positive_B_exact": B_exact if case_id == "PC01" and decision is not None else None,

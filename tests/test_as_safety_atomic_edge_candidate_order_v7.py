@@ -43,6 +43,10 @@ def _response(case_id: str, mode: str = "correct") -> str:
             kind = "subject"
         elif mode == "null":
             span, kind = None, "unresolved"
+        elif mode == "illegal_kind":
+            kind = "not_an_allowed_kind"
+        elif mode == "whitespace_quote":
+            span = {"clause_index": 2, "quote": " "}
     else:
         span, kind = None, "unresolved"
         if mode == "false_nonnull":
@@ -114,6 +118,57 @@ def test_tokenizer_unavailable_fails_closed(monkeypatch):
     monkeypatch.setattr(probe, "build_opener", lambda *handlers: OfflineOpener())
     with pytest.raises(ValueError, match="tokenizer endpoint unavailable"):
         probe._tokenize_request(b"{}")
+
+
+def test_tokenizer_rejects_oversized_response(monkeypatch):
+    class OversizedResponse:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, length):
+            assert length == 4097
+            return b"x" * length
+
+    class OversizedOpener:
+        def open(self, *args, **kwargs):
+            return OversizedResponse()
+
+    monkeypatch.setattr(probe, "build_opener", lambda *handlers: OversizedOpener())
+    with pytest.raises(ValueError, match="tokenizer response too large"):
+        probe._tokenize_request(b"{}")
+
+
+def test_gold_value_perturbation_cannot_change_outgoing_requests():
+    cases = _cases()
+    changed = json.loads(json.dumps(cases, ensure_ascii=False))
+    changed["PC01"]["gold_subject_span"] = {"clause_index": 1, "quote": "선풍기"}
+    changed["PC01"]["gold_kind"] = "subject"
+    policy = probe.v5._policy({"request_policy": v1.REQUEST_POLICY})
+    for arm in "ABC":
+        assert probe.messages(changed["PC01"], arm) == probe.messages(cases["PC01"], arm)
+        assert probe.request_sha(changed["PC01"], arm, policy) == probe.request_sha(
+            cases["PC01"], arm, policy
+        )
+    assert probe._candidate_manifest(changed) == probe._candidate_manifest(cases)
+
+
+def test_protocol_timeout_requires_exact_integer_before_replay(tmp_path):
+    protocol = _protocol()
+    protocol["request_policy"] = dict(protocol["request_policy"])
+    protocol["request_policy"]["timeout_seconds"] = 180.0
+    protocol["frozen_code_commit"] = "0" * 40
+    protocol["input_hashes"] = {}
+    path = tmp_path / "protocol.json"
+    path.write_text(json.dumps(protocol))
+    with pytest.raises(ValueError, match="request timeout type differs"):
+        probe.load_protocol(path, tmp_path / "model.gguf")
+    with pytest.raises(verify.VerificationError, match="request timeout type differs"):
+        verify.check_protocol(path, tmp_path / "model.gguf")
 
 
 def test_tokenizer_disables_proxy_and_rejects_redirect(monkeypatch):
@@ -270,8 +325,20 @@ def test_replay_separates_positive_and_negative_gate(tmp_path, monkeypatch):
     assert result["summary"]["negative_valid_hold"] == 3
     assert result["candidate_gate_pass"] is True
     assert result["candidate_availability"] == {
-        "PC01": {"candidate_count": 22, "gold_B_candidate_id": "P014", "gold_B_required": True},
-        "NC01": {"candidate_count": 35, "gold_B_candidate_id": None, "gold_B_required": False},
+        "PC01": {
+            "candidate_count": 22,
+            "gold_B_candidate_id": "P014",
+            "gold_B_display_position_index_base": 1,
+            "gold_B_display_position_by_arm": {"B": 14, "C": 9},
+            "gold_B_required": True,
+        },
+        "NC01": {
+            "candidate_count": 35,
+            "gold_B_candidate_id": None,
+            "gold_B_display_position_index_base": 1,
+            "gold_B_display_position_by_arm": {"B": None, "C": None},
+            "gold_B_required": False,
+        },
     }
     assert result["gold_in_requests"] is False
     assert result["official_accuracy_evaluated"] is False
@@ -284,13 +351,21 @@ def test_replay_separates_positive_and_negative_gate(tmp_path, monkeypatch):
         ("PC01-C", "null", "positive_full_match"),
         ("NC01-B", "false_nonnull", "negative_valid_hold"),
         ("NC01-C", "extra_key", "negative_valid_hold"),
+        ("PC01-B", "illegal_kind", "positive_full_match"),
+        ("PC01-C", "whitespace_quote", "positive_full_match"),
     ],
 )
 def test_candidate_gate_rejects_wrong_or_invalid_answer(tmp_path, monkeypatch, call, mode, field):
     result = _replay(tmp_path, monkeypatch, {call: mode})
     assert result["candidate_gate_pass"] is False
     row = next(item for item in result["per_call"] if item["call"] == call)
-    assert row[field] is False if mode != "extra_key" else row[field] is None
+    assert row[field] is (
+        None if mode in {"extra_key", "illegal_kind", "whitespace_quote"} else False
+    )
+    if mode == "illegal_kind":
+        assert row["contract_error_code"] == "subject_kind_invalid"
+    elif mode == "whitespace_quote":
+        assert row["contract_error_code"] == "quote_blank_or_invalid"
 
 
 def test_timeout_is_not_scored_as_semantic_failure(tmp_path, monkeypatch):
@@ -298,6 +373,8 @@ def test_timeout_is_not_scored_as_semantic_failure(tmp_path, monkeypatch):
     assert result["summary"]["transport_or_length_errors"] == 1
     row = next(item for item in result["per_call"] if item["call"] == "PC01-B")
     assert row["positive_B_exact"] is None
+    assert row["error_code"] == "timeout"
+    assert row["finish_reason"] is None
     assert result["candidate_gate_pass"] is False
 
 
