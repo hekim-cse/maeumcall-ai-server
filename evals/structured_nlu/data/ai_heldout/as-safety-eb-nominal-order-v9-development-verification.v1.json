@@ -1,0 +1,176 @@
+{
+  "claim_scope": "full_nominal_order_controls_two_exposed_cases",
+  "protocol_sha256": "90dfe37b594e445839a26632ed1a618e1a8dc992ce66c43d1bb5d78074399bf1",
+  "journal_sha256": "37d33a6f32ebde421738a3ccdab50c7431d9db1193a0162aba4cef5c5e90b9e9",
+  "frozen_verifier_sha256": "2933eb3a32c74811a5c0a0ce130408135f707cdfc23ca3b0edc8bee8d55df22e",
+  "replay_verifier_sha256": "2933eb3a32c74811a5c0a0ce130408135f707cdfc23ca3b0edc8bee8d55df22e",
+  "summary": {
+    "calls": 6,
+    "contract_pass": 5,
+    "contract_errors": 1,
+    "transport_or_length_errors": 0,
+    "positive_B_exact": 0,
+    "positive_kind_exact": 2,
+    "positive_full_match": 0,
+    "negative_valid_hold": 2,
+    "negative_false_nonnull": 0,
+    "request_latency_ms_sum": 35915.283
+  },
+  "per_call": [
+    {
+      "call": "PC01-F",
+      "case_id": "PC01",
+      "arm": "F",
+      "contract_pass": true,
+      "contract_error_code": null,
+      "error_code": null,
+      "finish_reason": "stop",
+      "valid_nonnull": true,
+      "source_quote_anchored": true,
+      "positive_B_exact": false,
+      "kind_exact": true,
+      "positive_full_match": false,
+      "negative_valid_hold": null,
+      "negative_false_nonnull": null,
+      "valid_null": false,
+      "request_latency_ms": 12144.723,
+      "input_tokens": 686
+    },
+    {
+      "call": "PC01-N",
+      "case_id": "PC01",
+      "arm": "N",
+      "contract_pass": true,
+      "contract_error_code": null,
+      "error_code": null,
+      "finish_reason": "stop",
+      "valid_nonnull": true,
+      "source_quote_anchored": true,
+      "positive_B_exact": false,
+      "kind_exact": true,
+      "positive_full_match": false,
+      "negative_valid_hold": null,
+      "negative_false_nonnull": null,
+      "valid_null": false,
+      "request_latency_ms": 3439.762,
+      "input_tokens": 475
+    },
+    {
+      "call": "PC01-R",
+      "case_id": "PC01",
+      "arm": "R",
+      "contract_pass": true,
+      "contract_error_code": null,
+      "error_code": null,
+      "finish_reason": "stop",
+      "valid_nonnull": false,
+      "source_quote_anchored": false,
+      "positive_B_exact": false,
+      "kind_exact": false,
+      "positive_full_match": false,
+      "negative_valid_hold": null,
+      "negative_false_nonnull": null,
+      "valid_null": true,
+      "request_latency_ms": 2350.295,
+      "input_tokens": 475
+    },
+    {
+      "call": "NC01-R",
+      "case_id": "NC01",
+      "arm": "R",
+      "contract_pass": true,
+      "contract_error_code": null,
+      "error_code": null,
+      "finish_reason": "stop",
+      "valid_nonnull": false,
+      "source_quote_anchored": false,
+      "positive_B_exact": null,
+      "kind_exact": true,
+      "positive_full_match": null,
+      "negative_valid_hold": true,
+      "negative_false_nonnull": false,
+      "valid_null": true,
+      "request_latency_ms": 6452.02,
+      "input_tokens": 452
+    },
+    {
+      "call": "NC01-N",
+      "case_id": "NC01",
+      "arm": "N",
+      "contract_pass": true,
+      "contract_error_code": null,
+      "error_code": null,
+      "finish_reason": "stop",
+      "valid_nonnull": false,
+      "source_quote_anchored": false,
+      "positive_B_exact": null,
+      "kind_exact": true,
+      "positive_full_match": null,
+      "negative_valid_hold": true,
+      "negative_false_nonnull": false,
+      "valid_null": true,
+      "request_latency_ms": 1617.785,
+      "input_tokens": 452
+    },
+    {
+      "call": "NC01-F",
+      "case_id": "NC01",
+      "arm": "F",
+      "contract_pass": false,
+      "contract_error_code": "quote_not_anchored",
+      "error_code": null,
+      "finish_reason": "stop",
+      "valid_nonnull": null,
+      "source_quote_anchored": null,
+      "positive_B_exact": null,
+      "kind_exact": null,
+      "positive_full_match": null,
+      "negative_valid_hold": null,
+      "negative_false_nonnull": null,
+      "valid_null": null,
+      "request_latency_ms": 9910.698,
+      "input_tokens": 857
+    }
+  ],
+  "candidate_availability": {
+    "PC01": {
+      "candidate_count_by_arm": {
+        "F": 22,
+        "N": 7,
+        "R": 7
+      },
+      "gold_B_candidate_id": "P014",
+      "gold_B_display_position_index_base": 1,
+      "gold_B_display_position_by_arm": {
+        "F": 14,
+        "N": 5,
+        "R": 3
+      },
+      "gold_B_required": true
+    },
+    "NC01": {
+      "candidate_count_by_arm": {
+        "F": 35,
+        "N": 4,
+        "R": 4
+      },
+      "gold_B_candidate_id": null,
+      "gold_B_display_position_index_base": 1,
+      "gold_B_display_position_by_arm": {
+        "F": null,
+        "N": null,
+        "R": null
+      },
+      "gold_B_required": false
+    }
+  },
+  "candidate_gate_pass": false,
+  "full_nominal_pair_comparable_by_case": {
+    "PC01": true,
+    "NC01": false
+  },
+  "gold_in_requests": false,
+  "official_accuracy_evaluated": false,
+  "B_to_A_evaluated": false,
+  "final_safety_route_evaluated": false
+}
