@@ -12,7 +12,7 @@ from experiments.as_safety_v2.quotes import split_clauses
 
 
 def _control_message(case_id: str) -> str:
-    payload = json.loads(audit.SOURCES["PC_NC"].read_text())
+    payload = json.loads(audit.SOURCES["PC_NC"].read_text(encoding="utf-8"))
     return next(item["user_message"] for item in payload["cases"] if item["case_id"] == case_id)
 
 
@@ -113,6 +113,27 @@ def test_offline_audit_reports_source_hashes_coverage_and_strict_losses():
 def test_input_digest_mismatch_fails_closed(monkeypatch):
     monkeypatch.setitem(audit.SOURCE_SHA256, "PC_NC", "0" * 64)
     with pytest.raises(ValueError, match="development source digest differs"):
+        audit.audit()
+
+
+def test_blank_source_is_rejected():
+    with pytest.raises(ValueError):
+        audit.candidate_views(" \t\n ", Kiwi())
+
+
+def test_modified_source_json_is_rejected_even_when_valid_json(tmp_path, monkeypatch):
+    original = json.loads(audit.SOURCES["PC_NC"].read_text(encoding="utf-8"))
+    original["unexpected_field"] = "changed"
+    modified = tmp_path / "changed-cases.json"
+    modified.write_text(json.dumps(original, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setitem(audit.SOURCES, "PC_NC", modified)
+    with pytest.raises(ValueError, match="development source digest differs"):
+        audit.audit()
+
+
+def test_label_digest_mismatch_fails_closed(monkeypatch):
+    monkeypatch.setattr(audit, "LABEL_SHA256", "0" * 64)
+    with pytest.raises(ValueError, match="reviewed owner digest differs"):
         audit.audit()
 
 
