@@ -1,0 +1,828 @@
+{
+  "cases": [
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 35,
+        "nominal_chunk": 3,
+        "nominal_end": 4
+      },
+      "case_id": "NC01",
+      "gold_candidate_ids_by_filter": {
+        "baseline": null,
+        "nominal_chunk": null,
+        "nominal_end": null
+      },
+      "gold_covered_by_filter": {
+        "baseline": null,
+        "nominal_chunk": null,
+        "nominal_end": null
+      },
+      "gold_required": false,
+      "gold_span_count": 0
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 22,
+        "nominal_chunk": 5,
+        "nominal_end": 7
+      },
+      "case_id": "PC01",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P014"
+        ],
+        "nominal_chunk": [
+          "P014"
+        ],
+        "nominal_end": [
+          "P014"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 89,
+        "nominal_chunk": 10,
+        "nominal_end": 29
+      },
+      "case_id": "RE01",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P035"
+        ],
+        "nominal_chunk": [
+          "P035"
+        ],
+        "nominal_end": [
+          "P035"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 56,
+        "nominal_chunk": 21,
+        "nominal_end": 27
+      },
+      "case_id": "RE02",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P055"
+        ],
+        "nominal_chunk": [
+          "P055"
+        ],
+        "nominal_end": [
+          "P055"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 55,
+        "nominal_chunk": 13,
+        "nominal_end": 23
+      },
+      "case_id": "RE03",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P010"
+        ],
+        "nominal_chunk": [
+          "P010"
+        ],
+        "nominal_end": [
+          "P010"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 82,
+        "nominal_chunk": 5,
+        "nominal_end": 21
+      },
+      "case_id": "RE04",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P017"
+        ],
+        "nominal_chunk": [
+          "P017"
+        ],
+        "nominal_end": [
+          "P017"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 79,
+        "nominal_chunk": 10,
+        "nominal_end": 27
+      },
+      "case_id": "RE05",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P015"
+        ],
+        "nominal_chunk": [
+          "P015"
+        ],
+        "nominal_end": [
+          "P015"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 90,
+        "nominal_chunk": 11,
+        "nominal_end": 27
+      },
+      "case_id": "RE06",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P027"
+        ],
+        "nominal_chunk": [
+          "P027"
+        ],
+        "nominal_end": [
+          "P027"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 91,
+        "nominal_chunk": 11,
+        "nominal_end": 32
+      },
+      "case_id": "RE07",
+      "gold_candidate_ids_by_filter": {
+        "baseline": null,
+        "nominal_chunk": null,
+        "nominal_end": null
+      },
+      "gold_covered_by_filter": {
+        "baseline": null,
+        "nominal_chunk": null,
+        "nominal_end": null
+      },
+      "gold_required": false,
+      "gold_span_count": 0
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 56,
+        "nominal_chunk": 6,
+        "nominal_end": 12
+      },
+      "case_id": "RE08",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P008"
+        ],
+        "nominal_chunk": [
+          "P008"
+        ],
+        "nominal_end": [
+          "P008"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 1,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 59,
+        "nominal_chunk": 15,
+        "nominal_end": 29
+      },
+      "case_id": "RE09",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P027"
+        ],
+        "nominal_chunk": [],
+        "nominal_end": [
+          "P027"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 0,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 1,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 64,
+        "nominal_chunk": 12,
+        "nominal_end": 19
+      },
+      "case_id": "RE10",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P054"
+        ],
+        "nominal_chunk": [],
+        "nominal_end": [
+          "P054"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 0,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 59,
+        "nominal_chunk": 11,
+        "nominal_end": 20
+      },
+      "case_id": "RE11",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P026"
+        ],
+        "nominal_chunk": [
+          "P026"
+        ],
+        "nominal_end": [
+          "P026"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 46,
+        "nominal_chunk": 9,
+        "nominal_end": 19
+      },
+      "case_id": "V01",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P025"
+        ],
+        "nominal_chunk": [
+          "P025"
+        ],
+        "nominal_end": [
+          "P025"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 46,
+        "nominal_chunk": 9,
+        "nominal_end": 19
+      },
+      "case_id": "V02",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P025"
+        ],
+        "nominal_chunk": [
+          "P025"
+        ],
+        "nominal_end": [
+          "P025"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 56,
+        "nominal_chunk": 9,
+        "nominal_end": 18
+      },
+      "case_id": "V03",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P041"
+        ],
+        "nominal_chunk": [
+          "P041"
+        ],
+        "nominal_end": [
+          "P041"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 56,
+        "nominal_chunk": 9,
+        "nominal_end": 18
+      },
+      "case_id": "V04",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P041"
+        ],
+        "nominal_chunk": [
+          "P041"
+        ],
+        "nominal_end": [
+          "P041"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 66,
+        "nominal_chunk": 9,
+        "nominal_end": 24
+      },
+      "case_id": "V05",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P008"
+        ],
+        "nominal_chunk": [
+          "P008"
+        ],
+        "nominal_end": [
+          "P008"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 89,
+        "nominal_chunk": 10,
+        "nominal_end": 30
+      },
+      "case_id": "V06",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P036"
+        ],
+        "nominal_chunk": [
+          "P036"
+        ],
+        "nominal_end": [
+          "P036"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 39,
+        "nominal_chunk": 4,
+        "nominal_end": 12
+      },
+      "case_id": "V07",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P004"
+        ],
+        "nominal_chunk": [
+          "P004"
+        ],
+        "nominal_end": [
+          "P004"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 80,
+        "nominal_chunk": 16,
+        "nominal_end": 34
+      },
+      "case_id": "V08",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P033"
+        ],
+        "nominal_chunk": [
+          "P033"
+        ],
+        "nominal_end": [
+          "P033"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 72,
+        "nominal_chunk": 8,
+        "nominal_end": 20
+      },
+      "case_id": "V09",
+      "gold_candidate_ids_by_filter": {
+        "baseline": null,
+        "nominal_chunk": null,
+        "nominal_end": null
+      },
+      "gold_covered_by_filter": {
+        "baseline": null,
+        "nominal_chunk": null,
+        "nominal_end": null
+      },
+      "gold_required": false,
+      "gold_span_count": 0
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 58,
+        "nominal_chunk": 8,
+        "nominal_end": 16
+      },
+      "case_id": "V10",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P004"
+        ],
+        "nominal_chunk": [
+          "P004"
+        ],
+        "nominal_end": [
+          "P004"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 49,
+        "nominal_chunk": 8,
+        "nominal_end": 20
+      },
+      "case_id": "V12",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P020"
+        ],
+        "nominal_chunk": [
+          "P020"
+        ],
+        "nominal_end": [
+          "P020"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 26,
+        "nominal_chunk": 3,
+        "nominal_end": 6
+      },
+      "case_id": "V14",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P004"
+        ],
+        "nominal_chunk": [
+          "P004"
+        ],
+        "nominal_end": [
+          "P004"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    },
+    {
+      "additional_gold_loss_vs_baseline_by_filter": {
+        "baseline": 0,
+        "nominal_chunk": 0,
+        "nominal_end": 0
+      },
+      "candidate_count_by_filter": {
+        "baseline": 50,
+        "nominal_chunk": 4,
+        "nominal_end": 12
+      },
+      "case_id": "V16",
+      "gold_candidate_ids_by_filter": {
+        "baseline": [
+          "P004"
+        ],
+        "nominal_chunk": [
+          "P004"
+        ],
+        "nominal_end": [
+          "P004"
+        ]
+      },
+      "gold_covered_by_filter": {
+        "baseline": 1,
+        "nominal_chunk": 1,
+        "nominal_end": 1
+      },
+      "gold_required": true,
+      "gold_span_count": 1
+    }
+  ],
+  "kind": "as_safety_eb_boundary_v8_exposed_offline_audit",
+  "kiwipiepy_version": "0.23.2",
+  "model_called": false,
+  "owner_selection_or_abstention_evaluated": false,
+  "reviewed_owner_sha256": "785b2cab6c4cf4cc3ed545676ed27f1b39ce09c24ff0465e963f298aecb15f56",
+  "scope": "PC_NC_RE_V_exposed_development_only",
+  "source_sha256_by_group": {
+    "PC_NC": "11d76e8c047241dd8898733fd4334309095d965527878a41c222bc779849036d",
+    "RE": "b601d000ee4a8b8ffee114179099283f1d75f9226514cfd31467f99993f158cd",
+    "V": "cf07b01f1107d3fc15b232ff85692188d2a807fc425865768163f4d4fb12bf5e"
+  },
+  "summary": {
+    "additional_gold_loss_case_ids_by_filter": {
+      "baseline": [],
+      "nominal_chunk": [
+        "RE09",
+        "RE10"
+      ],
+      "nominal_end": []
+    },
+    "additional_gold_loss_vs_baseline_by_filter": {
+      "baseline": 0,
+      "nominal_chunk": 2,
+      "nominal_end": 0
+    },
+    "candidate_count_by_filter": {
+      "baseline": 1570,
+      "nominal_chunk": 239,
+      "nominal_end": 525
+    },
+    "case_count": 26,
+    "null_case_count": 3,
+    "positive_case_count": 23,
+    "positive_gold_covered_by_filter": {
+      "baseline": 23,
+      "nominal_chunk": 21,
+      "nominal_end": 23
+    },
+    "positive_gold_total": 23
+  }
+}
