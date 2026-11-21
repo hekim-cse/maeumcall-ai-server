@@ -33,6 +33,11 @@ SCOPE = "ai_authored_user_reviewed_development_controls_only"
 CASE_IDS = ("PC01", "NC01")
 ORDER = CASE_IDS
 CONTAINER_NAME = "as-safety-eb-controls-v5"
+JOURNAL = (
+    ROOT
+    / "evals/structured_nlu/data/ai_heldout/as-safety-eb-controls-v5-development-journal.v1.jsonl"
+)
+PRIVATE_DIR = Path("/private/tmp/as-safety-eb-controls-v5-raw")
 SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
 DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}\Z")
@@ -258,6 +263,10 @@ def _append(stream, row: dict) -> None:
 
 
 def run(args: argparse.Namespace, *, completion_call=v4.post_format_completion) -> None:
+    # This protocol has one canonical run. Changing CLI paths must not turn a
+    # partial or completed run into a second set of calls with the same hashes.
+    if args.output.absolute() != JOURNAL or args.private_dir.absolute() != PRIVATE_DIR:
+        raise ValueError("one-shot output paths differ")
     if args.output.exists() or args.private_dir.exists():
         raise FileExistsError("partial or existing run requires manual audit")
     if args.output.resolve().is_relative_to(args.private_dir.resolve()):

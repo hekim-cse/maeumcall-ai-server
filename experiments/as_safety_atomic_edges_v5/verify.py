@@ -27,6 +27,11 @@ SOURCE_PATHS = v4_run.SOURCE_PATHS | {
     "experiments/as_safety_atomic_edges_v5/verify.py",
     "tests/test_as_safety_atomic_edge_controls_v5.py",
 }
+POST_RUN_REPLAY_SOURCES = {
+    "experiments/as_safety_atomic_edges_v5/run.py",
+    "experiments/as_safety_atomic_edges_v5/verify.py",
+    "tests/test_as_safety_atomic_edge_controls_v5.py",
+}
 CASE_IDS = ("PC01", "NC01")
 SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
@@ -231,28 +236,26 @@ def check_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, d
             or not SHA_RE.fullmatch(expected_sha)
             or _digest(frozen) != expected_sha
             or (
-                relative
-                not in {
-                    "experiments/as_safety_atomic_edges_v5/run.py",
-                    "experiments/as_safety_atomic_edges_v5/verify.py",
-                }
-                and (ROOT / relative).read_bytes() != frozen
+                relative not in POST_RUN_REPLAY_SOURCES and (ROOT / relative).read_bytes() != frozen
             )
         ):
             raise VerificationError("source manifest differs")
     inputs = protocol["input_hashes"]
     if type(inputs) is not dict or set(inputs) != set(INPUTS):
         raise VerificationError("input manifest differs")
+    verified_inputs = {}
     for key, source in INPUTS.items():
         frozen = _frozen(commit, source.relative_to(ROOT).as_posix())
+        current = source.read_bytes()
         if (
             type(inputs[key]) is not str
             or not SHA_RE.fullmatch(inputs[key])
             or _digest(frozen) != inputs[key]
-            or source.read_bytes() != frozen
+            or current != frozen
         ):
             raise VerificationError(f"input differs: {key}")
-    cases = _source_cases(DATA.read_bytes())
+        verified_inputs[key] = current
+    cases = _source_cases(verified_inputs["control_cases"])
     hashes = protocol["request_sha256_by_call"]
     if type(hashes) is not dict or set(hashes) != set(CASE_IDS):
         raise VerificationError("request manifest differs")
@@ -265,9 +268,13 @@ def check_protocol(path: Path, model_path: Path) -> tuple[dict, str, dict[str, d
     return protocol, _digest(raw), cases
 
 
-def _journal(path: Path, protocol_sha: str, cases: dict[str, dict], protocol: dict) -> list[dict]:
+def _journal(raw: bytes, protocol_sha: str, cases: dict[str, dict], protocol: dict) -> list[dict]:
     rows = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    try:
+        lines = raw.decode("utf-8").splitlines()
+    except UnicodeDecodeError as error:
+        raise VerificationError("journal encoding differs") from error
+    for line in lines:
         if not line.strip():
             raise VerificationError("blank journal line")
         parsed = _json(line.encode("utf-8"))
@@ -350,7 +357,8 @@ def verify_result(
         or stat.S_IMODE(private_dir.stat().st_mode) != 0o700
     ):
         raise VerificationError("private directory or mode differs")
-    rows = _journal(journal_path, protocol_sha, cases, protocol)
+    journal_bytes = journal_path.read_bytes()
+    rows = _journal(journal_bytes, protocol_sha, cases, protocol)
     expected_files = {f"{row['case_id']}.json.txt" for row in rows if row["raw_sha256"] is not None}
     if {entry.name for entry in private_dir.iterdir()} != expected_files:
         raise VerificationError("unexpected private response file")
@@ -437,7 +445,7 @@ def verify_result(
                 ),
                 "valid_abstention": (
                     bool(metrics["negative_correct_abstention"])
-                    if case["case_id"] == "NC01"
+                    if case["case_id"] == "NC01" and decision is not None
                     else None
                 ),
                 "false_resolution": (
@@ -457,7 +465,7 @@ def verify_result(
     return {
         "claim_scope": protocol["claim_scope"],
         "protocol_sha256": protocol_sha,
-        "journal_sha256": _digest_file(journal_path),
+        "journal_sha256": _digest(journal_bytes),
         "frozen_verifier_sha256": protocol["source_manifest"][
             "experiments/as_safety_atomic_edges_v5/verify.py"
         ],
