@@ -1,7 +1,8 @@
 """Compare source-only morphological span filters on exposed development data.
 
 This measures candidate availability, not owner selection, abstention, or
-model accuracy. Reviewed spans are loaded only after all candidates exist.
+model accuracy. Only source text is passed to candidate generation; reviewed
+spans are used to score the generated candidates.
 """
 
 from __future__ import annotations

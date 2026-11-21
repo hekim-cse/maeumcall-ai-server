@@ -4,7 +4,7 @@
 
 ## 재현 범위
 
-`.venv/bin/python -m experiments.as_safety_atomic_edges_v8.boundary_audit`는 입력 4개 파일의 SHA-256과 `kiwipiepy==0.23.2`를 확인하고 [사례별 결과 JSON](../../evals/structured_nlu/data/ai_heldout/as-safety-eb-boundary-v8-offline-result.v1.json)을 출력한다. 저장된 JSON의 SHA-256은 `3370ef8ebb6da5a5f8d0c6722cc4e6c20bf5f5580d51a36c55ca846a63df124b`이며 같은 명령의 재출력과 일치했다. 원문 34건의 후보를 검수 정답을 읽기 전에 생성한 뒤, 검수 주체 라벨이 있는 **26건**만 아래 분모에 포함했다. 나머지 8건의 정답 포함률은 계산하지 않았다. TX·GB는 감사 코드의 입력·집계에 포함하지 않았다.
+`.venv/bin/python -m experiments.as_safety_atomic_edges_v8.boundary_audit`는 입력 4개 파일의 SHA-256과 `kiwipiepy==0.23.2`를 확인하고 [사례별 결과 JSON](../../evals/structured_nlu/data/ai_heldout/as-safety-eb-boundary-v8-offline-result.v1.json)을 출력한다. 저장된 JSON의 SHA-256은 `3370ef8ebb6da5a5f8d0c6722cc4e6c20bf5f5580d51a36c55ca846a63df124b`이며 같은 명령의 재출력과 일치했다. 원문 34건의 문자열만 후보 생성 함수에 전달하고, 생성 뒤 검수 주체 라벨이 있는 **26건**의 포함 여부를 채점했다. PC/NC 원문과 정답은 같은 파일에 들어 있어 파일 바이트 자체는 후보 생성 전에 읽는다. 나머지 8건의 정답 포함률은 계산하지 않았다. TX·GB는 감사 코드의 입력·집계에 포함하지 않았다.
 
 자료 탐색 중 `as-safety-source-boundary-reviewed.v1.json`의 첫 110행을 실수로 열람했다. GB01–GB06 일부 문장이 이 작업 세션에 노출됐으므로 **GB 전체가 이 세션에서 완전 미노출이었다고 주장하지 않는다.** 해당 내용은 후보 조건 설계·코드·결과 집계에 사용하지 않았고, 앞으로 GB를 새 미노출 평가로 취급하지 않는다. TX는 열람하지 않았다.
 
