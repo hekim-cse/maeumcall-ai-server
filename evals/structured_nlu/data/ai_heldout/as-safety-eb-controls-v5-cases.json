@@ -1,0 +1,37 @@
+{
+  "kind": "as_safety_eb_controls_v5_cases_v1",
+  "provenance": "ai_authored_development_control",
+  "review_status": "user_approved_for_development_probe",
+  "review_date": "2026-11-21",
+  "cases": [
+    {
+      "case_id": "PC01",
+      "user_message": "선풍기를 접수하려고 합니다. 선풍기 모터에서 연기가 났습니다.",
+      "product_index": 1,
+      "target_mention": "선풍기",
+      "event_span": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "gold_subject_span": {
+        "clause_index": 2,
+        "quote": "선풍기 모터"
+      },
+      "gold_kind": "location"
+    },
+    {
+      "case_id": "NC01",
+      "user_message": "선풍기를 접수하려고 합니다. 타는 냄새가 납니다. 냄새가 어디서 나는지는 확인하지 못했습니다.",
+      "product_index": 1,
+      "target_mention": "선풍기",
+      "event_span": {
+        "clause_index": 2,
+        "quote": "타는 냄새가 납니다"
+      },
+      "occurrence": "observed",
+      "gold_subject_span": null,
+      "gold_kind": "unresolved"
+    }
+  ]
+}
