@@ -1,0 +1,3 @@
+{"event": "header", "protocol_sha256": "5a1c111f44e8bdf276d7d9237537aff2e5fe11db4c150d67855dd54405dad1e8"}
+{"event": "result", "arm": "F1", "request_sha256": "2f2410f963fc463aea8973cd909e98d8945545b45d4fed4aa7613f340d383dc8", "finish_reason": "stop", "error_code": null, "http_status": null, "raw_sha256": "07325d92cd72a34c5eb56cc3347ab5f6540f016965f790ae2d89749027dba172", "raw_bytes": 106, "request_latency_ms": 6665.58}
+{"event": "result", "arm": "F2", "request_sha256": "61a1f6e227d07c96dbb521c3876b1c6a082a2ce2b0869fada3cf498a229e1716", "finish_reason": "stop", "error_code": null, "http_status": null, "raw_sha256": "a588460513d9144d1ee1eb5cd4f43d56ba9671e7e357c5742274972fd95805f6", "raw_bytes": 148, "request_latency_ms": 2859.095}
