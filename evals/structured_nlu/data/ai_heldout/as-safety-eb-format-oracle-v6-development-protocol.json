@@ -1,0 +1,95 @@
+{
+  "call_order": [
+    "F1",
+    "F2"
+  ],
+  "case_id": "PC01",
+  "claim_scope": "answer_given_format_oracle_only_no_extraction_accuracy",
+  "container_name": "as-safety-eb-format-oracle-v6",
+  "endpoint": "http://127.0.0.1:18081/v1/chat/completions",
+  "frozen_code_commit": "355b89c13d0c7a07311e9b84b0b29476a6f6bfe2",
+  "input_hashes": {
+    "method_v6": "54bd01bf4e8e79d759a9ed19cd824758b2d252bcfd8f6163e720033b56f2870a",
+    "reference_v5_journal": "949b528284b04ee8fbccb9053f4ad428d33b3aaa190d9954d0ab1ecc5cc4dab8",
+    "reference_v5_protocol": "9c2733c2faf66051519442e2c6590c3854234481f81330e8fe939606cd1ae95e",
+    "reviewed_v5_cases": "11d76e8c047241dd8898733fd4334309095d965527878a41c222bc779849036d"
+  },
+  "kind": "as_safety_eb_format_oracle_v6_development_v1",
+  "local_runtime": {
+    "context_tokens": 4096,
+    "cpu_count": 2,
+    "host_port": 18081,
+    "memory_bytes": 4294967296,
+    "parallel_slots": 1,
+    "threads": 2
+  },
+  "model_id": "/models/kanana.gguf",
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "oracle_labels_in_both_requests": true,
+  "private_output": "outside_repository_mode_0700_files_0600",
+  "reference_v5_journal_sha256": "949b528284b04ee8fbccb9053f4ad428d33b3aaa190d9954d0ab1ecc5cc4dab8",
+  "reference_v5_protocol_sha256": "9c2733c2faf66051519442e2c6590c3854234481f81330e8fe939606cd1ae95e",
+  "request_policy": {
+    "max_tokens": 320,
+    "repeat_penalty": 1.05,
+    "seed": 0,
+    "stop": [
+      "<|eot_id|>"
+    ],
+    "temperature": 0,
+    "timeout_seconds": 180
+  },
+  "request_sha256_by_call": {
+    "F1": "2f2410f963fc463aea8973cd909e98d8945545b45d4fed4aa7613f340d383dc8",
+    "F2": "61a1f6e227d07c96dbb521c3876b1c6a082a2ce2b0869fada3cf498a229e1716"
+  },
+  "response_format": "v4_subject_only_two_field_schema_constrained_json",
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "score_scope": "format_oracle_only; no extraction_accuracy; no B_to_A; no safety_route",
+  "server_args": [
+    "-m",
+    "/models/kanana.gguf",
+    "-c",
+    "4096",
+    "-t",
+    "2",
+    "-np",
+    "1",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8080"
+  ],
+  "server_image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "source_manifest": {
+    "experiments/as_safety_atomic_edges_v1/event_owner.py": "9b7cdb854f64c1768c05e9b9e95cd2b786cef2a097db854bef6f3acd583bda3e",
+    "experiments/as_safety_atomic_edges_v1/run.py": "f38f60808ebb3b1bdaed7381446ad43326bbe0970113f0dbc157ea2afb1ab764",
+    "experiments/as_safety_atomic_edges_v1/verify.py": "0d436107afa65c4a65cfd042557ab21be47f521c5adacfd5b97f9fc519298c4f",
+    "experiments/as_safety_atomic_edges_v2/__init__.py": "055acdd26d8f85c0c450e2703983143dd3367488b7d6c881e9202138a987d80c",
+    "experiments/as_safety_atomic_edges_v2/run.py": "d278acc40fb19483b3cb3adc06eacb4139cc9936143e979d9630933447c25074",
+    "experiments/as_safety_atomic_edges_v2/verify.py": "bb0be4b598711de5ac0d28d9153243f20a5015978e1dc6774b419d396045c03b",
+    "experiments/as_safety_atomic_edges_v3/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/as_safety_atomic_edges_v3/run.py": "7f7c44dbc971067900ec9e8b47243aac4cf34624b541f4c77908a70d4cfd48aa",
+    "experiments/as_safety_atomic_edges_v3/verify.py": "7c3d8e74a2c4751a0bfa5a9820823fe79916e153ecbbadd9a60880a9dd46b67d",
+    "experiments/as_safety_atomic_edges_v4/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/as_safety_atomic_edges_v4/run.py": "f9d31d6041fdc00f71bcca452c4793bd63d4cab8be740e84ec043d8b80fb497b",
+    "experiments/as_safety_atomic_edges_v4/verify.py": "473f9867e170a5bef0eda79a79abedb618cd821eab032a188a1e615b57219b31",
+    "experiments/as_safety_atomic_edges_v5/__init__.py": "4e01c98bd35df6bdd58354be9aebbcd12c21910b68bfa1569c4b2b8ed318eea1",
+    "experiments/as_safety_atomic_edges_v5/run.py": "a953810fa63ee76ab3f2c27ce66c7abdfb7b94cd620482744c08bce91a325b55",
+    "experiments/as_safety_atomic_edges_v5/verify.py": "23c876b3437a43a27133fa2f8b1e91ac818ffcd0195b329f0dec6554e765155b",
+    "experiments/as_safety_atomic_edges_v6/__init__.py": "9f57623c03cfa08bd5daa2029fdfa1cc7b60e3918bb02f09bd7f8f6d412e6314",
+    "experiments/as_safety_atomic_edges_v6/run.py": "ded1d2a6d781a668554daeabd28d35403cbb16054e6896372ed4c2bc73538929",
+    "experiments/as_safety_atomic_edges_v6/verify.py": "9019598580cf38e043b5af7b7a1423b259660b0287db6aa5fc006129d9956d15",
+    "experiments/as_safety_v2/evidence_graph.py": "31c957cda14e0474445bd864d7d40f7790fb7f13924361483e3fb7eb91efe46b",
+    "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
+    "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
+    "experiments/as_safety_v2/quotes.py": "580d7816523c40cdda89850afde042bf5f29a28805e984a1cac643ed0a2a2f88",
+    "experiments/as_safety_v2/transport.py": "ccbaab8dae80b78275c6b1af29ce16c5dd3d88933a3db41c6f3b99717d1c8384",
+    "experiments/as_safety_v4/cases.py": "02e0c686c3bddb7593364067916fb6c49b6ca44d5420b85fd810a4053436a4aa",
+    "experiments/as_safety_v4/contract.py": "b7039e6a0562ddb808acf596ab575fc617feb3a8f467dd53e0cd5e44db153613",
+    "experiments/as_safety_v4/run.py": "5ff01016ced5c1fe1028e81cc1533f224fcb7abca6e84e0ba56a4f14e89ac9cb",
+    "tests/test_as_safety_atomic_edge_controls_v5.py": "71ddfff5c7ddba1f97fe974f4404f5e102adc24a094e27bc7123c3b8eb1b6163",
+    "tests/test_as_safety_atomic_edge_format_oracle_v6.py": "cd27b1208ce06b5741bc06343dcd3831f3a07c2c92212dd198ff0fe650d0dcc0"
+  },
+  "token_usage": "not_collected_by_completion_transport"
+}
