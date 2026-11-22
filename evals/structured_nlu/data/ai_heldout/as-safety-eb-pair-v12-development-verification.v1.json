@@ -1,0 +1,49 @@
+{
+  "calls_completed": 4,
+  "contract_pass_count": 4,
+  "evidence_clause_exact_count": 3,
+  "journal_sha256": "04b79815a38044a953e16586fe059f4216234958662d5e1cfe3a7c6a7c721db1",
+  "kind": "as_safety_eb_pair_v12_development_verification_v1",
+  "official_accuracy_evaluated": false,
+  "pair_gate_pass": false,
+  "per_call": [
+    {
+      "call": "PC01-P014",
+      "contract_error": null,
+      "contract_valid": true,
+      "error_code": null,
+      "evidence_clause_exact": true,
+      "relation_status": "supported",
+      "status_exact": true
+    },
+    {
+      "call": "PC01-P016",
+      "contract_error": null,
+      "contract_valid": true,
+      "error_code": null,
+      "evidence_clause_exact": true,
+      "relation_status": "supported",
+      "status_exact": false
+    },
+    {
+      "call": "NC01-P020",
+      "contract_error": null,
+      "contract_valid": true,
+      "error_code": null,
+      "evidence_clause_exact": true,
+      "relation_status": "supported",
+      "status_exact": false
+    },
+    {
+      "call": "NC01-P002",
+      "contract_error": null,
+      "contract_valid": true,
+      "error_code": null,
+      "evidence_clause_exact": false,
+      "relation_status": "supported",
+      "status_exact": false
+    }
+  ],
+  "protocol_sha256": "91952aafbff5ec9f7767225ea9bfdd62d42d9b6a105d0ca3f02cb3242079c893",
+  "status_exact_count": 1
+}
