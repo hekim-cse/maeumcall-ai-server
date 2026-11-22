@@ -2,6 +2,8 @@
   "kind": "as_safety_eb_candidate_id_v10_development_verification_v1",
   "protocol_sha256": "4c88aeb3b0bc70d3e50c343edfd377bc977a98e7fa444be194e304aebce89feb",
   "journal_sha256": "633bd804ac9f895817e1cf71bb949f826756704dca8d405d3880483174b7f8d1",
+  "frozen_verifier_sha256": "41a4c604ded77fa90a4ead003f9cc391fbf3a20250f414ffda23b8f3b4e1e916",
+  "postrun_verifier_sha256": "9b1fb7de293c2c3a3d4aea58eb0ff7ea3eafbc70e45a5b2094f410277b8cbf4a",
   "calls_completed": 2,
   "contract_pass_count": 2,
   "per_call": [
