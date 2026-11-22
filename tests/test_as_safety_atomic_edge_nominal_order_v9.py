@@ -370,6 +370,7 @@ def test_replay_separates_positive_and_negative_gate(tmp_path, monkeypatch):
     ("call", "mode", "field"),
     [
         ("PC01-N", "wrong_b", "positive_B_exact"),
+        ("PC01-N", "wrong_kind", "positive_full_match"),
         ("PC01-R", "null", "positive_full_match"),
         ("NC01-N", "false_nonnull", "negative_valid_hold"),
         ("NC01-R", "extra_key", "negative_valid_hold"),
