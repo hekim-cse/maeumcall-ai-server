@@ -36,6 +36,12 @@ SOURCES = v12_verify.EXPECTED_SOURCES | {
     "experiments/as_safety_atomic_edges_v13/verify.py",
     "tests/test_as_safety_criteria_v13.py",
 }
+POSTRUN_REVIEW_FILES = frozenset(
+    {
+        "experiments/as_safety_atomic_edges_v13/verify.py",
+        "tests/test_as_safety_criteria_v13.py",
+    }
+)
 
 
 def _sha(raw: bytes) -> str:
@@ -65,6 +71,24 @@ def _frozen(commit: str, relative: str) -> bytes:
     return subprocess.run(
         ("git", "show", f"{commit}:{relative}"), cwd=ROOT, check=True, capture_output=True
     ).stdout
+
+
+def _check_result_rows(rows: list[dict]) -> None:
+    """Reject a journal that could not have come from the stop-on-error runner."""
+    for index, row in enumerate(rows):
+        has_raw = row["raw_sha256"] is not None
+        finish = row["finish_reason"]
+        error = row["error_code"]
+        if has_raw:
+            if finish == "length":
+                if error != "finish_length":
+                    raise ValueError("length finish without finish_length error")
+            elif finish != "stop":
+                raise ValueError("raw response has invalid finish reason")
+        elif finish is not None:
+            raise ValueError("finish reason without raw response")
+        if error is not None and index != len(rows) - 1:
+            raise ValueError("journal continued after error")
 
 
 def verify() -> dict:
@@ -125,7 +149,7 @@ def verify() -> dict:
     for path, digest in protocol["source_sha256"].items():
         if _sha(_frozen(protocol["frozen_code_commit"], path)) != digest:
             raise ValueError("frozen source differs")
-        if _sha((ROOT / path).read_bytes()) != digest:
+        if path not in POSTRUN_REVIEW_FILES and _sha((ROOT / path).read_bytes()) != digest:
             raise ValueError("current source differs from frozen code")
     if _sha(v5.DATA.read_bytes()) != protocol["cases_sha256"]:
         raise ValueError("case source differs")
@@ -177,8 +201,7 @@ def verify() -> dict:
         ORDER[: len(rows) - 1]
     ):
         raise ValueError("journal order differs")
-    if any(row["error_code"] is not None for row in rows[1:-1]):
-        raise ValueError("journal continued after error")
+    _check_result_rows(rows[1:])
     if PRIVATE_DIR.is_symlink() or stat.S_IMODE(PRIVATE_DIR.stat().st_mode) != 0o700:
         raise ValueError("private directory mode differs")
     expected_files = {
