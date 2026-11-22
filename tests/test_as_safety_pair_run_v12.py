@@ -4,6 +4,7 @@ import copy
 import json
 from contextlib import nullcontext
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -84,6 +85,49 @@ def test_first_transport_error_stops_without_retry(monkeypatch, tmp_path):
     rows = [json.loads(line) for line in journal.read_text().splitlines()]
     assert [row.get("call") for row in rows] == [None, "PC01-P014"]
     assert rows[1]["error_code"] == "network_unavailable"
+    assert calls == [1]
+    with pytest.raises(FileExistsError, match="partial run"):
+        run.run(Path("unused.gguf"))
+    assert calls == [1]
+
+
+def test_first_contract_error_saves_raw_and_stops_without_retry(monkeypatch, tmp_path):
+    journal = tmp_path / "journal.jsonl"
+    private = tmp_path / "raw"
+    monkeypatch.setattr(run, "JOURNAL", journal)
+    monkeypatch.setattr(run, "PRIVATE_DIR", private)
+    monkeypatch.setattr(run.v10_run, "_server", lambda _path: nullcontext(object()))
+    monkeypatch.setattr(run, "guarded_call", lambda _attestor, call: call())
+    monkeypatch.setattr(run.v7, "_tokenize_request", lambda _body: 1)
+    cases = probe.cases()
+    requests = {f"{case}-{candidate}": b"request" for case, candidate in run.ORDER}
+    monkeypatch.setattr(
+        run,
+        "_load_protocol",
+        lambda: (
+            {"input_tokens": {name: 1 for name in requests}},
+            "protocol-digest",
+            cases,
+            object(),
+            requests,
+        ),
+    )
+    calls = []
+
+    def malformed(*_args, **_kwargs):
+        calls.append(1)
+        return SimpleNamespace(
+            finish_reason="stop",
+            content='{"relation_status":"supported","evidence_clause_index":null}',
+        )
+
+    monkeypatch.setattr(run.v4, "post_format_completion", malformed)
+    run.run(Path("unused.gguf"))
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    assert [row.get("call") for row in rows] == [None, "PC01-P014"]
+    assert rows[1]["error_code"] == "evidence_clause_missing"
+    assert rows[1]["raw_sha256"] is not None
+    assert (private / "PC01-P014.json.txt").exists()
     assert calls == [1]
     with pytest.raises(FileExistsError, match="partial run"):
         run.run(Path("unused.gguf"))

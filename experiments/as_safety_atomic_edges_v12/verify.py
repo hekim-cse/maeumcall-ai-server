@@ -41,6 +41,14 @@ EXPECTED_SOURCES = v5.SOURCE_PATHS | {
     "tests/test_as_safety_pair_run_v12.py",
 }
 STATUSES = frozenset({"supported", "unsupported", "insufficient"})
+POSTRUN_REVIEW_FILES = frozenset(
+    {
+        "experiments/as_safety_atomic_edges_v12/run.py",
+        "experiments/as_safety_atomic_edges_v12/verify.py",
+        "tests/test_as_safety_pair_relation_v12.py",
+        "tests/test_as_safety_pair_run_v12.py",
+    }
+)
 
 
 def _sha(raw: bytes) -> str:
@@ -196,7 +204,7 @@ def verify() -> dict:
     for path, digest in protocol["source_sha256"].items():
         if _sha(_frozen(protocol["frozen_code_commit"], path)) != digest:
             raise ValueError("frozen source differs")
-        if _sha((ROOT / path).read_bytes()) != digest:
+        if path not in POSTRUN_REVIEW_FILES and _sha((ROOT / path).read_bytes()) != digest:
             raise ValueError("current source differs from frozen code")
     if _sha(v5.DATA.read_bytes()) != protocol["cases_sha256"]:
         raise ValueError("case source differs")

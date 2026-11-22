@@ -62,6 +62,9 @@ def test_response_contract_accepts_three_distinct_decisions(raw, expected):
         '{"relation_status":"supported","evidence_clause_index":true}',
         '{"relation_status":"supported","evidence_clause_index":2,"extra":1}',
         '{"relation_status":"other","evidence_clause_index":2}',
+        '{"relation_status":"","evidence_clause_index":2}',
+        '{"relation_status":" ","evidence_clause_index":2}',
+        '{"relation_status":" supported ","evidence_clause_index":2}',
         '{"relation_status":"supported","evidence_clause_index":2,"relation_status":"unsupported"}',
     ],
 )

@@ -21,6 +21,7 @@ from experiments.as_safety_atomic_edges_v10 import probe
 from experiments.as_safety_atomic_edges_v10 import run as v10_run
 from experiments.as_safety_atomic_edges_v10.model_attestation import guarded_call
 from experiments.as_safety_atomic_edges_v12 import pair_contract
+from experiments.as_safety_v2.json_contract import ValidationError
 from experiments.as_safety_v2.transport import TransportError
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -248,6 +249,11 @@ def run(model_path: Path) -> None:
                     )
                     if completion.finish_reason != "stop":
                         row["error_code"] = "finish_length"
+                    else:
+                        try:
+                            pair_contract.validate_response(completion.content, pair)
+                        except ValidationError as error:
+                            row["error_code"] = error.code
                 row["request_latency_ms"] = round((time.perf_counter() - started) * 1000, 3)
                 v5._append(stream, row)
                 if row["error_code"] is not None:
