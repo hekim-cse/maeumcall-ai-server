@@ -1,0 +1,108 @@
+{
+  "candidate_manifest": {
+    "NC01": {
+      "candidate_ids": [
+        "P002",
+        "P008",
+        "P011",
+        "P020"
+      ],
+      "candidate_rows_sha256": "56ec4a5b60793453821e35a234d0545306ccc0dae7d0fc6e0b4af01e942fa8d6"
+    },
+    "PC01": {
+      "candidate_ids": [
+        "P002",
+        "P005",
+        "P007",
+        "P009",
+        "P014",
+        "P016",
+        "P020"
+      ],
+      "candidate_rows_sha256": "c342b38e50441ba2efee5a3bbf45aec4eb8d847781d7c2e7e28190f6561e504b"
+    }
+  },
+  "cases_sha256": "11d76e8c047241dd8898733fd4334309095d965527878a41c222bc779849036d",
+  "frozen_code_commit": "33dc70cbef9ecb88ec9ebf4f26deaa2deef3419f",
+  "image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "input_tokens": {
+    "NC01": 403,
+    "PC01": 426
+  },
+  "journal": "evals/structured_nlu/data/ai_heldout/as-safety-eb-candidate-id-v10-development-journal.v1.jsonl",
+  "kind": "as_safety_eb_candidate_id_v10_development_v1",
+  "max_context_tokens": 4096,
+  "model_sha256": "644b04cde835d486df33c6d4d7552ba367fcb28802fe39b6b4bb9c60b9ab6f3d",
+  "order": [
+    "PC01",
+    "NC01"
+  ],
+  "private_output": "outside_repository_mode_0700_files_0600",
+  "request_policy": {
+    "max_tokens": 320,
+    "repeat_penalty": 1.05,
+    "seed": 0,
+    "stop": [
+      "<|eot_id|>"
+    ],
+    "temperature": 0,
+    "timeout_seconds": 180
+  },
+  "request_sha256": {
+    "NC01": "228cd092b64651587d095e3d14bdd89a9b4b128dc0763cfd8d648905b66f3757",
+    "PC01": "88180445fb4f3e91ae602cc536a87566c77ec75a541f5bd5bd50b9f0d6012e1a"
+  },
+  "retry_policy": "no_retry_manual_audit_on_interruption",
+  "scope": "two_exposed_ai_authored_reviewed_development_controls",
+  "server_args": [
+    "-m",
+    "/models/kanana.gguf",
+    "-c",
+    "4096",
+    "-t",
+    "2",
+    "-np",
+    "1",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8080"
+  ],
+  "source_sha256": {
+    "docs/portfolio/nlu_safety_eb_candidate_id_v10_method.md": "e0cf7d59642373bc670a7d3c99356cfc227da5cdf6dd65f48696d7926703892c",
+    "experiments/as_safety_atomic_edges_v1/event_owner.py": "9b7cdb854f64c1768c05e9b9e95cd2b786cef2a097db854bef6f3acd583bda3e",
+    "experiments/as_safety_atomic_edges_v1/run.py": "f38f60808ebb3b1bdaed7381446ad43326bbe0970113f0dbc157ea2afb1ab764",
+    "experiments/as_safety_atomic_edges_v1/verify.py": "0d436107afa65c4a65cfd042557ab21be47f521c5adacfd5b97f9fc519298c4f",
+    "experiments/as_safety_atomic_edges_v10/candidate_contract.py": "44a856631dd6cb85309d75a7de8951f44cc5318e213d00e65f651177343eac1e",
+    "experiments/as_safety_atomic_edges_v10/model_attestation.py": "13ad5360340e15055cb675a5bf5b873a6580cba8b71311911324368c3a5de006",
+    "experiments/as_safety_atomic_edges_v10/probe.py": "145528d6cf83ad198f66cb1361b570601d02704f26c70e9d72de79c7c47b0358",
+    "experiments/as_safety_atomic_edges_v10/run.py": "2980917900d7595dc925415ebacfea6209d7078b386c00f8fd51721f99277d93",
+    "experiments/as_safety_atomic_edges_v10/verify.py": "41a4c604ded77fa90a4ead003f9cc391fbf3a20250f414ffda23b8f3b4e1e916",
+    "experiments/as_safety_atomic_edges_v2/__init__.py": "055acdd26d8f85c0c450e2703983143dd3367488b7d6c881e9202138a987d80c",
+    "experiments/as_safety_atomic_edges_v2/run.py": "d278acc40fb19483b3cb3adc06eacb4139cc9936143e979d9630933447c25074",
+    "experiments/as_safety_atomic_edges_v2/verify.py": "bb0be4b598711de5ac0d28d9153243f20a5015978e1dc6774b419d396045c03b",
+    "experiments/as_safety_atomic_edges_v3/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/as_safety_atomic_edges_v3/run.py": "7f7c44dbc971067900ec9e8b47243aac4cf34624b541f4c77908a70d4cfd48aa",
+    "experiments/as_safety_atomic_edges_v3/verify.py": "7c3d8e74a2c4751a0bfa5a9820823fe79916e153ecbbadd9a60880a9dd46b67d",
+    "experiments/as_safety_atomic_edges_v4/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/as_safety_atomic_edges_v4/run.py": "f9d31d6041fdc00f71bcca452c4793bd63d4cab8be740e84ec043d8b80fb497b",
+    "experiments/as_safety_atomic_edges_v4/verify.py": "473f9867e170a5bef0eda79a79abedb618cd821eab032a188a1e615b57219b31",
+    "experiments/as_safety_atomic_edges_v5/__init__.py": "4e01c98bd35df6bdd58354be9aebbcd12c21910b68bfa1569c4b2b8ed318eea1",
+    "experiments/as_safety_atomic_edges_v5/run.py": "a953810fa63ee76ab3f2c27ce66c7abdfb7b94cd620482744c08bce91a325b55",
+    "experiments/as_safety_atomic_edges_v5/verify.py": "23c876b3437a43a27133fa2f8b1e91ac818ffcd0195b329f0dec6554e765155b",
+    "experiments/as_safety_atomic_edges_v7/run.py": "f41398e167246c0a882667a30b197e6b7baa8228000f8af0302c357efbfd54dc",
+    "experiments/as_safety_atomic_edges_v8/boundary_audit.py": "2cad83cf80709c722bc55745d17f48e2468445eccbf663412fa948191a94ff86",
+    "experiments/as_safety_atomic_edges_v9/verify.py": "2933eb3a32c74811a5c0a0ce130408135f707cdfc23ca3b0edc8bee8d55df22e",
+    "experiments/as_safety_v2/evidence_graph.py": "31c957cda14e0474445bd864d7d40f7790fb7f13924361483e3fb7eb91efe46b",
+    "experiments/as_safety_v2/extraction.py": "2f9c9c2a874bd0eab1f8821b2b5ef54ab58b0c6d33a3d59ee0b34303de8da5cd",
+    "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
+    "experiments/as_safety_v2/quotes.py": "580d7816523c40cdda89850afde042bf5f29a28805e984a1cac643ed0a2a2f88",
+    "experiments/as_safety_v2/source_lattice.py": "206a7984a921e05e18274bc6468b2e231f9c86c0aa0d923f2dec0875f9e53262",
+    "experiments/as_safety_v2/transport.py": "ccbaab8dae80b78275c6b1af29ce16c5dd3d88933a3db41c6f3b99717d1c8384",
+    "experiments/as_safety_v4/cases.py": "02e0c686c3bddb7593364067916fb6c49b6ca44d5420b85fd810a4053436a4aa",
+    "experiments/as_safety_v4/contract.py": "b7039e6a0562ddb808acf596ab575fc617feb3a8f467dd53e0cd5e44db153613",
+    "experiments/as_safety_v4/run.py": "5ff01016ced5c1fe1028e81cc1533f224fcb7abca6e84e0ba56a4f14e89ac9cb",
+    "tests/test_as_safety_atomic_edge_controls_v5.py": "71ddfff5c7ddba1f97fe974f4404f5e102adc24a094e27bc7123c3b8eb1b6163",
+    "tests/test_as_safety_candidate_id_probe_v10.py": "cb0e76b214573e3a3e46403d5de457bd8de25be302ebb92deac41a8ac49101bf"
+  }
+}
