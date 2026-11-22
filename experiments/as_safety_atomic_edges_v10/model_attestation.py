@@ -97,6 +97,8 @@ class ModelAttestor:
         if type(observed) is not list or len(observed) != 1 or type(observed[0]) is not dict:
             raise ValueError("container inspect invalid")
         container = observed[0]
+        if type(container.get("Id")) is not str or not container["Id"]:
+            raise ValueError("container ID invalid")
         if not container.get("State", {}).get("Running"):
             raise ValueError("model container stopped")
         if _created_ns(container.get("Created")) < self.captured_at_ns:

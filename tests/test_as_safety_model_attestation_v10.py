@@ -90,6 +90,14 @@ def test_guard_rejects_container_created_before_snapshot(tmp_path, monkeypatch):
         attestor.activate()
 
 
+def test_guard_rejects_missing_container_identity(tmp_path, monkeypatch):
+    path, digest, state = _fixture(tmp_path, monkeypatch)
+    state["container"]["Id"] = ""
+    attestor = guard.ModelAttestor(path, digest, "model-server")
+    with pytest.raises(ValueError, match="container ID invalid"):
+        attestor.activate()
+
+
 def test_guard_fails_when_container_digest_command_unavailable(tmp_path, monkeypatch):
     path, digest, _ = _fixture(tmp_path, monkeypatch)
     attestor = guard.ModelAttestor(path, digest, "model-server")
