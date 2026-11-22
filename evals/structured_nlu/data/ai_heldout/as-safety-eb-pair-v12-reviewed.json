@@ -1,0 +1,10 @@
+{
+  "kind": "as_safety_eb_pair_v12_user_reviewed_development_labels",
+  "source": "ai_authored_exposed_pc01_nc01_derivatives",
+  "cases": [
+    {"call": "PC01-P014", "relation_status": "supported", "evidence_clause_index": 2},
+    {"call": "PC01-P016", "relation_status": "unsupported", "evidence_clause_index": 2},
+    {"call": "NC01-P020", "relation_status": "unsupported", "evidence_clause_index": 2},
+    {"call": "NC01-P002", "relation_status": "insufficient", "evidence_clause_index": 3}
+  ]
+}
