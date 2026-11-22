@@ -1,0 +1,81 @@
+{
+  "candidate_generation_source_only": true,
+  "event_span_is_reviewed_input": true,
+  "exposed_control_rows": [
+    {
+      "candidate_count": 7,
+      "candidate_ids_by_position": {
+        "after": [],
+        "before": [
+          "P005",
+          "P007",
+          "P014"
+        ],
+        "crosses_event": [
+          "P016",
+          "P020"
+        ],
+        "inside_event": [
+          "P009"
+        ],
+        "other_clause": [
+          "P002"
+        ]
+      },
+      "case_id": "PC01",
+      "gold_present_before_event": true,
+      "nominal_chunk_count": 5,
+      "position_counts": {
+        "after": 0,
+        "before": 3,
+        "crosses_event": 2,
+        "inside_event": 1,
+        "other_clause": 1
+      },
+      "source_sha256": "70b11eaf3699a857ce6fef2a72510ec50bb2a550d988289bf1e6b5688d868b77"
+    },
+    {
+      "candidate_count": 4,
+      "candidate_ids_by_position": {
+        "after": [],
+        "before": [],
+        "crosses_event": [],
+        "inside_event": [
+          "P008",
+          "P020"
+        ],
+        "other_clause": [
+          "P002",
+          "P011"
+        ]
+      },
+      "case_id": "NC01",
+      "gold_present_before_event": null,
+      "nominal_chunk_count": 3,
+      "position_counts": {
+        "after": 0,
+        "before": 0,
+        "crosses_event": 0,
+        "inside_event": 2,
+        "other_clause": 2
+      },
+      "source_sha256": "e3100ec21fd563d8de84f570423359c6a62a87c1cfcde533086646c6d2742c19"
+    }
+  ],
+  "kind": "as_safety_eb_candidate_evidence_v11_offline_audit",
+  "model_called": false,
+  "owner_or_abstention_inferred": false,
+  "previous_26_case_nominal_filter": {
+    "case_count": 26,
+    "nominal_chunk_candidates": 239,
+    "nominal_chunk_gold_covered": 21,
+    "nominal_chunk_gold_loss_ids": [
+      "RE09",
+      "RE10"
+    ],
+    "nominal_end_candidates": 525,
+    "nominal_end_gold_covered": 23,
+    "null_case_count": 3,
+    "positive_case_count": 23
+  }
+}
