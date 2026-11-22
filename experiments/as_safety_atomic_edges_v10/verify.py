@@ -24,6 +24,7 @@ JOURNAL = (
 )
 PRIVATE_DIR = Path("/private/tmp/as-safety-eb-candidate-id-v10-raw")
 ORDER = ("PC01", "NC01")
+VERIFIER_PATH = "experiments/as_safety_atomic_edges_v10/verify.py"
 EXPECTED_SOURCES = v5.SOURCE_PATHS | {
     "docs/portfolio/nlu_safety_eb_candidate_id_v10_method.md",
     "experiments/as_safety_v2/source_lattice.py",
@@ -173,18 +174,26 @@ def verify() -> dict:
     ):
         raise ValueError("protocol is not committed")
     for relative, digest in protocol["source_sha256"].items():
-        if (
-            _sha(_frozen(commit, relative)) != digest
-            or _sha((ROOT / relative).read_bytes()) != digest
-        ):
+        if _sha(_frozen(commit, relative)) != digest:
             raise ValueError("frozen source differs")
+        if relative != VERIFIER_PATH and _sha((ROOT / relative).read_bytes()) != digest:
+            raise ValueError("current source differs from frozen execution")
+    current_verifier = (ROOT / VERIFIER_PATH).read_bytes()
+    current_commit = (
+        subprocess.run(("git", "rev-parse", "HEAD"), cwd=ROOT, check=True, capture_output=True)
+        .stdout.decode()
+        .strip()
+    )
+    if _frozen(current_commit, VERIFIER_PATH) != current_verifier:
+        raise ValueError("post-run verifier revision is not committed")
     if _sha(v5.DATA.read_bytes()) != protocol["cases_sha256"]:
         raise ValueError("case bytes differ")
     cases = v5._load_cases(v5.DATA.read_bytes())
     policy = v5._policy(protocol)
     if protocol["request_sha256"] != {name: _sha(_request(cases[name], policy)) for name in ORDER}:
         raise ValueError("request differs from frozen protocol")
-    lines = JOURNAL.read_text(encoding="utf-8").splitlines()
+    journal_raw = JOURNAL.read_bytes()
+    lines = journal_raw.decode("utf-8").splitlines()
     rows = [json.loads(line, object_pairs_hook=_unique) for line in lines]
     if not rows or rows[0] != {"event": "header", "protocol_sha256": _sha(protocol_raw)}:
         raise ValueError("journal header differs")
@@ -248,7 +257,9 @@ def verify() -> dict:
     return {
         "kind": "as_safety_eb_candidate_id_v10_development_verification_v1",
         "protocol_sha256": _sha(protocol_raw),
-        "journal_sha256": _sha(JOURNAL.read_bytes()),
+        "journal_sha256": _sha(journal_raw),
+        "frozen_verifier_sha256": protocol["source_sha256"][VERIFIER_PATH],
+        "postrun_verifier_sha256": _sha(current_verifier),
         "calls_completed": len(per_call),
         "contract_pass_count": sum(item["contract_valid"] for item in per_call),
         "per_call": per_call,
