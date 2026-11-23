@@ -62,3 +62,31 @@ def test_first_transport_failure_blocks_retry(monkeypatch, tmp_path):
     assert calls == [1]
     with pytest.raises(FileExistsError, match="partial control"):
         run.run(Path("unused.gguf"))
+
+
+@pytest.mark.parametrize("invalid", ["invalid", " ", "extra_field"])
+def test_invalid_protocol_is_rejected_before_model_call(monkeypatch, tmp_path, invalid):
+    payload = json.loads(run.PROTOCOL.read_text())
+    if invalid == "extra_field":
+        payload["unexpected"] = True
+    else:
+        payload["call"] = invalid
+    path = tmp_path / "protocol.json"
+    path.write_text(json.dumps(payload))
+    monkeypatch.setattr(run, "PROTOCOL", path)
+    monkeypatch.setattr(verify, "PROTOCOL", path)
+    monkeypatch.setattr(run, "JOURNAL", tmp_path / "journal.jsonl")
+    monkeypatch.setattr(run, "PRIVATE_DIR", tmp_path / "raw")
+    calls = []
+
+    def forbidden(*_args, **_kwargs):
+        calls.append(1)
+        raise AssertionError("model must not be called")
+
+    monkeypatch.setattr(run.v12.v10_run, "_server", forbidden)
+    monkeypatch.setattr(run.v7, "_tokenize_request", forbidden)
+    with pytest.raises(ValueError, match="protocol identity differs"):
+        run.run(Path("unused.gguf"))
+    with pytest.raises(ValueError, match="protocol identity differs"):
+        verify.verify()
+    assert calls == []

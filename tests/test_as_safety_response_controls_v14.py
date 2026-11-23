@@ -3,6 +3,7 @@
 import json
 from contextlib import nullcontext
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -55,7 +56,7 @@ def test_observed_status_is_separate_from_contract_validity():
     assert verify._observed_fields(b"{") == (None, None)
 
 
-def test_first_transport_error_stops_without_retry(monkeypatch, tmp_path):
+def _mock_runner(monkeypatch, tmp_path):
     journal = tmp_path / "journal.jsonl"
     private = tmp_path / "raw"
     monkeypatch.setattr(run, "JOURNAL", journal)
@@ -73,6 +74,11 @@ def test_first_transport_error_stops_without_retry(monkeypatch, tmp_path):
             {name: b"request" for name in run.ORDER},
         ),
     )
+    return journal, private
+
+
+def test_first_transport_error_stops_without_retry(monkeypatch, tmp_path):
+    journal, private = _mock_runner(monkeypatch, tmp_path)
     calls = []
 
     def fail(*_args, **_kwargs):
@@ -88,6 +94,66 @@ def test_first_transport_error_stops_without_retry(monkeypatch, tmp_path):
     assert calls == [1]
     with pytest.raises(FileExistsError, match="partial control"):
         run.run(Path("unused.gguf"))
+
+
+@pytest.mark.parametrize(
+    ("content", "finish_reason", "expected_error"),
+    [
+        (
+            '{"relation_status":"wrong","evidence_clause_index":2}',
+            "stop",
+            "relation_status_invalid",
+        ),
+        (
+            '{"relation_status":"unsupported","evidence_clause_index":2,"extra":1}',
+            "stop",
+            "fields_invalid",
+        ),
+        (" ", "stop", "invalid_json"),
+        ('{"relation_status":"unsupported","evidence_clause_index":2}', "length", "finish_length"),
+    ],
+)
+def test_first_response_error_stops_without_retry(
+    monkeypatch, tmp_path, content, finish_reason, expected_error
+):
+    journal, private = _mock_runner(monkeypatch, tmp_path)
+    calls = []
+
+    def respond(*_args, **_kwargs):
+        calls.append(1)
+        return SimpleNamespace(content=content, finish_reason=finish_reason)
+
+    monkeypatch.setattr(run.v4, "post_format_completion", respond)
+    run.run(Path("unused.gguf"))
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    assert [row.get("call") for row in rows] == [None, run.ORDER[0]]
+    assert rows[1]["error_code"] == expected_error
+    assert rows[1]["raw_sha256"] is not None
+    assert list(private.iterdir()) == [private / f"{run.ORDER[0]}.json.txt"]
+    assert calls == [1]
+    with pytest.raises(FileExistsError, match="partial control"):
+        run.run(Path("unused.gguf"))
+    assert calls == [1]
+
+
+def test_valid_first_response_reaches_second_control(monkeypatch, tmp_path):
+    journal, private = _mock_runner(monkeypatch, tmp_path)
+    calls = []
+
+    def respond(*_args, **_kwargs):
+        calls.append(1)
+        return SimpleNamespace(
+            content='{"relation_status":"unsupported","evidence_clause_index":2}',
+            finish_reason="stop",
+        )
+
+    monkeypatch.setattr(run.v4, "post_format_completion", respond)
+    run.run(Path("unused.gguf"))
+    rows = [json.loads(line) for line in journal.read_text().splitlines()]
+    assert [row.get("call") for row in rows] == [None, *run.ORDER]
+    assert all(row["error_code"] is None for row in rows[1:])
+    assert len(list(private.iterdir())) == 2
+    assert calls == [1, 1]
 
 
 def test_schema_control_does_not_rewrite_prompt():
