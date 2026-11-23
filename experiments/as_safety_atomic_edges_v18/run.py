@@ -24,6 +24,7 @@ PROTOCOL = DATA / "as-safety-eb-evidence-selection-v18-protocol.json"
 JOURNAL = DATA / "as-safety-eb-evidence-selection-v18-journal.v1.jsonl"
 PRIVATE_DIR = Path("/private/tmp/as-safety-eb-evidence-selection-v18-raw")
 LABELS = DATA / "as-safety-eb-pair-v12-reviewed.json"
+RUNNER_SOURCE = Path(__file__).resolve().relative_to(ROOT).as_posix()
 SOURCES = sorted(
     set(v12.SOURCES)
     | {
@@ -63,9 +64,15 @@ def coverage():
     }
 
 
-def manifest(commit, requests):
+def manifest(commit, requests, *, replay_only=False):
     sources = {path: v12._sha(v12._git("show", f"{commit}:{path}")) for path in SOURCES}
-    if sources != {path: v12._sha((ROOT / path).read_bytes()) for path in SOURCES}:
+    # Check the frozen hash of every file, including this runner. During replay,
+    # allow the current runner to contain the post-execution reporting changes.
+    if any(
+        digest != v12._sha((ROOT / path).read_bytes())
+        for path, digest in sources.items()
+        if not (replay_only and path == RUNNER_SOURCE)
+    ):
         raise ValueError("frozen source differs")
     return {
         "kind": "as_safety_eb_evidence_selection_v18_development",
@@ -100,10 +107,10 @@ def prepare(model_path):
         stream.write("\n")
 
 
-def load_protocol(requests):
+def load_protocol(requests, *, replay_only=False):
     raw = PROTOCOL.read_bytes()
     protocol = json.loads(raw, object_pairs_hook=v4._unique_pairs)
-    if protocol != manifest(protocol["frozen_code_commit"], requests):
+    if protocol != manifest(protocol["frozen_code_commit"], requests, replay_only=replay_only):
         raise ValueError("protocol differs from reconstructed requests")
     if v12._git("show", f"HEAD:{PROTOCOL.relative_to(ROOT)}") != raw:
         raise ValueError("protocol must be committed before calls")
@@ -175,7 +182,7 @@ def execute(pair, messages, schema, policy, attestor, name):
 def replay():
     """Verify journal provenance and rescore the stored responses offline."""
     _, requests = calls()
-    protocol_sha = load_protocol(requests)
+    protocol_sha = load_protocol(requests, replay_only=True)
     with JOURNAL.open(encoding="utf-8") as stream:
         header, *rows = [json.loads(line, object_pairs_hook=v4._unique_pairs) for line in stream]
     if header["event"] != "header" or header["protocol_sha256"] != protocol_sha:
@@ -227,6 +234,22 @@ def replay():
                 "error": error,
                 "relation_status": result["relation_status"] if result else None,
                 **selection.score(pair, gold, result),
+            }
+        )
+    # The journal records actual attempts. Derive the unattempted suffix from
+    # the already verified request order without fabricating journal events.
+    for name in list(requests)[len(rows) :]:
+        pair = requests[name][0]
+        gold = labels[name.rsplit("-", 1)[0]]
+        results.append(
+            {
+                "call": name,
+                "execution_status": "not_run",
+                "error": None,
+                "relation_status": None,
+                **selection.score(pair, gold, None),
+                "gold_evidence_selected_if_offered": None,
+                "status_match": None,
             }
         )
     return results
