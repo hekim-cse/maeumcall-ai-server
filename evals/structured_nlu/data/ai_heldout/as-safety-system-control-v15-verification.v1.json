@@ -1,0 +1,12 @@
+{
+  "calls_completed": 1,
+  "contract_valid": true,
+  "error_code": null,
+  "explicit_instruction_followed": false,
+  "journal_sha256": "530262d79e67d84a3f4ca93e27aeac4e167cd95dbd763d3979b3182b26f2ca9b",
+  "kind": "as_safety_system_control_v15_verification_v1",
+  "observed_evidence_clause_index": 2,
+  "observed_relation_status": "supported",
+  "official_accuracy_evaluated": false,
+  "protocol_sha256": "4719cbc67444978dcf02d2cd0a732dd6b79846c8d629e6373244145833c8c856"
+}
