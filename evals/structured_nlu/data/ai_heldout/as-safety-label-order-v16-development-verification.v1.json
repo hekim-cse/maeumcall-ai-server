@@ -1,0 +1,63 @@
+{
+  "calls_completed": 4,
+  "contract_pass_count": 4,
+  "evidence_clause_exact_count": 0,
+  "input_tokens": {
+    "NC01-P002": 365,
+    "NC01-P020": 365,
+    "PC01-P014": 346,
+    "PC01-P016": 344
+  },
+  "journal_sha256": "2d578726b65f2c182d16983fcf9010b25b3fba59a03c7c237f070f26b9eb7971",
+  "kind": "as_safety_label_order_v16_verification_v1",
+  "official_accuracy_evaluated": false,
+  "per_call": [
+    {
+      "baseline_status": "supported",
+      "call": "PC01-P014",
+      "contract_error": null,
+      "contract_valid": true,
+      "error_code": null,
+      "evidence_clause_exact": false,
+      "raw_matches_v12": false,
+      "relation_status": "insufficient",
+      "status_exact": false
+    },
+    {
+      "baseline_status": "supported",
+      "call": "PC01-P016",
+      "contract_error": null,
+      "contract_valid": true,
+      "error_code": null,
+      "evidence_clause_exact": false,
+      "raw_matches_v12": false,
+      "relation_status": "insufficient",
+      "status_exact": false
+    },
+    {
+      "baseline_status": "supported",
+      "call": "NC01-P020",
+      "contract_error": null,
+      "contract_valid": true,
+      "error_code": null,
+      "evidence_clause_exact": false,
+      "raw_matches_v12": false,
+      "relation_status": "insufficient",
+      "status_exact": false
+    },
+    {
+      "baseline_status": "supported",
+      "call": "NC01-P002",
+      "contract_error": null,
+      "contract_valid": true,
+      "error_code": null,
+      "evidence_clause_exact": false,
+      "raw_matches_v12": false,
+      "relation_status": "insufficient",
+      "status_exact": true
+    }
+  ],
+  "protocol_sha256": "dcf9414bb012c240e9c18678f4a362e5c7ea690fb2ab2045ae3f5d5405d99538",
+  "status_exact_count": 1,
+  "supported_count": 0
+}
