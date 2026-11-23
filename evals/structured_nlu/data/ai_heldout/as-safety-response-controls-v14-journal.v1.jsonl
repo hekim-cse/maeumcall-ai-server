@@ -1,0 +1,2 @@
+{"event": "header", "protocol_sha256": "389f54d5efdde788bc95d4b5b7b2b96474363b15fa8a38d9fd05af34c4b57001"}
+{"event": "result", "call": "schema_forced_unsupported", "request_sha256": "397b357b7188fcce0519b5cce475ed71d3cff9a52e6b37b2276761ee2eacdfa6", "finish_reason": "stop", "error_code": "evidence_clause_missing", "http_status": null, "raw_sha256": "9b0a72456ca466ae7cbc82847ed20fcd3a63a8874bb2227d0815ecd719e58bfe", "raw_bytes": 71, "request_latency_ms": 7640.565}
