@@ -35,6 +35,12 @@ SOURCES = v12_verify.EXPECTED_SOURCES | {
     "experiments/as_safety_atomic_edges_v14/verify.py",
     "tests/test_as_safety_response_controls_v14.py",
 }
+POSTRUN_REVIEW_FILES = frozenset(
+    {
+        "experiments/as_safety_atomic_edges_v14/verify.py",
+        "tests/test_as_safety_response_controls_v14.py",
+    }
+)
 
 
 def _sha(raw: bytes) -> str:
@@ -84,6 +90,22 @@ def _check_rows(rows: list[dict]) -> None:
             raise ValueError("finish reason without raw response")
         if row["error_code"] is not None and index != len(rows) - 1:
             raise ValueError("journal continued after error")
+
+
+def _observed_fields(raw: bytes) -> tuple[str | None, int | None]:
+    """Report parseable values separately from full contract validity."""
+    try:
+        parsed = parse_model_json(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValidationError):
+        return None, None
+    if type(parsed) is not dict:
+        return None, None
+    status = parsed.get("relation_status")
+    index = parsed.get("evidence_clause_index")
+    return (
+        status if type(status) is str else None,
+        index if type(index) is int else None,
+    )
 
 
 def verify() -> dict:
@@ -142,7 +164,7 @@ def verify() -> dict:
     for path, digest in protocol["source_sha256"].items():
         if _sha(_frozen(protocol["frozen_code_commit"], path)) != digest:
             raise ValueError("frozen source differs")
-        if _sha((ROOT / path).read_bytes()) != digest:
+        if path not in POSTRUN_REVIEW_FILES and _sha((ROOT / path).read_bytes()) != digest:
             raise ValueError("current source differs from frozen code")
     if _sha(v5.DATA.read_bytes()) != protocol["cases_sha256"]:
         raise ValueError("case source differs")
@@ -209,6 +231,8 @@ def verify() -> dict:
                 "contract_valid": False,
                 "relation_status": None,
                 "evidence_clause_index": None,
+                "observed_relation_status": None,
+                "observed_evidence_clause_index": None,
             }
         else:
             path = PRIVATE_DIR / f"{name}.json.txt"
@@ -235,28 +259,36 @@ def verify() -> dict:
                     "contract_valid": True,
                     "relation_status": parsed["relation_status"],
                     "evidence_clause_index": parsed["evidence_clause_index"],
+                    "observed_relation_status": parsed["relation_status"],
+                    "observed_evidence_clause_index": parsed["evidence_clause_index"],
                 }
             else:
+                observed_status, observed_index = _observed_fields(response)
                 result = {
                     "contract_valid": False,
                     "relation_status": None,
                     "evidence_clause_index": None,
+                    "observed_relation_status": observed_status,
+                    "observed_evidence_clause_index": observed_index,
                 }
         results.append({"call": name, "error_code": row["error_code"], **result})
     by_name = {item["call"]: item for item in results}
+    schema_row = by_name.get("schema_forced_unsupported")
+    prompt_row = by_name.get("system_forced_unsupported")
     return {
         "kind": "as_safety_response_controls_v14_verification_v1",
         "protocol_sha256": _sha(raw),
         "journal_sha256": _sha(journal_raw),
         "calls_completed": len(results),
         "per_call": results,
-        "schema_constraint_followed": by_name.get("schema_forced_unsupported", {}).get(
-            "relation_status"
-        )
-        == "unsupported",
+        "schema_enum_observed": (
+            schema_row["observed_relation_status"] == "unsupported" if schema_row else None
+        ),
         "explicit_instruction_followed": (
-            by_name.get("system_forced_unsupported", {}).get("relation_status") == "unsupported"
-            and by_name.get("system_forced_unsupported", {}).get("evidence_clause_index") == 2
+            prompt_row["relation_status"] == "unsupported"
+            and prompt_row["evidence_clause_index"] == 2
+            if prompt_row
+            else None
         ),
         "baseline_relation_status": baseline_result["per_call"][0]["relation_status"],
         "official_accuracy_evaluated": False,

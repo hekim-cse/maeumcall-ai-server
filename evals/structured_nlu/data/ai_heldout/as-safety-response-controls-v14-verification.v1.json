@@ -1,0 +1,21 @@
+{
+  "baseline_relation_status": "supported",
+  "calls_completed": 1,
+  "explicit_instruction_followed": null,
+  "journal_sha256": "9b56ed175df2f8acfdbcc518ea2f47a78c11ce081a0d6590e5661acd8fadd020",
+  "kind": "as_safety_response_controls_v14_verification_v1",
+  "official_accuracy_evaluated": false,
+  "per_call": [
+    {
+      "call": "schema_forced_unsupported",
+      "contract_valid": false,
+      "error_code": "evidence_clause_missing",
+      "evidence_clause_index": null,
+      "observed_evidence_clause_index": null,
+      "observed_relation_status": "unsupported",
+      "relation_status": null
+    }
+  ],
+  "protocol_sha256": "389f54d5efdde788bc95d4b5b7b2b96474363b15fa8a38d9fd05af34c4b57001",
+  "schema_enum_observed": true
+}

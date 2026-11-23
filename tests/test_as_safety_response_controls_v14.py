@@ -49,6 +49,12 @@ def test_verifier_rejects_length_without_error_and_continuation():
         )
 
 
+def test_observed_status_is_separate_from_contract_validity():
+    raw = b'{"relation_status":"unsupported","evidence_clause_index":null}'
+    assert verify._observed_fields(raw) == ("unsupported", None)
+    assert verify._observed_fields(b"{") == (None, None)
+
+
 def test_first_transport_error_stops_without_retry(monkeypatch, tmp_path):
     journal = tmp_path / "journal.jsonl"
     private = tmp_path / "raw"
