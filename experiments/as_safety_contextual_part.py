@@ -59,12 +59,13 @@ def contextual_source(
     kiwi: Kiwi,
     *,
     extra_part_evidence: Callable[[str], bool] | None = None,
+    nominal_evidence: Callable[[str], bool] | None = None,
 ) -> DirectSource | None:
     """Extend only the prior rule's locative head check, retaining its vetoes."""
     established = source_scope(pair, occurrence, kiwi)
     if established is not None:
         return established
-    locative = explicit_source(pair, occurrence, kiwi)
+    locative = explicit_source(pair, occurrence, kiwi, nominal_evidence=nominal_evidence)
     if locative is None:
         return None
     index = locative.clause_index

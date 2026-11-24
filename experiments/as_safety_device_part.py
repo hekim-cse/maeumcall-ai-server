@@ -42,3 +42,14 @@ def names_device_component(quote: str) -> bool:
 
 def composed_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
     return contextual_source(pair, occurrence, kiwi, extra_part_evidence=names_device_component)
+
+
+def surface_nominal_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
+    """Use the exact device/part surface as nominal evidence for this variant."""
+    return contextual_source(
+        pair,
+        occurrence,
+        kiwi,
+        extra_part_evidence=names_device_component,
+        nominal_evidence=names_device_component,
+    )

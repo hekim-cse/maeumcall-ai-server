@@ -1,0 +1,180 @@
+{
+  "input_sha256": "7182240703a1a9d3c5190ea02ea22c393df9b065a9e36979b9c6374d17019761",
+  "provenance": "ai_authored_user_reviewed",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "composed": {
+      "positive_total": 5,
+      "negative_total": 13,
+      "true_approval": 0,
+      "missed_approval": 5,
+      "false_approval": 0,
+      "correct_abstention": 13,
+      "errors": 0,
+      "pairs_total": 9,
+      "pairs_passed": 4,
+      "location_total": 3,
+      "location_false_approval": 0
+    },
+    "surface_nominal": {
+      "positive_total": 5,
+      "negative_total": 13,
+      "true_approval": 3,
+      "missed_approval": 2,
+      "false_approval": 0,
+      "correct_abstention": 13,
+      "errors": 0,
+      "pairs_total": 9,
+      "pairs_passed": 7,
+      "location_total": 3,
+      "location_false_approval": 0
+    }
+  },
+  "rows": [
+    {
+      "case": "SN01",
+      "id": "SN01-1",
+      "quote": "프린터 집진판",
+      "gold": "approve",
+      "composed": "abstain",
+      "surface_nominal": "approve"
+    },
+    {
+      "case": "SN01",
+      "id": "SN01-2",
+      "quote": "전원 어댑터",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN02",
+      "id": "SN02-1",
+      "quote": "케이블",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN02",
+      "id": "SN02-2",
+      "quote": "전원 공급기 고정편",
+      "gold": "approve",
+      "composed": "abstain",
+      "surface_nominal": "approve"
+    },
+    {
+      "case": "SN03",
+      "id": "SN03-1",
+      "quote": "공기청정기 집진판",
+      "gold": "approve",
+      "composed": "abstain",
+      "surface_nominal": "approve"
+    },
+    {
+      "case": "SN03",
+      "id": "SN03-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN04",
+      "id": "SN04-1",
+      "quote": "인쇄기 집진판 옆 작업대",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN04",
+      "id": "SN04-2",
+      "quote": "인쇄기 집진판",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN05",
+      "id": "SN05-1",
+      "quote": "연기",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN05",
+      "id": "SN05-2",
+      "quote": "제습기 집진판",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN06",
+      "id": "SN06-1",
+      "quote": "건조기 집진판",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN06",
+      "id": "SN06-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN07",
+      "id": "SN07-1",
+      "quote": "프린터집진판",
+      "gold": "approve",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN07",
+      "id": "SN07-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN08",
+      "id": "SN08-1",
+      "quote": "종이 상자",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN08",
+      "id": "SN08-2",
+      "quote": "인쇄기 여과격자",
+      "gold": "approve",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN09",
+      "id": "SN09-1",
+      "quote": "펌프 완충판 보관함",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    },
+    {
+      "case": "SN09",
+      "id": "SN09-2",
+      "quote": "완충판",
+      "gold": "abstain",
+      "composed": "abstain",
+      "surface_nominal": "abstain"
+    }
+  ]
+}

@@ -91,3 +91,23 @@ def compare(path: Path, kind: str, detectors: Mapping[str, Detector]) -> dict:
         "summary": {name: summarize(rows, name) for name in detectors},
         "rows": rows,
     }
+
+
+def compare_with_locations(path: Path, kind: str, detectors: Mapping[str, Detector]) -> dict:
+    """Compare decisions and separately score the fixed observation-location subset."""
+    frozen = path.read_bytes()
+    location_ids = json.loads(frozen)["observation_location_candidates"]
+    result = compare(path, kind, detectors)
+    if result["input_sha256"] != hashlib.sha256(frozen).hexdigest():
+        raise ValueError("reviewed fixture changed during evaluation")
+    rows = {row["id"]: row for row in result["rows"]}
+    if len(location_ids) != len(set(location_ids)) or any(
+        candidate not in rows or rows[candidate]["gold"] != "abstain" for candidate in location_ids
+    ):
+        raise ValueError("location subset must contain unique abstention labels")
+    for name, summary in result["summary"].items():
+        summary["location_total"] = len(location_ids)
+        summary["location_false_approval"] = sum(
+            rows[candidate][name] == "approve" for candidate in location_ids
+        )
+    return result
