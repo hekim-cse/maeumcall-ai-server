@@ -1,0 +1,176 @@
+{
+  "input_sha256": "35ce21d331f7c8fc39f2818f42fdd84751f1dd9d5d78087c36a1ee39f744036b",
+  "provenance": "ai_authored_user_reviewed",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "role": {
+      "positive_total": 4,
+      "negative_total": 14,
+      "true_approval": 2,
+      "missed_approval": 2,
+      "false_approval": 1,
+      "correct_abstention": 13,
+      "errors": 0,
+      "pairs_total": 9,
+      "pairs_passed": 6
+    },
+    "scope": {
+      "positive_total": 4,
+      "negative_total": 14,
+      "true_approval": 2,
+      "missed_approval": 2,
+      "false_approval": 0,
+      "correct_abstention": 14,
+      "errors": 0,
+      "pairs_total": 9,
+      "pairs_passed": 7
+    }
+  },
+  "rows": [
+    {
+      "case": "SQ01",
+      "id": "SQ01-1",
+      "quote": "지하 복도",
+      "gold": "abstain",
+      "role": "approve",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ01",
+      "id": "SQ01-2",
+      "quote": "전기히터",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ02",
+      "id": "SQ02-1",
+      "quote": "온풍기 송풍구",
+      "gold": "approve",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ02",
+      "id": "SQ02-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ03",
+      "id": "SQ03-1",
+      "quote": "온풍기 송풍구",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ03",
+      "id": "SQ03-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ04",
+      "id": "SQ04-1",
+      "quote": "전원 어댑터",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ04",
+      "id": "SQ04-2",
+      "quote": "불꽃",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ05",
+      "id": "SQ05-1",
+      "quote": "온풍기 송풍구",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ05",
+      "id": "SQ05-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ06",
+      "id": "SQ06-1",
+      "quote": "충전기 보관함",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ06",
+      "id": "SQ06-2",
+      "quote": "케이블",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ07",
+      "id": "SQ07-1",
+      "quote": "스위치",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ07",
+      "id": "SQ07-2",
+      "quote": "전기담요 열선",
+      "gold": "approve",
+      "role": "approve",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ08",
+      "id": "SQ08-1",
+      "quote": "믹서기 받침",
+      "gold": "approve",
+      "role": "abstain",
+      "scope": "approve"
+    },
+    {
+      "case": "SQ08",
+      "id": "SQ08-2",
+      "quote": "조리대",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ09",
+      "id": "SQ09-1",
+      "quote": "불꽃",
+      "gold": "abstain",
+      "role": "abstain",
+      "scope": "abstain"
+    },
+    {
+      "case": "SQ09",
+      "id": "SQ09-2",
+      "quote": "전기밥솥 단자",
+      "gold": "approve",
+      "role": "approve",
+      "scope": "approve"
+    }
+  ]
+}
