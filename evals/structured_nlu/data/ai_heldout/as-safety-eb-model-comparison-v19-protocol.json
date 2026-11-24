@@ -1,0 +1,47 @@
+{
+  "frozen_code_commit": "ea143757404ed00df39920408fb8edad9b79fc7a",
+  "source_sha256": {
+    "experiments/as_safety_atomic_edges_v19.py": "24e54e4dbdcd69adda8aac661120e389b8beac8626bb0aef1de6219a4701bc4d",
+    "experiments/as_safety_atomic_edges_v18/run.py": "db62ddfdb10e3df897ab314c648dadd0c598b33962170ebae1c07da674c8cbef",
+    "docs/portfolio/nlu_safety_eb_evidence_model_comparison_v19_method.md": "b4aa445dd1eb99524b93755d6eb8e8e60d44dcd8e9806766daca6c622b83638c"
+  },
+  "baseline_protocol_sha256": "c9992bd317bf89fa89e9cf89495047fc0288fe9bfb24301643e954a69d2eb869",
+  "baseline_journal_sha256": "f1c3dc0e58c884e8f845b709c1053d655fbe06ae0022f7756ab4b63b5a61e57e",
+  "request_sha256": {
+    "PC01-P014-forward": "5c4205c4095c87e24d06a2da347774dcb771ffeb06f3aaf1a6751fd7eb3a7f65",
+    "PC01-P014-reverse": "5509639a58e39b48e1529228b20c85afac0e3743afde0e029329e1f45d228d14",
+    "PC01-P016-forward": "b7d32788b0a3b223b7fab82467dac4dd1548cc1bcb1091c62f33c41b876305fe",
+    "PC01-P016-reverse": "370f2ca40aead0a70185a894aaa34a31db7466ee1433f8430d37742a1ff1b41a",
+    "NC01-P020-forward": "c42fc9cf972762c1224f3380024b216b6c5fd55f4d92ba266295a4a197fbb30f",
+    "NC01-P020-reverse": "52fb0e46fb7adac77f1890ad3f16d36aa4c31755b1e8dad475cbf02a2cc71f7b",
+    "NC01-P002-forward": "020d7dce2e90849eed9531b879290cf334b6719a559d47a34a5e0172550d4043",
+    "NC01-P002-reverse": "cf8e61d73fe671cc669a0a1ec48d7c9ffa0270927665e414582e1785155f9050"
+  },
+  "order": [
+    "PC01-P014-forward",
+    "PC01-P014-reverse",
+    "PC01-P016-forward",
+    "PC01-P016-reverse",
+    "NC01-P020-forward",
+    "NC01-P020-reverse",
+    "NC01-P002-forward",
+    "NC01-P002-reverse"
+  ],
+  "model_sha256": "b46661073c18e5b56a41fa320975f866a00def1ff08feef4718e013258896f8c",
+  "container": "as-safety-eb-model-comparison-v19",
+  "image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "server_args": [
+    "-m",
+    "/models/kanana.gguf",
+    "-c",
+    "4096",
+    "-t",
+    "2",
+    "-np",
+    "1",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8080"
+  ]
+}
