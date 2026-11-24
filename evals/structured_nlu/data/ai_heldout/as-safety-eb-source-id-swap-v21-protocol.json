@@ -1,0 +1,22 @@
+{
+  "commit": "1273efb311f3f0eee9a1d7051d7fe180a8e719bb",
+  "source_sha256": {
+    "experiments/as_safety_atomic_edges_v21.py": "0ed44bcf822b7f3e31a92800da3ec4e0d6ab1bc56c79007cd615303a04a3e72f",
+    "docs/portfolio/nlu_safety_eb_source_id_swap_v21_method.md": "fbc0c12878cd318fcdb8763b3ecd2f4bf8282fb9bb6f557ccd9b2114f34f8064"
+  },
+  "v20_protocol_sha256": "82cfa057bca6f27498a26d97bfcb626d1cb726af0fcb594e15095cf0996b44a1",
+  "model_sha256": "b46661073c18e5b56a41fa320975f866a00def1ff08feef4718e013258896f8c",
+  "image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "order": [
+    "PC01-P014-forward",
+    "PC01-P016-forward",
+    "NC01-P020-forward",
+    "NC01-P002-forward"
+  ],
+  "request_sha256": {
+    "PC01-P014-forward": "33fdc9742006835965cd0b0ad809b11aa9ea05af2c789df321d4f3852916cd6d",
+    "PC01-P016-forward": "5776762cafd622de08e5199b36c1cfdf897fa01bbc020596a21adcd1e10508fe",
+    "NC01-P020-forward": "2832c8e869924001f8915d7334e1875af02c25e061b6bb7b868b6e926aa43e92",
+    "NC01-P002-forward": "50068f8877ad99f5711dd649e2355c253cfe52c7c10276efc45150d22f911a2f"
+  }
+}
