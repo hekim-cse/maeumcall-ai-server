@@ -1,0 +1,180 @@
+{
+  "input_sha256": "a798ac839d0e21424f8542d1182f55cf208047b3e28ed804a5dd6ca1c60da6a7",
+  "provenance": "ai_authored_user_reviewed",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "contextual": {
+      "positive_total": 5,
+      "negative_total": 13,
+      "true_approval": 0,
+      "missed_approval": 5,
+      "false_approval": 0,
+      "correct_abstention": 13,
+      "errors": 0,
+      "pairs_total": 9,
+      "pairs_passed": 4,
+      "location_total": 3,
+      "location_false_approval": 0
+    },
+    "composed": {
+      "positive_total": 5,
+      "negative_total": 13,
+      "true_approval": 3,
+      "missed_approval": 2,
+      "false_approval": 0,
+      "correct_abstention": 13,
+      "errors": 0,
+      "pairs_total": 9,
+      "pairs_passed": 7,
+      "location_total": 3,
+      "location_false_approval": 0
+    }
+  },
+  "rows": [
+    {
+      "case": "DP01",
+      "id": "DP01-1",
+      "quote": "제습기 냉각판",
+      "gold": "approve",
+      "contextual": "abstain",
+      "composed": "approve"
+    },
+    {
+      "case": "DP01",
+      "id": "DP01-2",
+      "quote": "전원 어댑터",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP02",
+      "id": "DP02-1",
+      "quote": "멀티탭",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP02",
+      "id": "DP02-2",
+      "quote": "전원 공급기 절연막",
+      "gold": "approve",
+      "contextual": "abstain",
+      "composed": "approve"
+    },
+    {
+      "case": "DP03",
+      "id": "DP03-1",
+      "quote": "공기청정기 집진망",
+      "gold": "approve",
+      "contextual": "abstain",
+      "composed": "approve"
+    },
+    {
+      "case": "DP03",
+      "id": "DP03-2",
+      "quote": "필터",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP04",
+      "id": "DP04-1",
+      "quote": "인쇄기 집진판 옆 작업대",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP04",
+      "id": "DP04-2",
+      "quote": "인쇄기 집진판",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP05",
+      "id": "DP05-1",
+      "quote": "충전기 방열판 보관함",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP05",
+      "id": "DP05-2",
+      "quote": "방열판",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP06",
+      "id": "DP06-1",
+      "quote": "모니터",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP06",
+      "id": "DP06-2",
+      "quote": "독립형 차폐망",
+      "gold": "approve",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP07",
+      "id": "DP07-1",
+      "quote": "집진판",
+      "gold": "approve",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP07",
+      "id": "DP07-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP08",
+      "id": "DP08-1",
+      "quote": "정수기 방열판",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP08",
+      "id": "DP08-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP09",
+      "id": "DP09-1",
+      "quote": "연기",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    },
+    {
+      "case": "DP09",
+      "id": "DP09-2",
+      "quote": "건조기 방열망",
+      "gold": "abstain",
+      "contextual": "abstain",
+      "composed": "abstain"
+    }
+  ]
+}
