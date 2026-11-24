@@ -1,0 +1,52 @@
+{
+  "experiment": "as-safety-eb-event-reference-v23",
+  "commit": "f039518999e442af6301f1d70f8a6ed2bf0cc59f",
+  "source_sha256": {
+    "docs/portfolio/nlu_safety_eb_event_reference_v23_method.md": "102d145b5ebac99d3c2ff0d1ba9d17acff93307150951ff9338f5a9c5d6deddd",
+    "experiments/as_safety_atomic_edges_v1/run.py": "f38f60808ebb3b1bdaed7381446ad43326bbe0970113f0dbc157ea2afb1ab764",
+    "experiments/as_safety_atomic_edges_v10/model_attestation.py": "13ad5360340e15055cb675a5bf5b873a6580cba8b71311911324368c3a5de006",
+    "experiments/as_safety_atomic_edges_v12/run.py": "fa09f4730e660f55a90780ae05ae00649632cd0cf4a4ae9ec51918c5b8698a4c",
+    "experiments/as_safety_atomic_edges_v19.py": "24e54e4dbdcd69adda8aac661120e389b8beac8626bb0aef1de6219a4701bc4d",
+    "experiments/as_safety_atomic_edges_v23.py": "9b923f3daa7b0ea9eeb192e887373b2867cf3044caa2c3a7ca10459b9940d37e",
+    "experiments/as_safety_atomic_edges_v4/run.py": "f9d31d6041fdc00f71bcca452c4793bd63d4cab8be740e84ec043d8b80fb497b",
+    "experiments/as_safety_atomic_edges_v5/run.py": "a953810fa63ee76ab3f2c27ce66c7abdfb7b94cd620482744c08bce91a325b55",
+    "experiments/as_safety_atomic_edges_v7/run.py": "f41398e167246c0a882667a30b197e6b7baa8228000f8af0302c357efbfd54dc",
+    "experiments/as_safety_runner.py": "ac5fc69e9276ac87addd0da62b39a6ae138c59ef6351063497c1fc5ad19bafe5",
+    "experiments/as_safety_v2/json_contract.py": "e2bff0454084f28390a383179fefb0812077610fbeabd067d1343fbb687f2012",
+    "experiments/as_safety_v2/transport.py": "ccbaab8dae80b78275c6b1af29ce16c5dd3d88933a3db41c6f3b99717d1c8384",
+    "experiments/as_safety_v4/run.py": "5ff01016ced5c1fe1028e81cc1533f224fcb7abca6e84e0ba56a4f14e89ac9cb"
+  },
+  "reference": {
+    "protocol_sha256": "d8e8160ec563eeec9416eb4db4b28d7ca48eaec41c5876ce7e0be7d51363d80b",
+    "journal_sha256": "ceb22990bbbf5fc53adf690fc631f40c2e1e212a3afb96fd74c547984123cd39"
+  },
+  "model_sha256": "b46661073c18e5b56a41fa320975f866a00def1ff08feef4718e013258896f8c",
+  "container": "as-safety-eb-model-comparison-v19",
+  "image_digest": "sha256:17155a3ce4cc906728ec99a2814bf0b4eaffaf3b4872bad8c3affed310cdbc35",
+  "server_args": [
+    "-m",
+    "/models/kanana.gguf",
+    "-c",
+    "4096",
+    "-t",
+    "2",
+    "-np",
+    "1",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8080"
+  ],
+  "order": [
+    "PC01-P014-forward",
+    "PC01-P016-forward",
+    "NC01-P020-forward",
+    "NC01-P002-forward"
+  ],
+  "request_sha256": {
+    "PC01-P014-forward": "06028c3dfc72e8c39916998185cbd898969594fd5b3a9b73cf2651409e4d8124",
+    "PC01-P016-forward": "99f7d81467bddd0490db231fe9615ec173487af7d29a4758a61509e41026c456",
+    "NC01-P020-forward": "5bcf7522c7d35533b1455997172b46b19ad814b9010943e4f850606d6171a260",
+    "NC01-P002-forward": "177589af4efaa3b36ce58d815e88180b1d9d4e2a99815dec74deb68841fa4b40"
+  }
+}
