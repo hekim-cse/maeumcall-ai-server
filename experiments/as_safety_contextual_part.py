@@ -1,6 +1,7 @@
 """Recover full surface part names and explicit part links in earlier context."""
 
 import re
+from collections.abc import Callable
 
 from kiwipiepy import Kiwi
 
@@ -52,7 +53,13 @@ def has_explicit_part_link(part: str, preceding: tuple[str, ...]) -> bool:
     return len(owners) == 1
 
 
-def contextual_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
+def contextual_source(
+    pair: FixedPair,
+    occurrence: str,
+    kiwi: Kiwi,
+    *,
+    extra_part_evidence: Callable[[str], bool] | None = None,
+) -> DirectSource | None:
     """Extend only the prior rule's locative head check, retaining its vetoes."""
     established = source_scope(pair, occurrence, kiwi)
     if established is not None:
@@ -71,5 +78,7 @@ def contextual_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSou
     source = pair.candidate.quote
     surface_head = source.split()[-1]
     if surface_head in PHYSICAL_HEADS or has_explicit_part_link(source, pair.clauses[: index - 1]):
+        return locative
+    if extra_part_evidence is not None and extra_part_evidence(source):
         return locative
     return None
