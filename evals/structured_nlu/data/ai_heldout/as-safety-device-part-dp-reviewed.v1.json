@@ -1,0 +1,268 @@
+{
+  "kind": "as_safety_device_part_dp_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "DP05·DP08: 두 후보 보류",
+    "DP06: 독립형 차폐망 승인",
+    "DP07: 집진판 승인"
+  ],
+  "observation_location_candidates": [
+    "DP04-1",
+    "DP05-1",
+    "DP09-2"
+  ],
+  "cases": [
+    {
+      "id": "DP01",
+      "utterance": "제습기 냉각판에서 연기가 났습니다. 옆에는 전원 어댑터가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "선행 부품 설명 없는 기기·부위 조합",
+      "candidates": [
+        {
+          "id": "DP01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "제습기 냉각판"
+          },
+          "approve": true
+        },
+        {
+          "id": "DP01-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "전원 어댑터"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DP02",
+      "utterance": "전원 공급기 절연막에서 불꽃이 튀었습니다. 연결된 멀티탭에는 별다른 이상이 없었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "여러 어절의 기기명과 직접 출처",
+      "candidates": [
+        {
+          "id": "DP02-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "멀티탭"
+          },
+          "approve": false
+        },
+        {
+          "id": "DP02-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 공급기 절연막"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "DP03",
+      "utterance": "공기청정기 집진망에서 연기가 났습니다. 분리해 둔 필터는 옆에 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "새로운 기능·형태 조합과 다른 후보",
+      "candidates": [
+        {
+          "id": "DP03-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "공기청정기 집진망"
+          },
+          "approve": true
+        },
+        {
+          "id": "DP03-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "필터"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DP04",
+      "utterance": "인쇄기 집진판을 점검하려고 왔습니다. 인쇄기 집진판 옆 작업대에서 연기가 났습니다. 어디서 시작된 연기인지는 보지 못했습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "부품 단어가 있어도 관찰 장소",
+      "candidates": [
+        {
+          "id": "DP04-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "인쇄기 집진판 옆 작업대"
+          },
+          "approve": false
+        },
+        {
+          "id": "DP04-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "인쇄기 집진판"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DP05",
+      "utterance": "충전기 방열판 보관함에서 연기가 났습니다. 안에는 방열판과 청소용 천이 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "보관함에서 발견한 연기, 실제 출처 미확정",
+      "candidates": [
+        {
+          "id": "DP05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 방열판 보관함"
+          },
+          "approve": false
+        },
+        {
+          "id": "DP05-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "방열판"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DP06",
+      "utterance": "모니터 옆에 별도로 세워 둔 차폐망이 있습니다. 독립형 차폐망에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "외부 물체도 직접 출처가 될 수 있음",
+      "candidates": [
+        {
+          "id": "DP06-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "모니터"
+          },
+          "approve": false
+        },
+        {
+          "id": "DP06-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "독립형 차폐망"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "DP07",
+      "utterance": "작업을 멈춘 직후였습니다. 집진판에서 연기가 났습니다. 집진판을 떼어 따로 두었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기기명 없이 부위만 직접 지목",
+      "candidates": [
+        {
+          "id": "DP07-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "집진판"
+          },
+          "approve": true
+        },
+        {
+          "id": "DP07-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "연기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DP08",
+      "utterance": "정수기 방열판에서 연기가 났습니다. 다시 보니 연기가 어디서 시작됐는지는 확인하지 못했습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 사건의 출처를 후속 문장에서 정정",
+      "candidates": [
+        {
+          "id": "DP08-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "정수기 방열판"
+          },
+          "approve": false
+        },
+        {
+          "id": "DP08-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "연기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DP09",
+      "utterance": "건조기 방열망에서 연기가 보였습니다. 망 자체에서 시작된 연기인지는 보지 못했습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 보였습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기기·부품명이 있어도 목격 장소만 확인",
+      "candidates": [
+        {
+          "id": "DP09-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "연기"
+          },
+          "approve": false
+        },
+        {
+          "id": "DP09-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "건조기 방열망"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}
