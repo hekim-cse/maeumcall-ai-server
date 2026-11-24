@@ -1,5 +1,6 @@
 """Offline baseline for a direct Korean locative attachment to an observed event."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from kiwipiepy import Kiwi
@@ -19,7 +20,13 @@ class DirectSource:
     event_end: int
 
 
-def explicit_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
+def explicit_source(
+    pair: FixedPair,
+    occurrence: str,
+    kiwi: Kiwi,
+    *,
+    nominal_evidence: Callable[[str], bool] | None = None,
+) -> DirectSource | None:
     """Accept only a whole nominal phrase directly attached to the anchored event."""
     event = pair.event
     candidate = pair.candidate
@@ -41,7 +48,8 @@ def explicit_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSourc
         return None
     if clause[end:] not in {"", ".", "。"}:
         return None
-    tokens = kiwi.tokenize(candidate.quote)
-    if not tokens or any(token.tag not in NOUN_TAGS for token in tokens):
-        return None
+    if nominal_evidence is None or not nominal_evidence(candidate.quote):
+        tokens = kiwi.tokenize(candidate.quote)
+        if not tokens or any(token.tag not in NOUN_TAGS for token in tokens):
+            return None
     return DirectSource(index, candidate.start, candidate.end, start, end)
