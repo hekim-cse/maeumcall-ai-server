@@ -1,0 +1,195 @@
+{
+  "input_sha256": "46cb2a0aed2e78c0a34b6e89dfadad10341d2e5eee6f460d0c87eb5afa3a4823",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "total_candidates": 16,
+    "positive_total": 6,
+    "true_approval": 3,
+    "missed_approval": 3,
+    "negative_total": 10,
+    "false_approval": 2,
+    "correct_abstention": 8,
+    "errors": 0,
+    "mixed_total": 6,
+    "mixed_pass": 3,
+    "all_abstain_total": 2,
+    "all_abstain_pass": 1
+  },
+  "rows": [
+    {
+      "case": "EP01",
+      "candidate": "EP01-1",
+      "gold": "approve",
+      "decision": "approve",
+      "error": null,
+      "evidence": {
+        "clause_index": 2,
+        "source_start": 0,
+        "source_end": 8,
+        "event_start": 11,
+        "event_end": 19
+      },
+      "correct": true
+    },
+    {
+      "case": "EP01",
+      "candidate": "EP01-2",
+      "gold": "abstain",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": true
+    },
+    {
+      "case": "EP02",
+      "candidate": "EP02-1",
+      "gold": "abstain",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": true
+    },
+    {
+      "case": "EP02",
+      "candidate": "EP02-2",
+      "gold": "approve",
+      "decision": "approve",
+      "error": null,
+      "evidence": {
+        "clause_index": 2,
+        "source_start": 0,
+        "source_end": 8,
+        "event_start": 12,
+        "event_end": 21
+      },
+      "correct": true
+    },
+    {
+      "case": "EP03",
+      "candidate": "EP03-1",
+      "gold": "approve",
+      "decision": "approve",
+      "error": null,
+      "evidence": {
+        "clause_index": 2,
+        "source_start": 0,
+        "source_end": 7,
+        "event_start": 10,
+        "event_end": 23
+      },
+      "correct": true
+    },
+    {
+      "case": "EP03",
+      "candidate": "EP03-2",
+      "gold": "abstain",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": true
+    },
+    {
+      "case": "EP04",
+      "candidate": "EP04-1",
+      "gold": "abstain",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": true
+    },
+    {
+      "case": "EP04",
+      "candidate": "EP04-2",
+      "gold": "approve",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": false
+    },
+    {
+      "case": "EP05",
+      "candidate": "EP05-1",
+      "gold": "approve",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": false
+    },
+    {
+      "case": "EP05",
+      "candidate": "EP05-2",
+      "gold": "abstain",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": true
+    },
+    {
+      "case": "EP06",
+      "candidate": "EP06-1",
+      "gold": "abstain",
+      "decision": "approve",
+      "error": null,
+      "evidence": {
+        "clause_index": 2,
+        "source_start": 0,
+        "source_end": 3,
+        "event_start": 6,
+        "event_end": 19
+      },
+      "correct": false
+    },
+    {
+      "case": "EP06",
+      "candidate": "EP06-2",
+      "gold": "approve",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": false
+    },
+    {
+      "case": "EP07",
+      "candidate": "EP07-1",
+      "gold": "abstain",
+      "decision": "approve",
+      "error": null,
+      "evidence": {
+        "clause_index": 2,
+        "source_start": 0,
+        "source_end": 3,
+        "event_start": 6,
+        "event_end": 17
+      },
+      "correct": false
+    },
+    {
+      "case": "EP07",
+      "candidate": "EP07-2",
+      "gold": "abstain",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": true
+    },
+    {
+      "case": "EP08",
+      "candidate": "EP08-1",
+      "gold": "abstain",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": true
+    },
+    {
+      "case": "EP08",
+      "candidate": "EP08-2",
+      "gold": "abstain",
+      "decision": "abstain",
+      "error": null,
+      "evidence": null,
+      "correct": true
+    }
+  ]
+}
