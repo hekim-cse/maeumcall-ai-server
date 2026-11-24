@@ -1,0 +1,235 @@
+{
+  "kind": "as_safety_explicit_source_ep_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "EP05: 그 장치는 전원 어댑터를 가리킨다.",
+    "EP06: 작업대는 관찰 장소다.",
+    "EP07: 방 안은 관찰 장소다."
+  ],
+  "cases": [
+    {
+      "id": "EP01",
+      "utterance": "공기청정기하고 멀티탭을 같이 쓰고 있습니다. 공기청정기 모터에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "접수 문맥 속 다른 물체",
+      "candidates": [
+        {
+          "id": "EP01-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "공기청정기 모터"
+          },
+          "approve": true
+        },
+        {
+          "id": "EP01-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "멀티탭"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "EP02",
+      "utterance": "전기주전자와 전원 받침을 함께 접수하려고 합니다. 전원 받침 단자로부터 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "다른 조사와 실제 부품",
+      "candidates": [
+        {
+          "id": "EP02-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "전기주전자"
+          },
+          "approve": false
+        },
+        {
+          "id": "EP02-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "전원 받침 단자"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "EP03",
+      "utterance": "토스터가 식은 뒤에 확인했습니다. 토스터 배출구에서 검은 가루가 떨어졌습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "검은 가루가 떨어졌습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "출처와 현상 구분",
+      "candidates": [
+        {
+          "id": "EP03-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "토스터 배출구"
+          },
+          "approve": true
+        },
+        {
+          "id": "EP03-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "검은 가루"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "EP04",
+      "utterance": "핸디청소기를 점검해 주세요. 전원을 꽂자마자 충전 단자에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "출처 앞에 시간절이 있는 경우",
+      "candidates": [
+        {
+          "id": "EP04-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "핸디청소기"
+          },
+          "approve": false
+        },
+        {
+          "id": "EP04-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "충전 단자"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "EP05",
+      "utterance": "모니터와 전원 어댑터를 분리했습니다. 그중 전원 어댑터를 따로 점검했습니다. 그 장치에서 타는 냄새가 났습니다.",
+      "event": {
+        "clause_index": 3,
+        "quote": "타는 냄새가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "앞 문장의 지시어 선행사",
+      "candidates": [
+        {
+          "id": "EP05-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "전원 어댑터"
+          },
+          "approve": true
+        },
+        {
+          "id": "EP05-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "모니터"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "EP06",
+      "utterance": "휴대용 조명과 배터리 팩을 작업대에 놓았습니다. 작업대에서 배터리 팩이 부풀었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "배터리 팩이 부풀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "관찰 장소와 실제 변화가 일어난 대상",
+      "candidates": [
+        {
+          "id": "EP06-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "작업대"
+          },
+          "approve": false
+        },
+        {
+          "id": "EP06-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "배터리 팩"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "EP07",
+      "utterance": "방 안에 노트북과 모니터를 켜 둔 상태였습니다. 방 안에서 타는 냄새가 났습니다. 어느 제품에서 시작된 냄새인지는 모르겠습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "타는 냄새가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "출처 조사처럼 보이는 관찰 장소",
+      "candidates": [
+        {
+          "id": "EP07-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "방 안"
+          },
+          "approve": false
+        },
+        {
+          "id": "EP07-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "노트북"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "EP08",
+      "utterance": "프린터와 그 옆의 전원 어댑터를 사용 중이었습니다. 갑자기 연기가 났습니다. 둘 중 어느 쪽에서 시작됐는지는 보지 못했습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "사건 관찰과 출처 확인의 분리",
+      "candidates": [
+        {
+          "id": "EP08-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "프린터"
+          },
+          "approve": false
+        },
+        {
+          "id": "EP08-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 어댑터"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}

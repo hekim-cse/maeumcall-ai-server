@@ -1,0 +1,14 @@
+{
+  "kind": "as_safety_source_role_development_v1",
+  "provenance": "ai_authored_development",
+  "cases": [
+    {"id":"SL01","utterance":"수납함에서 보조배터리 케이스가 부풀었습니다.","event":{"clause_index":1,"quote":"보조배터리 케이스가 부풀었습니다"},"candidates":[{"quote":"수납함","approve":false},{"quote":"보조배터리 케이스","approve":true}]},
+    {"id":"SL02","utterance":"정비실에서 전선 피복이 녹았습니다.","event":{"clause_index":1,"quote":"전선 피복이 녹았습니다"},"candidates":[{"quote":"전선 피복","approve":true},{"quote":"정비실","approve":false}]},
+    {"id":"SL03","utterance":"포장대에서 플러그 단자가 휘었습니다.","event":{"clause_index":1,"quote":"플러그 단자가 휘었습니다"},"candidates":[{"quote":"포장대","approve":false},{"quote":"플러그 단자","approve":true}]},
+    {"id":"SL04","utterance":"복도에서 불꽃을 목격했습니다. 근처에 충전기가 놓여 있었습니다.","event":{"clause_index":1,"quote":"불꽃을 목격했습니다"},"candidates":[{"quote":"복도","approve":false},{"clause_index":2,"quote":"충전기","approve":false}]},
+    {"id":"SL05","utterance":"다용도실에서 매캐한 냄새가 났습니다. 어느 기기에서 시작됐는지는 확인하지 못했습니다.","event":{"clause_index":1,"quote":"매캐한 냄새가 났습니다"},"candidates":[{"quote":"매캐한 냄새","approve":false},{"quote":"다용도실","approve":false}]},
+    {"id":"SL06","utterance":"전기히터 송풍구에서 연기가 났습니다. 옆에는 선풍기가 있었습니다.","event":{"clause_index":1,"quote":"연기가 났습니다"},"candidates":[{"clause_index":2,"quote":"선풍기","approve":false},{"quote":"전기히터 송풍구","approve":true}]},
+    {"id":"SL07","utterance":"대기실에서 연기가 났습니다. 공기청정기가 켜져 있었습니다.","event":{"clause_index":1,"quote":"연기가 났습니다"},"candidates":[{"quote":"대기실","approve":false},{"clause_index":2,"quote":"공기청정기","approve":false}]},
+    {"id":"SL08","utterance":"컴퓨터 전원 장치에서 불꽃이 튀었습니다. 어디서 수리할지 모르겠습니다.","event":{"clause_index":1,"quote":"불꽃이 튀었습니다"},"candidates":[{"quote":"컴퓨터 전원 장치","approve":true},{"quote":"불꽃","approve":false}]}
+  ]
+}

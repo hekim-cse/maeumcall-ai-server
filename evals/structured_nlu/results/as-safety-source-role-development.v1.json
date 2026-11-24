@@ -1,0 +1,143 @@
+{
+  "input_sha256": "d3fce9ffdba4d436939c0ec3f902fcb59e332a6062cb3ef34573a43effe31a7b",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "baseline": {
+      "positive_total": 5,
+      "negative_total": 11,
+      "true_approval": 2,
+      "missed_approval": 3,
+      "false_approval": 4,
+      "correct_abstention": 7,
+      "errors": 0,
+      "pairs_total": 8,
+      "pairs_passed": 2
+    },
+    "role": {
+      "positive_total": 5,
+      "negative_total": 11,
+      "true_approval": 5,
+      "missed_approval": 0,
+      "false_approval": 1,
+      "correct_abstention": 10,
+      "errors": 0,
+      "pairs_total": 8,
+      "pairs_passed": 7
+    }
+  },
+  "rows": [
+    {
+      "id": "SL01-1",
+      "quote": "수납함",
+      "gold_approval": false,
+      "baseline": false,
+      "role": false
+    },
+    {
+      "id": "SL01-2",
+      "quote": "보조배터리 케이스",
+      "gold_approval": true,
+      "baseline": false,
+      "role": true
+    },
+    {
+      "id": "SL02-1",
+      "quote": "전선 피복",
+      "gold_approval": true,
+      "baseline": false,
+      "role": true
+    },
+    {
+      "id": "SL02-2",
+      "quote": "정비실",
+      "gold_approval": false,
+      "baseline": true,
+      "role": false
+    },
+    {
+      "id": "SL03-1",
+      "quote": "포장대",
+      "gold_approval": false,
+      "baseline": false,
+      "role": false
+    },
+    {
+      "id": "SL03-2",
+      "quote": "플러그 단자",
+      "gold_approval": true,
+      "baseline": false,
+      "role": true
+    },
+    {
+      "id": "SL04-1",
+      "quote": "복도",
+      "gold_approval": false,
+      "baseline": true,
+      "role": false
+    },
+    {
+      "id": "SL04-2",
+      "quote": "충전기",
+      "gold_approval": false,
+      "baseline": false,
+      "role": false
+    },
+    {
+      "id": "SL05-1",
+      "quote": "매캐한 냄새",
+      "gold_approval": false,
+      "baseline": false,
+      "role": false
+    },
+    {
+      "id": "SL05-2",
+      "quote": "다용도실",
+      "gold_approval": false,
+      "baseline": true,
+      "role": false
+    },
+    {
+      "id": "SL06-1",
+      "quote": "선풍기",
+      "gold_approval": false,
+      "baseline": false,
+      "role": false
+    },
+    {
+      "id": "SL06-2",
+      "quote": "전기히터 송풍구",
+      "gold_approval": true,
+      "baseline": true,
+      "role": true
+    },
+    {
+      "id": "SL07-1",
+      "quote": "대기실",
+      "gold_approval": false,
+      "baseline": true,
+      "role": true
+    },
+    {
+      "id": "SL07-2",
+      "quote": "공기청정기",
+      "gold_approval": false,
+      "baseline": false,
+      "role": false
+    },
+    {
+      "id": "SL08-1",
+      "quote": "컴퓨터 전원 장치",
+      "gold_approval": true,
+      "baseline": true,
+      "role": true
+    },
+    {
+      "id": "SL08-2",
+      "quote": "불꽃",
+      "gold_approval": false,
+      "baseline": false,
+      "role": false
+    }
+  ]
+}
