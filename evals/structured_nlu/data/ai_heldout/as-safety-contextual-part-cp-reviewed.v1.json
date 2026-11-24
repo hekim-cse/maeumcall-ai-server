@@ -1,0 +1,262 @@
+{
+  "kind": "as_safety_contextual_part_cp_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "CP06·CP09: 두 후보 보류",
+    "CP07: 인쇄기 집진판 승인"
+  ],
+  "cases": [
+    {
+      "id": "CP01",
+      "utterance": "의류관리기 송풍구에서 연기가 났습니다. 옆 선반에는 수건이 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "원문 복합 부위명, 다른 문장의 장소",
+      "candidates": [
+        {
+          "id": "CP01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "의류관리기 송풍구"
+          },
+          "approve": true
+        },
+        {
+          "id": "CP01-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "선반"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CP02",
+      "utterance": "절연판은 배터리에 장착된 부품입니다. 절연판에서 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "목록 밖 부위의 실제 장착과 직접 출처",
+      "candidates": [
+        {
+          "id": "CP02-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "배터리"
+          },
+          "approve": false
+        },
+        {
+          "id": "CP02-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "절연판"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "CP03",
+      "utterance": "충전기의 교체 부품인 접점판을 점검했습니다. 접점판에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "부품 설명과 직접 지목, 기기 대신 더 구체적인 부위",
+      "candidates": [
+        {
+          "id": "CP03-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "접점판"
+          },
+          "approve": true
+        },
+        {
+          "id": "CP03-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CP04",
+      "utterance": "차단편을 펌프 옆에 보관했습니다. 차단편 주변에서 연기가 보였습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 보였습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "보관 관계와 관찰 장소",
+      "candidates": [
+        {
+          "id": "CP04-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "차단편 주변"
+          },
+          "approve": false
+        },
+        {
+          "id": "CP04-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "차단편"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CP05",
+      "utterance": "절연판은 충전기에 장착되지 않은 부품입니다. 절연판 근처에서 불꽃을 봤습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "불꽃을 봤습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "장착 부정과 관찰 위치",
+      "candidates": [
+        {
+          "id": "CP05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "절연판"
+          },
+          "approve": false
+        },
+        {
+          "id": "CP05-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "절연판 근처"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CP06",
+      "utterance": "차폐판은 전원 장치에 장착된 부품입니다. 차폐판은 제어 모터에 장착된 부품입니다. 두 장치에 각각 하나씩 있습니다. 차폐판에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 4,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "이름이 같은 두 부품 중 어느 쪽인지 불명확",
+      "candidates": [
+        {
+          "id": "CP06-1",
+          "span": {
+            "clause_index": 4,
+            "quote": "차폐판"
+          },
+          "approve": false
+        },
+        {
+          "id": "CP06-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "제어 모터"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CP07",
+      "utterance": "인쇄기 집진판에서 연기가 났습니다. 아래쪽에는 포장 상자가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "부위 목록 밖이지만 원문은 직접 출처를 지목",
+      "candidates": [
+        {
+          "id": "CP07-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "포장 상자"
+          },
+          "approve": false
+        },
+        {
+          "id": "CP07-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "인쇄기 집진판"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "CP08",
+      "utterance": "왼쪽 차폐판은 전원 장치에 장착된 부품입니다. 오른쪽 차폐판은 제어 모터에 장착된 부품입니다. 왼쪽 차폐판에서 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 3,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "여러 부위가 있어도 왼쪽 부위를 특정",
+      "candidates": [
+        {
+          "id": "CP08-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "오른쪽 차폐판"
+          },
+          "approve": false
+        },
+        {
+          "id": "CP08-2",
+          "span": {
+            "clause_index": 3,
+            "quote": "왼쪽 차폐판"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "CP09",
+      "utterance": "가림판은 전원 장치에 장착된 부품입니다. 가림판에서 연기가 났습니다. 다시 보니 연기가 어디서 시작됐는지는 확인하지 못했습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "부품 관계와 별개로 같은 사건의 출처 진술을 정정",
+      "candidates": [
+        {
+          "id": "CP09-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "가림판"
+          },
+          "approve": false
+        },
+        {
+          "id": "CP09-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 장치"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}
