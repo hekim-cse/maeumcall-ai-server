@@ -1,0 +1,267 @@
+{
+  "kind": "as_safety_surface_nominal_sn_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "SN03·SN07·SN08: 직접 출처 후보 승인",
+    "SN05: 두 후보 보류"
+  ],
+  "observation_location_candidates": [
+    "SN04-1",
+    "SN05-2",
+    "SN09-1"
+  ],
+  "cases": [
+    {
+      "id": "SN01",
+      "utterance": "프린터 집진판에서 검은 연기가 났습니다. 전원 어댑터는 손으로 만졌을 때 열이 없었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "검은 연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "앞 문장 설명 없는 복합 부위",
+      "candidates": [
+        {
+          "id": "SN01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "프린터 집진판"
+          },
+          "approve": true
+        },
+        {
+          "id": "SN01-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "전원 어댑터"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "SN02",
+      "utterance": "전원 공급기 고정편에서 불꽃이 튀었습니다. 옆에 놓인 케이블은 다른 쪽에 연결돼 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "여러 어절의 기기명과 부위",
+      "candidates": [
+        {
+          "id": "SN02-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "케이블"
+          },
+          "approve": false
+        },
+        {
+          "id": "SN02-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 공급기 고정편"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "SN03",
+      "utterance": "공기청정기 집진판에서 연기가 났습니다. 그 전에 들은 소리의 출처는 모르겠습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "별개 소리의 출처 미확인이 연기 출처에 영향을 주지 않음",
+      "candidates": [
+        {
+          "id": "SN03-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "공기청정기 집진판"
+          },
+          "approve": true
+        },
+        {
+          "id": "SN03-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "연기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "SN04",
+      "utterance": "인쇄기 집진판 옆 작업대에서 불꽃이 튀었습니다. 작업대 위에는 여러 물건이 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "관찰 장소 전체와 그 앞부분인 부위 후보",
+      "candidates": [
+        {
+          "id": "SN04-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "인쇄기 집진판 옆 작업대"
+          },
+          "approve": false
+        },
+        {
+          "id": "SN04-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "인쇄기 집진판"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "SN05",
+      "utterance": "제습기 집진판에서 연기가 보였습니다. 연기가 집진판 자체에서 시작된 건지는 못 봤습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 보였습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "정확한 기기·부위 조합이어도 목격 위치만 확인",
+      "candidates": [
+        {
+          "id": "SN05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "연기"
+          },
+          "approve": false
+        },
+        {
+          "id": "SN05-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "제습기 집진판"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "SN06",
+      "utterance": "건조기 집진판에서 연기가 났습니다. 다시 보니 연기의 출처는 모르겠습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 사건의 출처를 뒤에서 정정",
+      "candidates": [
+        {
+          "id": "SN06-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "건조기 집진판"
+          },
+          "approve": false
+        },
+        {
+          "id": "SN06-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "연기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "SN07",
+      "utterance": "상담 메시지에 남기겠습니다. 프린터집진판에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "띄어쓰기는 없지만 부위를 직접 지목",
+      "candidates": [
+        {
+          "id": "SN07-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "프린터집진판"
+          },
+          "approve": true
+        },
+        {
+          "id": "SN07-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "연기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "SN08",
+      "utterance": "인쇄기 여과격자에서 연기가 났습니다. 옆에 둔 종이 상자는 그대로였습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "알려진 조합 밖의 부위라도 직접 출처로 명시",
+      "candidates": [
+        {
+          "id": "SN08-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "종이 상자"
+          },
+          "approve": false
+        },
+        {
+          "id": "SN08-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "인쇄기 여과격자"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "SN09",
+      "utterance": "펌프 완충판 보관함에서 연기가 났습니다. 안에는 완충판과 포장재를 같이 넣어 뒀습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기기·부품명이 포함된 보관 장소",
+      "candidates": [
+        {
+          "id": "SN09-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "펌프 완충판 보관함"
+          },
+          "approve": false
+        },
+        {
+          "id": "SN09-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "완충판"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}
