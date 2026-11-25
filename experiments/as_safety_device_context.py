@@ -19,15 +19,11 @@ DEVICE_STATEMENT = re.compile(
     r"(?:제가 |지금 |현재 )?(?:사용하는|사용 중인|점검할) (?:기기|장비)입니다[.。]?"
 )
 DEVICE_RETRACTION = r"(?:은|는) (?:(?:제가 |지금 |현재 )?(?:사용하는|사용 중인|점검할) )?(?:기기|장비)가 (?:아닙니다|아니라)"
-NATIVE_MULTIPLE = (
-    r"(?:두|세|네|다섯|여섯|일곱|여덟|아홉|여러|"
-    r"(?:열|스물|스무|서른|마흔|쉰|예순|일흔|여든|아흔)"
-    r"(?: ?(?:한|두|세|네|다섯|여섯|일곱|여덟|아홉))?)"
-)
-DEVICE_MULTIPLICITY = (
+DEVICE_COUNT = (
     r"(?:이)?라는 이름의 (?:기기|장비)가 "
-    rf"(?:{NATIVE_MULTIPLE} |0*(?:[2-9]|[1-9][0-9]+) ?)대 있습니다[.。]?"
+    r"(?P<count>[가-힣0-9][가-힣0-9 ~–-]*?) ?대 있습니다[.。]?"
 )
+SINGLE_DEVICE_COUNT = re.compile(r"(?:(?:단 )?한|일|0*1)")
 
 
 def described_devices(preceding: tuple[str, ...]) -> frozenset[str]:
@@ -64,12 +60,15 @@ def unique_contextual_split(
         return False
     ((device, _, _),) = matches
     names = {device, device.replace(" ", "")} if device in registered else {device}
-    return not any(
-        re.match(re.escape(name) + DEVICE_RETRACTION, clause)
-        or re.fullmatch(re.escape(name) + DEVICE_MULTIPLICITY, clause)
-        for name in names
-        for clause in clauses
-    )
+    for name in names:
+        escaped = re.escape(name)
+        for clause in clauses:
+            if re.match(escaped + DEVICE_RETRACTION, clause):
+                return False
+            count = re.fullmatch(escaped + DEVICE_COUNT, clause)
+            if count and not SINGLE_DEVICE_COUNT.fullmatch(count["count"].strip()):
+                return False
+    return True
 
 
 def device_context_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
