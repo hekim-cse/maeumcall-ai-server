@@ -1,0 +1,196 @@
+{
+  "input_sha256": "ea15bb20a2bcc71ffb736810f0eb559450b8d8d0460dd13c5a414098ca67ec77",
+  "provenance": "ai_authored_user_reviewed",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "surface_nominal": {
+      "positive_total": 6,
+      "negative_total": 14,
+      "true_approval": 0,
+      "missed_approval": 6,
+      "false_approval": 0,
+      "correct_abstention": 14,
+      "errors": 0,
+      "pairs_total": 10,
+      "pairs_passed": 4,
+      "location_total": 3,
+      "location_false_approval": 0
+    },
+    "attached_device": {
+      "positive_total": 6,
+      "negative_total": 14,
+      "true_approval": 4,
+      "missed_approval": 2,
+      "false_approval": 0,
+      "correct_abstention": 14,
+      "errors": 0,
+      "pairs_total": 10,
+      "pairs_passed": 8,
+      "location_total": 3,
+      "location_false_approval": 0
+    }
+  },
+  "rows": [
+    {
+      "case": "AP01",
+      "id": "AP01-1",
+      "quote": "전원 공급기절연판",
+      "gold": "approve",
+      "surface_nominal": "abstain",
+      "attached_device": "approve"
+    },
+    {
+      "case": "AP01",
+      "id": "AP01-2",
+      "quote": "멀티탭",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP02",
+      "id": "AP02-1",
+      "quote": "수건",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP02",
+      "id": "AP02-2",
+      "quote": "정수기 여과막",
+      "gold": "approve",
+      "surface_nominal": "abstain",
+      "attached_device": "approve"
+    },
+    {
+      "case": "AP03",
+      "id": "AP03-1",
+      "quote": "인쇄기 차폐격자",
+      "gold": "approve",
+      "surface_nominal": "abstain",
+      "attached_device": "approve"
+    },
+    {
+      "case": "AP03",
+      "id": "AP03-2",
+      "quote": "케이블",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP04",
+      "id": "AP04-1",
+      "quote": "연기",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP04",
+      "id": "AP04-2",
+      "quote": "제습기여과격자",
+      "gold": "approve",
+      "surface_nominal": "abstain",
+      "attached_device": "approve"
+    },
+    {
+      "case": "AP05",
+      "id": "AP05-1",
+      "quote": "인쇄기집진판 옆 작업대",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP05",
+      "id": "AP05-2",
+      "quote": "인쇄기집진판",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP06",
+      "id": "AP06-1",
+      "quote": "프린터집진판보관함",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP06",
+      "id": "AP06-2",
+      "quote": "프린터집진판",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP07",
+      "id": "AP07-1",
+      "quote": "공기청정기여과격자",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP07",
+      "id": "AP07-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP08",
+      "id": "AP08-1",
+      "quote": "연기",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP08",
+      "id": "AP08-2",
+      "quote": "정수기여과막",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP09",
+      "id": "AP09-1",
+      "quote": "거치대",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP09",
+      "id": "AP09-2",
+      "quote": "전원장치발열체",
+      "gold": "approve",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP10",
+      "id": "AP10-1",
+      "quote": "공기순환기 여과격자",
+      "gold": "approve",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    },
+    {
+      "case": "AP10",
+      "id": "AP10-2",
+      "quote": "필터",
+      "gold": "abstain",
+      "surface_nominal": "abstain",
+      "attached_device": "abstain"
+    }
+  ]
+}
