@@ -1,0 +1,212 @@
+{
+  "input_sha256": "b342fe5f397d03008e3b3b2c7ada680703e8ff50af9f447d61f416d09e45595b",
+  "provenance": "ai_authored_user_reviewed",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "device_context": {
+      "positive_total": 5,
+      "negative_total": 17,
+      "true_approval": 0,
+      "missed_approval": 5,
+      "false_approval": 0,
+      "correct_abstention": 17,
+      "errors": 0,
+      "pairs_total": 11,
+      "pairs_passed": 6,
+      "location_total": 3,
+      "location_false_approval": 0
+    },
+    "device_operation": {
+      "positive_total": 5,
+      "negative_total": 17,
+      "true_approval": 3,
+      "missed_approval": 2,
+      "false_approval": 0,
+      "correct_abstention": 17,
+      "errors": 0,
+      "pairs_total": 11,
+      "pairs_passed": 9,
+      "location_total": 3,
+      "location_false_approval": 0
+    }
+  },
+  "rows": [
+    {
+      "case": "OP01",
+      "id": "OP01-1",
+      "quote": "분말포집기 여과망",
+      "gold": "approve",
+      "device_context": "abstain",
+      "device_operation": "approve"
+    },
+    {
+      "case": "OP01",
+      "id": "OP01-2",
+      "quote": "포대",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP02",
+      "id": "OP02-1",
+      "quote": "전원선",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP02",
+      "id": "OP02-2",
+      "quote": "미세먼지회수기 절연판",
+      "gold": "approve",
+      "device_context": "abstain",
+      "device_operation": "approve"
+    },
+    {
+      "case": "OP03",
+      "id": "OP03-1",
+      "quote": "열교환순환기 방열판",
+      "gold": "approve",
+      "device_context": "abstain",
+      "device_operation": "approve"
+    },
+    {
+      "case": "OP03",
+      "id": "OP03-2",
+      "quote": "전원 플러그",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP04",
+      "id": "OP04-1",
+      "quote": "분말혼합기 차폐막 옆 선반",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP04",
+      "id": "OP04-2",
+      "quote": "분말혼합기 차폐막",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP05",
+      "id": "OP05-1",
+      "quote": "분말분리기",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP05",
+      "id": "OP05-2",
+      "quote": "분말압축기 고정판",
+      "gold": "approve",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP06",
+      "id": "OP06-1",
+      "quote": "습기흡수기 차폐격자",
+      "gold": "approve",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP06",
+      "id": "OP06-2",
+      "quote": "전원 버튼",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP07",
+      "id": "OP07-1",
+      "quote": "분말선별기 집진망",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP07",
+      "id": "OP07-2",
+      "quote": "전원 버튼",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP08",
+      "id": "OP08-1",
+      "quote": "압력조절기",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP08",
+      "id": "OP08-2",
+      "quote": "압력조절기 완충판",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP09",
+      "id": "OP09-1",
+      "quote": "미립자선별기 여과격자",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP09",
+      "id": "OP09-2",
+      "quote": "전원 버튼",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP10",
+      "id": "OP10-1",
+      "quote": "분진이송기 방열망",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP10",
+      "id": "OP10-2",
+      "quote": "분진이송기",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP11",
+      "id": "OP11-1",
+      "quote": "정비실 출입구",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    },
+    {
+      "case": "OP11",
+      "id": "OP11-2",
+      "quote": "공구 상자",
+      "gold": "abstain",
+      "device_context": "abstain",
+      "device_operation": "abstain"
+    }
+  ]
+}
