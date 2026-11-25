@@ -12,7 +12,7 @@ OPERATION = re.compile(
     r"(?P<name>[가-힣]+)의 전원 (?:버튼을 눌렀습니다|"
     r"스위치를 (?:켰습니다|껐습니다)|플러그를 뽑았습니다)[.。]?"
 )
-PLACE_NAME = r"(?:은|는) (?:[가-힣]+ )*(?:구역|장소|공간|작업실|보관함) 이름입니다[.。]?"
+PLACE_NAME = r"(?:은|는) (?:[가-힣]+ )*(?:구역|장소|공간|작업실|보관함|통로) 이름입니다[.。]?"
 
 
 def device_operation_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:

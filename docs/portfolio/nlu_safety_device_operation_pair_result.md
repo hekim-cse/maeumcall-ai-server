@@ -14,4 +14,6 @@
 
 평가 전 독립 검수로 기기명과 전체 후보 구절 중 어느 하나라도 장소 이름으로 밝혀지면 새 조작 근거를 사용하지 않도록 보강했다. 기존 DC 결과는 이전 규칙으로 재실행해 저장본과 바이트 단위로 일치했다. DC09는 이 표본에 포함하지 않았다.
 
+PR 검토를 반영해 통로 이름 정정을 추가하고, 잘못된 발생 상태 보류와 추가 필드·공백 구절 거부를 확인했다. 수정 뒤 OP와 DC 결과가 저장본과 바이트 단위로 일치했다.
+
 [후보별 결과](../../evals/structured_nlu/results/as-safety-device-operation-op-evaluation.v1.json)는 `python -m experiments.as_safety_device_operation_evaluation`으로 재현한다. 입력 SHA-256은 `b342fe5f397d03008e3b3b2c7ada680703e8ff50af9f447d61f416d09e45595b`이다. AI 작성·사용자 검수 11건에서 고정 후보의 승인과 보류를 비교한 오프라인 결과다.
