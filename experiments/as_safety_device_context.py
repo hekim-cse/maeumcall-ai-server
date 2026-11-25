@@ -71,9 +71,15 @@ def unique_contextual_split(
     return True
 
 
-def device_context_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
+def device_context_source(
+    pair: FixedPair,
+    occurrence: str,
+    kiwi: Kiwi,
+    *,
+    extra_devices: frozenset[str] = frozenset(),
+) -> DirectSource | None:
     index = pair.event["clause_index"]
-    described = described_devices(pair.clauses[: index - 1])
+    described = described_devices(pair.clauses[: index - 1]) | extra_devices
 
     def nominal_evidence(quote: str) -> bool:
         return unique_contextual_split(quote, DEVICE_NAMES, described, pair.clauses)
