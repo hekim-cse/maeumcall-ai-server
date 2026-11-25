@@ -1,0 +1,322 @@
+{
+  "kind": "as_safety_device_operation_op_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "OP01–OP11 검수표의 후보별 판단을 사용자가 전부 채택함"
+  ],
+  "observation_location_candidates": [
+    "OP04-1",
+    "OP07-1",
+    "OP11-1"
+  ],
+  "cases": [
+    {
+      "id": "OP01",
+      "utterance": "분말포집기의 전원 버튼을 눌렀습니다. 분말포집기 여과망에서 검은 연기가 났습니다. 바닥에는 포대가 놓여 있었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "검은 연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 기기를 직접 조작한 뒤 부위에서 발연",
+      "candidates": [
+        {
+          "id": "OP01-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "분말포집기 여과망"
+          },
+          "approve": true
+        },
+        {
+          "id": "OP01-2",
+          "span": {
+            "clause_index": 3,
+            "quote": "포대"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "OP02",
+      "utterance": "미세먼지회수기의 전원 스위치를 켰습니다. 미세먼지회수기 절연판에서 불꽃이 튀었습니다. 전원선은 그대로였습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "스위치 조작과 불꽃의 직접 출처",
+      "candidates": [
+        {
+          "id": "OP02-1",
+          "span": {
+            "clause_index": 3,
+            "quote": "전원선"
+          },
+          "approve": false
+        },
+        {
+          "id": "OP02-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "미세먼지회수기 절연판"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "OP03",
+      "utterance": "열교환순환기의 전원 플러그를 뽑았습니다. 열교환순환기 방열판에서 연기가 나왔습니다. 먼저 들린 경고 소리의 출처는 모르겠습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 나왔습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "출처가 불명확한 사건은 연기와 별개의 소리",
+      "candidates": [
+        {
+          "id": "OP03-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "열교환순환기 방열판"
+          },
+          "approve": true
+        },
+        {
+          "id": "OP03-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 플러그"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "OP04",
+      "utterance": "분말혼합기의 전원 버튼을 눌렀습니다. 분말혼합기 차폐막 옆 선반에서 연기가 났습니다. 선반 위에는 물건이 여러 개 있었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "선반은 관찰 장소이며 부위는 장소를 설명함",
+      "candidates": [
+        {
+          "id": "OP04-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "분말혼합기 차폐막 옆 선반"
+          },
+          "approve": false
+        },
+        {
+          "id": "OP04-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "분말혼합기 차폐막"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "OP05",
+      "utterance": "분말분리기의 전원 스위치를 껐습니다. 분말압축기 고정판에서 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "출처는 직접 지목됐으나 조작한 기기와 이름이 다름",
+      "candidates": [
+        {
+          "id": "OP05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "분말분리기"
+          },
+          "approve": false
+        },
+        {
+          "id": "OP05-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "분말압축기 고정판"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "OP06",
+      "utterance": "설명서에 습기흡수기의 전원 버튼을 누르라고 적혀 있습니다. 습기흡수기 차폐격자에서 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "직접 출처와 설명서 속 조작 지시를 구분",
+      "candidates": [
+        {
+          "id": "OP06-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "습기흡수기 차폐격자"
+          },
+          "approve": true
+        },
+        {
+          "id": "OP06-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 버튼"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "OP07",
+      "utterance": "분말선별기의 전원 버튼을 눌렀습니다. 분말선별기 집진망에서 연기가 났습니다. 분말선별기는 보관 구역 이름입니다. 분말선별기 집진망은 구역 안 통로 이름입니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "뒤에서 전체 후보를 장소 이름으로 명시",
+      "candidates": [
+        {
+          "id": "OP07-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "분말선별기 집진망"
+          },
+          "approve": false
+        },
+        {
+          "id": "OP07-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 버튼"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "OP08",
+      "utterance": "압력조절기의 전원 스위치를 켰습니다. 압력조절기 완충판에서 연기가 보였습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 보였습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "목격은 표현됐고 발원 부위는 특정되지 않음",
+      "candidates": [
+        {
+          "id": "OP08-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "압력조절기"
+          },
+          "approve": false
+        },
+        {
+          "id": "OP08-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "압력조절기 완충판"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "OP09",
+      "utterance": "미립자선별기의 전원 버튼을 눌렀습니다. 미립자선별기 여과격자에서 연기가 났습니다. 다시 보니 연기의 출처는 모르겠습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 사건의 출처를 뒤에서 정정",
+      "candidates": [
+        {
+          "id": "OP09-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "미립자선별기 여과격자"
+          },
+          "approve": false
+        },
+        {
+          "id": "OP09-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 버튼"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "OP10",
+      "utterance": "분진이송기의 전원 버튼을 눌렀습니다. 분진이송기 방열망에서 연기가 났습니다. 분진이송기라는 이름의 장비가 두 대 있습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "동명 장비 둘 중 출처 기기를 특정할 수 없음",
+      "candidates": [
+        {
+          "id": "OP10-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "분진이송기 방열망"
+          },
+          "approve": false
+        },
+        {
+          "id": "OP10-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "분진이송기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "OP11",
+      "utterance": "정비실의 전원 스위치를 켰습니다. 정비실 출입구에서 연기가 났습니다. 출입구 바닥에 공구 상자가 있었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "장소의 전원 조작과 직접 출처를 구분",
+      "candidates": [
+        {
+          "id": "OP11-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "정비실 출입구"
+          },
+          "approve": false
+        },
+        {
+          "id": "OP11-2",
+          "span": {
+            "clause_index": 3,
+            "quote": "공구 상자"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}
