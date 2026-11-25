@@ -1,0 +1,196 @@
+{
+  "input_sha256": "200c673fc73f4294f5ec1838ebbaded79b519febaf5f63944233a7295d42ccfc",
+  "provenance": "ai_authored_user_reviewed",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "attached_device": {
+      "positive_total": 4,
+      "negative_total": 16,
+      "true_approval": 0,
+      "missed_approval": 4,
+      "false_approval": 0,
+      "correct_abstention": 16,
+      "errors": 0,
+      "pairs_total": 10,
+      "pairs_passed": 6,
+      "location_total": 3,
+      "location_false_approval": 0
+    },
+    "device_context": {
+      "positive_total": 4,
+      "negative_total": 16,
+      "true_approval": 3,
+      "missed_approval": 1,
+      "false_approval": 0,
+      "correct_abstention": 16,
+      "errors": 0,
+      "pairs_total": 10,
+      "pairs_passed": 9,
+      "location_total": 3,
+      "location_false_approval": 0
+    }
+  },
+  "rows": [
+    {
+      "case": "DC01",
+      "id": "DC01-1",
+      "quote": "전원공급기절연막",
+      "gold": "approve",
+      "attached_device": "abstain",
+      "device_context": "approve"
+    },
+    {
+      "case": "DC01",
+      "id": "DC01-2",
+      "quote": "케이블",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC02",
+      "id": "DC02-1",
+      "quote": "멀티탭",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC02",
+      "id": "DC02-2",
+      "quote": "분진회수기 여과격자",
+      "gold": "approve",
+      "attached_device": "abstain",
+      "device_context": "approve"
+    },
+    {
+      "case": "DC03",
+      "id": "DC03-1",
+      "quote": "온도조절기 차폐막",
+      "gold": "approve",
+      "attached_device": "abstain",
+      "device_context": "approve"
+    },
+    {
+      "case": "DC03",
+      "id": "DC03-2",
+      "quote": "온도조절기",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC04",
+      "id": "DC04-1",
+      "quote": "서버실",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC04",
+      "id": "DC04-2",
+      "quote": "정수기",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC05",
+      "id": "DC05-1",
+      "quote": "전원장치발열체보관함",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC05",
+      "id": "DC05-2",
+      "quote": "전원장치발열체",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC06",
+      "id": "DC06-1",
+      "quote": "랙 모니터 차폐격자 옆 선반",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC06",
+      "id": "DC06-2",
+      "quote": "랙 모니터 차폐격자",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC07",
+      "id": "DC07-1",
+      "quote": "분진회수기 여과격자",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC07",
+      "id": "DC07-2",
+      "quote": "연기",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC08",
+      "id": "DC08-1",
+      "quote": "분진회수기 여과격자",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC08",
+      "id": "DC08-2",
+      "quote": "분진회수기",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC09",
+      "id": "DC09-1",
+      "quote": "종이 상자",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC09",
+      "id": "DC09-2",
+      "quote": "가루흡입기 집진판",
+      "gold": "approve",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC10",
+      "id": "DC10-1",
+      "quote": "전원공급기절연막",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    },
+    {
+      "case": "DC10",
+      "id": "DC10-2",
+      "quote": "불꽃",
+      "gold": "abstain",
+      "attached_device": "abstain",
+      "device_context": "abstain"
+    }
+  ]
+}
