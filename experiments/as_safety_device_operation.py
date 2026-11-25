@@ -31,7 +31,9 @@ def device_operation_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> Dir
             and (tokens[-1].form, tokens[-1].tag) == ("기", "XSN")
             and all(token.tag in NOUN_TAGS for token in tokens[:-1])
             and not any(
-                re.fullmatch(re.escape(device) + PLACE_NAME, clause) for clause in pair.clauses
+                re.fullmatch(re.escape(name) + PLACE_NAME, clause)
+                for name in (device, pair.candidate.quote)
+                for clause in pair.clauses
             )
         ):
             return device_context_source(pair, occurrence, kiwi, extra_devices=frozenset({device}))
