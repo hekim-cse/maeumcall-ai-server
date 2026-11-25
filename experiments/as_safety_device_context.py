@@ -22,23 +22,21 @@ DEVICE_RETRACTION = r"(?:은|는) (?:(?:제가 |지금 |현재 )?(?:사용하는
 DEVICE_MULTIPLICITY = r"(?:이)?라는 이름의 (?:기기|장비)가 (?:두|세|여러) 대 있습니다[.。]?"
 
 
-def described_devices(preceding: tuple[str, ...], clauses: tuple[str, ...]) -> frozenset[str]:
+def described_devices(preceding: tuple[str, ...]) -> frozenset[str]:
     """Use only a named device explicitly introduced before the event."""
-    names = {match["name"] for clause in preceding if (match := DEVICE_STATEMENT.fullmatch(clause))}
     return frozenset(
-        name
-        for name in names
-        if name.split()[-1] not in POSITION_HEADS
-        and not any(
-            re.match(re.escape(name) + DEVICE_RETRACTION, clause)
-            or re.fullmatch(re.escape(name) + DEVICE_MULTIPLICITY, clause)
-            for clause in clauses
-        )
+        match["name"]
+        for clause in preceding
+        if (match := DEVICE_STATEMENT.fullmatch(clause))
+        and match["name"].split()[-1] not in POSITION_HEADS
     )
 
 
 def unique_contextual_split(
-    quote: str, registered: frozenset[str], described: frozenset[str]
+    quote: str,
+    registered: frozenset[str],
+    described: frozenset[str],
+    clauses: tuple[str, ...] = (),
 ) -> bool:
     matches = set()
     for device in registered | described:
@@ -54,15 +52,24 @@ def unique_contextual_split(
                     (device, function, shape)
                     for function, shape in part_splits(part, EXTENDED_FUNCTIONS, EXTENDED_SHAPES)
                 )
-    return len(matches) == 1
+    if len(matches) != 1:
+        return False
+    ((device, _, _),) = matches
+    names = {device, device.replace(" ", "")} if device in registered else {device}
+    return not any(
+        re.match(re.escape(name) + DEVICE_RETRACTION, clause)
+        or re.fullmatch(re.escape(name) + DEVICE_MULTIPLICITY, clause)
+        for name in names
+        for clause in clauses
+    )
 
 
 def device_context_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
     index = pair.event["clause_index"]
-    described = described_devices(pair.clauses[: index - 1], pair.clauses)
+    described = described_devices(pair.clauses[: index - 1])
 
     def nominal_evidence(quote: str) -> bool:
-        return unique_contextual_split(quote, DEVICE_NAMES, described)
+        return unique_contextual_split(quote, DEVICE_NAMES, described, pair.clauses)
 
     return contextual_source(
         pair,

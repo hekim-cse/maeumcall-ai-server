@@ -1,0 +1,294 @@
+{
+  "kind": "as_safety_device_context_dc_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "DC01–DC10 검수표의 후보별 판단을 사용자가 전부 채택함"
+  ],
+  "observation_location_candidates": [
+    "DC04-1",
+    "DC05-1",
+    "DC06-1"
+  ],
+  "cases": [
+    {
+      "id": "DC01",
+      "utterance": "전원공급기절연막에서 불꽃이 튀었습니다. 옆의 케이블에는 불꽃이 없었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "등록 기기의 내부와 부위 경계가 모두 붙음",
+      "candidates": [
+        {
+          "id": "DC01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원공급기절연막"
+          },
+          "approve": true
+        },
+        {
+          "id": "DC01-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "케이블"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DC02",
+      "utterance": "분진회수기는 현재 사용 중인 장비입니다. 분진회수기 여과격자에서 연기가 났습니다. 멀티탭은 그대로였습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "미등록 이름을 실제 장비로 소개",
+      "candidates": [
+        {
+          "id": "DC02-1",
+          "span": {
+            "clause_index": 3,
+            "quote": "멀티탭"
+          },
+          "approve": false
+        },
+        {
+          "id": "DC02-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "분진회수기 여과격자"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "DC03",
+      "utterance": "온도조절기는 제가 사용하는 기기입니다. 온도조절기를 계속 사용 중이었습니다. 온도조절기 차폐막에서 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 3,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 기기 재언급과 더 구체적인 부위",
+      "candidates": [
+        {
+          "id": "DC03-1",
+          "span": {
+            "clause_index": 3,
+            "quote": "온도조절기 차폐막"
+          },
+          "approve": true
+        },
+        {
+          "id": "DC03-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "온도조절기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DC04",
+      "utterance": "서버실은 작업실 이름입니다. 서버실에서 연기가 났습니다. 근처에는 정수기가 있었습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "이름이 있어도 기기가 아닌 관찰 장소",
+      "candidates": [
+        {
+          "id": "DC04-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "서버실"
+          },
+          "approve": false
+        },
+        {
+          "id": "DC04-2",
+          "span": {
+            "clause_index": 3,
+            "quote": "정수기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DC05",
+      "utterance": "전원장치발열체보관함에서 연기가 났습니다. 안에는 부품과 포장재가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "전체 보관 장소와 잘라 제시한 부위",
+      "candidates": [
+        {
+          "id": "DC05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원장치발열체보관함"
+          },
+          "approve": false
+        },
+        {
+          "id": "DC05-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원장치발열체"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DC06",
+      "utterance": "랙 모니터는 제가 사용하는 기기입니다. 랙 모니터 차폐격자 옆 선반에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기기 정의가 있어도 장소와 부위는 다름",
+      "candidates": [
+        {
+          "id": "DC06-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "랙 모니터 차폐격자 옆 선반"
+          },
+          "approve": false
+        },
+        {
+          "id": "DC06-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "랙 모니터 차폐격자"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DC07",
+      "utterance": "분진회수기는 현재 사용 중인 장비입니다. 분진회수기 여과격자에서 연기가 났습니다. 분진회수기는 장비가 아니라 보관함 이름입니다.",
+      "event": {
+        "clause_index": 2,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "장비 이름이라는 앞 진술을 후속 정정",
+      "candidates": [
+        {
+          "id": "DC07-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "분진회수기 여과격자"
+          },
+          "approve": false
+        },
+        {
+          "id": "DC07-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "연기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DC08",
+      "utterance": "분진회수기는 현재 사용 중인 장비입니다. 분진회수기라는 이름의 장비가 두 대 있습니다. 분진회수기 여과격자에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 3,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 이름의 장비 두 대 중 어느 쪽인지 불명확",
+      "candidates": [
+        {
+          "id": "DC08-1",
+          "span": {
+            "clause_index": 3,
+            "quote": "분진회수기 여과격자"
+          },
+          "approve": false
+        },
+        {
+          "id": "DC08-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "분진회수기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "DC09",
+      "utterance": "가루흡입기 집진판에서 연기가 났습니다. 바닥에는 종이 상자가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "사전·정의에는 없어도 직접 출처 지목",
+      "candidates": [
+        {
+          "id": "DC09-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "종이 상자"
+          },
+          "approve": false
+        },
+        {
+          "id": "DC09-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "가루흡입기 집진판"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "DC10",
+      "utterance": "전원공급기절연막에서 불꽃이 튀었습니다. 다시 보니 불꽃이 어디서 시작됐는지는 확인하지 못했습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "붙여 쓴 출처 후보를 같은 사건의 후속 발화가 정정",
+      "candidates": [
+        {
+          "id": "DC10-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원공급기절연막"
+          },
+          "approve": false
+        },
+        {
+          "id": "DC10-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "불꽃"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}
