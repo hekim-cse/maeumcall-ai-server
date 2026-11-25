@@ -1,0 +1,296 @@
+{
+  "kind": "as_safety_attached_device_part_ap_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "AP05~AP08: 두 후보 모두 보류",
+    "AP09: 전원장치발열체 승인",
+    "AP10: 공기순환기 여과격자 승인"
+  ],
+  "observation_location_candidates": [
+    "AP05-1",
+    "AP06-1",
+    "AP08-2"
+  ],
+  "cases": [
+    {
+      "id": "AP01",
+      "utterance": "전원 공급기절연판에서 불꽃이 튀었습니다. 옆에 둔 멀티탭에는 불꽃이 보이지 않았습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기기 내부 띄어쓰기는 유지하고 부위 앞만 붙임",
+      "candidates": [
+        {
+          "id": "AP01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 공급기절연판"
+          },
+          "approve": true
+        },
+        {
+          "id": "AP01-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "멀티탭"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AP02",
+      "utterance": "정수기 여과막에서 물이 샜습니다. 바닥에 있던 수건은 젖어 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "물이 샜습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "새 기능과 기존 형태 조합",
+      "candidates": [
+        {
+          "id": "AP02-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "수건"
+          },
+          "approve": false
+        },
+        {
+          "id": "AP02-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "정수기 여과막"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "AP03",
+      "utterance": "인쇄기 차폐격자에서 불꽃이 튀었습니다. 뒤에 놓인 케이블에는 불꽃이 없었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기존 기능과 새 형태 조합",
+      "candidates": [
+        {
+          "id": "AP03-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "인쇄기 차폐격자"
+          },
+          "approve": true
+        },
+        {
+          "id": "AP03-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "케이블"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AP04",
+      "utterance": "제습기여과격자에서 매캐한 연기가 났습니다. 그 전에 들린 소리의 출처는 모르겠습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "매캐한 연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "두 어휘 확장과 붙여쓰기, 별개 소리",
+      "candidates": [
+        {
+          "id": "AP04-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "연기"
+          },
+          "approve": false
+        },
+        {
+          "id": "AP04-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "제습기여과격자"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "AP05",
+      "utterance": "인쇄기집진판 옆 작업대에서 불꽃이 튀었습니다. 작업대에는 공구가 여러 개 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "관찰 장소 전체와 잘라 제시한 부위",
+      "candidates": [
+        {
+          "id": "AP05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "인쇄기집진판 옆 작업대"
+          },
+          "approve": false
+        },
+        {
+          "id": "AP05-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "인쇄기집진판"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AP06",
+      "utterance": "프린터집진판보관함에서 연기가 났습니다. 보관함에는 예비 부품과 종이 포장재가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기기·부위·보관함이 모두 붙어도 출처 미확정",
+      "candidates": [
+        {
+          "id": "AP06-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "프린터집진판보관함"
+          },
+          "approve": false
+        },
+        {
+          "id": "AP06-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "프린터집진판"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AP07",
+      "utterance": "공기청정기여과격자에서 연기가 났습니다. 다시 보니 연기가 어디서 시작됐는지는 확인하지 못했습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "후속 문장에서 같은 사건의 출처를 정정",
+      "candidates": [
+        {
+          "id": "AP07-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "공기청정기여과격자"
+          },
+          "approve": false
+        },
+        {
+          "id": "AP07-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "연기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AP08",
+      "utterance": "정수기여과막에서 연기가 보였습니다. 여과막 자체에서 시작된 건지는 확인하지 못했습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 보였습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "부위 근처에서 관찰했지만 시작점은 미확인",
+      "candidates": [
+        {
+          "id": "AP08-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "연기"
+          },
+          "approve": false
+        },
+        {
+          "id": "AP08-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "정수기여과막"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AP09",
+      "utterance": "전원장치발열체에서 불꽃이 튀었습니다. 거치대는 그 아래에 놓여 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기기명 내부까지 붙인 명확한 출처",
+      "candidates": [
+        {
+          "id": "AP09-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "거치대"
+          },
+          "approve": false
+        },
+        {
+          "id": "AP09-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원장치발열체"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "AP10",
+      "utterance": "공기순환기 여과격자에서 연기가 났습니다. 뒤쪽 선반에는 예비 필터가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "등록 범위 밖 기기의 직접 출처",
+      "candidates": [
+        {
+          "id": "AP10-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "공기순환기 여과격자"
+          },
+          "approve": true
+        },
+        {
+          "id": "AP10-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "필터"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}
