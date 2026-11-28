@@ -1,0 +1,634 @@
+{
+  "paired": {
+    "input_sha256": "9e3e8bd7f814afe089496b100ce56dce947fb2e66f47c0f2b9f41beed0cc0797",
+    "provenance": "ai_authored_user_reviewed",
+    "kiwipiepy": "0.23.2",
+    "kiwipiepy_model": "0.23.0",
+    "summary": {
+      "baseline": {
+        "positive_total": 5,
+        "negative_total": 17,
+        "true_approval": 0,
+        "missed_approval": 5,
+        "false_approval": 0,
+        "correct_abstention": 17,
+        "errors": 0,
+        "pairs_total": 11,
+        "pairs_passed": 6,
+        "location_total": 4,
+        "location_false_approval": 0,
+        "other_event_source_total": 1,
+        "other_event_source_false_approval": 0,
+        "partial_span_total": 1,
+        "partial_span_false_approval": 0
+      },
+      "adjacent_pad": {
+        "positive_total": 5,
+        "negative_total": 17,
+        "true_approval": 4,
+        "missed_approval": 1,
+        "false_approval": 0,
+        "correct_abstention": 17,
+        "errors": 0,
+        "pairs_total": 11,
+        "pairs_passed": 10,
+        "location_total": 4,
+        "location_false_approval": 0,
+        "other_event_source_total": 1,
+        "other_event_source_false_approval": 0,
+        "partial_span_total": 1,
+        "partial_span_false_approval": 0
+      }
+    },
+    "rows": [
+      {
+        "case": "PD01",
+        "id": "PD01-1",
+        "quote": "차량용 무선 충전 패드",
+        "gold": "approve",
+        "baseline": "abstain",
+        "adjacent_pad": "approve"
+      },
+      {
+        "case": "PD01",
+        "id": "PD01-2",
+        "quote": "무선 충전 패드",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD02",
+        "id": "PD02-1",
+        "quote": "스피커",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD02",
+        "id": "PD02-2",
+        "quote": "어댑터 단자",
+        "gold": "approve",
+        "baseline": "abstain",
+        "adjacent_pad": "approve"
+      },
+      {
+        "case": "PD03",
+        "id": "PD03-1",
+        "quote": "멀티탭 커넥터",
+        "gold": "approve",
+        "baseline": "abstain",
+        "adjacent_pad": "approve"
+      },
+      {
+        "case": "PD03",
+        "id": "PD03-2",
+        "quote": "전원",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD04",
+        "id": "PD04-1",
+        "quote": "소형 라디오",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD04",
+        "id": "PD04-2",
+        "quote": "탁상용 충전 패드",
+        "gold": "approve",
+        "baseline": "abstain",
+        "adjacent_pad": "approve"
+      },
+      {
+        "case": "PD05",
+        "id": "PD05-1",
+        "quote": "무선 충전 패드 옆",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD05",
+        "id": "PD05-2",
+        "quote": "무선 충전 패드",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD06",
+        "id": "PD06-1",
+        "quote": "충전 패드 옆 바닥",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD06",
+        "id": "PD06-2",
+        "quote": "충전 패드",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD07",
+        "id": "PD07-1",
+        "quote": "충전 패드",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD07",
+        "id": "PD07-2",
+        "quote": "전원",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD08",
+        "id": "PD08-1",
+        "quote": "무선 충전 패드",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD08",
+        "id": "PD08-2",
+        "quote": "전원",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD09",
+        "id": "PD09-1",
+        "quote": "전원",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD09",
+        "id": "PD09-2",
+        "quote": "탁상용 충전 패드",
+        "gold": "approve",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD10",
+        "id": "PD10-1",
+        "quote": "충전기",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD10",
+        "id": "PD10-2",
+        "quote": "선반 쪽",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD11",
+        "id": "PD11-1",
+        "quote": "충전 패드 옆",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      },
+      {
+        "case": "PD11",
+        "id": "PD11-2",
+        "quote": "멀티탭 단자",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "adjacent_pad": "abstain"
+      }
+    ]
+  },
+  "es": {
+    "kind": "as_safety_es_adjacent_pad_development_v1",
+    "input_sha256": "49e4e960d901c037c7d10de6899aaeade3c71809060772571f0c8f58409d52f7",
+    "kiwipiepy": "0.23.2",
+    "kiwipiepy_model": "0.23.0",
+    "candidate_settings": {
+      "max_window_tokens": 5,
+      "max_candidates": 192
+    },
+    "skipped_nonoccurring": [
+      "ES15-2",
+      "ES19-1",
+      "ES20-1"
+    ],
+    "gold_availability": {
+      "no_gold_owner": 1,
+      "selected": 18
+    },
+    "outcomes": {
+      "baseline": {
+        "correct_unresolved": 1,
+        "exact": 3,
+        "missed_available": 15
+      },
+      "adjacent_pad": {
+        "correct_unresolved": 1,
+        "exact": 4,
+        "missed_available": 14
+      }
+    },
+    "rows": [
+      {
+        "event": "ES01-1",
+        "occurrence": "observed",
+        "offered_candidates": 70,
+        "gold_availability": "selected",
+        "gold_candidate": "P044",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES02-1",
+        "occurrence": "observed",
+        "offered_candidates": 44,
+        "gold_availability": "selected",
+        "gold_candidate": "P023",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [
+              "P023"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [
+              "P023"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          }
+        }
+      },
+      {
+        "event": "ES03-1",
+        "occurrence": "observed",
+        "offered_candidates": 56,
+        "gold_availability": "selected",
+        "gold_candidate": "P036",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES04-1",
+        "occurrence": "observed",
+        "offered_candidates": 93,
+        "gold_availability": "selected",
+        "gold_candidate": "P039",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES05-1",
+        "occurrence": "observed",
+        "offered_candidates": 75,
+        "gold_availability": "selected",
+        "gold_candidate": "P034",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES06-1",
+        "occurrence": "observed",
+        "offered_candidates": 122,
+        "gold_availability": "selected",
+        "gold_candidate": "P071",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [
+              "P071"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [
+              "P071"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          }
+        }
+      },
+      {
+        "event": "ES06-2",
+        "occurrence": "observed",
+        "offered_candidates": 122,
+        "gold_availability": "selected",
+        "gold_candidate": "P054",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [
+              "P054"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [
+              "P054"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          }
+        }
+      },
+      {
+        "event": "ES07-1",
+        "occurrence": "observed",
+        "offered_candidates": 87,
+        "gold_availability": "selected",
+        "gold_candidate": "P070",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES08-1",
+        "occurrence": "observed",
+        "offered_candidates": 90,
+        "gold_availability": "selected",
+        "gold_candidate": "P034",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES09-1",
+        "occurrence": "observed",
+        "offered_candidates": 88,
+        "gold_availability": "selected",
+        "gold_candidate": "P070",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES10-1",
+        "occurrence": "observed",
+        "offered_candidates": 80,
+        "gold_availability": "selected",
+        "gold_candidate": "P034",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES11-1",
+        "occurrence": "observed",
+        "offered_candidates": 59,
+        "gold_availability": "selected",
+        "gold_candidate": "P029",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES12-1",
+        "occurrence": "observed",
+        "offered_candidates": 88,
+        "gold_availability": "selected",
+        "gold_candidate": "P041",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES13-1",
+        "occurrence": "observed",
+        "offered_candidates": 83,
+        "gold_availability": "selected",
+        "gold_candidate": "P054",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES14-1",
+        "occurrence": "observed",
+        "offered_candidates": 101,
+        "gold_availability": "selected",
+        "gold_candidate": "P063",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [
+              "P063"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          }
+        }
+      },
+      {
+        "event": "ES15-1",
+        "occurrence": "observed",
+        "offered_candidates": 85,
+        "gold_availability": "selected",
+        "gold_candidate": "P034",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES16-1",
+        "occurrence": "observed",
+        "offered_candidates": 89,
+        "gold_availability": "selected",
+        "gold_candidate": "P041",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES17-1",
+        "occurrence": "observed",
+        "offered_candidates": 112,
+        "gold_availability": "no_gold_owner",
+        "gold_candidate": null,
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "correct_unresolved"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "correct_unresolved"
+          }
+        }
+      },
+      {
+        "event": "ES18-1",
+        "occurrence": "uncertain",
+        "offered_candidates": 93,
+        "gold_availability": "selected",
+        "gold_candidate": "P010",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "adjacent_pad": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      }
+    ],
+    "historical_result_sha256": "0e4b4001b27c60fdf453a272ac2cad43adf5b80bcec2022d298fb8c3e4d9a82c",
+    "changed_events": [
+      "ES14-1"
+    ]
+  }
+}
