@@ -4,8 +4,12 @@ import json
 from pathlib import Path
 
 from experiments.as_safety_adjacent_pad_source import DETECTORS
-from experiments.as_safety_pair_evaluation import compare_with_locations
-from experiments.as_safety_wire_coordination_evaluation import baseline_projection, read_fixed
+from experiments.as_safety_pair_evaluation import (
+    add_abstention_subset,
+    baseline_projection,
+    compare_with_locations,
+    read_fixed,
+)
 from scripts.audit_as_safety_source_selection import audit
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,14 +26,7 @@ def paired_evaluation() -> dict:
     if result["input_sha256"] != DATA_SHA256:
         raise ValueError("reviewed input changed during comparison")
     for label in ("other_event_source", "partial_span"):
-        ids = data[f"{label}_candidates"]
-        subset = set(ids)
-        rows = [row for row in result["rows"] if row["id"] in subset]
-        if len(rows) != len(ids) or any(row["gold"] != "abstain" for row in rows):
-            raise ValueError(f"{label} must consist of unique abstention labels")
-        for name, summary in result["summary"].items():
-            summary[f"{label}_total"] = len(rows)
-            summary[f"{label}_false_approval"] = sum(row[name] == "approve" for row in rows)
+        add_abstention_subset(result, label, data[f"{label}_candidates"])
     return result
 
 

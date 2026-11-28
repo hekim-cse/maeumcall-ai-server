@@ -19,7 +19,6 @@ from core.auth import (
     require_authenticated_user,
 )
 from core.config import AUDIO_UPLOAD_MAX_BYTES
-from praat_voice_analysis import VoiceAnalysisError, analyze_audio
 from services.analysis_service import (
     accumulate_baseline,
     build_payload,
@@ -32,6 +31,7 @@ from services.baseline_store import (
     finalize_calibration_simple,
     normalize_user_id,
 )
+from services.praat_voice_analysis import VoiceAnalysisError, analyze_audio
 
 router = APIRouter(prefix="/voice", tags=["voice"])
 logger = logging.getLogger(__name__)

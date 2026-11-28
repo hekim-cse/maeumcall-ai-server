@@ -17,6 +17,47 @@ from experiments.as_safety_v2.source_lattice import SourceCandidate
 Detector = Callable[[FixedPair, str, Kiwi], DirectSource | None]
 
 
+def read_fixed(path: Path, checksum: str) -> dict:
+    raw = path.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != checksum:
+        raise ValueError(f"fixed input changed: {path.name}")
+    return json.loads(raw)
+
+
+def baseline_projection(report: dict, rule: str) -> dict:
+    return {
+        "settings": {
+            key: report[key]
+            for key in (
+                "input_sha256",
+                "kiwipiepy",
+                "kiwipiepy_model",
+                "candidate_settings",
+                "skipped_nonoccurring",
+                "gold_availability",
+            )
+        },
+        "outcomes": report["outcomes"][rule],
+        "rows": [
+            {
+                **{key: value for key, value in row.items() if key != "rules"},
+                "decision": row["rules"][rule],
+            }
+            for row in report["rows"]
+        ],
+    }
+
+
+def add_abstention_subset(result: dict, label: str, ids: list[str]) -> None:
+    subset = set(ids)
+    rows = [row for row in result["rows"] if row["id"] in subset]
+    if len(rows) != len(ids) or any(row["gold"] != "abstain" for row in rows):
+        raise ValueError(f"{label} must consist of unique abstention labels")
+    for name, summary in result["summary"].items():
+        summary[f"{label}_total"] = len(rows)
+        summary[f"{label}_false_approval"] = sum(row[name] == "approve" for row in rows)
+
+
 def predict(detector: Detector, pair: FixedPair, occurrence: str, kiwi: Kiwi) -> str:
     try:
         return "approve" if detector(pair, occurrence, kiwi) is not None else "abstain"

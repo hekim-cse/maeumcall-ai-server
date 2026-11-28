@@ -43,6 +43,7 @@ jobs:
         run: |
           test "$(docker compose --env-file /dev/null --project-name maeumcall-container-ci exec -T api id -u)" = "10001"
           docker compose --env-file /dev/null --project-name maeumcall-container-ci exec -T api sh -c '! command -v gcc && ! command -v ninja'
+          docker compose --env-file /dev/null --project-name maeumcall-container-ci exec -T api sh -c 'test ! -e /app/evals && test ! -e /app/experiments && test ! -e /app/scripts'
 
       - name: Verify HTTP runtime contract
         run: python scripts/verify_core_container.py --deadline-seconds 60 --expected-version 2.2.0

@@ -220,7 +220,7 @@ def test_invalid_voice_measurements_are_rejected(analysis):
 
 
 def test_unmeasurable_voice_returns_a_typed_client_error(monkeypatch):
-    from praat_voice_analysis import VoiceAnalysisError
+    from services.praat_voice_analysis import VoiceAnalysisError
 
     def reject_unvoiced_audio(path: str):
         raise VoiceAnalysisError(
