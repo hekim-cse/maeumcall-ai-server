@@ -2,6 +2,10 @@
 
 이 도구는 AI 작성·사용자 검수 validation 32건에서 **사전 후보를 고르는 개발 평가**만 수행한다. 공식 test64나 전체 정확도 개선율의 근거로 사용하지 않는다. 알려진 저장소 발화와의 정확 일치만 검사하며, 과거 모델 노출 전체를 증명하지 않는다.
 
+실제 V1 실행은 수동 재시작 판정 오류로 무효 처리했고, V2를 새 프로토콜로
+실행·검증했다. 고정 코드와 결과, 후보 선택 판단은
+[V2 결과 기록](../../docs/portfolio/nlu_internal_validation_v2_candidate_selection_result.md)에 있다.
+
 ## 실행 순서
 
 1. baseline 코드 커밋과 candidate 코드 커밋을 각각 깨끗한 별도 worktree로 준비한다. 후보 코드가 validation 문장·라벨을 보고 수정되지 않았는지 개발 기록도 확인한다.

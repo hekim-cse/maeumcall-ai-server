@@ -1,5 +1,13 @@
 # 탐색적 실모델 관측 (2026-10-09)
 
+이 파일은 2026-10-09~11-05의 **개발 탐색 실행 기록**을 보존한다. 이후의
+[BF01–BF10 후속 경계 탐색](../../../docs/portfolio/nlu_boundary_followup_pair_findings.md),
+AI 작성·사용자 검수 [Q4·Q5 32건 비교](../../../docs/portfolio/ai_authored_nlu_q4_q5_results.md),
+[내부 validation 32건 후보 선택](../../../docs/portfolio/nlu_internal_validation_v2_candidate_selection_result.md),
+[새 일반 test 64건·별도 안전 16건 비교](../../../docs/portfolio/nlu_internal_test80_verified_result.md)는
+각 문서와 연결한 검증 영수증에서 확인한다. 서로 다른 데이터·후보·실행 조건의
+분모를 합쳐 하나의 정확도 개선율로 사용하지 않는다.
+
 `exploratory-local-2026-10-09.json`은 로컬 ARM Docker 이미지
 `sha256:448fdff14781d4dd40a5b664dcfdd909e6a93a557f7803d110381394b736f271`에서
 개발용 초안 36건 중 16개 상세 시나리오별 정보 제공 사례 한 건씩 `/chat`에 보낸 기록이다.
