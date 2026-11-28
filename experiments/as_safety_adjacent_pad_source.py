@@ -43,7 +43,9 @@ def adjacent_action_boundaries(
 
 def source_retracted(pair: FixedPair, kiwi: Kiwi) -> bool:
     candidate = re.escape(pair.candidate.quote)
-    denied_source = re.compile(rf"{candidate}(?:이|가|은|는)? (?:아니라(?:서)?|아니었|아닙니다)")
+    denied_source = re.compile(
+        rf"{candidate}(?:이|가|은|는)? (?:아니(?:고|라|었|에요|다|지만|며)|아닙니다)"
+    )
     kinds = event_kinds(kiwi.tokenize(pair.event["quote"]))
     separate_event_seen = False
     for clause in pair.clauses[pair.event["clause_index"] :]:
@@ -51,11 +53,14 @@ def source_retracted(pair: FixedPair, kiwi: Kiwi) -> bool:
         statement = clause[correction.end() :] if correction else clause
         if denied_source.match(statement):
             return True
-        if kinds.isdisjoint(event_kinds(kiwi.tokenize(clause))):
-            continue
+        mentioned = event_kinds(kiwi.tokenize(clause))
         if SEPARATE_EVENT.match(clause):
-            separate_event_seen = True
-        elif correction and (not separate_event_seen or FIRST_EVENT_REFERENCE.search(statement)):
+            separate_event_seen |= bool(mentioned)
+        elif (
+            correction
+            and not kinds.isdisjoint(mentioned)
+            and (not separate_event_seen or FIRST_EVENT_REFERENCE.search(statement))
+        ):
             return True
     return False
 

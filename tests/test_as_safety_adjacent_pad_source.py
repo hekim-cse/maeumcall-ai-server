@@ -39,6 +39,23 @@ SEPARATE_SPARK = " 별도로 선풍기에서도 불꽃이 튀었습니다."
             False,
         ),
         (DIRECT + f" 다시 보니 {PAD}가 아니라 선풍기 단자였어요.", 2, PAD, "불꽃이 튀어", False),
+        (DIRECT + f" {PAD}가 아니고 선풍기 단자였어요.", 2, PAD, "불꽃이 튀어", False),
+        (DIRECT + f" {PAD}가 아니에요.", 2, PAD, "불꽃이 튀어", False),
+        (
+            DIRECT
+            + " 별도로 선풍기에서 연기가 났습니다. 다시 보니 선풍기에서는 연기가 아니라 불꽃이 튀었어요.",
+            2,
+            PAD,
+            "불꽃이 튀어",
+            True,
+        ),
+        (
+            DIRECT + " 별도로 문의할 내용이 있어요. 다시 보니 불꽃은 선풍기 단자에서 튀었어요.",
+            2,
+            PAD,
+            "불꽃이 튀어",
+            False,
+        ),
         (
             DIRECT
             + SEPARATE_SPARK
