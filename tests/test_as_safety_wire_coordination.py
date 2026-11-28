@@ -50,6 +50,18 @@ COORDINATION = ("coordination_only", "combined")
             "다른 기기의 충전기",
             (),
         ),
+        (
+            "냉각 장치 단자에서 불꽃이 튀었고, 사실은 건조기 커넥터에서 불꽃이 튀었습니다.",
+            "불꽃이 튀었고",
+            "냉각 장치 단자",
+            (),
+        ),
+        (
+            "냉각 장치 단자에서 불꽃이 튀었고, 다시 보니 건조기 커넥터에서 불꽃이 튀었습니다.",
+            "불꽃이 튀었고",
+            "냉각 장치 단자",
+            (),
+        ),
     ],
 )
 def test_independent_wire_and_coordination(source, event, candidate, expected):

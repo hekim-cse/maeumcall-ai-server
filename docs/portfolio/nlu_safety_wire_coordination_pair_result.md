@@ -31,4 +31,6 @@
 
 후보 미생성과 한도 탈락은 각각 0건이다. 복합 부위 규칙은 ES02-1의 식기세척기 전원선을, 사건 경계 규칙은 ES06-1의 다른 기기의 충전기와 ES06-2의 프린터 옆면을 정확히 선택했다. 이어지는 관찰과 지정한 변화 문형, 알려진 복합 부위명에 적용 범위를 한정했다.
 
+독립 검수 후 `사실은`과 `다시 보니` 같은 정정 표현으로 이어지는 절을 새 사건으로 승인하지 않도록 보완했다. 회귀 테스트 두 개에서 첫 출처 보류를 확인했고, 고정 대조와 ES 재평가 출력은 수정 전 저장본과 바이트 단위로 일치했다.
+
 [검수 입력](../../evals/structured_nlu/data/ai_heldout/as-safety-wire-coordination-reviewed.v1.json)과 [후보별 결과](../../evals/structured_nlu/results/as-safety-wire-coordination-evaluation.v1.json)는 `python -m experiments.as_safety_wire_coordination_evaluation`으로 비교를 재현하는 자료다. 새 대조는 고정 후보 자료이고, ES는 이미 노출된 개발 자료에서 검수 사건과 발생 상태를 준 조건부 추출 감사다. 제품 관계와 실제 서비스 안전 경로는 별도 검증 대상이다.

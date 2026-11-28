@@ -28,6 +28,7 @@ FIRST_REPORT = re.compile(rf"{DIRECT_LOCATIVE}{FIRST_EVENT.pattern}")
 SECOND_OBSERVATION = rf"{MODIFIER}연기가 보였습니다"
 SECOND_REPORT = re.compile(rf"{DIRECT_LOCATIVE}(?:{SECOND_EVENT}|{SECOND_OBSERVATION})[.。]?")
 TOPIC_TIME = re.compile(r"(?:오늘은|어제는|엊그제는) ")
+CORRECTION = re.compile(r"(?:사실은?|실제로는|정정하면|정확히는|다시 보니|알고 보니) ")
 CHANGE = re.compile(
     r"(?P<subject>[가-힣]+(?: [가-힣]+){0,5})(?:이|가) "
     r"(?:뜨거워지며|휘면서|부풀면서|녹으면서) "
@@ -67,6 +68,8 @@ def coordinated_boundaries(prefix: str, event: str, suffix: str) -> bool:
     if (not prefix or TIME_PREFIX.fullmatch(prefix)) and FIRST_EVENT.fullmatch(event):
         if suffix.startswith(", "):
             following = suffix[2:]
+            if CORRECTION.match(following):
+                return False
             if SECOND_REPORT.fullmatch(following):
                 return True
             time = TOPIC_TIME.match(following) or TIME_PREFIX.match(following)
