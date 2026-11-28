@@ -6,7 +6,12 @@ from kiwipiepy import Kiwi
 
 from experiments.as_safety_atomic_edges_v12.pair_contract import FixedPair
 from experiments.as_safety_device_context import device_context_source
-from experiments.as_safety_explicit_source import NOUN_TAGS, DirectSource
+from experiments.as_safety_explicit_source import (
+    NOUN_TAGS,
+    BoundaryCheck,
+    DirectSource,
+    strict_boundaries,
+)
 
 OPERATION = re.compile(
     r"(?P<name>[가-힣]+)의 전원 (?:버튼을 눌렀습니다|"
@@ -15,7 +20,13 @@ OPERATION = re.compile(
 PLACE_NAME = r"(?:은|는) (?:[가-힣]+ )*(?:구역|장소|공간|작업실|보관함|통로) 이름입니다[.。]?"
 
 
-def device_operation_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
+def device_operation_source(
+    pair: FixedPair,
+    occurrence: str,
+    kiwi: Kiwi,
+    *,
+    boundaries: BoundaryCheck = strict_boundaries,
+) -> DirectSource | None:
     """Reuse locative guards and add only evidence for the candidate's exact device name."""
     device, separator, _ = pair.candidate.quote.rpartition(" ")
     before_event = pair.clauses[: pair.event["clause_index"] - 1]
@@ -36,5 +47,7 @@ def device_operation_source(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> Dir
                 for clause in pair.clauses
             )
         ):
-            return device_context_source(pair, occurrence, kiwi, extra_devices=frozenset({device}))
-    return device_context_source(pair, occurrence, kiwi)
+            return device_context_source(
+                pair, occurrence, kiwi, extra_devices=frozenset({device}), boundaries=boundaries
+            )
+    return device_context_source(pair, occurrence, kiwi, boundaries=boundaries)

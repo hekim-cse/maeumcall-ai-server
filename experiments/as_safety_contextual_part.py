@@ -6,7 +6,12 @@ from collections.abc import Callable
 from kiwipiepy import Kiwi
 
 from experiments.as_safety_atomic_edges_v12.pair_contract import FixedPair
-from experiments.as_safety_explicit_source import DirectSource, explicit_source
+from experiments.as_safety_explicit_source import (
+    BoundaryCheck,
+    DirectSource,
+    explicit_source,
+    strict_boundaries,
+)
 from experiments.as_safety_source_role import changed_subject_end, is_perception
 from experiments.as_safety_source_scope import (
     PHYSICAL_HEADS,
@@ -60,12 +65,15 @@ def contextual_source(
     *,
     extra_part_evidence: Callable[[str], bool] | None = None,
     nominal_evidence: Callable[[str], bool] | None = None,
+    boundaries: BoundaryCheck = strict_boundaries,
 ) -> DirectSource | None:
     """Extend only the prior rule's locative head check, retaining its vetoes."""
-    established = source_scope(pair, occurrence, kiwi)
+    established = source_scope(pair, occurrence, kiwi, boundaries=boundaries)
     if established is not None:
         return established
-    locative = explicit_source(pair, occurrence, kiwi, nominal_evidence=nominal_evidence)
+    locative = explicit_source(
+        pair, occurrence, kiwi, nominal_evidence=nominal_evidence, boundaries=boundaries
+    )
     if locative is None:
         return None
     index = locative.clause_index

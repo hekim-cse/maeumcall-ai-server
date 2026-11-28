@@ -1,0 +1,355 @@
+{
+  "kind": "as_safety_temporal_action_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "TP01–TP04, AC01–AC06, MX01–MX02 사용자가 전부 채택함"
+  ],
+  "observation_location_candidates": [
+    "TP03-1",
+    "TP04-2",
+    "AC03-1",
+    "MX02-1"
+  ],
+  "other_event_source_candidates": [
+    "TP04-1",
+    "AC05-1"
+  ],
+  "cases": [
+    {
+      "id": "TP01",
+      "utterance": "오늘 충전기 단자에서 파란 불꽃이 튀었습니다. 옆에는 배터리가 놓여 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "파란 불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "절 첫 시간 표현 뒤 실제 출처",
+      "candidates": [
+        {
+          "id": "TP01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 단자"
+          },
+          "approve": true
+        },
+        {
+          "id": "TP01-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "배터리"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "TP02",
+      "utterance": "어제 저녁 전원 장치 차폐막에서 희미한 연기가 났습니다. 선반에는 작업 장갑이 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "희미한 연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "두 어절 시간 표현 뒤 실제 부위",
+      "candidates": [
+        {
+          "id": "TP02-1",
+          "span": {
+            "clause_index": 2,
+            "quote": "작업 장갑"
+          },
+          "approve": false
+        },
+        {
+          "id": "TP02-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 장치 차폐막"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "TP03",
+      "utterance": "오늘 시험실 선반 쪽에서 연기가 났습니다. 선반에는 충전기와 공구 상자가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "시간 뒤 구절은 장소이며 어느 물건이 발원했는지 불명",
+      "candidates": [
+        {
+          "id": "TP03-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "시험실 선반 쪽"
+          },
+          "approve": false
+        },
+        {
+          "id": "TP03-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "충전기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "TP04",
+      "utterance": "어제 어댑터 단자에서 불꽃이 튀었고, 오늘 조립실에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 절에서 다른 시간·다른 사건의 출처와 관찰 장소",
+      "candidates": [
+        {
+          "id": "TP04-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "어댑터 단자"
+          },
+          "approve": false
+        },
+        {
+          "id": "TP04-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "조립실"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AC01",
+      "utterance": "어댑터 포트에서 불꽃이 튀어 바로 전원을 껐습니다. 작업대에는 절연 테이프가 놓여 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "발생 뒤 전원을 끄는 행동",
+      "candidates": [
+        {
+          "id": "AC01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "어댑터 포트"
+          },
+          "approve": true
+        },
+        {
+          "id": "AC01-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "절연 테이프"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AC02",
+      "utterance": "멀티탭 커넥터에서 연기가 나서 플러그를 뽑았습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 나서"
+      },
+      "occurrence": "observed",
+      "boundary": "발연 출처와 조치 대상 구분",
+      "candidates": [
+        {
+          "id": "AC02-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "플러그"
+          },
+          "approve": false
+        },
+        {
+          "id": "AC02-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "멀티탭 커넥터"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "AC03",
+      "utterance": "제어함 앞에서 연기를 보고 전원을 껐습니다. 가까운 곳에 충전기가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기를 보고"
+      },
+      "occurrence": "observed",
+      "boundary": "장소에서 목격한 뒤 조치했고 발원은 불명",
+      "candidates": [
+        {
+          "id": "AC03-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "제어함 앞"
+          },
+          "approve": false
+        },
+        {
+          "id": "AC03-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "충전기"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AC04",
+      "utterance": "전원 공급기 커넥터에서 불꽃이 튀어 전원을 껐지만 실제 불꽃 출처는 확인하지 못했습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "조치 뒤 같은 사건의 출처를 정정",
+      "candidates": [
+        {
+          "id": "AC04-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 공급기 커넥터"
+          },
+          "approve": false
+        },
+        {
+          "id": "AC04-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원을"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "AC05",
+      "utterance": "배터리 단자에서 불꽃이 튀어 전원을 껐고, 멀티탭 커넥터에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "두 번째 출처를 첫 사건과 연결하면 오승인",
+      "candidates": [
+        {
+          "id": "AC05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "멀티탭 커넥터"
+          },
+          "approve": false
+        },
+        {
+          "id": "AC05-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "배터리 단자"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "AC06",
+      "utterance": "충전기 포트에서 불꽃이 튀면 전원을 끄겠습니다. 아직 불꽃은 없었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀면"
+      },
+      "occurrence": "nonoccurring",
+      "boundary": "실제 발생이 아닌 가정과 조치 계획",
+      "candidates": [
+        {
+          "id": "AC06-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 포트"
+          },
+          "approve": false
+        },
+        {
+          "id": "AC06-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "MX01",
+      "utterance": "오늘 오후 펌프 단자에서 불꽃이 튀어 작동을 멈췄습니다. 바닥에는 케이블이 놓여 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "시간 표현과 후속 행동이 한 문장에 공존",
+      "candidates": [
+        {
+          "id": "MX01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "펌프 단자"
+          },
+          "approve": true
+        },
+        {
+          "id": "MX01-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "케이블"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "MX02",
+      "utterance": "오늘 창고 출입구에서 연기가 나서 건물 전원을 껐습니다. 출입구 근처에 충전기가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 나서"
+      },
+      "occurrence": "observed",
+      "boundary": "두 조건이 있어도 출입구는 관찰 장소",
+      "candidates": [
+        {
+          "id": "MX02-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "창고 출입구"
+          },
+          "approve": false
+        },
+        {
+          "id": "MX02-2",
+          "span": {
+            "clause_index": 2,
+            "quote": "충전기"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}

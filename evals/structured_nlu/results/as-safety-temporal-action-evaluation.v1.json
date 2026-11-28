@@ -1,0 +1,450 @@
+{
+  "input_sha256": "e6149885c16061e10fdb4987db57b8aa050d6fd721b19e7c1263b6821d10a490",
+  "provenance": "ai_authored_user_reviewed",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "baseline": {
+      "positive_total": 6,
+      "negative_total": 18,
+      "true_approval": 0,
+      "missed_approval": 6,
+      "false_approval": 0,
+      "correct_abstention": 18,
+      "errors": 0,
+      "pairs_total": 12,
+      "pairs_passed": 6,
+      "location_total": 4,
+      "location_false_approval": 0,
+      "other_event_total": 2,
+      "other_event_false_approval": 0
+    },
+    "time_only": {
+      "positive_total": 6,
+      "negative_total": 18,
+      "true_approval": 2,
+      "missed_approval": 4,
+      "false_approval": 0,
+      "correct_abstention": 18,
+      "errors": 0,
+      "pairs_total": 12,
+      "pairs_passed": 8,
+      "location_total": 4,
+      "location_false_approval": 0,
+      "other_event_total": 2,
+      "other_event_false_approval": 0
+    },
+    "action_only": {
+      "positive_total": 6,
+      "negative_total": 18,
+      "true_approval": 2,
+      "missed_approval": 4,
+      "false_approval": 0,
+      "correct_abstention": 18,
+      "errors": 0,
+      "pairs_total": 12,
+      "pairs_passed": 8,
+      "location_total": 4,
+      "location_false_approval": 0,
+      "other_event_total": 2,
+      "other_event_false_approval": 0
+    },
+    "time_and_action": {
+      "positive_total": 6,
+      "negative_total": 18,
+      "true_approval": 5,
+      "missed_approval": 1,
+      "false_approval": 0,
+      "correct_abstention": 18,
+      "errors": 0,
+      "pairs_total": 12,
+      "pairs_passed": 11,
+      "location_total": 4,
+      "location_false_approval": 0,
+      "other_event_total": 2,
+      "other_event_false_approval": 0
+    }
+  },
+  "rows": [
+    {
+      "case": "TP01",
+      "id": "TP01-1",
+      "quote": "충전기 단자",
+      "gold": "approve",
+      "baseline": "abstain",
+      "time_only": "approve",
+      "action_only": "abstain",
+      "time_and_action": "approve"
+    },
+    {
+      "case": "TP01",
+      "id": "TP01-2",
+      "quote": "배터리",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "TP02",
+      "id": "TP02-1",
+      "quote": "작업 장갑",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "TP02",
+      "id": "TP02-2",
+      "quote": "전원 장치 차폐막",
+      "gold": "approve",
+      "baseline": "abstain",
+      "time_only": "approve",
+      "action_only": "abstain",
+      "time_and_action": "approve"
+    },
+    {
+      "case": "TP03",
+      "id": "TP03-1",
+      "quote": "시험실 선반 쪽",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "TP03",
+      "id": "TP03-2",
+      "quote": "충전기",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "TP04",
+      "id": "TP04-1",
+      "quote": "어댑터 단자",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "TP04",
+      "id": "TP04-2",
+      "quote": "조립실",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC01",
+      "id": "AC01-1",
+      "quote": "어댑터 포트",
+      "gold": "approve",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "approve",
+      "time_and_action": "approve"
+    },
+    {
+      "case": "AC01",
+      "id": "AC01-2",
+      "quote": "절연 테이프",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC02",
+      "id": "AC02-1",
+      "quote": "플러그",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC02",
+      "id": "AC02-2",
+      "quote": "멀티탭 커넥터",
+      "gold": "approve",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "approve",
+      "time_and_action": "approve"
+    },
+    {
+      "case": "AC03",
+      "id": "AC03-1",
+      "quote": "제어함 앞",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC03",
+      "id": "AC03-2",
+      "quote": "충전기",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC04",
+      "id": "AC04-1",
+      "quote": "전원 공급기 커넥터",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC04",
+      "id": "AC04-2",
+      "quote": "전원을",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC05",
+      "id": "AC05-1",
+      "quote": "멀티탭 커넥터",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC05",
+      "id": "AC05-2",
+      "quote": "배터리 단자",
+      "gold": "approve",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC06",
+      "id": "AC06-1",
+      "quote": "충전기 포트",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "AC06",
+      "id": "AC06-2",
+      "quote": "전원",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "MX01",
+      "id": "MX01-1",
+      "quote": "펌프 단자",
+      "gold": "approve",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "approve"
+    },
+    {
+      "case": "MX01",
+      "id": "MX01-2",
+      "quote": "케이블",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "MX02",
+      "id": "MX02-1",
+      "quote": "창고 출입구",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    },
+    {
+      "case": "MX02",
+      "id": "MX02-2",
+      "quote": "충전기",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "time_only": "abstain",
+      "action_only": "abstain",
+      "time_and_action": "abstain"
+    }
+  ],
+  "groups": {
+    "TP": {
+      "baseline": {
+        "positive_total": 2,
+        "negative_total": 6,
+        "true_approval": 0,
+        "missed_approval": 2,
+        "false_approval": 0,
+        "correct_abstention": 6,
+        "errors": 0,
+        "pairs_total": 4,
+        "pairs_passed": 2
+      },
+      "time_only": {
+        "positive_total": 2,
+        "negative_total": 6,
+        "true_approval": 2,
+        "missed_approval": 0,
+        "false_approval": 0,
+        "correct_abstention": 6,
+        "errors": 0,
+        "pairs_total": 4,
+        "pairs_passed": 4
+      },
+      "action_only": {
+        "positive_total": 2,
+        "negative_total": 6,
+        "true_approval": 0,
+        "missed_approval": 2,
+        "false_approval": 0,
+        "correct_abstention": 6,
+        "errors": 0,
+        "pairs_total": 4,
+        "pairs_passed": 2
+      },
+      "time_and_action": {
+        "positive_total": 2,
+        "negative_total": 6,
+        "true_approval": 2,
+        "missed_approval": 0,
+        "false_approval": 0,
+        "correct_abstention": 6,
+        "errors": 0,
+        "pairs_total": 4,
+        "pairs_passed": 4
+      }
+    },
+    "AC": {
+      "baseline": {
+        "positive_total": 3,
+        "negative_total": 9,
+        "true_approval": 0,
+        "missed_approval": 3,
+        "false_approval": 0,
+        "correct_abstention": 9,
+        "errors": 0,
+        "pairs_total": 6,
+        "pairs_passed": 3
+      },
+      "time_only": {
+        "positive_total": 3,
+        "negative_total": 9,
+        "true_approval": 0,
+        "missed_approval": 3,
+        "false_approval": 0,
+        "correct_abstention": 9,
+        "errors": 0,
+        "pairs_total": 6,
+        "pairs_passed": 3
+      },
+      "action_only": {
+        "positive_total": 3,
+        "negative_total": 9,
+        "true_approval": 2,
+        "missed_approval": 1,
+        "false_approval": 0,
+        "correct_abstention": 9,
+        "errors": 0,
+        "pairs_total": 6,
+        "pairs_passed": 5
+      },
+      "time_and_action": {
+        "positive_total": 3,
+        "negative_total": 9,
+        "true_approval": 2,
+        "missed_approval": 1,
+        "false_approval": 0,
+        "correct_abstention": 9,
+        "errors": 0,
+        "pairs_total": 6,
+        "pairs_passed": 5
+      }
+    },
+    "MX": {
+      "baseline": {
+        "positive_total": 1,
+        "negative_total": 3,
+        "true_approval": 0,
+        "missed_approval": 1,
+        "false_approval": 0,
+        "correct_abstention": 3,
+        "errors": 0,
+        "pairs_total": 2,
+        "pairs_passed": 1
+      },
+      "time_only": {
+        "positive_total": 1,
+        "negative_total": 3,
+        "true_approval": 0,
+        "missed_approval": 1,
+        "false_approval": 0,
+        "correct_abstention": 3,
+        "errors": 0,
+        "pairs_total": 2,
+        "pairs_passed": 1
+      },
+      "action_only": {
+        "positive_total": 1,
+        "negative_total": 3,
+        "true_approval": 0,
+        "missed_approval": 1,
+        "false_approval": 0,
+        "correct_abstention": 3,
+        "errors": 0,
+        "pairs_total": 2,
+        "pairs_passed": 1
+      },
+      "time_and_action": {
+        "positive_total": 1,
+        "negative_total": 3,
+        "true_approval": 1,
+        "missed_approval": 0,
+        "false_approval": 0,
+        "correct_abstention": 3,
+        "errors": 0,
+        "pairs_total": 2,
+        "pairs_passed": 2
+      }
+    }
+  }
+}

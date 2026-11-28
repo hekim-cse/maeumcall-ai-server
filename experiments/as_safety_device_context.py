@@ -12,7 +12,7 @@ from experiments.as_safety_device_part import (
     EXTENDED_SHAPES,
     part_splits,
 )
-from experiments.as_safety_explicit_source import DirectSource
+from experiments.as_safety_explicit_source import BoundaryCheck, DirectSource, strict_boundaries
 
 DEVICE_STATEMENT = re.compile(
     r"(?P<name>[가-힣]+(?: [가-힣]+)*)(?:은|는) "
@@ -77,6 +77,7 @@ def device_context_source(
     kiwi: Kiwi,
     *,
     extra_devices: frozenset[str] = frozenset(),
+    boundaries: BoundaryCheck = strict_boundaries,
 ) -> DirectSource | None:
     index = pair.event["clause_index"]
     described = described_devices(pair.clauses[: index - 1]) | extra_devices
@@ -90,4 +91,5 @@ def device_context_source(
         kiwi,
         extra_part_evidence=nominal_evidence,
         nominal_evidence=nominal_evidence,
+        boundaries=boundaries,
     )
