@@ -1,0 +1,392 @@
+{
+  "kind": "as_safety_source_selection_es_development_v1",
+  "input_sha256": "49e4e960d901c037c7d10de6899aaeade3c71809060772571f0c8f58409d52f7",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "candidate_settings": {
+    "max_window_tokens": 5,
+    "max_candidates": 192
+  },
+  "skipped_nonoccurring": [
+    "ES15-2",
+    "ES19-1",
+    "ES20-1"
+  ],
+  "gold_availability": {
+    "no_gold_owner": 1,
+    "selected": 18
+  },
+  "outcomes": {
+    "device_context": {
+      "correct_unresolved": 1,
+      "missed_available": 18
+    },
+    "device_operation": {
+      "correct_unresolved": 1,
+      "missed_available": 18
+    }
+  },
+  "rows": [
+    {
+      "event": "ES01-1",
+      "occurrence": "observed",
+      "offered_candidates": 70,
+      "gold_availability": "selected",
+      "gold_candidate": "P044",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES02-1",
+      "occurrence": "observed",
+      "offered_candidates": 44,
+      "gold_availability": "selected",
+      "gold_candidate": "P023",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES03-1",
+      "occurrence": "observed",
+      "offered_candidates": 56,
+      "gold_availability": "selected",
+      "gold_candidate": "P036",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES04-1",
+      "occurrence": "observed",
+      "offered_candidates": 93,
+      "gold_availability": "selected",
+      "gold_candidate": "P039",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES05-1",
+      "occurrence": "observed",
+      "offered_candidates": 75,
+      "gold_availability": "selected",
+      "gold_candidate": "P034",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES06-1",
+      "occurrence": "observed",
+      "offered_candidates": 122,
+      "gold_availability": "selected",
+      "gold_candidate": "P071",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES06-2",
+      "occurrence": "observed",
+      "offered_candidates": 122,
+      "gold_availability": "selected",
+      "gold_candidate": "P054",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES07-1",
+      "occurrence": "observed",
+      "offered_candidates": 87,
+      "gold_availability": "selected",
+      "gold_candidate": "P070",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES08-1",
+      "occurrence": "observed",
+      "offered_candidates": 90,
+      "gold_availability": "selected",
+      "gold_candidate": "P034",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES09-1",
+      "occurrence": "observed",
+      "offered_candidates": 88,
+      "gold_availability": "selected",
+      "gold_candidate": "P070",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES10-1",
+      "occurrence": "observed",
+      "offered_candidates": 80,
+      "gold_availability": "selected",
+      "gold_candidate": "P034",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES11-1",
+      "occurrence": "observed",
+      "offered_candidates": 59,
+      "gold_availability": "selected",
+      "gold_candidate": "P029",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES12-1",
+      "occurrence": "observed",
+      "offered_candidates": 88,
+      "gold_availability": "selected",
+      "gold_candidate": "P041",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES13-1",
+      "occurrence": "observed",
+      "offered_candidates": 83,
+      "gold_availability": "selected",
+      "gold_candidate": "P054",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES14-1",
+      "occurrence": "observed",
+      "offered_candidates": 101,
+      "gold_availability": "selected",
+      "gold_candidate": "P063",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES15-1",
+      "occurrence": "observed",
+      "offered_candidates": 85,
+      "gold_availability": "selected",
+      "gold_candidate": "P034",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES16-1",
+      "occurrence": "observed",
+      "offered_candidates": 89,
+      "gold_availability": "selected",
+      "gold_candidate": "P041",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    },
+    {
+      "event": "ES17-1",
+      "occurrence": "observed",
+      "offered_candidates": 112,
+      "gold_availability": "no_gold_owner",
+      "gold_candidate": null,
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "correct_unresolved"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "correct_unresolved"
+        }
+      }
+    },
+    {
+      "event": "ES18-1",
+      "occurrence": "uncertain",
+      "offered_candidates": 93,
+      "gold_availability": "selected",
+      "gold_candidate": "P010",
+      "rules": {
+        "device_context": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        },
+        "device_operation": {
+          "approved_candidates": [],
+          "candidate_errors": 0,
+          "outcome": "missed_available"
+        }
+      }
+    }
+  ]
+}
