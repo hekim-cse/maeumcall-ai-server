@@ -1,10 +1,15 @@
 """Evaluate the two independent changes on fixed pairs and the exposed ES lattice."""
 
-import hashlib
 import json
 from pathlib import Path
 
-from experiments.as_safety_pair_evaluation import compare_with_locations, summarize
+from experiments.as_safety_pair_evaluation import (
+    add_abstention_subset,
+    baseline_projection,
+    compare_with_locations,
+    read_fixed,
+    summarize,
+)
 from experiments.as_safety_wire_coordination import DETECTORS
 from scripts.audit_as_safety_source_selection import audit
 
@@ -16,26 +21,13 @@ PRIOR = ROOT / "evals/structured_nlu/results/as-safety-es-multi-event-developmen
 PRIOR_SHA256 = "5dc37f989c3a7de004e3cff3f10a840190b62a90ccad49147cda026d959685a9"
 
 
-def read_fixed(path: Path, checksum: str) -> dict:
-    raw = path.read_bytes()
-    if hashlib.sha256(raw).hexdigest() != checksum:
-        raise ValueError(f"fixed input changed: {path.name}")
-    return json.loads(raw)
-
-
 def paired_evaluation() -> dict:
     metadata = read_fixed(DATA, DATA_SHA256)
     result = compare_with_locations(DATA, KIND, DETECTORS)
     if result["input_sha256"] != DATA_SHA256:
         raise ValueError("reviewed input changed during comparison")
     for label in ("other_event_source", "partial_span"):
-        ids = metadata[f"{label}_candidates"]
-        positives = [row for row in result["rows"] if row["id"] in set(ids)]
-        if len(positives) != len(ids) or any(row["gold"] != "abstain" for row in positives):
-            raise ValueError(f"{label} must consist of unique abstention labels")
-        for name, summary in result["summary"].items():
-            summary[f"{label}_total"] = len(positives)
-            summary[f"{label}_false_approval"] = sum(row[name] == "approve" for row in positives)
+        add_abstention_subset(result, label, metadata[f"{label}_candidates"])
     result["groups"] = {
         prefix: {
             name: summarize([row for row in result["rows"] if row["case"].startswith(prefix)], name)
@@ -44,30 +36,6 @@ def paired_evaluation() -> dict:
         for prefix in ("WL", "CE", "WC")
     }
     return result
-
-
-def baseline_projection(report: dict, rule: str) -> dict:
-    return {
-        "settings": {
-            key: report[key]
-            for key in (
-                "input_sha256",
-                "kiwipiepy",
-                "kiwipiepy_model",
-                "candidate_settings",
-                "skipped_nonoccurring",
-                "gold_availability",
-            )
-        },
-        "outcomes": report["outcomes"][rule],
-        "rows": [
-            {
-                **{key: value for key, value in row.items() if key != "rules"},
-                "decision": row["rules"][rule],
-            }
-            for row in report["rows"]
-        ],
-    }
 
 
 def es_evaluation() -> dict:

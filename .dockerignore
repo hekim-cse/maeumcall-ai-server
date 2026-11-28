@@ -15,7 +15,9 @@ artifacts
 data/aihub
 data/baseline_db.json
 docs
+evals
 experiments
+scripts
 tests
 CHANGELOG.md
 README.md

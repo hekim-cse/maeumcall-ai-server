@@ -78,7 +78,7 @@ python -m scripts.generate_magpie_tts_auditions \
 
 python3.11 -m venv /absolute/path/to/chatterbox-eval
 /absolute/path/to/chatterbox-eval/bin/python -m pip install \
-  -r requirements-tts-eval-chatterbox.lock.txt
+  -r experiments/tts_model_eval/requirements-tts-eval-chatterbox.lock.txt
 /absolute/path/to/chatterbox-eval/bin/python \
   -m scripts.generate_chatterbox_audition \
   --output-dir artifacts/tts-auditions/chatterbox-multilingual-v3 \
@@ -119,7 +119,7 @@ python -m scripts.generate_qwen_mother_voice_design_auditions \
 docker build \
   --file experiments/tts_model_eval/melotts.Dockerfile \
   --tag maeum-call-melotts-eval:2026-08-18 \
-  .
+  experiments/tts_model_eval
 docker run --rm \
   --user "$(id -u):$(id -g)" \
   --env HOME=/tmp/melotts-home \

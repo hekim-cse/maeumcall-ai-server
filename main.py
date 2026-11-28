@@ -29,12 +29,12 @@ from core.observability import record_contract_failure, render_metrics
 from llm.errors import AIServiceError
 from llm.huggingface_provider import load_hf_model, local_model_ready
 from routes.auth_routes import router as auth_router
+from routes.call_routes import router as call_router
 from routes.chat_routes import router as chat_router
 from routes.suggest_routes import router as suggest_router
 from routes.tts_routes import router as tts_router
 from routes.voice_routes import router as voice_router
 from routes.wordfreq_router import router as wordfreq_router
-from server.api_call import router as call_router
 from services.baseline_store import BaselineStoreError
 from services.flow.common.state_contract import ScenarioStateContractError
 from services.flow.reservation.common.availability_provider import (

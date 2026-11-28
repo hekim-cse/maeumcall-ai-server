@@ -316,6 +316,8 @@ Q5 짝 비교는 [일반 64건·안전 16건 결과](docs/portfolio/nlu_internal
     │   └── scenario/
     ├── docs/
     │   └── assets/
+    ├── evals/
+    ├── experiments/
     ├── llm/
     ├── routes/
     ├── schemas/
@@ -336,8 +338,9 @@ Q5 짝 비교는 [일반 64건·안전 16건 결과](docs/portfolio/nlu_internal
 | 경로 | 설명 |
 |---|---|
 | `core/` | 설정, 인증, 데이터베이스, 관측성 등 공통 운영 경계 |
-| `routes/` | FastAPI 라우터와 채팅·인증·음성 엔드포인트 |
+| `routes/` | 채팅, 통화 설정, 인증, 음성 등 FastAPI 엔드포인트 |
 | `schemas/` | 요청/응답 데이터 모델 |
+| `services/praat_voice_analysis.py` | Praat 기반 음성 특징 추출 |
 | `services/flow/registry.py` | 32개 시나리오의 상세·등록형 LangGraph 실행 계약과 단일 디스패처 |
 | `services/flow/scenario/` | 가족·친구·연인·회사 16개 등록 시나리오의 구조화된 턴 생성 LangGraph |
 | `services/flow/service_workflow/` | 배달·시청·고객센터 상세 그래프의 엄격한 필드·분기·확인 실행 엔진 |
@@ -348,7 +351,9 @@ Q5 짝 비교는 [일반 64건·안전 16건 결과](docs/portfolio/nlu_internal
 | `llm/` | LLM provider, prompt builder, 구조화 출력 계약과 오류 타입 |
 | `data/scenario/` | 시나리오 샘플 데이터 |
 | `data/prompts/` | 시나리오별 프롬프트 데이터 |
-| `scripts/` | 검증 가능한 운영 데이터 이관 명령 |
+| `experiments/` | 모델과 규칙을 비교하는 실험 코드와 전용 환경 |
+| `evals/` | 고정 평가 입력과 재현 가능한 결과 |
+| `scripts/` | 호스트에서 실행하는 운영 데이터 이관과 평가 명령 |
 | `tests/` | 단위 테스트 및 통합 테스트 |
 
 ---

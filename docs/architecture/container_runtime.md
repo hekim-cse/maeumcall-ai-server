@@ -56,6 +56,8 @@ core-runtime
 
 ## 실행 권한과 파일 시스템
 
+서버 이미지의 빌드 컨텍스트에서 `evals/`, `experiments/`, `scripts/`를 제외한다. 컨테이너 CI는 이 경로들이 API 이미지에 없는지 확인하고, HTTP 계약 검증 스크립트는 CI 호스트에서 실행한다.
+
 API와 마이그레이션은 Linux 관리자 계정인 `root`가 아니라 UID/GID 10001의 `maeumcall` 사용자로 실행한다.
 
 Compose에는 다음 제한을 적용한다.
