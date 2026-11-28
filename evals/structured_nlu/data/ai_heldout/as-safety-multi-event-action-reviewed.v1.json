@@ -1,0 +1,341 @@
+{
+  "kind": "as_safety_multi_event_action_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "ME01–ME11의 후보별 판단을 사용자가 전부 채택함"
+  ],
+  "observation_location_candidates": [
+    "ME04-1",
+    "ME05-2",
+    "ME06-1",
+    "ME10-2"
+  ],
+  "other_event_source_candidates": [
+    "ME01-2",
+    "ME02-1",
+    "ME03-1",
+    "ME05-1",
+    "ME06-2",
+    "ME07-2",
+    "ME09-1"
+  ],
+  "first_event_cases": [
+    "ME01",
+    "ME03",
+    "ME04",
+    "ME06",
+    "ME07",
+    "ME08",
+    "ME09"
+  ],
+  "cases": [
+    {
+      "id": "ME01",
+      "utterance": "멀티탭 단자에서 불꽃이 튀어 전원을 껐고, 충전기 커넥터에서 옅은 연기가 났습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "첫 사건의 출처를 후속 행동 뒤 두 번째 사건과 분리",
+      "candidates": [
+        {
+          "id": "ME01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "멀티탭 단자"
+          },
+          "approve": true
+        },
+        {
+          "id": "ME01-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 커넥터"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "ME02",
+      "utterance": "멀티탭 단자에서 불꽃이 튀어 전원을 껐고, 충전기 커넥터에서 옅은 연기가 났습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "옅은 연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 문장에서 사건을 바꾸면 승인 후보도 바뀜",
+      "candidates": [
+        {
+          "id": "ME02-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "멀티탭 단자"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME02-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 커넥터"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "ME03",
+      "utterance": "어제 오후 어댑터 포트에서 연기가 나서 플러그를 뽑았고, 펌프 커넥터에서 짧은 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 나서"
+      },
+      "occurrence": "observed",
+      "boundary": "첫 구간 시간 표현과 후속 행동이 함께 있어도 둘째 출처를 끌어오지 않음",
+      "candidates": [
+        {
+          "id": "ME03-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "펌프 커넥터"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME03-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "어댑터 포트"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "ME04",
+      "utterance": "전원 장치 절연막에서 불꽃이 튀어 전원을 차단했고, 복도 출입구 쪽에서 희미한 연기를 봤습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "둘째 구간이 관찰 장소여도 첫 출처는 유지",
+      "candidates": [
+        {
+          "id": "ME04-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "복도 출입구 쪽"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME04-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 장치 절연막"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "ME05",
+      "utterance": "전원 장치 절연막에서 불꽃이 튀어 전원을 차단했고, 복도 출입구 쪽에서 희미한 연기를 봤습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "희미한 연기를 봤습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "두 번째 목격 사건에 첫 출처를 물려주지 않음",
+      "candidates": [
+        {
+          "id": "ME05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원 장치 절연막"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME05-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "복도 출입구 쪽"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "ME06",
+      "utterance": "조립대 옆에서 연기를 보고 전원을 껐고, 어댑터 단자에서 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기를 보고"
+      },
+      "occurrence": "observed",
+      "boundary": "첫 사건에 관찰 장소와 둘째 실제 출처를 모두 보류",
+      "candidates": [
+        {
+          "id": "ME06-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "조립대 옆"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME06-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "어댑터 단자"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "ME07",
+      "utterance": "펌프 단자에서 불꽃이 튀어 작동을 멈췄고, 충전기 포트에서 연기가 났지만 첫 불꽃의 출처는 확인하지 못했습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "둘째 사건 뒤에 나온 정정도 첫 불꽃에 적용",
+      "candidates": [
+        {
+          "id": "ME07-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "펌프 단자"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME07-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 포트"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "ME08",
+      "utterance": "배터리 커넥터에서 불꽃이 튀어 전원을 차단했고, 뒤이어 경고 소리가 났지만 그 소리의 출처는 모르겠습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "둘째 소리의 출처 불명은 첫 불꽃의 출처를 취소하지 않음",
+      "candidates": [
+        {
+          "id": "ME08-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "배터리 커넥터"
+          },
+          "approve": true
+        },
+        {
+          "id": "ME08-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "경고 소리"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "ME09",
+      "utterance": "충전기 단자에서 파란 불꽃이 튀어 플러그를 뽑았고, 잠시 뒤 멀티탭 포트에서 작은 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "파란 불꽃이 튀어"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 종류라도 시점과 물체가 다른 두 사건",
+      "candidates": [
+        {
+          "id": "ME09-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "멀티탭 포트"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME09-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 단자"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "ME10",
+      "utterance": "어댑터 커넥터에서 불꽃이 튀면 전원을 끄려고 했고, 작업실 문 옆에서는 연기가 보였습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀면"
+      },
+      "occurrence": "nonoccurring",
+      "boundary": "첫 사건은 가정이고 둘째 구절은 관찰 장소",
+      "candidates": [
+        {
+          "id": "ME10-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "어댑터 커넥터"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME10-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "작업실 문 옆"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "ME11",
+      "utterance": "방금 멀티탭 포트에서 연기가 나서 플러그를 뽑았습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 나서"
+      },
+      "occurrence": "observed",
+      "boundary": "후속 행동에서 끝나는 기존 지원 유형의 회귀 확인",
+      "candidates": [
+        {
+          "id": "ME11-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "플러그"
+          },
+          "approve": false
+        },
+        {
+          "id": "ME11-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "멀티탭 포트"
+          },
+          "approve": true
+        }
+      ]
+    }
+  ]
+}

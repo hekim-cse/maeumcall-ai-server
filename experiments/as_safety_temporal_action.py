@@ -8,9 +8,8 @@ from experiments.as_safety_explicit_source import strict_boundaries
 
 TIME_PREFIX = re.compile(r"(?:(?:오늘|어제|엊그제)(?: (?:아침|오전|오후|저녁|밤))?|방금|조금 전) ")
 OBSERVED_CONNECTIVE = re.compile(r"(?:불꽃이 튀(?:어|어서)|연기가 (?:나서|나와(?:서)?))")
-COMPLETED_ACTION = re.compile(
-    r" (?:바로 )?(?:전원을 (?:껐|차단했)|플러그를 뽑았|작동을 멈췄)습니다[.。]?"
-)
+ACTION_STEM = r" (?:바로 )?(?:전원을 (?:껐|차단했)|플러그를 뽑았|작동을 멈췄)"
+COMPLETED_ACTION = re.compile(rf"{ACTION_STEM}습니다[.。]?")
 
 
 def locative_boundaries(
