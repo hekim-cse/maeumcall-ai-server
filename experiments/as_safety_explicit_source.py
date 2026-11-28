@@ -9,6 +9,11 @@ from experiments.as_safety_atomic_edges_v12.pair_contract import FixedPair
 
 SOURCE_MARKERS = {"에서", "로부터", "으로부터"}
 NOUN_TAGS = {"NNG", "NNP"}
+BoundaryCheck = Callable[[str, str, str], bool]
+
+
+def strict_boundaries(prefix: str, _event: str, suffix: str) -> bool:
+    return not prefix and suffix in {"", ".", "。"}
 
 
 @dataclass(frozen=True)
@@ -26,6 +31,7 @@ def explicit_source(
     kiwi: Kiwi,
     *,
     nominal_evidence: Callable[[str], bool] | None = None,
+    boundaries: BoundaryCheck = strict_boundaries,
 ) -> DirectSource | None:
     """Accept only a whole nominal phrase directly attached to the anchored event."""
     event = pair.event
@@ -41,12 +47,12 @@ def explicit_source(
 
     if occurrence != "observed" or candidate.clause_index != index:
         return None
-    if candidate.start != 0 or not 0 < candidate.end < start:
+    if not 0 <= candidate.start < candidate.end < start:
         return None
     gap = clause[candidate.end : start]
     if not gap.endswith(" ") or gap.rstrip(" ") not in SOURCE_MARKERS:
         return None
-    if clause[end:] not in {"", ".", "。"}:
+    if not boundaries(clause[: candidate.start], event["quote"], clause[end:]):
         return None
     if nominal_evidence is None or not nominal_evidence(candidate.quote):
         tokens = kiwi.tokenize(candidate.quote)

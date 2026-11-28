@@ -5,7 +5,12 @@ import re
 from kiwipiepy import Kiwi, Token
 
 from experiments.as_safety_atomic_edges_v12.pair_contract import FixedPair
-from experiments.as_safety_explicit_source import DirectSource, explicit_source
+from experiments.as_safety_explicit_source import (
+    BoundaryCheck,
+    DirectSource,
+    explicit_source,
+    strict_boundaries,
+)
 from experiments.as_safety_source_role import SOURCE_UNKNOWN, changed_subject_end, is_perception
 
 # A small positive vocabulary for unambiguous appliance/part heads. Unknown
@@ -75,9 +80,15 @@ def unresolved_on_same_event(following: tuple[str, ...], kinds: set[str], kiwi: 
     return False
 
 
-def source_scope(pair: FixedPair, occurrence: str, kiwi: Kiwi) -> DirectSource | None:
+def source_scope(
+    pair: FixedPair,
+    occurrence: str,
+    kiwi: Kiwi,
+    *,
+    boundaries: BoundaryCheck = strict_boundaries,
+) -> DirectSource | None:
     """Approve locally grounded material evidence, with conservative abstention."""
-    locative = explicit_source(pair, occurrence, kiwi)
+    locative = explicit_source(pair, occurrence, kiwi, boundaries=boundaries)
     if occurrence != "observed":
         return None
     event, candidate = pair.event, pair.candidate
