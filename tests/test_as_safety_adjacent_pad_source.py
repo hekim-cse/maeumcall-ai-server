@@ -11,6 +11,7 @@ from experiments.as_safety_v2.source_lattice import SourceCandidate
 INTRO = "탁자에 조명을 놓았어요. "
 PAD = "휴대용 무선 충전 패드"
 DIRECT = f"{INTRO}그 옆의 {PAD}에서 불꽃이 튀어 플러그를 뽑았어요."
+SEPARATE_SPARK = " 별도로 선풍기에서도 불꽃이 튀었습니다."
 
 
 @pytest.mark.parametrize(
@@ -32,6 +33,23 @@ DIRECT = f"{INTRO}그 옆의 {PAD}에서 불꽃이 튀어 플러그를 뽑았어
         (f"{PAD}에서 불꽃이 튀어 플러그를 뽑으려 했어요.", 1, PAD, "불꽃이 튀어", False),
         (
             DIRECT + " 다시 보니 불꽃은 선풍기 단자에서 튀었어요.",
+            2,
+            PAD,
+            "불꽃이 튀어",
+            False,
+        ),
+        (DIRECT + f" 다시 보니 {PAD}가 아니라 선풍기 단자였어요.", 2, PAD, "불꽃이 튀어", False),
+        (
+            DIRECT
+            + SEPARATE_SPARK
+            + " 다시 보니 선풍기의 불꽃은 단자가 아니라 전원선에서 튀었어요.",
+            2,
+            PAD,
+            "불꽃이 튀어",
+            True,
+        ),
+        (
+            DIRECT + SEPARATE_SPARK + " 다시 보니 첫 불꽃은 멀티탭 단자에서 튀었어요.",
             2,
             PAD,
             "불꽃이 튀어",
