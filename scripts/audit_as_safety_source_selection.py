@@ -3,6 +3,7 @@
 import hashlib
 import json
 from collections import Counter
+from collections.abc import Mapping
 from importlib.metadata import version
 
 from kiwipiepy import Kiwi
@@ -60,7 +61,7 @@ def score(approved: list[str], errors: int, gold_id: str | None, availability: s
     }[availability]
 
 
-def audit() -> dict:
+def audit(detectors: Mapping[str, Detector] = DETECTORS) -> dict:
     raw = CASES.read_bytes()
     if hashlib.sha256(raw).hexdigest() != INPUT_SHA256:
         raise ValueError("reviewed ES input changed")
@@ -89,7 +90,7 @@ def audit() -> dict:
                 name: approvals(
                     detector, source, clauses, event, occurrence, lattice.candidates, kiwi
                 )
-                for name, detector in DETECTORS.items()
+                for name, detector in detectors.items()
             }
             gold = anchor_span(reviewed["hazard_owner_span"], clauses, field=f"{identifier}.owner")
             availability = "no_gold_owner"
@@ -130,7 +131,7 @@ def audit() -> dict:
         ),
         "outcomes": {
             name: dict(sorted(Counter(row["rules"][name]["outcome"] for row in rows).items()))
-            for name in DETECTORS
+            for name in detectors
         },
         "rows": rows,
     }
