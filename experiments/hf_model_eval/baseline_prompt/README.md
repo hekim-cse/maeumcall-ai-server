@@ -1,12 +1,15 @@
-# Benchmark Prompt
+# 병원 예약 1차 기준 프롬프트
 
-모든 로컬 LLM / Hugging Face 모델 비교에는 동일한 병원 예약 전화 프롬프트를 사용한다.
+1차 Hugging Face 모델 비교에서 사용한 병원 예약 전화 프롬프트를 보존한다.
+현재 `experiments/hf_model_eval/test_hf_model.py`는 이후 **4차 `ai_message` 전용**
+실험 프롬프트를 담고 있으므로, 이 문서의 JSON 프롬프트를 그대로 실행하지 않는다.
+모델별 1차 관찰은 이 폴더의 개별 보고서에서 확인한다.
 
-## Purpose
+## 목적
 
 모델별 한국어 전화 응대 품질, JSON 출력 안정성, 응답 속도를 동일 조건에서 비교하기 위함이다.
 
-## Fixed Prompt
+## 당시 고정 프롬프트
 
 ```text
 너는 전화 공포증 완화를 위한 통화 시뮬레이션 상대이다.
@@ -43,3 +46,4 @@
   "conversation_state": "...",
   "should_end_call": false
 }
+```

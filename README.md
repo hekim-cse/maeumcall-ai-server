@@ -294,10 +294,16 @@ MaeumCall AI Server는 모든 시나리오를 단일 프롬프트로 처리하�
 |---|---|
 | 오프라인 단위·그래프·라우트 테스트 | ✅ 915개 통과(2026-11-03 로컬 실행) |
 | 기본 실행에서 제외한 통합 테스트 | 19개(실모델 16개·PostgreSQL 3개), 수동 실행으로 분리 |
-| 실패 테스트 | 없음 |
+| 위 2026-11-03 실행의 실패 테스트 | 없음 |
 | 기본 실행 네트워크 의존성 | 없음 |
 
 > 기본 테스트는 모델 경계를 고정 출력으로 대체하고, graph flow, chat route, 프롬프트 레지스트리, 음성 업로드 안전성을 재현 가능하게 검증합니다.
+
+위 `915개 통과`는 **2026-11-03 당시의 로컬 실행 기록**이며 현재 테스트 총수나
+실모델 정확도를 뜻하지 않습니다. 이후 AI 작성·사용자 1인 검수 내부 표본의
+Q5 짝 비교는 [일반 64건·안전 16건 결과](docs/portfolio/nlu_internal_test80_verified_result.md)에
+출처·분모·검증 조건과 함께 별도로 기록했습니다. 이 결과도 실제 사용자 발화의
+전체 정확도로 일반화하지 않습니다.
 
 ---
 
@@ -523,6 +529,7 @@ Docker Compose 실행 주소는 `http://127.0.0.1:8001`, API 문서는 `http://1
 | 🐳 [AI 서버 컨테이너 실행 경계](docs/architecture/container_runtime.md) | Python 3.11 이미지, 비루트 보안, PostgreSQL→Alembic→API 순서와 컨테이너 CI |
 | 📈 [LangGraph 관측성 설계](docs/architecture/langgraph_observability.md) | 노드 latency, 재시도, 계약 실패 지표, PromQL과 용어 설명 |
 | 🧪 [구조화 NLU 모델 평가](evals/structured_nlu/README.md) | 16개 상세 그래프의 상태-행동 계약, 벤치마크 coverage와 현재 구축 단계 |
+| 🔬 [AI 작성 내부 NLU 짝 비교](docs/portfolio/nlu_internal_test80_verified_result.md) | 새 일반 64건과 별도 안전 16건의 로컬 Q5 비교, 원문 재생 검증, 적용 범위와 한계 |
 | 🔊 [TTS 배역·공급자 경계](docs/architecture/tts_provider_boundary.md) | 배역 버전 2, Qwen·Bark·Voice Clone 모델 전환, 인증된 합성 API와 운영 제약 |
 | 🎚️ [AI Hub 다화자 음향 기준](docs/architecture/tts_voice_reference_data.md) | 50·60대 여성 55명의 익명 집계, 균형 표본, 개인정보·라이선스 경계와 엄마 음성 선정 기준 |
 
@@ -547,7 +554,7 @@ Docker Compose 실행 주소는 `http://127.0.0.1:8001`, API 문서는 `http://1
 | 관측성 | `/metrics`에서 LangGraph 노드·구조화 출력 재시도·계약 실패와 TTS 모델 상태·단계별 지연 Prometheus 지표 제공 |
 | 한국어 단어 분석 | Kiwi 형태소 원형과 품사 계약으로 내용어·감탄사를 분리하며 분석기 장애는 503 오류와 readiness로 공개 |
 | 한국어 음성 합성 | 32개 시나리오의 배역 버전 2를 Qwen3-TTS·Bark Small·엄마 Voice Clone 공급자와 인증된 WAV 계약으로 제공 |
-| 테스트 검증 | 오프라인 회귀 테스트 915개 통과(2026-11-03 로컬 실행), 통합 테스트 19개는 기본 실행에서 제외 |
+| 테스트 검증 | 2026-11-03 로컬 오프라인 회귀 테스트 915개 통과 기록, 당시 통합 테스트 19개는 기본 실행에서 제외. 최신 테스트 수와 결과는 해당 실행 기록에서 별도 확인 필요 |
 
 <table>
   <tr>

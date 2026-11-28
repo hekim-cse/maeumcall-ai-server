@@ -32,7 +32,7 @@ POST /chat
   → recommendedReplies와 scenarioState 반환
 ```
 
-시나리오 그래프는 OpenAI 응답을 다음 계약으로 생성합니다.
+등록형 16개 시나리오 그래프는 OpenAI 응답을 다음 계약으로 생성합니다.
 
 ```json
 {
@@ -123,4 +123,4 @@ services/flow/
 - 모바일 이모지 제목의 등록 키 정규화
 - 모델 장애의 API 오류 계약
 
-현재 상태 원본은 모바일이 보관하는 버전 지정 `scenarioState` 하나로 유지합니다. 서버 checkpointer를 동시에 두지 않는 근거와 서버 소유 영속 상태로 전환할 조건은 [상태 책임 ADR](../../docs/architecture/langgraph_call_flow_design.md)에 기록합니다. 다음 운영 단계는 노드별 latency/error 지표와 시나리오별 평가 데이터셋 구축입니다.
+현재 상태 원본은 모바일이 보관하는 버전 지정 `scenarioState` 하나로 유지합니다. 서버 checkpointer를 동시에 두지 않는 근거와 서버 소유 영속 상태로 전환할 조건은 [상태 책임 ADR](../../docs/architecture/langgraph_call_flow_design.md)에 기록합니다. 노드별 latency/error 지표는 현재 `/metrics`로 노출합니다. 구조화 NLU의 AI 작성·사용자 검수 내부 비교와 남은 정확도·안전 한계는 [실모델 평가 기록](../../docs/portfolio/nlu_internal_test80_verified_result.md)에 분리해 기록합니다.

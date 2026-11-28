@@ -1,9 +1,12 @@
-cat > experiments/hf_model_eval/improved_prompt/README.md <<'EOF'
-# Hugging Face Improved Prompt Evaluation
+# Hugging Face 2차 프롬프트 평가
 
 ## 목적
 
-1차 Baseline Prompt에서 상위 후보로 남은 모델을 대상으로, 실제 서비스 적용 가능성을 확인하기 위해 역할 분리 프롬프트로 재평가한다.
+1차 기준 프롬프트에서 상위 후보로 남은 모델을 역할 분리 프롬프트로
+재평가한 **과거 실험**이다. 당시 입력·조건·관찰은
+[2차 비교 기록](improved_prompt_comparison.md)에 보존한다.
+현재 `experiments/hf_model_eval/test_hf_model.py`는 4차 `ai_message` 전용
+실험 코드이므로 이 2차 프롬프트를 재현하는 실행기로 취급하지 않는다.
 
 ## 2차 평가 대상
 
@@ -19,4 +22,3 @@ cat > experiments/hf_model_eval/improved_prompt/README.md <<'EOF'
 - assistant 블록이나 프롬프트 반복 출력이 사라지는지
 - ai_message가 예약 가능 여부를 임의로 확정하지 않는지
 - 응답 시간이 1차 대비 유지되는지
-EOF

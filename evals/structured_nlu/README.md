@@ -1,5 +1,11 @@
 # 마음콜 구조화 NLU 모델 평가
 
+이 문서의 `human_authored` corpus와 Freeze Record V4는 **사람 직접 작성 공식
+벤치마크를 준비하는 경로**다. 별도로 진행한 AI 작성·사용자 1인 검수 내부 비교는
+[일반 64건·안전 16건 결과](../../docs/portfolio/nlu_internal_test80_verified_result.md)와
+[전용 실행 도구](../../experiments/internal_test_pair_v1/README.md)에 기록한다.
+두 경로의 출처·coverage·점수 발행 조건은 서로 대체하지 않는다.
+
 ## 평가 범위
 
 이 평가는 마음콜의 32개 전체 시나리오 중 로컬 Hugging Face 모델이 실제로
