@@ -1,6 +1,7 @@
 """Use an earlier affirmative operation as evidence for an unregistered device."""
 
 import re
+from collections.abc import Callable
 
 from kiwipiepy import Kiwi
 
@@ -26,6 +27,7 @@ def device_operation_source(
     kiwi: Kiwi,
     *,
     boundaries: BoundaryCheck = strict_boundaries,
+    additional_nominal: Callable[[str], bool] | None = None,
 ) -> DirectSource | None:
     """Reuse locative guards and add only evidence for the candidate's exact device name."""
     device, separator, _ = pair.candidate.quote.rpartition(" ")
@@ -48,6 +50,13 @@ def device_operation_source(
             )
         ):
             return device_context_source(
-                pair, occurrence, kiwi, extra_devices=frozenset({device}), boundaries=boundaries
+                pair,
+                occurrence,
+                kiwi,
+                extra_devices=frozenset({device}),
+                boundaries=boundaries,
+                additional_nominal=additional_nominal,
             )
-    return device_context_source(pair, occurrence, kiwi, boundaries=boundaries)
+    return device_context_source(
+        pair, occurrence, kiwi, boundaries=boundaries, additional_nominal=additional_nominal
+    )
