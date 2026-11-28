@@ -1,6 +1,7 @@
 """Recognize unambiguous registered aliases and names typed by the utterance."""
 
 import re
+from collections.abc import Callable
 
 from kiwipiepy import Kiwi
 
@@ -78,12 +79,15 @@ def device_context_source(
     *,
     extra_devices: frozenset[str] = frozenset(),
     boundaries: BoundaryCheck = strict_boundaries,
+    additional_nominal: Callable[[str], bool] | None = None,
 ) -> DirectSource | None:
     index = pair.event["clause_index"]
     described = described_devices(pair.clauses[: index - 1]) | extra_devices
 
     def nominal_evidence(quote: str) -> bool:
-        return unique_contextual_split(quote, DEVICE_NAMES, described, pair.clauses)
+        return unique_contextual_split(quote, DEVICE_NAMES, described, pair.clauses) or (
+            additional_nominal is not None and additional_nominal(quote)
+        )
 
     return contextual_source(
         pair,

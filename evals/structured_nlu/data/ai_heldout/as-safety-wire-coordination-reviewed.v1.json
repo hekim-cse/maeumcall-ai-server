@@ -1,0 +1,393 @@
+{
+  "kind": "as_safety_wire_coordination_reviewed_v1",
+  "provenance": "ai_authored_user_reviewed",
+  "review_notes": [
+    "WL01–WL04, CE01–CE08, WC01 후보별 판단을 사용자가 전부 채택함"
+  ],
+  "observation_location_candidates": [
+    "WL03-1",
+    "CE03-2",
+    "CE04-1"
+  ],
+  "other_event_source_candidates": [
+    "CE01-2",
+    "CE02-1",
+    "CE04-2",
+    "CE05-2",
+    "CE06-1",
+    "CE07-2",
+    "CE08-1",
+    "WC01-2"
+  ],
+  "partial_span_candidates": [
+    "WL01-2",
+    "WL02-1",
+    "WL04-1"
+  ],
+  "cases": [
+    {
+      "id": "WL01",
+      "utterance": "오늘 산업용 스캐너 전원선에서 파란 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "파란 불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "기기와 붙여 쓴 부위 전체가 구체적인 출처",
+      "candidates": [
+        {
+          "id": "WL01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "산업용 스캐너 전원선"
+          },
+          "approve": true
+        },
+        {
+          "id": "WL01-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "전원선"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "WL02",
+      "utterance": "접이식 조명 접지선에서 불꽃이 튀었습니다. 바닥에는 케이블 타이가 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "`접지`와 `선`으로 분석돼도 원문 구절을 그대로 유지",
+      "candidates": [
+        {
+          "id": "WL02-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "조명 접지선"
+          },
+          "approve": false
+        },
+        {
+          "id": "WL02-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "접이식 조명 접지선"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "WL03",
+      "utterance": "오늘 산업용 스캐너 전원선 옆 선반에서 불꽃이 튀었습니다. 선반 위에는 공구가 여러 개 있었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "WL01과 같은 시간·기기명이고, 선반은 관찰 장소",
+      "candidates": [
+        {
+          "id": "WL03-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "산업용 스캐너 전원선 옆 선반"
+          },
+          "approve": false
+        },
+        {
+          "id": "WL03-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "산업용 스캐너 전원선"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "WL04",
+      "utterance": "라벨프린터 전원선에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "복합어 중간에서 끊은 구절은 전체 출처가 아님",
+      "candidates": [
+        {
+          "id": "WL04-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "라벨프린터 전원"
+          },
+          "approve": false
+        },
+        {
+          "id": "WL04-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "라벨프린터 전원선"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "CE01",
+      "utterance": "충전기 단자에서 불꽃이 튀었고, 펌프 커넥터에서 옅은 연기가 났습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었고"
+      },
+      "occurrence": "observed",
+      "boundary": "후속 조치 없이 이어진 두 사건에서 첫 출처 선택",
+      "candidates": [
+        {
+          "id": "CE01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 단자"
+          },
+          "approve": true
+        },
+        {
+          "id": "CE01-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "펌프 커넥터"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CE02",
+      "utterance": "충전기 단자에서 불꽃이 튀었고, 펌프 커넥터에서 옅은 연기가 났습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "옅은 연기가 났습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "같은 발화에서 둘째 사건을 지정하면 둘째 출처 선택",
+      "candidates": [
+        {
+          "id": "CE02-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 단자"
+          },
+          "approve": false
+        },
+        {
+          "id": "CE02-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "펌프 커넥터"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "CE03",
+      "utterance": "배터리 단자에서 불꽃이 튀었고, 창고 출입구에서 희미한 연기가 보였습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었고"
+      },
+      "occurrence": "observed",
+      "boundary": "둘째 구간의 관찰 장소가 첫 출처가 되지 않음",
+      "candidates": [
+        {
+          "id": "CE03-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "배터리 단자"
+          },
+          "approve": true
+        },
+        {
+          "id": "CE03-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "창고 출입구"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CE04",
+      "utterance": "시험대 옆에서 연기를 봤고, 어댑터 포트에서 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기를 봤고"
+      },
+      "occurrence": "observed",
+      "boundary": "첫 사건의 발원은 불명이고 둘째 사건의 출처는 명시됨",
+      "candidates": [
+        {
+          "id": "CE04-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "시험대 옆"
+          },
+          "approve": false
+        },
+        {
+          "id": "CE04-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "어댑터 포트"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CE05",
+      "utterance": "정수기 커넥터에서 연기가 났고, 배터리 포트에서 불꽃이 튀었지만 다시 보니 처음 연기의 출처는 확인하지 못했습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났고"
+      },
+      "occurrence": "observed",
+      "boundary": "뒤의 출처 정정은 처음 연기에 적용",
+      "candidates": [
+        {
+          "id": "CE05-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "정수기 커넥터"
+          },
+          "approve": false
+        },
+        {
+          "id": "CE05-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "배터리 포트"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CE06",
+      "utterance": "어제 어댑터 단자에서 파란 불꽃이 튀었고, 오늘 멀티탭 포트에서 작은 불꽃이 튀었습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "파란 불꽃이 튀었고"
+      },
+      "occurrence": "observed",
+      "boundary": "위험 유형은 같아도 날짜와 물체가 다른 두 사건",
+      "candidates": [
+        {
+          "id": "CE06-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "멀티탭 포트"
+          },
+          "approve": false
+        },
+        {
+          "id": "CE06-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "어댑터 단자"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "CE07",
+      "utterance": "충전기 단자에서 연기가 났고, 정수기 포트가 휘면서 덮개가 벌어졌습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "연기가 났고"
+      },
+      "occurrence": "observed",
+      "boundary": "ES06처럼 둘째 사건이 `에서` 없이 변화한 물체를 직접 말함",
+      "candidates": [
+        {
+          "id": "CE07-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 단자"
+          },
+          "approve": true
+        },
+        {
+          "id": "CE07-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "정수기 포트"
+          },
+          "approve": false
+        }
+      ]
+    },
+    {
+      "id": "CE08",
+      "utterance": "충전기 단자에서 연기가 났고, 정수기 포트가 휘면서 덮개가 벌어졌습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "정수기 포트가 휘면서 덮개가 벌어졌습니다"
+      },
+      "occurrence": "observed",
+      "boundary": "둘째의 비장소격 출처는 별도 진단",
+      "candidates": [
+        {
+          "id": "CE08-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "충전기 단자"
+          },
+          "approve": false
+        },
+        {
+          "id": "CE08-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "정수기 포트"
+          },
+          "approve": true
+        }
+      ]
+    },
+    {
+      "id": "WC01",
+      "utterance": "오늘 복합기 전원선에서 불꽃이 튀었고, 펌프 단자에서 연기가 났습니다.",
+      "event": {
+        "clause_index": 1,
+        "quote": "불꽃이 튀었고"
+      },
+      "occurrence": "observed",
+      "boundary": "복합 부위명과 사건 경계가 동시에 필요한 경우",
+      "candidates": [
+        {
+          "id": "WC01-1",
+          "span": {
+            "clause_index": 1,
+            "quote": "복합기 전원선"
+          },
+          "approve": true
+        },
+        {
+          "id": "WC01-2",
+          "span": {
+            "clause_index": 1,
+            "quote": "펌프 단자"
+          },
+          "approve": false
+        }
+      ]
+    }
+  ]
+}
