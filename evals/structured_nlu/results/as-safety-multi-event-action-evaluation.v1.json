@@ -1,0 +1,259 @@
+{
+  "input_sha256": "70b6967ff17108a9201e999435e261bd56f3f464887547edeffc3dcccbdab5d9",
+  "provenance": "ai_authored_user_reviewed",
+  "kiwipiepy": "0.23.2",
+  "kiwipiepy_model": "0.23.0",
+  "summary": {
+    "baseline": {
+      "positive_total": 7,
+      "negative_total": 15,
+      "true_approval": 1,
+      "missed_approval": 6,
+      "false_approval": 0,
+      "correct_abstention": 15,
+      "errors": 0,
+      "pairs_total": 11,
+      "pairs_passed": 5,
+      "location_total": 4,
+      "location_false_approval": 0,
+      "other_event_total": 7,
+      "other_event_false_approval": 0
+    },
+    "multi_event": {
+      "positive_total": 7,
+      "negative_total": 15,
+      "true_approval": 7,
+      "missed_approval": 0,
+      "false_approval": 0,
+      "correct_abstention": 15,
+      "errors": 0,
+      "pairs_total": 11,
+      "pairs_passed": 11,
+      "location_total": 4,
+      "location_false_approval": 0,
+      "other_event_total": 7,
+      "other_event_false_approval": 0
+    }
+  },
+  "rows": [
+    {
+      "case": "ME01",
+      "id": "ME01-1",
+      "quote": "멀티탭 단자",
+      "gold": "approve",
+      "baseline": "abstain",
+      "multi_event": "approve"
+    },
+    {
+      "case": "ME01",
+      "id": "ME01-2",
+      "quote": "충전기 커넥터",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME02",
+      "id": "ME02-1",
+      "quote": "멀티탭 단자",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME02",
+      "id": "ME02-2",
+      "quote": "충전기 커넥터",
+      "gold": "approve",
+      "baseline": "abstain",
+      "multi_event": "approve"
+    },
+    {
+      "case": "ME03",
+      "id": "ME03-1",
+      "quote": "펌프 커넥터",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME03",
+      "id": "ME03-2",
+      "quote": "어댑터 포트",
+      "gold": "approve",
+      "baseline": "abstain",
+      "multi_event": "approve"
+    },
+    {
+      "case": "ME04",
+      "id": "ME04-1",
+      "quote": "복도 출입구 쪽",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME04",
+      "id": "ME04-2",
+      "quote": "전원 장치 절연막",
+      "gold": "approve",
+      "baseline": "abstain",
+      "multi_event": "approve"
+    },
+    {
+      "case": "ME05",
+      "id": "ME05-1",
+      "quote": "전원 장치 절연막",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME05",
+      "id": "ME05-2",
+      "quote": "복도 출입구 쪽",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME06",
+      "id": "ME06-1",
+      "quote": "조립대 옆",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME06",
+      "id": "ME06-2",
+      "quote": "어댑터 단자",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME07",
+      "id": "ME07-1",
+      "quote": "펌프 단자",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME07",
+      "id": "ME07-2",
+      "quote": "충전기 포트",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME08",
+      "id": "ME08-1",
+      "quote": "배터리 커넥터",
+      "gold": "approve",
+      "baseline": "abstain",
+      "multi_event": "approve"
+    },
+    {
+      "case": "ME08",
+      "id": "ME08-2",
+      "quote": "경고 소리",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME09",
+      "id": "ME09-1",
+      "quote": "멀티탭 포트",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME09",
+      "id": "ME09-2",
+      "quote": "충전기 단자",
+      "gold": "approve",
+      "baseline": "abstain",
+      "multi_event": "approve"
+    },
+    {
+      "case": "ME10",
+      "id": "ME10-1",
+      "quote": "어댑터 커넥터",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME10",
+      "id": "ME10-2",
+      "quote": "작업실 문 옆",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME11",
+      "id": "ME11-1",
+      "quote": "플러그",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "ME11",
+      "id": "ME11-2",
+      "quote": "멀티탭 포트",
+      "gold": "approve",
+      "baseline": "approve",
+      "multi_event": "approve"
+    }
+  ],
+  "first_event_summary": {
+    "baseline": {
+      "positive_total": 5,
+      "negative_total": 9,
+      "true_approval": 0,
+      "missed_approval": 5,
+      "false_approval": 0,
+      "correct_abstention": 9,
+      "errors": 0,
+      "pairs_total": 7,
+      "pairs_passed": 2
+    },
+    "multi_event": {
+      "positive_total": 5,
+      "negative_total": 9,
+      "true_approval": 5,
+      "missed_approval": 0,
+      "false_approval": 0,
+      "correct_abstention": 9,
+      "errors": 0,
+      "pairs_total": 7,
+      "pairs_passed": 7
+    }
+  },
+  "ac05_regression": [
+    {
+      "case": "AC05",
+      "id": "AC05-1",
+      "quote": "멀티탭 커넥터",
+      "gold": "abstain",
+      "baseline": "abstain",
+      "multi_event": "abstain"
+    },
+    {
+      "case": "AC05",
+      "id": "AC05-2",
+      "quote": "배터리 단자",
+      "gold": "approve",
+      "baseline": "abstain",
+      "multi_event": "approve"
+    }
+  ],
+  "other_prior_changes": []
+}
