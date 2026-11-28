@@ -1,0 +1,1086 @@
+{
+  "paired": {
+    "input_sha256": "510b7b06cd41ee1c2b9ed9a93e356164365980fd1a09731146179ea670f50a8c",
+    "provenance": "ai_authored_user_reviewed",
+    "kiwipiepy": "0.23.2",
+    "kiwipiepy_model": "0.23.0",
+    "summary": {
+      "baseline": {
+        "positive_total": 10,
+        "negative_total": 16,
+        "true_approval": 0,
+        "missed_approval": 10,
+        "false_approval": 0,
+        "correct_abstention": 16,
+        "errors": 0,
+        "pairs_total": 13,
+        "pairs_passed": 3,
+        "location_total": 3,
+        "location_false_approval": 0,
+        "other_event_source_total": 8,
+        "other_event_source_false_approval": 0,
+        "partial_span_total": 3,
+        "partial_span_false_approval": 0
+      },
+      "wire_only": {
+        "positive_total": 10,
+        "negative_total": 16,
+        "true_approval": 3,
+        "missed_approval": 7,
+        "false_approval": 0,
+        "correct_abstention": 16,
+        "errors": 0,
+        "pairs_total": 13,
+        "pairs_passed": 6,
+        "location_total": 3,
+        "location_false_approval": 0,
+        "other_event_source_total": 8,
+        "other_event_source_false_approval": 0,
+        "partial_span_total": 3,
+        "partial_span_false_approval": 0
+      },
+      "coordination_only": {
+        "positive_total": 10,
+        "negative_total": 16,
+        "true_approval": 6,
+        "missed_approval": 4,
+        "false_approval": 0,
+        "correct_abstention": 16,
+        "errors": 0,
+        "pairs_total": 13,
+        "pairs_passed": 9,
+        "location_total": 3,
+        "location_false_approval": 0,
+        "other_event_source_total": 8,
+        "other_event_source_false_approval": 0,
+        "partial_span_total": 3,
+        "partial_span_false_approval": 0
+      },
+      "combined": {
+        "positive_total": 10,
+        "negative_total": 16,
+        "true_approval": 10,
+        "missed_approval": 0,
+        "false_approval": 0,
+        "correct_abstention": 16,
+        "errors": 0,
+        "pairs_total": 13,
+        "pairs_passed": 13,
+        "location_total": 3,
+        "location_false_approval": 0,
+        "other_event_source_total": 8,
+        "other_event_source_false_approval": 0,
+        "partial_span_total": 3,
+        "partial_span_false_approval": 0
+      }
+    },
+    "rows": [
+      {
+        "case": "WL01",
+        "id": "WL01-1",
+        "quote": "산업용 스캐너 전원선",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "approve",
+        "coordination_only": "abstain",
+        "combined": "approve"
+      },
+      {
+        "case": "WL01",
+        "id": "WL01-2",
+        "quote": "전원선",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "WL02",
+        "id": "WL02-1",
+        "quote": "조명 접지선",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "WL02",
+        "id": "WL02-2",
+        "quote": "접이식 조명 접지선",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "approve",
+        "coordination_only": "abstain",
+        "combined": "approve"
+      },
+      {
+        "case": "WL03",
+        "id": "WL03-1",
+        "quote": "산업용 스캐너 전원선 옆 선반",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "WL03",
+        "id": "WL03-2",
+        "quote": "산업용 스캐너 전원선",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "WL04",
+        "id": "WL04-1",
+        "quote": "라벨프린터 전원",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "WL04",
+        "id": "WL04-2",
+        "quote": "라벨프린터 전원선",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "approve",
+        "coordination_only": "abstain",
+        "combined": "approve"
+      },
+      {
+        "case": "CE01",
+        "id": "CE01-1",
+        "quote": "충전기 단자",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "approve",
+        "combined": "approve"
+      },
+      {
+        "case": "CE01",
+        "id": "CE01-2",
+        "quote": "펌프 커넥터",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE02",
+        "id": "CE02-1",
+        "quote": "충전기 단자",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE02",
+        "id": "CE02-2",
+        "quote": "펌프 커넥터",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "approve",
+        "combined": "approve"
+      },
+      {
+        "case": "CE03",
+        "id": "CE03-1",
+        "quote": "배터리 단자",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "approve",
+        "combined": "approve"
+      },
+      {
+        "case": "CE03",
+        "id": "CE03-2",
+        "quote": "창고 출입구",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE04",
+        "id": "CE04-1",
+        "quote": "시험대 옆",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE04",
+        "id": "CE04-2",
+        "quote": "어댑터 포트",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE05",
+        "id": "CE05-1",
+        "quote": "정수기 커넥터",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE05",
+        "id": "CE05-2",
+        "quote": "배터리 포트",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE06",
+        "id": "CE06-1",
+        "quote": "멀티탭 포트",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE06",
+        "id": "CE06-2",
+        "quote": "어댑터 단자",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "approve",
+        "combined": "approve"
+      },
+      {
+        "case": "CE07",
+        "id": "CE07-1",
+        "quote": "충전기 단자",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "approve",
+        "combined": "approve"
+      },
+      {
+        "case": "CE07",
+        "id": "CE07-2",
+        "quote": "정수기 포트",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE08",
+        "id": "CE08-1",
+        "quote": "충전기 단자",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      },
+      {
+        "case": "CE08",
+        "id": "CE08-2",
+        "quote": "정수기 포트",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "approve",
+        "combined": "approve"
+      },
+      {
+        "case": "WC01",
+        "id": "WC01-1",
+        "quote": "복합기 전원선",
+        "gold": "approve",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "approve"
+      },
+      {
+        "case": "WC01",
+        "id": "WC01-2",
+        "quote": "펌프 단자",
+        "gold": "abstain",
+        "baseline": "abstain",
+        "wire_only": "abstain",
+        "coordination_only": "abstain",
+        "combined": "abstain"
+      }
+    ],
+    "groups": {
+      "WL": {
+        "baseline": {
+          "positive_total": 3,
+          "negative_total": 5,
+          "true_approval": 0,
+          "missed_approval": 3,
+          "false_approval": 0,
+          "correct_abstention": 5,
+          "errors": 0,
+          "pairs_total": 4,
+          "pairs_passed": 1
+        },
+        "wire_only": {
+          "positive_total": 3,
+          "negative_total": 5,
+          "true_approval": 3,
+          "missed_approval": 0,
+          "false_approval": 0,
+          "correct_abstention": 5,
+          "errors": 0,
+          "pairs_total": 4,
+          "pairs_passed": 4
+        },
+        "coordination_only": {
+          "positive_total": 3,
+          "negative_total": 5,
+          "true_approval": 0,
+          "missed_approval": 3,
+          "false_approval": 0,
+          "correct_abstention": 5,
+          "errors": 0,
+          "pairs_total": 4,
+          "pairs_passed": 1
+        },
+        "combined": {
+          "positive_total": 3,
+          "negative_total": 5,
+          "true_approval": 3,
+          "missed_approval": 0,
+          "false_approval": 0,
+          "correct_abstention": 5,
+          "errors": 0,
+          "pairs_total": 4,
+          "pairs_passed": 4
+        }
+      },
+      "CE": {
+        "baseline": {
+          "positive_total": 6,
+          "negative_total": 10,
+          "true_approval": 0,
+          "missed_approval": 6,
+          "false_approval": 0,
+          "correct_abstention": 10,
+          "errors": 0,
+          "pairs_total": 8,
+          "pairs_passed": 2
+        },
+        "wire_only": {
+          "positive_total": 6,
+          "negative_total": 10,
+          "true_approval": 0,
+          "missed_approval": 6,
+          "false_approval": 0,
+          "correct_abstention": 10,
+          "errors": 0,
+          "pairs_total": 8,
+          "pairs_passed": 2
+        },
+        "coordination_only": {
+          "positive_total": 6,
+          "negative_total": 10,
+          "true_approval": 6,
+          "missed_approval": 0,
+          "false_approval": 0,
+          "correct_abstention": 10,
+          "errors": 0,
+          "pairs_total": 8,
+          "pairs_passed": 8
+        },
+        "combined": {
+          "positive_total": 6,
+          "negative_total": 10,
+          "true_approval": 6,
+          "missed_approval": 0,
+          "false_approval": 0,
+          "correct_abstention": 10,
+          "errors": 0,
+          "pairs_total": 8,
+          "pairs_passed": 8
+        }
+      },
+      "WC": {
+        "baseline": {
+          "positive_total": 1,
+          "negative_total": 1,
+          "true_approval": 0,
+          "missed_approval": 1,
+          "false_approval": 0,
+          "correct_abstention": 1,
+          "errors": 0,
+          "pairs_total": 1,
+          "pairs_passed": 0
+        },
+        "wire_only": {
+          "positive_total": 1,
+          "negative_total": 1,
+          "true_approval": 0,
+          "missed_approval": 1,
+          "false_approval": 0,
+          "correct_abstention": 1,
+          "errors": 0,
+          "pairs_total": 1,
+          "pairs_passed": 0
+        },
+        "coordination_only": {
+          "positive_total": 1,
+          "negative_total": 1,
+          "true_approval": 0,
+          "missed_approval": 1,
+          "false_approval": 0,
+          "correct_abstention": 1,
+          "errors": 0,
+          "pairs_total": 1,
+          "pairs_passed": 0
+        },
+        "combined": {
+          "positive_total": 1,
+          "negative_total": 1,
+          "true_approval": 1,
+          "missed_approval": 0,
+          "false_approval": 0,
+          "correct_abstention": 1,
+          "errors": 0,
+          "pairs_total": 1,
+          "pairs_passed": 1
+        }
+      }
+    }
+  },
+  "es": {
+    "kind": "as_safety_es_wire_coordination_development_v1",
+    "input_sha256": "49e4e960d901c037c7d10de6899aaeade3c71809060772571f0c8f58409d52f7",
+    "kiwipiepy": "0.23.2",
+    "kiwipiepy_model": "0.23.0",
+    "candidate_settings": {
+      "max_window_tokens": 5,
+      "max_candidates": 192
+    },
+    "skipped_nonoccurring": [
+      "ES15-2",
+      "ES19-1",
+      "ES20-1"
+    ],
+    "gold_availability": {
+      "no_gold_owner": 1,
+      "selected": 18
+    },
+    "outcomes": {
+      "baseline": {
+        "correct_unresolved": 1,
+        "missed_available": 18
+      },
+      "wire_only": {
+        "correct_unresolved": 1,
+        "exact": 1,
+        "missed_available": 17
+      },
+      "coordination_only": {
+        "correct_unresolved": 1,
+        "exact": 2,
+        "missed_available": 16
+      },
+      "combined": {
+        "correct_unresolved": 1,
+        "exact": 3,
+        "missed_available": 15
+      }
+    },
+    "rows": [
+      {
+        "event": "ES01-1",
+        "occurrence": "observed",
+        "offered_candidates": 70,
+        "gold_availability": "selected",
+        "gold_candidate": "P044",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES02-1",
+        "occurrence": "observed",
+        "offered_candidates": 44,
+        "gold_availability": "selected",
+        "gold_candidate": "P023",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [
+              "P023"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [
+              "P023"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          }
+        }
+      },
+      {
+        "event": "ES03-1",
+        "occurrence": "observed",
+        "offered_candidates": 56,
+        "gold_availability": "selected",
+        "gold_candidate": "P036",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES04-1",
+        "occurrence": "observed",
+        "offered_candidates": 93,
+        "gold_availability": "selected",
+        "gold_candidate": "P039",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES05-1",
+        "occurrence": "observed",
+        "offered_candidates": 75,
+        "gold_availability": "selected",
+        "gold_candidate": "P034",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES06-1",
+        "occurrence": "observed",
+        "offered_candidates": 122,
+        "gold_availability": "selected",
+        "gold_candidate": "P071",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [
+              "P071"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          },
+          "combined": {
+            "approved_candidates": [
+              "P071"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          }
+        }
+      },
+      {
+        "event": "ES06-2",
+        "occurrence": "observed",
+        "offered_candidates": 122,
+        "gold_availability": "selected",
+        "gold_candidate": "P054",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [
+              "P054"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          },
+          "combined": {
+            "approved_candidates": [
+              "P054"
+            ],
+            "candidate_errors": 0,
+            "outcome": "exact"
+          }
+        }
+      },
+      {
+        "event": "ES07-1",
+        "occurrence": "observed",
+        "offered_candidates": 87,
+        "gold_availability": "selected",
+        "gold_candidate": "P070",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES08-1",
+        "occurrence": "observed",
+        "offered_candidates": 90,
+        "gold_availability": "selected",
+        "gold_candidate": "P034",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES09-1",
+        "occurrence": "observed",
+        "offered_candidates": 88,
+        "gold_availability": "selected",
+        "gold_candidate": "P070",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES10-1",
+        "occurrence": "observed",
+        "offered_candidates": 80,
+        "gold_availability": "selected",
+        "gold_candidate": "P034",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES11-1",
+        "occurrence": "observed",
+        "offered_candidates": 59,
+        "gold_availability": "selected",
+        "gold_candidate": "P029",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES12-1",
+        "occurrence": "observed",
+        "offered_candidates": 88,
+        "gold_availability": "selected",
+        "gold_candidate": "P041",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES13-1",
+        "occurrence": "observed",
+        "offered_candidates": 83,
+        "gold_availability": "selected",
+        "gold_candidate": "P054",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES14-1",
+        "occurrence": "observed",
+        "offered_candidates": 101,
+        "gold_availability": "selected",
+        "gold_candidate": "P063",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES15-1",
+        "occurrence": "observed",
+        "offered_candidates": 85,
+        "gold_availability": "selected",
+        "gold_candidate": "P034",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES16-1",
+        "occurrence": "observed",
+        "offered_candidates": 89,
+        "gold_availability": "selected",
+        "gold_candidate": "P041",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      },
+      {
+        "event": "ES17-1",
+        "occurrence": "observed",
+        "offered_candidates": 112,
+        "gold_availability": "no_gold_owner",
+        "gold_candidate": null,
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "correct_unresolved"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "correct_unresolved"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "correct_unresolved"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "correct_unresolved"
+          }
+        }
+      },
+      {
+        "event": "ES18-1",
+        "occurrence": "uncertain",
+        "offered_candidates": 93,
+        "gold_availability": "selected",
+        "gold_candidate": "P010",
+        "rules": {
+          "baseline": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "wire_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "coordination_only": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          },
+          "combined": {
+            "approved_candidates": [],
+            "candidate_errors": 0,
+            "outcome": "missed_available"
+          }
+        }
+      }
+    ],
+    "historical_result_sha256": "5dc37f989c3a7de004e3cff3f10a840190b62a90ccad49147cda026d959685a9"
+  }
+}
